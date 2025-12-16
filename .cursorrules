@@ -1,0 +1,68 @@
+You are working in a Flutter app.
+
+Architecture & Structure
+- Follow Clean Architecture: presentation / application / domain / data layers.
+- No business logic in Widgets. Widgets only handle UI + user interactions.
+- Use use-cases for actions, repositories for data access, data sources for APIs/DB.
+- Prefer feature-first folder structure: features/<feature>/presentation|application|domain|data.
+
+State Management (Riverpod)
+- Use Riverpod as the only state management.
+- Prefer AsyncNotifier/Notifier + providers; avoid setState except for local UI-only toggles.
+- Providers must be in presentation/providers or application depending on responsibility.
+- Keep providers small and composable; avoid “god providers”.
+- Always handle loading/error states explicitly (AsyncValue.when / maybeWhen).
+
+UI, Theming, Responsiveness
+- Support Light & Dark themes across the entire app.
+- No hardcoded colors. Use AppColors (or Theme colorScheme).
+- No hardcoded TextStyle. Use Theme textTheme (or your AppTextStyles).
+- All spacing/sizing must be responsive using ScreenUtil (.w, .h, .sp, .r).
+- Avoid fixed widths/heights; use LayoutBuilder/Flexible/Expanded and responsive constraints.
+- Use reusable widgets for repeated UI patterns (buttons, cards, inputs, tables).
+
+Localization (i18n)
+- All user-facing strings must come from localization files (ARB).
+- Support English + Arabic (RTL).
+- Never hardcode strings in Widgets; use AppLocalizations.
+- Test layouts in both LTR and RTL; avoid directional bugs (use EdgeInsetsDirectional).
+
+Navigation
+- Use go_router for navigation.
+- Routes should be declared centrally and grouped by feature.
+- Use typed/structured route params; validate required params.
+
+Networking & Models
+- Use Dio (or your chosen HTTP client) via a single configured instance.
+- Use DTOs for API parsing and domain models for app logic.
+- No JSON parsing inside Widgets. Parsing belongs in data layer.
+- Use consistent error handling with Failure/Result types (domain-safe errors).
+
+Persistence
+- Use a repository abstraction for local storage (SharedPreferences/Hive/SQFlite).
+- Never access storage directly in UI; only via use-cases/repositories.
+
+Code Style & Quality
+- Use const constructors wherever possible.
+- Keep Widgets small; if a build method exceeds ~150 lines, refactor.
+- Avoid deep nesting; extract sub-widgets.
+- Prefer composition over inheritance.
+- Use meaningful names; avoid abbreviations.
+- Do not add comments that restate the obvious; comment only complex logic.
+
+Testing
+- Write unit tests for use-cases and repositories where possible.
+- Widget tests for critical screens and reusable components.
+- Mock external dependencies (network/storage).
+
+Performance & Safety
+- Avoid rebuilding heavy widgets unnecessarily; use ConsumerWidget selectively.
+- Use ListView.builder for long lists; avoid rendering large lists at once.
+- Dispose controllers/focus nodes when used (or use hooks if available).
+- Validate all user input; keep validation rules in application/domain layer.
+
+Output Rules for AI
+- When generating code: provide complete, runnable Dart files with correct imports.
+- Match the existing project conventions and folder structure.
+- Do not introduce new packages unless explicitly asked.
+- If unsure about a project pattern, choose the simplest Clean Architecture + Riverpod approach.
