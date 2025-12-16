@@ -103,79 +103,79 @@ class _SidebarState extends ConsumerState<Sidebar> {
       case 'appTitle':
         return localizations.appTitle;
       case 'hrManagement':
-        return 'HR Management';
+        return 'HR Management'; // TODO: Add to localization
       case 'dashboard':
         return localizations.dashboard;
       case 'overview':
-        return 'Overview';
+        return 'Overview'; // TODO: Add to localization
       case 'analytics':
-        return 'Analytics';
+        return 'Analytics'; // TODO: Add to localization
       case 'quickActions':
-        return 'Quick Actions';
+        return localizations.quickActions;
       case 'moduleCatalogue':
-        return 'Module Catalogue';
+        return localizations.moduleCatalogue;
       case 'productIntro':
-        return 'Product Intro';
+        return localizations.productIntroduction;
       case 'enterpriseStructure':
         return localizations.enterpriseStructure;
       case 'manageEnterpriseStructure':
-        return 'Manage Enterprise\nStructure';
+        return 'Manage Enterprise\nStructure'; // TODO: Add to localization
       case 'manageComponentValues':
-        return 'Manage Component\nValues';
+        return 'Manage Component\nValues'; // TODO: Add to localization
       case 'company':
-        return 'Company';
+        return 'Company'; // TODO: Add to localization
       case 'division':
-        return 'Division';
+        return 'Division'; // TODO: Add to localization
       case 'businessUnit':
-        return 'Business Unit';
+        return 'Business Unit'; // TODO: Add to localization
       case 'department':
-        return 'Department';
+        return 'Department'; // TODO: Add to localization
       case 'section':
-        return 'Section';
+        return 'Section'; // TODO: Add to localization
       case 'workforceStructure':
-        return 'Workforce Structure';
+        return localizations.workforceStructure;
       case 'timeManagement':
-        return 'Time Management';
+        return localizations.timeManagement;
       case 'employees':
-        return 'Employees';
+        return localizations.employees;
       case 'employeeList':
-        return 'Employee List';
+        return 'Employee List'; // TODO: Add to localization
       case 'addEmployee':
-        return 'Add Employee';
+        return 'Add Employee'; // TODO: Add to localization
       case 'employeeActions':
-        return 'Employee Actions';
+        return 'Employee Actions'; // TODO: Add to localization
       case 'orgStructure':
-        return 'Org Structure';
+        return 'Org Structure'; // TODO: Add to localization
       case 'workforcePlanning':
-        return 'Workforce Planning';
+        return 'Workforce Planning'; // TODO: Add to localization
       case 'positions':
-        return 'Positions';
+        return 'Positions'; // TODO: Add to localization
       case 'contracts':
-        return 'Contracts';
+        return 'Contracts'; // TODO: Add to localization
       case 'leaveManagement':
-        return 'Leave Management';
+        return localizations.leaveManagement;
       case 'attendance':
-        return 'Attendance';
+        return localizations.attendance;
       case 'payroll':
-        return 'Payroll';
+        return localizations.payroll;
       case 'compliance':
-        return 'Compliance';
+        return localizations.compliance;
       case 'eosCalculator':
-        return 'EOS Calculator';
+        return localizations.eosCalculator;
       case 'reports':
-        return 'Reports';
+        return localizations.reports;
       case 'governmentForms':
-        return 'Government Forms';
+        return localizations.governmentForms;
       case 'deiDashboard':
-        return 'DEI Dashboard';
+        return localizations.deiDashboard;
       case 'hrOperations':
-        return 'HR Operations';
+        return localizations.hrOperations;
       case 'settingsConfig':
-        return 'Settings &\nConfigurations';
+        return '${localizations.settings} &\nConfigurations'; // TODO: Add full string to localization
       case 'kuwaitLaborLaw':
-        return 'Kuwait Labor Law';
+        return 'Kuwait Labor Law'; // TODO: Add to localization
       case 'fullyCompliant':
-        return 'Fully Compliant System';
+        return 'Fully Compliant System'; // TODO: Add to localization
       default:
         return key;
     }
@@ -442,7 +442,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
           color: AppColors.cardBackground,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 15,
               offset: const Offset(0, 3),
             ),
@@ -507,36 +507,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
         child: isExpanded
             ? Row(
                 key: const ValueKey('header-expanded'),
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          localizations.appTitle,
-                          style: TextStyle(
-                            fontSize: 18.9.sp,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF101828),
-                            height: 30 / 18.9,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                        Text(
-                          _getLocalizedLabel('hrManagement', localizations),
-                          style: TextStyle(
-                            fontSize: 15.4.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary,
-                            height: 24 / 15.4,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   GestureDetector(
                     onTap: () => ref.read(sidebarProvider.notifier).collapse(),
                     child: Container(
@@ -553,23 +525,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
                   ),
                 ],
               )
-            : Center(
-                key: const ValueKey('header-collapsed'),
-                child: GestureDetector(
-                  onTap: () => ref.read(sidebarProvider.notifier).expand(),
-                  child: Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Icon(
-                      Icons.menu,
-                      size: 20.sp,
-                      color: const Color(0xFF101828),
-                    ),
-                  ),
-                ),
-              ),
+            : const SizedBox.shrink(),
       ),
     );
   }
@@ -635,11 +591,16 @@ class _SidebarState extends ConsumerState<Sidebar> {
             // Always expand sidebar first when collapsed
             ref.read(sidebarProvider.notifier).expand();
             
+            // Capture route and hasChildren before async operation
+            final route = item.route;
+            final hasChildrenLocal = hasChildren;
+            
             // Then navigate or expand children after a short delay
             Future.delayed(const Duration(milliseconds: 100), () {
-              if (item.route != null) {
-                context.go(item.route!);
-              } else if (hasChildren) {
+              if (!mounted) return;
+              if (route != null && context.mounted) {
+                context.go(route);
+              } else if (hasChildrenLocal) {
                 _toggleExpanded(item.id, allItems);
               }
             });

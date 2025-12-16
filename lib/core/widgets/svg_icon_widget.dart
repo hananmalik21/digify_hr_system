@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,6 +29,8 @@ class SvgIconWidget extends StatelessWidget {
         height: size ?? 20.sp,
         child: const CircularProgressIndicator(strokeWidth: 2),
       ),
+      // Ensure SVG renders correctly
+      semanticsLabel: '',
     );
   }
 }

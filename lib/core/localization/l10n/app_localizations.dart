@@ -2497,6 +2497,214 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Compliance Score'**
   String get complianceScore;
+
+  String get tasksEvents;
+
+  String get attendanceLeaves;
+
+  String get myTasks;
+
+  String get upcomingEvents;
+
+  String get reviewLeaveRequests;
+
+  String get dueToday;
+
+  String get processMonthlyPayroll;
+
+  String get dueIn3Days;
+
+  String get updateEmployeeRecords;
+
+  String get completed;
+
+  String get teamMeeting;
+
+  String get payrollProcessing;
+
+  String get allDay;
+
+  String get viewAllTasksEvents;
+
+  String get todaysAttendance;
+
+  String get checkInTime;
+
+  String get statusOnTime;
+
+  String get myUpcomingLeaves;
+
+  String get annualLeave;
+
+  String get leaveDates;
+
+  String get approved;
+
+  String get teamOnLeaveToday;
+
+  String get ahmadHassan;
+
+  String get sickLeave;
+
+  String get mohammedKhan;
+
+  String get emergencyLeave;
+
+  String get viewFullCalendar;
+
+  String get adminUser;
+
+  String get welcomeAdmin;
+
+  String get timeManagement;
+
+  String get leaveManagement;
+
+  String get workforceStructure;
+
+  String get eosCalculator;
+
+  String get governmentForms;
+
+  String get hrOperations;
+
+  String get deiDashboard;
+
+  String get moduleCatalogue;
+
+  String get productIntroduction;
+
+  String get employees;
+
+  String get attendance;
+
+  String get payroll;
+
+  String get compliance;
+
+  String get reports;
+
+  String get manageEnterpriseStructure;
+
+  String get configureManageHierarchy;
+
+  String get configureManageHierarchyAr;
+
+  String get currentlyActiveStructure;
+
+  String get standardKuwaitCorporateStructure;
+
+  String get traditionalHierarchicalStructure;
+
+  String get activeLevels;
+
+  String get components;
+
+  String get employeesAssigned;
+
+  String get totalStructures;
+
+  String get activeStructure;
+
+  String get componentsInUse;
+
+  String get structureConfigurations;
+
+  String get manageDifferentConfigurations;
+
+  String get createNewStructure;
+
+  String get hierarchy;
+
+  String get levels;
+
+  String get created;
+
+  String get modified;
+
+  String get duplicate;
+
+  String get activate;
+
+  String get delete;
+
+  String get notUsed;
+
+  String get simplifiedStructure;
+
+  String get streamlinedStructure;
+
+  String get flatOrganizationStructure;
+
+  String get minimalHierarchy;
+
+  String get currentlyActiveStructureMessage;
+
+  String get company;
+
+  String get division;
+
+  String get businessUnit;
+
+  String get section;
+
+  String get viewEnterpriseStructureConfiguration;
+
+  String get reviewOrganizationalHierarchy;
+
+  String get structureConfigurationActive;
+
+  String get enterpriseStructureActiveMessage;
+
+  String get configurationInstructions;
+
+  String get companyMandatoryInstruction;
+
+  String get enableDisableLevelsInstruction;
+
+  String get useArrowsInstruction;
+
+  String get orderDeterminesRelationshipsInstruction;
+
+  String get changesAffectComponentsInstruction;
+
+  String get structureName;
+
+  String get previewStructure;
+
+  String get saveConfiguration;
+
+  String get organizationalHierarchyLevels;
+
+  String get resetToDefault;
+
+  String levelInHierarchy(int level);
+
+  String get hierarchyPreview;
+
+  String level(int levelNumber);
+
+  String get configurationSummary;
+
+  String get totalLevels;
+
+  String get hierarchyDepth;
+
+  String get topLevel;
+
+  String get editEnterpriseStructureConfiguration;
+
+  String get defineOrganizationalHierarchy;
+
+  String get createEnterpriseStructureConfiguration;
+
+  String get noConfigurationFound;
+
+  String get pleaseConfigureEnterpriseStructure;
+
+  String get structureNamePlaceholder;
+
+  String get descriptionPlaceholder;
 }
 
 class _AppLocalizationsDelegate

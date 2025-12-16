@@ -49,10 +49,11 @@ class AppColors {
   static const Color successBorder = Color(0xFF86EFAC);
   static const Color successText = Color(0xFF166534);
 
+  // Warning Colors
   static const Color warning = Color(0xFFF59E0B);
-  static const Color warningBg = Color(0xFFFEF3C7);
-  static const Color warningBorder = Color(0xFFFDE68A);
-  static const Color warningText = Color(0xFF92400E);
+  static const Color warningBg = Color(0xFFFEFCE8);
+  static const Color warningBorder = Color(0xFFFFF085);
+  static const Color warningText = Color(0xFFA65F00);
 
   static const Color error = Color(0xFFEF4444);
   static const Color errorBg = Color(0xFFFEE2E2);
@@ -182,5 +183,13 @@ class AppColors {
   
   // Delete Icon Color
   static const Color deleteIconRed = Color(0xFFFB2C36);
+  
+  // Input Colors
+  static const Color inputBg = Color(0xFFF3F4F6);
+  static const Color inputBorder = Color(0xFFD1D5DC);
+  
+  // Dark Mode Input Colors
+  static const Color inputBgDark = Color(0xFF334155);
+  static const Color inputBorderDark = Color(0xFF475569);
 }
 

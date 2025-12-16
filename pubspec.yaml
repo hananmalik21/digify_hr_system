@@ -83,6 +83,9 @@ flutter:
   assets:
     - assets/icons/
 
+  # Enable code generation for localization
+  generate: true
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

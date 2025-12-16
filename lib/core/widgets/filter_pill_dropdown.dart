@@ -7,12 +7,12 @@ class FilterPillDropdown extends StatelessWidget {
   final bool isDark;
 
   const FilterPillDropdown({
-    Key? key,
+    super.key,
     required this.value,
     required this.items,
     required this.onChanged,
     required this.isDark,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

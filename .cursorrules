@@ -66,3 +66,11 @@ Output Rules for AI
 - Match the existing project conventions and folder structure.
 - Do not introduce new packages unless explicitly asked.
 - If unsure about a project pattern, choose the simplest Clean Architecture + Riverpod approach.
+
+When generating Flutter UI from Figma JSON:
+- Ignore VECTOR, STROKE, FILL and low-level drawing nodes
+- Extract pages, frames, components, layout patterns
+- Use Riverpod AsyncNotifiers + Clean Architecture
+- Use ScreenUtil
+- No hardcoded colors/textstyles/strings
+- Support EN/AR localization and light/dark theme

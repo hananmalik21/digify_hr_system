@@ -1240,4 +1240,316 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get complianceScore => 'درجة الامتثال';
+
+  @override
+  String get tasksEvents => 'المهام والأحداث';
+
+  @override
+  String get attendanceLeaves => 'الحضور والإجازات';
+
+  @override
+  String get myTasks => 'مهامي';
+
+  @override
+  String get upcomingEvents => 'الأحداث القادمة';
+
+  @override
+  String get reviewLeaveRequests => 'مراجعة طلبات الإجازة المعلقة';
+
+  @override
+  String get dueToday => 'مستحقة اليوم';
+
+  @override
+  String get processMonthlyPayroll => 'معالجة كشوف المرتبات الشهرية';
+
+  @override
+  String get dueIn3Days => 'مستحقة خلال 3 أيام';
+
+  @override
+  String get updateEmployeeRecords => 'تحديث سجلات الموظفين';
+
+  @override
+  String get completed => 'مكتمل';
+
+  @override
+  String get teamMeeting => 'اجتماع الفريق';
+
+  @override
+  String get payrollProcessing => 'معالجة كشوف المرتبات';
+
+  @override
+  String get allDay => 'طوال اليوم';
+
+  @override
+  String get viewAllTasksEvents => 'عرض جميع المهام والأحداث';
+
+  @override
+  String get todaysAttendance => 'حضور اليوم';
+
+  @override
+  String get checkInTime => 'وقت تسجيل الدخول';
+
+  @override
+  String get statusOnTime => 'في الوقت المحدد';
+
+  @override
+  String get myUpcomingLeaves => 'إجازاتي القادمة';
+
+  @override
+  String get annualLeave => 'إجازة سنوية';
+
+  @override
+  String get leaveDates => '25 ديسمبر - 30 ديسمبر 2024';
+
+  @override
+  String get approved => 'موافق عليه';
+
+  @override
+  String get teamOnLeaveToday => 'الفريق في إجازة اليوم';
+
+  @override
+  String get ahmadHassan => 'أحمد حسن';
+
+  @override
+  String get sickLeave => 'إجازة مرضية';
+
+  @override
+  String get mohammedKhan => 'محمد خان';
+
+  @override
+  String get emergencyLeave => 'إجازة طارئة';
+
+  @override
+  String get viewFullCalendar => 'عرض التقويم الكامل';
+
+  @override
+  String get adminUser => 'مستخدم الإدارة';
+
+  @override
+  String get welcomeAdmin => 'مرحباً، مستخدم الإدارة';
+
+  @override
+  String get timeManagement => 'إدارة الوقت';
+
+  @override
+  String get leaveManagement => 'إدارة الإجازات';
+
+  @override
+  String get workforceStructure => 'هيكل القوى العاملة';
+
+  @override
+  String get eosCalculator => 'حاسبة نهاية الخدمة';
+
+  @override
+  String get governmentForms => 'النماذج الحكومية';
+
+  @override
+  String get hrOperations => 'عمليات الموارد البشرية';
+
+  @override
+  String get deiDashboard => 'لوحة DEI';
+
+  @override
+  String get moduleCatalogue => 'كتالوج الوحدات';
+
+  @override
+  String get productIntroduction => 'مقدمة المنتج';
+
+  @override
+  String get employees => 'الموظفون';
+
+  @override
+  String get attendance => 'الحضور';
+
+  @override
+  String get payroll => 'كشوف المرتبات';
+
+  @override
+  String get compliance => 'الامتثال';
+
+  @override
+  String get reports => 'التقارير';
+
+  @override
+  String get manageEnterpriseStructure => 'إدارة هيكل المؤسسة';
+
+  @override
+  String get configureManageHierarchy => 'تكوين وإدارة هياكل التسلسل الهرمي للمؤسسة';
+
+  @override
+  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+
+  @override
+  String get currentlyActiveStructure => 'الهيكل النشط حاليًا';
+
+  @override
+  String get standardKuwaitCorporateStructure => 'الهيكل المؤسسي الكويتي القياسي';
+
+  @override
+  String get traditionalHierarchicalStructure => 'هيكل هرمي تقليدي بجميع المستويات الخمسة للإدارة التنظيمية الشاملة';
+
+  @override
+  String get activeLevels => 'المستويات النشطة';
+
+  @override
+  String get components => 'المكونات';
+
+  @override
+  String get employeesAssigned => 'الموظفون المعينون';
+
+  @override
+  String get totalStructures => 'إجمالي الهياكل';
+
+  @override
+  String get activeStructure => 'الهيكل النشط';
+
+  @override
+  String get componentsInUse => 'المكونات قيد الاستخدام';
+
+  @override
+  String get structureConfigurations => 'تكوينات الهيكل';
+
+  @override
+  String get manageDifferentConfigurations => 'إدارة تكوينات التسلسل الهرمي التنظيمي المختلفة. يمكن تنشيط واحد فقط في كل مرة.';
+
+  @override
+  String get createNewStructure => 'إنشاء هيكل جديد';
+
+  @override
+  String get hierarchy => 'التسلسل الهرمي:';
+
+  @override
+  String get levels => 'مستويات';
+
+  @override
+  String get created => 'تم الإنشاء:';
+
+  @override
+  String get modified => 'تم التعديل:';
+
+  @override
+  String get duplicate => 'نسخ';
+
+  @override
+  String get activate => 'تفعيل';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get notUsed => 'غير مستخدم';
+
+  @override
+  String get simplifiedStructure => 'هيكل مبسط';
+
+  @override
+  String get streamlinedStructure => 'هيكل مبسط للمؤسسات الصغيرة - الشركة والقسم والإدارة فقط';
+
+  @override
+  String get flatOrganizationStructure => 'هيكل تنظيمي مسطح';
+
+  @override
+  String get minimalHierarchy => 'تسلسل هرمي minimal للشركات الناشئة والفرق الرشيقة - الشركة والإدارة فقط';
+
+  @override
+  String get currentlyActiveStructureMessage => 'هذا هو الهيكل النشط حاليًا. لتفعيل هيكل مختلف، انقر فوق زر "تفعيل" في تكوين آخر.';
+
+  @override
+  String get company => 'الشركة';
+
+  @override
+  String get division => 'القسم';
+
+  @override
+  String get businessUnit => 'وحدة الأعمال';
+
+  @override
+  String get section => 'القسم';
+
+  @override
+  String get viewEnterpriseStructureConfiguration => 'عرض تكوين هيكل المؤسسة';
+
+  @override
+  String get reviewOrganizationalHierarchy => 'مراجعة مستويات التسلسل الهرمي التنظيمي والتسلسل';
+
+  @override
+  String get structureConfigurationActive => 'تكوين الهيكل نشط';
+
+  @override
+  String get enterpriseStructureActiveMessage => 'تم تكوين التسلسل الهرمي لهيكل المؤسسة الخاص بك وهو نشط. يمكنك تعديل المستويات والترتيب أدناه.';
+
+  @override
+  String get configurationInstructions => 'تعليمات التكوين';
+
+  @override
+  String get companyMandatoryInstruction => 'الشركة إلزامية ويجب أن تكون المستوى الأعلى - لا يمكن تعطيلها أو إعادة ترتيبها';
+
+  @override
+  String get enableDisableLevelsInstruction => 'تمكين أو تعطيل المستويات حسب احتياجاتك التنظيمية';
+
+  @override
+  String get useArrowsInstruction => 'استخدم الأسهم لأعلى/لأسفل لتغيير تسلسل التسلسل الهرمي';
+
+  @override
+  String get orderDeterminesRelationshipsInstruction => 'يحدد الترتيب العلاقات بين الوالدين والطفل في هيكلك التنظيمي';
+
+  @override
+  String get changesAffectComponentsInstruction => 'ستؤثر التغييرات على كيفية إنشاء المكونات وعرضها في عرض الشجرة';
+
+  @override
+  String get structureName => 'اسم الهيكل';
+
+  @override
+  String get previewStructure => 'معاينة الهيكل';
+
+  @override
+  String get saveConfiguration => 'حفظ التكوين';
+
+  @override
+  String get organizationalHierarchyLevels => 'مستويات التسلسل الهرمي التنظيمي';
+
+  @override
+  String get resetToDefault => 'إعادة تعيين إلى الافتراضي';
+
+  @override
+  String levelInHierarchy(int level) => 'المستوى $level في التسلسل الهرمي';
+
+  @override
+  String get hierarchyPreview => 'معاينة التسلسل الهرمي';
+
+  @override
+  String level(int levelNumber) => 'المستوى $levelNumber';
+
+  @override
+  String get configurationSummary => 'ملخص التكوين';
+
+  @override
+  String get totalLevels => 'إجمالي المستويات';
+
+  @override
+  String get hierarchyDepth => 'عمق التسلسل الهرمي';
+
+  @override
+  String get topLevel => 'المستوى الأعلى';
+
+  @override
+  String get editEnterpriseStructureConfiguration => 'تعديل تكوين هيكل المؤسسة';
+
+  @override
+  String get defineOrganizationalHierarchy => 'حدد مستويات التسلسل الهرمي التنظيمي وتسلسلها';
+
+  @override
+  String get createEnterpriseStructureConfiguration => 'إنشاء تكوين هيكل المؤسسة';
+
+  @override
+  String get noConfigurationFound => 'لم يتم العثور على تكوين';
+
+  @override
+  String get pleaseConfigureEnterpriseStructure => 'يرجى تكوين التسلسل الهرمي لهيكل مؤسستك قبل إنشاء المكونات.';
+
+  @override
+  String get structureNamePlaceholder => 'مثال: هيكل الشركة القياسي، هيكل مبسط';
+
+  @override
+  String get descriptionPlaceholder => 'اوصف تكوين هذا الهيكل ومتى يجب استخدامه...';
 }

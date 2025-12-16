@@ -1244,4 +1244,316 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get complianceScore => 'Compliance Score';
+
+  @override
+  String get tasksEvents => 'Tasks & Events';
+
+  @override
+  String get attendanceLeaves => 'Attendance & Leaves';
+
+  @override
+  String get myTasks => 'MY TASKS';
+
+  @override
+  String get upcomingEvents => 'UPCOMING EVENTS';
+
+  @override
+  String get reviewLeaveRequests => 'Review pending leave requests';
+
+  @override
+  String get dueToday => 'Due today';
+
+  @override
+  String get processMonthlyPayroll => 'Process monthly payroll';
+
+  @override
+  String get dueIn3Days => 'Due in 3 days';
+
+  @override
+  String get updateEmployeeRecords => 'Update employee records';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get teamMeeting => 'Team Meeting';
+
+  @override
+  String get payrollProcessing => 'Payroll Processing';
+
+  @override
+  String get allDay => 'All-day';
+
+  @override
+  String get viewAllTasksEvents => 'View All Tasks & Events';
+
+  @override
+  String get todaysAttendance => 'TODAY\'S ATTENDANCE';
+
+  @override
+  String get checkInTime => 'Check In Time';
+
+  @override
+  String get statusOnTime => 'On Time';
+
+  @override
+  String get myUpcomingLeaves => 'MY UPCOMING LEAVES';
+
+  @override
+  String get annualLeave => 'Annual Leave';
+
+  @override
+  String get leaveDates => 'Dec 25 - Dec 30, 2024';
+
+  @override
+  String get approved => 'Approved';
+
+  @override
+  String get teamOnLeaveToday => 'TEAM ON LEAVE TODAY';
+
+  @override
+  String get ahmadHassan => 'Ahmad Hassan';
+
+  @override
+  String get sickLeave => 'Sick Leave';
+
+  @override
+  String get mohammedKhan => 'Mohammed Khan';
+
+  @override
+  String get emergencyLeave => 'Emergency Leave';
+
+  @override
+  String get viewFullCalendar => 'View Full Calendar';
+
+  @override
+  String get adminUser => 'Admin User';
+
+  @override
+  String get welcomeAdmin => 'Welcome, Admin User';
+
+  @override
+  String get timeManagement => 'Time Management';
+
+  @override
+  String get leaveManagement => 'Leave Management';
+
+  @override
+  String get workforceStructure => 'Workforce Structure';
+
+  @override
+  String get eosCalculator => 'EOS Calculator';
+
+  @override
+  String get governmentForms => 'Government Forms';
+
+  @override
+  String get hrOperations => 'HR Operations';
+
+  @override
+  String get deiDashboard => 'DEI Dashboard';
+
+  @override
+  String get moduleCatalogue => 'Module Catalogue';
+
+  @override
+  String get productIntroduction => 'Product Introduction';
+
+  @override
+  String get employees => 'Employees';
+
+  @override
+  String get attendance => 'Attendance';
+
+  @override
+  String get payroll => 'Payroll';
+
+  @override
+  String get compliance => 'Compliance';
+
+  @override
+  String get reports => 'Reports';
+
+  @override
+  String get manageEnterpriseStructure => 'Manage Enterprise Structure';
+
+  @override
+  String get configureManageHierarchy => 'Configure and manage your organizational hierarchy structures';
+
+  @override
+  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+
+  @override
+  String get currentlyActiveStructure => 'Currently Active Structure';
+
+  @override
+  String get standardKuwaitCorporateStructure => 'Standard Kuwait Corporate Structure';
+
+  @override
+  String get traditionalHierarchicalStructure => 'Traditional hierarchical structure with all five levels for comprehensive organizational management';
+
+  @override
+  String get activeLevels => 'Active Levels';
+
+  @override
+  String get components => 'Components';
+
+  @override
+  String get employeesAssigned => 'Employees Assigned';
+
+  @override
+  String get totalStructures => 'Total Structures';
+
+  @override
+  String get activeStructure => 'Active Structure';
+
+  @override
+  String get componentsInUse => 'Components in Use';
+
+  @override
+  String get structureConfigurations => 'Structure Configurations';
+
+  @override
+  String get manageDifferentConfigurations => 'Manage different organizational hierarchy configurations. Only one can be active at a time.';
+
+  @override
+  String get createNewStructure => 'Create New Structure';
+
+  @override
+  String get hierarchy => 'Hierarchy:';
+
+  @override
+  String get levels => 'levels';
+
+  @override
+  String get created => 'Created:';
+
+  @override
+  String get modified => 'Modified:';
+
+  @override
+  String get duplicate => 'Duplicate';
+
+  @override
+  String get activate => 'Activate';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get notUsed => 'NOT USED';
+
+  @override
+  String get simplifiedStructure => 'Simplified Structure';
+
+  @override
+  String get streamlinedStructure => 'Streamlined structure for smaller organizations - Company, Division, and Department only';
+
+  @override
+  String get flatOrganizationStructure => 'Flat Organization Structure';
+
+  @override
+  String get minimalHierarchy => 'Minimal hierarchy for startups and agile teams - Company and Department only';
+
+  @override
+  String get currentlyActiveStructureMessage => 'This is the currently active structure. To activate a different structure, click the "Activate" button on another configuration.';
+
+  @override
+  String get company => 'Company';
+
+  @override
+  String get division => 'Division';
+
+  @override
+  String get businessUnit => 'Business Unit';
+
+  @override
+  String get section => 'Section';
+
+  @override
+  String get viewEnterpriseStructureConfiguration => 'View Enterprise Structure Configuration';
+
+  @override
+  String get reviewOrganizationalHierarchy => 'Review organizational hierarchy levels and sequence';
+
+  @override
+  String get structureConfigurationActive => 'Structure Configuration Active';
+
+  @override
+  String get enterpriseStructureActiveMessage => 'Your enterprise structure hierarchy is configured and active. You can modify the levels and order below.';
+
+  @override
+  String get configurationInstructions => 'Configuration Instructions';
+
+  @override
+  String get companyMandatoryInstruction => 'Company is mandatory and must be the top level - it cannot be disabled or reordered';
+
+  @override
+  String get enableDisableLevelsInstruction => 'Enable or disable levels based on your organizational needs';
+
+  @override
+  String get useArrowsInstruction => 'Use the up/down arrows to change the hierarchy sequence';
+
+  @override
+  String get orderDeterminesRelationshipsInstruction => 'The order determines parent-child relationships in your org structure';
+
+  @override
+  String get changesAffectComponentsInstruction => 'Changes will affect how components are created and displayed in the tree view';
+
+  @override
+  String get structureName => 'Structure Name';
+
+  @override
+  String get previewStructure => 'Preview Structure';
+
+  @override
+  String get saveConfiguration => 'Save Configuration';
+
+  @override
+  String get organizationalHierarchyLevels => 'Organizational Hierarchy Levels';
+
+  @override
+  String get resetToDefault => 'Reset to Default';
+
+  @override
+  String levelInHierarchy(int level) => 'Level $level in the hierarchy';
+
+  @override
+  String get hierarchyPreview => 'Hierarchy Preview';
+
+  @override
+  String level(int levelNumber) => 'Level $levelNumber';
+
+  @override
+  String get configurationSummary => 'Configuration Summary';
+
+  @override
+  String get totalLevels => 'Total Levels';
+
+  @override
+  String get hierarchyDepth => 'Hierarchy Depth';
+
+  @override
+  String get topLevel => 'Top Level';
+
+  @override
+  String get editEnterpriseStructureConfiguration => 'Edit Enterprise Structure Configuration';
+
+  @override
+  String get defineOrganizationalHierarchy => 'Define your organizational hierarchy levels and sequence';
+
+  @override
+  String get createEnterpriseStructureConfiguration => 'Create Enterprise Structure Configuration';
+
+  @override
+  String get noConfigurationFound => 'No Configuration Found';
+
+  @override
+  String get pleaseConfigureEnterpriseStructure => 'Please configure your enterprise structure hierarchy before creating components.';
+
+  @override
+  String get structureNamePlaceholder => 'e.g., Standard Corporate Structure, Simplified Structure';
+
+  @override
+  String get descriptionPlaceholder => 'Describe this structure configuration and when it should be used...';
 }
