@@ -121,7 +121,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
       case 'manageEnterpriseStructure':
         return 'Manage Enterprise\nStructure'; // TODO: Add to localization
       case 'manageComponentValues':
-        return 'Manage Component\nValues'; // TODO: Add to localization
+        return localizations.manageComponentValues;
       case 'company':
         return 'Company'; // TODO: Add to localization
       case 'division':
@@ -737,8 +737,9 @@ class _SidebarState extends ConsumerState<Sidebar> {
                               bottom: index < item.children!.length - 1 ? 4.h : 0,
                             ),
                             child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                if (child.route != null) {
+                                if (child.route != null && mounted) {
                                   context.go(child.route!);
                                 }
                               },

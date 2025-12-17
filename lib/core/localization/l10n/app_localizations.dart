@@ -2189,7 +2189,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterDescription.
   ///
   /// In en, this message translates to:
-  /// **'Enter description'**
+  /// **'Enter description (optional)'**
   String get enterDescription;
 
   /// No description provided for @noDataAccessSetsFound.
@@ -2498,213 +2498,1559 @@ abstract class AppLocalizations {
   /// **'Compliance Score'**
   String get complianceScore;
 
+  /// No description provided for @tasksEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks & Events'**
   String get tasksEvents;
 
+  /// No description provided for @attendanceLeaves.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance & Leaves'**
   String get attendanceLeaves;
 
+  /// No description provided for @myTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'MY TASKS'**
   String get myTasks;
 
+  /// No description provided for @upcomingEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'UPCOMING EVENTS'**
   String get upcomingEvents;
 
+  /// No description provided for @reviewLeaveRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Review pending leave requests'**
   String get reviewLeaveRequests;
 
+  /// No description provided for @dueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
   String get dueToday;
 
+  /// No description provided for @processMonthlyPayroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Process monthly payroll'**
   String get processMonthlyPayroll;
 
+  /// No description provided for @dueIn3Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Due in 3 days'**
   String get dueIn3Days;
 
+  /// No description provided for @updateEmployeeRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Update employee records'**
   String get updateEmployeeRecords;
 
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
   String get completed;
 
+  /// No description provided for @teamMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Meeting'**
   String get teamMeeting;
 
+  /// No description provided for @payrollProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll Processing'**
   String get payrollProcessing;
 
+  /// No description provided for @allDay.
+  ///
+  /// In en, this message translates to:
+  /// **'All-day'**
   String get allDay;
 
+  /// No description provided for @viewAllTasksEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Tasks & Events'**
   String get viewAllTasksEvents;
 
+  /// No description provided for @todaysAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY\'S ATTENDANCE'**
   String get todaysAttendance;
 
+  /// No description provided for @checkInTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Check In Time'**
   String get checkInTime;
 
+  /// No description provided for @statusOnTime.
+  ///
+  /// In en, this message translates to:
+  /// **'On Time'**
   String get statusOnTime;
 
+  /// No description provided for @myUpcomingLeaves.
+  ///
+  /// In en, this message translates to:
+  /// **'MY UPCOMING LEAVES'**
   String get myUpcomingLeaves;
 
+  /// No description provided for @annualLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Leave'**
   String get annualLeave;
 
+  /// No description provided for @leaveDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dec 25 - Dec 30, 2024'**
   String get leaveDates;
 
+  /// No description provided for @approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
   String get approved;
 
+  /// No description provided for @teamOnLeaveToday.
+  ///
+  /// In en, this message translates to:
+  /// **'TEAM ON LEAVE TODAY'**
   String get teamOnLeaveToday;
 
+  /// No description provided for @ahmadHassan.
+  ///
+  /// In en, this message translates to:
+  /// **'Ahmad Hassan'**
   String get ahmadHassan;
 
+  /// No description provided for @sickLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Sick Leave'**
   String get sickLeave;
 
+  /// No description provided for @mohammedKhan.
+  ///
+  /// In en, this message translates to:
+  /// **'Mohammed Khan'**
   String get mohammedKhan;
 
+  /// No description provided for @emergencyLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Leave'**
   String get emergencyLeave;
 
+  /// No description provided for @viewFullCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'View Full Calendar'**
   String get viewFullCalendar;
 
+  /// No description provided for @adminUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin User'**
   String get adminUser;
 
+  /// No description provided for @welcomeAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, Admin User'**
   String get welcomeAdmin;
 
+  /// No description provided for @timeManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Management'**
   String get timeManagement;
 
+  /// No description provided for @leaveManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Management'**
   String get leaveManagement;
 
+  /// No description provided for @workforceStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Workforce Structure'**
   String get workforceStructure;
 
+  /// No description provided for @eosCalculator.
+  ///
+  /// In en, this message translates to:
+  /// **'EOS Calculator'**
   String get eosCalculator;
 
+  /// No description provided for @governmentForms.
+  ///
+  /// In en, this message translates to:
+  /// **'Government Forms'**
   String get governmentForms;
 
+  /// No description provided for @hrOperations.
+  ///
+  /// In en, this message translates to:
+  /// **'HR Operations'**
   String get hrOperations;
 
+  /// No description provided for @deiDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'DEI Dashboard'**
   String get deiDashboard;
 
+  /// No description provided for @moduleCatalogue.
+  ///
+  /// In en, this message translates to:
+  /// **'Module Catalogue'**
   String get moduleCatalogue;
 
+  /// No description provided for @productIntroduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Introduction'**
   String get productIntroduction;
 
+  /// No description provided for @employees.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
   String get employees;
 
+  /// No description provided for @attendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
   String get attendance;
 
+  /// No description provided for @payroll.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll'**
   String get payroll;
 
+  /// No description provided for @compliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Compliance'**
   String get compliance;
 
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
   String get reports;
 
+  /// No description provided for @manageEnterpriseStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Enterprise Structure'**
   String get manageEnterpriseStructure;
 
+  /// No description provided for @configureManageHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure and manage your organizational hierarchy structures'**
   String get configureManageHierarchy;
 
+  /// No description provided for @configureManageHierarchyAr.
+  ///
+  /// In en, this message translates to:
+  /// **'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة'**
   String get configureManageHierarchyAr;
 
+  /// No description provided for @currentlyActiveStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently Active Structure'**
   String get currentlyActiveStructure;
 
+  /// No description provided for @standardKuwaitCorporateStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard Kuwait Corporate Structure'**
   String get standardKuwaitCorporateStructure;
 
+  /// No description provided for @traditionalHierarchicalStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional hierarchical structure with all five levels for comprehensive organizational management'**
   String get traditionalHierarchicalStructure;
 
+  /// No description provided for @activeLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Levels'**
   String get activeLevels;
 
+  /// No description provided for @components.
+  ///
+  /// In en, this message translates to:
+  /// **'Components'**
   String get components;
 
+  /// No description provided for @employeesAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees Assigned'**
   String get employeesAssigned;
 
+  /// No description provided for @totalStructures.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Structures'**
   String get totalStructures;
 
+  /// No description provided for @activeStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Structure'**
   String get activeStructure;
 
+  /// No description provided for @componentsInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Components in Use'**
   String get componentsInUse;
 
+  /// No description provided for @structureConfigurations.
+  ///
+  /// In en, this message translates to:
+  /// **'Structure Configurations'**
   String get structureConfigurations;
 
+  /// No description provided for @manageDifferentConfigurations.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage different organizational hierarchy configurations. Only one can be active at a time.'**
   String get manageDifferentConfigurations;
 
+  /// No description provided for @createNewStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Structure'**
   String get createNewStructure;
 
+  /// No description provided for @hierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy'**
   String get hierarchy;
 
+  /// No description provided for @levels.
+  ///
+  /// In en, this message translates to:
+  /// **'levels'**
   String get levels;
 
+  /// No description provided for @created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
   String get created;
 
+  /// No description provided for @modified.
+  ///
+  /// In en, this message translates to:
+  /// **'Modified'**
   String get modified;
 
+  /// No description provided for @duplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
   String get duplicate;
 
+  /// No description provided for @activate.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
   String get activate;
 
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
   String get delete;
 
+  /// No description provided for @notUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT USED'**
   String get notUsed;
 
+  /// No description provided for @simplifiedStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Simplified Structure'**
   String get simplifiedStructure;
 
+  /// No description provided for @streamlinedStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Streamlined structure for smaller organizations - Company, Division, and Department only'**
   String get streamlinedStructure;
 
+  /// No description provided for @flatOrganizationStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat Organization Structure'**
   String get flatOrganizationStructure;
 
+  /// No description provided for @minimalHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal hierarchy for startups and agile teams - Company and Department only'**
   String get minimalHierarchy;
 
+  /// No description provided for @currentlyActiveStructureMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the currently active structure. To activate a different structure, click the \"Activate\" button on another configuration.'**
   String get currentlyActiveStructureMessage;
 
+  /// No description provided for @company.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
   String get company;
 
+  /// No description provided for @companies.
+  ///
+  /// In en, this message translates to:
+  /// **'Companies'**
+  String get companies;
+
+  /// No description provided for @division.
+  ///
+  /// In en, this message translates to:
+  /// **'Division'**
   String get division;
 
+  /// No description provided for @divisions.
+  ///
+  /// In en, this message translates to:
+  /// **'Divisions'**
+  String get divisions;
+
+  /// No description provided for @businessUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Unit'**
   String get businessUnit;
 
+  /// No description provided for @businessUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Units'**
+  String get businessUnits;
+
+  /// No description provided for @departments.
+  ///
+  /// In en, this message translates to:
+  /// **'Departments'**
+  String get departments;
+
+  /// No description provided for @section.
+  ///
+  /// In en, this message translates to:
+  /// **'Section'**
   String get section;
 
+  /// No description provided for @sections.
+  ///
+  /// In en, this message translates to:
+  /// **'Sections'**
+  String get sections;
+
+  /// No description provided for @companyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Code'**
+  String get companyCode;
+
+  /// No description provided for @companyNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name (English)'**
+  String get companyNameEnglish;
+
+  /// No description provided for @companyNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Name (Arabic)'**
+  String get companyNameArabic;
+
+  /// No description provided for @legalNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Name (English)'**
+  String get legalNameEnglish;
+
+  /// No description provided for @legalNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Name (Arabic)'**
+  String get legalNameArabic;
+
+  /// No description provided for @industry.
+  ///
+  /// In en, this message translates to:
+  /// **'Industry'**
+  String get industry;
+
+  /// No description provided for @country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country;
+
+  /// No description provided for @city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @poBox.
+  ///
+  /// In en, this message translates to:
+  /// **'P.O. Box'**
+  String get poBox;
+
+  /// No description provided for @zipCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Zip Code'**
+  String get zipCode;
+
+  /// No description provided for @website.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get website;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
+  /// No description provided for @fiscalYearStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiscal Year Start (MM-DD)'**
+  String get fiscalYearStart;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @viewEnterpriseStructureConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'View Enterprise Structure Configuration'**
   String get viewEnterpriseStructureConfiguration;
 
+  /// No description provided for @reviewOrganizationalHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Review organizational hierarchy levels and sequence'**
   String get reviewOrganizationalHierarchy;
 
+  /// No description provided for @structureConfigurationActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Structure Configuration Active'**
   String get structureConfigurationActive;
 
+  /// No description provided for @enterpriseStructureActiveMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your enterprise structure hierarchy is configured and active. You can modify the levels and order below.'**
   String get enterpriseStructureActiveMessage;
 
+  /// No description provided for @configurationInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration Instructions'**
   String get configurationInstructions;
 
+  /// No description provided for @companyMandatoryInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Company is mandatory and must be the top level - it cannot be disabled or reordered'**
   String get companyMandatoryInstruction;
 
+  /// No description provided for @enableDisableLevelsInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable or disable levels based on your organizational needs'**
   String get enableDisableLevelsInstruction;
 
+  /// No description provided for @useArrowsInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the up/down arrows to change the hierarchy sequence'**
   String get useArrowsInstruction;
 
+  /// No description provided for @orderDeterminesRelationshipsInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'The order determines parent-child relationships in your org structure'**
   String get orderDeterminesRelationshipsInstruction;
 
+  /// No description provided for @changesAffectComponentsInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes will affect how components are created and displayed in the tree view'**
   String get changesAffectComponentsInstruction;
 
-  String get structureName;
-
+  /// No description provided for @previewStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Structure'**
   String get previewStructure;
 
+  /// No description provided for @saveConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Configuration'**
   String get saveConfiguration;
 
+  /// No description provided for @organizationalHierarchyLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Hierarchy Levels'**
   String get organizationalHierarchyLevels;
 
+  /// No description provided for @resetToDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Default'**
   String get resetToDefault;
 
+  /// No description provided for @levelInHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'{level}'**
   String levelInHierarchy(int level);
 
+  /// No description provided for @hierarchyPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy Preview'**
   String get hierarchyPreview;
 
+  /// No description provided for @level.
+  ///
+  /// In en, this message translates to:
+  /// **'{levelNumber}'**
   String level(int levelNumber);
 
+  /// No description provided for @configurationSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration Summary'**
   String get configurationSummary;
 
+  /// No description provided for @totalLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Levels'**
   String get totalLevels;
 
+  /// No description provided for @hierarchyDepth.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy Depth'**
   String get hierarchyDepth;
 
+  /// No description provided for @topLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Level'**
   String get topLevel;
 
+  /// No description provided for @editEnterpriseStructureConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Enterprise Structure Configuration'**
   String get editEnterpriseStructureConfiguration;
 
+  /// No description provided for @defineOrganizationalHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Define your organizational hierarchy levels and sequence'**
   String get defineOrganizationalHierarchy;
 
+  /// No description provided for @createEnterpriseStructureConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Enterprise Structure Configuration'**
   String get createEnterpriseStructureConfiguration;
 
+  /// No description provided for @noConfigurationFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Configuration Found'**
   String get noConfigurationFound;
 
+  /// No description provided for @pleaseConfigureEnterpriseStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Please configure your enterprise structure hierarchy before creating components.'**
   String get pleaseConfigureEnterpriseStructure;
 
+  /// No description provided for @structureName.
+  ///
+  /// In en, this message translates to:
+  /// **'Structure Name'**
+  String get structureName;
+
+  /// No description provided for @structureNamePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Standard Corporate Structure, Simplified Structure'**
   String get structureNamePlaceholder;
 
+  /// No description provided for @descriptionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe this structure configuration and when it should be used...'**
   String get descriptionPlaceholder;
+
+  /// No description provided for @manageComponentValues.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Component Values'**
+  String get manageComponentValues;
+
+  /// No description provided for @componentValuesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and manage organizational components (Company, Division, Business Unit, Department, Section)'**
+  String get componentValuesSubtitle;
+
+  /// No description provided for @manageOrganizationalHierarchy.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage organizational hierarchy and structure'**
+  String get manageOrganizationalHierarchy;
+
+  /// No description provided for @manageOrganizationalHierarchyAr.
+  ///
+  /// In en, this message translates to:
+  /// **'إدارة الهيكل التنظيمي والتسلسل الإداري'**
+  String get manageOrganizationalHierarchyAr;
+
+  /// No description provided for @structureConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Structure Configuration'**
+  String get structureConfiguration;
+
+  /// No description provided for @organizationalTreeStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Tree Structure'**
+  String get organizationalTreeStructure;
+
+  /// No description provided for @addNewComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Component'**
+  String get addNewComponent;
+
+  /// No description provided for @bulkUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk Upload'**
+  String get bulkUpload;
+
+  /// No description provided for @bulkUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk Upload - Enterprise Structure Components'**
+  String get bulkUploadTitle;
+
+  /// No description provided for @bulkUploadInstructionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Instructions'**
+  String get bulkUploadInstructionsTitle;
+
+  /// No description provided for @bulkUploadInstructionDownloadTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the template file to see the required format'**
+  String get bulkUploadInstructionDownloadTemplate;
+
+  /// No description provided for @bulkUploadInstructionRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in all required fields: Type, Code, Name, Name Arabic, Parent Code (if applicable)'**
+  String get bulkUploadInstructionRequiredFields;
+
+  /// No description provided for @bulkUploadInstructionOptionalFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional fields: Manager ID, Cost Center, Location, Description'**
+  String get bulkUploadInstructionOptionalFields;
+
+  /// No description provided for @bulkUploadInstructionParentCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Code must match an existing component code'**
+  String get bulkUploadInstructionParentCode;
+
+  /// No description provided for @bulkUploadInstructionFileFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'File format: Excel (.xlsx) or CSV (.csv)'**
+  String get bulkUploadInstructionFileFormat;
+
+  /// No description provided for @bulkUploadInstructionRowLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 1000 rows per upload'**
+  String get bulkUploadInstructionRowLimit;
+
+  /// No description provided for @bulkUploadStepDownloadLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1: Download Template'**
+  String get bulkUploadStepDownloadLabel;
+
+  /// No description provided for @bulkUploadDownloadTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Excel Template'**
+  String get bulkUploadDownloadTemplate;
+
+  /// No description provided for @bulkUploadStepUploadLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2: Upload Filled Template'**
+  String get bulkUploadStepUploadLabel;
+
+  /// No description provided for @bulkUploadDropHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag and drop your file here, or click to browse'**
+  String get bulkUploadDropHint;
+
+  /// No description provided for @bulkUploadSupportedFormats.
+  ///
+  /// In en, this message translates to:
+  /// **'Supports: .xlsx, .csv (Max size: 10MB)'**
+  String get bulkUploadSupportedFormats;
+
+  /// No description provided for @bulkUploadTemplatePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Template Format Preview'**
+  String get bulkUploadTemplatePreview;
+
+  /// No description provided for @bulkUploadTypeHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Type*'**
+  String get bulkUploadTypeHeader;
+
+  /// No description provided for @bulkUploadCodeHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Code*'**
+  String get bulkUploadCodeHeader;
+
+  /// No description provided for @bulkUploadNameHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Name*'**
+  String get bulkUploadNameHeader;
+
+  /// No description provided for @bulkUploadNameArabicHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Arabic*'**
+  String get bulkUploadNameArabicHeader;
+
+  /// No description provided for @bulkUploadParentCodeHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent Code'**
+  String get bulkUploadParentCodeHeader;
+
+  /// No description provided for @bulkUploadManagerIdHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager ID'**
+  String get bulkUploadManagerIdHeader;
+
+  /// No description provided for @bulkUploadLocationHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get bulkUploadLocationHeader;
+
+  /// No description provided for @bulkUploadSampleRow1Type.
+  ///
+  /// In en, this message translates to:
+  /// **'company'**
+  String get bulkUploadSampleRow1Type;
+
+  /// No description provided for @bulkUploadSampleRow1Code.
+  ///
+  /// In en, this message translates to:
+  /// **'COMP-001'**
+  String get bulkUploadSampleRow1Code;
+
+  /// No description provided for @bulkUploadSampleRow1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Company'**
+  String get bulkUploadSampleRow1Name;
+
+  /// No description provided for @bulkUploadSampleRow1NameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'الشركة الرئيسية'**
+  String get bulkUploadSampleRow1NameArabic;
+
+  /// No description provided for @bulkUploadSampleRow1ParentCode.
+  ///
+  /// In en, this message translates to:
+  /// **'-'**
+  String get bulkUploadSampleRow1ParentCode;
+
+  /// No description provided for @bulkUploadSampleRow1ManagerId.
+  ///
+  /// In en, this message translates to:
+  /// **'EMP-001'**
+  String get bulkUploadSampleRow1ManagerId;
+
+  /// No description provided for @bulkUploadSampleRow1Location.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait City'**
+  String get bulkUploadSampleRow1Location;
+
+  /// No description provided for @bulkUploadSampleRow2Type.
+  ///
+  /// In en, this message translates to:
+  /// **'division'**
+  String get bulkUploadSampleRow2Type;
+
+  /// No description provided for @bulkUploadSampleRow2Code.
+  ///
+  /// In en, this message translates to:
+  /// **'DIV-001'**
+  String get bulkUploadSampleRow2Code;
+
+  /// No description provided for @bulkUploadSampleRow2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance Division'**
+  String get bulkUploadSampleRow2Name;
+
+  /// No description provided for @bulkUploadSampleRow2NameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'قسم المالية'**
+  String get bulkUploadSampleRow2NameArabic;
+
+  /// No description provided for @bulkUploadSampleRow2ParentCode.
+  ///
+  /// In en, this message translates to:
+  /// **'COMP-001'**
+  String get bulkUploadSampleRow2ParentCode;
+
+  /// No description provided for @bulkUploadSampleRow2ManagerId.
+  ///
+  /// In en, this message translates to:
+  /// **'EMP-010'**
+  String get bulkUploadSampleRow2ManagerId;
+
+  /// No description provided for @bulkUploadSampleRow2Location.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait City HQ'**
+  String get bulkUploadSampleRow2Location;
+
+  /// No description provided for @bulkUploadUploadButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload & Process'**
+  String get bulkUploadUploadButton;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// No description provided for @searchComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, code, or Arabic name...'**
+  String get searchComponents;
+
+  /// No description provided for @componentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Component Type'**
+  String get componentType;
+
+  /// No description provided for @componentCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get componentCode;
+
+  /// No description provided for @componentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get componentName;
+
+  /// No description provided for @arabicName.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic Name'**
+  String get arabicName;
+
+  /// No description provided for @parentComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent'**
+  String get parentComponent;
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated'**
+  String get lastUpdated;
+
+  /// No description provided for @createComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Component'**
+  String get createComponent;
+
+  /// No description provided for @editComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Component'**
+  String get editComponent;
+
+  /// No description provided for @viewComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'View Component'**
+  String get viewComponent;
+
+  /// No description provided for @deleteComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Component'**
+  String get deleteComponent;
+
+  /// No description provided for @treeView.
+  ///
+  /// In en, this message translates to:
+  /// **'Tree View'**
+  String get treeView;
+
+  /// No description provided for @listView.
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get listView;
+
+  /// No description provided for @noComponentsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No components found'**
+  String get noComponentsFound;
+
+  /// No description provided for @confirmDeleteComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this component?'**
+  String get confirmDeleteComponent;
+
+  /// No description provided for @componentTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Component type is required'**
+  String get componentTypeRequired;
+
+  /// No description provided for @componentCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Component code is required'**
+  String get componentCodeRequired;
+
+  /// No description provided for @componentNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Component name is required'**
+  String get componentNameRequired;
+
+  /// No description provided for @arabicNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic name is required'**
+  String get arabicNameRequired;
+
+  /// No description provided for @selectComponentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select component type'**
+  String get selectComponentType;
+
+  /// No description provided for @enterComponentCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter component code'**
+  String get enterComponentCode;
+
+  /// No description provided for @enterComponentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter component name'**
+  String get enterComponentName;
+
+  /// No description provided for @enterArabicName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Arabic name'**
+  String get enterArabicName;
+
+  /// No description provided for @selectParentComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Select parent component (optional)'**
+  String get selectParentComponent;
+
+  /// No description provided for @selectManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Select manager'**
+  String get selectManager;
+
+  /// No description provided for @enterLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter location'**
+  String get enterLocation;
+
+  /// No description provided for @componentCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Component created successfully'**
+  String get componentCreatedSuccessfully;
+
+  /// No description provided for @componentUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Component updated successfully'**
+  String get componentUpdatedSuccessfully;
+
+  /// No description provided for @componentDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Component deleted successfully'**
+  String get componentDeletedSuccessfully;
+
+  /// No description provided for @bulkUploadInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a CSV file with component data. Download the template for the correct format.'**
+  String get bulkUploadInstructions;
+
+  /// No description provided for @downloadTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Template'**
+  String get downloadTemplate;
+
+  /// No description provided for @uploadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload File'**
+  String get uploadFile;
+
+  /// No description provided for @selectFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select File'**
+  String get selectFile;
+
+  /// No description provided for @noFileSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected'**
+  String get noFileSelected;
+
+  /// No description provided for @uploadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload successful'**
+  String get uploadSuccess;
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload failed'**
+  String get uploadFailed;
+
+  /// No description provided for @processingUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing upload...'**
+  String get processingUpload;
+
+  /// No description provided for @selectComponentTypePlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Select type...'**
+  String get selectComponentTypePlaceholder;
+
+  /// No description provided for @componentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Component Details'**
+  String get componentDetails;
+
+  /// No description provided for @hierarchyRelationships.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy & Relationships'**
+  String get hierarchyRelationships;
+
+  /// No description provided for @managementInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Management Information'**
+  String get managementInformation;
+
+  /// No description provided for @auditTrail.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit Trail'**
+  String get auditTrail;
+
+  /// No description provided for @additionalFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Fields'**
+  String get additionalFields;
+
+  /// No description provided for @nameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (English)'**
+  String get nameEnglish;
+
+  /// No description provided for @nameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Arabic)'**
+  String get nameArabic;
+
+  /// No description provided for @costCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost Center'**
+  String get costCenter;
+
+  /// No description provided for @childComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Components'**
+  String get childComponents;
+
+  /// No description provided for @hierarchyPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy Path'**
+  String get hierarchyPath;
+
+  /// No description provided for @hierarchyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hierarchy Level'**
+  String get hierarchyLevel;
+
+  /// No description provided for @lastUpdatedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated Date'**
+  String get lastUpdatedDate;
+
+  /// No description provided for @lastUpdatedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated By'**
+  String get lastUpdatedBy;
+
+  /// No description provided for @establishedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Established Date'**
+  String get establishedDate;
+
+  /// No description provided for @registrationNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration Number'**
+  String get registrationNumber;
+
+  /// No description provided for @taxId.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax Id'**
+  String get taxId;
+
+  /// No description provided for @rootLevelNoParent.
+  ///
+  /// In en, this message translates to:
+  /// **'Root Level - No Parent'**
+  String get rootLevelNoParent;
+
+  /// No description provided for @noDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'No description provided'**
+  String get noDescription;
+
+  /// No description provided for @notSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// No description provided for @companyManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Management'**
+  String get companyManagement;
+
+  /// No description provided for @manageCompanyInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage company information and organizational entities'**
+  String get manageCompanyInformation;
+
+  /// No description provided for @addCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Company'**
+  String get addCompany;
+
+  /// No description provided for @totalCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Companies'**
+  String get totalCompanies;
+
+  /// No description provided for @activeCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Companies'**
+  String get activeCompanies;
+
+  /// No description provided for @totalEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Employees'**
+  String get totalEmployees;
+
+  /// No description provided for @compliant.
+  ///
+  /// In en, this message translates to:
+  /// **'Compliant'**
+  String get compliant;
+
+  /// No description provided for @searchCompaniesPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by company name, code, or registration number...'**
+  String get searchCompaniesPlaceholder;
+
+  /// No description provided for @editCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Company'**
+  String get editCompany;
+
+  /// No description provided for @updateCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Company'**
+  String get updateCompany;
+
+  /// No description provided for @hintCompanyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter company code'**
+  String get hintCompanyCode;
+
+  /// No description provided for @hintCompanyNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter company name in English'**
+  String get hintCompanyNameEnglish;
+
+  /// No description provided for @hintCompanyNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'أدخل اسم الشركة بالعربية'**
+  String get hintCompanyNameArabic;
+
+  /// No description provided for @hintLegalNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter legal name in English'**
+  String get hintLegalNameEnglish;
+
+  /// No description provided for @hintLegalNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'أدخل الاسم القانوني بالعربية'**
+  String get hintLegalNameArabic;
+
+  /// No description provided for @hintRegistrationNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter registration number'**
+  String get hintRegistrationNumber;
+
+  /// No description provided for @hintTaxId.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter tax ID'**
+  String get hintTaxId;
+
+  /// No description provided for @hintEstablishedDate.
+  ///
+  /// In en, this message translates to:
+  /// **'DD/MM/YYYY'**
+  String get hintEstablishedDate;
+
+  /// No description provided for @hintIndustry.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter industry'**
+  String get hintIndustry;
+
+  /// No description provided for @hintCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter country'**
+  String get hintCountry;
+
+  /// No description provided for @hintCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter city'**
+  String get hintCity;
+
+  /// No description provided for @hintAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full address'**
+  String get hintAddress;
+
+  /// No description provided for @hintPoBox.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter P.O. Box'**
+  String get hintPoBox;
+
+  /// No description provided for @hintZipCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter zip code'**
+  String get hintZipCode;
+
+  /// No description provided for @hintPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get hintPhone;
+
+  /// No description provided for @hintEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter email address'**
+  String get hintEmail;
+
+  /// No description provided for @hintWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter website URL'**
+  String get hintWebsite;
+
+  /// No description provided for @hintTotalEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter total employees'**
+  String get hintTotalEmployees;
+
+  /// No description provided for @hintFiscalYearStart.
+  ///
+  /// In en, this message translates to:
+  /// **'MM-DD'**
+  String get hintFiscalYearStart;
+
+  /// No description provided for @companyDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Company Details'**
+  String get companyDetails;
+
+  /// No description provided for @contactInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information'**
+  String get contactInformation;
+
+  /// No description provided for @financialAndOperational.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial & Operational'**
+  String get financialAndOperational;
+
+  /// No description provided for @established.
+  ///
+  /// In en, this message translates to:
+  /// **'Established'**
+  String get established;
 }
 
 class _AppLocalizationsDelegate

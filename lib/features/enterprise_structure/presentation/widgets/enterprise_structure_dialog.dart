@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/active_status_card.dart';
@@ -236,13 +237,19 @@ class _EnterpriseStructureDialogState
         ? defaultLevels
         : (state?.levels ?? defaultLevels);
 
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
+      ),
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: 900.w,
-          maxHeight: MediaQuery.of(context).size.height * 0.9,
+          maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
+          maxHeight: MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
         ),
         decoration: BoxDecoration(
           color: isDark ? AppColors.cardBackgroundDark : Colors.white,
@@ -259,7 +266,12 @@ class _EnterpriseStructureDialogState
             ),
             Flexible(
               child: SingleChildScrollView(
-                padding: EdgeInsetsDirectional.all(24.w),
+                padding: ResponsiveHelper.getResponsivePadding(
+                  context,
+                  mobile: EdgeInsetsDirectional.all(16.w),
+                  tablet: EdgeInsetsDirectional.all(20.w),
+                  web: EdgeInsetsDirectional.all(24.w),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -274,7 +286,7 @@ class _EnterpriseStructureDialogState
                         title: localizations.structureConfigurationActive,
                         message: localizations.enterpriseStructureActiveMessage,
                       ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isMobile ? 16.h : 24.h),
                     ConfigurationInstructionsCard(
                       title: localizations.configurationInstructions,
                       instructions: [
@@ -286,7 +298,7 @@ class _EnterpriseStructureDialogState
                       ],
                       boldText: localizations.company,
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isMobile ? 16.h : 24.h),
                     EnterpriseStructureTextField(
                       label: localizations.structureName,
                       isRequired: true,
@@ -307,7 +319,7 @@ class _EnterpriseStructureDialogState
                             }
                           : null,
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: isMobile ? 12.h : 16.h),
                     EnterpriseStructureTextArea(
                       label: localizations.description,
                       isRequired: true,
@@ -328,13 +340,13 @@ class _EnterpriseStructureDialogState
                             }
                           : null,
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isMobile ? 16.h : 24.h),
                     _buildOrganizationalHierarchyLevelsSection(
                         context, localizations, isDark, levels, state),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isMobile ? 16.h : 24.h),
                     _buildHierarchyPreviewSection(
                         context, localizations, isDark, levels),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isMobile ? 16.h : 24.h),
                     ConfigurationSummaryWidget(
                       totalLevels: levels.length,
                       activeLevels: levels.where((l) => l.isActive).length,
@@ -359,43 +371,82 @@ class _EnterpriseStructureDialogState
     List<HierarchyLevel> levels,
     EditEnterpriseStructureState? state,
   ) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              localizations.organizationalHierarchyLevels,
-              style: TextStyle(
-                fontSize: 15.4.sp,
-                fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
-                height: 24 / 15.4,
-                letterSpacing: 0,
-              ),
-            ),
-            if (widget.mode != EnterpriseStructureDialogMode.view)
-              GestureDetector(
-                onTap: () {
-                  ref.read(_editDialogProvider(_params).notifier).resetToDefault();
-                },
-                child: Text(
-                  localizations.resetToDefault,
-                  style: TextStyle(
-                    fontSize: 13.6.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.primary,
-                    height: 20 / 13.6,
-                    letterSpacing: 0,
+        isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    localizations.organizationalHierarchyLevels,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : const Color(0xFF101828),
+                      height: 24 / 15.4,
+                      letterSpacing: 0,
+                    ),
                   ),
-                ),
+                  if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                    SizedBox(height: 8.h),
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(_editDialogProvider(_params).notifier).resetToDefault();
+                      },
+                      child: Text(
+                        localizations.resetToDefault,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                          height: 20 / 13.6,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    localizations.organizationalHierarchyLevels,
+                    style: TextStyle(
+                      fontSize: isTablet ? 14.5.sp : 15.4.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : const Color(0xFF101828),
+                      height: 24 / 15.4,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  if (widget.mode != EnterpriseStructureDialogMode.view)
+                    GestureDetector(
+                      onTap: () {
+                        ref.read(_editDialogProvider(_params).notifier).resetToDefault();
+                      },
+                      child: Text(
+                        localizations.resetToDefault,
+                        style: TextStyle(
+                          fontSize: isTablet ? 12.5.sp : 13.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                          height: 20 / 13.6,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
-        SizedBox(height: 16.h),
+        SizedBox(height: isMobile ? 12.h : 16.h),
         ...levels.asMap().entries.map((entry) {
           final index = entry.key;
           final level = entry.value;
@@ -463,9 +514,31 @@ class _EnterpriseStructureDialogState
     bool isDark,
     EditEnterpriseStructureState? state,
   ) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
-      padding: EdgeInsetsDirectional.only(
-          start: 24.w, end: 24.w, top: 25.h, bottom: 24.h),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.only(
+          start: 16.w,
+          end: 16.w,
+          top: 16.h,
+          bottom: 16.h,
+        ),
+        tablet: EdgeInsetsDirectional.only(
+          start: 20.w,
+          end: 20.w,
+          top: 20.h,
+          bottom: 20.h,
+        ),
+        web: EdgeInsetsDirectional.only(
+          start: 24.w,
+          end: 24.w,
+          top: 25.h,
+          bottom: 24.h,
+        ),
+      ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
         border: Border(
@@ -475,129 +548,264 @@ class _EnterpriseStructureDialogState
           ),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: 25.w, vertical: 9.h),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-                border: Border.all(
-                  color: isDark
-                      ? AppColors.inputBorderDark
-                      : const Color(0xFFD1D5DC),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Text(
-                localizations.cancel,
-                style: TextStyle(
-                  fontSize: 15.3.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : const Color(0xFF364153),
-                  height: 24 / 15.3,
-                  letterSpacing: 0,
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                GestureDetector(
-                  onTap: () {
-                    // TODO: Preview structure
-                  },
-                  child: Container(
-                    padding: EdgeInsetsDirectional.symmetric(
-                      horizontal: 24.w,
-                      vertical: 8.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : const Color(0xFF4A5565),
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/preview_structure_icon.svg',
-                          size: 20.sp,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          localizations.previewStructure,
-                          style: TextStyle(
-                            fontSize: 15.3.sp,
-                            fontWeight: FontWeight.w400,
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (widget.mode != EnterpriseStructureDialogMode.view)
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: Preview structure
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : const Color(0xFF4A5565),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgIconWidget(
+                            assetPath: 'assets/icons/preview_structure_icon.svg',
+                            size: 18.sp,
                             color: Colors.white,
-                            height: 24 / 15.3,
-                            letterSpacing: 0,
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            localizations.previewStructure,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                              height: 24 / 15.3,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (widget.mode != EnterpriseStructureDialogMode.view)
+                  SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 20.w,
+                            vertical: 10.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.inputBorderDark
+                                  : const Color(0xFFD1D5DC),
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Center(
+                            child: Text(
+                              localizations.cancel,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: isDark
+                                    ? AppColors.textPrimaryDark
+                                    : const Color(0xFF364153),
+                                height: 24 / 15.3,
+                                letterSpacing: 0,
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-              ],
-              GestureDetector(
-                onTap: widget.mode == EnterpriseStructureDialogMode.view
-                    ? null
-                    : () {
-                        // TODO: Save Configuration
-                        if (state != null) {
-                          debugPrint('Saving: ${state.structureName}');
-                        }
-                        Navigator.of(context).pop();
-                      },
-                child: Container(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 24.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF9810FA),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgIconWidget(
-                        assetPath: widget.mode == EnterpriseStructureDialogMode.create
-                            ? 'assets/icons/save_config_icon.svg'
-                            : 'assets/icons/save_config_icon.svg',
-                        size: 20.sp,
-                        color: Colors.white,
                       ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        localizations.saveConfiguration,
-                        style: TextStyle(
-                          fontSize: 15.3.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                          height: 24 / 15.3,
-                          letterSpacing: 0,
+                    ),
+                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            // TODO: Save Configuration
+                            if (state != null) {
+                              debugPrint('Saving: ${state.structureName}');
+                            }
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: 20.w,
+                              vertical: 10.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF9810FA),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgIconWidget(
+                                  assetPath: 'assets/icons/save_config_icon.svg',
+                                  size: 18.sp,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 8.w),
+                                Flexible(
+                                  child: Text(
+                                    localizations.saveConfiguration,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      height: 24 / 15.3,
+                                      letterSpacing: 0,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
+                  ],
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: isTablet ? 20.w : 25.w,
+                      vertical: isTablet ? 10.h : 9.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.inputBorderDark
+                            : const Color(0xFFD1D5DC),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Text(
+                      localizations.cancel,
+                      style: TextStyle(
+                        fontSize: isTablet ? 14.sp : 15.3.sp,
+                        fontWeight: FontWeight.w400,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : const Color(0xFF364153),
+                        height: 24 / 15.3,
+                        letterSpacing: 0,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+                Row(
+                  children: [
+                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                      GestureDetector(
+                        onTap: () {
+                          // TODO: Preview structure
+                        },
+                        child: Container(
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: isTablet ? 20.w : 24.w,
+                            vertical: isTablet ? 10.h : 8.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : const Color(0xFF4A5565),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgIconWidget(
+                                assetPath: 'assets/icons/preview_structure_icon.svg',
+                                size: isTablet ? 18.sp : 20.sp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                localizations.previewStructure,
+                                style: TextStyle(
+                                  fontSize: isTablet ? 14.sp : 15.3.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  height: 24 / 15.3,
+                                  letterSpacing: 0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: isTablet ? 10.w : 12.w),
+                    ],
+                    GestureDetector(
+                      onTap: widget.mode == EnterpriseStructureDialogMode.view
+                          ? null
+                          : () {
+                              // TODO: Save Configuration
+                              if (state != null) {
+                                debugPrint('Saving: ${state.structureName}');
+                              }
+                              Navigator.of(context).pop();
+                            },
+                      child: Container(
+                        padding: EdgeInsetsDirectional.symmetric(
+                          horizontal: isTablet ? 20.w : 24.w,
+                          vertical: isTablet ? 10.h : 8.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF9810FA),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgIconWidget(
+                              assetPath: 'assets/icons/save_config_icon.svg',
+                              size: isTablet ? 18.sp : 20.sp,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              localizations.saveConfiguration,
+                              style: TextStyle(
+                                fontSize: isTablet ? 14.sp : 15.3.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                height: 24 / 15.3,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
     );
   }
 }

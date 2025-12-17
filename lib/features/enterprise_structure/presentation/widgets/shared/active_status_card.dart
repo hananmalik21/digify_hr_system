@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +18,16 @@ class ActiveStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
 
     return Container(
-      padding: EdgeInsetsDirectional.all(17.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(12.w),
+        tablet: EdgeInsetsDirectional.all(14.w),
+        web: EdgeInsetsDirectional.all(17.w),
+      ),
       decoration: BoxDecoration(
         color: isDark
             ? AppColors.successBgDark
@@ -39,13 +47,13 @@ class ActiveStatusCard extends StatelessWidget {
             padding: EdgeInsetsDirectional.only(top: 2.h),
             child: SvgIconWidget(
               assetPath: 'assets/icons/check_icon_green.svg',
-              size: 20.sp,
+              size: isMobile ? 18.sp : (isTablet ? 19.sp : 20.sp),
               color: isDark
                   ? AppColors.successTextDark
                   : const Color(0xFF008236),
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: isMobile ? 10.w : 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +61,7 @@ class ActiveStatusCard extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 15.4.sp,
+                    fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.4.sp),
                     fontWeight: FontWeight.w500,
                     color: isDark
                         ? AppColors.successTextDark
@@ -66,7 +74,7 @@ class ActiveStatusCard extends StatelessWidget {
                 Text(
                   message,
                   style: TextStyle(
-                    fontSize: 13.6.sp,
+                    fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.6.sp),
                     fontWeight: FontWeight.w400,
                     color: isDark
                         ? AppColors.successTextDark

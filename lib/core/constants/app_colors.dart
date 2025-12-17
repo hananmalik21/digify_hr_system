@@ -61,15 +61,33 @@ class AppColors {
   static const Color errorText = Color(0xFF991B1B);
 
   static const Color info = Color(0xFF3B82F6);
-  static const Color infoBg = Color(0xFFDBEAFE);
-  static const Color infoBorder = Color(0xFFBFDBFE);
-  static const Color infoText = Color(0xFF1E40AF);
+  static const Color infoBg = Color(0xFFEFF6FF);
+  static const Color infoBorder = Color(0xFFBEDBFF);
+  static const Color infoText = Color(0xFF1C398E);
+  static const Color infoTextSecondary = Color(0xFF193CB8);
 
   // Additional Colors
   static const Color purple = Color(0xFF8B5CF6);
-  static const Color purpleBg = Color(0xFFEDE9FE);
-  static const Color purpleBorder = Color(0xFFDDD6FE);
-  static const Color purpleText = Color(0xFF6B21A8);
+  static const Color purpleBg = Color(0xFFFAF5FF);
+  static const Color purpleBorder = Color(0xFFE9D4FF);
+  static const Color purpleText = Color(0xFF59168B);
+  static const Color purpleTextSecondary = Color(0xFF6E11B0);
+  
+  // Green Colors
+  static const Color greenBg = Color(0xFFF0FDF4);
+  static const Color greenBorder = Color(0xFFB9F8CF);
+  static const Color greenText = Color(0xFF0D542B);
+  static const Color greenTextSecondary = Color(0xFF016630);
+  
+  // Red Error Colors (enhanced)
+  static const Color redBg = Color(0xFFFEF2F2);
+  static const Color redBorder = Color(0xFFFFA2A2);
+  static const Color redText = Color(0xFF82181A);
+  static const Color redTextSecondary = Color(0xFF9F0712);
+  static const Color redButton = Color(0xFFE7000B);
+  
+  // Green Action Colors
+  static const Color greenButton = Color(0xFF00A63E);
 
   static const Color orange = Color(0xFFEA580C);
   static const Color orangeBg = Color(0xFFFFEDD5);

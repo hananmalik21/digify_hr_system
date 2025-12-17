@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,9 +19,16 @@ class ConfigurationInstructionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
 
     return Container(
-      padding: EdgeInsetsDirectional.all(17.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(12.w),
+        tablet: EdgeInsetsDirectional.all(14.w),
+        web: EdgeInsetsDirectional.all(17.w),
+      ),
       decoration: BoxDecoration(
         color: isDark
             ? AppColors.infoBgDark
@@ -39,7 +47,7 @@ class ConfigurationInstructionsCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 15.5.sp,
+              fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp),
               fontWeight: FontWeight.w500,
               color: isDark
                   ? AppColors.infoTextDark
@@ -48,7 +56,7 @@ class ConfigurationInstructionsCard extends StatelessWidget {
               letterSpacing: 0,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: isMobile ? 6.h : 8.h),
           ...instructions.asMap().entries.map((entry) {
             final index = entry.key;
             final instruction = entry.value;
@@ -99,7 +107,7 @@ class ConfigurationInstructionsCard extends StatelessWidget {
                               ],
                             ),
                             style: TextStyle(
-                              fontSize: 13.6.sp,
+                              fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.6.sp),
                               height: 20 / 13.6,
                               letterSpacing: 0,
                             ),
@@ -107,9 +115,11 @@ class ConfigurationInstructionsCard extends StatelessWidget {
                         : Text(
                             instruction,
                             style: TextStyle(
-                              fontSize: index == 1 || index == 3
-                                  ? 13.6.sp
-                                  : 13.5.sp,
+                              fontSize: isMobile 
+                                  ? 12.sp 
+                                  : (isTablet 
+                                      ? (index == 1 || index == 3 ? 12.5.sp : 12.4.sp)
+                                      : (index == 1 || index == 3 ? 13.6.sp : 13.5.sp)),
                               fontWeight: FontWeight.w400,
                               color: isDark
                                   ? AppColors.infoTextDark

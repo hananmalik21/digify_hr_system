@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,6 +27,8 @@ class EnterpriseStructureTextArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
     final effectiveController = controller ?? (value != null ? TextEditingController(text: value) : null);
 
     return Column(
@@ -35,7 +38,7 @@ class EnterpriseStructureTextArea extends StatelessWidget {
           TextSpan(
             text: label,
             style: TextStyle(
-              fontSize: 13.7.sp,
+              fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
               fontWeight: FontWeight.w500,
               color: isDark
                   ? AppColors.textPrimaryDark
@@ -57,14 +60,14 @@ class EnterpriseStructureTextArea extends StatelessWidget {
                 : null,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: isMobile ? 6.h : 8.h),
         readOnly || effectiveController == null
             ? Container(
                 padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: 17.w,
-                  vertical: 9.h,
+                  horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
+                  vertical: isMobile ? 8.h : 9.h,
                 ),
-                height: 100.h,
+                height: isMobile ? 80.h : (isTablet ? 90.h : 100.h),
                 alignment: Alignment.topLeft,
                 decoration: BoxDecoration(
                   color: isDark
@@ -81,7 +84,7 @@ class EnterpriseStructureTextArea extends StatelessWidget {
                 child: Text(
                   value ?? '',
                   style: TextStyle(
-                    fontSize: 15.3.sp,
+                    fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.3.sp),
                     fontWeight: FontWeight.w400,
                     color: isDark
                         ? AppColors.textPrimaryDark
@@ -94,9 +97,9 @@ class EnterpriseStructureTextArea extends StatelessWidget {
             : TextField(
                 controller: effectiveController,
                 onChanged: onChanged,
-                maxLines: 4,
+                maxLines: isMobile ? 3 : 4,
                 style: TextStyle(
-                  fontSize: 15.3.sp,
+                  fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.3.sp),
                   fontWeight: FontWeight.w400,
                   color: isDark
                       ? AppColors.textPrimaryDark
@@ -111,7 +114,7 @@ class EnterpriseStructureTextArea extends StatelessWidget {
                       : AppColors.inputBg,
                   hintText: hintText,
                   hintStyle: TextStyle(
-                    fontSize: 15.3.sp,
+                    fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.3.sp),
                     fontWeight: FontWeight.w400,
                     color: isDark
                         ? AppColors.textPlaceholderDark
@@ -145,8 +148,8 @@ class EnterpriseStructureTextArea extends StatelessWidget {
                     ),
                   ),
                   contentPadding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 17.w,
-                    vertical: 9.h,
+                    horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
+                    vertical: isMobile ? 8.h : 9.h,
                   ),
                 ),
               ),

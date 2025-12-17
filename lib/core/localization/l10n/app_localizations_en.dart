@@ -1086,7 +1086,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateSet => 'Update Set';
 
   @override
-  String get enterDescription => 'Enter description';
+  String get enterDescription => 'Enter description (optional)';
 
   @override
   String get noDataAccessSetsFound => 'No data access sets found';
@@ -1378,19 +1378,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageEnterpriseStructure => 'Manage Enterprise Structure';
 
   @override
-  String get configureManageHierarchy => 'Configure and manage your organizational hierarchy structures';
+  String get configureManageHierarchy =>
+      'Configure and manage your organizational hierarchy structures';
 
   @override
-  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+  String get configureManageHierarchyAr =>
+      'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
 
   @override
   String get currentlyActiveStructure => 'Currently Active Structure';
 
   @override
-  String get standardKuwaitCorporateStructure => 'Standard Kuwait Corporate Structure';
+  String get standardKuwaitCorporateStructure =>
+      'Standard Kuwait Corporate Structure';
 
   @override
-  String get traditionalHierarchicalStructure => 'Traditional hierarchical structure with all five levels for comprehensive organizational management';
+  String get traditionalHierarchicalStructure =>
+      'Traditional hierarchical structure with all five levels for comprehensive organizational management';
 
   @override
   String get activeLevels => 'Active Levels';
@@ -1414,22 +1418,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get structureConfigurations => 'Structure Configurations';
 
   @override
-  String get manageDifferentConfigurations => 'Manage different organizational hierarchy configurations. Only one can be active at a time.';
+  String get manageDifferentConfigurations =>
+      'Manage different organizational hierarchy configurations. Only one can be active at a time.';
 
   @override
   String get createNewStructure => 'Create New Structure';
 
   @override
-  String get hierarchy => 'Hierarchy:';
+  String get hierarchy => 'Hierarchy';
 
   @override
   String get levels => 'levels';
 
   @override
-  String get created => 'Created:';
+  String get created => 'Created';
 
   @override
-  String get modified => 'Modified:';
+  String get modified => 'Modified';
 
   @override
   String get duplicate => 'Duplicate';
@@ -1447,61 +1452,129 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simplifiedStructure => 'Simplified Structure';
 
   @override
-  String get streamlinedStructure => 'Streamlined structure for smaller organizations - Company, Division, and Department only';
+  String get streamlinedStructure =>
+      'Streamlined structure for smaller organizations - Company, Division, and Department only';
 
   @override
   String get flatOrganizationStructure => 'Flat Organization Structure';
 
   @override
-  String get minimalHierarchy => 'Minimal hierarchy for startups and agile teams - Company and Department only';
+  String get minimalHierarchy =>
+      'Minimal hierarchy for startups and agile teams - Company and Department only';
 
   @override
-  String get currentlyActiveStructureMessage => 'This is the currently active structure. To activate a different structure, click the "Activate" button on another configuration.';
+  String get currentlyActiveStructureMessage =>
+      'This is the currently active structure. To activate a different structure, click the \"Activate\" button on another configuration.';
 
   @override
   String get company => 'Company';
 
   @override
+  String get companies => 'Companies';
+
+  @override
   String get division => 'Division';
+
+  @override
+  String get divisions => 'Divisions';
 
   @override
   String get businessUnit => 'Business Unit';
 
   @override
+  String get businessUnits => 'Business Units';
+
+  @override
+  String get departments => 'Departments';
+
+  @override
   String get section => 'Section';
 
   @override
-  String get viewEnterpriseStructureConfiguration => 'View Enterprise Structure Configuration';
+  String get sections => 'Sections';
 
   @override
-  String get reviewOrganizationalHierarchy => 'Review organizational hierarchy levels and sequence';
+  String get companyCode => 'Company Code';
+
+  @override
+  String get companyNameEnglish => 'Company Name (English)';
+
+  @override
+  String get companyNameArabic => 'Company Name (Arabic)';
+
+  @override
+  String get legalNameEnglish => 'Legal Name (English)';
+
+  @override
+  String get legalNameArabic => 'Legal Name (Arabic)';
+
+  @override
+  String get industry => 'Industry';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get poBox => 'P.O. Box';
+
+  @override
+  String get zipCode => 'Zip Code';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
+  String get fiscalYearStart => 'Fiscal Year Start (MM-DD)';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get viewEnterpriseStructureConfiguration =>
+      'View Enterprise Structure Configuration';
+
+  @override
+  String get reviewOrganizationalHierarchy =>
+      'Review organizational hierarchy levels and sequence';
 
   @override
   String get structureConfigurationActive => 'Structure Configuration Active';
 
   @override
-  String get enterpriseStructureActiveMessage => 'Your enterprise structure hierarchy is configured and active. You can modify the levels and order below.';
+  String get enterpriseStructureActiveMessage =>
+      'Your enterprise structure hierarchy is configured and active. You can modify the levels and order below.';
 
   @override
   String get configurationInstructions => 'Configuration Instructions';
 
   @override
-  String get companyMandatoryInstruction => 'Company is mandatory and must be the top level - it cannot be disabled or reordered';
+  String get companyMandatoryInstruction =>
+      'Company is mandatory and must be the top level - it cannot be disabled or reordered';
 
   @override
-  String get enableDisableLevelsInstruction => 'Enable or disable levels based on your organizational needs';
+  String get enableDisableLevelsInstruction =>
+      'Enable or disable levels based on your organizational needs';
 
   @override
-  String get useArrowsInstruction => 'Use the up/down arrows to change the hierarchy sequence';
+  String get useArrowsInstruction =>
+      'Use the up/down arrows to change the hierarchy sequence';
 
   @override
-  String get orderDeterminesRelationshipsInstruction => 'The order determines parent-child relationships in your org structure';
+  String get orderDeterminesRelationshipsInstruction =>
+      'The order determines parent-child relationships in your org structure';
 
   @override
-  String get changesAffectComponentsInstruction => 'Changes will affect how components are created and displayed in the tree view';
-
-  @override
-  String get structureName => 'Structure Name';
+  String get changesAffectComponentsInstruction =>
+      'Changes will affect how components are created and displayed in the tree view';
 
   @override
   String get previewStructure => 'Preview Structure';
@@ -1516,13 +1589,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetToDefault => 'Reset to Default';
 
   @override
-  String levelInHierarchy(int level) => 'Level $level in the hierarchy';
+  String levelInHierarchy(int level) {
+    return '$level';
+  }
 
   @override
   String get hierarchyPreview => 'Hierarchy Preview';
 
   @override
-  String level(int levelNumber) => 'Level $levelNumber';
+  String level(int levelNumber) {
+    return '$levelNumber';
+  }
 
   @override
   String get configurationSummary => 'Configuration Summary';
@@ -1537,23 +1614,451 @@ class AppLocalizationsEn extends AppLocalizations {
   String get topLevel => 'Top Level';
 
   @override
-  String get editEnterpriseStructureConfiguration => 'Edit Enterprise Structure Configuration';
+  String get editEnterpriseStructureConfiguration =>
+      'Edit Enterprise Structure Configuration';
 
   @override
-  String get defineOrganizationalHierarchy => 'Define your organizational hierarchy levels and sequence';
+  String get defineOrganizationalHierarchy =>
+      'Define your organizational hierarchy levels and sequence';
 
   @override
-  String get createEnterpriseStructureConfiguration => 'Create Enterprise Structure Configuration';
+  String get createEnterpriseStructureConfiguration =>
+      'Create Enterprise Structure Configuration';
 
   @override
   String get noConfigurationFound => 'No Configuration Found';
 
   @override
-  String get pleaseConfigureEnterpriseStructure => 'Please configure your enterprise structure hierarchy before creating components.';
+  String get pleaseConfigureEnterpriseStructure =>
+      'Please configure your enterprise structure hierarchy before creating components.';
 
   @override
-  String get structureNamePlaceholder => 'e.g., Standard Corporate Structure, Simplified Structure';
+  String get structureName => 'Structure Name';
 
   @override
-  String get descriptionPlaceholder => 'Describe this structure configuration and when it should be used...';
+  String get structureNamePlaceholder =>
+      'e.g., Standard Corporate Structure, Simplified Structure';
+
+  @override
+  String get descriptionPlaceholder =>
+      'Describe this structure configuration and when it should be used...';
+
+  @override
+  String get manageComponentValues => 'Manage Component Values';
+
+  @override
+  String get componentValuesSubtitle =>
+      'Create and manage organizational components (Company, Division, Business Unit, Department, Section)';
+
+  @override
+  String get manageOrganizationalHierarchy =>
+      'Manage organizational hierarchy and structure';
+
+  @override
+  String get manageOrganizationalHierarchyAr =>
+      'إدارة الهيكل التنظيمي والتسلسل الإداري';
+
+  @override
+  String get structureConfiguration => 'Structure Configuration';
+
+  @override
+  String get organizationalTreeStructure => 'Organizational Tree Structure';
+
+  @override
+  String get addNewComponent => 'Add New Component';
+
+  @override
+  String get bulkUpload => 'Bulk Upload';
+
+  @override
+  String get bulkUploadTitle => 'Bulk Upload - Enterprise Structure Components';
+
+  @override
+  String get bulkUploadInstructionsTitle => 'Upload Instructions';
+
+  @override
+  String get bulkUploadInstructionDownloadTemplate =>
+      'Download the template file to see the required format';
+
+  @override
+  String get bulkUploadInstructionRequiredFields =>
+      'Fill in all required fields: Type, Code, Name, Name Arabic, Parent Code (if applicable)';
+
+  @override
+  String get bulkUploadInstructionOptionalFields =>
+      'Optional fields: Manager ID, Cost Center, Location, Description';
+
+  @override
+  String get bulkUploadInstructionParentCode =>
+      'Parent Code must match an existing component code';
+
+  @override
+  String get bulkUploadInstructionFileFormat =>
+      'File format: Excel (.xlsx) or CSV (.csv)';
+
+  @override
+  String get bulkUploadInstructionRowLimit => 'Maximum 1000 rows per upload';
+
+  @override
+  String get bulkUploadStepDownloadLabel => 'Step 1: Download Template';
+
+  @override
+  String get bulkUploadDownloadTemplate => 'Download Excel Template';
+
+  @override
+  String get bulkUploadStepUploadLabel => 'Step 2: Upload Filled Template';
+
+  @override
+  String get bulkUploadDropHint =>
+      'Drag and drop your file here, or click to browse';
+
+  @override
+  String get bulkUploadSupportedFormats =>
+      'Supports: .xlsx, .csv (Max size: 10MB)';
+
+  @override
+  String get bulkUploadTemplatePreview => 'Template Format Preview';
+
+  @override
+  String get bulkUploadTypeHeader => 'Type*';
+
+  @override
+  String get bulkUploadCodeHeader => 'Code*';
+
+  @override
+  String get bulkUploadNameHeader => 'Name*';
+
+  @override
+  String get bulkUploadNameArabicHeader => 'Name Arabic*';
+
+  @override
+  String get bulkUploadParentCodeHeader => 'Parent Code';
+
+  @override
+  String get bulkUploadManagerIdHeader => 'Manager ID';
+
+  @override
+  String get bulkUploadLocationHeader => 'Location';
+
+  @override
+  String get bulkUploadSampleRow1Type => 'company';
+
+  @override
+  String get bulkUploadSampleRow1Code => 'COMP-001';
+
+  @override
+  String get bulkUploadSampleRow1Name => 'Main Company';
+
+  @override
+  String get bulkUploadSampleRow1NameArabic => 'الشركة الرئيسية';
+
+  @override
+  String get bulkUploadSampleRow1ParentCode => '-';
+
+  @override
+  String get bulkUploadSampleRow1ManagerId => 'EMP-001';
+
+  @override
+  String get bulkUploadSampleRow1Location => 'Kuwait City';
+
+  @override
+  String get bulkUploadSampleRow2Type => 'division';
+
+  @override
+  String get bulkUploadSampleRow2Code => 'DIV-001';
+
+  @override
+  String get bulkUploadSampleRow2Name => 'Finance Division';
+
+  @override
+  String get bulkUploadSampleRow2NameArabic => 'قسم المالية';
+
+  @override
+  String get bulkUploadSampleRow2ParentCode => 'COMP-001';
+
+  @override
+  String get bulkUploadSampleRow2ManagerId => 'EMP-010';
+
+  @override
+  String get bulkUploadSampleRow2Location => 'Kuwait City HQ';
+
+  @override
+  String get bulkUploadUploadButton => 'Upload & Process';
+
+  @override
+  String get export => 'Export';
+
+  @override
+  String get searchComponents => 'Search by name, code, or Arabic name...';
+
+  @override
+  String get componentType => 'Component Type';
+
+  @override
+  String get componentCode => 'Code';
+
+  @override
+  String get componentName => 'Name';
+
+  @override
+  String get arabicName => 'Arabic Name';
+
+  @override
+  String get parentComponent => 'Parent';
+
+  @override
+  String get lastUpdated => 'Last Updated';
+
+  @override
+  String get createComponent => 'Create Component';
+
+  @override
+  String get editComponent => 'Edit Component';
+
+  @override
+  String get viewComponent => 'View Component';
+
+  @override
+  String get deleteComponent => 'Delete Component';
+
+  @override
+  String get treeView => 'Tree View';
+
+  @override
+  String get listView => 'List View';
+
+  @override
+  String get noComponentsFound => 'No components found';
+
+  @override
+  String get confirmDeleteComponent =>
+      'Are you sure you want to delete this component?';
+
+  @override
+  String get componentTypeRequired => 'Component type is required';
+
+  @override
+  String get componentCodeRequired => 'Component code is required';
+
+  @override
+  String get componentNameRequired => 'Component name is required';
+
+  @override
+  String get arabicNameRequired => 'Arabic name is required';
+
+  @override
+  String get selectComponentType => 'Select component type';
+
+  @override
+  String get enterComponentCode => 'Enter component code';
+
+  @override
+  String get enterComponentName => 'Enter component name';
+
+  @override
+  String get enterArabicName => 'Enter Arabic name';
+
+  @override
+  String get selectParentComponent => 'Select parent component (optional)';
+
+  @override
+  String get selectManager => 'Select manager';
+
+  @override
+  String get enterLocation => 'Enter location';
+
+  @override
+  String get componentCreatedSuccessfully => 'Component created successfully';
+
+  @override
+  String get componentUpdatedSuccessfully => 'Component updated successfully';
+
+  @override
+  String get componentDeletedSuccessfully => 'Component deleted successfully';
+
+  @override
+  String get bulkUploadInstructions =>
+      'Upload a CSV file with component data. Download the template for the correct format.';
+
+  @override
+  String get downloadTemplate => 'Download Template';
+
+  @override
+  String get uploadFile => 'Upload File';
+
+  @override
+  String get selectFile => 'Select File';
+
+  @override
+  String get noFileSelected => 'No file selected';
+
+  @override
+  String get uploadSuccess => 'Upload successful';
+
+  @override
+  String get uploadFailed => 'Upload failed';
+
+  @override
+  String get processingUpload => 'Processing upload...';
+
+  @override
+  String get selectComponentTypePlaceholder => 'Select type...';
+
+  @override
+  String get componentDetails => 'Component Details';
+
+  @override
+  String get hierarchyRelationships => 'Hierarchy & Relationships';
+
+  @override
+  String get managementInformation => 'Management Information';
+
+  @override
+  String get auditTrail => 'Audit Trail';
+
+  @override
+  String get additionalFields => 'Additional Fields';
+
+  @override
+  String get nameEnglish => 'Name (English)';
+
+  @override
+  String get nameArabic => 'Name (Arabic)';
+
+  @override
+  String get costCenter => 'Cost Center';
+
+  @override
+  String get childComponents => 'Child Components';
+
+  @override
+  String get hierarchyPath => 'Hierarchy Path';
+
+  @override
+  String get hierarchyLevel => 'Hierarchy Level';
+
+  @override
+  String get lastUpdatedDate => 'Last Updated Date';
+
+  @override
+  String get lastUpdatedBy => 'Last Updated By';
+
+  @override
+  String get establishedDate => 'Established Date';
+
+  @override
+  String get registrationNumber => 'Registration Number';
+
+  @override
+  String get taxId => 'Tax Id';
+
+  @override
+  String get rootLevelNoParent => 'Root Level - No Parent';
+
+  @override
+  String get noDescription => 'No description provided';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String get companyManagement => 'Company Management';
+
+  @override
+  String get manageCompanyInformation =>
+      'Manage company information and organizational entities';
+
+  @override
+  String get addCompany => 'Add Company';
+
+  @override
+  String get totalCompanies => 'Total Companies';
+
+  @override
+  String get activeCompanies => 'Active Companies';
+
+  @override
+  String get totalEmployees => 'Total Employees';
+
+  @override
+  String get compliant => 'Compliant';
+
+  @override
+  String get searchCompaniesPlaceholder =>
+      'Search by company name, code, or registration number...';
+
+  @override
+  String get editCompany => 'Edit Company';
+
+  @override
+  String get updateCompany => 'Update Company';
+
+  @override
+  String get hintCompanyCode => 'Enter company code';
+
+  @override
+  String get hintCompanyNameEnglish => 'Enter company name in English';
+
+  @override
+  String get hintCompanyNameArabic => 'أدخل اسم الشركة بالعربية';
+
+  @override
+  String get hintLegalNameEnglish => 'Enter legal name in English';
+
+  @override
+  String get hintLegalNameArabic => 'أدخل الاسم القانوني بالعربية';
+
+  @override
+  String get hintRegistrationNumber => 'Enter registration number';
+
+  @override
+  String get hintTaxId => 'Enter tax ID';
+
+  @override
+  String get hintEstablishedDate => 'DD/MM/YYYY';
+
+  @override
+  String get hintIndustry => 'Enter industry';
+
+  @override
+  String get hintCountry => 'Enter country';
+
+  @override
+  String get hintCity => 'Enter city';
+
+  @override
+  String get hintAddress => 'Enter full address';
+
+  @override
+  String get hintPoBox => 'Enter P.O. Box';
+
+  @override
+  String get hintZipCode => 'Enter zip code';
+
+  @override
+  String get hintPhone => 'Enter phone number';
+
+  @override
+  String get hintEmail => 'Enter email address';
+
+  @override
+  String get hintWebsite => 'Enter website URL';
+
+  @override
+  String get hintTotalEmployees => 'Enter total employees';
+
+  @override
+  String get hintFiscalYearStart => 'MM-DD';
+
+  @override
+  String get companyDetails => 'Company Details';
+
+  @override
+  String get contactInformation => 'Contact Information';
+
+  @override
+  String get financialAndOperational => 'Financial & Operational';
+
+  @override
+  String get established => 'Established';
 }

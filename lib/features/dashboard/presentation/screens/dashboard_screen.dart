@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,19 +16,42 @@ class DashboardScreen extends ConsumerWidget {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
     
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
       child: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: 88.h,
-              start: 32.w,
-              end: 32.w,
-              bottom: 24.h,
+            padding: ResponsiveHelper.getResponsivePadding(
+              context,
+              mobile: EdgeInsetsDirectional.only(
+                top: 16.h,
+                start: 16.w,
+                end: 16.w,
+                bottom: 16.h,
+              ),
+              tablet: EdgeInsetsDirectional.only(
+                top: 24.h,
+                start: 24.w,
+                end: 24.w,
+                bottom: 24.h,
+              ),
+              web: EdgeInsetsDirectional.only(
+                top: 88.h,
+                start: 32.w,
+                end: 32.w,
+                bottom: 24.h,
+              ),
             ),
             child: Container(
-              padding: EdgeInsetsDirectional.all(24.w),
+              padding: ResponsiveHelper.getResponsivePadding(
+                context,
+                mobile: EdgeInsetsDirectional.all(16.w),
+                tablet: EdgeInsetsDirectional.all(20.w),
+                web: EdgeInsetsDirectional.all(24.w),
+              ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -46,23 +70,34 @@ class DashboardScreen extends ConsumerWidget {
                         ],
                 ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: _buildIconGrid(context, localizations)),
-                  SizedBox(width: 24.w),
-                  SizedBox(
-                    width: 272.w,
-                    child: Column(
+              child: isMobile
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildTasksEventsCard(context, localizations),
+                        _buildIconGrid(context, localizations),
                         SizedBox(height: 24.h),
+                        _buildTasksEventsCard(context, localizations),
+                        SizedBox(height: 16.h),
                         _buildAttendanceLeavesCard(context, localizations),
                       ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: _buildIconGrid(context, localizations)),
+                        SizedBox(width: isTablet ? 16.w : 24.w),
+                        SizedBox(
+                          width: isTablet ? 200.w : 272.w,
+                          child: Column(
+                            children: [
+                              _buildTasksEventsCard(context, localizations),
+                              SizedBox(height: 24.h),
+                              _buildAttendanceLeavesCard(context, localizations),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),
@@ -183,15 +218,30 @@ class DashboardScreen extends ConsumerWidget {
       ),
     ];
 
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final padding = isMobile ? 32.w : (isTablet ? 48.w : 64.w);
+    final availableWidth = screenWidth - padding;
+    
+    // Calculate button width based on screen size
+    double buttonWidth;
+    if (isMobile) {
+      buttonWidth = (availableWidth - 8.w) / 2; // 2 columns with spacing
+    } else if (isTablet) {
+      buttonWidth = (availableWidth - 32.w) / 3; // 3 columns with spacing
+    } else {
+      buttonWidth = 189.w; // Fixed width on desktop
+    }
+    
     return Wrap(
-      spacing: 0
-          .w, // Buttons are positioned at 0, 189, 378, etc. - each container is 189px wide
-      runSpacing: 11.75.h,
+      spacing: isMobile ? 8.w : (isTablet ? 16.w : 0.w),
+      runSpacing: isMobile ? 12.h : 11.75.h,
       children: buttons.asMap().entries.map((entry) {
         final index = entry.key;
         final button = entry.value;
         return SizedBox(
-          width: 189.w, // Each button container is 189px wide
+          width: buttonWidth,
           child: _buildIconButton(context, button, index),
         );
       }).toList(),

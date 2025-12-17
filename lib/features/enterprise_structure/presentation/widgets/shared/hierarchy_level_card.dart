@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +36,16 @@ class HierarchyLevelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
 
     return Container(
-      padding: EdgeInsetsDirectional.all(18.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(12.w),
+        tablet: EdgeInsetsDirectional.all(15.w),
+        web: EdgeInsetsDirectional.all(18.w),
+      ),
       decoration: BoxDecoration(
         color: isDark
             ? AppColors.successBgDark
@@ -50,193 +58,384 @@ class HierarchyLevelCard extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10.r),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 32.w,
-                  height: 32.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF9810FA),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Center(
-                    child: SvgIconWidget(
-                      assetPath: icon,
-                      size: 20.sp,
-                      color: Colors.white,
+                Row(
+                  children: [
+                    Container(
+                      width: 28.w,
+                      height: 28.h,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9810FA),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Center(
+                        child: SvgIconWidget(
+                          assetPath: icon,
+                          size: 16.sp,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        spacing: 8.w,
-                        runSpacing: 4.h,
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: 15.5.sp,
-                              fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828),
-                              height: 24 / 15.5,
-                              letterSpacing: 0,
-                            ),
-                          ),
-                          if (isMandatory)
-                            Container(
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: 9.w,
-                                vertical: 3.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? AppColors.errorBgDark
-                                    : const Color(0xFFFFE2E2),
-                                border: Border.all(
-                                  color: isDark
-                                      ? AppColors.errorBorderDark
-                                      : const Color(0xFFFFC9C9),
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(4.r),
-                              ),
-                              child: Text(
-                                localizations.mandatory,
+                          Wrap(
+                            spacing: 6.w,
+                            runSpacing: 4.h,
+                            children: [
+                              Text(
+                                name,
                                 style: TextStyle(
-                                  fontSize: 11.8.sp,
-                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
                                   color: isDark
-                                      ? AppColors.errorTextDark
-                                      : const Color(0xFFC10007),
-                                  height: 16 / 11.8,
+                                      ? AppColors.textPrimaryDark
+                                      : const Color(0xFF101828),
+                                  height: 24 / 15.5,
                                   letterSpacing: 0,
                                 ),
                               ),
-                            ),
-                          Container(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              horizontal: 9.w,
-                              vertical: 3.h,
-                            ),
-                            decoration: BoxDecoration(
+                              if (isMandatory)
+                                Container(
+                                  padding: EdgeInsetsDirectional.symmetric(
+                                    horizontal: 7.w,
+                                    vertical: 2.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppColors.errorBgDark
+                                        : const Color(0xFFFFE2E2),
+                                    border: Border.all(
+                                      color: isDark
+                                          ? AppColors.errorBorderDark
+                                          : const Color(0xFFFFC9C9),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                  child: Text(
+                                    localizations.mandatory,
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: isDark
+                                          ? AppColors.errorTextDark
+                                          : const Color(0xFFC10007),
+                                      height: 16 / 11.8,
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                ),
+                              Container(
+                                padding: EdgeInsetsDirectional.symmetric(
+                                  horizontal: 7.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? AppColors.successBgDark
+                                      : const Color(0xFFDCFCE7),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? AppColors.successBorderDark
+                                        : const Color(0xFFB9F8CF),
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4.r),
+                                ),
+                                child: Text(
+                                  localizations.active,
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: isDark
+                                        ? AppColors.successTextDark
+                                        : const Color(0xFF008236),
+                                    height: 16 / 11.8,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            'Level $levelNumber in the hierarchy',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
                               color: isDark
-                                  ? AppColors.successBgDark
-                                  : const Color(0xFFDCFCE7),
-                              border: Border.all(
-                                color: isDark
-                                    ? AppColors.successBorderDark
-                                    : const Color(0xFFB9F8CF),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: Text(
-                              localizations.active,
-                              style: TextStyle(
-                                fontSize: 11.8.sp,
-                                fontWeight: FontWeight.w400,
-                                color: isDark
-                                    ? AppColors.successTextDark
-                                    : const Color(0xFF008236),
-                                height: 16 / 11.8,
-                                letterSpacing: 0,
-                              ),
+                                  ? AppColors.textSecondaryDark
+                                  : const Color(0xFF4A5565),
+                              height: 20 / 13.6,
+                              letterSpacing: 0,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Level $levelNumber in the hierarchy',
-                        style: TextStyle(
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : const Color(0xFF4A5565),
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: canMoveUp ? onMoveUp : null,
+                          child: Container(
+                            padding: EdgeInsetsDirectional.all(6.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: SvgIconWidget(
+                              assetPath: 'assets/icons/up_arrow_icon.svg',
+                              size: 18.sp,
+                              color: canMoveUp
+                                  ? (isDark
+                                      ? AppColors.textPrimaryDark
+                                      : const Color(0xFF101828))
+                                  : (isDark
+                                      ? AppColors.textTertiaryDark
+                                      : const Color(0xFF9CA3AF)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        GestureDetector(
+                          onTap: canMoveDown ? onMoveDown : null,
+                          child: Container(
+                            padding: EdgeInsetsDirectional.all(6.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: SvgIconWidget(
+                              assetPath: 'assets/icons/down_arrow_icon.svg',
+                              size: 18.sp,
+                              color: canMoveDown
+                                  ? (isDark
+                                      ? AppColors.textPrimaryDark
+                                      : const Color(0xFF101828))
+                                  : (isDark
+                                      ? AppColors.textTertiaryDark
+                                      : const Color(0xFF9CA3AF)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 50.w,
+                      height: 28.h,
+                      child: Switch(
+                        value: isActive,
+                        onChanged: isMandatory ? null : onToggleActive,
+                        activeTrackColor: const Color(0xFF00A63E),
+                        activeThumbColor: Colors.white,
+                        inactiveThumbColor: Colors.white,
+                        inactiveTrackColor: isDark
+                            ? AppColors.cardBorderDark
+                            : const Color(0xFFD1D5DC),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: isTablet ? 30.w : 32.w,
+                        height: isTablet ? 30.h : 32.h,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF9810FA),
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Center(
+                          child: SvgIconWidget(
+                            assetPath: icon,
+                            size: isTablet ? 18.sp : 20.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: isTablet ? 6.w : 8.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Wrap(
+                              spacing: isTablet ? 6.w : 8.w,
+                              runSpacing: 4.h,
+                              children: [
+                                Text(
+                                  name,
+                                  style: TextStyle(
+                                    fontSize: isTablet ? 14.5.sp : 15.5.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark
+                                        ? AppColors.textPrimaryDark
+                                        : const Color(0xFF101828),
+                                    height: 24 / 15.5,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                                if (isMandatory)
+                                  Container(
+                                    padding: EdgeInsetsDirectional.symmetric(
+                                      horizontal: isTablet ? 8.w : 9.w,
+                                      vertical: 3.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isDark
+                                          ? AppColors.errorBgDark
+                                          : const Color(0xFFFFE2E2),
+                                      border: Border.all(
+                                        color: isDark
+                                            ? AppColors.errorBorderDark
+                                            : const Color(0xFFFFC9C9),
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(4.r),
+                                    ),
+                                    child: Text(
+                                      localizations.mandatory,
+                                      style: TextStyle(
+                                        fontSize: isTablet ? 11.sp : 11.8.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: isDark
+                                            ? AppColors.errorTextDark
+                                            : const Color(0xFFC10007),
+                                        height: 16 / 11.8,
+                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                  ),
+                                Container(
+                                  padding: EdgeInsetsDirectional.symmetric(
+                                    horizontal: isTablet ? 8.w : 9.w,
+                                    vertical: 3.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? AppColors.successBgDark
+                                        : const Color(0xFFDCFCE7),
+                                    border: Border.all(
+                                      color: isDark
+                                          ? AppColors.successBorderDark
+                                          : const Color(0xFFB9F8CF),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                  ),
+                                  child: Text(
+                                    localizations.active,
+                                    style: TextStyle(
+                                      fontSize: isTablet ? 11.sp : 11.8.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: isDark
+                                          ? AppColors.successTextDark
+                                          : const Color(0xFF008236),
+                                      height: 16 / 11.8,
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Level $levelNumber in the hierarchy',
+                              style: TextStyle(
+                                fontSize: isTablet ? 12.5.sp : 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : const Color(0xFF4A5565),
+                                height: 20 / 13.6,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(width: isTablet ? 6.w : 8.w),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: canMoveUp ? onMoveUp : null,
+                      child: Container(
+                        padding: EdgeInsetsDirectional.all(4.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: SvgIconWidget(
+                          assetPath: 'assets/icons/up_arrow_icon.svg',
+                          size: isTablet ? 15.sp : 16.sp,
+                          color: canMoveUp
+                              ? (isDark
+                                  ? AppColors.textPrimaryDark
+                                  : const Color(0xFF101828))
+                              : (isDark
+                                  ? AppColors.textTertiaryDark
+                                  : const Color(0xFF9CA3AF)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    GestureDetector(
+                      onTap: canMoveDown ? onMoveDown : null,
+                      child: Container(
+                        padding: EdgeInsetsDirectional.all(4.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: SvgIconWidget(
+                          assetPath: 'assets/icons/down_arrow_icon.svg',
+                          size: isTablet ? 15.sp : 16.sp,
+                          color: canMoveDown
+                              ? (isDark
+                                  ? AppColors.textPrimaryDark
+                                  : const Color(0xFF101828))
+                              : (isDark
+                                  ? AppColors.textTertiaryDark
+                                  : const Color(0xFF9CA3AF)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(width: isTablet ? 6.w : 8.w),
+                SizedBox(
+                  width: isTablet ? 42.w : 44.w,
+                  height: isTablet ? 22.h : 24.h,
+                  child: Switch(
+                    value: isActive,
+                    onChanged: isMandatory ? null : onToggleActive,
+                    activeTrackColor: const Color(0xFF00A63E),
+                    activeThumbColor: Colors.white,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: isDark
+                        ? AppColors.cardBorderDark
+                        : const Color(0xFFD1D5DC),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
               ],
             ),
-          ),
-          SizedBox(width: 8.w),
-          Column(
-            children: [
-              GestureDetector(
-                onTap: canMoveUp ? onMoveUp : null,
-                child: Container(
-                  padding: EdgeInsetsDirectional.all(4.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: SvgIconWidget(
-                    assetPath: 'assets/icons/up_arrow_icon.svg',
-                    size: 16.sp,
-                    color: canMoveUp
-                        ? (isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF101828))
-                        : (isDark
-                            ? AppColors.textTertiaryDark
-                            : const Color(0xFF9CA3AF)),
-                  ),
-                ),
-              ),
-              SizedBox(height: 4.h),
-              GestureDetector(
-                onTap: canMoveDown ? onMoveDown : null,
-                child: Container(
-                  padding: EdgeInsetsDirectional.all(4.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: SvgIconWidget(
-                    assetPath: 'assets/icons/down_arrow_icon.svg',
-                    size: 16.sp,
-                    color: canMoveDown
-                        ? (isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF101828))
-                        : (isDark
-                            ? AppColors.textTertiaryDark
-                            : const Color(0xFF9CA3AF)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(width: 8.w),
-          SizedBox(
-            width: 44.w,
-            height: 24.h,
-            child: Switch(
-              value: isActive,
-              onChanged: isMandatory ? null : onToggleActive,
-              activeTrackColor: const Color(0xFF00A63E),
-              activeThumbColor: Colors.white,
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: isDark
-                  ? AppColors.cardBorderDark
-                  : const Color(0xFFD1D5DC),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

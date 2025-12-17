@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog.dart';
@@ -20,24 +21,39 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsetsDirectional.only(
-            top: 88.h,
-            start: 24.w,
-            end: 24.w,
-            bottom: 24.h,
+          padding: ResponsiveHelper.getResponsivePadding(
+            context,
+            mobile: EdgeInsetsDirectional.only(
+              top: 16.h,
+              start: 16.w,
+              end: 16.w,
+              bottom: 16.h,
+            ),
+            tablet: EdgeInsetsDirectional.only(
+              top: 24.h,
+              start: 24.w,
+              end: 24.w,
+              bottom: 24.h,
+            ),
+            web: EdgeInsetsDirectional.only(
+              top: 88.h,
+              start: 24.w,
+              end: 24.w,
+              bottom: 24.h,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(context, localizations, isDark),
-              SizedBox(height: 24.h),
+              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
               _buildActiveStructureCard(context, localizations, isDark),
-              SizedBox(height: 24.h),
+              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
               _buildStatsCards(context, localizations, isDark),
-              SizedBox(height: 24.h),
+              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
               _buildStructureConfigurationsHeader(
                   context, localizations, isDark),
-              SizedBox(height: 16.h),
+              SizedBox(height: ResponsiveHelper.isMobile(context) ? 12.h : 16.h),
               _buildStructureCard(
                 context,
                 localizations,
@@ -94,8 +110,16 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
 
   Widget _buildHeader(
       BuildContext context, AppLocalizations localizations, bool isDark) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
-      padding: EdgeInsetsDirectional.all(24.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(16.w),
+        tablet: EdgeInsetsDirectional.all(20.w),
+        web: EdgeInsetsDirectional.all(24.w),
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -107,39 +131,54 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(10.r),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
+      child: isMobile
+          ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  localizations.manageEnterpriseStructure,
-                  style: TextStyle(
-                    fontSize: 22.7.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    height: 32 / 22.7,
-                    letterSpacing: 0,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localizations.manageEnterpriseStructure,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              height: 32 / 22.7,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            localizations.configureManageHierarchy,
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xFFF3E8FF),
+                              height: 24 / 15.3,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    SvgIconWidget(
+                      assetPath: 'assets/icons/manage_enterprise_icon.svg',
+                      size: 24.sp,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  localizations.configureManageHierarchy,
-                  style: TextStyle(
-                    fontSize: 15.3.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFFF3E8FF),
-                    height: 24 / 15.3,
-                    letterSpacing: 0,
-                  ),
-                ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 8.h),
                 Text(
                   localizations.configureManageHierarchyAr,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: const Color(0xFFF3E8FF),
                     height: 20 / 14,
@@ -148,23 +187,73 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   textDirection: TextDirection.rtl,
                 ),
               ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localizations.manageEnterpriseStructure,
+                        style: TextStyle(
+                          fontSize: isTablet ? 20.sp : 22.7.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          height: 32 / 22.7,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        localizations.configureManageHierarchy,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14.sp : 15.3.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFFF3E8FF),
+                          height: 24 / 15.3,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        localizations.configureManageHierarchyAr,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color(0xFFF3E8FF),
+                          height: 20 / 14,
+                          letterSpacing: 0,
+                        ),
+                        textDirection: TextDirection.rtl,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: isTablet ? 12.w : 16.w),
+                SvgIconWidget(
+                  assetPath: 'assets/icons/manage_enterprise_icon.svg',
+                  size: isTablet ? 28.sp : 32.sp,
+                  color: Colors.white,
+                ),
+              ],
             ),
-          ),
-          SizedBox(width: 16.w),
-          SvgIconWidget(
-            assetPath: 'assets/icons/manage_enterprise_icon.svg',
-            size: 32.sp,
-            color: Colors.white,
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildActiveStructureCard(
       BuildContext context, AppLocalizations localizations, bool isDark) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
-      padding: EdgeInsetsDirectional.all(17.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(12.w),
+        tablet: EdgeInsetsDirectional.all(14.w),
+        web: EdgeInsetsDirectional.all(17.w),
+      ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.successBgDark : const Color(0xFFF0FDF4),
         border: Border.all(
@@ -173,42 +262,37 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(10.r),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsetsDirectional.only(top: 2.h),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/info_icon_green.svg',
-              size: 24.sp,
-              color: isDark
-                  ? AppColors.successTextDark
-                  : const Color(0xFF0D542B),
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
+      child: isMobile
+          ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text(
-                      localizations.currentlyActiveStructure,
-                      style: TextStyle(
-                        fontSize: 15.6.sp,
-                        fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF0D542B),
-                        height: 24 / 15.6,
-                        letterSpacing: 0,
+                    SvgIconWidget(
+                      assetPath: 'assets/icons/info_icon_green.svg',
+                      size: 20.sp,
+                      color: isDark
+                          ? AppColors.successTextDark
+                          : const Color(0xFF0D542B),
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        localizations.currentlyActiveStructure,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.successTextDark
+                              : const Color(0xFF0D542B),
+                          height: 24 / 15.6,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 12.w,
+                        horizontal: 10.w,
                         vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
@@ -218,7 +302,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                       child: Text(
                         localizations.active,
                         style: TextStyle(
-                          fontSize: 11.8.sp,
+                          fontSize: 10.sp,
                           fontWeight: FontWeight.w400,
                           color: Colors.white,
                           height: 16 / 11.8,
@@ -233,7 +317,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   TextSpan(
                     text: localizations.standardKuwaitCorporateStructure,
                     style: TextStyle(
-                      fontSize: 15.4.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
                       color: isDark
                           ? AppColors.successTextDark
@@ -245,7 +329,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                       TextSpan(
                         text: ' - ${localizations.traditionalHierarchicalStructure}',
                         style: TextStyle(
-                          fontSize: 15.4.sp,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w400,
                           color: isDark
                               ? AppColors.successTextDark
@@ -256,12 +340,14 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Row(
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 4.h,
                   children: [
                     Text(
                       '5 ${localizations.activeLevels}',
                       style: TextStyle(
-                        fontSize: 13.5.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.successTextDark
@@ -270,11 +356,10 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                         letterSpacing: 0,
                       ),
                     ),
-                    SizedBox(width: 16.w),
                     Text(
                       '•',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.successTextDark
@@ -283,11 +368,10 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                         letterSpacing: 0,
                       ),
                     ),
-                    SizedBox(width: 16.w),
                     Text(
                       '58 ${localizations.components}',
                       style: TextStyle(
-                        fontSize: 13.7.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.successTextDark
@@ -296,11 +380,10 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                         letterSpacing: 0,
                       ),
                     ),
-                    SizedBox(width: 16.w),
                     Text(
                       '•',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.successTextDark
@@ -309,11 +392,10 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                         letterSpacing: 0,
                       ),
                     ),
-                    SizedBox(width: 16.w),
                     Text(
                       '450 ${localizations.employees}',
                       style: TextStyle(
-                        fontSize: 13.7.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.successTextDark
@@ -325,15 +407,169 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   ],
                 ),
               ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 2.h),
+                  child: SvgIconWidget(
+                    assetPath: 'assets/icons/info_icon_green.svg',
+                    size: isTablet ? 22.sp : 24.sp,
+                    color: isDark
+                        ? AppColors.successTextDark
+                        : const Color(0xFF0D542B),
+                  ),
+                ),
+                SizedBox(width: isTablet ? 10.w : 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            localizations.currentlyActiveStructure,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14.5.sp : 15.6.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF0D542B),
+                              height: 24 / 15.6,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          SizedBox(width: isTablet ? 10.w : 12.w),
+                          Container(
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: isTablet ? 10.w : 12.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF00A63E),
+                              borderRadius: BorderRadius.circular(9999.r),
+                            ),
+                            child: Text(
+                              localizations.active,
+                              style: TextStyle(
+                                fontSize: isTablet ? 11.sp : 11.8.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                height: 16 / 11.8,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      Text.rich(
+                        TextSpan(
+                          text: localizations.standardKuwaitCorporateStructure,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14.5.sp : 15.4.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? AppColors.successTextDark
+                                : const Color(0xFF016630),
+                            height: 24 / 15.4,
+                            letterSpacing: 0,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: ' - ${localizations.traditionalHierarchicalStructure}',
+                              style: TextStyle(
+                                fontSize: isTablet ? 14.5.sp : 15.4.sp,
+                                fontWeight: FontWeight.w400,
+                                color: isDark
+                                    ? AppColors.successTextDark
+                                    : const Color(0xFF016630),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Wrap(
+                        spacing: isTablet ? 12.w : 16.w,
+                        runSpacing: 4.h,
+                        children: [
+                          Text(
+                            '5 ${localizations.activeLevels}',
+                            style: TextStyle(
+                              fontSize: isTablet ? 12.5.sp : 13.5.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF008236),
+                              height: 20 / 13.5,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          Text(
+                            '•',
+                            style: TextStyle(
+                              fontSize: isTablet ? 12.5.sp : 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF008236),
+                              height: 20 / 14,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          Text(
+                            '58 ${localizations.components}',
+                            style: TextStyle(
+                              fontSize: isTablet ? 12.5.sp : 13.7.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF008236),
+                              height: 20 / 13.7,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          Text(
+                            '•',
+                            style: TextStyle(
+                              fontSize: isTablet ? 12.5.sp : 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF008236),
+                              height: 20 / 14,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          Text(
+                            '450 ${localizations.employees}',
+                            style: TextStyle(
+                              fontSize: isTablet ? 12.5.sp : 13.7.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.successTextDark
+                                  : const Color(0xFF008236),
+                              height: 20 / 13.7,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildStatsCards(
       BuildContext context, AppLocalizations localizations, bool isDark) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     final cards = [
       _StatCard(
         label: localizations.totalStructures,
@@ -361,85 +597,56 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
       ),
     ];
 
-    return Row(
-      children: cards.map((card) {
-        return Expanded(
-          child: Padding(
+    if (isMobile) {
+      return Column(
+        children: cards.map((card) {
+          return Padding(
             padding: EdgeInsetsDirectional.only(
-              end: card != cards.last ? 16.w : 0,
+              bottom: card != cards.last ? 12.h : 0,
             ),
             child: _buildStatCard(context, card, isDark),
-          ),
-        );
-      }).toList(),
-    );
+          );
+        }).toList(),
+      );
+    } else if (isTablet) {
+      return Wrap(
+        spacing: 12.w,
+        runSpacing: 12.h,
+        children: cards.map((card) {
+          return SizedBox(
+            width: (MediaQuery.of(context).size.width - 48.w - 12.w) / 2,
+            child: _buildStatCard(context, card, isDark),
+          );
+        }).toList(),
+      );
+    } else {
+      return Row(
+        children: cards.map((card) {
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(
+                end: card != cards.last ? 16.w : 0,
+              ),
+              child: _buildStatCard(context, card, isDark),
+            ),
+          );
+        }).toList(),
+      );
+    }
   }
 
   Widget _buildStatCard(
       BuildContext context, _StatCard card, bool isDark) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
-      padding: EdgeInsetsDirectional.all(24.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
-        ],
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(16.w),
+        tablet: EdgeInsetsDirectional.all(20.w),
+        web: EdgeInsetsDirectional.all(24.w),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                card.label,
-                style: TextStyle(
-                  fontSize: 13.7.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark
-                      ? AppColors.textSecondaryDark
-                      : const Color(0xFF4A5565),
-                  height: 20 / 13.7,
-                  letterSpacing: 0,
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                card.value,
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: card.color,
-                  height: 32 / 24,
-                  letterSpacing: 0,
-                ),
-              ),
-            ],
-          ),
-          SvgIconWidget(
-            assetPath: card.icon,
-            size: 24.sp,
-            color: card.color,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStructureConfigurationsHeader(
-      BuildContext context, AppLocalizations localizations, bool isDark) {
-    return Container(
-      padding: EdgeInsetsDirectional.all(16.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
@@ -464,9 +671,77 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  card.label,
+                  style: TextStyle(
+                    fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
+                    fontWeight: FontWeight.w400,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : const Color(0xFF4A5565),
+                    height: 20 / 13.7,
+                    letterSpacing: 0,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  card.value,
+                  style: TextStyle(
+                    fontSize: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+                    fontWeight: FontWeight.w700,
+                    color: card.color,
+                    height: 32 / 24,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SvgIconWidget(
+            assetPath: card.icon,
+            size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+            color: card.color,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStructureConfigurationsHeader(
+      BuildContext context, AppLocalizations localizations, bool isDark) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
+    return Container(
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(12.w),
+        tablet: EdgeInsetsDirectional.all(14.w),
+        web: EdgeInsetsDirectional.all(16.w),
+      ),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 2,
+            offset: const Offset(0, -1),
+          ),
+        ],
+      ),
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   localizations.structureConfigurations,
                   style: TextStyle(
-                    fontSize: 15.6.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: isDark
                         ? AppColors.textPrimaryDark
@@ -479,7 +754,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                 Text(
                   localizations.manageDifferentConfigurations,
                   style: TextStyle(
-                    fontSize: 13.6.sp,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: isDark
                         ? AppColors.textSecondaryDark
@@ -488,53 +763,120 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                     letterSpacing: 0,
                   ),
                 ),
+                SizedBox(height: 12.h),
+                GestureDetector(
+                  onTap: () {
+                    EnterpriseStructureDialog.showCreate(context);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 16.w,
+                      vertical: 10.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9810FA),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgIconWidget(
+                          assetPath: 'assets/icons/create_new_structure_icon.svg',
+                          size: 18.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          localizations.createNewStructure,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            height: 24 / 15.3,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localizations.structureConfigurations,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14.5.sp : 15.6.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : const Color(0xFF101828),
+                          height: 24 / 15.6,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        localizations.manageDifferentConfigurations,
+                        style: TextStyle(
+                          fontSize: isTablet ? 12.5.sp : 13.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : const Color(0xFF4A5565),
+                          height: 20 / 13.6,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: isTablet ? 12.w : 16.w),
+                GestureDetector(
+                  onTap: () {
+                    EnterpriseStructureDialog.showCreate(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: isTablet ? 20.w : 24.w,
+                      vertical: 12.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9810FA),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgIconWidget(
+                          assetPath: 'assets/icons/create_new_structure_icon.svg',
+                          size: isTablet ? 18.sp : 20.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          localizations.createNewStructure,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14.sp : 15.3.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            height: 24 / 15.3,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          SizedBox(width: 16.w),
-          GestureDetector(
-            onTap: () {
-              // TODO: Create new structure
-            },
-            child: Container(
-              padding: EdgeInsetsDirectional.symmetric(
-                horizontal: 24.w,
-                vertical: 12.h,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFF9810FA),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  EnterpriseStructureDialog.showCreate(context);
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/create_new_structure_icon.svg',
-                      size: 20.sp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      localizations.createNewStructure,
-                      style: TextStyle(
-                        fontSize: 15.3.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                        height: 24 / 15.3,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -561,8 +903,16 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
         ? const Color(0xFFDCFCE7)
         : Colors.black.withValues(alpha: 0.1);
 
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     return Container(
-      padding: EdgeInsetsDirectional.all(isActive ? 24.w : 26.w),
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(isActive ? 16.w : 18.w),
+        tablet: EdgeInsetsDirectional.all(isActive ? 20.w : 22.w),
+        web: EdgeInsetsDirectional.all(isActive ? 24.w : 26.w),
+      ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         border: Border.all(
@@ -586,31 +936,29 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
+          isMobile
+              ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 17.4.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF101828),
-                            height: 28 / 17.4,
-                            letterSpacing: 0,
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isDark
+                                  ? AppColors.textPrimaryDark
+                                  : const Color(0xFF101828),
+                              height: 28 / 17.4,
+                              letterSpacing: 0,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 12.w),
                         Container(
                           padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: 12.w,
+                            horizontal: 10.w,
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
@@ -627,7 +975,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                               if (isActive) ...[
                                 SvgIconWidget(
                                   assetPath: 'assets/icons/active_check_icon.svg',
-                                  size: 12.sp,
+                                  size: 10.sp,
                                   color: Colors.white,
                                 ),
                                 SizedBox(width: 4.w),
@@ -635,7 +983,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                               Text(
                                 isActive ? localizations.active : localizations.notUsed,
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 11.sp,
                                   fontWeight: FontWeight.w400,
                                   color: isActive
                                       ? Colors.white
@@ -655,7 +1003,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                     Text(
                       description,
                       style: TextStyle(
-                        fontSize: 15.3.sp,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.textSecondaryDark
@@ -673,20 +1021,121 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                       child: _buildStructureMetrics(
                           context, localizations, isDark, components, employees, created, modified),
                     ),
+                    SizedBox(height: 16.h),
+                    _buildActionButtons(
+                      context,
+                      localizations,
+                      isDark,
+                      isActive,
+                      title: title,
+                      description: description,
+                    ),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  title,
+                                  style: TextStyle(
+                                    fontSize: isTablet ? 16.sp : 17.4.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDark
+                                        ? AppColors.textPrimaryDark
+                                        : const Color(0xFF101828),
+                                    height: 28 / 17.4,
+                                    letterSpacing: 0,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(width: isTablet ? 10.w : 12.w),
+                              Container(
+                                padding: EdgeInsetsDirectional.symmetric(
+                                  horizontal: isTablet ? 10.w : 12.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isActive
+                                      ? const Color(0xFF00A63E)
+                                      : (isDark
+                                          ? AppColors.cardBackgroundGreyDark
+                                          : const Color(0xFFF3F4F6)),
+                                  borderRadius: BorderRadius.circular(9999.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (isActive) ...[
+                                      SvgIconWidget(
+                                        assetPath: 'assets/icons/active_check_icon.svg',
+                                        size: isTablet ? 11.sp : 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(width: 4.w),
+                                    ],
+                                    Text(
+                                      isActive ? localizations.active : localizations.notUsed,
+                                      style: TextStyle(
+                                        fontSize: isTablet ? 11.sp : 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: isActive
+                                            ? Colors.white
+                                            : (isDark
+                                                ? AppColors.textSecondaryDark
+                                                : const Color(0xFF4A5565)),
+                                        height: 16 / 12,
+                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            description,
+                            style: TextStyle(
+                              fontSize: isTablet ? 14.sp : 15.3.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : const Color(0xFF4A5565),
+                              height: 24 / 15.3,
+                              letterSpacing: 0,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.only(top: 8.h),
+                            child: _buildHierarchyLevels(context, localizations, isDark, levels, levelCount),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsDirectional.only(top: 8.h),
+                            child: _buildStructureMetrics(
+                                context, localizations, isDark, components, employees, created, modified),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: isTablet ? 16.w : 24.w),
+                    _buildActionButtons(
+                      context,
+                      localizations,
+                      isDark,
+                      isActive,
+                      title: title,
+                      description: description,
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(width: 24.w),
-              _buildActionButtons(
-                context,
-                localizations,
-                isDark,
-                isActive,
-                title: title,
-                description: description,
-              ),
-            ],
-          ),
           if (showInfoMessage) ...[
             Container(
               margin: EdgeInsetsDirectional.only(top: 17.h),
@@ -740,6 +1189,9 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
 
   Widget _buildHierarchyLevels(
       BuildContext context, AppLocalizations localizations, bool isDark, List<String> levels, int levelCount) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     final levelLabels = {
       'Company': localizations.company,
       'Division': localizations.division,
@@ -757,14 +1209,14 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
     };
 
     return Wrap(
-      spacing: 8.w,
-      runSpacing: 0,
+      spacing: isMobile ? 6.w : (isTablet ? 7.w : 8.w),
+      runSpacing: isMobile ? 6.h : 0,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(
           localizations.hierarchy,
           style: TextStyle(
-            fontSize: 13.7.sp,
+            fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
             fontWeight: FontWeight.w400,
             color: isDark
                 ? AppColors.textTertiaryDark
@@ -781,8 +1233,8 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
             children: [
               Container(
                 padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: 9.w,
-                  vertical: 5.h,
+                  horizontal: isMobile ? 7.w : (isTablet ? 8.w : 9.w),
+                  vertical: isMobile ? 4.h : 5.h,
                 ),
                 decoration: BoxDecoration(
                   color: isDark
@@ -801,16 +1253,16 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   children: [
                     SvgIconWidget(
                       assetPath: levelIcons[level] ?? '',
-                      size: 14.sp,
+                      size: isMobile ? 12.sp : (isTablet ? 13.sp : 14.sp),
                       color: isDark
                           ? AppColors.purpleTextDark
                           : const Color(0xFF59168B),
                     ),
-                    SizedBox(width: 4.w),
+                    SizedBox(width: isMobile ? 3.w : 4.w),
                     Text(
                       levelLabels[level] ?? level,
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                         fontWeight: FontWeight.w500,
                         color: isDark
                             ? AppColors.purpleTextDark
@@ -823,11 +1275,11 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                 ),
               ),
               if (index < levels.length - 1) ...[
-                SizedBox(width: 8.w),
+                SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
                 Text(
                   '→',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
                     fontWeight: FontWeight.w400,
                     color: isDark
                         ? AppColors.textPlaceholderDark
@@ -836,16 +1288,16 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                     letterSpacing: 0,
                   ),
                 ),
-                SizedBox(width: 8.w),
+                SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
               ],
             ],
           );
         }),
-        SizedBox(width: 8.w),
+        SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
         Text(
           '($levelCount ${localizations.levels})',
           style: TextStyle(
-            fontSize: 12.sp,
+            fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
             fontWeight: FontWeight.w400,
             color: isDark
                 ? AppColors.textTertiaryDark
@@ -866,13 +1318,17 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
       int employees,
       String created,
       String modified) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
             '${localizations.components}: ${components.toString()}',
             style: TextStyle(
-              fontSize: 13.8.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: isDark
                   ? AppColors.textTertiaryDark
@@ -881,12 +1337,11 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               letterSpacing: 0,
             ),
           ),
-        ),
-        Expanded(
-          child: Text(
+          SizedBox(height: 4.h),
+          Text(
             '${localizations.employees}: ${employees.toString()}',
             style: TextStyle(
-              fontSize: 13.7.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: isDark
                   ? AppColors.textTertiaryDark
@@ -895,12 +1350,11 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               letterSpacing: 0,
             ),
           ),
-        ),
-        Expanded(
-          child: Text(
+          SizedBox(height: 4.h),
+          Text(
             '${localizations.created}: $created',
             style: TextStyle(
-              fontSize: 13.8.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: isDark
                   ? AppColors.textTertiaryDark
@@ -909,12 +1363,11 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               letterSpacing: 0,
             ),
           ),
-        ),
-        Expanded(
-          child: Text(
+          SizedBox(height: 4.h),
+          Text(
             '${localizations.modified}: $modified',
             style: TextStyle(
-              fontSize: 13.8.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: isDark
                   ? AppColors.textTertiaryDark
@@ -922,6 +1375,71 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               height: 20 / 13.8,
               letterSpacing: 0,
             ),
+          ),
+        ],
+      );
+    }
+    
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            '${localizations.components}: ${components.toString()}',
+            style: TextStyle(
+              fontSize: isTablet ? 12.5.sp : 13.8.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark
+                  ? AppColors.textTertiaryDark
+                  : const Color(0xFF6A7282),
+              height: 20 / 13.8,
+              letterSpacing: 0,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            '${localizations.employees}: ${employees.toString()}',
+            style: TextStyle(
+              fontSize: isTablet ? 12.5.sp : 13.7.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark
+                  ? AppColors.textTertiaryDark
+                  : const Color(0xFF6A7282),
+              height: 20 / 13.7,
+              letterSpacing: 0,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            '${localizations.created}: $created',
+            style: TextStyle(
+              fontSize: isTablet ? 12.5.sp : 13.8.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark
+                  ? AppColors.textTertiaryDark
+                  : const Color(0xFF6A7282),
+              height: 20 / 13.8,
+              letterSpacing: 0,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            '${localizations.modified}: $modified',
+            style: TextStyle(
+              fontSize: isTablet ? 12.5.sp : 13.8.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark
+                  ? AppColors.textTertiaryDark
+                  : const Color(0xFF6A7282),
+              height: 20 / 13.8,
+              letterSpacing: 0,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
@@ -933,7 +1451,10 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
       required String title,
       required String description,
     }) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    
     return Column(
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
       children: [
         if (!isActive)
           _buildActionButton(
@@ -1082,6 +1603,9 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
     required Color textColor,
     required VoidCallback onTap,
   }) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+    
     // Calculate padding based on button type to match Figma exactly
     final isActivate = label == localizations.activate;
     final isView = label == localizations.view;
@@ -1089,21 +1613,22 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
     final isDuplicate = label == localizations.duplicate;
     final isDelete = label == localizations.delete;
     
-    double startPadding = 16.w;
-    double endPadding = 16.w;
+    double startPadding = isMobile ? 12.w : (isTablet ? 14.w : 16.w);
+    double endPadding = isMobile ? 12.w : (isTablet ? 14.w : 16.w);
     
-    if (isActivate) {
-      endPadding = 25.82.w; // Match Figma: pl-[16px] pr-[25.82px]
-    } else if (isView) {
-      endPadding = 49.51.w; // Match Figma: pl-[16px] pr-[49.51px]
-    } else if (isEdit) {
-      endPadding = 56.65.w; // Match Figma: pl-[16px] pr-[56.65px]
-    } else if (isDuplicate) {
-      // Match Figma: px-[16px] (same on both sides)
-      startPadding = 16.w;
-      endPadding = 16.w;
-    } else if (isDelete) {
-      endPadding = 37.62.w; // Match Figma: pl-[16px] pr-[37.62px]
+    if (!isMobile) {
+      if (isActivate) {
+        endPadding = isTablet ? 22.w : 25.82.w;
+      } else if (isView) {
+        endPadding = isTablet ? 42.w : 49.51.w;
+      } else if (isEdit) {
+        endPadding = isTablet ? 48.w : 56.65.w;
+      } else if (isDuplicate) {
+        startPadding = isTablet ? 14.w : 16.w;
+        endPadding = isTablet ? 14.w : 16.w;
+      } else if (isDelete) {
+        endPadding = isTablet ? 32.w : 37.62.w;
+      }
     }
     
     return GestureDetector(
@@ -1112,30 +1637,40 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
         padding: EdgeInsetsDirectional.only(
           start: startPadding,
           end: endPadding,
-          top: 8.h,
-          bottom: 8.h,
+          top: isMobile ? 10.h : 8.h,
+          bottom: isMobile ? 10.h : 8.h,
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
+          mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
             SvgIconWidget(
               assetPath: icon,
-              size: 16.sp,
+              size: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
               color: textColor,
             ),
             SizedBox(width: 8.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: isActivate || isView ? 15.1.sp : (isDelete ? 15.3.sp : 15.4.sp),
-                fontWeight: FontWeight.w400,
-                color: textColor,
-                height: 24 / 15.1,
-                letterSpacing: 0,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: isMobile 
+                      ? 13.sp 
+                      : (isActivate || isView 
+                          ? (isTablet ? 14.sp : 15.1.sp) 
+                          : (isDelete 
+                              ? (isTablet ? 14.5.sp : 15.3.sp) 
+                              : (isTablet ? 14.5.sp : 15.4.sp))),
+                  fontWeight: FontWeight.w400,
+                  color: textColor,
+                  height: 24 / 15.1,
+                  letterSpacing: 0,
+                ),
+                textAlign: isMobile ? TextAlign.center : TextAlign.start,
               ),
             ),
           ],

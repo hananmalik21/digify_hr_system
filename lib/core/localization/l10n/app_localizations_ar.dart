@@ -387,7 +387,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get financeUser => 'مستخدم مالي';
 
   @override
-  String get manager => 'مدير';
+  String get manager => 'المدير';
 
   @override
   String get active2FA => 'نشط (2FA)';
@@ -431,7 +431,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailAddress => 'عنوان البريد الإلكتروني';
 
   @override
-  String get department => 'القسم';
+  String get department => 'الإدارة';
 
   @override
   String get position => 'المنصب';
@@ -1083,7 +1083,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get updateSet => 'تحديث المجموعة';
 
   @override
-  String get enterDescription => 'أدخل الوصف';
+  String get enterDescription => 'أدخل الوصف (اختياري)';
 
   @override
   String get noDataAccessSetsFound => 'لم يتم العثور على مجموعات وصول';
@@ -1374,19 +1374,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manageEnterpriseStructure => 'إدارة هيكل المؤسسة';
 
   @override
-  String get configureManageHierarchy => 'تكوين وإدارة هياكل التسلسل الهرمي للمؤسسة';
+  String get configureManageHierarchy =>
+      'تكوين وإدارة هياكل التسلسل الهرمي للمؤسسة';
 
   @override
-  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+  String get configureManageHierarchyAr =>
+      'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
 
   @override
   String get currentlyActiveStructure => 'الهيكل النشط حاليًا';
 
   @override
-  String get standardKuwaitCorporateStructure => 'الهيكل المؤسسي الكويتي القياسي';
+  String get standardKuwaitCorporateStructure =>
+      'الهيكل المؤسسي الكويتي القياسي';
 
   @override
-  String get traditionalHierarchicalStructure => 'هيكل هرمي تقليدي بجميع المستويات الخمسة للإدارة التنظيمية الشاملة';
+  String get traditionalHierarchicalStructure =>
+      'هيكل هرمي تقليدي بجميع المستويات الخمسة للإدارة التنظيمية الشاملة';
 
   @override
   String get activeLevels => 'المستويات النشطة';
@@ -1410,22 +1414,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get structureConfigurations => 'تكوينات الهيكل';
 
   @override
-  String get manageDifferentConfigurations => 'إدارة تكوينات التسلسل الهرمي التنظيمي المختلفة. يمكن تنشيط واحد فقط في كل مرة.';
+  String get manageDifferentConfigurations =>
+      'إدارة تكوينات التسلسل الهرمي التنظيمي المختلفة. يمكن تنشيط واحد فقط في كل مرة.';
 
   @override
   String get createNewStructure => 'إنشاء هيكل جديد';
 
   @override
-  String get hierarchy => 'التسلسل الهرمي:';
+  String get hierarchy => 'التسلسل الهرمي';
 
   @override
   String get levels => 'مستويات';
 
   @override
-  String get created => 'تم الإنشاء:';
+  String get created => 'تم الإنشاء';
 
   @override
-  String get modified => 'تم التعديل:';
+  String get modified => 'تم التعديل';
 
   @override
   String get duplicate => 'نسخ';
@@ -1443,61 +1448,128 @@ class AppLocalizationsAr extends AppLocalizations {
   String get simplifiedStructure => 'هيكل مبسط';
 
   @override
-  String get streamlinedStructure => 'هيكل مبسط للمؤسسات الصغيرة - الشركة والقسم والإدارة فقط';
+  String get streamlinedStructure =>
+      'هيكل مبسط للمؤسسات الصغيرة - الشركة والقسم والإدارة فقط';
 
   @override
   String get flatOrganizationStructure => 'هيكل تنظيمي مسطح';
 
   @override
-  String get minimalHierarchy => 'تسلسل هرمي minimal للشركات الناشئة والفرق الرشيقة - الشركة والإدارة فقط';
+  String get minimalHierarchy =>
+      'تسلسل هرمي minimal للشركات الناشئة والفرق الرشيقة - الشركة والإدارة فقط';
 
   @override
-  String get currentlyActiveStructureMessage => 'هذا هو الهيكل النشط حاليًا. لتفعيل هيكل مختلف، انقر فوق زر "تفعيل" في تكوين آخر.';
+  String get currentlyActiveStructureMessage =>
+      'هذا هو الهيكل النشط حاليًا. لتفعيل هيكل مختلف، انقر فوق زر \"تفعيل\" في تكوين آخر.';
 
   @override
   String get company => 'الشركة';
 
   @override
+  String get companies => 'الشركات';
+
+  @override
   String get division => 'القسم';
+
+  @override
+  String get divisions => 'الأقسام';
 
   @override
   String get businessUnit => 'وحدة الأعمال';
 
   @override
+  String get businessUnits => 'وحدات الأعمال';
+
+  @override
+  String get departments => 'الإدارات';
+
+  @override
   String get section => 'القسم';
+
+  @override
+  String get sections => 'الأقسام';
+
+  @override
+  String get companyCode => 'رمز الشركة';
+
+  @override
+  String get companyNameEnglish => 'اسم الشركة (بالإنجليزية)';
+
+  @override
+  String get companyNameArabic => 'اسم الشركة (بالعربية)';
+
+  @override
+  String get legalNameEnglish => 'الاسم القانوني (بالإنجليزية)';
+
+  @override
+  String get legalNameArabic => 'الاسم القانوني (بالعربية)';
+
+  @override
+  String get industry => 'الصناعة';
+
+  @override
+  String get country => 'البلد';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get poBox => 'ص.ب';
+
+  @override
+  String get zipCode => 'الرمز البريدي';
+
+  @override
+  String get website => 'الموقع الإلكتروني';
+
+  @override
+  String get currency => 'العملة';
+
+  @override
+  String get fiscalYearStart => 'بداية السنة المالية (شهر-يوم)';
+
+  @override
+  String get phone => 'الهاتف';
 
   @override
   String get viewEnterpriseStructureConfiguration => 'عرض تكوين هيكل المؤسسة';
 
   @override
-  String get reviewOrganizationalHierarchy => 'مراجعة مستويات التسلسل الهرمي التنظيمي والتسلسل';
+  String get reviewOrganizationalHierarchy =>
+      'مراجعة مستويات التسلسل الهرمي التنظيمي والتسلسل';
 
   @override
   String get structureConfigurationActive => 'تكوين الهيكل نشط';
 
   @override
-  String get enterpriseStructureActiveMessage => 'تم تكوين التسلسل الهرمي لهيكل المؤسسة الخاص بك وهو نشط. يمكنك تعديل المستويات والترتيب أدناه.';
+  String get enterpriseStructureActiveMessage =>
+      'تم تكوين التسلسل الهرمي لهيكل المؤسسة الخاص بك وهو نشط. يمكنك تعديل المستويات والترتيب أدناه.';
 
   @override
   String get configurationInstructions => 'تعليمات التكوين';
 
   @override
-  String get companyMandatoryInstruction => 'الشركة إلزامية ويجب أن تكون المستوى الأعلى - لا يمكن تعطيلها أو إعادة ترتيبها';
+  String get companyMandatoryInstruction =>
+      'الشركة إلزامية ويجب أن تكون المستوى الأعلى - لا يمكن تعطيلها أو إعادة ترتيبها';
 
   @override
-  String get enableDisableLevelsInstruction => 'تمكين أو تعطيل المستويات حسب احتياجاتك التنظيمية';
+  String get enableDisableLevelsInstruction =>
+      'تمكين أو تعطيل المستويات حسب احتياجاتك التنظيمية';
 
   @override
-  String get useArrowsInstruction => 'استخدم الأسهم لأعلى/لأسفل لتغيير تسلسل التسلسل الهرمي';
+  String get useArrowsInstruction =>
+      'استخدم الأسهم لأعلى/لأسفل لتغيير تسلسل التسلسل الهرمي';
 
   @override
-  String get orderDeterminesRelationshipsInstruction => 'يحدد الترتيب العلاقات بين الوالدين والطفل في هيكلك التنظيمي';
+  String get orderDeterminesRelationshipsInstruction =>
+      'يحدد الترتيب العلاقات بين الوالدين والطفل في هيكلك التنظيمي';
 
   @override
-  String get changesAffectComponentsInstruction => 'ستؤثر التغييرات على كيفية إنشاء المكونات وعرضها في عرض الشجرة';
-
-  @override
-  String get structureName => 'اسم الهيكل';
+  String get changesAffectComponentsInstruction =>
+      'ستؤثر التغييرات على كيفية إنشاء المكونات وعرضها في عرض الشجرة';
 
   @override
   String get previewStructure => 'معاينة الهيكل';
@@ -1512,13 +1584,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resetToDefault => 'إعادة تعيين إلى الافتراضي';
 
   @override
-  String levelInHierarchy(int level) => 'المستوى $level في التسلسل الهرمي';
+  String levelInHierarchy(int level) {
+    return '$level';
+  }
 
   @override
   String get hierarchyPreview => 'معاينة التسلسل الهرمي';
 
   @override
-  String level(int levelNumber) => 'المستوى $levelNumber';
+  String level(int levelNumber) {
+    return '$levelNumber';
+  }
 
   @override
   String get configurationSummary => 'ملخص التكوين';
@@ -1536,20 +1612,443 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editEnterpriseStructureConfiguration => 'تعديل تكوين هيكل المؤسسة';
 
   @override
-  String get defineOrganizationalHierarchy => 'حدد مستويات التسلسل الهرمي التنظيمي وتسلسلها';
+  String get defineOrganizationalHierarchy =>
+      'حدد مستويات التسلسل الهرمي التنظيمي وتسلسلها';
 
   @override
-  String get createEnterpriseStructureConfiguration => 'إنشاء تكوين هيكل المؤسسة';
+  String get createEnterpriseStructureConfiguration =>
+      'إنشاء تكوين هيكل المؤسسة';
 
   @override
   String get noConfigurationFound => 'لم يتم العثور على تكوين';
 
   @override
-  String get pleaseConfigureEnterpriseStructure => 'يرجى تكوين التسلسل الهرمي لهيكل مؤسستك قبل إنشاء المكونات.';
+  String get pleaseConfigureEnterpriseStructure =>
+      'يرجى تكوين التسلسل الهرمي لهيكل مؤسستك قبل إنشاء المكونات.';
+
+  @override
+  String get structureName => 'اسم الهيكل';
 
   @override
   String get structureNamePlaceholder => 'مثال: هيكل الشركة القياسي، هيكل مبسط';
 
   @override
-  String get descriptionPlaceholder => 'اوصف تكوين هذا الهيكل ومتى يجب استخدامه...';
+  String get descriptionPlaceholder =>
+      'اوصف تكوين هذا الهيكل ومتى يجب استخدامه...';
+
+  @override
+  String get manageComponentValues => 'إدارة قيم المكونات';
+
+  @override
+  String get componentValuesSubtitle =>
+      'إنشاء وإدارة المكونات التنظيمية (الشركة، القسم، وحدة الأعمال، الإدارة، القسم)';
+
+  @override
+  String get manageOrganizationalHierarchy => 'إدارة الهيكل التنظيمي والهيكل';
+
+  @override
+  String get manageOrganizationalHierarchyAr =>
+      'إدارة الهيكل التنظيمي والتسلسل الإداري';
+
+  @override
+  String get structureConfiguration => 'تكوين الهيكل';
+
+  @override
+  String get organizationalTreeStructure => 'هيكل الشجرة التنظيمية';
+
+  @override
+  String get addNewComponent => 'إضافة مكون جديد';
+
+  @override
+  String get bulkUpload => 'رفع مجمع';
+
+  @override
+  String get bulkUploadTitle => 'رفع مجمع - مكونات الهيكل المؤسسي';
+
+  @override
+  String get bulkUploadInstructionsTitle => 'تعليمات التحميل';
+
+  @override
+  String get bulkUploadInstructionDownloadTemplate =>
+      'قم بتنزيل ملف القالب لمعرفة التنسيق المطلوب';
+
+  @override
+  String get bulkUploadInstructionRequiredFields =>
+      'املأ كافة الحقول الإلزامية: النوع، الرمز، الاسم، الاسم العربي، رمز الأب (إن وجد)';
+
+  @override
+  String get bulkUploadInstructionOptionalFields =>
+      'الحقول الاختيارية: معرف المدير، مركز التكلفة، الموقع، الوصف';
+
+  @override
+  String get bulkUploadInstructionParentCode =>
+      'يجب أن يطابق رمز الأب رمز مكون موجود';
+
+  @override
+  String get bulkUploadInstructionFileFormat =>
+      'تنسيق الملف: Excel (.xlsx) أو CSV (.csv)';
+
+  @override
+  String get bulkUploadInstructionRowLimit => 'الحد الأقصى 1000 صف لكل تحميل';
+
+  @override
+  String get bulkUploadStepDownloadLabel => 'الخطوة 1: تنزيل القالب';
+
+  @override
+  String get bulkUploadDownloadTemplate => 'تنزيل قالب Excel';
+
+  @override
+  String get bulkUploadStepUploadLabel => 'الخطوة 2: تحميل القالب المعبأ';
+
+  @override
+  String get bulkUploadDropHint => 'قم بسحب وإفلات ملفك هنا، أو انقر للتصفح';
+
+  @override
+  String get bulkUploadSupportedFormats =>
+      'يدعم: .xlsx، .csv (الحد الأقصى: 10 ميغابايت)';
+
+  @override
+  String get bulkUploadTemplatePreview => 'معاينة تنسيق القالب';
+
+  @override
+  String get bulkUploadTypeHeader => 'النوع*';
+
+  @override
+  String get bulkUploadCodeHeader => 'الرمز*';
+
+  @override
+  String get bulkUploadNameHeader => 'الاسم*';
+
+  @override
+  String get bulkUploadNameArabicHeader => 'الاسم بالعربية*';
+
+  @override
+  String get bulkUploadParentCodeHeader => 'رمز الأب';
+
+  @override
+  String get bulkUploadManagerIdHeader => 'معرف المدير';
+
+  @override
+  String get bulkUploadLocationHeader => 'الموقع';
+
+  @override
+  String get bulkUploadSampleRow1Type => 'شركة';
+
+  @override
+  String get bulkUploadSampleRow1Code => 'COMP-001';
+
+  @override
+  String get bulkUploadSampleRow1Name => 'الشركة الرئيسية';
+
+  @override
+  String get bulkUploadSampleRow1NameArabic => 'الشركة الرئيسية';
+
+  @override
+  String get bulkUploadSampleRow1ParentCode => '-';
+
+  @override
+  String get bulkUploadSampleRow1ManagerId => 'EMP-001';
+
+  @override
+  String get bulkUploadSampleRow1Location => 'مدينة الكويت';
+
+  @override
+  String get bulkUploadSampleRow2Type => 'قسم';
+
+  @override
+  String get bulkUploadSampleRow2Code => 'DIV-001';
+
+  @override
+  String get bulkUploadSampleRow2Name => 'قسم المالية';
+
+  @override
+  String get bulkUploadSampleRow2NameArabic => 'قسم المالية';
+
+  @override
+  String get bulkUploadSampleRow2ParentCode => 'COMP-001';
+
+  @override
+  String get bulkUploadSampleRow2ManagerId => 'EMP-010';
+
+  @override
+  String get bulkUploadSampleRow2Location => 'مقر الكويت';
+
+  @override
+  String get bulkUploadUploadButton => 'تحميل ومعالجة';
+
+  @override
+  String get export => 'تصدير';
+
+  @override
+  String get searchComponents => 'البحث بالاسم أو الرمز أو الاسم العربي...';
+
+  @override
+  String get componentType => 'نوع المكون';
+
+  @override
+  String get componentCode => 'الرمز';
+
+  @override
+  String get componentName => 'الاسم';
+
+  @override
+  String get arabicName => 'الاسم العربي';
+
+  @override
+  String get parentComponent => 'الأصل';
+
+  @override
+  String get lastUpdated => 'آخر تحديث';
+
+  @override
+  String get createComponent => 'إنشاء مكون';
+
+  @override
+  String get editComponent => 'تعديل مكون';
+
+  @override
+  String get viewComponent => 'عرض مكون';
+
+  @override
+  String get deleteComponent => 'حذف مكون';
+
+  @override
+  String get treeView => 'عرض الشجرة';
+
+  @override
+  String get listView => 'عرض القائمة';
+
+  @override
+  String get noComponentsFound => 'لم يتم العثور على مكونات';
+
+  @override
+  String get confirmDeleteComponent => 'هل أنت متأكد من حذف هذا المكون؟';
+
+  @override
+  String get componentTypeRequired => 'نوع المكون مطلوب';
+
+  @override
+  String get componentCodeRequired => 'رمز المكون مطلوب';
+
+  @override
+  String get componentNameRequired => 'اسم المكون مطلوب';
+
+  @override
+  String get arabicNameRequired => 'الاسم العربي مطلوب';
+
+  @override
+  String get selectComponentType => 'اختر نوع المكون';
+
+  @override
+  String get enterComponentCode => 'أدخل رمز المكون';
+
+  @override
+  String get enterComponentName => 'أدخل اسم المكون';
+
+  @override
+  String get enterArabicName => 'أدخل الاسم العربي';
+
+  @override
+  String get selectParentComponent => 'اختر المكون الأصل (اختياري)';
+
+  @override
+  String get selectManager => 'اختر المدير';
+
+  @override
+  String get enterLocation => 'أدخل الموقع';
+
+  @override
+  String get componentCreatedSuccessfully => 'تم إنشاء المكون بنجاح';
+
+  @override
+  String get componentUpdatedSuccessfully => 'تم تحديث المكون بنجاح';
+
+  @override
+  String get componentDeletedSuccessfully => 'تم حذف المكون بنجاح';
+
+  @override
+  String get bulkUploadInstructions =>
+      'قم برفع ملف CSV يحتوي على بيانات المكونات. قم بتنزيل القالب للحصول على التنسيق الصحيح.';
+
+  @override
+  String get downloadTemplate => 'تنزيل القالب';
+
+  @override
+  String get uploadFile => 'رفع الملف';
+
+  @override
+  String get selectFile => 'اختر الملف';
+
+  @override
+  String get noFileSelected => 'لم يتم اختيار ملف';
+
+  @override
+  String get uploadSuccess => 'تم الرفع بنجاح';
+
+  @override
+  String get uploadFailed => 'فشل الرفع';
+
+  @override
+  String get processingUpload => 'جاري معالجة الرفع...';
+
+  @override
+  String get selectComponentTypePlaceholder => 'اختر النوع...';
+
+  @override
+  String get componentDetails => 'تفاصيل المكون';
+
+  @override
+  String get hierarchyRelationships => 'التسلسل الهرمي والعلاقات';
+
+  @override
+  String get managementInformation => 'معلومات الإدارة';
+
+  @override
+  String get auditTrail => 'سجل التدقيق';
+
+  @override
+  String get additionalFields => 'حقول إضافية';
+
+  @override
+  String get nameEnglish => 'الاسم (بالإنجليزية)';
+
+  @override
+  String get nameArabic => 'الاسم (بالعربية)';
+
+  @override
+  String get costCenter => 'مركز التكلفة';
+
+  @override
+  String get childComponents => 'المكونات الفرعية';
+
+  @override
+  String get hierarchyPath => 'مسار التسلسل الهرمي';
+
+  @override
+  String get hierarchyLevel => 'مستوى التسلسل الهرمي';
+
+  @override
+  String get lastUpdatedDate => 'تاريخ آخر تحديث';
+
+  @override
+  String get lastUpdatedBy => 'آخر تحديث بواسطة';
+
+  @override
+  String get establishedDate => 'تاريخ التأسيس';
+
+  @override
+  String get registrationNumber => 'رقم التسجيل';
+
+  @override
+  String get taxId => 'الرقم الضريبي';
+
+  @override
+  String get rootLevelNoParent => 'المستوى الجذري - لا يوجد والد';
+
+  @override
+  String get noDescription => 'لا يوجد وصف';
+
+  @override
+  String get notSpecified => 'غير محدد';
+
+  @override
+  String get companyManagement => 'إدارة الشركات';
+
+  @override
+  String get manageCompanyInformation =>
+      'إدارة معلومات الشركة والكيانات التنظيمية';
+
+  @override
+  String get addCompany => 'إضافة شركة';
+
+  @override
+  String get totalCompanies => 'إجمالي الشركات';
+
+  @override
+  String get activeCompanies => 'الشركات النشطة';
+
+  @override
+  String get totalEmployees => 'إجمالي الموظفين';
+
+  @override
+  String get compliant => 'متوافق';
+
+  @override
+  String get searchCompaniesPlaceholder =>
+      'ابحث باسم الشركة أو الكود أو رقم التسجيل...';
+
+  @override
+  String get editCompany => 'تعديل الشركة';
+
+  @override
+  String get updateCompany => 'تحديث الشركة';
+
+  @override
+  String get hintCompanyCode => 'أدخل كود الشركة';
+
+  @override
+  String get hintCompanyNameEnglish => 'أدخل اسم الشركة بالإنجليزية';
+
+  @override
+  String get hintCompanyNameArabic => 'أدخل اسم الشركة بالعربية';
+
+  @override
+  String get hintLegalNameEnglish => 'أدخل الاسم القانوني بالإنجليزية';
+
+  @override
+  String get hintLegalNameArabic => 'أدخل الاسم القانوني بالعربية';
+
+  @override
+  String get hintRegistrationNumber => 'أدخل رقم التسجيل';
+
+  @override
+  String get hintTaxId => 'أدخل الرقم الضريبي';
+
+  @override
+  String get hintEstablishedDate => 'يوم/شهر/سنة';
+
+  @override
+  String get hintIndustry => 'أدخل الصناعة';
+
+  @override
+  String get hintCountry => 'أدخل الدولة';
+
+  @override
+  String get hintCity => 'أدخل المدينة';
+
+  @override
+  String get hintAddress => 'أدخل العنوان الكامل';
+
+  @override
+  String get hintPoBox => 'أدخل صندوق البريد';
+
+  @override
+  String get hintZipCode => 'أدخل الرمز البريدي';
+
+  @override
+  String get hintPhone => 'أدخل رقم الهاتف';
+
+  @override
+  String get hintEmail => 'أدخل عنوان البريد الإلكتروني';
+
+  @override
+  String get hintWebsite => 'أدخل رابط الموقع';
+
+  @override
+  String get hintTotalEmployees => 'أدخل إجمالي الموظفين';
+
+  @override
+  String get hintFiscalYearStart => 'شهر-يوم';
+
+  @override
+  String get companyDetails => 'تفاصيل الشركة';
+
+  @override
+  String get contactInformation => 'معلومات الاتصال';
+
+  @override
+  String get financialAndOperational => 'المالية والتشغيلية';
+
+  @override
+  String get established => 'تاريخ التأسيس';
 }

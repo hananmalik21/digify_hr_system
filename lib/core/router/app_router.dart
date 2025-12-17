@@ -3,6 +3,8 @@ import 'package:digify_hr_system/core/widgets/placeholder_screen.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/screens/login_screen.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/company_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -84,7 +86,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/enterprise-structure',
             name: 'enterprise-structure',
-            redirect: (context, state) => '/enterprise-structure/manage',
+            redirect: (context, state) {
+              // Only redirect if we're on the exact parent path
+              // Don't redirect if we're already on a child route
+              if (state.uri.path == '/enterprise-structure') {
+                return '/enterprise-structure/manage';
+              }
+              return null; // No redirect needed
+            },
             routes: [
               GoRoute(
                 path: 'manage',
@@ -95,16 +104,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'component-values',
                 name: 'enterprise-structure-component-values',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Manage Component Values',
-                ),
+                builder: (context, state) =>
+                    const ManageComponentValuesScreen(),
               ),
               GoRoute(
                 path: 'company',
                 name: 'enterprise-structure-company',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Company',
-                ),
+                builder: (context, state) =>
+                    const CompanyManagementScreen(),
               ),
               GoRoute(
                 path: 'division',
