@@ -3,8 +3,10 @@ import 'package:digify_hr_system/core/widgets/placeholder_screen.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/screens/login_screen.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/business_unit_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/company_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/division_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/department_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -123,16 +125,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'business-unit',
                 name: 'enterprise-structure-business-unit',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Business Unit',
-                ),
+                builder: (context, state) =>
+                    const BusinessUnitManagementScreen(),
               ),
               GoRoute(
                 path: 'department',
                 name: 'enterprise-structure-department',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Department',
-                ),
+                builder: (context, state) =>
+                    const DepartmentManagementScreen(),
               ),
               GoRoute(
                 path: 'section',

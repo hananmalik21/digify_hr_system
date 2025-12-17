@@ -2015,7 +2015,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintTaxId => 'Enter tax ID';
 
   @override
-  String get hintEstablishedDate => 'DD/MM/YYYY';
+  String get hintEstablishedDate => 'dd/MM/yyyy';
 
   @override
   String get hintIndustry => 'Enter industry';
@@ -2187,4 +2187,162 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get annualBudget => 'Annual Budget';
+
+  @override
+  String get businessUnitManagement => 'Business Unit Management';
+
+  @override
+  String get manageBusinessUnitsSubtitle =>
+      'Manage business units within divisions';
+
+  @override
+  String get addBusinessUnit => 'Add Business Unit';
+
+  @override
+  String get totalUnits => 'Total Units';
+
+  @override
+  String get activeUnits => 'Active Units';
+
+  @override
+  String get searchBusinessUnitsPlaceholder =>
+      'Search by business unit name, code, or head...';
+
+  @override
+  String get allDivisions => 'All Divisions';
+
+  @override
+  String get focusArea => 'Focus Area';
+
+  @override
+  String get unitCode => 'Unit Code';
+
+  @override
+  String get unitNameEnglish => 'Unit Name (English)';
+
+  @override
+  String get unitNameArabic => 'Unit Name (Arabic)';
+
+  @override
+  String get headOfUnit => 'Head of Unit';
+
+  @override
+  String get createBusinessUnit => 'Create Unit';
+
+  @override
+  String get editBusinessUnit => 'Edit Business Unit';
+
+  @override
+  String get updateBusinessUnit => 'Update Unit';
+
+  @override
+  String get hintBusinessUnitCode => 'e.g., BU-FIN';
+
+  @override
+  String get hintBusinessUnitName => 'Business Unit Name';
+
+  @override
+  String get hintBusinessUnitNameArabic => 'اسم الوحدة';
+
+  @override
+  String get hintSelectDivision => 'Select Division';
+
+  @override
+  String get hintHeadOfUnit => 'Full Name';
+
+  @override
+  String get hintBusinessUnitHeadEmail => 'email@company.com';
+
+  @override
+  String get hintBusinessUnitHeadPhone => '+965 XXXX XXXX';
+
+  @override
+  String get hintBusinessUnitFocus => 'e.g., Treasury & Investments';
+
+  @override
+  String get hintBusinessUnitDescription =>
+      'Brief description of the business unit';
+
+  @override
+  String get businessUnitDetails => 'Business Unit Details';
+
+  @override
+  String get departmentManagement => 'Department Management';
+
+  @override
+  String get manageDepartmentsSubtitle =>
+      'Manage departments within business units';
+
+  @override
+  String get addDepartment => 'Add Department';
+
+  @override
+  String get activeDepartments => 'Active Departments';
+
+  @override
+  String get totalEmployeesDept => 'Total Employees';
+
+  @override
+  String get totalBudgetDept => 'Total Budget';
+
+  @override
+  String get searchDepartmentsPlaceholder =>
+      'Search by department name, code, or head...';
+
+  @override
+  String get allBusinessUnits => 'All Business Units';
+
+  @override
+  String get departmentFocus => 'Department Focus';
+
+  @override
+  String get departmentCode => 'Department Code';
+
+  @override
+  String get departmentNameEnglish => 'Department Name (English)';
+
+  @override
+  String get departmentNameArabic => 'Department Name (Arabic)';
+
+  @override
+  String get headOfDepartment => 'Head of Department';
+
+  @override
+  String get hintDepartmentCode => 'e.g., DEPT-TREAS';
+
+  @override
+  String get hintDepartmentNameEnglish => 'Department Name';
+
+  @override
+  String get hintDepartmentNameArabic => 'اسم القسم';
+
+  @override
+  String get hintBusinessUnit => 'Select Business Unit';
+
+  @override
+  String get hintHeadOfDepartment => 'Full Name';
+
+  @override
+  String get hintAnnualBudgetDepartment => '0';
+
+  @override
+  String get hintDescriptionDepartment => 'Brief description of the department';
+
+  @override
+  String get editDepartment => 'Edit Department';
+
+  @override
+  String get updateDepartment => 'Update Department';
+
+  @override
+  String get departmentDetails => 'Department Details';
+
+  @override
+  String get departmentLeadership => 'Department Leadership';
+
+  @override
+  String get departmentDescription => 'Department Description';
+
+  @override
+  String get departmentBudget => 'Annual Budget (KWD)';
 }

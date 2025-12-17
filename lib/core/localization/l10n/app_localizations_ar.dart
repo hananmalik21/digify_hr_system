@@ -2005,7 +2005,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintTaxId => 'أدخل الرقم الضريبي';
 
   @override
-  String get hintEstablishedDate => 'يوم/شهر/سنة';
+  String get hintEstablishedDate => 'dd/MM/yyyy';
 
   @override
   String get hintIndustry => 'أدخل الصناعة';
@@ -2114,7 +2114,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get businessFocus => 'التركيز التجاري';
 
   @override
-  String get totalDepartments => 'إجمالي الإدارات';
+  String get totalDepartments => 'إجمالي الأقسام';
 
   @override
   String get annualBudgetKwd => 'الميزانية السنوية (دينار كويتي)';
@@ -2171,8 +2171,163 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leadership => 'القيادة';
 
   @override
-  String get organizationalMetrics => 'المقاييس التنظيمية';
+  String get organizationalMetrics => 'مقاييس التنظيم';
 
   @override
   String get annualBudget => 'الميزانية السنوية';
+
+  @override
+  String get businessUnitManagement => 'إدارة وحدات الأعمال';
+
+  @override
+  String get manageBusinessUnitsSubtitle => 'إدارة وحدات الأعمال ضمن الأقسام';
+
+  @override
+  String get addBusinessUnit => 'إضافة وحدة أعمال';
+
+  @override
+  String get totalUnits => 'إجمالي الوحدات';
+
+  @override
+  String get activeUnits => 'الوحدات النشطة';
+
+  @override
+  String get searchBusinessUnitsPlaceholder =>
+      'البحث حسب اسم الوحدة أو الرمز أو الرئيس...';
+
+  @override
+  String get allDivisions => 'جميع الأقسام';
+
+  @override
+  String get focusArea => 'مجال التركيز';
+
+  @override
+  String get unitCode => 'رمز الوحدة';
+
+  @override
+  String get unitNameEnglish => 'اسم الوحدة (الإنجليزية)';
+
+  @override
+  String get unitNameArabic => 'اسم الوحدة (العربية)';
+
+  @override
+  String get headOfUnit => 'رئيس الوحدة';
+
+  @override
+  String get createBusinessUnit => 'إنشاء وحدة';
+
+  @override
+  String get editBusinessUnit => 'تعديل الوحدة';
+
+  @override
+  String get updateBusinessUnit => 'تحديث الوحدة';
+
+  @override
+  String get hintBusinessUnitCode => 'مثال: BU-FIN';
+
+  @override
+  String get hintBusinessUnitName => 'اسم الوحدة';
+
+  @override
+  String get hintBusinessUnitNameArabic => 'اسم الوحدة';
+
+  @override
+  String get hintSelectDivision => 'اختر القسم';
+
+  @override
+  String get hintHeadOfUnit => 'الاسم الكامل';
+
+  @override
+  String get hintBusinessUnitHeadEmail => 'email@company.com';
+
+  @override
+  String get hintBusinessUnitHeadPhone => '+965 XXXX XXXX';
+
+  @override
+  String get hintBusinessUnitFocus => 'مثال: الخزانة والاستثمارات';
+
+  @override
+  String get hintBusinessUnitDescription => 'وصف موجز لوحدة الأعمال';
+
+  @override
+  String get businessUnitDetails => 'تفاصيل وحدة الأعمال';
+
+  @override
+  String get departmentManagement => 'إدارة الأقسام';
+
+  @override
+  String get manageDepartmentsSubtitle => 'إدارة الأقسام ضمن وحدات الأعمال';
+
+  @override
+  String get addDepartment => 'إضافة قسم';
+
+  @override
+  String get activeDepartments => 'الأقسام النشطة';
+
+  @override
+  String get totalEmployeesDept => 'إجمالي الموظفين';
+
+  @override
+  String get totalBudgetDept => 'إجمالي الميزانية';
+
+  @override
+  String get searchDepartmentsPlaceholder =>
+      'البحث حسب اسم القسم أو الرمز أو الرئيس...';
+
+  @override
+  String get allBusinessUnits => 'جميع وحدات الأعمال';
+
+  @override
+  String get departmentFocus => 'مجال التركيز';
+
+  @override
+  String get departmentCode => 'رمز القسم';
+
+  @override
+  String get departmentNameEnglish => 'اسم القسم (بالإنجليزية)';
+
+  @override
+  String get departmentNameArabic => 'اسم القسم (بالعربية)';
+
+  @override
+  String get headOfDepartment => 'رئيس القسم';
+
+  @override
+  String get hintDepartmentCode => 'مثال: DEPT-TREAS';
+
+  @override
+  String get hintDepartmentNameEnglish => 'اسم القسم';
+
+  @override
+  String get hintDepartmentNameArabic => 'اسم القسم';
+
+  @override
+  String get hintBusinessUnit => 'اختر وحدة الأعمال';
+
+  @override
+  String get hintHeadOfDepartment => 'الاسم الكامل';
+
+  @override
+  String get hintAnnualBudgetDepartment => '0';
+
+  @override
+  String get hintDescriptionDepartment => 'وصف موجز للقسم';
+
+  @override
+  String get editDepartment => 'تعديل القسم';
+
+  @override
+  String get updateDepartment => 'تحديث القسم';
+
+  @override
+  String get departmentDetails => 'تفاصيل القسم';
+
+  @override
+  String get departmentLeadership => 'قيادة القسم';
+
+  @override
+  String get departmentDescription => 'وصف القسم';
+
+  @override
+  String get departmentBudget => 'الميزانية السنوية (د.ك)';
 }
