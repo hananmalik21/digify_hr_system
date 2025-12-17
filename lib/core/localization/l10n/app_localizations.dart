@@ -4051,6 +4051,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Established'**
   String get established;
+
+  /// No description provided for @divisionManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Management'**
+  String get divisionManagement;
+
+  /// No description provided for @manageDivisionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage organizational divisions across companies'**
+  String get manageDivisionsSubtitle;
+
+  /// No description provided for @addDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Division'**
+  String get addDivision;
+
+  /// No description provided for @totalDivisions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Divisions'**
+  String get totalDivisions;
+
+  /// No description provided for @activeDivisions.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Divisions'**
+  String get activeDivisions;
+
+  /// No description provided for @totalBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Budget'**
+  String get totalBudget;
+
+  /// No description provided for @searchDivisionsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by division name, code, or head of division...'**
+  String get searchDivisionsPlaceholder;
+
+  /// No description provided for @allCompanies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Companies'**
+  String get allCompanies;
+
+  /// No description provided for @head.
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get head;
+
+  /// No description provided for @emp.
+  ///
+  /// In en, this message translates to:
+  /// **'emp'**
+  String get emp;
+
+  /// No description provided for @depts.
+  ///
+  /// In en, this message translates to:
+  /// **'depts'**
+  String get depts;
+
+  /// No description provided for @addNewDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Division'**
+  String get addNewDivision;
+
+  /// No description provided for @editDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Division'**
+  String get editDivision;
+
+  /// No description provided for @divisionCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Code'**
+  String get divisionCode;
+
+  /// No description provided for @divisionNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Name (English)'**
+  String get divisionNameEnglish;
+
+  /// No description provided for @divisionNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Name (Arabic)'**
+  String get divisionNameArabic;
+
+  /// No description provided for @headOfDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Head of Division'**
+  String get headOfDivision;
+
+  /// No description provided for @headEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Head Email'**
+  String get headEmail;
+
+  /// No description provided for @headPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Head Phone'**
+  String get headPhone;
+
+  /// No description provided for @businessFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Focus'**
+  String get businessFocus;
+
+  /// No description provided for @totalDepartments.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Departments'**
+  String get totalDepartments;
+
+  /// No description provided for @annualBudgetKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Budget (KWD)'**
+  String get annualBudgetKwd;
+
+  /// No description provided for @divisionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get divisionDescription;
+
+  /// No description provided for @createDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Division'**
+  String get createDivision;
+
+  /// No description provided for @updateDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Division'**
+  String get updateDivision;
+
+  /// No description provided for @selectCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Company'**
+  String get selectCompany;
+
+  /// No description provided for @hintDivisionCode.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., DIV-FIN'**
+  String get hintDivisionCode;
+
+  /// No description provided for @hintDivisionNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Name'**
+  String get hintDivisionNameEnglish;
+
+  /// No description provided for @hintDivisionNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'اسم القسم'**
+  String get hintDivisionNameArabic;
+
+  /// No description provided for @hintHeadOfDivision.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get hintHeadOfDivision;
+
+  /// No description provided for @hintHeadEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'email@company.com'**
+  String get hintHeadEmail;
+
+  /// No description provided for @hintHeadPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'+965 XXXX XXXX'**
+  String get hintHeadPhone;
+
+  /// No description provided for @hintLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Building/Floor'**
+  String get hintLocation;
+
+  /// No description provided for @hintBusinessFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Financial Services'**
+  String get hintBusinessFocus;
+
+  /// No description provided for @hintTotalDepartments.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get hintTotalDepartments;
+
+  /// No description provided for @hintAnnualBudgetKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get hintAnnualBudgetKwd;
+
+  /// No description provided for @hintDivisionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Brief description of the division\'s role and responsibilities'**
+  String get hintDivisionDescription;
+
+  /// No description provided for @divisionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Division Details'**
+  String get divisionDetails;
+
+  /// No description provided for @leadership.
+  ///
+  /// In en, this message translates to:
+  /// **'Leadership'**
+  String get leadership;
+
+  /// No description provided for @organizationalMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Metrics'**
+  String get organizationalMetrics;
+
+  /// No description provided for @annualBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Budget'**
+  String get annualBudget;
 }
 
 class _AppLocalizationsDelegate

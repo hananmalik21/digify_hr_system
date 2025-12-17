@@ -2051,4 +2051,128 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get established => 'تاريخ التأسيس';
+
+  @override
+  String get divisionManagement => 'إدارة الأقسام';
+
+  @override
+  String get manageDivisionsSubtitle => 'إدارة الأقسام التنظيمية عبر الشركات';
+
+  @override
+  String get addDivision => 'إضافة قسم';
+
+  @override
+  String get totalDivisions => 'إجمالي الأقسام';
+
+  @override
+  String get activeDivisions => 'الأقسام النشطة';
+
+  @override
+  String get totalBudget => 'إجمالي الميزانية';
+
+  @override
+  String get searchDivisionsPlaceholder =>
+      'البحث حسب اسم القسم أو الرمز أو رئيس القسم...';
+
+  @override
+  String get allCompanies => 'جميع الشركات';
+
+  @override
+  String get head => 'الرئيس';
+
+  @override
+  String get emp => 'موظف';
+
+  @override
+  String get depts => 'أقسام';
+
+  @override
+  String get addNewDivision => 'إضافة قسم جديد';
+
+  @override
+  String get editDivision => 'تعديل القسم';
+
+  @override
+  String get divisionCode => 'رمز القسم';
+
+  @override
+  String get divisionNameEnglish => 'اسم القسم (بالإنجليزية)';
+
+  @override
+  String get divisionNameArabic => 'اسم القسم (بالعربية)';
+
+  @override
+  String get headOfDivision => 'رئيس القسم';
+
+  @override
+  String get headEmail => 'البريد الإلكتروني للرئيس';
+
+  @override
+  String get headPhone => 'هاتف الرئيس';
+
+  @override
+  String get businessFocus => 'التركيز التجاري';
+
+  @override
+  String get totalDepartments => 'إجمالي الإدارات';
+
+  @override
+  String get annualBudgetKwd => 'الميزانية السنوية (دينار كويتي)';
+
+  @override
+  String get divisionDescription => 'الوصف';
+
+  @override
+  String get createDivision => 'إنشاء القسم';
+
+  @override
+  String get updateDivision => 'تحديث القسم';
+
+  @override
+  String get selectCompany => 'اختر الشركة';
+
+  @override
+  String get hintDivisionCode => 'مثال: DIV-FIN';
+
+  @override
+  String get hintDivisionNameEnglish => 'اسم القسم';
+
+  @override
+  String get hintDivisionNameArabic => 'اسم القسم';
+
+  @override
+  String get hintHeadOfDivision => 'الاسم الكامل';
+
+  @override
+  String get hintHeadEmail => 'email@company.com';
+
+  @override
+  String get hintHeadPhone => '+965 XXXX XXXX';
+
+  @override
+  String get hintLocation => 'المبنى/الطابق';
+
+  @override
+  String get hintBusinessFocus => 'مثال: الخدمات المالية';
+
+  @override
+  String get hintTotalDepartments => '0';
+
+  @override
+  String get hintAnnualBudgetKwd => '0';
+
+  @override
+  String get hintDivisionDescription => 'وصف موجز لدور ومسؤوليات القسم';
+
+  @override
+  String get divisionDetails => 'تفاصيل القسم';
+
+  @override
+  String get leadership => 'القيادة';
+
+  @override
+  String get organizationalMetrics => 'المقاييس التنظيمية';
+
+  @override
+  String get annualBudget => 'الميزانية السنوية';
 }

@@ -2061,4 +2061,130 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get established => 'Established';
+
+  @override
+  String get divisionManagement => 'Division Management';
+
+  @override
+  String get manageDivisionsSubtitle =>
+      'Manage organizational divisions across companies';
+
+  @override
+  String get addDivision => 'Add Division';
+
+  @override
+  String get totalDivisions => 'Total Divisions';
+
+  @override
+  String get activeDivisions => 'Active Divisions';
+
+  @override
+  String get totalBudget => 'Total Budget';
+
+  @override
+  String get searchDivisionsPlaceholder =>
+      'Search by division name, code, or head of division...';
+
+  @override
+  String get allCompanies => 'All Companies';
+
+  @override
+  String get head => 'Head';
+
+  @override
+  String get emp => 'emp';
+
+  @override
+  String get depts => 'depts';
+
+  @override
+  String get addNewDivision => 'Add New Division';
+
+  @override
+  String get editDivision => 'Edit Division';
+
+  @override
+  String get divisionCode => 'Division Code';
+
+  @override
+  String get divisionNameEnglish => 'Division Name (English)';
+
+  @override
+  String get divisionNameArabic => 'Division Name (Arabic)';
+
+  @override
+  String get headOfDivision => 'Head of Division';
+
+  @override
+  String get headEmail => 'Head Email';
+
+  @override
+  String get headPhone => 'Head Phone';
+
+  @override
+  String get businessFocus => 'Business Focus';
+
+  @override
+  String get totalDepartments => 'Total Departments';
+
+  @override
+  String get annualBudgetKwd => 'Annual Budget (KWD)';
+
+  @override
+  String get divisionDescription => 'Description';
+
+  @override
+  String get createDivision => 'Create Division';
+
+  @override
+  String get updateDivision => 'Update Division';
+
+  @override
+  String get selectCompany => 'Select Company';
+
+  @override
+  String get hintDivisionCode => 'e.g., DIV-FIN';
+
+  @override
+  String get hintDivisionNameEnglish => 'Division Name';
+
+  @override
+  String get hintDivisionNameArabic => 'اسم القسم';
+
+  @override
+  String get hintHeadOfDivision => 'Full Name';
+
+  @override
+  String get hintHeadEmail => 'email@company.com';
+
+  @override
+  String get hintHeadPhone => '+965 XXXX XXXX';
+
+  @override
+  String get hintLocation => 'Building/Floor';
+
+  @override
+  String get hintBusinessFocus => 'e.g., Financial Services';
+
+  @override
+  String get hintTotalDepartments => '0';
+
+  @override
+  String get hintAnnualBudgetKwd => '0';
+
+  @override
+  String get hintDivisionDescription =>
+      'Brief description of the division\'s role and responsibilities';
+
+  @override
+  String get divisionDetails => 'Division Details';
+
+  @override
+  String get leadership => 'Leadership';
+
+  @override
+  String get organizationalMetrics => 'Organizational Metrics';
+
+  @override
+  String get annualBudget => 'Annual Budget';
 }
