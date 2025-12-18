@@ -7,63 +7,69 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_department_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/department_details_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/section.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/section_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_section_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/section_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DepartmentManagementScreen extends ConsumerWidget {
-  const DepartmentManagementScreen({super.key});
+class SectionManagementScreen extends ConsumerWidget {
+  const SectionManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final departments = ref.watch(filteredDepartmentProvider);
-    final allDepartments = ref.watch(departmentListProvider);
-    final totalEmployees = allDepartments.fold<int>(
+    final sections = ref.watch(filteredSectionsProvider);
+    final allSections = ref.watch(sectionListProvider);
+    final totalEmployees = allSections.fold<int>(
       0,
-      (prev, department) => prev + department.employees,
+      (prev, section) => prev + section.employees,
     );
-    final activeDepartments =
-        allDepartments.where((department) => department.isActive).length;
-    final totalBudget = allDepartments.fold<double>(
+    final activeSections =
+        allSections.where((section) => section.isActive).length;
+    final totalBudget = allSections.fold<double>(
       0,
-      (prev, department) {
-        final sanitized =
-            department.budget.replaceAll('M', '').replaceAll(' ', '');
-        final parsed = double.tryParse(sanitized);
-        return prev + (parsed ?? 0);
+      (prev, section) {
+        final sanitized = section.budget
+            .replaceAll('M', '')
+            .replaceAll('K', '')
+            .replaceAll(' ', '');
+        final parsed = double.tryParse(sanitized) ?? 0;
+        // Convert K to M for calculation (divide by 1000)
+        if (section.budget.contains('K')) {
+          return prev + (parsed / 1000);
+        }
+        return prev + parsed;
       },
     );
     final isDark = context.isDark;
 
     final stats = [
       StatsCardData(
-        label: localizations.totalDepartments,
-        value: '${allDepartments.length}',
-        iconPath: 'assets/icons/total_departments_icon.svg',
+        label: localizations.totalSections,
+        value: '${allSections.length}',
+        iconPath: 'assets/icons/section_stat_icon.svg',
         iconColor: const Color(0xFF00BBA7),
         iconBackground: const Color(0xFFCFFBF1),
       ),
       StatsCardData(
-        label: localizations.activeDepartments,
-        value: '$activeDepartments',
+        label: localizations.activeSections,
+        value: '$activeSections',
         iconPath: 'assets/icons/active_departments_icon.svg',
         iconColor: const Color(0xFF22C55E),
         iconBackground: const Color(0xFFDCFCE7),
       ),
       StatsCardData(
-        label: localizations.totalEmployeesDept,
+        label: localizations.totalEmployeesSection,
         value: '$totalEmployees',
         iconPath: 'assets/icons/total_employees_dept_icon.svg',
         iconColor: const Color(0xFF06B6D4),
         iconBackground: const Color(0xFFCEFAFE),
       ),
       StatsCardData(
-        label: localizations.totalBudgetDept,
+        label: localizations.totalBudgetSection,
         value: '${totalBudget.toStringAsFixed(1)}M KWD',
         iconPath: 'assets/icons/total_budget_dept_icon.svg',
         iconColor: const Color(0xFF10B981),
@@ -105,9 +111,9 @@ class DepartmentManagementScreen extends ConsumerWidget {
               SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
               _buildSearchBar(context, ref, localizations),
               SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-              _buildDepartmentList(
+              _buildSectionList(
                 context,
-                departments,
+                sections,
                 localizations,
                 isDark: isDark,
               ),
@@ -132,7 +138,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
           ),
           child: Center(
             child: SvgIconWidget(
-              assetPath: 'assets/icons/department_management_header.svg',
+              assetPath: 'assets/icons/section_icon.svg',
               size: 24.sp,
               color: Colors.white,
             ),
@@ -144,7 +150,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                localizations.departmentManagement,
+                localizations.sectionManagement,
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
@@ -155,7 +161,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
               ),
               SizedBox(height: 4.h),
               Text(
-                localizations.manageDepartmentsSubtitle,
+                localizations.manageSectionsSubtitle,
                 style: TextStyle(
                   fontSize: 15.1.sp,
                   fontWeight: FontWeight.w400,
@@ -168,10 +174,10 @@ class DepartmentManagementScreen extends ConsumerWidget {
         ),
         SizedBox(width: 12.w),
         GradientIconButton(
-          label: localizations.addDepartment,
-          iconPath: 'assets/icons/add_department_icon.svg',
+          label: localizations.addSection,
+          iconPath: 'assets/icons/add_new_icon_figma.svg',
           backgroundColor: const Color(0xFF009689),
-          onTap: () => AddDepartmentDialog.show(context),
+          onTap: () => AddSectionDialog.show(context),
         ),
       ],
     );
@@ -244,14 +250,13 @@ class DepartmentManagementScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
                 onChanged: (value) =>
-                    ref.read(departmentSearchQueryProvider.notifier).state =
-                        value,
+                    ref.read(sectionSearchQueryProvider.notifier).state = value,
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
                   fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
                   border: InputBorder.none,
-                  hintText: localizations.searchDepartmentsPlaceholder,
+                  hintText: localizations.searchSectionsPlaceholder,
                   hintStyle: TextStyle(
                     color: const Color(0xFF364153).withValues(alpha: 0.5),
                     fontSize: 15.3.sp,
@@ -280,49 +285,18 @@ class DepartmentManagementScreen extends ConsumerWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            child: Row(
-              children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/business_unit_filter_icon.svg',
-                  size: 20.sp,
-                  color: context.themeTextSecondary,
-                ),
-                SizedBox(width: 8.w),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFD1D5DC)),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Text(
-                    localizations.allBusinessUnits,
-                    style: TextStyle(
-                      fontSize: 15.4.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A),
-                      height: 19 / 15.4,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildDepartmentList(
+  Widget _buildSectionList(
     BuildContext context,
-    List<DepartmentOverview> departments,
+    List<SectionOverview> sections,
     AppLocalizations localizations, {
     required bool isDark,
   }) {
-    if (departments.isEmpty) {
+    if (sections.isEmpty) {
       return Center(
         child: Text(
           localizations.noResultsFound,
@@ -337,7 +311,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
           context,
           mobile: 1,
           tablet: 2,
-          web: 2,
+          web: 3,
         );
         const gap = 24.0;
         final totalSpacing = gap * (columns - 1);
@@ -348,11 +322,11 @@ class DepartmentManagementScreen extends ConsumerWidget {
         return Wrap(
           spacing: gap,
           runSpacing: 24.h,
-          children: departments.map((department) {
+          children: sections.map((section) {
             return SizedBox(
               width: columns == 1 ? double.infinity : cardWidth,
-              child: _DepartmentCard(
-                department: department,
+              child: _SectionCard(
+                section: section,
                 localizations: localizations,
                 isDark: isDark,
               ),
@@ -364,13 +338,13 @@ class DepartmentManagementScreen extends ConsumerWidget {
   }
 }
 
-class _DepartmentCard extends StatelessWidget {
-  final DepartmentOverview department;
+class _SectionCard extends StatelessWidget {
+  final SectionOverview section;
   final AppLocalizations localizations;
   final bool isDark;
 
-  const _DepartmentCard({
-    required this.department,
+  const _SectionCard({
+    required this.section,
     required this.localizations,
     required this.isDark,
   });
@@ -378,7 +352,7 @@ class _DepartmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => DepartmentDetailsDialog.show(context, department),
+      onTap: () => SectionDetailsDialog.show(context, section),
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
@@ -420,7 +394,7 @@ class _DepartmentCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: SvgIconWidget(
-                                assetPath: 'assets/icons/department_card_icon.svg',
+                                assetPath: 'assets/icons/section_icon.svg',
                                 size: 20.sp,
                                 color: const Color(0xFF00BBA7),
                               ),
@@ -432,7 +406,7 @@ class _DepartmentCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  department.name,
+                                  section.name,
                                   style: TextStyle(
                                     fontSize: 17.sp,
                                     fontWeight: FontWeight.w500,
@@ -441,7 +415,7 @@ class _DepartmentCard extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  department.nameArabic,
+                                  section.nameArabic,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w400,
@@ -459,13 +433,13 @@ class _DepartmentCard extends StatelessWidget {
                       Row(
                         children: [
                           _Badge(
-                            label: department.code,
+                            label: section.code,
                             backgroundColor: const Color(0xFFF3F4F6),
                             textColor: const Color(0xFF364153),
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: department.isActive
+                            label: section.isActive
                                 ? localizations.active
                                 : localizations.inactive,
                             backgroundColor: isDark
@@ -479,13 +453,13 @@ class _DepartmentCard extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       _detailRow(
-                        'assets/icons/division_small_icon_2.svg',
-                        department.divisionName,
+                        'assets/icons/department_small_icon.svg',
+                        section.departmentName,
                       ),
                       SizedBox(height: 4.h),
                       _detailRow(
                         'assets/icons/business_unit_small_icon.svg',
-                        department.businessUnitName,
+                        section.businessUnitName,
                       ),
                     ],
                   ),
@@ -494,13 +468,15 @@ class _DepartmentCard extends StatelessWidget {
                   children: [
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
+                      iconColor: const Color(0xFF22C55E),
                       onTap: () {
-                        AddDepartmentDialog.show(context, isEditMode: true);
+                        AddSectionDialog.show(context, isEditMode: true);
                       },
                     ),
                     SizedBox(width: 8.w),
                     _ActionIcon(
                       assetPath: 'assets/icons/delete_icon_red.svg',
+                      iconColor: const Color(0xFFEF4444),
                       onTap: () {},
                     ),
                   ],
@@ -523,7 +499,7 @@ class _DepartmentCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    '${localizations.head}: ${department.headName}',
+                    '${localizations.head}: ${section.headName}',
                     style: TextStyle(
                       fontSize: 13.9.sp,
                       fontWeight: FontWeight.w500,
@@ -535,42 +511,18 @@ class _DepartmentCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _iconStat(
-                    'assets/icons/email_icon.svg',
-                    department.headEmail ?? localizations.notSpecified,
-                    context,
-                  ),
-                ),
-                Expanded(
-                  child: _iconStat(
-                    'assets/icons/phone_icon.svg',
-                    department.headPhone ?? localizations.notSpecified,
-                    context,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
             Wrap(
               spacing: 12.w,
               runSpacing: 8.h,
               children: [
                 _iconStat(
                   'assets/icons/department_metric_icon.svg',
-                  '${department.employees} ${localizations.emp}',
-                  context,
-                ),
-                _iconStat(
-                  'assets/icons/department_metric2_icon.svg',
-                  '${department.sections} ${localizations.depts}',
+                  '${section.employees} ${localizations.emp}',
                   context,
                 ),
                 _iconStat(
                   'assets/icons/department_metric3_icon.svg',
-                  department.budget,
+                  '\$ ${section.budget}',
                   context,
                 ),
               ],
@@ -579,13 +531,13 @@ class _DepartmentCard extends StatelessWidget {
             Row(
               children: [
                 SvgIconWidget(
-                  assetPath: 'assets/icons/department_card_icon.svg',
+                  assetPath: 'assets/icons/focus_area_icon.svg',
                   size: 16.sp,
                   color: context.themeTextSecondary,
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  department.focusArea,
+                  section.focusArea,
                   style: TextStyle(
                     fontSize: 13.6.sp,
                     fontWeight: FontWeight.w400,
@@ -688,10 +640,12 @@ class _Badge extends StatelessWidget {
 class _ActionIcon extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
+  final Color? iconColor;
 
   const _ActionIcon({
     required this.assetPath,
     required this.onTap,
+    this.iconColor,
   });
 
   @override
@@ -709,10 +663,11 @@ class _ActionIcon extends StatelessWidget {
           child: SvgIconWidget(
             assetPath: assetPath,
             size: 16.sp,
-            color: context.themeTextSecondary,
+            color: iconColor ?? context.themeTextSecondary,
           ),
         ),
       ),
     );
   }
 }
+

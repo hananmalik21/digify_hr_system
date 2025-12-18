@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/company_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/division_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/department_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/section_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -137,9 +138,8 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'section',
                 name: 'enterprise-structure-section',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Section',
-                ),
+                builder: (context, state) =>
+                    const SectionManagementScreen(),
               ),
             ],
           ),

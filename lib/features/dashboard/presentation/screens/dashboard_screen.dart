@@ -7,97 +7,460 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reorderables/reorderables.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  bool _initialized = false;
+  late List<_DashboardButton> _buttons;
+
+  // ✅ One toggle that works no matter which eye you tap
+  bool _showSideCards = true;
+
+  void _toggleSideCards() {
+    if (!mounted) return;
+    setState(() => _showSideCards = !_showSideCards);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final loc = AppLocalizations.of(context)!;
+
+    final canonical = <_DashboardButton>[
+      _DashboardButton(
+        id: 'dashboard',
+        icon: 'assets/icons/dashboard_main_icon.svg',
+        label: loc.dashboard,
+        color: AppColors.primaryLight,
+        route: '/dashboard',
+      ),
+      _DashboardButton(
+        id: 'employees',
+        icon: 'assets/icons/employees_main_icon.svg',
+        label: loc.employees,
+        color: const Color(0xFF00C950),
+        route: '/employees',
+      ),
+      _DashboardButton(
+        id: 'time-management',
+        icon: 'assets/icons/time_management_main_icon.svg',
+        label: loc.timeManagement,
+        color: const Color(0xFFFF6900),
+        route: '/time-management',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'leave-management',
+        icon: 'assets/icons/leave_management_main_icon.svg',
+        label: loc.leaveManagement,
+        color: const Color(0xFF00B8DB),
+        route: '/leave-management',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'attendance',
+        icon: 'assets/icons/attendance_main_icon.svg',
+        label: loc.attendance,
+        color: const Color(0xFFFE9A00),
+        route: '/attendance',
+      ),
+      _DashboardButton(
+        id: 'payroll',
+        icon: 'assets/icons/payroll_main_icon.svg',
+        label: loc.payroll,
+        color: const Color(0xFF00BC7D),
+        route: '/payroll',
+      ),
+      _DashboardButton(
+        id: 'compliance',
+        icon: 'assets/icons/compliance_main_icon.svg',
+        label: loc.compliance,
+        color: const Color(0xFFFB2C36),
+        route: '/compliance',
+      ),
+      _DashboardButton(
+        id: 'workforce-structure',
+        icon: 'assets/icons/workforce_structure_main_icon.svg',
+        label: loc.workforceStructure,
+        color: const Color(0xFF00BBA7),
+        route: '/workforce-structure',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'enterprise-structure',
+        icon: 'assets/icons/enterprise_structure_main_icon.svg',
+        label: loc.enterpriseStructure,
+        color: const Color(0xFF615FFF),
+        route: '/enterprise-structure',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'reports',
+        icon: 'assets/icons/reports_main_icon.svg',
+        label: loc.reports,
+        color: const Color(0xFF62748E),
+        route: '/reports',
+      ),
+      _DashboardButton(
+        id: 'eos-calculator',
+        icon: 'assets/icons/eos_calculator_main_icon.svg',
+        label: loc.eosCalculator,
+        color: const Color(0xFF8E51FF),
+        route: '/eos-calculator',
+      ),
+      _DashboardButton(
+        id: 'government-forms',
+        icon: 'assets/icons/government_forms_main_icon.svg',
+        label: loc.governmentForms,
+        color: const Color(0xFFFF2056),
+        route: '/government-forms',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'hr-operations',
+        icon: 'assets/icons/hr_operations_main_icon.svg',
+        label: loc.hrOperations,
+        color: const Color(0xFF7CCF00),
+        route: '/hr-operations',
+      ),
+      _DashboardButton(
+        id: 'dei-dashboard',
+        icon: 'assets/icons/dei_dashboard_main_icon.svg',
+        label: loc.deiDashboard,
+        color: const Color(0xFFE12AFB),
+        route: '/dei-dashboard',
+      ),
+      _DashboardButton(
+        id: 'module-catalogue',
+        icon: 'assets/icons/module_catalogue_main_icon.svg',
+        label: loc.moduleCatalogue,
+        color: const Color(0xFFAD46FF),
+        route: '/module-catalogue',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'product-intro',
+        icon: 'assets/icons/product_intro_main_icon.svg',
+        label: loc.productIntroduction,
+        color: const Color(0xFFF6339A),
+        route: '/product-intro',
+        isMultiLine: true,
+      ),
+      _DashboardButton(
+        id: 'settings',
+        icon: 'assets/icons/settings_main_icon.svg',
+        label: loc.settings,
+        color: const Color(0xFF6A7282),
+        route: '/settings',
+      ),
+    ];
+
+    if (!_initialized) {
+      _buttons = canonical;
+      _initialized = true;
+      return;
+    }
+
+    final byId = {for (final b in canonical) b.id: b};
+    _buttons = _buttons.map((old) {
+      final fresh = byId[old.id];
+      if (fresh == null) return old;
+      return old.copyWith(label: fresh.label);
+    }).toList();
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      final item = _buttons.removeAt(oldIndex);
+      _buttons.insert(newIndex, item);
+    });
+  }
+
+  @override
+  @override
+  Widget build(BuildContext context) {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
-    
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
-    
-    return Container(
-      color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: ResponsiveHelper.getResponsivePadding(
-              context,
-              mobile: EdgeInsetsDirectional.only(
-                top: 16.h,
-                start: 16.w,
-                end: 16.w,
-                bottom: 16.h,
-              ),
-              tablet: EdgeInsetsDirectional.only(
-                top: 24.h,
-                start: 24.w,
-                end: 24.w,
-                bottom: 24.h,
-              ),
-              web: EdgeInsetsDirectional.only(
-                top: 88.h,
-                start: 32.w,
-                end: 32.w,
-                bottom: 24.h,
-              ),
-            ),
-            child: Container(
-              padding: ResponsiveHelper.getResponsivePadding(
-                context,
-                mobile: EdgeInsetsDirectional.all(16.w),
-                tablet: EdgeInsetsDirectional.all(20.w),
-                web: EdgeInsetsDirectional.all(24.w),
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: const [0.0, 0.5, 1.0],
-                  colors: isDark
-                      ? [
-                          AppColors.cardBackgroundGreyDark,
-                          AppColors.infoBgDark,
-                          AppColors.cardBackgroundGreyDark,
-                        ]
-                      : const [
-                          Color(0xFFF3F4F6),
-                          Color(0xFFEFF6FF),
-                          Color(0xFFF3F4F6),
-                        ],
+
+    return Scaffold(
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : const Color(0xFFF9FAFB),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // ✅ Scrollable content
+            SingleChildScrollView(
+              child: Padding(
+                padding: ResponsiveHelper.getResponsivePadding(
+                  context,
+                  mobile: EdgeInsetsDirectional.only(
+                    top: 16.h,
+                    start: 16.w,
+                    end: 16.w,
+                    bottom: 16.h,
+                  ),
+                  tablet: EdgeInsetsDirectional.only(
+                    top: 24.h,
+                    start: 24.w,
+                    end: 24.w,
+                    bottom: 24.h,
+                  ),
+                  web: EdgeInsetsDirectional.only(
+                    top: 88.h,
+                    start: 32.w,
+                    end: 32.w,
+                    bottom: 24.h,
+                  ),
+                ),
+                child: Container(
+                  padding: ResponsiveHelper.getResponsivePadding(
+                    context,
+                    mobile: EdgeInsetsDirectional.all(16.w),
+                    tablet: EdgeInsetsDirectional.all(20.w),
+                    web: EdgeInsetsDirectional.all(24.w),
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: const [0.0, 0.5, 1.0],
+                      colors: isDark
+                          ? [
+                              AppColors.cardBackgroundGreyDark,
+                              AppColors.infoBgDark,
+                              AppColors.cardBackgroundGreyDark,
+                            ]
+                          : const [
+                              Color(0xFFF3F4F6),
+                              Color(0xFFEFF6FF),
+                              Color(0xFFF3F4F6),
+                            ],
+                    ),
+                  ),
+                  child: ResponsiveHelper.isMobile(context)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildDraggableIconGrid(context),
+                            SizedBox(height: 24.h),
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 240),
+                              switchInCurve: Curves.easeOutCubic,
+                              switchOutCurve: Curves.easeInCubic,
+                              transitionBuilder: (child, anim) =>
+                                  FadeTransition(
+                                    opacity: anim,
+                                    child: ScaleTransition(
+                                      scale: Tween<double>(
+                                        begin: 0.97,
+                                        end: 1.0,
+                                      ).animate(anim),
+                                      child: child,
+                                    ),
+                                  ),
+                              child: _showSideCards
+                                  ? Column(
+                                      key: const ValueKey('sideCardsOn'),
+                                      children: [
+                                        _buildTasksEventsCard(
+                                          context,
+                                          localizations,
+                                        ),
+                                        SizedBox(height: 16.h),
+                                        _buildAttendanceLeavesCard(
+                                          context,
+                                          localizations,
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(
+                                      key: ValueKey('sideCardsOff'),
+                                    ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: _buildDraggableIconGrid(context)),
+                            SizedBox(
+                              width: ResponsiveHelper.isTablet(context)
+                                  ? 16.w
+                                  : 24.w,
+                            ),
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 240),
+                              switchInCurve: Curves.easeOutCubic,
+                              switchOutCurve: Curves.easeInCubic,
+                              transitionBuilder: (child, anim) =>
+                                  FadeTransition(
+                                    opacity: anim,
+                                    child: ScaleTransition(
+                                      scale: Tween<double>(
+                                        begin: 0.97,
+                                        end: 1.0,
+                                      ).animate(anim),
+                                      child: child,
+                                    ),
+                                  ),
+                              child: _showSideCards
+                                  ? SizedBox(
+                                      key: const ValueKey('sideColOn'),
+                                      width: ResponsiveHelper.isTablet(context)
+                                          ? 200.w
+                                          : 272.w,
+                                      child: Column(
+                                        children: [
+                                          _buildTasksEventsCard(
+                                            context,
+                                            localizations,
+                                          ),
+                                          SizedBox(height: 24.h),
+                                          _buildAttendanceLeavesCard(
+                                            context,
+                                            localizations,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox(key: ValueKey('sideColOff')),
+                            ),
+                          ],
+                        ),
                 ),
               ),
-              child: isMobile
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildIconGrid(context, localizations),
-                        SizedBox(height: 24.h),
-                        _buildTasksEventsCard(context, localizations),
-                        SizedBox(height: 16.h),
-                        _buildAttendanceLeavesCard(context, localizations),
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: _buildIconGrid(context, localizations)),
-                        SizedBox(width: isTablet ? 16.w : 24.w),
-                        SizedBox(
-                          width: isTablet ? 200.w : 272.w,
-                          child: Column(
-                            children: [
-                              _buildTasksEventsCard(context, localizations),
-                              SizedBox(height: 24.h),
-                              _buildAttendanceLeavesCard(context, localizations),
-                            ],
-                          ),
-                        ),
-                      ],
+            ),
+
+            // ✅ Floating eye ALWAYS on top while scrolling (only when hidden)
+            Positioned(
+              top: 12.h,
+              right: 12.w,
+              child: IgnorePointer(
+                ignoring: _showSideCards, // when cards visible, disable taps
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, anim) => FadeTransition(
+                    opacity: anim,
+                    child: ScaleTransition(
+                      scale: Tween<double>(begin: 0.92, end: 1.0).animate(anim),
+                      child: child,
                     ),
+                  ),
+                  child: _showSideCards
+                      ? const SizedBox.shrink(key: ValueKey('eyeOff'))
+                      : _buildFloatingDashboardIcon(context),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ✅ Fully responsive Drag & Drop grid
+  Widget _buildDraggableIconGrid(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxW = constraints.maxWidth;
+        final spec = _gridSpecForWidth(context, maxW);
+
+        return ReorderableWrap(
+          // spacing: spec.spacing,
+          spacing: spec.spacing,
+          runSpacing: 32.h,
+          needsLongPressDraggable: spec.needsLongPress,
+          onReorder: _onReorder,
+          children: List.generate(_buttons.length, (index) {
+            final btn = _buttons[index];
+            return SizedBox(
+              key: ValueKey('dash-${btn.id}'),
+              width: spec.tileW,
+              height: spec.tileH,
+              child: _HoverableIconButton(
+                button: btn,
+                onTap: () => context.go(btn.route),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
+  // ---------- Grid spec ----------
+  _GridSpec _gridSpecForWidth(BuildContext context, double maxW) {
+    final isMobile = maxW < 600;
+    final isTablet = maxW >= 600 && maxW < 1024;
+    final isWeb = maxW >= 1024;
+
+    // ✅ spacing in actual pixels using ScreenUtil so it matches your wrap spacing
+    final double spacing = isMobile ? 23.w : (isTablet ? 16.w : 16.w);
+
+    // ✅ ALWAYS 2 columns on mobile
+    final int columns = isMobile ? 2 : (isTablet ? 3 : 4);
+
+    // ✅ compute width per tile based on columns + spacing
+    final double usable = maxW - (spacing * (columns - 1));
+    final double rawTileW = usable / columns;
+
+    // ✅ clamp smartly
+    final double minW = isMobile ? 140.0 : 150.0;
+    final double maxWClamp = isWeb ? 190.0 : (isTablet ? 220.0 : 200.0);
+
+    final double tileW = rawTileW.clamp(minW, maxWClamp).toDouble();
+
+    // ✅ keep height proportional
+    final double tileH = (tileW * 0.90).clamp(150.0, 175.0).toDouble();
+
+    return _GridSpec(
+      columns: columns,
+      spacing: spacing,
+      tileW: tileW,
+      tileH: tileH,
+      needsLongPress: isMobile,
+    );
+  }
+
+  // ✅ Floating icon builder (tap to show back)
+  Widget _buildFloatingDashboardIcon(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: _toggleSideCards,
+        child: Container(
+          width: 56.w,
+          height: 56.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF4F46E5), Color(0xFF2563EB)],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.18),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Center(
+            child: SvgIconWidget(
+              assetPath: 'assets/icons/eyes_icon.svg',
+              size: 24.sp,
+              color: Colors.white,
             ),
           ),
         ),
@@ -105,166 +468,20 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildIconGrid(BuildContext context, AppLocalizations localizations) {
-    final buttons = [
-      _DashboardButton(
-        icon: 'assets/icons/dashboard_main_icon.svg',
-        label: localizations.dashboard,
-        color: AppColors.primaryLight,
-        route: '/dashboard',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/employees_main_icon.svg',
-        label: localizations.employees,
-        color: const Color(0xFF00C950),
-        route: '/employees',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/time_management_main_icon.svg',
-        label: localizations.timeManagement,
-        color: const Color(0xFFFF6900),
-        route: '/time-management',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/leave_management_main_icon.svg',
-        label: localizations.leaveManagement,
-        color: const Color(0xFF00B8DB),
-        route: '/leave-management',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/attendance_main_icon.svg',
-        label: localizations.attendance,
-        color: const Color(0xFFFE9A00),
-        route: '/attendance',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/payroll_main_icon.svg',
-        label: localizations.payroll,
-        color: const Color(0xFF00BC7D),
-        route: '/payroll',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/compliance_main_icon.svg',
-        label: localizations.compliance,
-        color: const Color(0xFFFB2C36),
-        route: '/compliance',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/workforce_structure_main_icon.svg',
-        label: localizations.workforceStructure,
-        color: const Color(0xFF00BBA7),
-        route: '/workforce-structure',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/enterprise_structure_main_icon.svg',
-        label: localizations.enterpriseStructure,
-        color: const Color(0xFF615FFF),
-        route: '/enterprise-structure',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/reports_main_icon.svg',
-        label: localizations.reports,
-        color: const Color(0xFF62748E),
-        route: '/reports',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/eos_calculator_main_icon.svg',
-        label: localizations.eosCalculator,
-        color: const Color(0xFF8E51FF),
-        route: '/eos-calculator',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/government_forms_main_icon.svg',
-        label: localizations.governmentForms,
-        color: const Color(0xFFFF2056),
-        route: '/government-forms',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/hr_operations_main_icon.svg',
-        label: localizations.hrOperations,
-        color: const Color(0xFF7CCF00),
-        route: '/hr-operations',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/dei_dashboard_main_icon.svg',
-        label: localizations.deiDashboard,
-        color: const Color(0xFFE12AFB),
-        route: '/dei-dashboard',
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/module_catalogue_main_icon.svg',
-        label: localizations.moduleCatalogue,
-        color: const Color(0xFFAD46FF),
-        route: '/module-catalogue',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/product_intro_main_icon.svg',
-        label: localizations.productIntroduction,
-        color: const Color(0xFFF6339A),
-        route: '/product-intro',
-        isMultiLine: true,
-      ),
-      _DashboardButton(
-        icon: 'assets/icons/settings_main_icon.svg',
-        label: localizations.settings,
-        color: const Color(0xFF6A7282),
-        route: '/settings',
-      ),
-    ];
+  // ---------------------- Cards ----------------------
 
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final padding = isMobile ? 32.w : (isTablet ? 48.w : 64.w);
-    final availableWidth = screenWidth - padding;
-    
-    // Calculate button width based on screen size
-    double buttonWidth;
-    if (isMobile) {
-      buttonWidth = (availableWidth - 8.w) / 2; // 2 columns with spacing
-    } else if (isTablet) {
-      buttonWidth = (availableWidth - 32.w) / 3; // 3 columns with spacing
-    } else {
-      buttonWidth = 189.w; // Fixed width on desktop
-    }
-    
-    return Wrap(
-      spacing: isMobile ? 8.w : (isTablet ? 16.w : 0.w),
-      runSpacing: isMobile ? 12.h : 11.75.h,
-      children: buttons.asMap().entries.map((entry) {
-        final index = entry.key;
-        final button = entry.value;
-        return SizedBox(
-          width: buttonWidth,
-          child: _buildIconButton(context, button, index),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildIconButton(
+  Widget _buildTasksEventsCard(
     BuildContext context,
-    _DashboardButton button,
-    int index,
+    AppLocalizations localizations,
   ) {
-    return _HoverableIconButton(
-      key: ValueKey('dashboard-button-$index'),
-      button: button,
-      onTap: () => context.go(button.route),
-    );
-  }
-
-  Widget _buildTasksEventsCard(BuildContext context, AppLocalizations localizations) {
     final isDark = context.isDark;
-    final textColor = isDark ? AppColors.textPrimaryDark : const Color(0xFF101828);
-    final tertiaryColor = isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282);
-    
+    final textColor = isDark
+        ? AppColors.textPrimaryDark
+        : const Color(0xFF101828);
+    final tertiaryColor = isDark
+        ? AppColors.textTertiaryDark
+        : const Color(0xFF6A7282);
+
     return Container(
       padding: EdgeInsetsDirectional.all(20.w),
       decoration: BoxDecoration(
@@ -283,10 +500,16 @@ class DashboardScreen extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/tasks_events_icon.svg',
-                    size: 20.sp,
-                    color: textColor,
+                  Container(
+                    padding: EdgeInsets.all(7.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.sidebarActiveParent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SvgIconWidget(
+                      assetPath: 'assets/icons/tasks_icon.svg',
+                      color: Colors.white,
+                    ),
                   ),
                   SizedBox(width: 8.w),
                   Text(
@@ -296,7 +519,6 @@ class DashboardScreen extends ConsumerWidget {
                       fontWeight: FontWeight.w600,
                       color: textColor,
                       height: 24 / 15.6,
-                      letterSpacing: 0,
                     ),
                   ),
                 ],
@@ -307,8 +529,8 @@ class DashboardScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(4.r),
                     constraints: const BoxConstraints(),
                     icon: SvgIconWidget(
-                      assetPath: 'assets/icons/add_icon.svg',
-                      size: 16.sp,
+                      assetPath: 'assets/icons/arrow_up.svg',
+                      size: 20.sp,
                       color: textColor,
                     ),
                     onPressed: () {},
@@ -318,11 +540,11 @@ class DashboardScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(4.r),
                     constraints: const BoxConstraints(),
                     icon: SvgIconWidget(
-                      assetPath: 'assets/icons/more_icon.svg',
-                      size: 20.sp,
+                      assetPath: 'assets/icons/eyes_icon.svg',
+                      size: 16.sp,
                       color: textColor,
                     ),
-                    onPressed: () {},
+                    onPressed: _toggleSideCards, // ✅ same toggle everywhere
                   ),
                 ],
               ),
@@ -336,7 +558,6 @@ class DashboardScreen extends ConsumerWidget {
               fontWeight: FontWeight.w600,
               color: tertiaryColor,
               height: 16 / 12,
-              letterSpacing: 0,
             ),
           ),
           SizedBox(height: 12.h),
@@ -370,7 +591,6 @@ class DashboardScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: tertiaryColor,
                 height: 16 / 12,
-                letterSpacing: 0,
               ),
             ),
           ),
@@ -408,7 +628,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFF155DFC),
                   height: 20 / 13.6,
-                  letterSpacing: 0,
                 ),
               ),
             ),
@@ -426,17 +645,22 @@ class DashboardScreen extends ConsumerWidget {
   ) {
     final isDark = context.isDark;
     final completedColor = AppColors.primary;
-    final borderColor = isDark ? AppColors.borderGreyDark : const Color(0xFF767676);
+    final borderColor = isDark
+        ? AppColors.borderGreyDark
+        : const Color(0xFF767676);
+
     final textColor = isCompleted
         ? (isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF))
         : (isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939));
+
     final subtitleColor = isCompleted
         ? (isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF))
         : (isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282));
+
     final checkboxBg = isCompleted
         ? completedColor
         : (isDark ? AppColors.cardBackgroundDark : Colors.white);
-    
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -468,7 +692,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w400,
                   color: textColor,
                   height: 20 / 13.6,
-                  letterSpacing: 0,
                   decoration: isCompleted ? TextDecoration.lineThrough : null,
                 ),
               ),
@@ -480,7 +703,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w400,
                   color: subtitleColor,
                   height: 16 / 11.8,
-                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -520,7 +742,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                   color: textColor,
                   height: 16 / 12,
-                  letterSpacing: 0,
                 ),
               ),
               Text(
@@ -530,7 +751,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w700,
                   color: textColor,
                   height: 28 / 18,
-                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -546,9 +766,10 @@ class DashboardScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 13.7.sp,
                   fontWeight: FontWeight.w500,
-                  color: context.isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                  color: context.isDark
+                      ? AppColors.textPrimaryDark
+                      : const Color(0xFF1E2939),
                   height: 20 / 13.7,
-                  letterSpacing: 0,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -557,9 +778,10 @@ class DashboardScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
-                  color: context.isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
+                  color: context.isDark
+                      ? AppColors.textTertiaryDark
+                      : const Color(0xFF6A7282),
                   height: 16 / 12,
-                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -569,12 +791,21 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAttendanceLeavesCard(BuildContext context, AppLocalizations localizations) {
+  Widget _buildAttendanceLeavesCard(
+    BuildContext context,
+    AppLocalizations localizations,
+  ) {
     final isDark = context.isDark;
-    final textColor = isDark ? AppColors.textPrimaryDark : const Color(0xFF101828);
-    final tertiaryColor = isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282);
-    final secondaryColor = isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565);
-    
+    final textColor = isDark
+        ? AppColors.textPrimaryDark
+        : const Color(0xFF101828);
+    final tertiaryColor = isDark
+        ? AppColors.textTertiaryDark
+        : const Color(0xFF6A7282);
+    final secondaryColor = isDark
+        ? AppColors.textSecondaryDark
+        : const Color(0xFF4A5565);
+
     return Container(
       padding: EdgeInsetsDirectional.all(20.w),
       decoration: BoxDecoration(
@@ -591,25 +822,35 @@ class DashboardScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/attendance_leaves_icon.svg',
-                    size: 20.sp,
-                    color: textColor,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    localizations.attendanceLeaves,
-                    style: TextStyle(
-                      fontSize: 15.6.sp,
-                      fontWeight: FontWeight.w600,
-                      color: textColor,
-                      height: 24 / 15.6,
-                      letterSpacing: 0,
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(7.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.sidebarActiveParent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: SvgIconWidget(
+                        assetPath: 'assets/icons/clock_icon.svg',
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        localizations.attendanceLeaves,
+                        maxLines: 3,
+                        style: TextStyle(
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w600,
+                          color: textColor,
+                          height: 24 / 15.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Row(
                 children: [
@@ -617,8 +858,8 @@ class DashboardScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(4.r),
                     constraints: const BoxConstraints(),
                     icon: SvgIconWidget(
-                      assetPath: 'assets/icons/calendar_icon.svg',
-                      size: 16.sp,
+                      assetPath: 'assets/icons/arrow_up.svg',
+                      size: 20.sp,
                       color: textColor,
                     ),
                     onPressed: () {},
@@ -628,11 +869,11 @@ class DashboardScreen extends ConsumerWidget {
                     padding: EdgeInsets.all(4.r),
                     constraints: const BoxConstraints(),
                     icon: SvgIconWidget(
-                      assetPath: 'assets/icons/more_icon.svg',
-                      size: 20.sp,
+                      assetPath: 'assets/icons/eyes_icon.svg',
+                      size: 16.sp,
                       color: textColor,
                     ),
-                    onPressed: () {},
+                    onPressed: _toggleSideCards, // ✅ same toggle everywhere
                   ),
                 ],
               ),
@@ -646,7 +887,6 @@ class DashboardScreen extends ConsumerWidget {
               fontWeight: FontWeight.w600,
               color: tertiaryColor,
               height: 16 / 12,
-              letterSpacing: 0,
             ),
           ),
           SizedBox(height: 12.h),
@@ -660,12 +900,13 @@ class DashboardScreen extends ConsumerWidget {
               children: [
                 Container(
                   padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00C950),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF00C950),
                     shape: BoxShape.circle,
                   ),
                   child: SvgIconWidget(
-                    assetPath: 'assets/icons/check_in_icon.svg',
+                    assetPath: 'assets/icons/tasks_icon.svg',
+
                     size: 20.sp,
                     color: Colors.white,
                   ),
@@ -682,7 +923,6 @@ class DashboardScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w500,
                           color: textColor,
                           height: 20 / 13.9,
-                          letterSpacing: 0,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -693,7 +933,6 @@ class DashboardScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w400,
                           color: secondaryColor,
                           height: 16 / 12,
-                          letterSpacing: 0,
                         ),
                       ),
                     ],
@@ -715,7 +954,6 @@ class DashboardScreen extends ConsumerWidget {
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                       height: 16 / 12,
-                      letterSpacing: 0,
                     ),
                   ),
                 ),
@@ -732,7 +970,6 @@ class DashboardScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: tertiaryColor,
                 height: 16 / 12,
-                letterSpacing: 0,
               ),
             ),
           ),
@@ -769,7 +1006,6 @@ class DashboardScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w500,
                           color: textColor,
                           height: 20 / 13.8,
-                          letterSpacing: 0,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -780,7 +1016,6 @@ class DashboardScreen extends ConsumerWidget {
                           fontWeight: FontWeight.w400,
                           color: secondaryColor,
                           height: 16 / 12,
-                          letterSpacing: 0,
                         ),
                       ),
                     ],
@@ -802,7 +1037,6 @@ class DashboardScreen extends ConsumerWidget {
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                       height: 16 / 12,
-                      letterSpacing: 0,
                     ),
                   ),
                 ),
@@ -819,7 +1053,6 @@ class DashboardScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: tertiaryColor,
                 height: 16 / 12,
-                letterSpacing: 0,
               ),
             ),
           ),
@@ -853,7 +1086,6 @@ class DashboardScreen extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                   color: AppColors.primary,
                   height: 20 / 13.6,
-                  letterSpacing: 0,
                 ),
               ),
             ),
@@ -884,7 +1116,6 @@ class DashboardScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
                 height: 20 / 14,
-                letterSpacing: 0,
               ),
             ),
           ),
@@ -899,9 +1130,10 @@ class DashboardScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 13.7.sp,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1E2939),
+                  color: context.isDark
+                      ? AppColors.textPrimaryDark
+                      : const Color(0xFF1E2939),
                   height: 20 / 13.7,
-                  letterSpacing: 0,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -910,9 +1142,10 @@ class DashboardScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 11.8.sp,
                   fontWeight: FontWeight.w400,
-                  color: context.isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
+                  color: context.isDark
+                      ? AppColors.textTertiaryDark
+                      : const Color(0xFF6A7282),
                   height: 16 / 11.8,
-                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -923,7 +1156,28 @@ class DashboardScreen extends ConsumerWidget {
   }
 }
 
+// -------------------- Grid spec model --------------------
+
+class _GridSpec {
+  final int columns;
+  final double spacing;
+  final double tileW;
+  final double tileH;
+  final bool needsLongPress;
+
+  const _GridSpec({
+    required this.columns,
+    required this.spacing,
+    required this.tileW,
+    required this.tileH,
+    required this.needsLongPress,
+  });
+}
+
+// -------------------- Button model --------------------
+
 class _DashboardButton {
+  final String id;
   final String icon;
   final String label;
   final Color color;
@@ -931,13 +1185,27 @@ class _DashboardButton {
   final bool isMultiLine;
 
   _DashboardButton({
+    required this.id,
     required this.icon,
     required this.label,
     required this.color,
     required this.route,
     this.isMultiLine = false,
   });
+
+  _DashboardButton copyWith({String? label}) {
+    return _DashboardButton(
+      id: id,
+      icon: icon,
+      label: label ?? this.label,
+      color: color,
+      route: route,
+      isMultiLine: isMultiLine,
+    );
+  }
 }
+
+// -------------------- Hover tile --------------------
 
 class _HoverableIconButton extends StatefulWidget {
   final _DashboardButton button;
@@ -955,103 +1223,148 @@ class _HoverableIconButton extends StatefulWidget {
 
 class _HoverableIconButtonState extends State<_HoverableIconButton> {
   bool _isHovered = false;
+  bool _isDragging = false;
+
+  void _setHovered(bool v) {
+    if (!mounted || _isDragging) return;
+    setState(() => _isHovered = v);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) {
-        if (mounted) {
-          setState(() => _isHovered = true);
-        }
+    const Color hoverBg = Colors.white;
+
+    return LongPressDraggable<String>(
+      data: widget.button.id,
+      dragAnchorStrategy: pointerDragAnchorStrategy,
+      onDragStarted: () {
+        if (!mounted) return;
+        setState(() {
+          _isDragging = true;
+          _isHovered = false;
+        });
       },
-      onExit: (_) {
-        if (mounted) {
-          setState(() => _isHovered = false);
-        }
+      onDragEnd: (_) {
+        if (!mounted) return;
+        setState(() => _isDragging = false);
       },
-      hitTestBehavior: HitTestBehavior.opaque,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: widget.button.isMultiLine ? 28.5.w : 38.5.w,
-            vertical: 16.h,
+      feedback: Material(
+        color: Colors.transparent,
+        child: Opacity(
+          opacity: 0.90,
+          child: IntrinsicWidth(
+            child: _buildTile(context, hoverBg, forceHover: true),
           ),
-                  decoration: BoxDecoration(
-                color: _isHovered 
-                    ? (context.isDark ? AppColors.cardBackgroundDark : Colors.white)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(14.r),
-              ),
+        ),
+      ),
+      childWhenDragging: Opacity(
+        opacity: 0.35,
+        child: _buildTile(context, hoverBg),
+      ),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        hitTestBehavior: HitTestBehavior.opaque,
+        onEnter: (_) => _setHovered(true),
+        onExit: (_) => _setHovered(false),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _isDragging ? null : widget.onTap,
+          child: _buildTile(context, hoverBg),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTile(
+    BuildContext context,
+    Color hoverBg, {
+    bool forceHover = false,
+  }) {
+    final bool activeHover = forceHover || (_isHovered && !_isDragging);
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: activeHover ? 1 : 0),
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOutCubic,
+      builder: (context, t, _) {
+        final bg = Color.lerp(Colors.transparent, hoverBg, t)!;
+
+        // 👇 tiny “alive” motion: lift + micro rotate + pop
+        final double liftY = -6.0 * t; // move up a little
+        final double boxScale = 1.0 + (0.06 * t); // subtle scale
+        final double iconScale = 1.0 + (0.10 * t); // icon pops slightly more
+        final double rotate = (0.03 * t); // ~1.7 degrees
+
+        final shadow1 = BoxShadow(
+          color: Colors.black.withValues(alpha: 0.10 * t),
+          blurRadius: 26 * t,
+          offset: Offset(0, 10 * t),
+        );
+        final shadow2 = BoxShadow(
+          color: Colors.black.withValues(alpha: 0.06 * t),
+          blurRadius: 10 * t,
+          offset: Offset(0, 2 * t),
+        );
+
+        return Container(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(18.r),
+            boxShadow: (t == 0 || _isDragging) ? [] : [shadow1, shadow2],
+          ),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: 10.w,
+            vertical: 10.h,
+          ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedScale(
-                scale: _isHovered ? 1.05 : 1.0,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  width: 80.w,
-                  height: 80.h,
-                  decoration: BoxDecoration(
-                    color: widget.button.color,
-                    borderRadius: BorderRadius.circular(16.r),
-                    boxShadow: _isHovered
-                        ? [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 25,
-                              offset: const Offset(0, 8),
-                            ),
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 6,
-                              offset: const Offset(0, -4),
-                            ),
-                          ]
-                        : [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 15,
-                              offset: const Offset(0, 3),
-                            ),
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 4,
-                              offset: const Offset(0, -4),
-                            ),
-                          ],
-                  ),
-                  child: Center(
-                    child: SvgIconWidget(
-                      assetPath: widget.button.icon,
-                      size: 40.sp,
-                      color: Colors.white,
+              // ✅ This gives the icon the “floating” feel
+              Transform.translate(
+                offset: Offset(0, liftY),
+                child: Transform.rotate(
+                  angle: rotate,
+                  child: Transform.scale(
+                    scale: boxScale,
+                    child: Container(
+                      width: 80.w,
+                      height: 80.w,
+                      decoration: BoxDecoration(
+                        color: widget.button.color,
+                        borderRadius: BorderRadius.circular(18.r),
+                      ),
+                      child: Center(
+                        child: Transform.scale(
+                          scale: iconScale,
+                          child: SvgIconWidget(
+                            assetPath: widget.button.icon,
+                            size: 40.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: widget.button.isMultiLine ? 12.h : 11.75.h),
-                  Text(
-                    widget.button.label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: widget.button.isMultiLine ? 13.6.sp : 13.7.sp,
-                      fontWeight: FontWeight.w400,
-                      color: context.isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
-                      height: 17.5 / 13.7,
-                      letterSpacing: 0,
-                    ),
-                  ),
+
+              SizedBox(height: 13.h),
+
+              Text(
+                widget.button.label,
+                textAlign: TextAlign.center,
+                maxLines: widget.button.isMultiLine ? 2 : 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13.6.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 1.2,
+                ),
+              ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

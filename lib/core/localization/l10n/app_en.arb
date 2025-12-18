@@ -889,6 +889,17 @@
   "departmentLeadership": "Department Leadership",
   "organizationalMetrics": "Organizational Metrics",
   "departmentDescription": "Department Description",
-  "departmentBudget": "Annual Budget (KWD)"
+  "departmentBudget": "Annual Budget (KWD)",
+  "sectionManagement": "Section Management",
+  "manageSectionsSubtitle": "Organize and manage organizational sections",
+  "addSection": "Add Section",
+  "editSection": "Edit Section",
+  "updateSection": "Update Section",
+  "sectionDetails": "Section Details",
+  "totalSections": "Total Sections",
+  "activeSections": "Active Sections",
+  "totalEmployeesSection": "Total Employees",
+  "totalBudgetSection": "Total Budget",
+  "searchSectionsPlaceholder": "Search sections..."
 }
 

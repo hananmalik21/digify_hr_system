@@ -823,6 +823,17 @@
   "departmentLeadership": "قيادة القسم",
   "organizationalMetrics": "مقاييس التنظيم",
   "departmentDescription": "وصف القسم",
-  "departmentBudget": "الميزانية السنوية (د.ك)"
+  "departmentBudget": "الميزانية السنوية (د.ك)",
+  "sectionManagement": "إدارة الأقسام",
+  "manageSectionsSubtitle": "تنظيم وإدارة الأقسام التنظيمية",
+  "addSection": "إضافة قسم",
+  "editSection": "تعديل قسم",
+  "updateSection": "تحديث قسم",
+  "sectionDetails": "تفاصيل القسم",
+  "totalSections": "إجمالي الأقسام",
+  "activeSections": "الأقسام النشطة",
+  "totalEmployeesSection": "إجمالي الموظفين",
+  "totalBudgetSection": "إجمالي الميزانية",
+  "searchSectionsPlaceholder": "بحث الأقسام..."
 }
 

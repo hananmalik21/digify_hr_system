@@ -129,6 +129,39 @@ class EditEnterpriseStructureNotifier extends StateNotifier<EditEnterpriseStruct
       ),
     ];
   }
+  void reorderLevels(int oldIndex, int newIndex) {
+    final levels = state.levels;
+    if (levels.isEmpty) return;
+
+    // ReorderableColumn uses direct indices (no "newIndex after removal" adjustment needed)
+    // BUT some versions behave like ReorderableListView; safe to keep this:
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final companyIndex = levels.indexWhere((e) => e.isMandatory);
+    if (companyIndex == -1) return;
+
+    // ✅ company cannot move
+    if (oldIndex == companyIndex) return;
+
+    // ✅ nothing can be dropped into company slot
+    if (newIndex == companyIndex) return;
+
+    // ✅ keep moves below company (company stays on top)
+    final minIndex = companyIndex + 1;
+    final safeOld = oldIndex < minIndex ? minIndex : oldIndex;
+    final safeNew = newIndex < minIndex ? minIndex : newIndex;
+
+    final updated = List<HierarchyLevel>.from(levels);
+    final item = updated.removeAt(safeOld);
+    updated.insert(safeNew, item);
+
+    state = state.copyWith(levels: _normalizeLevels(updated));
+  }
+
+  List<HierarchyLevel> _normalizeLevels(List<HierarchyLevel> list) {
+    return List.generate(list.length, (i) => list[i].copyWith(level: i + 1));
+  }
+
 
   void updateStructureName(String name) {
     state = state.copyWith(structureName: name);
@@ -157,7 +190,7 @@ class EditEnterpriseStructureNotifier extends StateNotifier<EditEnterpriseStruct
     updatedLevels[index] = previousLevel.copyWith(level: level.level);
     updatedLevels[index - 1] = level.copyWith(level: previousLevel.level);
 
-    state = state.copyWith(levels: updatedLevels);
+    state = state.copyWith(levels: _normalizeLevels(updatedLevels));
   }
 
   void moveLevelDown(int index) {

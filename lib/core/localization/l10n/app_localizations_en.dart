@@ -2345,4 +2345,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get departmentBudget => 'Annual Budget (KWD)';
+
+  @override
+  String get sectionManagement => 'Section Management';
+
+  @override
+  String get manageSectionsSubtitle =>
+      'Organize and manage organizational sections';
+
+  @override
+  String get addSection => 'Add Section';
+
+  @override
+  String get editSection => 'Edit Section';
+
+  @override
+  String get updateSection => 'Update Section';
+
+  @override
+  String get sectionDetails => 'Section Details';
+
+  @override
+  String get totalSections => 'Total Sections';
+
+  @override
+  String get activeSections => 'Active Sections';
+
+  @override
+  String get totalEmployeesSection => 'Total Employees';
+
+  @override
+  String get totalBudgetSection => 'Total Budget';
+
+  @override
+  String get searchSectionsPlaceholder => 'Search sections...';
 }

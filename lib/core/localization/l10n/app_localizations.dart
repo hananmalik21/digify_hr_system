@@ -4603,6 +4603,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Annual Budget (KWD)'**
   String get departmentBudget;
+
+  /// No description provided for @sectionManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Section Management'**
+  String get sectionManagement;
+
+  /// No description provided for @manageSectionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize and manage organizational sections'**
+  String get manageSectionsSubtitle;
+
+  /// No description provided for @addSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Section'**
+  String get addSection;
+
+  /// No description provided for @editSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Section'**
+  String get editSection;
+
+  /// No description provided for @updateSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Section'**
+  String get updateSection;
+
+  /// No description provided for @sectionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Section Details'**
+  String get sectionDetails;
+
+  /// No description provided for @totalSections.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Sections'**
+  String get totalSections;
+
+  /// No description provided for @activeSections.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Sections'**
+  String get activeSections;
+
+  /// No description provided for @totalEmployeesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Employees'**
+  String get totalEmployeesSection;
+
+  /// No description provided for @totalBudgetSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Budget'**
+  String get totalBudgetSection;
+
+  /// No description provided for @searchSectionsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search sections...'**
+  String get searchSectionsPlaceholder;
 }
 
 class _AppLocalizationsDelegate

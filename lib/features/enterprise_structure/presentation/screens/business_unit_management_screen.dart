@@ -4,6 +4,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
+import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
@@ -37,28 +39,28 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     }
 
     final stats = [
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalUnits,
         value: '${allBusinessUnits.length}',
         iconPath: 'assets/icons/total_units_icon.svg',
         iconColor: const Color(0xFF3B82F6),
         iconBackground: const Color(0xFFDBEAFE),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.activeUnits,
         value: '$activeUnits',
         iconPath: 'assets/icons/active_units_icon.svg',
         iconColor: const Color(0xFF22C55E),
         iconBackground: const Color(0xFFDCFCE7),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalEmployees,
         value: '$totalEmployees',
         iconPath: 'assets/icons/employees_cyan_icon.svg',
         iconColor: const Color(0xFF06B6D4),
         iconBackground: const Color(0xFFCEFAFE),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalBudget,
         value: '${totalBudget.toStringAsFixed(1)}M KWD',
         iconPath: 'assets/icons/budget_green_icon.svg',
@@ -169,44 +171,11 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
           ),
         ),
         SizedBox(width: 12.w),
-        GestureDetector(
-          onTap: () {
-            AddBusinessUnitDialog.show(context);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFF155DFC),
-              borderRadius: BorderRadius.circular(10.r),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF155DFC).withValues(alpha: 0.35),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/add_business_unit_icon.svg',
-                  size: 20.sp,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  localizations.addBusinessUnit,
-                  style: TextStyle(
-                    fontSize: 15.3.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                    height: 24 / 15.3,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        GradientIconButton(
+          label: localizations.addBusinessUnit,
+          iconPath: 'assets/icons/add_business_unit_icon.svg',
+          backgroundColor: const Color(0xFF155DFC),
+          onTap: () => AddBusinessUnitDialog.show(context),
         ),
       ],
     );
@@ -214,7 +183,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
 
   Widget _buildStatsSection(
     BuildContext context,
-    List<_StatCardData> stats, {
+    List<StatsCardData> stats, {
     required bool isDark,
   }) {
     final gap = 16.w;
@@ -237,7 +206,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
           children: stats.map((stat) {
             return SizedBox(
               width: columns == 1 ? double.infinity : width,
-              child: _StatCard(data: stat, isDark: isDark),
+              child: StatsCard(data: stat),
             );
           }).toList(),
         );
@@ -396,100 +365,6 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
           }).toList(),
         );
       },
-    );
-  }
-}
-
-class _StatCardData {
-  final String label;
-  final String value;
-  final String iconPath;
-  final Color iconColor;
-  final Color iconBackground;
-
-  const _StatCardData({
-    required this.label,
-    required this.value,
-    required this.iconPath,
-    required this.iconColor,
-    required this.iconBackground,
-  });
-}
-
-class _StatCard extends StatelessWidget {
-  final _StatCardData data;
-  final bool isDark;
-
-  const _StatCard({required this.data, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(17.w),
-      decoration: BoxDecoration(
-        color: context.themeCardBackground,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: context.themeCardBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-            spreadRadius: -1,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.label,
-                  style: TextStyle(
-                    fontSize: 15.1.sp,
-                    fontWeight: FontWeight.w400,
-                    color: context.themeTextSecondary,
-                    height: 24 / 15.1,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  data.value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: context.themeTextPrimary,
-                    height: 24 / 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Container(
-            width: 48.r,
-            height: 48.r,
-            decoration: BoxDecoration(
-              color: data.iconBackground,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Center(
-              child: SvgIconWidget(
-                assetPath: data.iconPath,
-                size: 24.sp,
-                color: data.iconColor,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

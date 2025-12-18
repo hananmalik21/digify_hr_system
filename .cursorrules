@@ -74,3 +74,28 @@ When generating Flutter UI from Figma JSON:
 - Use ScreenUtil
 - No hardcoded colors/textstyles/strings
 - Support EN/AR localization and light/dark theme
+
+
+Reusable Widgets Rule (ADDED)
+
+Before creating any new Widget, always check:
+lib/core/widgets/
+
+to see if a similar widget already exists.
+If a similar widget exists:
+Reuse it as-is, or
+Extend it via composition (parameters/builders).
+Do NOT duplicate or copy-paste widgets.
+Create a new widget only if:
+No existing widget satisfies the requirement without breaking responsibility, or
+The widget represents a clearly new UI pattern.
+All generic, cross-feature widgets must live in:
+lib/core/widgets/
+
+
+Feature-specific widgets must live in:
+
+features/<feature>/presentation/widgets/
+
+
+If a feature widget becomes reusable, refactor and move it to core/widgets.

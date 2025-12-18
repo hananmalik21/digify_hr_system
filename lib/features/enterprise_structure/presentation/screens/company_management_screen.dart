@@ -2,6 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
+import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
@@ -29,28 +31,28 @@ class CompanyManagementScreen extends ConsumerWidget {
     final isDark = context.isDark;
 
     final stats = [
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalCompanies,
         value: '${allCompanies.length}',
         iconPath: 'assets/icons/company_stat_icon.svg',
         iconColor: AppColors.statIconPurple,
         iconBackground: const Color(0xFFEDE9FE),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.activeCompanies,
         value: '$activeCompanies',
         iconPath: 'assets/icons/active_structure_icon.svg',
         iconColor: AppColors.statIconGreen,
         iconBackground: const Color(0xFFD1FAE5),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalEmployees,
         value: '$totalEmployees',
         iconPath: 'assets/icons/employees_assigned_icon.svg',
         iconColor: AppColors.statIconPurple,
         iconBackground: const Color(0xFFE7E0FF),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.complianceStatus,
         value: localizations.compliant,
         iconPath: 'assets/icons/compliance_icon.svg',
@@ -161,43 +163,14 @@ class CompanyManagementScreen extends ConsumerWidget {
           ),
         ),
         SizedBox(width: 12.w),
-        GestureDetector(
-          onTap: () {
-            AddCompanyDialog.show(context);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFF5E4BFF),
-              borderRadius: BorderRadius.circular(10.r),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF5E4BFF).withValues(alpha: 0.35),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/add_new_icon_figma.svg',
-                  size: 18.sp,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  localizations.addCompany,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        GradientIconButton(
+          label: localizations.addCompany,
+          iconPath: 'assets/icons/add_new_icon_figma.svg',
+          backgroundColor: const Color(0xFF5E4BFF),
+          onTap: () => AddCompanyDialog.show(context),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          iconSize: 18.sp,
+          fontSize: 14.sp,
         ),
       ],
     );
@@ -205,7 +178,7 @@ class CompanyManagementScreen extends ConsumerWidget {
 
   Widget _buildStatsSection(
     BuildContext context,
-    List<_StatCardData> stats, {
+    List<StatsCardData> stats, {
     required bool isDark,
   }) {
     final gap = 16.w;
@@ -228,7 +201,7 @@ class CompanyManagementScreen extends ConsumerWidget {
           children: stats.map((stat) {
             return SizedBox(
               width: columns == 1 ? double.infinity : width,
-              child: _StatCard(data: stat, isDark: isDark),
+              child: StatsCard(data: stat),
             );
           }).toList(),
         );
@@ -358,91 +331,6 @@ class CompanyManagementScreen extends ConsumerWidget {
   }
 }
 
-class _StatCardData {
-  final String label;
-  final String value;
-  final String iconPath;
-  final Color iconColor;
-  final Color iconBackground;
-
-  const _StatCardData({
-    required this.label,
-    required this.value,
-    required this.iconPath,
-    required this.iconColor,
-    required this.iconBackground,
-  });
-}
-
-class _StatCard extends StatelessWidget {
-  final _StatCardData data;
-  final bool isDark;
-
-  const _StatCard({required this.data, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: context.themeCardBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: context.themeCardBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.label,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w500,
-                    color: context.themeTextSecondary,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  data.value,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w700,
-                    color: context.themeTextPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Container(
-            width: 44.r,
-            height: 44.r,
-            decoration: BoxDecoration(
-              color: data.iconBackground,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Center(
-              child: SvgIconWidget(
-                assetPath: data.iconPath,
-                size: 24.sp,
-                color: data.iconColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _CompanyCard extends StatelessWidget {
   final CompanyOverview company;

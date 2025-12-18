@@ -16,6 +16,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:reorderables/reorderables.dart';
 
 enum EnterpriseStructureDialogMode {
   view,
@@ -39,10 +40,10 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
 
   // View mode factory
   static Future<void> showView(
-    BuildContext context, {
-    required String structureName,
-    required String description,
-  }) {
+      BuildContext context, {
+        required String structureName,
+        required String description,
+      }) {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -56,11 +57,11 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
 
   // Edit mode factory
   static Future<void> showEdit(
-    BuildContext context, {
-    required String structureName,
-    required String description,
-    required List<HierarchyLevel> initialLevels,
-  }) {
+      BuildContext context, {
+        required String structureName,
+        required String description,
+        required List<HierarchyLevel> initialLevels,
+      }) {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -103,7 +104,6 @@ class _EnterpriseStructureDialogState
   void initState() {
     super.initState();
 
-    // Initialize controllers based on mode
     final initialName = widget.mode == EnterpriseStructureDialogMode.create
         ? ''
         : (widget.structureName ?? '');
@@ -114,7 +114,6 @@ class _EnterpriseStructureDialogState
     _nameController = TextEditingController(text: initialName);
     _descriptionController = TextEditingController(text: initialDescription);
 
-    // Initialize levels based on mode - will be set in build when we have context
     final initialLevels = widget.initialLevels ?? [];
 
     _params = _EditDialogParams(
@@ -123,6 +122,7 @@ class _EnterpriseStructureDialogState
       initialLevels: initialLevels,
     );
   }
+
 
   List<HierarchyLevel> _getDefaultLevels(AppLocalizations localizations) {
     return [
@@ -218,20 +218,17 @@ class _EnterpriseStructureDialogState
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    // Get state for edit/create modes
     final state = widget.mode != EnterpriseStructureDialogMode.view
         ? ref.watch(_editDialogProvider(_params))
         : null;
 
-    // For view mode, use widget values; for edit/create, use state
     final structureName = widget.mode == EnterpriseStructureDialogMode.view
         ? widget.structureName ?? ''
         : (state?.structureName ?? '');
     final description = widget.mode == EnterpriseStructureDialogMode.view
         ? widget.description ?? ''
         : (state?.description ?? '');
-    
-    // Get levels - use state for edit/create, default for view/create
+
     final defaultLevels = _getDefaultLevels(localizations);
     final levels = widget.mode == EnterpriseStructureDialogMode.view
         ? defaultLevels
@@ -239,7 +236,7 @@ class _EnterpriseStructureDialogState
 
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(
@@ -249,7 +246,8 @@ class _EnterpriseStructureDialogState
       child: Container(
         constraints: BoxConstraints(
           maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
-          maxHeight: MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
+          maxHeight:
+          MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
         ),
         decoration: BoxDecoration(
           color: isDark ? AppColors.cardBackgroundDark : Colors.white,
@@ -275,11 +273,11 @@ class _EnterpriseStructureDialogState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Show warning card for create mode, active card for view/edit
                     if (widget.mode == EnterpriseStructureDialogMode.create)
                       WarningStatusCard(
                         title: localizations.noConfigurationFound,
-                        message: localizations.pleaseConfigureEnterpriseStructure,
+                        message:
+                        localizations.pleaseConfigureEnterpriseStructure,
                       )
                     else
                       ActiveStatusCard(
@@ -309,14 +307,16 @@ class _EnterpriseStructureDialogState
                           ? structureName
                           : null,
                       readOnly: widget.mode == EnterpriseStructureDialogMode.view,
-                      hintText: widget.mode == EnterpriseStructureDialogMode.create
+                      hintText:
+                      widget.mode == EnterpriseStructureDialogMode.create
                           ? localizations.structureNamePlaceholder
                           : null,
                       onChanged: widget.mode != EnterpriseStructureDialogMode.view
                           ? (value) {
-                              ref.read(_editDialogProvider(_params).notifier)
-                                  .updateStructureName(value);
-                            }
+                        ref
+                            .read(_editDialogProvider(_params).notifier)
+                            .updateStructureName(value);
+                      }
                           : null,
                     ),
                     SizedBox(height: isMobile ? 12.h : 16.h),
@@ -330,22 +330,33 @@ class _EnterpriseStructureDialogState
                           ? description
                           : null,
                       readOnly: widget.mode == EnterpriseStructureDialogMode.view,
-                      hintText: widget.mode == EnterpriseStructureDialogMode.create
+                      hintText:
+                      widget.mode == EnterpriseStructureDialogMode.create
                           ? localizations.descriptionPlaceholder
                           : null,
                       onChanged: widget.mode != EnterpriseStructureDialogMode.view
                           ? (value) {
-                              ref.read(_editDialogProvider(_params).notifier)
-                                  .updateDescription(value);
-                            }
+                        ref
+                            .read(_editDialogProvider(_params).notifier)
+                            .updateDescription(value);
+                      }
                           : null,
                     ),
                     SizedBox(height: isMobile ? 16.h : 24.h),
                     _buildOrganizationalHierarchyLevelsSection(
-                        context, localizations, isDark, levels, state),
+                      context,
+                      localizations,
+                      isDark,
+                      levels,
+                      state,
+                    ),
                     SizedBox(height: isMobile ? 16.h : 24.h),
                     _buildHierarchyPreviewSection(
-                        context, localizations, isDark, levels),
+                      context,
+                      localizations,
+                      isDark,
+                      levels,
+                    ),
                     SizedBox(height: isMobile ? 16.h : 24.h),
                     ConfigurationSummaryWidget(
                       totalLevels: levels.length,
@@ -363,140 +374,348 @@ class _EnterpriseStructureDialogState
       ),
     );
   }
-
   Widget _buildOrganizationalHierarchyLevelsSection(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    List<HierarchyLevel> levels,
-    EditEnterpriseStructureState? state,
-  ) {
+      BuildContext context,
+      AppLocalizations localizations,
+      bool isDark,
+      List<HierarchyLevel> levels,
+      EditEnterpriseStructureState? state,
+      ) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         isMobile
             ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    localizations.organizationalHierarchyLevels,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF101828),
-                      height: 24 / 15.4,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                    SizedBox(height: 8.h),
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(_editDialogProvider(_params).notifier).resetToDefault();
-                      },
-                      child: Text(
-                        localizations.resetToDefault,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primary,
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    localizations.organizationalHierarchyLevels,
-                    style: TextStyle(
-                      fontSize: isTablet ? 14.5.sp : 15.4.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF101828),
-                      height: 24 / 15.4,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  if (widget.mode != EnterpriseStructureDialogMode.view)
-                    GestureDetector(
-                      onTap: () {
-                        ref.read(_editDialogProvider(_params).notifier).resetToDefault();
-                      },
-                      child: Text(
-                        localizations.resetToDefault,
-                        style: TextStyle(
-                          fontSize: isTablet ? 12.5.sp : 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primary,
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                    ),
-                ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              localizations.organizationalHierarchyLevels,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : const Color(0xFF101828),
               ),
-        SizedBox(height: isMobile ? 12.h : 16.h),
-        ...levels.asMap().entries.map((entry) {
-          final index = entry.key;
-          final level = entry.value;
-          return Padding(
-            padding: EdgeInsetsDirectional.only(bottom: 12.h),
-            child: HierarchyLevelCard(
-              name: level.name,
-              icon: level.icon,
-              levelNumber: level.level,
-              isMandatory: level.isMandatory,
-              isActive: level.isActive,
-              canMoveUp: index > 0,
-              canMoveDown: index < levels.length - 1,
-              onMoveUp: widget.mode == EnterpriseStructureDialogMode.view
-                  ? null
-                  : () {
-                      ref.read(_editDialogProvider(_params).notifier).moveLevelUp(index);
-                    },
-              onMoveDown: widget.mode == EnterpriseStructureDialogMode.view
-                  ? null
-                  : () {
-                      ref.read(_editDialogProvider(_params).notifier).moveLevelDown(index);
-                    },
-              onToggleActive: widget.mode == EnterpriseStructureDialogMode.view
-                  ? null
-                  : (value) {
-                      ref.read(_editDialogProvider(_params).notifier)
-                          .toggleLevelActive(index);
-                    },
             ),
-          );
-        }),
+            if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+              SizedBox(height: 8.h),
+              GestureDetector(
+                onTap: () {
+                  ref
+                      .read(_editDialogProvider(_params).notifier)
+                      .resetToDefault();
+                },
+                child: Text(
+                  localizations.resetToDefault,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        )
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              localizations.organizationalHierarchyLevels,
+              style: TextStyle(
+                fontSize: isTablet ? 14.5.sp : 15.4.sp,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : const Color(0xFF101828),
+              ),
+            ),
+            if (widget.mode != EnterpriseStructureDialogMode.view)
+              GestureDetector(
+                onTap: () {
+                  ref
+                      .read(_editDialogProvider(_params).notifier)
+                      .resetToDefault();
+                },
+                child: Text(
+                  localizations.resetToDefault,
+                  style: TextStyle(
+                    fontSize: isTablet ? 12.5.sp : 13.6.sp,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        SizedBox(height: isMobile ? 12.h : 16.h),
+
+        /// ✅ DRAG & DROP LIST (WEB SAFE)
+        ReorderableListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          buildDefaultDragHandles: false,
+          itemCount: levels.length,
+          onReorder: (oldIndex, newIndex) {
+            if (widget.mode == EnterpriseStructureDialogMode.view) return;
+
+            ref
+                .read(_editDialogProvider(_params).notifier)
+                .reorderLevels(oldIndex, newIndex);
+          },
+          itemBuilder: (context, index) {
+            final level = levels[index];
+
+            return Padding(
+              key: ValueKey(level.id),
+              padding: EdgeInsetsDirectional.only(bottom: 12.h),
+              child: level.isMandatory
+                  ? HierarchyLevelCard(
+                name: level.name,
+                icon: level.icon,
+                levelNumber: level.level,
+                isMandatory: level.isMandatory,
+                isActive: level.isActive,
+                canMoveUp: index > 0,
+                canMoveDown: index < levels.length - 1,
+                onMoveUp: widget.mode ==
+                    EnterpriseStructureDialogMode.view
+                    ? null
+                    : () => ref
+                    .read(_editDialogProvider(_params).notifier)
+                    .moveLevelUp(index),
+                onMoveDown: widget.mode ==
+                    EnterpriseStructureDialogMode.view
+                    ? null
+                    : () => ref
+                    .read(_editDialogProvider(_params).notifier)
+                    .moveLevelDown(index),
+                onToggleActive: widget.mode ==
+                    EnterpriseStructureDialogMode.view
+                    ? null
+                    : (value) => ref
+                    .read(_editDialogProvider(_params).notifier)
+                    .toggleLevelActive(index),
+              )
+                  : ReorderableDragStartListener(
+                index: index,
+                child: HierarchyLevelCard(
+                  name: level.name,
+                  icon: level.icon,
+                  levelNumber: level.level,
+                  isMandatory: level.isMandatory,
+                  isActive: level.isActive,
+                  canMoveUp: index > 0,
+                  canMoveDown: index < levels.length - 1,
+                  onMoveUp: widget.mode ==
+                      EnterpriseStructureDialogMode.view
+                      ? null
+                      : () => ref
+                      .read(_editDialogProvider(_params).notifier)
+                      .moveLevelUp(index),
+                  onMoveDown: widget.mode ==
+                      EnterpriseStructureDialogMode.view
+                      ? null
+                      : () => ref
+                      .read(_editDialogProvider(_params).notifier)
+                      .moveLevelDown(index),
+                  onToggleActive: widget.mode ==
+                      EnterpriseStructureDialogMode.view
+                      ? null
+                      : (value) => ref
+                      .read(_editDialogProvider(_params).notifier)
+                      .toggleLevelActive(index),
+                ),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
 
+  // Widget _buildOrganizationalHierarchyLevelsSection(
+  //     BuildContext context,
+  //     AppLocalizations localizations,
+  //     bool isDark,
+  //     List<HierarchyLevel> levels,
+  //     EditEnterpriseStructureState? state,
+  //     ) {
+  //   final isMobile = ResponsiveHelper.isMobile(context);
+  //   final isTablet = ResponsiveHelper.isTablet(context);
+  //
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       isMobile
+  //           ? Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             localizations.organizationalHierarchyLevels,
+  //             style: TextStyle(
+  //               fontSize: 14.sp,
+  //               fontWeight: FontWeight.w500,
+  //               color:
+  //               isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+  //               height: 24 / 15.4,
+  //               letterSpacing: 0,
+  //             ),
+  //           ),
+  //           if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+  //             SizedBox(height: 8.h),
+  //             GestureDetector(
+  //               onTap: () {
+  //                 ref
+  //                     .read(_editDialogProvider(_params).notifier)
+  //                     .resetToDefault();
+  //               },
+  //               child: Text(
+  //                 localizations.resetToDefault,
+  //                 style: TextStyle(
+  //                   fontSize: 12.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.primary,
+  //                   height: 20 / 13.6,
+  //                   letterSpacing: 0,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ],
+  //       )
+  //           : Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             localizations.organizationalHierarchyLevels,
+  //             style: TextStyle(
+  //               fontSize: isTablet ? 14.5.sp : 15.4.sp,
+  //               fontWeight: FontWeight.w500,
+  //               color:
+  //               isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+  //               height: 24 / 15.4,
+  //               letterSpacing: 0,
+  //             ),
+  //           ),
+  //           if (widget.mode != EnterpriseStructureDialogMode.view)
+  //             GestureDetector(
+  //               onTap: () {
+  //                 ref
+  //                     .read(_editDialogProvider(_params).notifier)
+  //                     .resetToDefault();
+  //               },
+  //               child: Text(
+  //                 localizations.resetToDefault,
+  //                 style: TextStyle(
+  //                   fontSize: isTablet ? 12.5.sp : 13.6.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.primary,
+  //                   height: 20 / 13.6,
+  //                   letterSpacing: 0,
+  //                 ),
+  //               ),
+  //             ),
+  //         ],
+  //       ),
+  //       SizedBox(height: isMobile ? 12.h : 16.h),
+  //
+  //       // ✅ DRAG/DROP wrapper (no UI changes inside HierarchyLevelCard)
+  //       ReorderableColumn(
+  //         crossAxisAlignment: CrossAxisAlignment.stretch,
+  //         onReorder: (oldIndex, newIndex) {
+  //           if (widget.mode == EnterpriseStructureDialogMode.view) return;
+  //
+  //           ref
+  //               .read(_editDialogProvider(_params).notifier)
+  //               .reorderLevels(oldIndex, newIndex);
+  //         },
+  //         children: [
+  //           for (int index = 0; index < levels.length; index++)
+  //             Padding(
+  //               key: ValueKey(levels[index].id),
+  //               padding: EdgeInsetsDirectional.only(bottom: 12.h),
+  //               child: levels[index].isMandatory
+  //                   ? HierarchyLevelCard(
+  //                 name: levels[index].name,
+  //                 icon: levels[index].icon,
+  //                 levelNumber: levels[index].level,
+  //                 isMandatory: levels[index].isMandatory,
+  //                 isActive: levels[index].isActive,
+  //                 canMoveUp: index > 0,
+  //                 canMoveDown: index < levels.length - 1,
+  //                 onMoveUp: widget.mode == EnterpriseStructureDialogMode.view
+  //                     ? null
+  //                     : () => ref
+  //                     .read(_editDialogProvider(_params).notifier)
+  //                     .moveLevelUp(index),
+  //                 onMoveDown: widget.mode == EnterpriseStructureDialogMode.view
+  //                     ? null
+  //                     : () => ref
+  //                     .read(_editDialogProvider(_params).notifier)
+  //                     .moveLevelDown(index),
+  //                 onToggleActive: widget.mode == EnterpriseStructureDialogMode.view
+  //                     ? null
+  //                     : (value) => ref
+  //                     .read(_editDialogProvider(_params).notifier)
+  //                     .toggleLevelActive(index),
+  //               )
+  //               )
+  //                   : ReorderableDragStartListener(
+  //                 index: index,
+  //                 enabled: widget.mode != EnterpriseStructureDialogMode.view,
+  //                 child: HierarchyLevelCard(
+  //                   name: levels[index].name,
+  //                   icon: levels[index].icon,
+  //                   levelNumber: levels[index].level,
+  //                   isMandatory: levels[index].isMandatory,
+  //                   isActive: levels[index].isActive,
+  //                   canMoveUp: index > 0,
+  //                   canMoveDown: index < levels.length - 1,
+  //                   onMoveUp: widget.mode == EnterpriseStructureDialogMode.view
+  //                       ? null
+  //                       : () => ref
+  //                       .read(_editDialogProvider(_params).notifier)
+  //                       .moveLevelUp(index),
+  //                   onMoveDown: widget.mode == EnterpriseStructureDialogMode.view
+  //                       ? null
+  //                       : () => ref
+  //                       .read(_editDialogProvider(_params).notifier)
+  //                       .moveLevelDown(index),
+  //                   onToggleActive: widget.mode ==
+  //                       EnterpriseStructureDialogMode.view
+  //                       ? null
+  //                       : (value) => ref
+  //                       .read(_editDialogProvider(_params).notifier)
+  //                       .toggleLevelActive(index),
+  //                 ),
+  //               ),
+  //             ),
+  //         ],
+  //       )
+  //
+  //     ],
+  //   );
+  // }
+
   Widget _buildHierarchyPreviewSection(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    List<HierarchyLevel> levels,
-  ) {
+      BuildContext context,
+      AppLocalizations localizations,
+      bool isDark,
+      List<HierarchyLevel> levels,
+      ) {
     final previewLevels = levels
         .where((level) => level.isActive)
-        .map((level) => HierarchyPreviewLevel(
-              name: level.name,
-              icon: level.previewIcon,
-              level: level.level,
-              width: _getPreviewWidth(level.level, levels.length),
-            ))
+        .map(
+          (level) => HierarchyPreviewLevel(
+        name: level.name,
+        icon: level.previewIcon,
+        level: level.level,
+        width: _getPreviewWidth(level.level, levels.length),
+      ),
+    )
         .toList();
 
     return HierarchyPreviewWidget(levels: previewLevels);
@@ -509,14 +728,14 @@ class _EnterpriseStructureDialogState
   }
 
   Widget _buildFooter(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    EditEnterpriseStructureState? state,
-  ) {
+      BuildContext context,
+      AppLocalizations localizations,
+      bool isDark,
+      EditEnterpriseStructureState? state,
+      ) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    
+
     return Container(
       padding: ResponsiveHelper.getResponsivePadding(
         context,
@@ -550,151 +769,64 @@ class _EnterpriseStructureDialogState
       ),
       child: isMobile
           ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (widget.mode != EnterpriseStructureDialogMode.view)
-                  GestureDetector(
-                    onTap: () {
-                      // TODO: Preview structure
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 20.w,
-                        vertical: 10.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : const Color(0xFF4A5565),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/preview_structure_icon.svg',
-                            size: 18.sp,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            localizations.previewStructure,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                              height: 24 / 15.3,
-                              letterSpacing: 0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (widget.mode != EnterpriseStructureDialogMode.view)
-                  SizedBox(height: 12.h),
-                Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.mode != EnterpriseStructureDialogMode.view)
+            GestureDetector(
+              onTap: () {
+                // TODO: Preview structure
+              },
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 20.w,
+                  vertical: 10.h,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : const Color(0xFF4A5565),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: 20.w,
-                            vertical: 10.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-                            border: Border.all(
-                              color: isDark
-                                  ? AppColors.inputBorderDark
-                                  : const Color(0xFFD1D5DC),
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Center(
-                            child: Text(
-                              localizations.cancel,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: isDark
-                                    ? AppColors.textPrimaryDark
-                                    : const Color(0xFF364153),
-                                height: 24 / 15.3,
-                                letterSpacing: 0,
-                              ),
-                            ),
-                          ),
-                        ),
+                    SvgIconWidget(
+                      assetPath: 'assets/icons/preview_structure_icon.svg',
+                      size: 18.sp,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      localizations.previewStructure,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        height: 24 / 15.3,
+                        letterSpacing: 0,
                       ),
                     ),
-                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // TODO: Save Configuration
-                            if (state != null) {
-                              debugPrint('Saving: ${state.structureName}');
-                            }
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              horizontal: 20.w,
-                              vertical: 10.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF9810FA),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgIconWidget(
-                                  assetPath: 'assets/icons/save_config_icon.svg',
-                                  size: 18.sp,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 8.w),
-                                Flexible(
-                                  child: Text(
-                                    localizations.saveConfiguration,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                      height: 24 / 15.3,
-                                      letterSpacing: 0,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
                   ],
                 ),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
+              ),
+            ),
+          if (widget.mode != EnterpriseStructureDialogMode.view)
+            SizedBox(height: 12.h),
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Container(
                     padding: EdgeInsetsDirectional.symmetric(
-                      horizontal: isTablet ? 20.w : 25.w,
-                      vertical: isTablet ? 10.h : 9.h,
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                      color: isDark
+                          ? AppColors.cardBackgroundDark
+                          : Colors.white,
                       border: Border.all(
                         color: isDark
                             ? AppColors.inputBorderDark
@@ -703,117 +835,208 @@ class _EnterpriseStructureDialogState
                       ),
                       borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: Text(
-                      localizations.cancel,
-                      style: TextStyle(
-                        fontSize: isTablet ? 14.sp : 15.3.sp,
-                        fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF364153),
-                        height: 24 / 15.3,
-                        letterSpacing: 0,
+                    child: Center(
+                      child: Text(
+                        localizations.cancel,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : const Color(0xFF364153),
+                          height: 24 / 15.3,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: Preview structure
-                        },
-                        child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: isTablet ? 20.w : 24.w,
-                            vertical: isTablet ? 10.h : 8.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : const Color(0xFF4A5565),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgIconWidget(
-                                assetPath: 'assets/icons/preview_structure_icon.svg',
-                                size: isTablet ? 18.sp : 20.sp,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                localizations.previewStructure,
-                                style: TextStyle(
-                                  fontSize: isTablet ? 14.sp : 15.3.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                  height: 24 / 15.3,
-                                  letterSpacing: 0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+              ),
+              if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      if (state != null) {
+                        debugPrint('Saving: ${state.structureName}');
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
                       ),
-                      SizedBox(width: isTablet ? 10.w : 12.w),
-                    ],
-                    GestureDetector(
-                      onTap: widget.mode == EnterpriseStructureDialogMode.view
-                          ? null
-                          : () {
-                              // TODO: Save Configuration
-                              if (state != null) {
-                                debugPrint('Saving: ${state.structureName}');
-                              }
-                              Navigator.of(context).pop();
-                            },
-                      child: Container(
-                        padding: EdgeInsetsDirectional.symmetric(
-                          horizontal: isTablet ? 20.w : 24.w,
-                          vertical: isTablet ? 10.h : 8.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF9810FA),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgIconWidget(
-                              assetPath: 'assets/icons/save_config_icon.svg',
-                              size: isTablet ? 18.sp : 20.sp,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 8.w),
-                            Text(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9810FA),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgIconWidget(
+                            assetPath: 'assets/icons/save_config_icon.svg',
+                            size: 18.sp,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 8.w),
+                          Flexible(
+                            child: Text(
                               localizations.saveConfiguration,
                               style: TextStyle(
-                                fontSize: isTablet ? 14.sp : 15.3.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
                                 height: 24 / 15.3,
                                 letterSpacing: 0,
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
+            ],
+          ),
+        ],
+      )
+          : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: isTablet ? 20.w : 25.w,
+                vertical: isTablet ? 10.h : 9.h,
+              ),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.cardBackgroundDark
+                    : Colors.white,
+                border: Border.all(
+                  color: isDark
+                      ? AppColors.inputBorderDark
+                      : const Color(0xFFD1D5DC),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Text(
+                localizations.cancel,
+                style: TextStyle(
+                  fontSize: isTablet ? 14.sp : 15.3.sp,
+                  fontWeight: FontWeight.w400,
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : const Color(0xFF364153),
+                  height: 24 / 15.3,
+                  letterSpacing: 0,
+                ),
+              ),
             ),
+          ),
+          Row(
+            children: [
+              if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                GestureDetector(
+                  onTap: () {
+                    // TODO: Preview structure
+                  },
+                  child: Container(
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: isTablet ? 20.w : 24.w,
+                      vertical: isTablet ? 10.h : 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : const Color(0xFF4A5565),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgIconWidget(
+                          assetPath:
+                          'assets/icons/preview_structure_icon.svg',
+                          size: isTablet ? 18.sp : 20.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          localizations.previewStructure,
+                          style: TextStyle(
+                            fontSize: isTablet ? 14.sp : 15.3.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            height: 24 / 15.3,
+                            letterSpacing: 0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: isTablet ? 10.w : 12.w),
+              ],
+              GestureDetector(
+                onTap: widget.mode == EnterpriseStructureDialogMode.view
+                    ? null
+                    : () {
+                  if (state != null) {
+                    debugPrint('Saving: ${state.structureName}');
+                  }
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: isTablet ? 20.w : 24.w,
+                    vertical: isTablet ? 10.h : 8.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF9810FA),
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgIconWidget(
+                        assetPath: 'assets/icons/save_config_icon.svg',
+                        size: isTablet ? 18.sp : 20.sp,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        localizations.saveConfiguration,
+                        style: TextStyle(
+                          fontSize: isTablet ? 14.sp : 15.3.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                          height: 24 / 15.3,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-final _editDialogProvider = StateNotifierProvider.autoDispose
-    .family<EditEnterpriseStructureNotifier, EditEnterpriseStructureState,
-        _EditDialogParams>(
-  (ref, params) => EditEnterpriseStructureNotifier(
+final _editDialogProvider = StateNotifierProvider.autoDispose.family<
+    EditEnterpriseStructureNotifier,
+    EditEnterpriseStructureState,
+    _EditDialogParams>(
+      (ref, params) => EditEnterpriseStructureNotifier(
     structureName: params.structureName,
     description: params.description,
     initialLevels: params.initialLevels,
@@ -831,4 +1054,3 @@ class _EditDialogParams {
     required this.initialLevels,
   });
 }
-

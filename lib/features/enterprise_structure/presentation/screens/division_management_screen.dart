@@ -2,6 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
+import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
@@ -35,28 +37,28 @@ class DivisionManagementScreen extends ConsumerWidget {
     }
 
     final stats = [
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalDivisions,
         value: '${allDivisions.length}',
         iconPath: 'assets/icons/division_stat_icon.svg',
         iconColor: const Color(0xFF9810FA),
         iconBackground: const Color(0xFFF3E8FF),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.activeDivisions,
         value: '$activeDivisions',
         iconPath: 'assets/icons/active_division_icon.svg',
         iconColor: const Color(0xFF22C55E),
         iconBackground: const Color(0xFFDCFCE7),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalEmployees,
         value: '$totalEmployees',
         iconPath: 'assets/icons/employees_blue_icon.svg',
         iconColor: const Color(0xFF3B82F6),
         iconBackground: const Color(0xFFDBEAFE),
       ),
-      _StatCardData(
+      StatsCardData(
         label: localizations.totalBudget,
         value: '${totalBudget.toStringAsFixed(1)}M KWD',
         iconPath: 'assets/icons/budget_icon.svg',
@@ -167,44 +169,11 @@ class DivisionManagementScreen extends ConsumerWidget {
           ),
         ),
         SizedBox(width: 12.w),
-        GestureDetector(
-          onTap: () {
-            AddDivisionDialog.show(context);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFF9810FA),
-              borderRadius: BorderRadius.circular(10.r),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF9810FA).withValues(alpha: 0.35),
-                  blurRadius: 12,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/add_division_icon.svg',
-                  size: 20.sp,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  localizations.addDivision,
-                  style: TextStyle(
-                    fontSize: 15.3.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                    height: 24 / 15.3,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        GradientIconButton(
+          label: localizations.addDivision,
+          iconPath: 'assets/icons/add_division_icon.svg',
+          backgroundColor: const Color(0xFF9810FA),
+          onTap: () => AddDivisionDialog.show(context),
         ),
       ],
     );
@@ -212,7 +181,7 @@ class DivisionManagementScreen extends ConsumerWidget {
 
   Widget _buildStatsSection(
     BuildContext context,
-    List<_StatCardData> stats, {
+    List<StatsCardData> stats, {
     required bool isDark,
   }) {
     final gap = 16.w;
@@ -235,7 +204,7 @@ class DivisionManagementScreen extends ConsumerWidget {
           children: stats.map((stat) {
             return SizedBox(
               width: columns == 1 ? double.infinity : width,
-              child: _StatCard(data: stat, isDark: isDark),
+              child: StatsCard(data: stat),
             );
           }).toList(),
         );
@@ -393,100 +362,6 @@ class DivisionManagementScreen extends ConsumerWidget {
           }).toList(),
         );
       },
-    );
-  }
-}
-
-class _StatCardData {
-  final String label;
-  final String value;
-  final String iconPath;
-  final Color iconColor;
-  final Color iconBackground;
-
-  const _StatCardData({
-    required this.label,
-    required this.value,
-    required this.iconPath,
-    required this.iconColor,
-    required this.iconBackground,
-  });
-}
-
-class _StatCard extends StatelessWidget {
-  final _StatCardData data;
-  final bool isDark;
-
-  const _StatCard({required this.data, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(17.w),
-      decoration: BoxDecoration(
-        color: context.themeCardBackground,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: context.themeCardBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-            spreadRadius: -1,
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.label,
-                  style: TextStyle(
-                    fontSize: 15.3.sp,
-                    fontWeight: FontWeight.w400,
-                    color: context.themeTextSecondary,
-                    height: 24 / 15.3,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  data.value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: context.themeTextPrimary,
-                    height: 24 / 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Container(
-            width: 48.r,
-            height: 48.r,
-            decoration: BoxDecoration(
-              color: data.iconBackground,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Center(
-              child: SvgIconWidget(
-                assetPath: data.iconPath,
-                size: 24.sp,
-                color: data.iconColor,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

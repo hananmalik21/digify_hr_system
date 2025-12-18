@@ -2330,4 +2330,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get departmentBudget => 'الميزانية السنوية (د.ك)';
+
+  @override
+  String get sectionManagement => 'إدارة الأقسام';
+
+  @override
+  String get manageSectionsSubtitle => 'تنظيم وإدارة الأقسام التنظيمية';
+
+  @override
+  String get addSection => 'إضافة قسم';
+
+  @override
+  String get editSection => 'تعديل قسم';
+
+  @override
+  String get updateSection => 'تحديث قسم';
+
+  @override
+  String get sectionDetails => 'تفاصيل القسم';
+
+  @override
+  String get totalSections => 'إجمالي الأقسام';
+
+  @override
+  String get activeSections => 'الأقسام النشطة';
+
+  @override
+  String get totalEmployeesSection => 'إجمالي الموظفين';
+
+  @override
+  String get totalBudgetSection => 'إجمالي الميزانية';
+
+  @override
+  String get searchSectionsPlaceholder => 'بحث الأقسام...';
 }
