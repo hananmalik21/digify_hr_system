@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_colors.dart';
 import '../theme/theme_extensions.dart';
 
+/// Universal CustomTextField Widget
+/// This is the ONLY text field widget that should be used across the entire app.
+/// It supports all variations: standard input, search, password, multi-line, date pickers, etc.
+/// 
+/// Usage Examples:
+/// - Standard: CustomTextField(controller: controller, hintText: 'Enter name')
+/// - Search: CustomTextField.search(controller: controller)
+/// - Password: CustomTextField(controller: controller, obscureText: true)
+/// - With Label: CustomTextField(labelText: 'Email', isRequired: true)
+/// - Multi-line: CustomTextField(maxLines: 5, expands: false)
+/// - Read-only/Date: CustomTextField(readOnly: true, onTap: () => pickDate())
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? hintText;
@@ -12,6 +25,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final int? minLines;
   final double? height;
   final double? borderRadius;
   final double? fontSize;
@@ -22,15 +36,25 @@ class CustomTextField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final bool showBorder;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
   final bool isRequired;
   final bool hasInfoIcon;
   final String? helperText;
+  final String? errorText;
   final TextStyle? labelStyle;
   final TextStyle? helperTextStyle;
+  final TextStyle? hintStyle;
+  final TextStyle? textStyle;
   final bool expands;
   final String? initialValue;
   final bool readOnly;
   final VoidCallback? onTap;
+  final bool enabled;
+  final EdgeInsetsGeometry? contentPadding;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
+  final AutovalidateMode? autovalidateMode;
 
   const CustomTextField({
     super.key,
@@ -43,45 +67,60 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType,
     this.validator,
     this.maxLines = 1,
+    this.minLines,
     this.height,
     this.borderRadius,
     this.fontSize,
     this.fillColor,
     this.borderColor,
     this.focusedBorderColor,
-    this.filled = true, // default: filled (your design)
+    this.filled = true,
     this.textInputAction,
     this.showBorder = true,
     this.onChanged,
+    this.onSubmitted,
     this.isRequired = false,
     this.hasInfoIcon = false,
     this.helperText,
+    this.errorText,
     this.labelStyle,
     this.helperTextStyle,
+    this.hintStyle,
+    this.textStyle,
     this.expands = false,
     this.initialValue,
     this.readOnly = false,
     this.onTap,
+    this.enabled = true,
+    this.contentPadding,
+    this.maxLength,
+    this.inputFormatters,
+    this.focusNode,
+    this.autovalidateMode,
   });
 
+  /// Factory for search fields with consistent styling
   factory CustomTextField.search({
     required TextEditingController controller,
     String? hintText,
     double? height,
     bool filled = true,
     Color? fillColor,
+    ValueChanged<String>? onChanged,
+    ValueChanged<String>? onSubmitted,
   }) {
     return CustomTextField(
       controller: controller,
       hintText: hintText,
-      height: height ?? 39,                  // same height
-      borderRadius: 8,                       // same radius
-      fontSize: 15.3,
+      height: height ?? 39.h,
+      borderRadius: 8.r,
+      fontSize: 15.sp,
       filled: filled,
-      fillColor: fillColor ?? Color(0xFFF3F3F5),
-      borderColor: const Color(0xFFD1D5DC),
-      prefixIcon: const Icon(Icons.search, size: 16),
+      fillColor: fillColor,
+      prefixIcon: Icon(Icons.search, size: 16.sp),
       textInputAction: TextInputAction.search,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
     );
   }
 
@@ -90,13 +129,7 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  // your default design constants
-  static const double _defaultHeight = 39.0;
-  static const double _defaultBorderRadius = 8.0;
-  static const Color _defaultBorderColor = Color(0xFFD1D5DC);
-  static const Color _defaultFillColor = Color(0xFFF3F3F5);
-  static const EdgeInsets _defaultPadding =
-  EdgeInsets.fromLTRB(17, 9, 29, 9);
+  // Default design constants - now using ScreenUtil
 
   late TextEditingController _controller;
   bool _obscureText = true;
@@ -155,59 +188,64 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
-    // your fixed design colors (can still override via props)
-    final effectiveBorderColor =
-        widget.borderColor ?? _defaultBorderColor;
+    // Theme-aware colors
+    final effectiveBorderColor = widget.borderColor ??
+        (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
     final effectiveFocusedBorderColor =
         widget.focusedBorderColor ?? AppColors.primary;
-
-    // fill color is always your light grey by default
-    final effectiveFillColor = widget.fillColor ?? _defaultFillColor;
+    final effectiveFillColor = widget.fillColor ??
+        (isDark ? AppColors.inputBgDark : AppColors.inputBg);
+    final effectiveTextColor = isDark
+        ? context.themeTextPrimary ?? AppColors.textPrimaryDark
+        : AppColors.textPrimary;
+    final effectiveHintColor = isDark
+        ? context.themeTextMuted ?? AppColors.textPlaceholderDark
+        : AppColors.textTertiary;
 
     // Build label if provided
     Widget? labelWidget;
     if (widget.labelText != null) {
-      labelWidget = SizedBox(
-        height: 14,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              widget.labelText!,
-              style: widget.labelStyle ??
-                  const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13.8,
-                    fontWeight: FontWeight.w500,
-                    height: 1.0,
-                    color: Color(0xFF0A0A0A),
-                  ),
-            ),
-            if (widget.isRequired) ...[
-              const SizedBox(width: 4),
-              const Text(
-                '*',
-                style: TextStyle(
+      labelWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            widget.labelText!,
+            style: widget.labelStyle ??
+                TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 14,
+                  fontSize: 13.8.sp,
                   fontWeight: FontWeight.w500,
                   height: 1.0,
-                  color: Color(0xFFFB2C36),
+                  color: effectiveTextColor,
                 ),
+          ),
+          if (widget.isRequired) ...[
+            SizedBox(width: 4.w),
+            Text(
+              '*',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                height: 1.0,
+                color: AppColors.deleteIconRed,
               ),
-            ],
-            if (widget.hasInfoIcon) ...[
-              const SizedBox(width: 6),
-              const Icon(
-                Icons.info_outline,
-                size: 12,
-                color: Color(0xFF9CA3AF),
-              ),
-            ],
+            ),
           ],
-        ),
+          if (widget.hasInfoIcon) ...[
+            SizedBox(width: 6.w),
+            Icon(
+              Icons.info_outline,
+              size: 12.sp,
+              color: isDark
+                  ? AppColors.textPlaceholderDark
+                  : AppColors.textPlaceholder,
+            ),
+          ],
+        ],
       );
     }
 
@@ -220,10 +258,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
             _obscureText = !_obscureText;
           });
         },
-        child: const Icon(
-          Icons.visibility_off_outlined,
-          size: 16,
-          color: Color(0xFF9CA3AF),
+        child: Icon(
+          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          size: 16.sp,
+          color: isDark
+              ? AppColors.textPlaceholderDark
+              : AppColors.textPlaceholder,
         ),
       );
     }
@@ -236,116 +276,141 @@ class _CustomTextFieldState extends State<CustomTextField> {
       maxLines: widget.expands
           ? null
           : (widget.obscureText ? 1 : widget.maxLines),
+      minLines: widget.minLines,
       expands: widget.expands,
       textInputAction: widget.textInputAction,
       onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmitted,
       readOnly: widget.readOnly,
-      style: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: widget.fontSize ?? 13.7,
-        fontWeight: FontWeight.w400,
-        color: isDark
-            ? context.themeTextPrimary
-            : const Color(0xFF0A0A0A),
-      ),
+      enabled: widget.enabled,
+      focusNode: widget.focusNode,
+      maxLength: widget.maxLength,
+      inputFormatters: widget.inputFormatters,
+      autovalidateMode: widget.autovalidateMode,
+      style: widget.textStyle ??
+          TextStyle(
+            fontFamily: 'Inter',
+            fontSize: widget.fontSize ?? 13.7.sp,
+            fontWeight: FontWeight.w400,
+            color: effectiveTextColor,
+          ),
       decoration: InputDecoration(
         hintText: widget.hintText,
+        errorText: widget.errorText,
         labelText: widget.labelText == null || labelWidget != null
             ? null
             : widget.labelText,
         prefixIcon: widget.prefixIcon,
         suffixIcon: effectiveSuffixIcon,
-        filled: true,
+        filled: widget.filled,
         fillColor: effectiveFillColor,
-        hintStyle: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: widget.fontSize ?? 13.7,
-          fontWeight: FontWeight.w400,
-          color: isDark
-              ? context.themeTextMuted
-              : const Color(0xFF717182),
+        hintStyle: widget.hintStyle ??
+            TextStyle(
+              fontFamily: 'Inter',
+              fontSize: widget.fontSize ?? 13.7.sp,
+              fontWeight: FontWeight.w400,
+              color: effectiveHintColor,
+            ),
+        prefixIconConstraints: BoxConstraints(
+          minWidth: 40.w,
+          minHeight: 16.h,
         ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 40,
-          minHeight: 16,
+        suffixIconConstraints: BoxConstraints(
+          minWidth: 40.w,
+          minHeight: 16.h,
         ),
-        // fixed padding to match CSS: 9px 29px 9px 17px
-        contentPadding: _defaultPadding,
+        contentPadding: widget.contentPadding ??
+            EdgeInsetsDirectional.fromSTEB(17.w, 9.h, 29.w, 9.h),
         border: widget.showBorder
             ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? _defaultBorderRadius),
-          borderSide: BorderSide(color: effectiveBorderColor),
-        )
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(color: effectiveBorderColor),
+              )
             : InputBorder.none,
         enabledBorder: widget.showBorder
             ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? _defaultBorderRadius),
-          borderSide: BorderSide(color: effectiveBorderColor),
-        )
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(color: effectiveBorderColor),
+              )
+            : InputBorder.none,
+        disabledBorder: widget.showBorder
+            ? OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(
+                  color: isDark
+                      ? AppColors.borderGreyDark.withValues(alpha: 0.5)
+                      : AppColors.borderGrey.withValues(alpha: 0.5),
+                ),
+              )
             : InputBorder.none,
         focusedBorder: widget.showBorder
             ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? _defaultBorderRadius),
-          borderSide: BorderSide(
-            color: effectiveFocusedBorderColor,
-            width: 1.5,
-          ),
-        )
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(
+                  color: effectiveFocusedBorderColor,
+                  width: 1.5.w,
+                ),
+              )
             : InputBorder.none,
         errorBorder: widget.showBorder
             ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? _defaultBorderRadius),
-          borderSide: const BorderSide(color: AppColors.error),
-        )
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: const BorderSide(color: AppColors.error),
+              )
             : InputBorder.none,
         focusedErrorBorder: widget.showBorder
             ? OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-              widget.borderRadius ?? _defaultBorderRadius),
-          borderSide: const BorderSide(
-            color: AppColors.error,
-            width: 1.5,
-          ),
-        )
+                borderRadius:
+                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(
+                  color: AppColors.error,
+                  width: 1.5.w,
+                ),
+              )
             : InputBorder.none,
       ),
     );
 
     // For date fields (readOnly with onTap), we need to prevent text input but allow taps
-    // For regular fields, return the field normally without any blocking
     final isDateField = widget.onTap != null && widget.readOnly;
 
-    // Always enforce your default height if none is provided
-    Widget field = SizedBox(
-      height: widget.height ?? _defaultHeight,
-      child: textField,
-    );
+    // Apply default height if provided, otherwise let the field size naturally
+    Widget field = widget.height != null
+        ? SizedBox(
+            height: widget.height,
+            child: textField,
+          )
+        : textField;
 
     // Add label and helper text if provided
     if (labelWidget != null || widget.helperText != null) {
       Widget content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (labelWidget != null) ...[
             labelWidget,
-            const SizedBox(height: 14),
+            SizedBox(height: 14.h),
           ],
           field,
           if (widget.helperText != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Text(
               widget.helperText!,
               style: widget.helperTextStyle ??
-                  const TextStyle(
+                  TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 11.8,
+                    fontSize: 11.8.sp,
                     fontWeight: FontWeight.w400,
                     height: 16 / 11.8,
-                    color: Color(0xFF6A7282),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
                   ),
             ),
           ],
@@ -359,25 +424,28 @@ class _CustomTextFieldState extends State<CustomTextField> {
           behavior: HitTestBehavior.opaque,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (labelWidget != null) ...[
                 labelWidget,
-                const SizedBox(height: 14),
+                SizedBox(height: 14.h),
               ],
               AbsorbPointer(
                 child: field,
               ),
               if (widget.helperText != null) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Text(
                   widget.helperText!,
                   style: widget.helperTextStyle ??
-                      const TextStyle(
+                      TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 11.8,
+                        fontSize: 11.8.sp,
                         fontWeight: FontWeight.w400,
                         height: 16 / 11.8,
-                        color: Color(0xFF6A7282),
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondary,
                       ),
                 ),
               ],

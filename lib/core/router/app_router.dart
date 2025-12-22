@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/section_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -146,9 +147,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/workforce-structure',
             name: 'workforce-structure',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Workforce Structure',
-            ),
+            builder: (context, state) => const WorkforceStructureScreen(),
           ),
           GoRoute(
             path: '/time-management',

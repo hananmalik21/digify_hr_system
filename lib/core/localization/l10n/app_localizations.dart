@@ -2864,6 +2864,12 @@ abstract class AppLocalizations {
   /// **'Created'**
   String get created;
 
+  /// No description provided for @updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get updated;
+
   /// No description provided for @modified.
   ///
   /// In en, this message translates to:
@@ -4669,6 +4675,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search sections...'**
   String get searchSectionsPlaceholder;
+
+  /// No description provided for @managePositionsJobFamilies.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage positions, job families, levels, and organizational structure'**
+  String get managePositionsJobFamilies;
+
+  /// No description provided for @managePositionsJobFamiliesAr.
+  ///
+  /// In en, this message translates to:
+  /// **'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي'**
+  String get managePositionsJobFamiliesAr;
+
+  /// No description provided for @totalPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Positions'**
+  String get totalPositions;
+
+  /// No description provided for @filledPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled Positions'**
+  String get filledPositions;
+
+  /// No description provided for @vacantPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacant Positions'**
+  String get vacantPositions;
+
+  /// No description provided for @fillRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill Rate'**
+  String get fillRate;
+
+  /// No description provided for @positions.
+  ///
+  /// In en, this message translates to:
+  /// **'Positions'**
+  String get positions;
+
+  /// No description provided for @jobFamilies.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Families'**
+  String get jobFamilies;
+
+  /// No description provided for @addJobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Job Family'**
+  String get addJobFamily;
+
+  /// No description provided for @jobLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Levels'**
+  String get jobLevels;
+
+  /// No description provided for @jobFamilyOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family Overview'**
+  String get jobFamilyOverview;
+
+  /// No description provided for @jobFamilyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get jobFamilyStatus;
+
+  /// No description provided for @positionsByLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Positions By Level'**
+  String get positionsByLevel;
+
+  /// No description provided for @jobFamilyCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get jobFamilyCreated;
+
+  /// No description provided for @jobFamilyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get jobFamilyUpdated;
+
+  /// No description provided for @noDataMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No job level data is available for this family.'**
+  String get noDataMessage;
+
+  /// No description provided for @jobFamilyDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family Details'**
+  String get jobFamilyDetails;
+
+  /// No description provided for @jobLevelDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Level Details'**
+  String get jobLevelDetails;
+
+  /// No description provided for @talentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Talent Status'**
+  String get talentStatus;
+
+  /// No description provided for @jobLevelCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Code'**
+  String get jobLevelCode;
+
+  /// No description provided for @salaryRangeSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary Range'**
+  String get salaryRangeSection;
+
+  /// No description provided for @minimumSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Salary'**
+  String get minimumSalary;
+
+  /// No description provided for @maximumSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Salary'**
+  String get maximumSalary;
+
+  /// No description provided for @medianSalary.
+  ///
+  /// In en, this message translates to:
+  /// **'Median Salary'**
+  String get medianSalary;
+
+  /// No description provided for @keyResponsibilities.
+  ///
+  /// In en, this message translates to:
+  /// **'Key Responsibilities'**
+  String get keyResponsibilities;
+
+  /// No description provided for @progressionPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Progression Path'**
+  String get progressionPath;
+
+  /// No description provided for @averageTenure.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Tenure'**
+  String get averageTenure;
+
+  /// No description provided for @positionStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Statistics'**
+  String get positionStatistics;
+
+  /// No description provided for @enterNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter English name'**
+  String get enterNameEnglish;
+
+  /// No description provided for @enterNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Arabic name'**
+  String get enterNameArabic;
+
+  /// No description provided for @positionFamilyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter description'**
+  String get positionFamilyDescription;
+
+  /// No description provided for @addNewJobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Job Family'**
+  String get addNewJobFamily;
+
+  /// No description provided for @jobFamilyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family Code *'**
+  String get jobFamilyCode;
+
+  /// No description provided for @jobFamilyCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., JF-001'**
+  String get jobFamilyCodeHint;
+
+  /// No description provided for @id.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get id;
+
+  /// No description provided for @autoGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-generated'**
+  String get autoGenerated;
+
+  /// No description provided for @jobFamilyNameEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family Name (English) *'**
+  String get jobFamilyNameEnglish;
+
+  /// No description provided for @jobFamilyNameEnglishHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Finance & Accounting'**
+  String get jobFamilyNameEnglishHint;
+
+  /// No description provided for @jobFamilyNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family Name (Arabic) *'**
+  String get jobFamilyNameArabic;
+
+  /// No description provided for @jobFamilyNameArabicHint.
+  ///
+  /// In en, this message translates to:
+  /// **'مثال: المالية والمحاسبة'**
+  String get jobFamilyNameArabicHint;
+
+  /// No description provided for @createJobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Job Family'**
+  String get createJobFamily;
+
+  /// No description provided for @editJobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Job Family'**
+  String get editJobFamily;
+
+  /// No description provided for @addNewJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Job Level'**
+  String get addNewJobLevel;
+
+  /// No description provided for @editJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Job Level'**
+  String get editJobLevel;
+
+  /// No description provided for @levelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Name'**
+  String get levelName;
+
+  /// No description provided for @levelNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Executive'**
+  String get levelNameHint;
+
+  /// No description provided for @jobLevelDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the level'**
+  String get jobLevelDescriptionHint;
+
+  /// No description provided for @gradeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Range'**
+  String get gradeRange;
+
+  /// No description provided for @gradeRangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade X - Grade Y'**
+  String get gradeRangeHint;
+
+  /// No description provided for @notAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'N/A'**
+  String get notAvailable;
+
+  /// No description provided for @defaultJobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get defaultJobFamily;
+
+  /// No description provided for @createJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Job Level'**
+  String get createJobLevel;
+
+  /// No description provided for @jobLevelCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., EXEC'**
+  String get jobLevelCodeHint;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// No description provided for @minimumGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Grade'**
+  String get minimumGrade;
+
+  /// No description provided for @maximumGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Grade'**
+  String get maximumGrade;
+
+  /// No description provided for @gradeStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Structure'**
+  String get gradeStructure;
+
+  /// No description provided for @reportingStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting Structure'**
+  String get reportingStructure;
+
+  /// No description provided for @positionTree.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Tree'**
+  String get positionTree;
+
+  /// No description provided for @addPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Position'**
+  String get addPosition;
+
+  /// No description provided for @editPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Position'**
+  String get editPosition;
+
+  /// No description provided for @addJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Job Level'**
+  String get addJobLevel;
+
+  /// No description provided for @addGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Grade'**
+  String get addGrade;
+
+  /// No description provided for @createGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Grade'**
+  String get createGrade;
+
+  /// No description provided for @editGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Grade'**
+  String get editGrade;
+
+  /// No description provided for @gradeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Name'**
+  String get gradeName;
+
+  /// No description provided for @gradeNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Grade A'**
+  String get gradeNameHint;
+
+  /// No description provided for @gradeDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter grade description'**
+  String get gradeDescriptionHint;
+
+  /// No description provided for @gradeSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Steps'**
+  String get gradeSteps;
+
+  /// No description provided for @gradeStepLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1'**
+  String get gradeStepLabelHint;
+
+  /// No description provided for @gradeStepAmountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'SAR 5,000'**
+  String get gradeStepAmountHint;
+
+  /// No description provided for @addStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Step'**
+  String get addStep;
+
+  /// No description provided for @gradeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Number'**
+  String get gradeNumber;
+
+  /// No description provided for @selectGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Grade'**
+  String get selectGrade;
+
+  /// No description provided for @gradeCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Category'**
+  String get gradeCategory;
+
+  /// No description provided for @entryLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry Level'**
+  String get entryLevel;
+
+  /// No description provided for @stepSalaryStructureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Step Salary Structure'**
+  String get stepSalaryStructureTitle;
+
+  /// No description provided for @descriptionOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (Optional)'**
+  String get descriptionOptional;
+
+  /// No description provided for @kdSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'KD'**
+  String get kdSymbol;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @searchPositionsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search positions by title, code, or Arabic name...'**
+  String get searchPositionsPlaceholder;
+
+  /// No description provided for @allDepartments.
+  ///
+  /// In en, this message translates to:
+  /// **'All Departments'**
+  String get allDepartments;
+
+  /// No description provided for @positionCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Code'**
+  String get positionCode;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @jobFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Family'**
+  String get jobFamily;
+
+  /// No description provided for @jobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get jobLevel;
+
+  /// No description provided for @gradeStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade/Step'**
+  String get gradeStep;
+
+  /// No description provided for @reportsTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports To'**
+  String get reportsTo;
+
+  /// No description provided for @headcount.
+  ///
+  /// In en, this message translates to:
+  /// **'Headcount'**
+  String get headcount;
+
+  /// No description provided for @vacancy.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacancy'**
+  String get vacancy;
+
+  /// No description provided for @vacant.
+  ///
+  /// In en, this message translates to:
+  /// **'vacant'**
+  String get vacant;
+
+  /// No description provided for @filled.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled'**
+  String get filled;
+
+  /// No description provided for @titleEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Title (English)'**
+  String get titleEnglish;
+
+  /// No description provided for @titleArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Title (Arabic)'**
+  String get titleArabic;
+
+  /// No description provided for @reportingStructureDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Tabular view of position reporting relationships and hierarchy'**
+  String get reportingStructureDescription;
+
+  /// No description provided for @reportingStructureDescriptionAr.
+  ///
+  /// In en, this message translates to:
+  /// **'عرض جدولي لهيكل التقارير والتسلسل الوظيفي'**
+  String get reportingStructureDescriptionAr;
+
+  /// No description provided for @exportTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Table'**
+  String get exportTable;
+
+  /// No description provided for @withReports.
+  ///
+  /// In en, this message translates to:
+  /// **'With Reports'**
+  String get withReports;
+
+  /// No description provided for @positionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Title'**
+  String get positionTitle;
+
+  /// No description provided for @directReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Reports'**
+  String get directReports;
+
+  /// No description provided for @noReports.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports'**
+  String get noReports;
+
+  /// No description provided for @viewReports.
+  ///
+  /// In en, this message translates to:
+  /// **'View Reports'**
+  String get viewReports;
+
+  /// No description provided for @positionTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Types'**
+  String get positionTypes;
+
+  /// No description provided for @topLevelPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Level Positions'**
+  String get topLevelPositions;
+
+  /// No description provided for @noReportingManager.
+  ///
+  /// In en, this message translates to:
+  /// **'No reporting manager'**
+  String get noReportingManager;
+
+  /// No description provided for @managementPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Management Positions'**
+  String get managementPositions;
+
+  /// No description provided for @hasDirectReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Has direct reports'**
+  String get hasDirectReports;
+
+  /// No description provided for @individualContributors.
+  ///
+  /// In en, this message translates to:
+  /// **'Individual Contributors'**
+  String get individualContributors;
+
+  /// No description provided for @noDirectReports.
+  ///
+  /// In en, this message translates to:
+  /// **'No direct reports'**
+  String get noDirectReports;
+
+  /// No description provided for @positionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Details'**
+  String get positionDetails;
+
+  /// No description provided for @organizationalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Information'**
+  String get organizationalInformation;
+
+  /// No description provided for @jobClassification.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Classification'**
+  String get jobClassification;
+
+  /// No description provided for @headcountInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Headcount Information'**
+  String get headcountInformation;
+
+  /// No description provided for @salaryInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary Information'**
+  String get salaryInformation;
+
+  /// No description provided for @reportingRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting Relationship'**
+  String get reportingRelationship;
+
+  /// No description provided for @employmentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Type'**
+  String get employmentType;
+
+  /// No description provided for @budgetedMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgeted Min'**
+  String get budgetedMin;
+
+  /// No description provided for @budgetedMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgeted Max'**
+  String get budgetedMax;
+
+  /// No description provided for @actualAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual Average'**
+  String get actualAverage;
+
+  /// No description provided for @step.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get step;
 }
 
 class _AppLocalizationsDelegate
