@@ -6,10 +6,10 @@ class HierarchyLevel {
   final String icon;
   final int level;
   final bool isMandatory;
-  bool isActive;
+  final bool isActive; // ✅ make immutable (important for clean state updates)
   final String previewIcon;
 
-  HierarchyLevel({
+  const HierarchyLevel({
     required this.id,
     required this.name,
     required this.icon,
@@ -45,7 +45,7 @@ class EditEnterpriseStructureState {
   final String description;
   final List<HierarchyLevel> levels;
 
-  EditEnterpriseStructureState({
+  const EditEnterpriseStructureState({
     required this.structureName,
     required this.description,
     required this.levels,
@@ -66,102 +66,60 @@ class EditEnterpriseStructureState {
   int get totalLevels => levels.length;
   int get activeLevels => levels.where((l) => l.isActive).length;
   int get hierarchyDepth => levels.where((l) => l.isActive).length;
-  String get topLevel => levels.first.name;
+  String get topLevel => levels.isNotEmpty ? levels.first.name : '';
 }
 
-class EditEnterpriseStructureNotifier extends StateNotifier<EditEnterpriseStructureState> {
+class EditEnterpriseStructureNotifier
+    extends StateNotifier<EditEnterpriseStructureState> {
   EditEnterpriseStructureNotifier({
     required String structureName,
     required String description,
     required List<HierarchyLevel> initialLevels,
-  }) : super(EditEnterpriseStructureState(
-          structureName: structureName,
-          description: description,
-          levels: initialLevels.isEmpty ? _getDefaultLevels() : initialLevels,
-        ));
+  }) : super(
+    EditEnterpriseStructureState(
+      structureName: structureName,
+      description: description,
+      levels: List<HierarchyLevel>.from(initialLevels),
+    ),
+  );
 
-  static List<HierarchyLevel> _getDefaultLevels() {
-    return [
-      HierarchyLevel(
-        id: 'company',
-        name: 'Company',
-        icon: 'assets/icons/company_icon_small.svg',
-        level: 1,
-        isMandatory: true,
-        isActive: true,
-        previewIcon: 'assets/icons/company_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'division',
-        name: 'Division',
-        icon: 'assets/icons/division_icon_small.svg',
-        level: 2,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/division_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'business_unit',
-        name: 'Business Unit',
-        icon: 'assets/icons/business_unit_icon_small.svg',
-        level: 3,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/business_unit_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'department',
-        name: 'Department',
-        icon: 'assets/icons/department_icon_small.svg',
-        level: 4,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/department_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'section',
-        name: 'Section',
-        icon: 'assets/icons/section_icon_small.svg',
-        level: 5,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/section_icon_preview.svg',
-      ),
-    ];
+  /// ✅ IMPORTANT: only initialize from API once (prevents snap-back after reorder)
+  bool _initializedFromApi = false;
+
+  /// Sets levels from API data (ONE TIME by default)
+  void setLevelsFromApiOnce(List<HierarchyLevel> apiLevels) {
+    if (_initializedFromApi) return;
+    _initializedFromApi = true;
+    state = state.copyWith(levels: _normalizeLevels(List.from(apiLevels)));
   }
+
+  /// If you really want to force replace levels (e.g. Reset button)
+  void setLevels(List<HierarchyLevel> levels) {
+    state = state.copyWith(levels: _normalizeLevels(List.from(levels)));
+  }
+
   void reorderLevels(int oldIndex, int newIndex) {
-    final levels = state.levels;
-    if (levels.isEmpty) return;
+    final current = state.levels;
+    if (current.isEmpty) return;
+    if (oldIndex < 0 || oldIndex >= current.length) return;
 
-    // ReorderableColumn uses direct indices (no "newIndex after removal" adjustment needed)
-    // BUT some versions behave like ReorderableListView; safe to keep this:
-    if (newIndex > oldIndex) newIndex -= 1;
+    final moving = current[oldIndex];
+    if (moving.isMandatory) return;
 
-    final companyIndex = levels.indexWhere((e) => e.isMandatory);
-    if (companyIndex == -1) return;
+    if (newIndex < 0 || newIndex >= current.length) return;
+    if (current[newIndex].isMandatory) return; // extra safety
 
-    // ✅ company cannot move
-    if (oldIndex == companyIndex) return;
-
-    // ✅ nothing can be dropped into company slot
-    if (newIndex == companyIndex) return;
-
-    // ✅ keep moves below company (company stays on top)
-    final minIndex = companyIndex + 1;
-    final safeOld = oldIndex < minIndex ? minIndex : oldIndex;
-    final safeNew = newIndex < minIndex ? minIndex : newIndex;
-
-    final updated = List<HierarchyLevel>.from(levels);
-    final item = updated.removeAt(safeOld);
-    updated.insert(safeNew, item);
+    final updated = List<HierarchyLevel>.from(current);
+    final item = updated.removeAt(oldIndex);
+    updated.insert(newIndex, item);
 
     state = state.copyWith(levels: _normalizeLevels(updated));
   }
 
+
   List<HierarchyLevel> _normalizeLevels(List<HierarchyLevel> list) {
     return List.generate(list.length, (i) => list[i].copyWith(level: i + 1));
   }
-
 
   void updateStructureName(String name) {
     state = state.copyWith(structureName: name);
@@ -172,90 +130,75 @@ class EditEnterpriseStructureNotifier extends StateNotifier<EditEnterpriseStruct
   }
 
   void toggleLevelActive(int index) {
+    if (index < 0 || index >= state.levels.length) return;
+
     final level = state.levels[index];
     if (level.isMandatory) return;
 
-    final updatedLevels = List<HierarchyLevel>.from(state.levels);
-    updatedLevels[index] = level.copyWith(isActive: !level.isActive);
-    state = state.copyWith(levels: updatedLevels);
+    final updated = List<HierarchyLevel>.from(state.levels);
+    updated[index] = level.copyWith(isActive: !level.isActive);
+    state = state.copyWith(levels: updated);
   }
 
   void moveLevelUp(int index) {
-    if (index == 0) return;
-    final updatedLevels = List<HierarchyLevel>.from(state.levels);
-    final level = updatedLevels[index];
-    final previousLevel = updatedLevels[index - 1];
+    if (index <= 0 || index >= state.levels.length) return;
 
-    // Swap levels
-    updatedLevels[index] = previousLevel.copyWith(level: level.level);
-    updatedLevels[index - 1] = level.copyWith(level: previousLevel.level);
+    final level = state.levels[index];
+    if (level.isMandatory) return;
 
-    state = state.copyWith(levels: _normalizeLevels(updatedLevels));
+    final prev = state.levels[index - 1];
+    if (prev.isMandatory) return;
+
+    final updated = List<HierarchyLevel>.from(state.levels);
+    updated[index - 1] = level;
+    updated[index] = prev;
+
+    state = state.copyWith(levels: _normalizeLevels(updated));
   }
 
   void moveLevelDown(int index) {
-    if (index >= state.levels.length - 1) return;
-    final updatedLevels = List<HierarchyLevel>.from(state.levels);
-    final level = updatedLevels[index];
-    final nextLevel = updatedLevels[index + 1];
+    if (index < 0 || index >= state.levels.length - 1) return;
 
-    // Swap levels
-    updatedLevels[index] = nextLevel.copyWith(level: level.level);
-    updatedLevels[index + 1] = level.copyWith(level: nextLevel.level);
+    final level = state.levels[index];
+    if (level.isMandatory) return;
 
-    state = state.copyWith(levels: updatedLevels);
+    final next = state.levels[index + 1];
+    if (next.isMandatory) return;
+
+    final updated = List<HierarchyLevel>.from(state.levels);
+    updated[index + 1] = level;
+    updated[index] = next;
+
+    state = state.copyWith(levels: _normalizeLevels(updated));
   }
 
-  void resetToDefault() {
-    // Reset to default hierarchy
-    final defaultLevels = [
-      HierarchyLevel(
-        id: 'company',
-        name: 'Company',
-        icon: 'assets/icons/company_icon_small.svg',
-        level: 1,
-        isMandatory: true,
-        isActive: true,
-        previewIcon: 'assets/icons/company_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'division',
-        name: 'Division',
-        icon: 'assets/icons/division_icon_small.svg',
-        level: 2,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/division_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'business_unit',
-        name: 'Business Unit',
-        icon: 'assets/icons/business_unit_icon_small.svg',
-        level: 3,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/business_unit_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'department',
-        name: 'Department',
-        icon: 'assets/icons/department_icon_small.svg',
-        level: 4,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/department_icon_preview.svg',
-      ),
-      HierarchyLevel(
-        id: 'section',
-        name: 'Section',
-        icon: 'assets/icons/section_icon_small.svg',
-        level: 5,
-        isMandatory: false,
-        isActive: true,
-        previewIcon: 'assets/icons/section_icon_preview.svg',
-      ),
-    ];
-    state = state.copyWith(levels: defaultLevels);
+  /// Reset to default levels (from API) - force overwrite
+  void resetToDefault(List<HierarchyLevel> defaultLevels) {
+    _initializedFromApi = true; // keep it initialized after reset
+    state = state.copyWith(levels: _normalizeLevels(List.from(defaultLevels)));
   }
 }
 
+/// ✅ Provider (same pattern you already use)
+final editEnterpriseStructureProvider = StateNotifierProvider.autoDispose.family<
+    EditEnterpriseStructureNotifier,
+    EditEnterpriseStructureState,
+    EditDialogParams>(
+      (ref, params) => EditEnterpriseStructureNotifier(
+    structureName: params.structureName,
+    description: params.description,
+    initialLevels: params.initialLevels,
+  ),
+);
+
+class EditDialogParams {
+  final String structureName;
+  final String description;
+  final List<HierarchyLevel> initialLevels;
+
+  const EditDialogParams({
+    required this.structureName,
+    required this.description,
+    required this.initialLevels,
+  });
+}

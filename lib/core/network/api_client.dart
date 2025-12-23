@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
 
 class ApiClient {
   late final Dio _dio;
@@ -46,9 +47,12 @@ class ApiClient {
 
       return _handleResponse(response);
     } on DioException catch (e) {
-      throw ApiException(_handleDioError(e));
+      throw _mapDioException(e);
     } catch (e) {
-      throw ApiException('Network error: ${e.toString()}');
+      throw UnknownException(
+        'Unexpected error: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -68,9 +72,12 @@ class ApiClient {
 
       return _handleResponse(response);
     } on DioException catch (e) {
-      throw ApiException(_handleDioError(e));
+      throw _mapDioException(e);
     } catch (e) {
-      throw ApiException('Network error: ${e.toString()}');
+      throw UnknownException(
+        'Unexpected error: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -90,9 +97,12 @@ class ApiClient {
 
       return _handleResponse(response);
     } on DioException catch (e) {
-      throw ApiException(_handleDioError(e));
+      throw _mapDioException(e);
     } catch (e) {
-      throw ApiException('Network error: ${e.toString()}');
+      throw UnknownException(
+        'Unexpected error: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -112,9 +122,12 @@ class ApiClient {
 
       return _handleResponse(response);
     } on DioException catch (e) {
-      throw ApiException(_handleDioError(e));
+      throw _mapDioException(e);
     } catch (e) {
-      throw ApiException('Network error: ${e.toString()}');
+      throw UnknownException(
+        'Unexpected error: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -135,31 +148,188 @@ class ApiClient {
         return {'data': response.data};
       }
     } else {
-      throw ApiException(
+      throw ServerException(
         'Server error: ${response.statusCode} - ${response.data}',
+        statusCode: response.statusCode,
       );
     }
   }
 
-  String _handleDioError(DioException error) {
+  /// Maps DioException to appropriate AppException
+  AppException _mapDioException(DioException error) {
+    final statusCode = error.response?.statusCode;
+    final responseData = error.response?.data;
+
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return 'Connection timeout. Please check your internet connection.';
-      case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
-        final message = error.response?.data?.toString() ?? 'Unknown error';
-        return 'Server error: $statusCode - $message';
-      case DioExceptionType.cancel:
-        return 'Request cancelled';
+        return TimeoutException(
+          'Connection timeout. Please check your internet connection.',
+          statusCode: statusCode,
+          originalError: error,
+        );
+
       case DioExceptionType.connectionError:
-        return 'Connection error. Please check your internet connection.';
+        return ConnectionException(
+          'Connection error. Please check your internet connection.',
+          statusCode: statusCode,
+          originalError: error,
+        );
+
       case DioExceptionType.badCertificate:
-        return 'Certificate error';
+        return NetworkException(
+          'Certificate error. Please check your connection.',
+          statusCode: statusCode,
+          originalError: error,
+        );
+
+      case DioExceptionType.cancel:
+        return NetworkException(
+          'Request cancelled',
+          statusCode: statusCode,
+          originalError: error,
+        );
+
+      case DioExceptionType.badResponse:
+        return _mapHttpStatusError(statusCode, responseData, error);
+
       case DioExceptionType.unknown:
-        return error.message ?? 'Unknown error occurred';
+        if (error.message?.contains('SocketException') == true ||
+            error.message?.contains('Network is unreachable') == true) {
+          return ConnectionException(
+            'No internet connection. Please check your network.',
+            statusCode: statusCode,
+            originalError: error,
+          );
+        }
+        return UnknownException(
+          error.message ?? 'Unknown error occurred',
+          statusCode: statusCode,
+          originalError: error,
+        );
     }
+  }
+
+  /// Maps HTTP status codes to appropriate exceptions
+  AppException _mapHttpStatusError(
+    int? statusCode,
+    dynamic responseData,
+    DioException originalError,
+  ) {
+    final message = _extractErrorMessage(responseData);
+
+    switch (statusCode) {
+      case 400:
+        return ClientException(
+          message ?? 'Bad request',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+      case 401:
+        return UnauthorizedException(
+          message ?? 'Unauthorized. Please login again.',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+      case 403:
+        return ForbiddenException(
+          message ?? 'Access forbidden',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+      case 404:
+        return NotFoundException(
+          message ?? 'Resource not found',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+      case 422:
+        return ValidationException(
+          message ?? 'Validation error',
+          statusCode: statusCode,
+          originalError: originalError,
+          errors: _extractValidationErrors(responseData),
+        );
+      case 500:
+      case 502:
+      case 503:
+      case 504:
+        return ServerException(
+          message ?? 'Server error. Please try again later.',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+      default:
+        if (statusCode != null && statusCode >= 400 && statusCode < 500) {
+          return ClientException(
+            message ?? 'Client error',
+            statusCode: statusCode,
+            originalError: originalError,
+          );
+        } else if (statusCode != null && statusCode >= 500) {
+          return ServerException(
+            message ?? 'Server error',
+            statusCode: statusCode,
+            originalError: originalError,
+          );
+        }
+        return UnknownException(
+          message ?? 'Unknown error',
+          statusCode: statusCode,
+          originalError: originalError,
+        );
+    }
+  }
+
+  /// Extracts error message from response data
+  String? _extractErrorMessage(dynamic responseData) {
+    if (responseData == null) return null;
+
+    if (responseData is Map<String, dynamic>) {
+      return responseData['message'] as String? ??
+          responseData['error'] as String? ??
+          responseData['msg'] as String?;
+    }
+
+    if (responseData is String) {
+      try {
+        final decoded = jsonDecode(responseData);
+        if (decoded is Map<String, dynamic>) {
+          return decoded['message'] as String? ??
+              decoded['error'] as String? ??
+              decoded['msg'] as String?;
+        }
+      } catch (_) {
+        return responseData;
+      }
+    }
+
+    return responseData.toString();
+  }
+
+  /// Extracts validation errors from response data
+  Map<String, dynamic>? _extractValidationErrors(dynamic responseData) {
+    if (responseData == null) return null;
+
+    if (responseData is Map<String, dynamic>) {
+      return responseData['errors'] as Map<String, dynamic>? ??
+          responseData['validation'] as Map<String, dynamic>?;
+    }
+
+    if (responseData is String) {
+      try {
+        final decoded = jsonDecode(responseData);
+        if (decoded is Map<String, dynamic>) {
+          return decoded['errors'] as Map<String, dynamic>? ??
+              decoded['validation'] as Map<String, dynamic>?;
+        }
+      } catch (_) {
+        // Ignore
+      }
+    }
+
+    return null;
   }
 
   void dispose() {
@@ -238,11 +408,3 @@ class _ErrorInterceptor extends Interceptor {
   }
 }
 
-class ApiException implements Exception {
-  final String message;
-
-  ApiException(this.message);
-
-  @override
-  String toString() => message;
-}
