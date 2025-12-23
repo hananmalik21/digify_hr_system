@@ -63,7 +63,8 @@ class StructureLevelDto {
     final icons = _getIconsForLevelCode(levelCode);
 
     return StructureLevelDto(
-      id: levelCode.isNotEmpty ? levelCode : 'level_$levelId',
+      // Use level_id as the id (needed for save API)
+      id: levelId.toString(),
       name: levelName,
       icon: json['icon'] as String? ??
           json['iconPath'] as String? ??

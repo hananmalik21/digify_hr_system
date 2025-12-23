@@ -44,22 +44,26 @@ class EditEnterpriseStructureState {
   final String structureName;
   final String description;
   final List<HierarchyLevel> levels;
+  final int? selectedEnterpriseId;
 
   const EditEnterpriseStructureState({
     required this.structureName,
     required this.description,
     required this.levels,
+    this.selectedEnterpriseId,
   });
 
   EditEnterpriseStructureState copyWith({
     String? structureName,
     String? description,
     List<HierarchyLevel>? levels,
+    int? selectedEnterpriseId,
   }) {
     return EditEnterpriseStructureState(
       structureName: structureName ?? this.structureName,
       description: description ?? this.description,
       levels: levels ?? this.levels,
+      selectedEnterpriseId: selectedEnterpriseId ?? this.selectedEnterpriseId,
     );
   }
 
@@ -75,11 +79,13 @@ class EditEnterpriseStructureNotifier
     required String structureName,
     required String description,
     required List<HierarchyLevel> initialLevels,
+    int? selectedEnterpriseId,
   }) : super(
     EditEnterpriseStructureState(
       structureName: structureName,
       description: description,
       levels: List<HierarchyLevel>.from(initialLevels),
+      selectedEnterpriseId: selectedEnterpriseId,
     ),
   );
 
@@ -127,6 +133,10 @@ class EditEnterpriseStructureNotifier
 
   void updateDescription(String desc) {
     state = state.copyWith(description: desc);
+  }
+
+  void updateSelectedEnterprise(int? enterpriseId) {
+    state = state.copyWith(selectedEnterpriseId: enterpriseId);
   }
 
   void toggleLevelActive(int index) {

@@ -3,9 +3,11 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/shimmer_widget.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_structure_dialog_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/active_status_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_instructions_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_summary_widget.dart';
@@ -114,6 +116,7 @@ class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureD
       structureName: initialName,
       description: initialDescription,
       initialLevels: widget.initialLevels ?? const <HierarchyLevel>[],
+      selectedEnterpriseId: null,
     );
 
     // ✅ Riverpod 2.6.x: listenManual is allowed in initState
@@ -270,6 +273,32 @@ class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureD
                       boldText: localizations.company,
                     ),
                     SizedBox(height: isMobile ? 16.h : 24.h),
+                    // Enterprise dropdown (only for create/edit modes)
+                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final enterprisesState = ref.watch(enterprisesProvider);
+                          final editState = ref.watch(_editDialogProvider(_params));
+                          
+                          return EnterpriseDropdown(
+                            label: 'Enterprise',
+                            isRequired: true,
+                            selectedEnterpriseId: editState.selectedEnterpriseId,
+                            enterprises: enterprisesState.enterprises,
+                            isLoading: enterprisesState.isLoading,
+                            readOnly: false,
+                            onChanged: (enterpriseId) {
+                              ref.read(_editDialogProvider(_params).notifier)
+                                  .updateSelectedEnterprise(enterpriseId);
+                            },
+                            errorText: enterprisesState.hasError
+                                ? enterprisesState.errorMessage
+                                : null,
+                          );
+                        },
+                      ),
+                      SizedBox(height: isMobile ? 12.h : 16.h),
+                    ],
                     EnterpriseStructureTextField(
                       label: localizations.structureName,
                       isRequired: true,
@@ -552,14 +581,22 @@ class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureD
       bool isDark,
       List<HierarchyLevel> levels,
       ) {
-    final previewLevels = levels
-        .where((level) => level.isActive)
-        .map((level) => HierarchyPreviewLevel(
-      name: level.name,
-      icon: level.previewIcon,
-      level: level.level,
-      width: _getPreviewWidth(level.level, levels.length),
-    ))
+    final activeLevels = levels.where((level) => level.isActive).toList();
+    final previewLevels = activeLevels
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+          final level = entry.value;
+          final sequentialLevel = index + 1; // Sequential level number (1, 2, 3, ...)
+          
+          return HierarchyPreviewLevel(
+            name: level.name,
+            icon: level.previewIcon,
+            level: sequentialLevel,
+            width: _getPreviewWidth(sequentialLevel, activeLevels.length),
+          );
+        })
         .toList();
 
     return HierarchyPreviewWidget(levels: previewLevels);
@@ -575,10 +612,175 @@ class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureD
       BuildContext context,
       AppLocalizations localizations,
       bool isDark,
-      EditEnterpriseStructureState? state,
+      EditEnterpriseStructureState? editState,
       ) {
-    // Keep your original footer code here (unchanged).
-    return const SizedBox.shrink();
+    // Only show footer for edit/create modes
+    if (widget.mode == EnterpriseStructureDialogMode.view) {
+      return const SizedBox.shrink();
+    }
+
+    final saveState = ref.watch(saveEnterpriseStructureProvider);
+    final isMobile = ResponsiveHelper.isMobile(context);
+
+    return Container(
+      padding: ResponsiveHelper.getResponsivePadding(
+        context,
+        mobile: EdgeInsetsDirectional.all(16.w),
+        tablet: EdgeInsetsDirectional.all(20.w),
+        web: EdgeInsetsDirectional.all(24.w),
+      ),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Cancel button
+          TextButton(
+            onPressed: saveState.isSaving
+                ? null
+                : () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16.w : 24.w,
+                vertical: isMobile ? 12.h : 14.h,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                side: BorderSide(
+                  color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder,
+                ),
+              ),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: isMobile ? 14.sp : 15.sp,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+              ),
+            ),
+          ),
+          SizedBox(width: isMobile ? 12.w : 16.w),
+          // Save button
+          ElevatedButton(
+            onPressed: saveState.isSaving
+                ? null
+                : () async {
+                    if (editState == null) return;
+
+                    // Validate
+                    if (editState.selectedEnterpriseId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please select an enterprise'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (editState.structureName.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Structure name is required'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (editState.levels.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('At least one level is required'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
+                    // Save
+                    await ref.read(saveEnterpriseStructureProvider.notifier).saveStructure(
+                      structureName: editState.structureName.trim(),
+                      description: editState.description.trim(),
+                      levels: editState.levels,
+                      enterpriseId: editState.selectedEnterpriseId,
+                    );
+
+                    // Check result
+                    final currentSaveState = ref.read(saveEnterpriseStructureProvider);
+                    if (currentSaveState.isSuccess) {
+                      if (context.mounted) {
+                        Navigator.of(context).pop(true); // Return true to indicate success
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Structure saved successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } else if (currentSaveState.hasError) {
+                      if (context.mounted) {
+                        final errorMessage = currentSaveState.errorMessage ?? 'Failed to save structure';
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              errorMessage,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Colors.red,
+                            duration: const Duration(seconds: 4),
+                            action: SnackBarAction(
+                              label: 'Dismiss',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              },
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16.w : 24.w,
+                vertical: isMobile ? 12.h : 14.h,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+            ),
+            child: saveState.isSaving
+                ? SizedBox(
+                    width: isMobile ? 16.w : 20.w,
+                    height: isMobile ? 16.h : 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    'Save',
+                    style: TextStyle(
+                      fontSize: isMobile ? 14.sp : 15.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -590,6 +792,7 @@ final _editDialogProvider = StateNotifierProvider.autoDispose.family<
     structureName: params.structureName,
     description: params.description,
     initialLevels: params.initialLevels,
+    selectedEnterpriseId: params.selectedEnterpriseId,
   ),
 );
 
@@ -597,10 +800,12 @@ class _EditDialogParams {
   final String structureName;
   final String description;
   final List<HierarchyLevel> initialLevels;
+  final int? selectedEnterpriseId;
 
   _EditDialogParams({
     required this.structureName,
     required this.description,
     required this.initialLevels,
+    this.selectedEnterpriseId,
   });
 }

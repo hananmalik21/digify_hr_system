@@ -221,6 +221,16 @@ class ApiClient {
 
     switch (statusCode) {
       case 400:
+        // Check if it's a validation error (has errors array/map)
+        final validationErrors = _extractValidationErrors(responseData);
+        if (validationErrors != null && validationErrors.isNotEmpty) {
+          return ValidationException(
+            message ?? 'Validation failed',
+            statusCode: statusCode,
+            originalError: originalError,
+            errors: validationErrors,
+          );
+        }
         return ClientException(
           message ?? 'Bad request',
           statusCode: statusCode,
@@ -287,6 +297,18 @@ class ApiClient {
     if (responseData == null) return null;
 
     if (responseData is Map<String, dynamic>) {
+      // Check for validation errors array first
+      final errors = responseData['errors'];
+      if (errors != null) {
+        if (errors is List && errors.isNotEmpty) {
+          // Join all error messages
+          return errors.map((e) => e.toString()).join(', ');
+        } else if (errors is Map && errors.isNotEmpty) {
+          // Join all error messages from map
+          return errors.values.map((e) => e.toString()).join(', ');
+        }
+      }
+      
       return responseData['message'] as String? ??
           responseData['error'] as String? ??
           responseData['msg'] as String?;
@@ -296,6 +318,16 @@ class ApiClient {
       try {
         final decoded = jsonDecode(responseData);
         if (decoded is Map<String, dynamic>) {
+          // Check for validation errors array first
+          final errors = decoded['errors'];
+          if (errors != null) {
+            if (errors is List && errors.isNotEmpty) {
+              return errors.map((e) => e.toString()).join(', ');
+            } else if (errors is Map && errors.isNotEmpty) {
+              return errors.values.map((e) => e.toString()).join(', ');
+            }
+          }
+          
           return decoded['message'] as String? ??
               decoded['error'] as String? ??
               decoded['msg'] as String?;
@@ -313,16 +345,40 @@ class ApiClient {
     if (responseData == null) return null;
 
     if (responseData is Map<String, dynamic>) {
-      return responseData['errors'] as Map<String, dynamic>? ??
-          responseData['validation'] as Map<String, dynamic>?;
+      final errors = responseData['errors'];
+      if (errors != null) {
+        if (errors is Map<String, dynamic>) {
+          return errors;
+        } else if (errors is List) {
+          // Convert list to map for easier handling
+          final errorMap = <String, dynamic>{};
+          for (var i = 0; i < errors.length; i++) {
+            errorMap['error_$i'] = errors[i];
+          }
+          return errorMap;
+        }
+      }
+      return responseData['validation'] as Map<String, dynamic>?;
     }
 
     if (responseData is String) {
       try {
         final decoded = jsonDecode(responseData);
         if (decoded is Map<String, dynamic>) {
-          return decoded['errors'] as Map<String, dynamic>? ??
-              decoded['validation'] as Map<String, dynamic>?;
+          final errors = decoded['errors'];
+          if (errors != null) {
+            if (errors is Map<String, dynamic>) {
+              return errors;
+            } else if (errors is List) {
+              // Convert list to map for easier handling
+              final errorMap = <String, dynamic>{};
+              for (var i = 0; i < errors.length; i++) {
+                errorMap['error_$i'] = errors[i];
+              }
+              return errorMap;
+            }
+          }
+          return decoded['validation'] as Map<String, dynamic>?;
         }
       } catch (_) {
         // Ignore

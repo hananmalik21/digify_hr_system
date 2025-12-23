@@ -8,6 +8,8 @@ class ApiEndpoints {
 
   // Enterprise Structure endpoints
   static const String structureLevels = '$api/structure-levels';
+  static const String hrOrgStructures = '$api/hr-org-structures';
+  static const String enterprises = '$api/enterprises';
   
   // Add more endpoints here as needed
   // Example:
