@@ -9,5 +9,13 @@ abstract class EnterpriseStructureRepository {
   Future<EnterpriseStructure> saveEnterpriseStructure(
     EnterpriseStructure structure,
   );
+  
+  /// Updates an enterprise structure
+  /// 
+  /// Throws [AppException] if the operation fails
+  Future<EnterpriseStructure> updateEnterpriseStructure(
+    int structureId,
+    EnterpriseStructure structure,
+  );
 }
 

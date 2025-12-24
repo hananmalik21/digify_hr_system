@@ -299,7 +299,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        EnterpriseStructureDialog.showCreate(context);
+                        // EnterpriseStructureDialog.showCreate(context,provider: provider);
                       },
                       child: Container(
                         padding: EdgeInsetsDirectional.symmetric(

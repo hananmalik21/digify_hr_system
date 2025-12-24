@@ -3,11 +3,14 @@ import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/enterprise_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/enterprise_structure_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/structure_level_remote_data_source.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/datasources/structure_list_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/enterprise_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/enterprise_structure_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/structure_level_repository_impl.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/repositories/structure_list_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_enterprises_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_levels_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,5 +80,26 @@ final getEnterprisesUseCaseProvider =
     Provider<GetEnterprisesUseCase>((ref) {
   final repository = ref.watch(enterpriseRepositoryProvider);
   return GetEnterprisesUseCase(repository: repository);
+});
+
+/// Provider for StructureListRemoteDataSource
+final structureListRemoteDataSourceProvider =
+    Provider<StructureListRemoteDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return StructureListRemoteDataSourceImpl(apiClient: apiClient);
+});
+
+/// Provider for StructureListRepository
+final structureListRepositoryProvider =
+    Provider<StructureListRepositoryImpl>((ref) {
+  final remoteDataSource = ref.watch(structureListRemoteDataSourceProvider);
+  return StructureListRepositoryImpl(remoteDataSource: remoteDataSource);
+});
+
+/// Provider for GetStructureListUseCase
+final getStructureListUseCaseProvider =
+    Provider<GetStructureListUseCase>((ref) {
+  final repository = ref.watch(structureListRepositoryProvider);
+  return GetStructureListUseCase(repository: repository);
 });
 

@@ -19,16 +19,23 @@ class SaveEnterpriseStructureRequestDto {
   });
 
   /// Converts to JSON for API request
+  /// For updates (PUT), levels should be empty and not included in the request
   Map<String, dynamic> toJson() {
-    return {
+    final json = <String, dynamic>{
       if (enterpriseId != null) 'ENTERPRISE_ID': enterpriseId,
       'STRUCTURE_CODE': structureCode,
       'STRUCTURE_NAME': structureName,
       'STRUCTURE_TYPE': structureType,
       'DESCRIPTION': description,
       'IS_ACTIVE': isActive,
-      'levels': levels.map((level) => level.toJson()).toList(),
     };
+    
+    // Only include levels if the list is not empty (for create operations)
+    if (levels.isNotEmpty) {
+      json['levels'] = levels.map((level) => level.toJson()).toList();
+    }
+    
+    return json;
   }
 }
 
