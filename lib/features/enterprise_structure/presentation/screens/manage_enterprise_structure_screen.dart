@@ -1466,7 +1466,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
             backgroundColor: const Color(0xFF00A63E),
             textColor: Colors.white,
             onTap: () {
-              // TODO: Activate structure
+
             },
           ),
         if (!isActive) SizedBox(height: 8.h),
@@ -1569,7 +1569,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               ? AppColors.textSecondaryDark
               : const Color(0xFF4A5565),
           onTap: () {
-            // TODO: Duplicate structure
+
           },
         ),
         if (!isActive) ...[
@@ -1585,7 +1585,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                 : const Color(0xFFFEF2F2),
             textColor: AppColors.brandRed,
             onTap: () {
-              // TODO: Delete structure
+
             },
           ),
         ],

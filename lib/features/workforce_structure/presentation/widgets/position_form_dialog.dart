@@ -300,7 +300,7 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
             fillColor: AppColors.inputBg,
             hintText: label,
             hintStyle: TextStyle(
-              color: AppColors.textSecondary.withOpacity(0.6),
+              color: AppColors.textSecondary.withValues(alpha: 0.6),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),

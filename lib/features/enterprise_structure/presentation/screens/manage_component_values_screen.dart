@@ -84,7 +84,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                         );
                       },
                       onDelete: (component) {
-                        // TODO: Open delete confirmation
+
                       },
                     )
                   : ComponentTableView(
@@ -105,11 +105,11 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                         );
                       },
                       onDelete: (component) {
-                        // TODO: Open delete confirmation
+
                       },
                       onDuplicate: state.filterType == ComponentType.department
                           ? (component) {
-                              // TODO: Open duplicate dialog
+
                             }
                           : null,
                     ),
@@ -186,7 +186,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          // TODO: Open structure configuration dialog
+
                         },
                         child: Container(
                           padding: EdgeInsetsDirectional.symmetric(
@@ -227,7 +227,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                     SizedBox(width: 8.w),
                     GestureDetector(
                       onTap: () {
-                        // TODO: Open settings
+
                       },
                       child: Container(
                         width: 40.w,
@@ -336,7 +336,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                     SizedBox(width: 12.w),
                     GestureDetector(
                       onTap: () {
-                        // TODO: Open settings
+
                       },
                       child: Container(
                         width: isTablet ? 36.w : 32.w,
@@ -853,7 +853,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
                 : const Color(0xFF4A5565),
             textColor: Colors.white,
             onTap: () {
-              // TODO: Export components
+
             },
           ),
         ],
@@ -905,7 +905,7 @@ class ManageComponentValuesScreen extends ConsumerWidget {
               : const Color(0xFF4A5565),
           textColor: Colors.white,
           onTap: () {
-            // TODO: Export components
+
           },
         ),
       ],

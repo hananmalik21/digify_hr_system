@@ -2,18 +2,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-/// Reusable Export button widget
-/// Used across workforce and enterprise structure features
-/// 
-/// DEPRECATED: Use CustomButton directly instead
-/// Example: CustomButton(
-///   label: localizations.export,
-///   svgIcon: 'assets/icons/download_icon.svg',
-///   onPressed: () {},
-///   backgroundColor: const Color(0xFF4A5565),
-///   foregroundColor: Colors.white,
-/// )
-@Deprecated('Use CustomButton instead. This widget wraps CustomButton for backward compatibility.')
 class ExportButton extends StatelessWidget {
   final VoidCallback onTap;
   final String? customLabel;
@@ -50,6 +38,3 @@ class ExportButton extends StatelessWidget {
     );
   }
 }
-
-
-

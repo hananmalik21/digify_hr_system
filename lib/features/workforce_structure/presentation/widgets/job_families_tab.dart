@@ -8,7 +8,6 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/job_
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_family_form_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_family_detail_dialog.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_level_detail_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +42,7 @@ class JobFamiliesTab extends ConsumerWidget {
                 JobFamilyFormDialog.show(context);
               },
               customLabel: localizations.addJobFamily,
-            )
+            ),
           ],
         ),
         SizedBox(height: 24.h),
@@ -78,11 +77,17 @@ class JobFamiliesTab extends ConsumerWidget {
             final targetCardWidth = 466.0;
 
             // ✅ decide columns but keep max 3
-            final columns = maxW < 600 ? 1 : maxW < 900 ? 2 : 3;
+            final columns = maxW < 600
+                ? 1
+                : maxW < 900
+                ? 2
+                : 3;
 
             // ✅ computed width, but clamp to 466 for web look
             final computed = (maxW - (spacing * (columns - 1))) / columns;
-            final cardWidth = computed > targetCardWidth ? targetCardWidth : computed;
+            final cardWidth = computed > targetCardWidth
+                ? targetCardWidth
+                : computed;
 
             return Wrap(
               spacing: spacing,
@@ -106,9 +111,7 @@ class JobFamiliesTab extends ConsumerWidget {
               }).toList(),
             );
           },
-        )
-
-
+        ),
       ],
     );
   }
@@ -130,12 +133,12 @@ class JobFamiliesTab extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -175,7 +178,9 @@ class JobFamiliesTab extends ConsumerWidget {
                         height: 20 / 14,
                       ),
                     ),
-                    SizedBox(height: 8.h), // slightly more breathing before chip
+                    SizedBox(
+                      height: 8.h,
+                    ), // slightly more breathing before chip
                     Container(
                       padding: EdgeInsetsDirectional.symmetric(
                         horizontal: 8.w,
@@ -207,7 +212,6 @@ class JobFamiliesTab extends ConsumerWidget {
           ),
 
           SizedBox(height: gap), // ✅ GAP 16
-
           // 2) Description block
           Text(
             jobFamily.description,
@@ -222,7 +226,6 @@ class JobFamiliesTab extends ConsumerWidget {
           ),
 
           SizedBox(height: gap), // ✅ GAP 16
-
           // 3) Stats row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,7 +251,6 @@ class JobFamiliesTab extends ConsumerWidget {
           ),
 
           SizedBox(height: gap), // ✅ GAP 16
-
           // 4) Divider
           Divider(
             color: AppColors.cardBorder,
@@ -257,7 +259,6 @@ class JobFamiliesTab extends ConsumerWidget {
           ),
 
           SizedBox(height: gap), // ✅ GAP 16
-
           // 5) Buttons row
           Row(
             children: [
@@ -309,16 +310,14 @@ class JobFamiliesTab extends ConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                  onTap: () {
-                    JobFamilyFormDialog.show(
-                      context,
-                      jobFamily: jobFamily,
-                      isEdit: true,
-                      onSave: (updated) {
-                        // TODO: wire to provider/persistence
-                      },
-                    );
-                  },
+                    onTap: () {
+                      JobFamilyFormDialog.show(
+                        context,
+                        jobFamily: jobFamily,
+                        isEdit: true,
+                        onSave: (updated) {},
+                      );
+                    },
                     borderRadius: BorderRadius.circular(4.r),
                     child: Container(
                       padding: EdgeInsetsDirectional.symmetric(
@@ -366,7 +365,6 @@ class JobFamiliesTab extends ConsumerWidget {
     );
   }
 
-
   Widget _buildStatItem({
     required String label,
     required String value,
@@ -399,4 +397,3 @@ class JobFamiliesTab extends ConsumerWidget {
     );
   }
 }
-

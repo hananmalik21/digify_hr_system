@@ -147,7 +147,50 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/workforce-structure',
             name: 'workforce-structure',
-            builder: (context, state) => const WorkforceStructureScreen(),
+            redirect: (context, state) {
+              if (state.uri.path == '/workforce-structure') {
+                return '/workforce-structure/positions';
+              }
+              return null;
+            },
+            routes: [
+              GoRoute(
+                path: 'positions',
+                name: 'workforce-structure-positions',
+                builder: (context, state) =>
+                    const WorkforceStructureScreen(initialTab: 'positions'),
+              ),
+              GoRoute(
+                path: 'job-families',
+                name: 'workforce-structure-job-families',
+                builder: (context, state) =>
+                    const WorkforceStructureScreen(initialTab: 'jobFamilies'),
+              ),
+              GoRoute(
+                path: 'job-levels',
+                name: 'workforce-structure-job-levels',
+                builder: (context, state) =>
+                    const WorkforceStructureScreen(initialTab: 'jobLevels'),
+              ),
+              GoRoute(
+                path: 'grade-structure',
+                name: 'workforce-structure-grade-structure',
+                builder: (context, state) =>
+                    const WorkforceStructureScreen(initialTab: 'gradeStructure'),
+              ),
+              GoRoute(
+                path: 'reporting-structure',
+                name: 'workforce-structure-reporting-structure',
+                builder: (context, state) => const WorkforceStructureScreen(
+                    initialTab: 'reportingStructure'),
+              ),
+              GoRoute(
+                path: 'position-tree',
+                name: 'workforce-structure-position-tree',
+                builder: (context, state) =>
+                    const WorkforceStructureScreen(initialTab: 'positionTree'),
+              ),
+            ],
           ),
           GoRoute(
             path: '/time-management',

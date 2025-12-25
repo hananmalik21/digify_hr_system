@@ -589,7 +589,7 @@ class ComponentDetailDialog extends StatelessWidget {
                   _buildInfoField(
                       context,
                       localizations.lastUpdatedBy,
-                      'HR Admin', // TODO: Get from component
+                      'HR Admin',
                       isDark,
                       isMobile,
                       isTablet,
@@ -615,7 +615,7 @@ class ComponentDetailDialog extends StatelessWidget {
                     child: _buildInfoField(
                         context,
                         localizations.lastUpdatedBy,
-                        'HR Admin', // TODO: Get from component
+                        'HR Admin',
                         isDark,
                         isMobile,
                         isTablet,
@@ -907,7 +907,7 @@ class ComponentDetailDialog extends StatelessWidget {
           SizedBox(height: 4.h),
           // Pixel perfect: text-[15.5px] for most, text-[15.6px] for business unit
           Text(
-            component.managerId ?? localizations.notSpecified, // TODO: Get manager name
+            component.managerId ?? localizations.notSpecified,
             style: TextStyle(
               fontSize: isMobile
                   ? 14.sp

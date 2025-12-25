@@ -7,7 +7,7 @@ import '../theme/theme_extensions.dart';
 /// Universal CustomTextField Widget
 /// This is the ONLY text field widget that should be used across the entire app.
 /// It supports all variations: standard input, search, password, multi-line, date pickers, etc.
-/// 
+///
 /// Usage Examples:
 /// - Standard: CustomTextField(controller: controller, hintText: 'Enter name')
 /// - Search: CustomTextField.search(controller: controller)
@@ -188,20 +188,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final theme = Theme.of(context);
+    Theme.of(context);
 
     // Theme-aware colors
-    final effectiveBorderColor = widget.borderColor ??
+    final effectiveBorderColor =
+        widget.borderColor ??
         (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
     final effectiveFocusedBorderColor =
         widget.focusedBorderColor ?? AppColors.primary;
-    final effectiveFillColor = widget.fillColor ??
+    final effectiveFillColor =
+        widget.fillColor ??
         (isDark ? AppColors.inputBgDark : AppColors.inputBg);
     final effectiveTextColor = isDark
-        ? context.themeTextPrimary ?? AppColors.textPrimaryDark
+        ? context.themeTextPrimary
         : AppColors.textPrimary;
     final effectiveHintColor = isDark
-        ? context.themeTextMuted ?? AppColors.textPlaceholderDark
+        ? context.themeTextMuted
         : AppColors.textTertiary;
 
     // Build label if provided
@@ -213,7 +215,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         children: [
           Text(
             widget.labelText!,
-            style: widget.labelStyle ??
+            style:
+                widget.labelStyle ??
                 TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13.8.sp,
@@ -259,7 +262,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           });
         },
         child: Icon(
-          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+          _obscureText
+              ? Icons.visibility_off_outlined
+              : Icons.visibility_outlined,
           size: 16.sp,
           color: isDark
               ? AppColors.textPlaceholderDark
@@ -287,7 +292,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       maxLength: widget.maxLength,
       inputFormatters: widget.inputFormatters,
       autovalidateMode: widget.autovalidateMode,
-      style: widget.textStyle ??
+      style:
+          widget.textStyle ??
           TextStyle(
             fontFamily: 'Inter',
             fontSize: widget.fontSize ?? 13.7.sp,
@@ -304,41 +310,34 @@ class _CustomTextFieldState extends State<CustomTextField> {
         suffixIcon: effectiveSuffixIcon,
         filled: widget.filled,
         fillColor: effectiveFillColor,
-        hintStyle: widget.hintStyle ??
+        hintStyle:
+            widget.hintStyle ??
             TextStyle(
               fontFamily: 'Inter',
               fontSize: widget.fontSize ?? 13.7.sp,
               fontWeight: FontWeight.w400,
               color: effectiveHintColor,
             ),
-        prefixIconConstraints: BoxConstraints(
-          minWidth: 40.w,
-          minHeight: 16.h,
-        ),
-        suffixIconConstraints: BoxConstraints(
-          minWidth: 40.w,
-          minHeight: 16.h,
-        ),
-        contentPadding: widget.contentPadding ??
+        prefixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
+        suffixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
+        contentPadding:
+            widget.contentPadding ??
             EdgeInsetsDirectional.fromSTEB(17.w, 9.h, 29.w, 9.h),
         border: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
                 borderSide: BorderSide(color: effectiveBorderColor),
               )
             : InputBorder.none,
         enabledBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
                 borderSide: BorderSide(color: effectiveBorderColor),
               )
             : InputBorder.none,
         disabledBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
                 borderSide: BorderSide(
                   color: isDark
                       ? AppColors.borderGreyDark.withValues(alpha: 0.5)
@@ -348,8 +347,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             : InputBorder.none,
         focusedBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
                 borderSide: BorderSide(
                   color: effectiveFocusedBorderColor,
                   width: 1.5.w,
@@ -358,19 +356,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             : InputBorder.none,
         errorBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
                 borderSide: const BorderSide(color: AppColors.error),
               )
             : InputBorder.none,
         focusedErrorBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? 8.r),
-                borderSide: BorderSide(
-                  color: AppColors.error,
-                  width: 1.5.w,
-                ),
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderSide: BorderSide(color: AppColors.error, width: 1.5.w),
               )
             : InputBorder.none,
       ),
@@ -381,10 +374,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
     // Apply default height if provided, otherwise let the field size naturally
     Widget field = widget.height != null
-        ? SizedBox(
-            height: widget.height,
-            child: textField,
-          )
+        ? SizedBox(height: widget.height, child: textField)
         : textField;
 
     // Add label and helper text if provided
@@ -393,16 +383,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (labelWidget != null) ...[
-            labelWidget,
-            SizedBox(height: 14.h),
-          ],
+          if (labelWidget != null) ...[labelWidget, SizedBox(height: 14.h)],
           field,
           if (widget.helperText != null) ...[
             SizedBox(height: 12.h),
             Text(
               widget.helperText!,
-              style: widget.helperTextStyle ??
+              style:
+                  widget.helperTextStyle ??
                   TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 11.8.sp,
@@ -426,18 +414,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (labelWidget != null) ...[
-                labelWidget,
-                SizedBox(height: 14.h),
-              ],
-              AbsorbPointer(
-                child: field,
-              ),
+              if (labelWidget != null) ...[labelWidget, SizedBox(height: 14.h)],
+              AbsorbPointer(child: field),
               if (widget.helperText != null) ...[
                 SizedBox(height: 12.h),
                 Text(
                   widget.helperText!,
-                  style: widget.helperTextStyle ??
+                  style:
+                      widget.helperTextStyle ??
                       TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 11.8.sp,
@@ -463,9 +447,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return GestureDetector(
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
-        child: AbsorbPointer(
-          child: field,
-        ),
+        child: AbsorbPointer(child: field),
       );
     }
 
