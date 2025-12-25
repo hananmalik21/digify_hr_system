@@ -14,6 +14,18 @@ class PositionFormDialog extends StatefulWidget {
     required this.isEdit,
   });
 
+  static void show(
+    BuildContext context, {
+    required Position position,
+    required bool isEdit,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          PositionFormDialog(initialPosition: position, isEdit: isEdit),
+    );
+  }
+
   @override
   State<PositionFormDialog> createState() => _PositionFormDialogState();
 }
@@ -46,8 +58,12 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
     super.initState();
     final position = widget.initialPosition;
     _codeController = TextEditingController(text: position.code);
-    _statusController = TextEditingController(text: position.isActive ? 'Active' : 'Inactive');
-    _titleEnglishController = TextEditingController(text: position.titleEnglish);
+    _statusController = TextEditingController(
+      text: position.isActive ? 'Active' : 'Inactive',
+    );
+    _titleEnglishController = TextEditingController(
+      text: position.titleEnglish,
+    );
     _titleArabicController = TextEditingController(text: position.titleArabic);
     _divisionController = TextEditingController(text: position.division);
     _departmentController = TextEditingController(text: position.department);
@@ -57,14 +73,22 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
     _jobLevelController = TextEditingController(text: position.level);
     _gradeController = TextEditingController(text: position.grade);
     _stepController = TextEditingController(text: position.step);
-    _positionsController = TextEditingController(text: position.headcount.toString());
+    _positionsController = TextEditingController(
+      text: position.headcount.toString(),
+    );
     _filledController = TextEditingController(text: position.filled.toString());
     _employmentController = TextEditingController(text: 'Full-Time');
     _budgetedMinController = TextEditingController(text: position.budgetedMin);
     _budgetedMaxController = TextEditingController(text: position.budgetedMax);
-    _actualAverageController = TextEditingController(text: position.actualAverage);
-    _reportsTitleController = TextEditingController(text: position.reportsTo ?? '');
-    _reportsCodeController = TextEditingController(text: position.reportsTo ?? '');
+    _actualAverageController = TextEditingController(
+      text: position.actualAverage,
+    );
+    _reportsTitleController = TextEditingController(
+      text: position.reportsTo ?? '',
+    );
+    _reportsCodeController = TextEditingController(
+      text: position.reportsTo ?? '',
+    );
   }
 
   @override
@@ -105,7 +129,7 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(localizations),
-              Divider(height: 1.h,color: Color(0xffD1D5DC),),
+              Divider(height: 1.h, color: Color(0xffD1D5DC)),
               Padding(
                 padding: EdgeInsets.all(24.w),
                 child: Form(
@@ -113,79 +137,121 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSection(
-                        localizations.basicInformation,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.positionCode, _codeController),
-                            _buildLabeledField(localizations.status, _statusController),
-                          ]),
-                          _buildFormRow([
-                            _buildLabeledField(localizations.titleEnglish, _titleEnglishController),
-                            _buildLabeledField(localizations.titleArabic, _titleArabicController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.basicInformation, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.positionCode,
+                            _codeController,
+                          ),
+                          _buildLabeledField(
+                            localizations.status,
+                            _statusController,
+                          ),
+                        ]),
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.titleEnglish,
+                            _titleEnglishController,
+                          ),
+                          _buildLabeledField(
+                            localizations.titleArabic,
+                            _titleArabicController,
+                          ),
+                        ]),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(
-                        localizations.organizationalInformation,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.division, _divisionController),
-                            _buildLabeledField(localizations.department, _departmentController),
-                          ]),
-                          _buildFormRow([
-                            _buildLabeledField(localizations.costCenter, _costCenterController),
-                            _buildLabeledField(localizations.location, _locationController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.organizationalInformation, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.division,
+                            _divisionController,
+                          ),
+                          _buildLabeledField(
+                            localizations.department,
+                            _departmentController,
+                          ),
+                        ]),
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.costCenter,
+                            _costCenterController,
+                          ),
+                          _buildLabeledField(
+                            localizations.location,
+                            _locationController,
+                          ),
+                        ]),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(
-                        localizations.jobClassification,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.jobFamily, _jobFamilyController),
-                            _buildLabeledField(localizations.jobLevel, _jobLevelController),
-                          ]),
-                          _buildFormRow([
-                            _buildLabeledField(localizations.gradeStep, _gradeController),
-                            _buildLabeledField(localizations.step, _stepController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.jobClassification, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.jobFamily,
+                            _jobFamilyController,
+                          ),
+                          _buildLabeledField(
+                            localizations.jobLevel,
+                            _jobLevelController,
+                          ),
+                        ]),
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.gradeStep,
+                            _gradeController,
+                          ),
+                          _buildLabeledField(
+                            localizations.step,
+                            _stepController,
+                          ),
+                        ]),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(
-                        localizations.headcountInformation,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.positionCode, _positionsController),
-                            _buildLabeledField(localizations.filled, _filledController),
-                            _buildLabeledField(localizations.employmentType, _employmentController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.headcountInformation, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.positionCode,
+                            _positionsController,
+                          ),
+                          _buildLabeledField(
+                            localizations.filled,
+                            _filledController,
+                          ),
+                          _buildLabeledField(
+                            localizations.employmentType,
+                            _employmentController,
+                          ),
+                        ]),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(
-                        localizations.salaryInformation,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.budgetedMin, _budgetedMinController),
-                            _buildLabeledField(localizations.budgetedMax, _budgetedMaxController),
-                            _buildLabeledField(localizations.actualAverage, _actualAverageController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.salaryInformation, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.budgetedMin,
+                            _budgetedMinController,
+                          ),
+                          _buildLabeledField(
+                            localizations.budgetedMax,
+                            _budgetedMaxController,
+                          ),
+                          _buildLabeledField(
+                            localizations.actualAverage,
+                            _actualAverageController,
+                          ),
+                        ]),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(
-                        localizations.reportingRelationship,
-                        [
-                          _buildFormRow([
-                            _buildLabeledField(localizations.reportsTo, _reportsTitleController),
-                            _buildLabeledField(localizations.reportsTo, _reportsCodeController),
-                          ]),
-                        ],
-                      ),
+                      _buildSection(localizations.reportingRelationship, [
+                        _buildFormRow([
+                          _buildLabeledField(
+                            localizations.reportsTo,
+                            _reportsTitleController,
+                          ),
+                          _buildLabeledField(
+                            localizations.reportsTo,
+                            _reportsCodeController,
+                          ),
+                        ]),
+                      ]),
                     ],
                   ),
                 ),
@@ -196,10 +262,15 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _buildTextButton(localizations.cancel, () => Navigator.of(context).pop()),
+                    _buildTextButton(
+                      localizations.cancel,
+                      () => Navigator.of(context).pop(),
+                    ),
                     SizedBox(width: 12.w),
                     _buildPrimaryButton(
-                      widget.isEdit ? localizations.saveUpdates : localizations.saveChanges,
+                      widget.isEdit
+                          ? localizations.saveUpdates
+                          : localizations.saveChanges,
                       () {
                         if (_formKey.currentState?.validate() ?? false) {
                           Navigator.of(context).pop();
@@ -217,7 +288,9 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
   }
 
   Widget _buildHeader(AppLocalizations localizations) {
-    final title = widget.isEdit ? localizations.editPosition : localizations.addPosition;
+    final title = widget.isEdit
+        ? localizations.editPosition
+        : localizations.addPosition;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Row(
@@ -235,7 +308,11 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
           IconButton(
             padding: EdgeInsets.zero,
             constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-            icon: Icon(Icons.close, size: 20.sp, color: AppColors.textSecondary),
+            icon: Icon(
+              Icons.close,
+              size: 20.sp,
+              color: AppColors.textSecondary,
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],
@@ -256,11 +333,7 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
           ),
         ),
         SizedBox(height: 16.h),
-        Wrap(
-          spacing: 16.w,
-          runSpacing: 16.h,
-          children: children,
-        ),
+        Wrap(spacing: 16.w, runSpacing: 16.h, children: children),
       ],
     );
   }
@@ -306,9 +379,13 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide(color: AppColors.borderGrey),
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.w,
+              vertical: 12.h,
+            ),
           ),
-          validator: (value) => (value ?? '').isEmpty ? label + ' is required' : null,
+          validator: (value) =>
+              (value ?? '').isEmpty ? label + ' is required' : null,
         ),
       ],
     );
@@ -362,4 +439,3 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
     );
   }
 }
-

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum DeviceType {
-  mobile,
-  tablet,
-  web,
-}
+enum DeviceType { mobile, tablet, web }
 
 class ResponsiveHelper {
   ResponsiveHelper._();
@@ -106,25 +102,16 @@ class ResponsiveHelper {
     switch (deviceType) {
       case DeviceType.mobile:
         return mobile ??
-            const EdgeInsetsDirectional.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            );
+            const EdgeInsetsDirectional.symmetric(horizontal: 16, vertical: 12);
       case DeviceType.tablet:
         return tablet ??
             mobile ??
-            const EdgeInsetsDirectional.symmetric(
-              horizontal: 24,
-              vertical: 16,
-            );
+            const EdgeInsetsDirectional.symmetric(horizontal: 24, vertical: 16);
       case DeviceType.web:
         return web ??
             tablet ??
             mobile ??
-            const EdgeInsetsDirectional.symmetric(
-              horizontal: 32,
-              vertical: 20,
-            );
+            const EdgeInsetsDirectional.symmetric(horizontal: 32, vertical: 20);
     }
   }
 
@@ -159,4 +146,3 @@ class ResponsiveHelper {
     }
   }
 }
-
