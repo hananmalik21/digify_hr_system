@@ -35,5 +35,33 @@ class SaveEnterpriseStructureUseCase {
       );
     }
   }
+
+  /// Updates an enterprise structure
+  /// 
+  /// Returns the updated [EnterpriseStructure]
+  /// Throws [AppException] if the operation fails
+  Future<EnterpriseStructure> updateStructure(
+    int structureId,
+    EnterpriseStructure structure,
+  ) async {
+    try {
+      // Validate structure before updating
+      if (structure.structureName.isEmpty) {
+        throw ValidationException('Structure name is required');
+      }
+      if (structure.structureCode.isEmpty) {
+        throw ValidationException('Structure code is required');
+      }
+
+      return await repository.updateEnterpriseStructure(structureId, structure);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to update enterprise structure: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
 }
 

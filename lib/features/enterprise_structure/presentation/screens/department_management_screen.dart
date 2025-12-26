@@ -7,8 +7,10 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_department_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/department_details_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,29 +23,32 @@ class DepartmentManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final departments = ref.watch(filteredDepartmentProvider);
-    final allDepartments = ref.watch(departmentListProvider);
-    final totalEmployees = allDepartments.fold<int>(
+    final listState = ref.watch(departmentListNotifierProvider);
+    final departments = listState.departments;
+    final isRefreshing = listState.isLoading && departments.isNotEmpty;
+    final isDark = context.isDark;
+
+    // Calculate stats from current list
+    final totalEmployees = departments.fold<int>(
       0,
       (prev, department) => prev + department.employees,
     );
     final activeDepartments =
-        allDepartments.where((department) => department.isActive).length;
-    final totalBudget = allDepartments.fold<double>(
+        departments.where((department) => department.isActive).length;
+    final totalBudget = departments.fold<double>(
       0,
       (prev, department) {
         final sanitized =
-            department.budget.replaceAll('M', '').replaceAll(' ', '');
+            department.budget.replaceAll('M', '').replaceAll(' KWD', '').replaceAll(',', '').replaceAll(' ', '');
         final parsed = double.tryParse(sanitized);
         return prev + (parsed ?? 0);
       },
     );
-    final isDark = context.isDark;
 
     final stats = [
       StatsCardData(
         label: localizations.totalDepartments,
-        value: '${allDepartments.length}',
+        value: '${departments.length}',
         iconPath: 'assets/icons/total_departments_icon.svg',
         iconColor: const Color(0xFF00BBA7),
         iconBackground: const Color(0xFFCFFBF1),
@@ -74,45 +79,93 @@ class DepartmentManagementScreen extends ConsumerWidget {
     return Container(
       color: context.themeBackground,
       child: SafeArea(
-        child: SingleChildScrollView(
-          padding: ResponsiveHelper.getResponsivePadding(
-            context,
-            mobile: EdgeInsetsDirectional.only(
-              top: 16.h,
-              start: 16.w,
-              end: 16.w,
-              bottom: 24.h,
-            ),
-            tablet: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-            web: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context, localizations),
-              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-              _buildStatsSection(context, stats),
-              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-              _buildSearchBar(context, ref, localizations),
-              SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-              _buildDepartmentList(
-                context,
-                departments,
-                localizations,
-                isDark: isDark,
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () => ref.read(departmentListNotifierProvider.notifier).refresh(),
+              child: Opacity(
+                opacity: isRefreshing ? 0.5 : 1.0,
+                child: SingleChildScrollView(
+                  padding: ResponsiveHelper.getResponsivePadding(
+                    context,
+                    mobile: EdgeInsetsDirectional.only(
+                      top: 16.h,
+                      start: 16.w,
+                      end: 16.w,
+                      bottom: 24.h,
+                    ),
+                    tablet: EdgeInsetsDirectional.only(
+                      top: 24.h,
+                      start: 24.w,
+                      end: 24.w,
+                      bottom: 24.h,
+                    ),
+                    web: EdgeInsetsDirectional.only(
+                      top: 24.h,
+                      start: 24.w,
+                      end: 24.w,
+                      bottom: 24.h,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(context, localizations),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
+                      _buildStatsSection(context, stats),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
+                      _buildSearchBar(context, ref, localizations),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
+                      _buildDepartmentList(
+                        context,
+                        ref,
+                        listState,
+                        departments,
+                        localizations,
+                        isDark: isDark,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            if (isRefreshing)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          SizedBox(height: 16.h),
+                          Text(
+                            localizations.pleaseWait,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: context.themeTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -243,9 +296,15 @@ class DepartmentManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
-                onChanged: (value) =>
-                    ref.read(departmentSearchQueryProvider.notifier).state =
-                        value,
+                onChanged: (value) {
+                  ref.read(departmentSearchQueryProvider.notifier).state = value;
+                  // Debounce API search - only search if user stops typing for 500ms
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    if (ref.read(departmentSearchQueryProvider) == value) {
+                      ref.read(departmentListNotifierProvider.notifier).search(value);
+                    }
+                  });
+                },
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
@@ -318,15 +377,55 @@ class DepartmentManagementScreen extends ConsumerWidget {
 
   Widget _buildDepartmentList(
     BuildContext context,
+    WidgetRef ref,
+    DepartmentListState listState,
     List<DepartmentOverview> departments,
     AppLocalizations localizations, {
     required bool isDark,
   }) {
+    if (listState.isLoading && departments.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (listState.hasError) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                listState.errorMessage ?? 'An error occurred',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.red,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              ElevatedButton(
+                onPressed: () => ref.read(departmentListNotifierProvider.notifier).refresh(),
+                child: Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (departments.isEmpty) {
       return Center(
-        child: Text(
-          localizations.noResultsFound,
-          style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Text(
+            localizations.noResultsFound,
+            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+          ),
         ),
       );
     }
@@ -355,11 +454,377 @@ class DepartmentManagementScreen extends ConsumerWidget {
                 department: department,
                 localizations: localizations,
                 isDark: isDark,
+                onDelete: (dept) => _handleDelete(context, ref, dept, localizations),
               ),
             );
           }).toList(),
         );
       },
+    );
+  }
+
+  void _handleDelete(
+    BuildContext context,
+    WidgetRef ref,
+    DepartmentOverview department,
+    AppLocalizations localizations,
+  ) async {
+    bool isLoading = false;
+
+    await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) {
+          return _DeleteConfirmationDialogWithLoader(
+            title: localizations.delete,
+            message: 'Are you sure you want to delete this department? This action cannot be undone.',
+            itemName: department.name,
+            isLoading: isLoading,
+            onConfirm: () async {
+              setState(() {
+                isLoading = true;
+              });
+
+              try {
+                final deleteUseCase = ref.read(deleteDepartmentUseCaseProvider);
+                await deleteUseCase(int.parse(department.id), hard: true);
+
+                if (context.mounted) {
+                  Navigator.of(context).pop(true);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Department deleted successfully'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  ref.read(departmentListNotifierProvider.notifier).refresh();
+                }
+              } on AppException catch (e) {
+                setState(() {
+                  isLoading = false;
+                });
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to delete department: ${e.message}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } catch (e) {
+                setState(() {
+                  isLoading = false;
+                });
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to delete department: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            onCancel: () {
+              if (!isLoading) {
+                Navigator.of(context).pop(false);
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _DeleteConfirmationDialogWithLoader extends StatelessWidget {
+  final String title;
+  final String message;
+  final String? itemName;
+  final bool isLoading;
+  final VoidCallback onConfirm;
+  final VoidCallback? onCancel;
+
+  const _DeleteConfirmationDialogWithLoader({
+    required this.title,
+    required this.message,
+    this.itemName,
+    required this.isLoading,
+    required this.onConfirm,
+    this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDark;
+    final localizations = AppLocalizations.of(context);
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 500.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 25,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header with gradient
+            Container(
+              padding: EdgeInsetsDirectional.all(24.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.error.withValues(alpha: 0.1),
+                    AppColors.error.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.errorBg,
+                      borderRadius: BorderRadius.circular(12.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.error.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: SvgIconWidget(
+                      assetPath: 'assets/icons/delete_icon_red.svg',
+                      size: 24.sp,
+                      color: AppColors.error,
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimary,
+                        height: 28 / 20,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ),
+                  if (!isLoading)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(false);
+                        onCancel?.call();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(4.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: SvgIconWidget(
+                          assetPath: 'assets/icons/close_dialog_icon.svg',
+                          size: 20.sp,
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            // Content
+            Padding(
+              padding: EdgeInsetsDirectional.all(24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    message,
+                    style: TextStyle(
+                      fontSize: 15.3.sp,
+                      fontWeight: FontWeight.w400,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
+                      height: 24 / 15.3,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                  if (itemName != null) ...[
+                    SizedBox(height: 16.h),
+                    Container(
+                      padding: EdgeInsetsDirectional.all(16.w),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.cardBackgroundGreyDark
+                            : AppColors.grayBg,
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.cardBorderDark
+                              : AppColors.cardBorder,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 4.w,
+                            height: 40.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.error,
+                              borderRadius: BorderRadius.circular(2.r),
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Text(
+                              itemName!,
+                              style: TextStyle(
+                                fontSize: 15.3.sp,
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? AppColors.textPrimaryDark
+                                    : AppColors.textPrimary,
+                                height: 24 / 15.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // Footer
+            Container(
+              padding: EdgeInsetsDirectional.only(
+                start: 24.w,
+                end: 24.w,
+                top: 20.h,
+                bottom: 24.h,
+              ),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: isDark
+                        ? AppColors.cardBorderDark
+                        : AppColors.cardBorder,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            Navigator.of(context).pop(false);
+                            onCancel?.call();
+                          },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 24.w,
+                        vertical: 14.h,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                        side: BorderSide(
+                          color: isDark
+                              ? AppColors.cardBorderDark
+                              : const Color(0xFFD1D5DC),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      localizations?.cancel ?? 'Cancel',
+                      style: TextStyle(
+                        fontSize: 15.3.sp,
+                        fontWeight: FontWeight.w400,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : const Color(0xFF364153),
+                        height: 24 / 15.3,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  ElevatedButton(
+                    onPressed: isLoading ? null : onConfirm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 24.w,
+                        vertical: 14.h,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      elevation: 0,
+                      disabledBackgroundColor: AppColors.error.withValues(alpha: 0.6),
+                    ),
+                    child: isLoading
+                        ? SizedBox(
+                            width: 20.w,
+                            height: 20.h,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgIconWidget(
+                                assetPath: 'assets/icons/delete_icon_red.svg',
+                                size: 16.sp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                localizations?.delete ?? 'Delete',
+                                style: TextStyle(
+                                  fontSize: 15.3.sp,
+                                  fontWeight: FontWeight.w400,
+                                  height: 24 / 15.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -368,11 +833,13 @@ class _DepartmentCard extends StatelessWidget {
   final DepartmentOverview department;
   final AppLocalizations localizations;
   final bool isDark;
+  final void Function(DepartmentOverview) onDelete;
 
   const _DepartmentCard({
     required this.department,
     required this.localizations,
     required this.isDark,
+    required this.onDelete,
   });
 
   @override
@@ -495,13 +962,17 @@ class _DepartmentCard extends StatelessWidget {
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
                       onTap: () {
-                        AddDepartmentDialog.show(context, isEditMode: true);
+                        AddDepartmentDialog.show(
+                          context,
+                          isEditMode: true,
+                          department: department,
+                        );
                       },
                     ),
                     SizedBox(width: 8.w),
                     _ActionIcon(
                       assetPath: 'assets/icons/delete_icon_red.svg',
-                      onTap: () {},
+                      onTap: () => onDelete(department),
                     ),
                   ],
                 ),

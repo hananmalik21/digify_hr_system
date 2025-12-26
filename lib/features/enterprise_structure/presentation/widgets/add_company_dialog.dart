@@ -4,13 +4,20 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_company_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_company_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-class AddCompanyDialog extends StatefulWidget {
+class AddCompanyDialog extends ConsumerStatefulWidget {
   final bool isEditMode;
   final Map<String, dynamic>? initialData;
 
@@ -32,13 +39,15 @@ class AddCompanyDialog extends StatefulWidget {
   }
 
   @override
-  State<AddCompanyDialog> createState() => _AddCompanyDialogState();
+  ConsumerState<AddCompanyDialog> createState() => _AddCompanyDialogState();
 }
 
-class _AddCompanyDialogState extends State<AddCompanyDialog> {
+class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   late final Map<String, TextEditingController> _controllers;
   String? _selectedStatus;
   String? _selectedCurrency;
+  int? _selectedOrgStructureId;
+  bool _isSubmitting = false;
 
   final List<String> _statusOptions = ['Active', 'Inactive'];
   final List<String> _currencyOptions = [
@@ -53,6 +62,7 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
     super.initState();
     _selectedStatus = widget.initialData?['status'] ?? 'Active';
     _selectedCurrency = widget.initialData?['currency'] ?? 'KWD - Kuwaiti Dinar';
+    _selectedOrgStructureId = widget.initialData?['orgStructureId'] as int?;
     
     _controllers = {
       'companyCode': TextEditingController(text: widget.initialData?['companyCode'] ?? ''),
@@ -138,6 +148,11 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    
+    // Pre-load organization structures when dialog opens (only once)
+    // The provider will automatically load data when first accessed
+    ref.read(orgStructuresDropdownProvider.notifier);
+    
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -329,6 +344,8 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
                         hintText: localizations.hintFiscalYearStart,
                       ),
                     ),
+                    SizedBox(height: 8.h),
+                    _buildOrgStructureDropdown(),
                     SizedBox(height: 24.h),
                   ],
                 ),
@@ -442,6 +459,98 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
       value: value,
       items: items,
       onChanged: onChanged,
+    );
+  }
+
+  Widget _buildOrgStructureDropdown() {
+    final structureListState = ref.watch(orgStructuresDropdownProvider);
+    final structures = structureListState.structures;
+    
+    if (structureListState.isLoading) {
+      return EnterpriseStructureDropdown(
+        label: 'Organization',
+        isRequired: true,
+        value: _selectedOrgStructureId != null ? 'Loading...' : null,
+        items: const ['Loading...'],
+        onChanged: (_) {},
+      );
+    }
+
+    if (structureListState.hasError) {
+      return EnterpriseStructureDropdown(
+        label: 'Organization',
+        isRequired: true,
+        value: 'Error loading organizations',
+        items: const ['Error loading organizations'],
+        onChanged: (_) {},
+      );
+    }
+
+    if (structures.isEmpty) {
+      return EnterpriseStructureDropdown(
+        label: 'Organization',
+        isRequired: true,
+        value: 'No organizations available',
+        items: const ['No organizations available'],
+        onChanged: (_) {},
+      );
+    }
+
+    // Show all structures (both active and inactive)
+    final structureItems = structures
+        .map((structure) => '${structure.structureName} (${structure.structureCode})')
+        .toList();
+    
+    // Find and set selected value based on orgStructureId
+    String? selectedValue;
+    // Only try to set selection if we have a valid orgStructureId (not null and not 0)
+    if (_selectedOrgStructureId != null && 
+        _selectedOrgStructureId! > 0 && 
+        structures.isNotEmpty) {
+      // Try to find the structure by ID
+      try {
+        final matchingStructure = structures.firstWhere(
+          (s) => s.structureId == _selectedOrgStructureId,
+        );
+        selectedValue = '${matchingStructure.structureName} (${matchingStructure.structureCode})';
+      } catch (e) {
+        // If exact match not found, try string comparison as fallback
+        try {
+          final matchingByString = structures.firstWhere(
+            (s) => s.structureId.toString() == _selectedOrgStructureId.toString(),
+          );
+          selectedValue = '${matchingByString.structureName} (${matchingByString.structureCode})';
+          // Update the state to use the correct ID format
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _selectedOrgStructureId = matchingByString.structureId;
+              });
+            }
+          });
+        } catch (e2) {
+          // Structure not found - selectedValue remains null
+          selectedValue = null;
+        }
+      }
+    }
+
+    return EnterpriseStructureDropdown(
+      key: ValueKey('org_dropdown_${_selectedOrgStructureId}_${structures.length}'),
+      label: 'Organization',
+      isRequired: true,
+      value: selectedValue,
+      items: structureItems,
+      onChanged: (value) {
+        if (value != null && structureItems.contains(value)) {
+          final selectedIndex = structureItems.indexOf(value);
+          if (selectedIndex >= 0 && selectedIndex < structures.length) {
+            setState(() {
+              _selectedOrgStructureId = structures[selectedIndex].structureId;
+            });
+          }
+        }
+      },
     );
   }
 
@@ -559,35 +668,35 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
           ),
           SizedBox(width: 12.w),
           ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    widget.isEditMode
-                        ? localizations.updateCompany
-                        : localizations.addCompany,
-                  ),
-                ),
-              );
-            },
+            onPressed: _isSubmitting ? null : _handleSave,
             icon: SvgIconWidget(
               assetPath: 'assets/icons/save_icon.svg',
               size: 16.sp,
               color: Colors.white,
             ),
-            label: Text(
-              widget.isEditMode
-                  ? localizations.updateCompany
-                  : localizations.addCompany,
-              style: TextStyle(
-                fontSize: 15.3.sp,
-                fontWeight: FontWeight.w400,
-                height: 24 / 15.3,
-              ),
-            ),
+            label: _isSubmitting
+                ? SizedBox(
+                    width: 16.sp,
+                    height: 16.sp,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    widget.isEditMode
+                        ? localizations.updateCompany
+                        : localizations.addCompany,
+                    style: TextStyle(
+                      fontSize: 15.3.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 24 / 15.3,
+                    ),
+                  ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4F39F6),
+              backgroundColor: _isSubmitting 
+                  ? const Color(0xFF4F39F6).withValues(alpha: 0.6)
+                  : const Color(0xFF4F39F6),
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
@@ -597,5 +706,137 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleSave() async {
+    if (_isSubmitting) return;
+    
+    final localizations = AppLocalizations.of(context)!;
+
+    // Validate required fields
+    if (_controllers['companyCode']!.text.trim().isEmpty ||
+        _controllers['nameEn']!.text.trim().isEmpty ||
+        _controllers['nameAr']!.text.trim().isEmpty ||
+        _controllers['registrationNumber']!.text.trim().isEmpty ||
+        _selectedOrgStructureId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all required fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      // Format date from DD/MM/YYYY to YYYY-MM-DD
+      String? establishedDate;
+      if (_controllers['establishedDate']!.text.isNotEmpty) {
+        try {
+          final parts = _controllers['establishedDate']!.text.split('/');
+          if (parts.length == 3) {
+            establishedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+          }
+        } catch (e) {
+          // If parsing fails, use as is
+          establishedDate = _controllers['establishedDate']!.text;
+        }
+      }
+
+      // Extract currency code from selected currency (e.g., "KWD - Kuwaiti Dinar" -> "KWD")
+      final currencyCode = _selectedCurrency?.split(' - ').first ?? 'KWD';
+
+      // Prepare company data according to API format (uppercase field names)
+      final companyData = <String, dynamic>{
+        'COMPANY_CODE': _controllers['companyCode']!.text.trim(),
+        'COMPANY_NAME_EN': _controllers['nameEn']!.text.trim(),
+        'COMPANY_NAME_AR': _controllers['nameAr']!.text.trim(),
+        'STATUS': _selectedStatus ?? 'Active',
+        'REGISTRATION_NUMBER': _controllers['registrationNumber']!.text.trim(),
+        'ORG_STRUCTURE_ID': _selectedOrgStructureId,
+        if (_controllers['legalNameEn']!.text.trim().isNotEmpty)
+          'LEGAL_NAME_EN': _controllers['legalNameEn']!.text.trim(),
+        if (_controllers['legalNameAr']!.text.trim().isNotEmpty)
+          'LEGAL_NAME_AR': _controllers['legalNameAr']!.text.trim(),
+        if (_controllers['taxId']!.text.trim().isNotEmpty)
+          'TAX_ID': _controllers['taxId']!.text.trim(),
+        if (establishedDate != null) 'ESTABLISHED_DATE': establishedDate,
+        if (_controllers['industry']!.text.trim().isNotEmpty)
+          'INDUSTRY': _controllers['industry']!.text.trim(),
+        if (_controllers['country']!.text.trim().isNotEmpty)
+          'COUNTRY': _controllers['country']!.text.trim(),
+        if (_controllers['city']!.text.trim().isNotEmpty)
+          'CITY': _controllers['city']!.text.trim(),
+        if (_controllers['address']!.text.trim().isNotEmpty)
+          'ADDRESS': _controllers['address']!.text.trim(),
+        if (_controllers['poBox']!.text.trim().isNotEmpty)
+          'PO_BOX': _controllers['poBox']!.text.trim(),
+        if (_controllers['zipCode']!.text.trim().isNotEmpty)
+          'ZIP_CODE': _controllers['zipCode']!.text.trim(),
+        if (_controllers['phone']!.text.trim().isNotEmpty)
+          'PHONE': _controllers['phone']!.text.trim(),
+        if (_controllers['email']!.text.trim().isNotEmpty)
+          'EMAIL': _controllers['email']!.text.trim(),
+        if (_controllers['website']!.text.trim().isNotEmpty)
+          'WEBSITE': _controllers['website']!.text.trim(),
+        if (_controllers['totalEmployees']!.text.trim().isNotEmpty)
+          'TOTAL_EMPLOYEES': int.tryParse(_controllers['totalEmployees']!.text.trim()) ?? 0,
+        if (currencyCode.isNotEmpty) 'CURRENCY_CODE': currencyCode,
+        if (_controllers['fiscalYearStart']!.text.trim().isNotEmpty)
+          'FISCAL_YEAR_START': _controllers['fiscalYearStart']!.text.trim(),
+        "LAST_UPDATE_LOGIN": "ADMIN"
+      };
+
+      if (widget.isEditMode) {
+        // Update existing company
+        final companyId = widget.initialData?['companyId'] as int?;
+        if (companyId == null) {
+          throw Exception('Company ID is required for update');
+        }
+
+        final updateCompanyUseCase = ref.read(updateCompanyUseCaseProvider);
+        await updateCompanyUseCase(companyId, companyData);
+      } else {
+        // Create new company
+        final createCompanyUseCase = ref.read(createCompanyUseCaseProvider);
+        await createCompanyUseCase(companyData);
+      }
+
+      // Refresh companies list
+      ref.read(companiesProvider.notifier).refresh();
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.isEditMode
+                  ? localizations.updateCompany ?? 'Company updated successfully'
+                  : localizations.addCompany ?? 'Company created successfully',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to ${widget.isEditMode ? 'update' : 'create'} company: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 }

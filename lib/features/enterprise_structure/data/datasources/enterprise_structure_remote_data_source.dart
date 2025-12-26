@@ -8,6 +8,11 @@ abstract class EnterpriseStructureRemoteDataSource {
   Future<Map<String, dynamic>> saveEnterpriseStructure(
     SaveEnterpriseStructureRequestDto request,
   );
+  
+  Future<Map<String, dynamic>> updateEnterpriseStructure(
+    int structureId,
+    SaveEnterpriseStructureRequestDto request,
+  );
 }
 
 class EnterpriseStructureRemoteDataSourceImpl
@@ -32,6 +37,28 @@ class EnterpriseStructureRemoteDataSourceImpl
     } catch (e) {
       throw UnknownException(
         'Failed to save enterprise structure: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateEnterpriseStructure(
+    int structureId,
+    SaveEnterpriseStructureRequestDto request,
+  ) async {
+    try {
+      final response = await apiClient.put(
+        '${ApiEndpoints.hrOrgStructures}/$structureId',
+        body: request.toJson(),
+      );
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to update enterprise structure: ${e.toString()}',
         originalError: e,
       );
     }
