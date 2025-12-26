@@ -28,10 +28,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      await ref.read(authProvider.notifier).login(
-            _emailController.text.trim(),
-            _passwordController.text,
-          );
+      await ref
+          .read(authProvider.notifier)
+          .login(_emailController.text.trim(), _passwordController.text);
 
       if (mounted) {
         final authState = ref.read(authProvider);
@@ -139,9 +138,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: TextButton(
-                        onPressed: () {
-                          // TODO: Implement forgot password
-                        },
+                        onPressed: () {},
                         child: Text(
                           localizations.forgotPassword,
                           style: context.bodySmall.copyWith(
@@ -177,9 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {
-                            // TODO: Navigate to signup
-                          },
+                          onPressed: () {},
                           child: Text(localizations.signUp),
                         ),
                       ],
@@ -194,4 +189,3 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 }
-

@@ -93,7 +93,7 @@ class ComponentValuesTable extends ConsumerWidget {
               ),
             );
           }
-          // TODO: Resolve parent name from ID
+
           return Text(
             component.parentId ?? '-',
             style: TextStyle(
@@ -122,7 +122,7 @@ class ComponentValuesTable extends ConsumerWidget {
               ),
             );
           }
-          // TODO: Resolve manager name from ID
+
           return Text(
             component.managerId ?? '-',
             style: TextStyle(
@@ -190,19 +190,19 @@ class ComponentValuesTable extends ConsumerWidget {
           return ActionButtonGroup(
             onView: onView != null
                 ? () {
-                    // TODO: Open view dialog
+
                     onView!();
                   }
                 : null,
             onEdit: onEdit != null
                 ? () {
-                    // TODO: Open edit dialog
+
                     onEdit!();
                   }
                 : null,
             onDelete: onDelete != null
                 ? () {
-                    // TODO: Open delete confirmation
+
                     onDelete!();
                   }
                 : null,
@@ -242,7 +242,7 @@ class ComponentValuesTable extends ConsumerWidget {
         message: localizations.tryAdjustingSearchCriteria,
         actionLabel: localizations.addNewComponent,
         onAction: () {
-          // TODO: Open create dialog
+
         },
       ),
     );

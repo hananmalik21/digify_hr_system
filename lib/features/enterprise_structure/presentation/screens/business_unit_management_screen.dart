@@ -32,7 +32,10 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
       0,
       (previousValue, bu) => previousValue + bu.employees,
     );
-    final activeUnits = businessUnits.where((bu) => bu.isActive).length;
+    final activeUnits = allBusinessUnits.where((bu) => bu.isActive).length;
+    final isDark = context.isDark;
+
+
 
     // Calculate total budget
     double totalBudget = 0;
@@ -203,7 +206,8 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.titleLarge?.color ??
+                  color:
+                      Theme.of(context).textTheme.titleLarge?.color ??
                       context.themeTextPrimary,
                   height: 36 / 22.1,
                 ),
@@ -299,6 +303,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
+
                 onChanged: (value) {
                   ref.read(businessUnitSearchQueryProvider.notifier).state = value;
                   // Debounce API search - only search if user stops typing for 500ms
@@ -311,7 +316,9 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
-                  fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                  fillColor: isDark
+                      ? AppColors.cardBackgroundDark
+                      : Colors.white,
                   border: InputBorder.none,
                   hintText: localizations.searchBusinessUnitsPlaceholder,
                   hintStyle: TextStyle(
@@ -353,7 +360,10 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8.w),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 21.w,
+                    vertical: 9.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFFD1D5DC)),
                     borderRadius: BorderRadius.circular(10.r),
@@ -423,12 +433,14 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
 
     if (businessUnits.isEmpty) {
       return Center(
+
         child: Padding(
           padding: EdgeInsets.all(24.h),
           child: Text(
             localizations.noResultsFound,
             style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
           ),
+
         ),
       );
     }
@@ -580,7 +592,8 @@ class _BusinessUnitCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: SvgIconWidget(
-                                assetPath: 'assets/icons/business_unit_card_icon.svg',
+                                assetPath:
+                                    'assets/icons/business_unit_card_icon.svg',
                                 size: 20.sp,
                                 color: const Color(0xFF3B82F6),
                               ),
@@ -626,7 +639,9 @@ class _BusinessUnitCard extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: businessUnit.isActive ? localizations.active : localizations.inactive,
+                            label: businessUnit.isActive
+                                ? localizations.active
+                                : localizations.inactive,
                             backgroundColor: isDark
                                 ? AppColors.successBgDark
                                 : const Color(0xFFDCFCE7),
@@ -701,6 +716,7 @@ class _BusinessUnitCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     _ActionIcon(
                       assetPath: 'assets/icons/delete_icon_red.svg',
+
                       onTap: () => onDelete(businessUnit),
                     ),
                   ],
@@ -779,7 +795,8 @@ class _BusinessUnitCard extends StatelessWidget {
                       child: Row(
                         children: [
                           SvgIconWidget(
-                            assetPath: 'assets/icons/departments_small_icon.svg',
+                            assetPath:
+                                'assets/icons/departments_small_icon.svg',
                             size: 16.sp,
                             color: context.themeTextSecondary,
                           ),
@@ -853,10 +870,7 @@ class _ActionIcon extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
 
-  const _ActionIcon({
-    required this.assetPath,
-    required this.onTap,
-  });
+  const _ActionIcon({required this.assetPath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -912,4 +926,3 @@ class _Badge extends StatelessWidget {
     );
   }
 }
-

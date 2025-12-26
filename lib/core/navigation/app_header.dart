@@ -21,7 +21,7 @@ class AppHeader extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    
+
     return Container(
       height: isMobile ? 56.h : 72.h,
       decoration: BoxDecoration(
@@ -72,7 +72,9 @@ class AppHeader extends ConsumerWidget {
                     child: SvgIconWidget(
                       assetPath: 'assets/icons/menu_toggle_icon.svg',
                       size: isMobile ? 18.sp : 20.sp,
-                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : const Color(0xFF1E2939),
                     ),
                   ),
                 ),
@@ -100,7 +102,9 @@ class AppHeader extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: isTablet ? 16.sp : 18.8.sp,
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : const Color(0xFF1E2939),
                         height: 30 / 18.8,
                         letterSpacing: 0,
                       ),
@@ -137,9 +141,13 @@ class AppHeader extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Icon(
-                      themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
+                      themeMode == ThemeMode.dark
+                          ? Icons.light_mode
+                          : Icons.dark_mode,
                       size: isMobile ? 18.sp : 20.sp,
-                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : const Color(0xFF1E2939),
                     ),
                   ),
                 ),
@@ -151,7 +159,10 @@ class AppHeader extends ConsumerWidget {
                       ref.read(localeProvider.notifier).toggleLocale();
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 6.h,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -160,7 +171,9 @@ class AppHeader extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : const Color(0xFF1E2939),
                         ),
                       ),
                     ),
@@ -177,7 +190,9 @@ class AppHeader extends ConsumerWidget {
                       child: SvgIconWidget(
                         assetPath: 'assets/icons/home_icon.svg',
                         size: 20.sp,
-                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : const Color(0xFF1E2939),
                       ),
                     ),
                   ),
@@ -186,9 +201,7 @@ class AppHeader extends ConsumerWidget {
                   clipBehavior: Clip.none,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        // TODO: Open notifications
-                      },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.all(6.r),
                         decoration: BoxDecoration(
@@ -197,7 +210,9 @@ class AppHeader extends ConsumerWidget {
                         child: SvgIconWidget(
                           assetPath: 'assets/icons/notifications_icon.svg',
                           size: isMobile ? 18.sp : 20.sp,
-                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
+                          color: isDark
+                              ? AppColors.textPrimaryDark
+                              : const Color(0xFF1E2939),
                         ),
                       ),
                     ),
@@ -229,9 +244,7 @@ class AppHeader extends ConsumerWidget {
                 ),
                 if (!isMobile) SizedBox(width: 8.w),
                 GestureDetector(
-                  onTap: () {
-                    // TODO: Open user menu
-                  },
+                  onTap: () {},
                   child: Container(
                     padding: EdgeInsets.all(isMobile ? 4.r : 8.r),
                     decoration: BoxDecoration(
@@ -262,7 +275,9 @@ class AppHeader extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 15.3.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : const Color(0xFF364153),
                               height: 24 / 15.3,
                               letterSpacing: 0,
                             ),
@@ -271,7 +286,9 @@ class AppHeader extends ConsumerWidget {
                           SvgIconWidget(
                             assetPath: 'assets/icons/dropdown_arrow_icon.svg',
                             size: 16.sp,
-                            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : const Color(0xFF364153),
                           ),
                         ],
                       ],
@@ -286,4 +303,3 @@ class AppHeader extends ConsumerWidget {
     );
   }
 }
-

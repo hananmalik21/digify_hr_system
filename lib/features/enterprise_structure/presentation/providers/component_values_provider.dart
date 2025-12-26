@@ -92,7 +92,9 @@ class ComponentValuesState {
 
     // Apply type filter
     if (filterType != null) {
-      filtered = filtered.where((component) => component.type == filterType).toList();
+      filtered = filtered
+          .where((component) => component.type == filterType)
+          .toList();
     }
 
     // Apply sorting
@@ -200,6 +202,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+
       // If filter is company, fetch from companies API using CompaniesNotifier
       if (state.filterType == ComponentType.company) {
         // Use search if provided, otherwise use existing search query
@@ -432,15 +435,9 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
         ),
       ];
 
-      state = state.copyWith(
-        components: mockComponents,
-        isLoading: false,
-      );
+      state = state.copyWith(components: mockComponents, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -493,6 +490,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   void filterByType(ComponentType? type) {
     // When a filter type is selected, switch to table view
     // When filter is cleared, switch back to tree view
+
     state = state.copyWith(
       filterType: type,
       isTreeView: type == null,
@@ -506,19 +504,17 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   /// Sort by column
   void sortByColumn(String column) {
     final isAscending = state.sortColumn == column && !state.sortAscending;
-    state = state.copyWith(
-      sortColumn: column,
-      sortAscending: isAscending,
-    );
+    state = state.copyWith(sortColumn: column, sortAscending: isAscending);
   }
 
   /// Delete component
   Future<void> deleteComponent(String id) async {
     try {
-      // TODO: Replace with actual API call
       await Future.delayed(const Duration(milliseconds: 300));
 
-      final updatedComponents = state.components.where((c) => c.id != id).toList();
+      final updatedComponents = state.components
+          .where((c) => c.id != id)
+          .toList();
       state = state.copyWith(components: updatedComponents);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -556,11 +552,13 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     // Recursive function to build tree nodes
     ComponentTreeNode buildNode(ComponentValue component, int level) {
       final children = childrenMap[component.id] ?? [];
-      final childNodes = children.map((child) => buildNode(child, level + 1)).toList();
-      
+      final childNodes = children
+          .map((child) => buildNode(child, level + 1))
+          .toList();
+
       // Sort children by name
       childNodes.sort((a, b) => a.component.name.compareTo(b.component.name));
-      
+
       return ComponentTreeNode(
         component: component,
         children: childNodes,
@@ -602,6 +600,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
 /// Provider for component values
 final componentValuesProvider =
     StateNotifierProvider<ComponentValuesNotifier, ComponentValuesState>(
+
   (ref) => ComponentValuesNotifier(ref),
 );
 

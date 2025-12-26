@@ -23,10 +23,8 @@ class JobFamilyDetailDialog extends StatelessWidget {
   }) {
     return showDialog<void>(
       context: context,
-      builder: (_) => JobFamilyDetailDialog(
-        jobFamily: jobFamily,
-        jobLevels: jobLevels,
-      ),
+      builder: (_) =>
+          JobFamilyDetailDialog(jobFamily: jobFamily, jobLevels: jobLevels),
     );
   }
 
@@ -39,9 +37,7 @@ class JobFamilyDetailDialog extends StatelessWidget {
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         width: 540.w,
         padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
@@ -136,28 +132,28 @@ class JobFamilyDetailDialog extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-              _buildActionButton(
-                label: localizations.close,
-                backgroundColor: AppColors.inputBg,
-                foregroundColor: AppColors.textSecondary,
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              SizedBox(width: 12.w),
-              _buildActionButton(
-                label: localizations.edit,
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                onPressed: () {
-                  JobFamilyFormDialog.show(
-                    context,
-                    jobFamily: jobFamily,
-                    isEdit: true,
-                    onSave: (updated) {
-                      // handle optional update logic here
+                  _buildActionButton(
+                    label: localizations.close,
+                    backgroundColor: AppColors.inputBg,
+                    foregroundColor: AppColors.textSecondary,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  SizedBox(width: 12.w),
+                  _buildActionButton(
+                    label: localizations.edit,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    onPressed: () {
+                      JobFamilyFormDialog.show(
+                        context,
+                        jobFamily: jobFamily,
+                        isEdit: true,
+                        onSave: (updated) {
+                          // handle optional update logic here
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
                 ],
               ),
             ),
@@ -166,6 +162,7 @@ class JobFamilyDetailDialog extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildHeader(BuildContext context, AppLocalizations localizations) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -183,11 +180,7 @@ class JobFamilyDetailDialog extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.zero,
           constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-          icon: Icon(
-            Icons.close,
-            size: 20.sp,
-            color: AppColors.textSecondary,
-          ),
+          icon: Icon(Icons.close, size: 20.sp, color: AppColors.textSecondary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
@@ -246,64 +239,6 @@ class JobFamilyDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildField({
-    required String label,
-    required String value,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.5.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textSecondary,
-            height: 18 / 13.5,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 15.5.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-            height: 22 / 15.5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSummaryField({
-    required String label,
-    required String value,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textSecondary,
-          ),
-        ),
-        SizedBox(height: 2.h),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 17.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildActionButton({
     required String label,
     required Color backgroundColor,
@@ -326,27 +261,8 @@ class JobFamilyDetailDialog extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
       ),
     );
   }
-
-  String _getGradePart(List<JobLevel> levels, bool minPart) {
-    final ranges = levels
-        .where((level) => level.gradeRange.contains('-'))
-        .map((level) => level.gradeRange)
-        .toList();
-    if (ranges.isEmpty) return '-';
-
-    final targetRange = minPart ? ranges.last : ranges.first;
-    final parts = targetRange.split('-');
-    if (parts.length < 2) return targetRange.trim();
-
-    final cleaned = minPart ? parts.first : parts.last;
-    return cleaned.trim();
-  }
 }
-

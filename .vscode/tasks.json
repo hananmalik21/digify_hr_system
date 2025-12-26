@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "fvm clean & get",
+      "type": "shell",
+      "command": "fvm flutter clean && fvm flutter pub get",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Runs fvm flutter clean followed by fvm flutter pub get"
+    },
+    {
+      "label": "fvm clean",
+      "type": "shell",
+      "command": "fvm flutter clean",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Runs fvm flutter clean"
+    },
+    {
+      "label": "fvm pub get",
+      "type": "shell",
+      "command": "fvm flutter pub get",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Runs fvm flutter pub get"
+    },
+    {
+      "label": "fvm build_runner build",
+      "type": "shell",
+      "command": "fvm flutter pub run build_runner build --delete-conflicting-outputs",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Runs fvm flutter pub run build_runner build"
+    },
+    {
+      "label": "fvm build_runner watch",
+      "type": "shell",
+      "command": "fvm flutter pub run build_runner watch --delete-conflicting-outputs",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Runs fvm flutter pub run build_runner watch"
+    },
+    {
+      "label": "fvm l10n generate",
+      "type": "shell",
+      "command": "fvm flutter gen-l10n",
+      "problemMatcher": [],
+      "group": "none",
+      "detail": "Generates localization files using fvm"
+    }
+  ]
+}

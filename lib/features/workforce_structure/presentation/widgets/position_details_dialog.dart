@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,13 +15,9 @@ class PositionDetailsDialog extends StatelessWidget {
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 1000.w,
-        ),
+        constraints: BoxConstraints(maxWidth: 1000.w),
         child: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
@@ -54,75 +49,63 @@ class PositionDetailsDialog extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 24.h),
-                _buildSection(
-                  localizations.basicInformation,
-                  [
-                    _DetailEntry(
-                      label: localizations.positionCode,
-                      value: position.code,
-                    ),
-                    _DetailEntry(
-                      label: localizations.status,
-                      value: position.isActive
-                          ? localizations.active.toUpperCase()
-                          : localizations.active,
-                      highlight: true,
-                    ),
-                    _DetailEntry(
-                      label: localizations.titleEnglish,
-                      value: position.titleEnglish,
-                    ),
-                    _DetailEntry(
-                      label: localizations.titleArabic,
-                      value: position.titleArabic,
-                      isRtl: true,
-                    ),
-                  ],
-                ),
+                _buildSection(localizations.basicInformation, [
+                  _DetailEntry(
+                    label: localizations.positionCode,
+                    value: position.code,
+                  ),
+                  _DetailEntry(
+                    label: localizations.status,
+                    value: position.isActive
+                        ? localizations.active.toUpperCase()
+                        : localizations.active,
+                    highlight: true,
+                  ),
+                  _DetailEntry(
+                    label: localizations.titleEnglish,
+                    value: position.titleEnglish,
+                  ),
+                  _DetailEntry(
+                    label: localizations.titleArabic,
+                    value: position.titleArabic,
+                    isRtl: true,
+                  ),
+                ]),
                 SizedBox(height: 24.h),
-                _buildSection(
-                  localizations.organizationalInformation,
-                  [
-                    _DetailEntry(
-                      label: localizations.division,
-                      value: position.division,
-                    ),
-                    _DetailEntry(
-                      label: localizations.department,
-                      value: position.department,
-                    ),
-                    _DetailEntry(
-                      label: localizations.costCenter,
-                      value: position.costCenter,
-                    ),
-                    _DetailEntry(
-                      label: localizations.location,
-                      value: position.location,
-                    ),
-                  ],
-                ),
+                _buildSection(localizations.organizationalInformation, [
+                  _DetailEntry(
+                    label: localizations.division,
+                    value: position.division,
+                  ),
+                  _DetailEntry(
+                    label: localizations.department,
+                    value: position.department,
+                  ),
+                  _DetailEntry(
+                    label: localizations.costCenter,
+                    value: position.costCenter,
+                  ),
+                  _DetailEntry(
+                    label: localizations.location,
+                    value: position.location,
+                  ),
+                ]),
                 SizedBox(height: 24.h),
-                _buildSection(
-                  localizations.jobClassification,
-                  [
-                    _DetailEntry(
-                      label: localizations.jobFamily,
-                      value: position.jobFamily,
-                    ),
-                    _DetailEntry(
-                      label: localizations.jobLevel,
-                      value: position.level,
-                    ),
-                    _DetailEntry(
-                      label: localizations.gradeStep,
-                      value: position.grade,
-                    ),
-                    _DetailEntry(
-                      label: localizations.step,
-                      value: position.step,
-                    ),
-                  ],
-                ),
+                _buildSection(localizations.jobClassification, [
+                  _DetailEntry(
+                    label: localizations.jobFamily,
+                    value: position.jobFamily,
+                  ),
+                  _DetailEntry(
+                    label: localizations.jobLevel,
+                    value: position.level,
+                  ),
+                  _DetailEntry(
+                    label: localizations.gradeStep,
+                    value: position.grade,
+                  ),
+                  _DetailEntry(label: localizations.step, value: position.step),
+                ]),
                 SizedBox(height: 24.h),
                 _buildHeadcountSection(localizations),
                 SizedBox(height: 24.h),
@@ -153,11 +136,7 @@ class PositionDetailsDialog extends StatelessWidget {
         Wrap(
           spacing: 16.w,
           runSpacing: 16.h,
-          children: entries
-              .map(
-                (entry) => _buildDetailCard(entry),
-              )
-              .toList(),
+          children: entries.map((entry) => _buildDetailCard(entry)).toList(),
         ),
       ],
     );
@@ -174,8 +153,9 @@ class PositionDetailsDialog extends StatelessWidget {
           border: Border.all(color: AppColors.cardBorder),
         ),
         child: Column(
-          crossAxisAlignment:
-              entry.isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: entry.isRtl
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Text(
               entry.label,
@@ -189,8 +169,10 @@ class PositionDetailsDialog extends StatelessWidget {
             SizedBox(height: 6.h),
             entry.highlight
                 ? Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFDCFCE7),
                       borderRadius: BorderRadius.circular(9999.r),
@@ -206,8 +188,9 @@ class PositionDetailsDialog extends StatelessWidget {
                   )
                 : Text(
                     entry.value,
-                    textDirection:
-                        entry.isRtl ? TextDirection.rtl : TextDirection.ltr,
+                    textDirection: entry.isRtl
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
                     style: TextStyle(
                       fontSize: 15.4.sp,
                       fontWeight: FontWeight.w600,
@@ -409,4 +392,3 @@ class _DetailEntry {
     this.isRtl = false,
   });
 }
-

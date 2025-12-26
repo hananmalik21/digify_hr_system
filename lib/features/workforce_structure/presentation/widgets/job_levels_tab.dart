@@ -39,7 +39,7 @@ class JobLevelsTab extends ConsumerWidget {
                 JobLevelFormDialog.show(
                   context,
                   onSave: (level) {
-                    // TODO: persist new level
+
                   },
                 );
               },
@@ -57,12 +57,12 @@ class JobLevelsTab extends ConsumerWidget {
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.10),
+                color: Colors.black.withValues(alpha: 0.10),
                 offset: const Offset(0, 1),
                 blurRadius: 3,
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.10),
+                color: Colors.black.withValues(alpha: 0.10),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
                 spreadRadius: -1,
@@ -235,7 +235,7 @@ class JobLevelsTab extends ConsumerWidget {
                         jobLevel: level,
                         isEdit: true,
                         onSave: (updated) {
-                          // TODO: save changes
+
                         },
                       );
                     },

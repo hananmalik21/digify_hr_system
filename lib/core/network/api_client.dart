@@ -7,28 +7,24 @@ class ApiClient {
   late final Dio _dio;
   final String baseUrl;
 
-  ApiClient({
-    required this.baseUrl,
-    Dio? dio,
-  }) {
-    _dio = dio ?? Dio(
-      BaseOptions(
-        baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      ),
-    );
+  ApiClient({required this.baseUrl, Dio? dio}) {
+    _dio =
+        dio ??
+        Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
+            sendTimeout: const Duration(seconds: 30),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ),
+        );
 
     // Add interceptors
-    _dio.interceptors.addAll([
-      _LoggingInterceptor(),
-      _ErrorInterceptor(),
-    ]);
+    _dio.interceptors.addAll([_LoggingInterceptor(), _ErrorInterceptor()]);
   }
 
   Future<Map<String, dynamic>> get(
@@ -40,9 +36,7 @@ class ApiClient {
       final response = await _dio.get(
         endpoint,
         queryParameters: queryParameters,
-        options: Options(
-          headers: headers,
-        ),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);
@@ -65,9 +59,7 @@ class ApiClient {
       final response = await _dio.post(
         endpoint,
         data: body,
-        options: Options(
-          headers: headers,
-        ),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);
@@ -90,9 +82,7 @@ class ApiClient {
       final response = await _dio.put(
         endpoint,
         data: body,
-        options: Options(
-          headers: headers,
-        ),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);
@@ -116,6 +106,7 @@ class ApiClient {
       final response = await _dio.delete(
         endpoint,
         data: body,
+
         queryParameters: queryParameters,
         options: Options(
           headers: headers,
@@ -310,7 +301,7 @@ class ApiClient {
           return errors.values.map((e) => e.toString()).join(', ');
         }
       }
-      
+
       return responseData['message'] as String? ??
           responseData['error'] as String? ??
           responseData['msg'] as String?;
@@ -329,7 +320,7 @@ class ApiClient {
               return errors.values.map((e) => e.toString()).join(', ');
             }
           }
-          
+
           return decoded['message'] as String? ??
               decoded['error'] as String? ??
               decoded['msg'] as String?;
@@ -418,7 +409,9 @@ class _LoggingInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (kDebugMode) {
       debugPrint('┌─────────────────────────────────────────────────────────');
-      debugPrint('│ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}');
+      debugPrint(
+        '│ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}',
+      );
       debugPrint('│ Data: ${response.data}');
       debugPrint('└─────────────────────────────────────────────────────────');
     }
@@ -443,12 +436,7 @@ class _LoggingInterceptor extends Interceptor {
 class _ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // You can add custom error handling here
-    // For example, refresh tokens, retry logic, etc.
-    
-    // Handle 401 Unauthorized - could trigger token refresh
     if (err.response?.statusCode == 401) {
-      // TODO: Implement token refresh logic if needed
       if (kDebugMode) {
         debugPrint('Unauthorized - Token may need refresh');
       }
@@ -456,7 +444,6 @@ class _ErrorInterceptor extends Interceptor {
 
     // Handle 500 Internal Server Error - could retry
     if (err.response?.statusCode == 500) {
-      // TODO: Implement retry logic if needed
       if (kDebugMode) {
         debugPrint('Server error - Consider retry');
       }
@@ -465,4 +452,3 @@ class _ErrorInterceptor extends Interceptor {
     super.onError(err, handler);
   }
 }
-

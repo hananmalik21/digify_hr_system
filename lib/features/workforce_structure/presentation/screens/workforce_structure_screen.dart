@@ -18,7 +18,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkforceStructureScreen extends ConsumerStatefulWidget {
-  const WorkforceStructureScreen({super.key});
+  final String? initialTab;
+  const WorkforceStructureScreen({super.key, this.initialTab});
 
   @override
   ConsumerState<WorkforceStructureScreen> createState() =>
@@ -27,11 +28,85 @@ class WorkforceStructureScreen extends ConsumerStatefulWidget {
 
 class _WorkforceStructureScreenState
     extends ConsumerState<WorkforceStructureScreen> {
-  String selectedTab = 'Positions';
+  String? selectedTab;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize selectedTab in didChangeDependencies or build since we need localizations
+  }
+
+  @override
+  void didUpdateWidget(WorkforceStructureScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTab != oldWidget.initialTab &&
+        widget.initialTab != null) {
+      _updateSelectedTab();
+    }
+  }
+
+  void _updateSelectedTab() {
+    final localizations = AppLocalizations.of(context)!;
+    setState(() {
+      switch (widget.initialTab) {
+        case 'positions':
+          selectedTab = localizations.positions;
+          break;
+        case 'jobFamilies':
+          selectedTab = localizations.jobFamilies;
+          break;
+        case 'jobLevels':
+          selectedTab = localizations.jobLevels;
+          break;
+        case 'gradeStructure':
+          selectedTab = localizations.gradeStructure;
+          break;
+        case 'reportingStructure':
+          selectedTab = localizations.reportingStructure;
+          break;
+        case 'positionTree':
+          selectedTab = localizations.positionTree;
+          break;
+        default:
+          selectedTab = localizations.positions;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
+    // Initialize selectedTab if it's null
+    if (selectedTab == null) {
+      if (widget.initialTab != null) {
+        switch (widget.initialTab) {
+          case 'positions':
+            selectedTab = localizations.positions;
+            break;
+          case 'jobFamilies':
+            selectedTab = localizations.jobFamilies;
+            break;
+          case 'jobLevels':
+            selectedTab = localizations.jobLevels;
+            break;
+          case 'gradeStructure':
+            selectedTab = localizations.gradeStructure;
+            break;
+          case 'reportingStructure':
+            selectedTab = localizations.reportingStructure;
+            break;
+          case 'positionTree':
+            selectedTab = localizations.positionTree;
+            break;
+          default:
+            selectedTab = localizations.positions;
+        }
+      } else {
+        selectedTab = localizations.positions;
+      }
+    }
+
     final isDark = context.isDark;
     final stats = ref.watch(workforceStatsProvider);
     final filteredPositions = ref.watch(filteredPositionsProvider);
@@ -56,13 +131,9 @@ class _WorkforceStructureScreenState
               _buildTabBar(context, localizations, isDark),
               SizedBox(height: 24.h),
               if (selectedTab == localizations.positions) ...[
-              _buildSearchAndActions(context, localizations, isDark, ref),
-              SizedBox(height: 24.h),
-              _buildPositionsTable(
-                localizations,
-                filteredPositions,
-                isDark,
-              ),
+                _buildSearchAndActions(context, localizations, isDark, ref),
+                SizedBox(height: 24.h),
+                _buildPositionsTable(localizations, filteredPositions, isDark),
               ] else if (selectedTab == localizations.jobFamilies) ...[
                 const JobFamiliesTab(),
               ] else if (selectedTab == localizations.jobLevels) ...[
@@ -154,28 +225,28 @@ class _WorkforceStructureScreenState
   ) {
     final statsCards = <_StatCardData>[
       _StatCardData(
-            label: localizations.totalPositions,
-            value: '${stats.totalPositions}',
+        label: localizations.totalPositions,
+        value: '${stats.totalPositions}',
         iconPath: 'assets/icons/business_unit_icon.svg',
-            valueColor: const Color(0xFF101828),
+        valueColor: const Color(0xFF101828),
       ),
       _StatCardData(
-            label: localizations.filledPositions,
-            value: '${stats.filledPositions}',
+        label: localizations.filledPositions,
+        value: '${stats.filledPositions}',
         iconPath: 'assets/icons/filled_position_icon.svg',
-            valueColor: const Color(0xFF00A63E),
+        valueColor: const Color(0xFF00A63E),
       ),
       _StatCardData(
-            label: localizations.vacantPositions,
-            value: '${stats.vacantPositions}',
+        label: localizations.vacantPositions,
+        value: '${stats.vacantPositions}',
         iconPath: 'assets/icons/warning_Icon.svg',
-            valueColor: const Color(0xFFF54900),
+        valueColor: const Color(0xFFF54900),
       ),
       _StatCardData(
-            label: localizations.fillRate,
-            value: '${stats.fillRate.toStringAsFixed(1)}%',
+        label: localizations.fillRate,
+        value: '${stats.fillRate.toStringAsFixed(1)}%',
         iconPath: 'assets/icons/price_up_item.svg',
-            valueColor: const Color(0xFF155DFC),
+        valueColor: const Color(0xFF155DFC),
       ),
     ];
 
@@ -184,17 +255,17 @@ class _WorkforceStructureScreenState
       children: statsCards.map((card) {
         return Padding(
           padding: EdgeInsetsDirectional.only(end: 16.w),
-        child: SizedBox(
-          width: 349.5.w,
-          child: _buildStatCard(
-            context,
-            label: card.label,
-            value: card.value,
-            iconPath: card.iconPath,
-            valueColor: card.valueColor,
-            isDark: isDark,
+          child: SizedBox(
+            width: 349.5.w,
+            child: _buildStatCard(
+              context,
+              label: card.label,
+              value: card.value,
+              iconPath: card.iconPath,
+              valueColor: card.valueColor,
+              isDark: isDark,
+            ),
           ),
-        ),
         );
       }).toList(),
     );
@@ -215,12 +286,12 @@ class _WorkforceStructureScreenState
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -256,10 +327,7 @@ class _WorkforceStructureScreenState
               ],
             ),
           ),
-          SvgIconWidget(
-            assetPath: iconPath,
-            size: 24.sp,
-          ),
+          SvgIconWidget(assetPath: iconPath, size: 24.sp),
         ],
       ),
     );
@@ -271,12 +339,30 @@ class _WorkforceStructureScreenState
     bool isDark,
   ) {
     final tabs = [
-      {'label': localizations.positions, 'icon': 'assets/icons/business_unit_card_icon.svg'},
-      {'label': localizations.jobFamilies, 'icon': 'assets/icons/hierarchy_icon_department.svg'},
-      {'label': localizations.jobLevels, 'icon': 'assets/icons/levels_icon.svg'},
-      {'label': localizations.gradeStructure, 'icon': 'assets/icons/grade_icon.svg'},
-      {'label': localizations.reportingStructure, 'icon': 'assets/icons/company_filter_icon.svg'},
-      {'label': localizations.positionTree, 'icon': 'assets/icons/hierarchy_icon_department.svg'},
+      {
+        'label': localizations.positions,
+        'icon': 'assets/icons/business_unit_card_icon.svg',
+      },
+      {
+        'label': localizations.jobFamilies,
+        'icon': 'assets/icons/hierarchy_icon_department.svg',
+      },
+      {
+        'label': localizations.jobLevels,
+        'icon': 'assets/icons/levels_icon.svg',
+      },
+      {
+        'label': localizations.gradeStructure,
+        'icon': 'assets/icons/grade_icon.svg',
+      },
+      {
+        'label': localizations.reportingStructure,
+        'icon': 'assets/icons/company_filter_icon.svg',
+      },
+      {
+        'label': localizations.positionTree,
+        'icon': 'assets/icons/hierarchy_icon_department.svg',
+      },
     ];
 
     return Container(
@@ -287,12 +373,12 @@ class _WorkforceStructureScreenState
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -330,8 +416,9 @@ class _WorkforceStructureScreenState
                         SvgIconWidget(
                           assetPath: tab['icon']!,
                           size: 16.sp,
-                          color:
-                              isSelected ? Colors.white : AppColors.textSecondary,
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.textSecondary,
                         ),
                         SizedBox(width: 8.w),
                         Text(
@@ -371,12 +458,12 @@ class _WorkforceStructureScreenState
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -401,20 +488,19 @@ class _WorkforceStructureScreenState
 
                 /// 🎨 BACKGROUND COLOR
                 filled: true,
-                fillColor:
-                isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
 
                 /// 🔲 BORDER (ALL STATES)
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
                   borderSide: BorderSide(
-                  color: isDark
-                      ? AppColors.inputBorderDark
+                    color: isDark
+                        ? AppColors.inputBorderDark
                         : AppColors.borderGrey,
-                ),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10.r),
                   borderSide: BorderSide(
                     color: isDark
                         ? AppColors.inputBorderDark
@@ -432,12 +518,12 @@ class _WorkforceStructureScreenState
                 /// 🔍 PREFIX ICON INSIDE FIELD
                 prefixIcon: Padding(
                   padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/search_icon.svg',
-                      size: 20.sp,
+                  child: SvgIconWidget(
+                    assetPath: 'assets/icons/search_icon.svg',
+                    size: 20.sp,
                     color: AppColors.textMuted,
-                    ),
                   ),
+                ),
 
                 /// 🚫 Remove default 48px padding
                 prefixIconConstraints: const BoxConstraints(
@@ -445,27 +531,26 @@ class _WorkforceStructureScreenState
                   minHeight: 0,
                 ),
 
-                        hintText: localizations.searchPositionsPlaceholder,
-                        hintStyle: TextStyle(
-                          fontSize: 15.3.sp,
-                          fontWeight: FontWeight.w400,
+                hintText: localizations.searchPositionsPlaceholder,
+                hintStyle: TextStyle(
+                  fontSize: 15.3.sp,
+                  fontWeight: FontWeight.w400,
                   color: AppColors.textPlaceholder,
-                        ),
+                ),
 
                 /// 📐 INTERNAL SPACING
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 12.h,
                   horizontal: 12.w,
-                        ),
-                      ),
-                      style: TextStyle(
-                        fontSize: 15.3.sp,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 15.3.sp,
                 fontWeight: FontWeight.w400,
-                        color: context.themeTextPrimary,
-                      ),
-                    ),
-          )
-,
+                color: context.themeTextPrimary,
+              ),
+            ),
+          ),
 
           // Department Filter
           _buildOptionChip(
@@ -482,38 +567,25 @@ class _WorkforceStructureScreenState
           ),
 
           AddButton(
-            padding: EdgeInsets.symmetric(
-              horizontal: 18.w,
-              vertical: 8.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             onTap: () {
               _showPositionFormDialog(context, Position.empty(), false);
             },
           ),
           ImportButton(
-            padding: EdgeInsets.symmetric(
-              horizontal: 18.w,
-              vertical: 8.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             backgroundColor: AppColors.greenButton,
             textColor: Colors.white,
-            onTap: () {
-              // TODO: Show import dialog
-            },
-            ),
+            onTap: () {},
+          ),
           ExportButton(
-            padding: EdgeInsets.symmetric(
-              horizontal: 18.w,
-              vertical: 8.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
             backgroundColor: const Color(0xFF4A5565),
             textColor: Colors.white,
-            onTap: () {
-              // TODO: Show export dialog
-            },
-              ),
-        ],
+            onTap: () {},
           ),
+        ],
+      ),
     );
   }
 
@@ -524,27 +596,24 @@ class _WorkforceStructureScreenState
   }) {
     return Container(
       width: width,
-      padding: EdgeInsets.symmetric(
-              horizontal: 21.w,
-              vertical: 9.h,
-            ),
-            decoration: BoxDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(
+        border: Border.all(
           color: isDark ? AppColors.inputBorderDark : AppColors.borderGrey,
-              ),
+        ),
         color: isDark ? AppColors.inputBgDark : Colors.white,
-            ),
+      ),
       child: Center(
-            child: Text(
+        child: Text(
           label,
-              style: TextStyle(
+          style: TextStyle(
             fontSize: 15.3.sp,
-                fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w400,
             color: AppColors.textPrimary,
             height: 19 / 15.3,
-            ),
           ),
+        ),
       ),
     );
   }
@@ -560,12 +629,12 @@ class _WorkforceStructureScreenState
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -592,7 +661,9 @@ class _WorkforceStructureScreenState
     AppLocalizations localizations,
     bool isDark,
   ) {
-    final headerColor = isDark ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB);
+    final headerColor = isDark
+        ? AppColors.cardBackgroundDark
+        : const Color(0xFFF9FAFB);
     return Container(
       color: headerColor,
       child: Row(
@@ -633,29 +704,23 @@ class _WorkforceStructureScreenState
     );
   }
 
-  Widget _buildTableRow(
-    AppLocalizations localizations,
-    Position position,
-  ) {
+  Widget _buildTableRow(AppLocalizations localizations, Position position) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.cardBorder,
-            width: 1.w,
-          ),
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
         children: [
           _buildDataCell(
             Text(
-                position.code,
-                style: TextStyle(
-                  fontSize: 13.9.sp,
-                  fontWeight: FontWeight.w500,
+              position.code,
+              style: TextStyle(
+                fontSize: 13.9.sp,
+                fontWeight: FontWeight.w500,
                 color: AppColors.textPrimary,
-                  height: 20 / 13.9,
+                height: 20 / 13.9,
               ),
             ),
             117.53.w,
@@ -786,10 +851,7 @@ class _WorkforceStructureScreenState
             ),
             125.12.w,
           ),
-          _buildDataCell(
-            _buildVacancyBadge(position, localizations),
-            108.22.w,
-          ),
+          _buildDataCell(_buildVacancyBadge(position, localizations), 108.22.w),
           _buildDataCell(
             _buildStatusBadge(localizations.active.toUpperCase()),
             107.02.w,
@@ -807,10 +869,7 @@ class _WorkforceStructureScreenState
                   () => _showPositionFormDialog(context, position, true),
                 ),
                 SizedBox(width: 8.w),
-                _buildActionIcon(
-                  'assets/icons/red_delete_icon.svg',
-                  () {},
-                ),
+                _buildActionIcon('assets/icons/red_delete_icon.svg', () {}),
               ],
             ),
             112.03.w,
@@ -820,84 +879,72 @@ class _WorkforceStructureScreenState
     );
   }
 
-  Widget _buildVacancyBadge(
-    Position position,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildVacancyBadge(Position position, AppLocalizations localizations) {
     if (position.vacant > 0) {
       return Container(
-        padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 3.h,
-                    ),
-                    decoration: BoxDecoration(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+        decoration: BoxDecoration(
           color: AppColors.orangeBg,
-                      borderRadius: BorderRadius.circular(9999.r),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          '${position.vacant}',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
+          borderRadius: BorderRadius.circular(9999.r),
+        ),
+        child: Column(
+          children: [
+            Text(
+              '${position.vacant}',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
                 color: AppColors.orangeText,
-                            height: 16 / 12,
-                          ),
-                        ),
-                        Text(
-                          localizations.vacant,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
+                height: 16 / 12,
+              ),
+            ),
+            Text(
+              localizations.vacant,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
                 color: AppColors.orangeText,
-                            height: 16 / 12,
-                          ),
-                        ),
-                      ],
-                    ),
+                height: 16 / 12,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 3.h,
-                    ),
-                    decoration: BoxDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
         color: AppColors.successBg,
-                      borderRadius: BorderRadius.circular(9999.r),
-                    ),
-                    child: Text(
-                      localizations.filled,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+        borderRadius: BorderRadius.circular(9999.r),
+      ),
+      child: Text(
+        localizations.filled,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
           color: AppColors.successText,
-                        height: 16 / 12,
-                      ),
-                    ),
+          height: 16 / 12,
+        ),
+      ),
     );
   }
 
   Widget _buildStatusBadge(String label) {
     return Container(
-      padding: EdgeInsets.symmetric(
-                horizontal: 8.w,
-                vertical: 3.h,
-              ),
-              decoration: BoxDecoration(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
         color: AppColors.successBg,
-                borderRadius: BorderRadius.circular(9999.r),
-              ),
-              child: Text(
+        borderRadius: BorderRadius.circular(9999.r),
+      ),
+      child: Text(
         label,
-                style: TextStyle(
-                  fontSize: 11.8.sp,
-                  fontWeight: FontWeight.w500,
+        style: TextStyle(
+          fontSize: 11.8.sp,
+          fontWeight: FontWeight.w500,
           color: AppColors.successText,
-                  height: 16 / 11.8,
-                ),
+          height: 16 / 11.8,
+        ),
       ),
     );
   }
@@ -916,10 +963,7 @@ class _WorkforceStructureScreenState
   Widget _buildActionIcon(String assetPath, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: SvgIconWidget(
-        assetPath: assetPath,
-        size: 16.sp,
-      ),
+      child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
     );
   }
 
@@ -934,14 +978,16 @@ class _WorkforceStructureScreenState
     });
   }
 
-  void _showPositionFormDialog(BuildContext context, Position position, bool isEdit) {
+  void _showPositionFormDialog(
+    BuildContext context,
+    Position position,
+    bool isEdit,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => PositionFormDialog(
-        initialPosition: position,
-        isEdit: isEdit,
-      ),
+      builder: (_) =>
+          PositionFormDialog(initialPosition: position, isEdit: isEdit),
     );
   }
 }
@@ -959,4 +1005,3 @@ class _StatCardData {
     required this.valueColor,
   });
 }
-

@@ -38,7 +38,7 @@ class GradeStructureTab extends ConsumerWidget {
                 GradeFormDialog.show(
                   context,
                   onSave: (grade) {
-                    // TODO: persist
+
                   },
                 );
               },
@@ -71,7 +71,7 @@ class GradeStructureTab extends ConsumerWidget {
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, 1),
             blurRadius: 4,
           ),
@@ -126,7 +126,7 @@ class GradeStructureTab extends ConsumerWidget {
                     grade: grade,
                     isEdit: true,
                     onSave: (updated) {
-                      // TODO: persist update
+
                     },
                   );
                 },

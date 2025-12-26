@@ -20,7 +20,7 @@ class SectionDetailsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    // TODO: Implement SectionDetailsDialog UI
+
     return AlertDialog(
       title: Text(localizations.sectionDetails),
       content: Text('Section: ${section.name}'),

@@ -90,7 +90,7 @@ class ReportingStructureTab extends ConsumerWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // TODO: Implement export table
+
         },
         borderRadius: BorderRadius.circular(10.r),
         child: Container(
@@ -222,12 +222,12 @@ class ReportingStructureTab extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -245,7 +245,7 @@ class ReportingStructureTab extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 13.6.sp,
                   fontWeight: FontWeight.w400,
-                  color: Colors.white.withOpacity(0.85), // better contrast
+                  color: Colors.white.withValues(alpha: 0.85), // better contrast
                   height: 20 / 13.6,
                 ),
               ),
@@ -283,12 +283,12 @@ class ReportingStructureTab extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 3,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
             blurRadius: 2,
             spreadRadius: -1,
@@ -851,7 +851,7 @@ class ReportingStructureTab extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, 1),
             blurRadius: 2,
           ),

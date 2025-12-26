@@ -1211,11 +1211,7 @@ class _HoverableIconButton extends StatefulWidget {
   final _DashboardButton button;
   final VoidCallback onTap;
 
-  const _HoverableIconButton({
-    super.key,
-    required this.button,
-    required this.onTap,
-  });
+  const _HoverableIconButton({required this.button, required this.onTap});
 
   @override
   State<_HoverableIconButton> createState() => _HoverableIconButtonState();

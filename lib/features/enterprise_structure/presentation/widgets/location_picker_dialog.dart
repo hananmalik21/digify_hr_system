@@ -51,7 +51,6 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
   final TextEditingController _latitudeController = TextEditingController();
   final TextEditingController _longitudeController = TextEditingController();
 
-  bool _hasLocationPermission = false;
   bool _locationPermissionDenied = true;
 
   @override
@@ -82,7 +81,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
             Flexible(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 16.w : 24.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 16.w : 24.w,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -358,7 +359,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         decoration: BoxDecoration(
           color: isSelected
               ? (isDark
-                    ? AppColors.infoBgDark.withOpacity(0.3)
+                    ? AppColors.infoBgDark.withValues(alpha: 0.3)
                     : AppColors.infoBg)
               : (isDark ? AppColors.cardBackgroundDark : Colors.transparent),
           border: Border.all(
@@ -432,7 +433,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
       padding: contentPadding,
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.infoBgDark.withOpacity(0.2)
+            ? AppColors.infoBgDark.withValues(alpha: 0.2)
             : AppColors.infoBg,
         border: Border.all(
           color: isDark ? AppColors.infoBorderDark : AppColors.infoBorder,
@@ -482,7 +483,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               padding: EdgeInsets.all(18.r),
               decoration: BoxDecoration(
                 color: isDark
-                    ? AppColors.errorBgDark.withOpacity(0.3)
+                    ? AppColors.errorBgDark.withValues(alpha: 0.3)
                     : AppColors.redBg,
                 border: Border.all(
                   color: isDark
@@ -695,7 +696,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
       padding: EdgeInsets.fromLTRB(25.w, 25.h, 25.w, 37.h),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.successBgDark.withOpacity(0.2)
+            ? AppColors.successBgDark.withValues(alpha: 0.2)
             : AppColors.greenBg,
         border: Border.all(
           color: isDark ? AppColors.successBorderDark : AppColors.greenBorder,
@@ -917,7 +918,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             icon: SvgIconWidget(
                               assetPath: 'assets/icons/search_white.svg',
                               size: 16.sp,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                             ),
                             label: Text(
                               'Search',
@@ -930,7 +931,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary.withOpacity(0.5),
+                              backgroundColor: AppColors.primary.withValues(alpha: 
+                                0.5,
+                              ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 24.w,
                                 vertical: 8.h,
@@ -959,7 +962,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                           icon: SvgIconWidget(
                             assetPath: 'assets/icons/search_white.svg',
                             size: 16.sp,
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                           ),
                           label: Text(
                             'Search',
@@ -972,7 +975,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary.withOpacity(0.5),
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.5),
                             padding: EdgeInsets.symmetric(
                               horizontal: 24.w,
                               vertical: 8.h,
@@ -1022,7 +1025,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
             fontFamily: 'Inter',
             fontSize: 12.sp,
             fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
             height: 16 / 12,
           ),
         ),
@@ -1057,7 +1062,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
             fontFamily: 'Inter',
             fontSize: 12.sp,
             fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
             height: 16 / 12,
           ),
         ),
@@ -1069,10 +1076,15 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
     final horizontalPadding = isMobile ? 18.w : 25.w;
     final bottomPadding = isMobile ? 32.h : 37.h;
     return Container(
-      padding: EdgeInsets.fromLTRB(horizontalPadding, 25.h, horizontalPadding, bottomPadding),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        25.h,
+        horizontalPadding,
+        bottomPadding,
+      ),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.purpleBgDark.withOpacity(0.2)
+            ? AppColors.purpleBgDark.withValues(alpha: 0.2)
             : AppColors.purpleBg,
         border: Border.all(
           color: isDark ? AppColors.purpleBorderDark : AppColors.purpleBorder,
@@ -1292,7 +1304,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             icon: SvgIconWidget(
                               assetPath: 'assets/icons/search_white.svg',
                               size: 16.sp,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                             ),
                             label: Text(
                               'Search',
@@ -1305,7 +1317,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary.withOpacity(0.5),
+                              backgroundColor: AppColors.primary.withValues(alpha: 
+                                0.5,
+                              ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 24.w,
                                 vertical: 8.h,
@@ -1334,7 +1348,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                           icon: SvgIconWidget(
                             assetPath: 'assets/icons/search_white.svg',
                             size: 16.sp,
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                           ),
                           label: Text(
                             'Search',
@@ -1347,7 +1361,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary.withOpacity(0.5),
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.5),
                             padding: EdgeInsets.symmetric(
                               horizontal: 24.w,
                               vertical: 8.h,
@@ -1400,7 +1414,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                       fontFamily: 'Inter',
                       fontSize: 15.3.sp,
                       fontWeight: FontWeight.w400,
-                      color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : const Color(0xFF4A5565),
                       height: 24 / 15.3,
                     ),
                   ),
@@ -1493,7 +1509,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
       padding: EdgeInsets.all(isMobile ? 14.r : 17.r),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.infoBgDark.withOpacity(0.2)
+            ? AppColors.infoBgDark.withValues(alpha: 0.2)
             : AppColors.infoBg,
         border: Border.all(
           color: isDark ? AppColors.infoBorderDark : AppColors.infoBorder,
@@ -1679,7 +1695,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 9.h),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isDark ? AppColors.borderGreyDark : const Color(0xFFD1D5DC),
+              color: isDark
+                  ? AppColors.borderGreyDark
+                  : const Color(0xFFD1D5DC),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(10.r),
@@ -1690,7 +1708,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               fontFamily: 'Inter',
               fontSize: 15.3.sp,
               fontWeight: FontWeight.w400,
-              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : const Color(0xFF364153),
               height: 24 / 15.3,
             ),
           ),
@@ -1708,7 +1728,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 9.h),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isDark ? AppColors.borderGreyDark : const Color(0xFFD1D5DC),
+              color: isDark
+                  ? AppColors.borderGreyDark
+                  : const Color(0xFFD1D5DC),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(10.r),
@@ -1719,7 +1741,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               SvgIconWidget(
                 assetPath: 'assets/icons/reset_icon.svg',
                 size: 18.sp,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : const Color(0xFF364153),
               ),
               SizedBox(width: 8.w),
               Text(
@@ -1728,7 +1752,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                   fontFamily: 'Inter',
                   fontSize: 15.4.sp,
                   fontWeight: FontWeight.w400,
-                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : const Color(0xFF364153),
                   height: 24 / 15.4,
                 ),
               ),

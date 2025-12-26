@@ -29,8 +29,9 @@ class DivisionManagementScreen extends ConsumerWidget {
       0,
       (previousValue, division) => previousValue + division.employees,
     );
-    final activeDivisions =
-        allDivisions.where((division) => division.isActive).length;
+    final activeDivisions = allDivisions
+        .where((division) => division.isActive)
+        .length;
     final isDark = context.isDark;
 
     // Calculate total budget
@@ -239,7 +240,8 @@ class DivisionManagementScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.titleLarge?.color ??
+                  color:
+                      Theme.of(context).textTheme.titleLarge?.color ??
                       context.themeTextPrimary,
                   height: 36 / 22.1,
                 ),
@@ -336,6 +338,7 @@ class DivisionManagementScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
                 onChanged: (value) =>
+
                     ref.read(divisionsProvider.notifier).searchDivisions(value),
                 decoration: InputDecoration(
                   isDense: true,
@@ -382,7 +385,10 @@ class DivisionManagementScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8.w),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 21.w,
+                    vertical: 9.h,
+                  ),
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFFD1D5DC)),
                     borderRadius: BorderRadius.circular(10.r),
@@ -491,103 +497,138 @@ class _DivisionCard extends ConsumerWidget {
           ],
         ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Icon + Name
-                    Row(
-                      children: [
-                        Container(
-                          width: 40.r,
-                          height: 40.r,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF3E8FF),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Center(
-                            child: SvgIconWidget(
-                              assetPath: 'assets/icons/division_card_icon.svg',
-                              size: 20.sp,
-                              color: const Color(0xFF9810FA),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Row
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Icon + Name
+                      Row(
+                        children: [
+                          Container(
+                            width: 40.r,
+                            height: 40.r,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Center(
+                              child: SvgIconWidget(
+                                assetPath:
+                                    'assets/icons/division_card_icon.svg',
+                                size: 20.sp,
+                                color: const Color(0xFF9810FA),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                division.name,
-                                style: TextStyle(
-                                  fontSize: 17.2.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: context.themeTextPrimary,
-                                  height: 27 / 17.2,
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  division.name,
+                                  style: TextStyle(
+                                    fontSize: 17.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: context.themeTextPrimary,
+                                    height: 27 / 17.2,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                division.nameArabic,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: context.themeTextSecondary,
-                                  height: 24 / 16,
+                                Text(
+                                  division.nameArabic,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: context.themeTextSecondary,
+                                    height: 24 / 16,
+                                  ),
+                                  textDirection: TextDirection.rtl,
                                 ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                    // Badges
-                    Row(
-                      children: [
-                        _Badge(
-                          label: division.code,
-                          backgroundColor: const Color(0xFFF3F4F6),
-                          textColor: const Color(0xFF364153),
-                        ),
-                        SizedBox(width: 8.w),
-                        _Badge(
-                          label: localizations.active,
-                          backgroundColor: const Color(0xFFDCFCE7),
-                          textColor: const Color(0xFF016630),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                    // Company Name
-                    Row(
-                      children: [
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/building_small_icon.svg',
-                          size: 12.sp,
-                          color: context.themeTextSecondary,
-                        ),
-                        SizedBox(width: 4.w),
-                        Text(
-                          division.companyName,
-                          style: TextStyle(
-                            fontSize: 13.6.sp,
-                            fontWeight: FontWeight.w400,
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      // Badges
+                      Row(
+                        children: [
+                          _Badge(
+                            label: division.code,
+                            backgroundColor: const Color(0xFFF3F4F6),
+                            textColor: const Color(0xFF364153),
+                          ),
+                          SizedBox(width: 8.w),
+                          _Badge(
+                            label: localizations.active,
+                            backgroundColor: const Color(0xFFDCFCE7),
+                            textColor: const Color(0xFF016630),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      // Company Name
+                      Row(
+                        children: [
+                          SvgIconWidget(
+                            assetPath: 'assets/icons/building_small_icon.svg',
+                            size: 12.sp,
                             color: context.themeTextSecondary,
-                            height: 20 / 13.6,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 4.w),
+                          Text(
+                            division.companyName,
+                            style: TextStyle(
+                              fontSize: 13.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.themeTextSecondary,
+                              height: 20 / 13.6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // Action Buttons
+                Row(
+                  children: [
+                    _ActionIcon(
+                      assetPath: 'assets/icons/edit_icon_green.svg',
+                      onTap: () {
+                        AddDivisionDialog.show(
+                          context,
+                          isEditMode: true,
+                          initialData: {
+                            'divisionCode': division.code,
+                            'nameEn': division.name,
+                            'nameAr': division.nameArabic,
+                            'company': division.companyName,
+                            'headOfDivision': division.headName,
+                            'location': division.location,
+                            'totalEmployees': division.employees.toString(),
+                            'totalDepartments': division.departments.toString(),
+                            'annualBudget': division.budget.replaceAll('M', ''),
+                            'businessFocus': division.industry,
+                            'status': division.isActive ? 'Active' : 'Inactive',
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(width: 8.w),
+                    _ActionIcon(
+                      assetPath: 'assets/icons/delete_icon_red.svg',
+                      onTap: () {},
                     ),
                   ],
                 ),
+
               ),
               // Action Buttons
               Row(
@@ -707,126 +748,80 @@ class _DivisionCard extends ConsumerWidget {
                       }
                     },
                   ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          // Details Section
-          Column(
-            children: [
-              // Head Row
-              Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.inputBgDark
-                      : const Color(0xFFF9FAFB),
-                  borderRadius: BorderRadius.circular(4.r),
                 ),
-                child: Row(
+                SizedBox(height: 12.h),
+                // Stats Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInfoItem(
+                        context,
+                        'assets/icons/employees_small_icon.svg',
+                        '${division.employees} ${localizations.emp}',
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildInfoItem(
+                        context,
+                        'assets/icons/departments_icon.svg',
+                        '${division.departments} ${localizations.depts}',
+                      ),
+                    ),
+                    Expanded(
+                      child: _buildInfoItem(
+                        context,
+                        'assets/icons/budget_small_icon.svg',
+                        division.budget,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                // Location Row
+                Row(
                   children: [
                     SvgIconWidget(
-                      assetPath: 'assets/icons/head_person_icon.svg',
+                      assetPath: 'assets/icons/location_small_icon.svg',
                       size: 16.sp,
                       color: context.themeTextSecondary,
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      '${localizations.head}:',
+                      division.location,
                       style: TextStyle(
-                        fontSize: 13.9.sp,
-                        fontWeight: FontWeight.w500,
-                        color: context.themeTextSecondary,
-                        height: 20 / 13.9,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      division.headName,
-                      style: TextStyle(
-                        fontSize: 13.7.sp,
+                        fontSize: 13.6.sp,
                         fontWeight: FontWeight.w400,
                         color: context.themeTextSecondary,
-                        height: 20 / 13.7,
+                        height: 20 / 13.6,
                       ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 12.h),
-              // Stats Row
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildInfoItem(
-                      context,
-                      'assets/icons/employees_small_icon.svg',
-                      '${division.employees} ${localizations.emp}',
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildInfoItem(
-                      context,
-                      'assets/icons/departments_icon.svg',
-                      '${division.departments} ${localizations.depts}',
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildInfoItem(
-                      context,
-                      'assets/icons/budget_small_icon.svg',
-                      division.budget,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.h),
-              // Location Row
-              Row(
-                children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/location_small_icon.svg',
-                    size: 16.sp,
-                    color: context.themeTextSecondary,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    division.location,
-                    style: TextStyle(
-                      fontSize: 13.6.sp,
-                      fontWeight: FontWeight.w400,
+                SizedBox(height: 12.h),
+                // Industry Row
+                Row(
+                  children: [
+                    SvgIconWidget(
+                      assetPath: 'assets/icons/industry_icon.svg',
+                      size: 16.sp,
                       color: context.themeTextSecondary,
-                      height: 20 / 13.6,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.h),
-              // Industry Row
-              Row(
-                children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/industry_icon.svg',
-                    size: 16.sp,
-                    color: context.themeTextSecondary,
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    division.industry,
-                    style: TextStyle(
-                      fontSize: 13.6.sp,
-                      fontWeight: FontWeight.w400,
-                      color: context.themeTextSecondary,
-                      height: 20 / 13.6,
+                    SizedBox(width: 8.w),
+                    Text(
+                      division.industry,
+                      style: TextStyle(
+                        fontSize: 13.6.sp,
+                        fontWeight: FontWeight.w400,
+                        color: context.themeTextSecondary,
+                        height: 20 / 13.6,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -860,6 +855,7 @@ class _ActionIcon extends StatelessWidget {
   final String? description;
   final Color? iconColor;
 
+
   const _ActionIcon({
     required this.assetPath,
     required this.onTap,
@@ -873,9 +869,7 @@ class _ActionIcon extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(8.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
         child: SvgIconWidget(
           assetPath: assetPath,
           size: 16.sp,
@@ -917,4 +911,3 @@ class _Badge extends StatelessWidget {
     );
   }
 }
-

@@ -83,21 +83,23 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
   ComponentFormNotifier({
     ComponentValue? initialValue,
     ComponentType? defaultType,
-  }) : super(initialValue != null
-            ? ComponentFormState(
-                mode: ComponentFormMode.edit,
-                id: initialValue.id,
-                code: initialValue.code,
-                name: initialValue.name,
-                arabicName: initialValue.arabicName,
-                type: initialValue.type,
-                parentId: initialValue.parentId,
-                managerId: initialValue.managerId,
-                location: initialValue.location,
-                status: initialValue.status,
-                description: initialValue.description,
-              )
-            : ComponentFormState(type: defaultType));
+  }) : super(
+         initialValue != null
+             ? ComponentFormState(
+                 mode: ComponentFormMode.edit,
+                 id: initialValue.id,
+                 code: initialValue.code,
+                 name: initialValue.name,
+                 arabicName: initialValue.arabicName,
+                 type: initialValue.type,
+                 parentId: initialValue.parentId,
+                 managerId: initialValue.managerId,
+                 location: initialValue.location,
+                 status: initialValue.status,
+                 description: initialValue.description,
+               )
+             : ComponentFormState(type: defaultType),
+       );
 
   /// Update field
   void updateField(String field, dynamic value) {
@@ -168,7 +170,6 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      // TODO: Replace with actual API call
       await Future.delayed(const Duration(milliseconds: 500));
 
       state = state.copyWith(isLoading: false);
@@ -191,6 +192,5 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
 /// Provider for component form (non-family for simplicity)
 final componentFormProvider =
     StateNotifierProvider<ComponentFormNotifier, ComponentFormState>(
-  (ref) => ComponentFormNotifier(),
-);
-
+      (ref) => ComponentFormNotifier(),
+    );

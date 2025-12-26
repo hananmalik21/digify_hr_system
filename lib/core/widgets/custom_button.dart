@@ -62,9 +62,9 @@ class CustomButton extends StatelessWidget {
     this.showShadow = false,
     this.iconPosition = IconPosition.left,
   }) : assert(
-          label != null || icon != null || svgIcon != null,
-          'CustomButton must have either label, icon, or svgIcon',
-        );
+         label != null || icon != null || svgIcon != null,
+         'CustomButton must have either label, icon, or svgIcon',
+       );
 
   /// Factory for primary action buttons
   factory CustomButton.primary({
@@ -222,14 +222,18 @@ class CustomButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: isLoading || isDisabled ? null : onPressed,
-        borderRadius: BorderRadius.circular(borderRadius ?? dimensions.borderRadius),
+        borderRadius: BorderRadius.circular(
+          borderRadius ?? dimensions.borderRadius,
+        ),
         child: Container(
           height: height ?? dimensions.height,
           width: width ?? (isExpanded ? double.infinity : null),
           padding: padding ?? dimensions.padding,
           decoration: BoxDecoration(
             color: colors.backgroundColor,
-            borderRadius: BorderRadius.circular(borderRadius ?? dimensions.borderRadius),
+            borderRadius: BorderRadius.circular(
+              borderRadius ?? dimensions.borderRadius,
+            ),
             border: colors.borderColor != null
                 ? Border.all(color: colors.borderColor!)
                 : null,
@@ -251,7 +255,10 @@ class CustomButton extends StatelessWidget {
     return button;
   }
 
-  Widget _buildButtonContent(_ButtonColors colors, _ButtonDimensions dimensions) {
+  Widget _buildButtonContent(
+    _ButtonColors colors,
+    _ButtonDimensions dimensions,
+  ) {
     // Show loading indicator
     if (isLoading) {
       return Center(
@@ -268,16 +275,15 @@ class CustomButton extends StatelessWidget {
 
     // Icon-only button
     if (label == null && (icon != null || svgIcon != null)) {
-      return Center(
-        child: _buildIcon(colors, dimensions),
-      );
+      return Center(child: _buildIcon(colors, dimensions));
     }
 
     // Button with label (and optional icon)
     List<Widget> children = [];
 
     // Add icon before label
-    if (iconPosition == IconPosition.left && (icon != null || svgIcon != null)) {
+    if (iconPosition == IconPosition.left &&
+        (icon != null || svgIcon != null)) {
       children.add(_buildIcon(colors, dimensions));
       if (label != null) children.add(SizedBox(width: 8.w));
     }
@@ -304,7 +310,8 @@ class CustomButton extends StatelessWidget {
     }
 
     // Add icon after label
-    if (iconPosition == IconPosition.right && (icon != null || svgIcon != null)) {
+    if (iconPosition == IconPosition.right &&
+        (icon != null || svgIcon != null)) {
       if (label != null) children.add(SizedBox(width: 8.w));
       children.add(_buildIcon(colors, dimensions));
     }
@@ -328,11 +335,7 @@ class CustomButton extends StatelessWidget {
     }
 
     if (icon != null) {
-      return Icon(
-        icon,
-        size: effectiveIconSize,
-        color: colors.foregroundColor,
-      );
+      return Icon(icon, size: effectiveIconSize, color: colors.foregroundColor);
     }
 
     return const SizedBox.shrink();
@@ -344,9 +347,7 @@ class CustomButton extends StatelessWidget {
         backgroundColor: isDark
             ? AppColors.grayBgDark.withValues(alpha: 0.3)
             : AppColors.grayBg.withValues(alpha: 0.5),
-        foregroundColor: isDark
-            ? AppColors.textMutedDark
-            : AppColors.textMuted,
+        foregroundColor: isDark ? AppColors.textMutedDark : AppColors.textMuted,
         borderColor: variant == ButtonVariant.outlined
             ? (isDark ? AppColors.borderGreyDark : AppColors.borderGrey)
             : null,
@@ -356,12 +357,14 @@ class CustomButton extends StatelessWidget {
     // Custom colors override
     if (backgroundColor != null || foregroundColor != null) {
       return _ButtonColors(
-        backgroundColor: backgroundColor ??
+        backgroundColor:
+            backgroundColor ??
             (variant == ButtonVariant.text || variant == ButtonVariant.outlined
                 ? Colors.transparent
                 : AppColors.primary),
         foregroundColor: foregroundColor ?? Colors.white,
-        borderColor: borderColor ??
+        borderColor:
+            borderColor ??
             (variant == ButtonVariant.outlined
                 ? (foregroundColor ?? AppColors.primary)
                 : null),
@@ -378,21 +381,29 @@ class CustomButton extends StatelessWidget {
 
       case ButtonVariant.secondary:
         return _ButtonColors(
-          backgroundColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackgroundGrey,
-          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textSecondary,
+          backgroundColor: isDark
+              ? AppColors.cardBackgroundDark
+              : AppColors.cardBackgroundGrey,
+          foregroundColor: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.textSecondary,
         );
 
       case ButtonVariant.outlined:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.primary,
+          foregroundColor: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.primary,
           borderColor: isDark ? AppColors.borderGreyDark : AppColors.primary,
         );
 
       case ButtonVariant.text:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.primary,
+          foregroundColor: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.primary,
         );
 
       case ButtonVariant.danger:
@@ -409,8 +420,12 @@ class CustomButton extends StatelessWidget {
 
       case ButtonVariant.icon:
         return _ButtonColors(
-          backgroundColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+          backgroundColor: isDark
+              ? AppColors.cardBackgroundDark
+              : AppColors.cardBackground,
+          foregroundColor: isDark
+              ? AppColors.textPrimaryDark
+              : AppColors.textPrimary,
           borderColor: isDark ? AppColors.borderGreyDark : AppColors.borderGrey,
         );
 
@@ -428,7 +443,10 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.small:
         return _ButtonDimensions(
           height: 32.h,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: 12.w,
+            vertical: 6.h,
+          ),
           fontSize: 13.sp,
           iconSize: 16.sp,
           borderRadius: 8.r,
@@ -437,7 +455,10 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.medium:
         return _ButtonDimensions(
           height: 40.h,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: 16.w,
+            vertical: 8.h,
+          ),
           fontSize: 15.sp,
           iconSize: 20.sp,
           borderRadius: 10.r,
@@ -446,7 +467,10 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.large:
         return _ButtonDimensions(
           height: 48.h,
-          padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 12.h),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: 20.w,
+            vertical: 12.h,
+          ),
           fontSize: 16.sp,
           iconSize: 24.sp,
           borderRadius: 12.r,
@@ -468,17 +492,10 @@ enum ButtonVariant {
 }
 
 // Button size types
-enum ButtonSize {
-  small,
-  medium,
-  large,
-}
+enum ButtonSize { small, medium, large }
 
 // Icon position
-enum IconPosition {
-  left,
-  right,
-}
+enum IconPosition { left, right }
 
 // Internal helper classes
 class _ButtonColors {
@@ -508,4 +525,3 @@ class _ButtonDimensions {
     required this.borderRadius,
   });
 }
-
