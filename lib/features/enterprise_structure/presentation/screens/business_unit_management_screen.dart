@@ -32,8 +32,8 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
       0,
       (previousValue, bu) => previousValue + bu.employees,
     );
-    final activeUnits = allBusinessUnits.where((bu) => bu.isActive).length;
-    final isDark = context.isDark;
+    final activeUnits = businessUnits.where((bu) => bu.isActive).length;
+
 
 
 

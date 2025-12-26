@@ -499,15 +499,16 @@ class _DivisionCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Row
+            // ===== Header Row (Left content + Right actions) =====
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Left section
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Icon + Name
+                      // Icon + Names
                       Row(
                         children: [
                           Container(
@@ -519,8 +520,7 @@ class _DivisionCard extends ConsumerWidget {
                             ),
                             child: Center(
                               child: SvgIconWidget(
-                                assetPath:
-                                    'assets/icons/division_card_icon.svg',
+                                assetPath: 'assets/icons/division_card_icon.svg',
                                 size: 20.sp,
                                 color: const Color(0xFF9810FA),
                               ),
@@ -555,7 +555,9 @@ class _DivisionCard extends ConsumerWidget {
                           ),
                         ],
                       ),
+
                       SizedBox(height: 8.h),
+
                       // Badges
                       Row(
                         children: [
@@ -566,13 +568,21 @@ class _DivisionCard extends ConsumerWidget {
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: localizations.active,
-                            backgroundColor: const Color(0xFFDCFCE7),
-                            textColor: const Color(0xFF016630),
+                            label: division.isActive
+                                ? localizations.active
+                                : localizations.inactive,
+                            backgroundColor: division.isActive
+                                ? const Color(0xFFDCFCE7)
+                                : const Color(0xFFFEE2E2),
+                            textColor: division.isActive
+                                ? const Color(0xFF016630)
+                                : const Color(0xFF991B1B),
                           ),
                         ],
                       ),
+
                       SizedBox(height: 8.h),
+
                       // Company Name
                       Row(
                         children: [
@@ -582,13 +592,16 @@ class _DivisionCard extends ConsumerWidget {
                             color: context.themeTextSecondary,
                           ),
                           SizedBox(width: 4.w),
-                          Text(
-                            division.companyName,
-                            style: TextStyle(
-                              fontSize: 13.6.sp,
-                              fontWeight: FontWeight.w400,
-                              color: context.themeTextSecondary,
-                              height: 20 / 13.6,
+                          Expanded(
+                            child: Text(
+                              division.companyName,
+                              style: TextStyle(
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: context.themeTextSecondary,
+                                height: 20 / 13.6,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -596,26 +609,79 @@ class _DivisionCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-                // Action Buttons
+
+                // Right section: Action Buttons (ONLY ONCE)
                 Row(
                   children: [
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
+                      description: localizations.edit,
+                      iconColor: context.themeTextSecondary,
                       onTap: () {
+                        // Format established date from YYYY-MM-DD to DD/MM/YYYY if available
+                        String? formattedDate;
+                        if (division.establishedDate != null &&
+                            division.establishedDate!.isNotEmpty) {
+                          try {
+                            final parts = division.establishedDate!.split('-');
+                            if (parts.length == 3) {
+                              formattedDate = '${parts[2]}/${parts[1]}/${parts[0]}';
+                            } else {
+                              formattedDate = division.establishedDate;
+                            }
+                          } catch (_) {
+                            formattedDate = division.establishedDate;
+                          }
+                        }
+
+                        // Use companyId from division if available, otherwise try resolve by name
+                        int? companyId = division.companyId;
+                        if (companyId == null && division.companyName.isNotEmpty) {
+                          final companiesState = ref.read(companiesProvider);
+                          if (companiesState.companies.isNotEmpty) {
+                            try {
+                              final company = companiesState.companies.firstWhere(
+                                    (c) => c.name == division.companyName,
+                              );
+                              companyId = int.tryParse(company.id);
+                            } catch (_) {}
+                          }
+                        }
+
+                        final divisionId = int.tryParse(division.id);
+                        if (divisionId == null || divisionId <= 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Invalid division ID. Cannot edit this division.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
                         AddDivisionDialog.show(
                           context,
                           isEditMode: true,
                           initialData: {
+                            'divisionId': divisionId,
                             'divisionCode': division.code,
                             'nameEn': division.name,
                             'nameAr': division.nameArabic,
                             'company': division.companyName,
+                            'companyId': companyId,
                             'headOfDivision': division.headName,
+                            'headEmail': division.headEmail ?? '',
+                            'headPhone': division.headPhone ?? '',
                             'location': division.location,
+                            'city': division.city ?? '',
+                            'address': division.address ?? '',
+                            'establishedDate': formattedDate ?? '',
                             'totalEmployees': division.employees.toString(),
                             'totalDepartments': division.departments.toString(),
-                            'annualBudget': division.budget.replaceAll('M', ''),
+                            'annualBudget': division.budget
+                                .replaceAll(RegExp(r'[^\d.]'), ''),
                             'businessFocus': division.industry,
+                            'description': division.description ?? '',
                             'status': division.isActive ? 'Active' : 'Inactive',
                           },
                         );
@@ -624,199 +690,127 @@ class _DivisionCard extends ConsumerWidget {
                     SizedBox(width: 8.w),
                     _ActionIcon(
                       assetPath: 'assets/icons/delete_icon_red.svg',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-
-              ),
-              // Action Buttons
-              Row(
-                children: [
-                  _ActionIcon(
-                    assetPath: 'assets/icons/edit_icon_green.svg',
-                    description: localizations.edit,
-                    iconColor: context.themeTextSecondary,
-                    onTap: () {
-                      // Format established date from YYYY-MM-DD to DD/MM/YYYY if available
-                      String? formattedDate;
-                      if (division.establishedDate != null && division.establishedDate!.isNotEmpty) {
-                        try {
-                          final dateParts = division.establishedDate!.split('-');
-                          if (dateParts.length == 3) {
-                            formattedDate = '${dateParts[2]}/${dateParts[1]}/${dateParts[0]}';
-                          } else {
-                            formattedDate = division.establishedDate;
-                          }
-                        } catch (e) {
-                          formattedDate = division.establishedDate;
-                        }
-                      }
-
-                      // Use companyId from division if available, otherwise find from company name
-                      int? companyId = division.companyId;
-                      if (companyId == null && division.companyName.isNotEmpty) {
-                        final companiesState = ref.read(companiesProvider);
-                        if (companiesState.companies.isNotEmpty) {
-                          try {
-                            final company = companiesState.companies.firstWhere(
-                              (c) => c.name == division.companyName,
-                            );
-                            companyId = int.tryParse(company.id);
-                          } catch (e) {
-                            // Company not found, will need to be selected manually
-                          }
-                        }
-                      }
-
-                      final divisionId = int.tryParse(division.id);
-                      if (divisionId == null || divisionId <= 0) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Invalid division ID. Cannot edit this division.'),
-                            backgroundColor: Colors.red,
-                          ),
+                      description: localizations.delete,
+                      iconColor: AppColors.deleteIconRed,
+                      onTap: () async {
+                        final confirmed = await DeleteConfirmationDialog.show(
+                          context,
+                          title: localizations.delete,
+                          message:
+                          'Are you sure you want to delete this division? This action cannot be undone.',
+                          itemName: division.name,
                         );
-                        return;
-                      }
 
-                      AddDivisionDialog.show(
-                        context,
-                        isEditMode: true,
-                        initialData: {
-                          'divisionId': divisionId,
-                          'divisionCode': division.code,
-                          'nameEn': division.name,
-                          'nameAr': division.nameArabic,
-                          'company': division.companyName,
-                          'companyId': companyId,
-                          'headOfDivision': division.headName,
-                          'headEmail': division.headEmail ?? '',
-                          'headPhone': division.headPhone ?? '',
-                          'location': division.location,
-                          'city': division.city ?? '',
-                          'address': division.address ?? '',
-                          'establishedDate': formattedDate ?? '',
-                          'totalEmployees': division.employees.toString(),
-                          'totalDepartments': division.departments.toString(),
-                          'annualBudget': division.budget.replaceAll(RegExp(r'[^\d.]'), ''),
-                          'businessFocus': division.industry,
-                          'description': division.description ?? '',
-                          'status': division.isActive ? 'Active' : 'Inactive',
-                        },
-                      );
-                    },
-                  ),
-                  SizedBox(width: 8.w),
-                  _ActionIcon(
-                    assetPath: 'assets/icons/delete_icon_red.svg',
-                    description: localizations.delete,
-                    iconColor: AppColors.deleteIconRed,
-                    onTap: () async {
-                      final confirmed = await DeleteConfirmationDialog.show(
-                        context,
-                        title: localizations.delete,
-                        message: 'Are you sure you want to delete this division? This action cannot be undone.',
-                        itemName: division.name,
-                      );
-                      
-                      if (confirmed == true) {
-                        try {
-                          final deleteUseCase = ref.read(deleteDivisionUseCaseProvider);
-                          await deleteUseCase(int.parse(division.id), hard: true);
-                          
-                          if (context.mounted) {
+                        if (confirmed == true) {
+                          try {
+                            final deleteUseCase =
+                            ref.read(deleteDivisionUseCaseProvider);
+                            await deleteUseCase(int.parse(division.id), hard: true);
+
+                            if (!context.mounted) return;
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Division deleted successfully'),
                                 backgroundColor: Colors.green,
                               ),
                             );
-                            // Refresh the divisions list
+
                             ref.read(divisionsProvider.notifier).refresh();
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
+                          } catch (e) {
+                            if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Failed to delete division: ${e.toString()}'),
+                                content: Text('Failed to delete division: $e'),
                                 backgroundColor: Colors.red,
                               ),
                             );
                           }
                         }
-                      }
-                    },
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+
+            // ===== Stats Row =====
+            Row(
+              children: [
+                Expanded(
+                  child: _buildInfoItem(
+                    context,
+                    'assets/icons/employees_small_icon.svg',
+                    '${division.employees} ${localizations.emp}',
                   ),
                 ),
-                SizedBox(height: 12.h),
-                // Stats Row
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildInfoItem(
-                        context,
-                        'assets/icons/employees_small_icon.svg',
-                        '${division.employees} ${localizations.emp}',
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildInfoItem(
-                        context,
-                        'assets/icons/departments_icon.svg',
-                        '${division.departments} ${localizations.depts}',
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildInfoItem(
-                        context,
-                        'assets/icons/budget_small_icon.svg',
-                        division.budget,
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: _buildInfoItem(
+                    context,
+                    'assets/icons/departments_icon.svg',
+                    '${division.departments} ${localizations.depts}',
+                  ),
                 ),
-                SizedBox(height: 12.h),
-                // Location Row
-                Row(
-                  children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/location_small_icon.svg',
-                      size: 16.sp,
-                      color: context.themeTextSecondary,
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      division.location,
-                      style: TextStyle(
-                        fontSize: 13.6.sp,
-                        fontWeight: FontWeight.w400,
-                        color: context.themeTextSecondary,
-                        height: 20 / 13.6,
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: _buildInfoItem(
+                    context,
+                    'assets/icons/budget_small_icon.svg',
+                    division.budget,
+                  ),
                 ),
-                SizedBox(height: 12.h),
-                // Industry Row
-                Row(
-                  children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/industry_icon.svg',
-                      size: 16.sp,
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+
+            // ===== Location Row =====
+            Row(
+              children: [
+                SvgIconWidget(
+                  assetPath: 'assets/icons/location_small_icon.svg',
+                  size: 16.sp,
+                  color: context.themeTextSecondary,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    division.location,
+                    style: TextStyle(
+                      fontSize: 13.6.sp,
+                      fontWeight: FontWeight.w400,
                       color: context.themeTextSecondary,
+                      height: 20 / 13.6,
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      division.industry,
-                      style: TextStyle(
-                        fontSize: 13.6.sp,
-                        fontWeight: FontWeight.w400,
-                        color: context.themeTextSecondary,
-                        height: 20 / 13.6,
-                      ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+
+            // ===== Industry Row =====
+            Row(
+              children: [
+                SvgIconWidget(
+                  assetPath: 'assets/icons/industry_icon.svg',
+                  size: 16.sp,
+                  color: context.themeTextSecondary,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    division.industry,
+                    style: TextStyle(
+                      fontSize: 13.6.sp,
+                      fontWeight: FontWeight.w400,
+                      color: context.themeTextSecondary,
+                      height: 20 / 13.6,
                     ),
-                  ],
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
@@ -835,13 +829,16 @@ class _DivisionCard extends ConsumerWidget {
           color: context.themeTextSecondary,
         ),
         SizedBox(width: 4.w),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 13.7.sp,
-            fontWeight: FontWeight.w400,
-            color: context.themeTextSecondary,
-            height: 20 / 13.7,
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 13.7.sp,
+              fontWeight: FontWeight.w400,
+              color: context.themeTextSecondary,
+              height: 20 / 13.7,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

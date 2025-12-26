@@ -2,9 +2,12 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/active_structure_card_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/header_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/stats_cards_widget.dart';
@@ -41,9 +44,14 @@ class _ManageEnterpriseStructureScreenState
       });
 
   @override
+  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
+
     final listState = ref.watch(structureListProvider);
     final isRefreshing = listState.isLoading && listState.structures.isNotEmpty;
 
@@ -78,32 +86,28 @@ class _ManageEnterpriseStructureScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   HeaderWidget(localizations: localizations),
-                  SizedBox(
-                    height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                  ),
+                  SizedBox(height: isMobile ? 16.h : 24.h),
+
                   ActiveStructureCardWidget(
                     localizations: localizations,
                     isDark: isDark,
                   ),
-                  SizedBox(
-                    height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                  ),
+                  SizedBox(height: isMobile ? 16.h : 24.h),
+
                   StatsCardsWidget(
                     localizations: localizations,
                     isDark: isDark,
                     structureListProvider: structureListProvider,
                   ),
-                  SizedBox(
-                    height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                  ),
+                  SizedBox(height: isMobile ? 16.h : 24.h),
+
                   StructureConfigurationsHeaderWidget(
                     localizations: localizations,
                     isDark: isDark,
                     structureListProvider: structureListProvider,
                   ),
-                  SizedBox(
-                    height: ResponsiveHelper.isMobile(context) ? 12.h : 16.h,
-                  ),
+                  SizedBox(height: isMobile ? 12.h : 16.h),
+
                   StructuresListWidget(
                     localizations: localizations,
                     isDark: isDark,
@@ -113,7 +117,8 @@ class _ManageEnterpriseStructureScreenState
                 ],
               ),
             ),
-            // Loading overlay with opacity
+
+            // ✅ Loading overlay
             if (isRefreshing)
               Positioned.fill(
                 child: Opacity(
@@ -121,33 +126,17 @@ class _ManageEnterpriseStructureScreenState
                   child: Container(
                     color: isDark ? Colors.black : Colors.white,
                     child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
+                      child: CircularProgressIndicator(color: AppColors.primary),
                     ),
                   ),
                 ),
-                SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
-              ],
-            ],
-          );
-        }),
-        SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
-        Text(
-          '($levelCount ${localizations.levels})',
-          style: TextStyle(
-            fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
-            fontWeight: FontWeight.w400,
-            color: isDark
-                ? AppColors.textTertiaryDark
-                : const Color(0xFF6A7282),
-            height: 16 / 12,
-            letterSpacing: 0,
-          ),
+              ),
+          ],
         ),
-      ],
+      ),
     );
   }
+
 
   Widget _buildStructureMetrics(
       BuildContext context,
@@ -323,7 +312,7 @@ class _ManageEnterpriseStructureScreenState
             EnterpriseStructureDialog.showView(
               context,
               structureName: title,
-              description: description,
+              description: description, provider: structureListProvider,
             );
           },
         ),
@@ -387,10 +376,13 @@ class _ManageEnterpriseStructureScreenState
               ),
             ];
             EnterpriseStructureDialog.showEdit(
+
               context,
               structureName: title,
               description: description,
               initialLevels: initialLevels,
+              provider: structureListProvider
+
             );
           },
         ),
@@ -512,7 +504,7 @@ class _ManageEnterpriseStructureScreenState
                 textAlign: isMobile ? TextAlign.center : TextAlign.start,
 
               ),
-          ],
+            )],
         ),
       ),
     );
