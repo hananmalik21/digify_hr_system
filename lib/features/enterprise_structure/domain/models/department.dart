@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -34,5 +35,20 @@ class DepartmentOverview {
     required this.sections,
     required this.budget,
     required this.focusArea,
+  });
+}
+
+/// Paginated response for departments
+class PaginatedDepartments {
+  final List<DepartmentOverview> departments;
+  final PaginationInfo pagination;
+  final int total;
+  final int count;
+
+  const PaginatedDepartments({
+    required this.departments,
+    required this.pagination,
+    required this.total,
+    required this.count,
   });
 }

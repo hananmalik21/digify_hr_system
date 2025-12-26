@@ -12,6 +12,11 @@ extension DateFormatting on DateTime {
   }
 }
 
+extension TitleCase on String {
+  String toTitleCase() =>
+      isEmpty ? this : this[0].toUpperCase() + substring(1).toLowerCase();
+}
+
 extension StringDateParsing on String {
   /// Parses ISO 8601 date string and formats it as "24 Feb, 2026"
   String toFormattedDate() {

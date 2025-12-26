@@ -59,15 +59,43 @@ class StructureListState {
 /// Notifier for structure list with pagination
 class StructureListNotifier extends StateNotifier<StructureListState> {
   final GetStructureListUseCase getStructureListUseCase;
+  bool _isDisposed = false;
 
   StructureListNotifier({required this.getStructureListUseCase})
       : super(const StructureListState()) {
-    loadStructures();
+    // Use Future.microtask to ensure the notifier is fully initialized
+    Future.microtask(() {
+      if (!_isDisposed) {
+        loadStructures();
+      }
+    });
+  }
+
+  /// Constructor with custom page size
+  StructureListNotifier.withPageSize({
+    required this.getStructureListUseCase,
+    int pageSize = 1000,
+  }) : super(StructureListState(pageSize: pageSize)) {
+    // Use Future.microtask to ensure the notifier is fully initialized
+    Future.microtask(() {
+      if (!_isDisposed) {
+        loadStructuresWithPageSize(pageSize: pageSize);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
   }
 
   /// Load structures for the first page
   Future<void> loadStructures({bool refresh = false}) async {
+    if (_isDisposed) return;
+
     if (refresh) {
+      if (_isDisposed) return;
       state = state.copyWith(
         isLoading: true,
         hasError: false,
@@ -77,6 +105,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     } else if (state.isLoading) {
       return; // Already loading
     } else {
+      if (_isDisposed) return;
       state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
     }
 
@@ -86,26 +115,105 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
         pageSize: state.pageSize,
       );
 
-      state = state.copyWith(
-        structures: result.structures,
-        pagination: result.pagination,
-        total: result.total,
-        isLoading: false,
-        hasError: false,
-        currentPage: result.pagination.page,
-      );
+      if (_isDisposed) return; // Check if disposed during async operation
+
+      try {
+        state = state.copyWith(
+          structures: result.structures,
+          pagination: result.pagination,
+          total: result.total,
+          isLoading: false,
+          hasError: false,
+          currentPage: result.pagination.page,
+        );
+      } catch (e) {
+        // Ignore if disposed
+        if (!_isDisposed) rethrow;
+      }
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: e.message,
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: 'Failed to load structures: ${e.toString()}',
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: 'Failed to load structures: ${e.toString()}',
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
+    }
+  }
+
+  /// Load structures with custom page size
+  Future<void> loadStructuresWithPageSize({int pageSize = 1000}) async {
+    if (_isDisposed || state.isLoading) {
+      return; // Already loading or disposed
+    }
+
+    if (_isDisposed) return;
+    state = state.copyWith(
+      isLoading: true,
+      hasError: false,
+      errorMessage: null,
+      currentPage: 1,
+      pageSize: pageSize,
+    );
+
+    try {
+      final result = await getStructureListUseCase(
+        page: 1,
+        pageSize: pageSize,
       );
+
+      if (_isDisposed) return; // Check if disposed during async operation
+
+      try {
+        state = state.copyWith(
+          structures: result.structures,
+          pagination: result.pagination,
+          total: result.total,
+          isLoading: false,
+          hasError: false,
+          currentPage: result.pagination.page,
+          pageSize: pageSize,
+        );
+      } catch (e) {
+        // Ignore if disposed
+        if (!_isDisposed) rethrow;
+      }
+    } on AppException catch (e) {
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: e.message,
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
+    } catch (e) {
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: 'Failed to load structures: ${e.toString()}',
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
     }
   }
 

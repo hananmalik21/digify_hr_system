@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -72,22 +73,10 @@ class CustomTable extends StatelessWidget {
       );
     }
 
-    if (data.isEmpty) {
-      return emptyStateWidget ??
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(40.h),
-              child: Text(
-                'No data available',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondary,
-                ),
-              ),
-            ),
-          );
+    // Debug: Log table data
+    debugPrint('CustomTable: Building with ${data.length} rows, ${columns.length} columns');
+    if (data.isNotEmpty) {
+      debugPrint('CustomTable: First row keys: ${data.first.keys}');
     }
 
     return Container(
@@ -102,14 +91,33 @@ class CustomTable extends StatelessWidget {
       child: Column(
         children: [
           if (showHeader) _buildHeader(context, isDark),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+          if (data.isEmpty)
+            Expanded(
+              child: emptyStateWidget ??
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(40.h),
+                      child: Text(
+                        'No data available',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+            )
+          else
+            Expanded(
               child: SingleChildScrollView(
-                child: _buildTable(context, isDark),
+                scrollDirection: Axis.horizontal,
+                child: SingleChildScrollView(
+                  child: _buildTable(context, isDark),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -212,12 +220,17 @@ class CustomTable extends StatelessWidget {
   }
 
   Widget _buildTable(BuildContext context, bool isDark) {
+    debugPrint('CustomTable._buildTable: Building ${data.length} rows');
     return Column(
       children: [
         ...data.asMap().entries.map<Widget>((entry) {
           final index = entry.key;
           final row = entry.value;
           final isSelected = selectedIndices?.contains(index) ?? false;
+          
+          if (index == 0) {
+            debugPrint('CustomTable._buildTable: First row data: $row');
+          }
 
           return _buildTableRow(
             context,

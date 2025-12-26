@@ -13,6 +13,19 @@ class CompanyOverview {
   final String industry;
   final String phone;
   final String email;
+  final String? legalNameEn;
+  final String? legalNameAr;
+  final String? taxId;
+  final String? establishedDate;
+  final String? country;
+  final String? city;
+  final String? address;
+  final String? poBox;
+  final String? zipCode;
+  final String? website;
+  final String? currencyCode;
+  final String? fiscalYearStart;
+  final int? orgStructureId;
 
   const CompanyOverview({
     required this.id,
@@ -26,6 +39,19 @@ class CompanyOverview {
     required this.industry,
     required this.phone,
     required this.email,
+    this.legalNameEn,
+    this.legalNameAr,
+    this.taxId,
+    this.establishedDate,
+    this.country,
+    this.city,
+    this.address,
+    this.poBox,
+    this.zipCode,
+    this.website,
+    this.currencyCode,
+    this.fiscalYearStart,
+    this.orgStructureId,
   });
 }
 

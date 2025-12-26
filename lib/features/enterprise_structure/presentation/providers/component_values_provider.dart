@@ -1,4 +1,10 @@
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Tree node for hierarchical display
@@ -114,16 +120,117 @@ class ComponentValuesState {
 
 /// StateNotifier for managing component values
 class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
-  ComponentValuesNotifier() : super(ComponentValuesState()) {
+  final Ref ref;
+  late final CompaniesNotifier _companiesNotifier;
+  late final DivisionsNotifier _divisionsNotifier;
+  List<StructureListItem> _orgStructures = []; // Store org structures for lookup
+
+  ComponentValuesNotifier(this.ref) : super(ComponentValuesState()) {
+    // Create a new instance of CompaniesNotifier for this component values screen
+    _companiesNotifier = CompaniesNotifier(
+      getCompaniesUseCase: ref.read(getCompaniesUseCaseProvider),
+    );
+    // Create a new instance of DivisionsNotifier for this component values screen
+    _divisionsNotifier = DivisionsNotifier(
+      getDivisionsUseCase: ref.read(getDivisionsUseCaseProvider),
+    );
+    // Load org structures for parent org lookup
+    _loadOrgStructures();
     loadComponents();
   }
 
-  /// Load components (mock data for now)
-  Future<void> loadComponents() async {
+  @override
+  void dispose() {
+    _companiesNotifier.dispose();
+    _divisionsNotifier.dispose();
+    super.dispose();
+  }
+
+  /// Load org structures for parent org lookup
+  Future<void> _loadOrgStructures() async {
+    try {
+      final orgStructuresState = ref.read(orgStructuresDropdownProvider);
+      _orgStructures = orgStructuresState.structures;
+    } catch (e) {
+      // If loading fails, continue with empty list
+      _orgStructures = [];
+    }
+  }
+
+  /// Convert CompanyOverview to ComponentValue
+  ComponentValue _companyToComponentValue(CompanyOverview company) {
+    // Store orgStructureId in parentId for lookup, registrationNumber in managerId for display
+    return ComponentValue(
+      id: company.id,
+      code: company.entityCode,
+      name: company.name,
+      arabicName: company.nameArabic,
+      type: ComponentType.company,
+      parentId: company.orgStructureId?.toString(), // Store org structure ID for lookup
+      managerId: company.registrationNumber, // Store registration number for display
+      location: company.location,
+      status: company.isActive,
+      description: company.industry,
+      createdAt: DateTime.now(), // Companies API doesn't provide these dates
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  /// Convert DivisionOverview to ComponentValue
+  ComponentValue _divisionToComponentValue(DivisionOverview division) {
+    // Store companyId in parentId for lookup, headName in managerId for display
+    return ComponentValue(
+      id: division.id,
+      code: division.code,
+      name: division.name,
+      arabicName: division.nameArabic,
+      type: ComponentType.division,
+      parentId: null, // Will be set based on company lookup if needed
+      managerId: division.headName, // Store head name for display
+      location: division.location,
+      status: division.isActive,
+      description: division.description ?? division.industry,
+      createdAt: DateTime.now(), // Divisions API doesn't provide these dates
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  /// Load components (mock data for now, or companies from API if filter is company)
+  Future<void> loadComponents({String? search}) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      // TODO: Replace with actual API call
+      // If filter is company, fetch from companies API using CompaniesNotifier
+      if (state.filterType == ComponentType.company) {
+        // Use search if provided, otherwise use existing search query
+        final searchQuery = search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : '');
+        
+        if (searchQuery.isNotEmpty) {
+          // Trigger search in companies notifier
+          _companiesNotifier.searchCompanies(searchQuery);
+        } else {
+          // Refresh companies
+          await _companiesNotifier.refresh();
+        }
+        
+        // Wait a bit for the notifier to load (debounce delay + API call)
+        await Future.delayed(const Duration(milliseconds: 600));
+        
+        // Get companies from the notifier state
+        final companiesState = _companiesNotifier.state;
+        final companies = companiesState.companies;
+        
+        final companyComponents = companies.map(_companyToComponentValue).toList();
+        
+        state = state.copyWith(
+          components: companyComponents,
+          isLoading: companiesState.isLoading,
+          error: companiesState.hasError ? companiesState.errorMessage : null,
+        );
+        return;
+      }
+
+      // Otherwise, use mock data for other component types
       await Future.delayed(const Duration(milliseconds: 500));
 
       // Mock data matching Figma design
@@ -340,6 +447,46 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   /// Search components
   void searchComponents(String query) {
     state = state.copyWith(searchQuery: query);
+    
+    // If company filter is active, use companies notifier search
+    if (state.filterType == ComponentType.company) {
+      _companiesNotifier.searchCompanies(query);
+      
+      // Update state after a delay to reflect the search results
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (state.filterType == ComponentType.company) {
+          final companiesState = _companiesNotifier.state;
+          final companies = companiesState.companies;
+          final companyComponents = companies.map(_companyToComponentValue).toList();
+          
+          state = state.copyWith(
+            components: companyComponents,
+            isLoading: companiesState.isLoading,
+            error: companiesState.hasError ? companiesState.errorMessage : null,
+          );
+        }
+      });
+    }
+    
+    // If division filter is active, use divisions notifier search
+    if (state.filterType == ComponentType.division) {
+      _divisionsNotifier.searchDivisions(query);
+      
+      // Update state after a delay to reflect the search results
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (state.filterType == ComponentType.division) {
+          final divisionsState = _divisionsNotifier.state;
+          final divisions = divisionsState.divisions;
+          final divisionComponents = divisions.map(_divisionToComponentValue).toList();
+          
+          state = state.copyWith(
+            components: divisionComponents,
+            isLoading: divisionsState.isLoading,
+            error: divisionsState.hasError ? divisionsState.errorMessage : null,
+          );
+        }
+      });
+    }
   }
 
   /// Filter by component type
@@ -349,7 +496,11 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     state = state.copyWith(
       filterType: type,
       isTreeView: type == null,
+      searchQuery: '', // Clear search when changing filter
     );
+    
+    // Reload components when filter changes (especially for company)
+    loadComponents();
   }
 
   /// Sort by column
@@ -451,6 +602,6 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
 /// Provider for component values
 final componentValuesProvider =
     StateNotifierProvider<ComponentValuesNotifier, ComponentValuesState>(
-  (ref) => ComponentValuesNotifier(),
+  (ref) => ComponentValuesNotifier(ref),
 );
 

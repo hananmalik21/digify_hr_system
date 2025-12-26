@@ -2,11 +2,14 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_division_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/division_details_dialog.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +22,9 @@ class DivisionManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final divisions = ref.watch(filteredDivisionProvider);
-    final allDivisions = ref.watch(divisionListProvider);
+    final divisionsState = ref.watch(divisionsProvider);
+    final allDivisions = divisionsState.divisions;
+    final isRefreshing = divisionsState.isLoading && allDivisions.isNotEmpty;
     final totalEmployees = allDivisions.fold<int>(
       0,
       (previousValue, division) => previousValue + division.employees,
@@ -70,7 +74,13 @@ class DivisionManagementScreen extends ConsumerWidget {
     return Container(
       color: context.themeBackground,
       child: SafeArea(
-        child: SingleChildScrollView(
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () => ref.read(divisionsProvider.notifier).refresh(),
+              child: Opacity(
+                opacity: isRefreshing ? 0.5 : 1.0,
+                child: SingleChildScrollView(
           padding: ResponsiveHelper.getResponsivePadding(
             context,
             mobile: EdgeInsetsDirectional.only(
@@ -107,15 +117,94 @@ class DivisionManagementScreen extends ConsumerWidget {
               SizedBox(
                 height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
               ),
-              _buildDivisionList(
-                context,
-                divisions,
-                localizations,
-                isDark: isDark,
-              ),
+              if (divisionsState.isLoading && divisionsState.divisions.isEmpty)
+                _buildLoadingState(context, localizations)
+              else if (divisionsState.hasError)
+                _buildErrorState(context, ref, divisionsState.errorMessage ?? 'An error occurred while loading divisions', localizations)
+              else
+                _buildDivisionList(
+                  context,
+                  allDivisions,
+                  localizations,
+                  isDark: isDark,
+                ),
             ],
           ),
+                ),
+              ),
+            ),
+            if (isRefreshing)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          SizedBox(height: 16.h),
+                          Text(
+                            localizations.pleaseWait,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: context.themeTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState(BuildContext context, AppLocalizations localizations) {
+    return Center(
+      child: Column(
+        children: [
+          const CircularProgressIndicator(),
+          SizedBox(height: 16.h),
+          Text(
+            localizations.pleaseWait,
+            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, WidgetRef ref, String message, AppLocalizations localizations) {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            message,
+            style: TextStyle(fontSize: 14.sp, color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
+          ElevatedButton(
+            onPressed: () => ref.read(divisionsProvider.notifier).refresh(),
+            child: const Text('Retry'),
+          ),
+        ],
       ),
     );
   }
@@ -247,7 +336,7 @@ class DivisionManagementScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
                 onChanged: (value) =>
-                    ref.read(divisionSearchQueryProvider.notifier).state = value,
+                    ref.read(divisionsProvider.notifier).searchDivisions(value),
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
@@ -366,7 +455,7 @@ class DivisionManagementScreen extends ConsumerWidget {
   }
 }
 
-class _DivisionCard extends StatelessWidget {
+class _DivisionCard extends ConsumerWidget {
   final DivisionOverview division;
   final AppLocalizations localizations;
   final bool isDark;
@@ -378,7 +467,7 @@ class _DivisionCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => DivisionDetailsDialog.show(context, division),
       child: Container(
@@ -505,21 +594,73 @@ class _DivisionCard extends StatelessWidget {
                 children: [
                   _ActionIcon(
                     assetPath: 'assets/icons/edit_icon_green.svg',
+                    description: localizations.edit,
+                    iconColor: context.themeTextSecondary,
                     onTap: () {
+                      // Format established date from YYYY-MM-DD to DD/MM/YYYY if available
+                      String? formattedDate;
+                      if (division.establishedDate != null && division.establishedDate!.isNotEmpty) {
+                        try {
+                          final dateParts = division.establishedDate!.split('-');
+                          if (dateParts.length == 3) {
+                            formattedDate = '${dateParts[2]}/${dateParts[1]}/${dateParts[0]}';
+                          } else {
+                            formattedDate = division.establishedDate;
+                          }
+                        } catch (e) {
+                          formattedDate = division.establishedDate;
+                        }
+                      }
+
+                      // Use companyId from division if available, otherwise find from company name
+                      int? companyId = division.companyId;
+                      if (companyId == null && division.companyName.isNotEmpty) {
+                        final companiesState = ref.read(companiesProvider);
+                        if (companiesState.companies.isNotEmpty) {
+                          try {
+                            final company = companiesState.companies.firstWhere(
+                              (c) => c.name == division.companyName,
+                            );
+                            companyId = int.tryParse(company.id);
+                          } catch (e) {
+                            // Company not found, will need to be selected manually
+                          }
+                        }
+                      }
+
+                      final divisionId = int.tryParse(division.id);
+                      if (divisionId == null || divisionId <= 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Invalid division ID. Cannot edit this division.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
                       AddDivisionDialog.show(
                         context,
                         isEditMode: true,
                         initialData: {
+                          'divisionId': divisionId,
                           'divisionCode': division.code,
                           'nameEn': division.name,
                           'nameAr': division.nameArabic,
                           'company': division.companyName,
+                          'companyId': companyId,
                           'headOfDivision': division.headName,
+                          'headEmail': division.headEmail ?? '',
+                          'headPhone': division.headPhone ?? '',
                           'location': division.location,
+                          'city': division.city ?? '',
+                          'address': division.address ?? '',
+                          'establishedDate': formattedDate ?? '',
                           'totalEmployees': division.employees.toString(),
                           'totalDepartments': division.departments.toString(),
-                          'annualBudget': division.budget.replaceAll('M', ''),
+                          'annualBudget': division.budget.replaceAll(RegExp(r'[^\d.]'), ''),
                           'businessFocus': division.industry,
+                          'description': division.description ?? '',
                           'status': division.isActive ? 'Active' : 'Inactive',
                         },
                       );
@@ -528,8 +669,42 @@ class _DivisionCard extends StatelessWidget {
                   SizedBox(width: 8.w),
                   _ActionIcon(
                     assetPath: 'assets/icons/delete_icon_red.svg',
-                    onTap: () {
-                      // TODO: Delete Division
+                    description: localizations.delete,
+                    iconColor: AppColors.deleteIconRed,
+                    onTap: () async {
+                      final confirmed = await DeleteConfirmationDialog.show(
+                        context,
+                        title: localizations.delete,
+                        message: 'Are you sure you want to delete this division? This action cannot be undone.',
+                        itemName: division.name,
+                      );
+                      
+                      if (confirmed == true) {
+                        try {
+                          final deleteUseCase = ref.read(deleteDivisionUseCaseProvider);
+                          await deleteUseCase(int.parse(division.id), hard: true);
+                          
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Division deleted successfully'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            // Refresh the divisions list
+                            ref.read(divisionsProvider.notifier).refresh();
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to delete division: ${e.toString()}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      }
                     },
                   ),
                 ],
@@ -682,10 +857,14 @@ class _DivisionCard extends StatelessWidget {
 class _ActionIcon extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
+  final String? description;
+  final Color? iconColor;
 
   const _ActionIcon({
     required this.assetPath,
     required this.onTap,
+    this.description,
+    this.iconColor,
   });
 
   @override
@@ -700,7 +879,7 @@ class _ActionIcon extends StatelessWidget {
         child: SvgIconWidget(
           assetPath: assetPath,
           size: 16.sp,
-          color: context.themeTextSecondary,
+          color: iconColor ?? context.themeTextSecondary,
         ),
       ),
     );

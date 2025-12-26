@@ -9,6 +9,7 @@ import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_business_unit_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/business_unit_details_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,27 +22,29 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final businessUnits = ref.watch(filteredBusinessUnitsProvider);
-    final allBusinessUnits = ref.watch(businessUnitListProvider);
-    final totalEmployees = allBusinessUnits.fold<int>(
+    final listState = ref.watch(businessUnitListNotifierProvider);
+    final businessUnits = listState.businessUnits;
+    final isRefreshing = listState.isLoading && businessUnits.isNotEmpty;
+    final isDark = context.isDark;
+
+    // Calculate stats from current list
+    final totalEmployees = businessUnits.fold<int>(
       0,
       (previousValue, bu) => previousValue + bu.employees,
     );
-    final activeUnits =
-        allBusinessUnits.where((bu) => bu.isActive).length;
-    final isDark = context.isDark;
+    final activeUnits = businessUnits.where((bu) => bu.isActive).length;
 
     // Calculate total budget
     double totalBudget = 0;
-    for (var bu in allBusinessUnits) {
-      final budgetStr = bu.budget.replaceAll('M', '').replaceAll(' KWD', '');
+    for (var bu in businessUnits) {
+      final budgetStr = bu.budget.replaceAll('M', '').replaceAll(' KWD', '').replaceAll(',', '');
       totalBudget += double.tryParse(budgetStr) ?? 0;
     }
 
     final stats = [
       StatsCardData(
         label: localizations.totalUnits,
-        value: '${allBusinessUnits.length}',
+        value: '${businessUnits.length}',
         iconPath: 'assets/icons/total_units_icon.svg',
         iconColor: const Color(0xFF3B82F6),
         iconBackground: const Color(0xFFDBEAFE),
@@ -72,51 +75,99 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     return Container(
       color: context.themeBackground,
       child: SafeArea(
-        child: SingleChildScrollView(
-          padding: ResponsiveHelper.getResponsivePadding(
-            context,
-            mobile: EdgeInsetsDirectional.only(
-              top: 16.h,
-              start: 16.w,
-              end: 16.w,
-              bottom: 24.h,
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () => ref.read(businessUnitListNotifierProvider.notifier).refresh(),
+              child: Opacity(
+                opacity: isRefreshing ? 0.5 : 1.0,
+                child: SingleChildScrollView(
+                  padding: ResponsiveHelper.getResponsivePadding(
+                    context,
+                    mobile: EdgeInsetsDirectional.only(
+                      top: 16.h,
+                      start: 16.w,
+                      end: 16.w,
+                      bottom: 24.h,
+                    ),
+                    tablet: EdgeInsetsDirectional.only(
+                      top: 24.h,
+                      start: 24.w,
+                      end: 24.w,
+                      bottom: 24.h,
+                    ),
+                    web: EdgeInsetsDirectional.only(
+                      top: 24.h,
+                      start: 24.w,
+                      end: 24.w,
+                      bottom: 24.h,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(context, localizations),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+                      ),
+                      _buildStatsSection(context, stats, isDark: isDark),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+                      ),
+                      _buildSearchBar(context, ref, localizations),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+                      ),
+                      _buildBusinessUnitList(
+                        context,
+                        ref,
+                        listState,
+                        businessUnits,
+                        localizations,
+                        isDark: isDark,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            tablet: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-            web: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context, localizations),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+            if (isRefreshing)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          SizedBox(height: 16.h),
+                          Text(
+                            localizations.pleaseWait,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: context.themeTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              _buildStatsSection(context, stats, isDark: isDark),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-              ),
-              _buildSearchBar(context, ref, localizations),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-              ),
-              _buildBusinessUnitList(
-                context,
-                businessUnits,
-                localizations,
-                isDark: isDark,
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -248,8 +299,15 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
-                onChanged: (value) =>
-                    ref.read(businessUnitSearchQueryProvider.notifier).state = value,
+                onChanged: (value) {
+                  ref.read(businessUnitSearchQueryProvider.notifier).state = value;
+                  // Debounce API search - only search if user stops typing for 500ms
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    if (ref.read(businessUnitSearchQueryProvider) == value) {
+                      ref.read(businessUnitListNotifierProvider.notifier).search(value);
+                    }
+                  });
+                },
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
@@ -322,16 +380,55 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
 
   Widget _buildBusinessUnitList(
     BuildContext context,
+    WidgetRef ref,
+    BusinessUnitListState listState,
     List<BusinessUnitOverview> businessUnits,
     AppLocalizations localizations, {
     required bool isDark,
   }) {
+    if (listState.isLoading && businessUnits.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (listState.hasError) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                listState.errorMessage ?? 'An error occurred',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.red,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              ElevatedButton(
+                onPressed: () => ref.read(businessUnitListNotifierProvider.notifier).refresh(),
+                child: Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (businessUnits.isEmpty) {
       return Center(
-        child: Text(
-          localizations.noResultsFound,
-          style:
-              TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Text(
+            localizations.noResultsFound,
+            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+          ),
         ),
       );
     }
@@ -360,11 +457,63 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 businessUnit: bu,
                 localizations: localizations,
                 isDark: isDark,
+                onDelete: (businessUnit) => _handleDelete(context, ref, businessUnit, localizations),
               ),
             );
           }).toList(),
         );
       },
+    );
+  }
+
+  void _handleDelete(
+    BuildContext context,
+    WidgetRef ref,
+    BusinessUnitOverview businessUnit,
+    AppLocalizations localizations,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Delete Business Unit'),
+        content: Text(
+          'Are you sure you want to delete ${businessUnit.name}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(localizations.cancel),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              try {
+                final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
+                await deleteUseCase(int.parse(businessUnit.id), hard: true);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Business unit deleted successfully')),
+                  );
+                  ref.read(businessUnitListNotifierProvider.notifier).refresh();
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error deleting business unit: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -373,11 +522,13 @@ class _BusinessUnitCard extends StatelessWidget {
   final BusinessUnitOverview businessUnit;
   final AppLocalizations localizations;
   final bool isDark;
+  final Function(BusinessUnitOverview) onDelete;
 
   const _BusinessUnitCard({
     required this.businessUnit,
     required this.localizations,
     required this.isDark,
+    required this.onDelete,
   });
 
   @override
@@ -550,9 +701,7 @@ class _BusinessUnitCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     _ActionIcon(
                       assetPath: 'assets/icons/delete_icon_red.svg',
-                      onTap: () {
-                        // TODO: Delete Business Unit
-                      },
+                      onTap: () => onDelete(businessUnit),
                     ),
                   ],
                 ),

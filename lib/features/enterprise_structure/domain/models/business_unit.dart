@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -40,6 +41,21 @@ class BusinessUnitOverview {
     required this.city,
     this.establishedDate,
     this.description,
+  });
+}
+
+/// Paginated response for business units
+class PaginatedBusinessUnits {
+  final List<BusinessUnitOverview> businessUnits;
+  final PaginationInfo pagination;
+  final int total;
+  final int count;
+
+  const PaginatedBusinessUnits({
+    required this.businessUnits,
+    required this.pagination,
+    required this.total,
+    required this.count,
   });
 }
 

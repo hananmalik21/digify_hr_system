@@ -4,13 +4,17 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-class AddDivisionDialog extends StatefulWidget {
+class AddDivisionDialog extends ConsumerStatefulWidget {
   final bool isEditMode;
   final Map<String, dynamic>? initialData;
 
@@ -33,27 +37,30 @@ class AddDivisionDialog extends StatefulWidget {
   }
 
   @override
-  State<AddDivisionDialog> createState() => _AddDivisionDialogState();
+  ConsumerState<AddDivisionDialog> createState() => _AddDivisionDialogState();
 }
 
-class _AddDivisionDialogState extends State<AddDivisionDialog> {
+class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
   late final Map<String, TextEditingController> _controllers;
   String? _selectedStatus;
-  String? _selectedCompany;
+  int? _selectedCompanyId;
+  String? _selectedCompanyName;
+  bool _isSubmitting = false;
 
   final List<String> _statusOptions = ['Active', 'Inactive'];
-  final List<String> _companyOptions = [
-    'Kuwait Holdings Corporation',
-    'Kuwait Petroleum Services',
-    'Gulf Investment Group',
-    'National Industries Company',
-  ];
 
   @override
   void initState() {
     super.initState();
     _selectedStatus = widget.initialData?['status'] ?? 'Active';
-    _selectedCompany = widget.initialData?['company'];
+    // Initialize company selection if provided
+    if (widget.initialData?['companyId'] != null) {
+      _selectedCompanyId = widget.initialData?['companyId'] as int?;
+      _selectedCompanyName = widget.initialData?['company'] as String?;
+    } else if (widget.initialData?['company'] != null) {
+      // If company name is provided but not ID, we'll need to find it
+      _selectedCompanyName = widget.initialData?['company'] as String?;
+    }
 
     _controllers = {
       'divisionCode':
@@ -218,18 +225,7 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
                     SizedBox(height: 8.h),
                     // Row 3: Company | Head of Division
                     _buildTwoColumnRow(
-                      left: _buildDropdown(
-                        label: localizations.company,
-                        value: _selectedCompany,
-                        items: _companyOptions,
-                        isRequired: true,
-                        hintText: localizations.selectCompany,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCompany = value;
-                          });
-                        },
-                      ),
+                      left: _buildCompanyDropdown(),
                       right: _buildTextField(
                         label: localizations.headOfDivision,
                         keyName: 'headOfDivision',
@@ -565,35 +561,44 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
           ),
           SizedBox(width: 12.w),
           ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
+            onPressed: _isSubmitting ? null : _handleSave,
+            icon: _isSubmitting
+                ? SizedBox(
+                    width: 16.sp,
+                    height: 16.sp,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : SvgIconWidget(
+                    assetPath: 'assets/icons/save_division_icon.svg',
+                    size: 16.sp,
+                    color: Colors.white,
+                  ),
+            label: _isSubmitting
+                ? SizedBox(
+                    width: 16.sp,
+                    height: 16.sp,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
                     widget.isEditMode
                         ? localizations.updateDivision
                         : localizations.createDivision,
+                    style: TextStyle(
+                      fontSize: 15.3.sp,
+                      fontWeight: FontWeight.w400,
+                      height: 24 / 15.3,
+                    ),
                   ),
-                ),
-              );
-            },
-            icon: SvgIconWidget(
-              assetPath: 'assets/icons/save_division_icon.svg',
-              size: 16.sp,
-              color: Colors.white,
-            ),
-            label: Text(
-              widget.isEditMode
-                  ? localizations.updateDivision
-                  : localizations.createDivision,
-              style: TextStyle(
-                fontSize: 15.3.sp,
-                fontWeight: FontWeight.w400,
-                height: 24 / 15.3,
-              ),
-            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF9810FA),
+              backgroundColor: _isSubmitting 
+                  ? const Color(0xFF9810FA).withValues(alpha: 0.6)
+                  : const Color(0xFF9810FA),
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
@@ -603,6 +608,184 @@ class _AddDivisionDialogState extends State<AddDivisionDialog> {
         ],
       ),
     );
+  }
+
+  Widget _buildCompanyDropdown() {
+    final localizations = AppLocalizations.of(context)!;
+    final companiesState = ref.watch(companiesProvider);
+    final companies = companiesState.companies;
+    
+    // Find and set selected value based on companyId
+    String? selectedValue;
+    if (_selectedCompanyId != null && companies.isNotEmpty) {
+      try {
+        final selectedCompany = companies.firstWhere(
+          (c) => int.tryParse(c.id) == _selectedCompanyId,
+        );
+        selectedValue = selectedCompany.name;
+        _selectedCompanyName ??= selectedCompany.name;
+      } catch (e) {
+        // Company not found, use provided name if available
+        selectedValue = _selectedCompanyName;
+      }
+    }
+
+    return EnterpriseStructureDropdown(
+      key: ValueKey('company_dropdown_${_selectedCompanyId}_${companies.length}_${companiesState.isLoading}'),
+      label: localizations.company,
+      isRequired: true,
+      value: companiesState.isLoading
+          ? 'Loading...'
+          : companiesState.hasError
+              ? 'Error loading companies'
+              : companies.isEmpty
+                  ? 'No companies available'
+                  : selectedValue,
+      items: companiesState.isLoading
+          ? const ['Loading...']
+          : companiesState.hasError
+              ? const ['Error loading companies']
+              : companies.isEmpty
+                  ? const ['No companies available']
+                  : companies.map((company) => company.name).toList(),
+      onChanged: (value) {
+        if (value != null && !companiesState.isLoading && !companiesState.hasError && companies.isNotEmpty) {
+          try {
+            final selectedCompany = companies.firstWhere(
+              (c) => c.name == value,
+            );
+            setState(() {
+              _selectedCompanyId = int.tryParse(selectedCompany.id);
+              _selectedCompanyName = selectedCompany.name;
+            });
+          } catch (e) {
+            // Company not found, ignore
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> _handleSave() async {
+    if (_isSubmitting) return;
+
+    final localizations = AppLocalizations.of(context)!;
+
+    // Validate required fields
+    if (_controllers['divisionCode']!.text.trim().isEmpty ||
+        _controllers['nameEn']!.text.trim().isEmpty ||
+        _controllers['nameAr']!.text.trim().isEmpty ||
+        _selectedCompanyId == null ||
+        _controllers['headOfDivision']!.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all required fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      // Format date from DD/MM/YYYY to YYYY-MM-DD
+      String? establishedDate;
+      if (_controllers['establishedDate']!.text.isNotEmpty) {
+        try {
+          final parts = _controllers['establishedDate']!.text.split('/');
+          if (parts.length == 3) {
+            establishedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+          }
+        } catch (e) {
+          // If parsing fails, use as is
+          establishedDate = _controllers['establishedDate']!.text;
+        }
+      }
+
+      // Prepare division data according to API format (uppercase field names)
+      final divisionData = <String, dynamic>{
+        'COMPANY_ID': _selectedCompanyId,
+        'DIVISION_CODE': _controllers['divisionCode']!.text.trim(),
+        'DIVISION_NAME_EN': _controllers['nameEn']!.text.trim(),
+        'DIVISION_NAME_AR': _controllers['nameAr']!.text.trim(),
+        'STATUS': _selectedStatus ?? 'Active',
+        'HEAD_OF_DIVISION': _controllers['headOfDivision']!.text.trim(),
+        if (_controllers['headEmail']!.text.trim().isNotEmpty)
+          'HEAD_EMAIL': _controllers['headEmail']!.text.trim(),
+        if (_controllers['headPhone']!.text.trim().isNotEmpty)
+          'HEAD_PHONE': _controllers['headPhone']!.text.trim(),
+        if (_controllers['location']!.text.trim().isNotEmpty)
+          'LOCATION': _controllers['location']!.text.trim(),
+        if (_controllers['city']!.text.trim().isNotEmpty)
+          'CITY': _controllers['city']!.text.trim(),
+        if (_controllers['address']!.text.trim().isNotEmpty)
+          'ADDRESS': _controllers['address']!.text.trim(),
+        if (establishedDate != null) 'ESTABLISHED_DATE': establishedDate,
+        if (_controllers['businessFocus']!.text.trim().isNotEmpty)
+          'BUSINESS_FOCUS': _controllers['businessFocus']!.text.trim(),
+        if (_controllers['totalEmployees']!.text.trim().isNotEmpty)
+          'TOTAL_EMPLOYEES': int.tryParse(_controllers['totalEmployees']!.text.trim()) ?? 0,
+        if (_controllers['totalDepartments']!.text.trim().isNotEmpty)
+          'TOTAL_DEPARTMENTS': int.tryParse(_controllers['totalDepartments']!.text.trim()) ?? 0,
+        if (_controllers['annualBudget']!.text.trim().isNotEmpty)
+          'ANNUAL_BUDGET_KWD': double.tryParse(_controllers['annualBudget']!.text.trim()) ?? 0.0,
+        if (_controllers['description']!.text.trim().isNotEmpty)
+          'DESCRIPTION': _controllers['description']!.text.trim(),
+        "LAST_UPDATE_LOGIN": "ADMIN"
+      };
+
+      if (widget.isEditMode && widget.initialData != null) {
+        final divisionId = widget.initialData!['divisionId'] as int?;
+        if (divisionId != null && divisionId > 0) {
+          final updateDivisionUseCase = ref.read(updateDivisionUseCaseProvider);
+          await updateDivisionUseCase(divisionId, divisionData);
+        } else {
+          throw Exception('Invalid division ID for update');
+        }
+      } else {
+        final createDivisionUseCase = ref.read(createDivisionUseCaseProvider);
+        await createDivisionUseCase(divisionData);
+      }
+
+      // Refresh divisions list
+      ref.read(divisionsProvider.notifier).refresh();
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.isEditMode
+                  ? localizations.updateDivision
+                  : localizations.createDivision,
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.isEditMode
+                  ? 'Failed to update division: ${e.toString()}'
+                  : 'Failed to create division: ${e.toString()}',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 }
 

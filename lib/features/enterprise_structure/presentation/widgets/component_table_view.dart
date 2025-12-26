@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/custom_status_cell.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,6 +14,7 @@ class ComponentTableView extends StatelessWidget {
   final List<ComponentValue> components;
   final List<ComponentValue> allComponents; // Full list for parent lookup
   final ComponentType? filterType;
+  final List<StructureListItem>? orgStructures; // Org structures for company parent org lookup
   final Function(ComponentValue component)? onView;
   final Function(ComponentValue component)? onEdit;
   final Function(ComponentValue component)? onDelete;
@@ -23,6 +25,7 @@ class ComponentTableView extends StatelessWidget {
     required this.components,
     required this.allComponents,
     this.filterType,
+    this.orgStructures,
     this.onView,
     this.onEdit,
     this.onDelete,
@@ -237,14 +240,14 @@ class ComponentTableView extends StatelessWidget {
           ),
           _buildHeaderCell(
             context,
-            localizations.parentComponent,
+            filterType == ComponentType.company ? 'Parent Org' : localizations.parentComponent,
             columnWidths['parent']!,
             headerPadding,
             isDark,
           ),
           _buildHeaderCell(
             context,
-            localizations.manager,
+            filterType == ComponentType.company ? 'Reg No' : localizations.manager,
             columnWidths['manager']!,
             headerPadding,
             isDark,
@@ -779,6 +782,22 @@ class ComponentTableView extends StatelessWidget {
   String _getParentName(ComponentValue component) {
     if (component.parentId == null) return '-';
     
+    // For companies, look up org structure name
+    if (filterType == ComponentType.company && component.type == ComponentType.company) {
+      final orgStructureId = int.tryParse(component.parentId ?? '');
+      if (orgStructureId != null && orgStructures != null) {
+        try {
+          final structure = orgStructures!.firstWhere(
+            (s) => s.structureId == orgStructureId,
+          );
+          return '${structure.structureName} (${structure.structureCode})';
+        } catch (e) {
+          return '-';
+        }
+      }
+      return '-';
+    }
+    
     // Find parent component from all components (not just filtered)
     final parent = allComponents.firstWhere(
       (c) => c.id == component.parentId,
@@ -855,6 +874,11 @@ class ComponentTableView extends StatelessWidget {
   }
 
   String _formatManagerName(String managerName) {
+    // For companies, managerName is actually registration number
+    if (filterType == ComponentType.company) {
+      return managerName; // Already registration number
+    }
+    
     if (filterType == ComponentType.department && managerName.contains(' ')) {
       // Split manager names with spaces into two lines
       final words = managerName.split(' ');
