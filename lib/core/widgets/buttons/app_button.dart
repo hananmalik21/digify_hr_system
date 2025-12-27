@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 
 enum AppButtonType { primary, secondary, outline, danger }
 
@@ -150,13 +151,10 @@ class AppButton extends StatelessWidget {
     Widget buttonChild;
 
     if (isLoading) {
-      buttonChild = SizedBox(
-        height: 20.h,
-        width: 20.w,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(_getTextColor()),
-        ),
+      buttonChild = AppLoadingIndicator(
+        type: LoadingType.threeBounce,
+        color: _getTextColor(),
+        size: 20.sp,
       );
     } else if (icon != null) {
       buttonChild = Row(

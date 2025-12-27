@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 
 /// Universal CustomButton Widget
 /// This is the ONLY button widget that should be used across the entire app.
@@ -262,13 +263,10 @@ class CustomButton extends StatelessWidget {
     // Show loading indicator
     if (isLoading) {
       return Center(
-        child: SizedBox(
-          width: dimensions.iconSize,
-          height: dimensions.iconSize,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.w,
-            valueColor: AlwaysStoppedAnimation<Color>(colors.foregroundColor),
-          ),
+        child: AppLoadingIndicator(
+          type: LoadingType.threeBounce,
+          color: colors.foregroundColor,
+          size: dimensions.iconSize,
         ),
       );
     }

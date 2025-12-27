@@ -17,4 +17,3 @@ class SidebarItem {
     this.route,
   });
 }
-

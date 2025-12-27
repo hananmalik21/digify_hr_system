@@ -22,9 +22,7 @@ class JobLevelDetailDialog extends StatelessWidget {
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         width: 540.w,
         padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
@@ -38,7 +36,7 @@ class JobLevelDetailDialog extends StatelessWidget {
                 Expanded(
                   child: _buildField(
                     label: localizations.levelName,
-                    value: jobLevel.nameEnglish,
+                    value: jobLevel.nameEn,
                   ),
                 ),
                 SizedBox(width: 12.h),
@@ -121,21 +119,14 @@ class JobLevelDetailDialog extends StatelessWidget {
         IconButton(
           padding: EdgeInsets.zero,
           constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-          icon: Icon(
-            Icons.close,
-            size: 20.sp,
-            color: AppColors.textSecondary,
-          ),
+          icon: Icon(Icons.close, size: 20.sp, color: AppColors.textSecondary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
     );
   }
 
-  Widget _buildField({
-    required String label,
-    required String value,
-  }) {
+  Widget _buildField({required String label, required String value}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -182,12 +173,8 @@ class JobLevelDetailDialog extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
       ),
     );
   }
 }
-

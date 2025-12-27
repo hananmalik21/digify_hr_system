@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/enums/workforce_enums.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_header.dart';
@@ -60,6 +61,8 @@ class _WorkforceStructureScreenState
           onRefresh: () async {
             if (selectedTab == WorkforceTab.jobFamilies) {
               await ref.read(jobFamilyNotifierProvider.notifier).refresh();
+            } else if (selectedTab == WorkforceTab.jobLevels) {
+              await ref.read(jobLevelNotifierProvider.notifier).refresh();
             }
           },
           child: SingleChildScrollView(
@@ -98,7 +101,7 @@ class _WorkforceStructureScreenState
       case WorkforceTab.jobFamilies:
         return JobFamiliesTab(scrollController: _scrollController);
       case WorkforceTab.jobLevels:
-        return const JobLevelsTab();
+        return JobLevelsTab(scrollController: _scrollController);
       case WorkforceTab.gradeStructure:
         return const GradeStructureTab();
       case WorkforceTab.reportingStructure:
