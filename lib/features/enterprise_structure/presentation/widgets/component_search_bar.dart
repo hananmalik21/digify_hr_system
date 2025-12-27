@@ -1,8 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/custom_text_field.dart';
-import 'package:digify_hr_system/core/widgets/filter_pill_dropdown.dart';
+import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/filter_pill_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,8 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
       if (value == localizations.allTypes) return null;
       if (value == localizations.company) return ComponentType.company;
       if (value == localizations.division) return ComponentType.division;
-      if (value == localizations.businessUnit) return ComponentType.businessUnit;
+      if (value == localizations.businessUnit)
+        return ComponentType.businessUnit;
       if (value == localizations.department) return ComponentType.department;
       if (value == localizations.section) return ComponentType.section;
       return null;
@@ -113,9 +114,7 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
           // Tree view toggle
           GestureDetector(
             onTap: () {
-              ref
-                  .read(componentValuesProvider.notifier)
-                  .toggleTreeView();
+              ref.read(componentValuesProvider.notifier).toggleTreeView();
             },
             child: Container(
               padding: EdgeInsetsDirectional.symmetric(
@@ -126,15 +125,15 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
                 color: state.isTreeView
                     ? AppColors.primary
                     : (isDark
-                        ? AppColors.cardBackgroundGreyDark
-                        : AppColors.grayBg),
+                          ? AppColors.cardBackgroundGreyDark
+                          : AppColors.grayBg),
                 borderRadius: BorderRadius.circular(10.r),
                 border: Border.all(
                   color: state.isTreeView
                       ? AppColors.primary
                       : (isDark
-                          ? AppColors.inputBorderDark
-                          : AppColors.inputBorder),
+                            ? AppColors.inputBorderDark
+                            : AppColors.inputBorder),
                   width: 1,
                 ),
               ),
@@ -147,8 +146,8 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
                     color: state.isTreeView
                         ? Colors.white
                         : (isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary),
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondary),
                   ),
                   SizedBox(width: 8.w),
                   Text(
@@ -161,8 +160,8 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
                       color: state.isTreeView
                           ? Colors.white
                           : (isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondary),
+                                ? AppColors.textSecondaryDark
+                                : AppColors.textSecondary),
                       height: 20 / 13.7,
                     ),
                   ),
@@ -175,4 +174,3 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
     );
   }
 }
-

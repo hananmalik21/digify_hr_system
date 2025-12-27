@@ -785,6 +785,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/website_icon.svg
   SvgGenImage get websiteIcon => const SvgGenImage('assets/icons/website_icon.svg');
 
+  /// Directory path: assets/icons/workforce
+  $AssetsIconsWorkforceGen get workforce => const $AssetsIconsWorkforceGen();
+
   /// File path: assets/icons/workforce_planning_icon.svg
   SvgGenImage get workforcePlanningIcon => const SvgGenImage('assets/icons/workforce_planning_icon.svg');
 
@@ -1056,6 +1059,28 @@ class $AssetsIconsGen {
     workforceStructureIcon,
     workforceStructureMainIcon,
   ];
+}
+
+class $AssetsIconsWorkforceGen {
+  const $AssetsIconsWorkforceGen();
+
+  /// File path: assets/icons/workforce/fill_rate.svg
+  SvgGenImage get fillRate => const SvgGenImage('assets/icons/workforce/fill_rate.svg');
+
+  /// File path: assets/icons/workforce/filled_position.svg
+  SvgGenImage get filledPosition => const SvgGenImage('assets/icons/workforce/filled_position.svg');
+
+  /// File path: assets/icons/workforce/total_position.svg
+  SvgGenImage get totalPosition => const SvgGenImage('assets/icons/workforce/total_position.svg');
+
+  /// File path: assets/icons/workforce/warning.svg
+  SvgGenImage get warning => const SvgGenImage('assets/icons/workforce/warning.svg');
+
+  /// File path: assets/icons/workforce/workforce-tab.svg
+  SvgGenImage get workforceTab => const SvgGenImage('assets/icons/workforce/workforce-tab.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [fillRate, filledPosition, totalPosition, warning, workforceTab];
 }
 
 class Assets {

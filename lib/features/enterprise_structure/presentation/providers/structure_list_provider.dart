@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for structure list with pagination
@@ -62,7 +61,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   bool _isDisposed = false;
 
   StructureListNotifier({required this.getStructureListUseCase})
-      : super(const StructureListState()) {
+    : super(const StructureListState()) {
     // Use Future.microtask to ensure the notifier is fully initialized
     Future.microtask(() {
       if (!_isDisposed) {
@@ -106,7 +105,11 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
       return; // Already loading
     } else {
       if (_isDisposed) return;
-      state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
+      state = state.copyWith(
+        isLoading: true,
+        hasError: false,
+        errorMessage: null,
+      );
     }
 
     try {
@@ -171,10 +174,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     );
 
     try {
-      final result = await getStructureListUseCase(
-        page: 1,
-        pageSize: pageSize,
-      );
+      final result = await getStructureListUseCase(page: 1, pageSize: pageSize);
 
       if (_isDisposed) return; // Check if disposed during async operation
 
@@ -292,6 +292,3 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     await loadStructures(refresh: true);
   }
 }
-
-
-

@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 /// Dialog for adding or editing an org unit
 class AddOrgUnitDialog extends ConsumerStatefulWidget {
@@ -59,26 +58,18 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
   final _formKey = GlobalKey<FormState>();
   late final Map<String, TextEditingController> _controllers;
   String? _selectedStatus;
-  String? _selectedCurrency;
 
   int? _selectedParentId;
   String? _selectedParentName;
   bool _isLoading = false;
 
   final List<String> _statusOptions = ['Active', 'Inactive'];
-  final List<String> _currencyOptions = [
-    'KWD - Kuwaiti Dinar',
-    'USD - US Dollar',
-    'EUR - Euro',
-    'GBP - British Pound',
-  ];
 
   @override
   void initState() {
     super.initState();
     final initial = widget.initialValue;
     _selectedStatus = initial?.isActive == true ? 'Active' : 'Inactive';
-    _selectedCurrency = 'KWD - Kuwaiti Dinar';
 
     _controllers = {
       'orgUnitCode': TextEditingController(text: initial?.orgUnitCode ?? ''),
@@ -156,51 +147,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       controller.dispose();
     }
     super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
-    if (_controllers['establishedDate']!.text.isNotEmpty) {
-      try {
-        final dateStr = _controllers['establishedDate']!.text;
-        final parts = dateStr.split('/');
-        if (parts.length == 3) {
-          initialDate = DateTime(
-            int.parse(parts[2]),
-            int.parse(parts[1]),
-            int.parse(parts[0]),
-          );
-        }
-      } catch (e) {
-        initialDate = DateTime.now();
-      }
-    }
-
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      final formattedDate = DateFormat('dd/MM/yyyy').format(picked);
-      setState(() {
-        _controllers['establishedDate']!.text = formattedDate;
-      });
-    }
   }
 
   Future<void> _selectParent() async {
@@ -386,7 +332,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                                 AppInputFormatters.nameEn,
                                 AppInputFormatters.maxLen(120),
                               ],
-
                             ),
                           ),
                           SizedBox(width: 16.w),
@@ -629,9 +574,8 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     int maxLines = 1,
     required bool isMobile,
     required bool isTablet,
-        List<TextInputFormatter>? inputFormatters,   // ✅ add
-
-      }) {
+    List<TextInputFormatter>? inputFormatters, // ✅ add
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -852,157 +796,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                         });
                       }
                     },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCurrencyDropdown(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    bool isMobile,
-    bool isTablet,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.currency,
-          style: TextStyle(
-            fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.sp),
-            fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-            height: 20 / 13,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 16.w,
-            vertical: isMobile ? 14.h : (isTablet ? 13.h : 12.h),
-          ),
-          decoration: BoxDecoration(
-            color: isDark
-                ? AppColors.cardBackgroundGreyDark
-                : const Color(0xFFF9FAFB),
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: isDark
-                  ? AppColors.cardBorderDark
-                  : const Color(0xFFD1D5DB),
-              width: 1,
-            ),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedCurrency,
-              isExpanded: true,
-              isDense: true,
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
-              ),
-              style: TextStyle(
-                fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
-                fontWeight: FontWeight.w400,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
-              ),
-              items: _currencyOptions.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: _isLoading
-                  ? null
-                  : (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          _selectedCurrency = newValue;
-                        });
-                      }
-                    },
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDateField({required String label, required String keyName}) {
-    final localizations = AppLocalizations.of(context)!;
-    final isDark = context.isDark;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 15.3.sp,
-            fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
-            height: 24 / 15.3,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        GestureDetector(
-          onTap: () => _selectDate(context),
-          child: Container(
-            padding: EdgeInsetsDirectional.symmetric(
-              horizontal: 17.w,
-              vertical: 9.h,
-            ),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.inputBgDark : Colors.white,
-              border: Border.all(
-                color: isDark
-                    ? AppColors.inputBorderDark
-                    : const Color(0xFFD1D5DC),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _controllers[keyName]!.text.isEmpty
-                        ? (localizations.hintEstablishedDate.isNotEmpty
-                              ? localizations.hintEstablishedDate
-                              : 'Select date')
-                        : _controllers[keyName]!.text,
-                    style: TextStyle(
-                      fontSize: 15.6.sp,
-                      fontWeight: FontWeight.w400,
-                      color: _controllers[keyName]!.text.isEmpty
-                          ? (isDark
-                                ? AppColors.textPlaceholderDark
-                                : const Color(
-                                    0xFF0A0A0A,
-                                  ).withValues(alpha: 0.5))
-                          : (isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF0A0A0A)),
-                      height: 24 / 15.6,
-                    ),
-                  ),
-                ),
-                SvgIconWidget(
-                  assetPath: 'assets/icons/calendar_icon.svg',
-                  size: 20.sp,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : const Color(0xFF0A0A0A),
-                ),
-              ],
             ),
           ),
         ),

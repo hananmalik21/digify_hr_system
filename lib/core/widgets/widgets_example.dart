@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'custom_button.dart';
-import 'custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
+import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
 
 /// Example file demonstrating the usage of CustomTextField and CustomButton
-/// 
+///
 /// This file is for reference only and should NOT be imported or used in the app.
 /// Refer to README_WIDGETS.md for comprehensive documentation.
 class WidgetsExampleScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class WidgetsExampleScreen extends StatefulWidget {
 
 class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Controllers
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,7 +25,7 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
   final _searchController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _dateController = TextEditingController();
-  
+
   bool _isLoading = false;
 
   @override
@@ -43,9 +43,7 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Widgets Example'),
-      ),
+      appBar: AppBar(title: const Text('Widgets Example')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
         child: Form(
@@ -99,7 +97,8 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
                 helperText: 'Must be at least 8 characters',
                 validator: (value) {
                   if (value?.isEmpty ?? true) return 'Password is required';
-                  if (value!.length < 8) return 'Password must be at least 8 characters';
+                  if (value!.length < 8)
+                    return 'Password must be at least 8 characters';
                   return null;
                 },
               ),
@@ -236,10 +235,7 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
               // Icon-only buttons
               Row(
                 children: [
-                  CustomButton.icon(
-                    icon: Icons.edit,
-                    onPressed: () => _edit(),
-                  ),
+                  CustomButton.icon(icon: Icons.edit, onPressed: () => _edit()),
                   SizedBox(width: 12.w),
                   CustomButton.icon(
                     icon: Icons.delete,
@@ -301,16 +297,16 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
   Future<void> _handleSave() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      
+
       // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
-      
+
       setState(() => _isLoading = false);
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Saved successfully!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Saved successfully!')));
       }
     }
   }
@@ -322,7 +318,7 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       _dateController.text = '${date.day}/${date.month}/${date.year}';
     }
@@ -330,9 +326,9 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Form submitted!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Form submitted!')));
     }
   }
 
@@ -360,4 +356,3 @@ class _WidgetsExampleScreenState extends State<WidgetsExampleScreen> {
   void _delete() => debugPrint('Delete');
   void _share() => debugPrint('Share');
 }
-

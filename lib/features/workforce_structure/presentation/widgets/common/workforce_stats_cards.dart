@@ -1,9 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../../core/widgets/assets/digify_asset.dart';
+import '../../../../../gen/assets.gen.dart';
 
 class WorkforceStatsCards extends StatelessWidget {
   final AppLocalizations localizations;
@@ -26,8 +28,7 @@ class WorkforceStatsCards extends StatelessWidget {
             context,
             label: localizations.totalPositions,
             value: '${stats.totalPositions}',
-            iconPath: 'assets/icons/stat_positions_icon.svg',
-            valueColor: const Color(0xFF155DFC),
+            iconPath: Assets.icons.workforce.totalPosition.path,
             isDark: isDark,
           ),
         ),
@@ -37,8 +38,7 @@ class WorkforceStatsCards extends StatelessWidget {
             context,
             label: localizations.filledPositions,
             value: '${stats.filledPositions}',
-            iconPath: 'assets/icons/stat_filled_icon.svg',
-            valueColor: const Color(0xFF10B981),
+            iconPath: Assets.icons.workforce.filledPosition.path,
             isDark: isDark,
           ),
         ),
@@ -48,8 +48,7 @@ class WorkforceStatsCards extends StatelessWidget {
             context,
             label: localizations.vacantPositions,
             value: '${stats.vacantPositions}',
-            iconPath: 'assets/icons/stat_vacant_icon.svg',
-            valueColor: const Color(0xFFF59E0B),
+            iconPath: Assets.icons.workforce.warning.path,
             isDark: isDark,
           ),
         ),
@@ -62,7 +61,6 @@ class WorkforceStatsCards extends StatelessWidget {
     required String label,
     required String value,
     required String iconPath,
-    required Color valueColor,
     required bool isDark,
   }) {
     return Container(
@@ -104,7 +102,7 @@ class WorkforceStatsCards extends StatelessWidget {
                   height: 20 / 13.7,
                 ),
               ),
-              SvgIconWidget(assetPath: iconPath, size: 20.sp),
+              DigifyAsset(assetPath: iconPath, width: 20.sp, height: 20.sp),
             ],
           ),
           SizedBox(height: 8.h),
@@ -113,7 +111,6 @@ class WorkforceStatsCards extends StatelessWidget {
             style: TextStyle(
               fontSize: 27.3.sp,
               fontWeight: FontWeight.w700,
-              color: valueColor,
               height: 36 / 27.3,
             ),
           ),

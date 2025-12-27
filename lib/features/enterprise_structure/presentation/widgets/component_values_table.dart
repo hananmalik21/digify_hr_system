@@ -1,11 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/action_button_group.dart';
-import 'package:digify_hr_system/core/widgets/component_type_badge.dart';
-import 'package:digify_hr_system/core/widgets/custom_status_cell.dart';
-import 'package:digify_hr_system/core/widgets/custom_table.dart';
-import 'package:digify_hr_system/core/widgets/empty_state_widget.dart';
+import 'package:digify_hr_system/core/widgets/buttons/action_button_group.dart';
+import 'package:digify_hr_system/core/widgets/common/component_type_badge.dart';
+import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/widgets/data/custom_table.dart';
+import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:flutter/material.dart';
@@ -71,9 +71,7 @@ class ComponentValuesTable extends ConsumerWidget {
         width: 150.w,
         cellBuilder: (value, rowData) {
           final component = rowData['component'] as ComponentValue;
-          return ComponentTypeBadge(
-            type: _getComponentType(component.type),
-          );
+          return ComponentTypeBadge(type: _getComponentType(component.type));
         },
       ),
       TableColumn(
@@ -98,9 +96,7 @@ class ComponentValuesTable extends ConsumerWidget {
             component.parentId ?? '-',
             style: TextStyle(
               fontSize: 13.7.sp,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : AppColors.textPrimary,
+              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           );
         },
@@ -127,9 +123,7 @@ class ComponentValuesTable extends ConsumerWidget {
             component.managerId ?? '-',
             style: TextStyle(
               fontSize: 13.7.sp,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : AppColors.textPrimary,
+              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           );
         },
@@ -144,9 +138,7 @@ class ComponentValuesTable extends ConsumerWidget {
             component.location ?? '-',
             style: TextStyle(
               fontSize: 13.7.sp,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : AppColors.textPrimary,
+              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           );
         },
@@ -190,19 +182,16 @@ class ComponentValuesTable extends ConsumerWidget {
           return ActionButtonGroup(
             onView: onView != null
                 ? () {
-
                     onView!();
                   }
                 : null,
             onEdit: onEdit != null
                 ? () {
-
                     onEdit!();
                   }
                 : null,
             onDelete: onDelete != null
                 ? () {
-
                     onDelete!();
                   }
                 : null,
@@ -241,11 +230,8 @@ class ComponentValuesTable extends ConsumerWidget {
         title: localizations.noComponentsFound,
         message: localizations.tryAdjustingSearchCriteria,
         actionLabel: localizations.addNewComponent,
-        onAction: () {
-
-        },
+        onAction: () {},
       ),
     );
   }
 }
-
