@@ -1,12 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_structure.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_form_dialog.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GradeStructureCard extends StatelessWidget {
-  final GradeStructure grade;
+  final Grade grade;
 
   const GradeStructureCard({super.key, required this.grade});
 
@@ -73,12 +72,12 @@ class GradeStructureCard extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  GradeFormDialog.show(
-                    context,
-                    grade: grade,
-                    isEdit: true,
-                    onSave: (updated) {},
-                  );
+                  // GradeFormDialog.show(
+                  //   context,
+                  //   grade: grade,
+                  //   isEdit: true,
+                  //   onSave: (updated) {},
+                  // );
                 },
                 child: SvgIconWidget(
                   assetPath: 'assets/icons/edit_icon.svg',
@@ -112,7 +111,7 @@ class GradeStructureCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      step.label,
+                      'Step ${step.step}',
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -121,7 +120,7 @@ class GradeStructureCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      step.amount,
+                      '${step.salary.toStringAsFixed(0)} ${grade.currencyCode}',
                       style: TextStyle(
                         fontSize: 15.8.sp,
                         fontWeight: FontWeight.w600,

@@ -36,4 +36,5 @@ class ApiEndpoints {
   // Workforce Structure endpoints
   static const String jobFamilies = '$api/job-families';
   static const String jobLevels = '$api/job-levels';
+  static const String grades = '$api/grades';
 }

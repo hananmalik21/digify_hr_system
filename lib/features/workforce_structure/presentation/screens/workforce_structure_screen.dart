@@ -103,7 +103,7 @@ class _WorkforceStructureScreenState
       case WorkforceTab.jobLevels:
         return JobLevelsTab(scrollController: _scrollController);
       case WorkforceTab.gradeStructure:
-        return const GradeStructureTab();
+        return GradeStructureTab(scrollController: _scrollController);
       case WorkforceTab.reportingStructure:
         return const ReportingStructureTab();
       case WorkforceTab.positionTree:
