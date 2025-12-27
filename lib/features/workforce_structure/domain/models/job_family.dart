@@ -1,5 +1,6 @@
-/// Job Family domain model
+/// Job Family domain model (Entity)
 /// Represents a job family grouping positions by function
+/// This is a pure domain entity with no serialization logic
 class JobFamily {
   final String code;
   final String nameEnglish;
@@ -67,4 +68,3 @@ class JobFamily {
     return 'JobFamily(code: $code, nameEnglish: $nameEnglish, nameArabic: $nameArabic)';
   }
 }
-
