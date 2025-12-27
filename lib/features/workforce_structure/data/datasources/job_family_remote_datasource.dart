@@ -13,6 +13,14 @@ abstract class JobFamilyRemoteDataSource {
     required String description,
     String status = 'ACTIVE',
   });
+  Future<JobFamily> updateJobFamily({
+    required int id,
+    required String code,
+    required String nameEnglish,
+    required String nameArabic,
+    required String description,
+    String status = 'ACTIVE',
+  });
   Future<void> deleteJobFamily({required int id, bool hard = true});
 }
 
@@ -56,7 +64,30 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
       },
     );
 
-    // Parse response using data model, then convert to entity
+    final model = JobFamilyModel.fromJson(response['data']);
+    return model.toEntity();
+  }
+
+  @override
+  Future<JobFamily> updateJobFamily({
+    required int id,
+    required String code,
+    required String nameEnglish,
+    required String nameArabic,
+    required String description,
+    String status = 'ACTIVE',
+  }) async {
+    final response = await apiClient.put(
+      '${ApiEndpoints.jobFamilies}/$id',
+      body: {
+        'job_family_code': code,
+        'job_family_name_en': nameEnglish,
+        'job_family_name_ar': nameArabic,
+        'description': description,
+        'status': status,
+      },
+    );
+
     final model = JobFamilyModel.fromJson(response['data']);
     return model.toEntity();
   }

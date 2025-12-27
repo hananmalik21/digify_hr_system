@@ -32,7 +32,7 @@ class JobFamilyModel {
   /// Create from API JSON response
   factory JobFamilyModel.fromJson(Map<String, dynamic> json) {
     return JobFamilyModel(
-      id: json['id'] as int? ?? 0,
+      id: json['job_family_id'] as int? ?? json['id'] as int? ?? 0,
       code: json['job_family_code'] as String? ?? json['code'] as String? ?? '',
       nameEnglish: json['job_family_name_en'] as String? ?? '',
       nameArabic: json['job_family_name_ar'] as String? ?? '',
