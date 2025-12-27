@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,18 +78,38 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     try {
-      await ref.createJobFamily(
-        code: codeController.text.trim(),
-        nameEnglish: englishController.text.trim(),
-        nameArabic: arabicController.text.trim(),
-        description: descriptionController.text.trim(),
-      );
-      context.pop();
-      ToastService.success(
-        context,
-        'Job family created successfully',
-        title: 'Success',
-      );
+      if (widget.isEdit && widget.jobFamily != null) {
+        await ref.updateJobFamily(
+          id: widget.jobFamily!.id,
+          code: codeController.text.trim(),
+          nameEnglish: englishController.text.trim(),
+          nameArabic: arabicController.text.trim(),
+          description: descriptionController.text.trim(),
+        );
+        if (mounted) {
+          context.pop();
+          ToastService.success(
+            context,
+            'Job family updated successfully',
+            title: 'Success',
+          );
+        }
+      } else {
+        await ref.createJobFamily(
+          code: codeController.text.trim(),
+          nameEnglish: englishController.text.trim(),
+          nameArabic: arabicController.text.trim(),
+          description: descriptionController.text.trim(),
+        );
+        if (mounted) {
+          context.pop();
+          ToastService.success(
+            context,
+            'Job family created successfully',
+            title: 'Success',
+          );
+        }
+      }
     } catch (e) {
       if (mounted) {
         ToastService.error(context, e.toString(), title: 'Error');
@@ -154,6 +175,7 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
                 label: localizations.jobFamilyCode,
                 hint: localizations.jobFamilyCodeHint,
                 controller: codeController,
+                readOnly: isEdit,
               ),
               SizedBox(height: 12.h),
               _buildField(
@@ -205,7 +227,9 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
                           ? localizations.saveChanges
                           : localizations.createJobFamily,
                       onPressed: _handleSubmit,
-                      isLoading: ref.watch(jobFamilyCreatingProvider),
+                      isLoading: isEdit
+                          ? ref.watch(jobFamilyUpdateStateProvider).isUpdating
+                          : ref.watch(jobFamilyCreatingProvider),
                     ),
                   ),
                 ],

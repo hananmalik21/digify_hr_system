@@ -37,6 +37,25 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
   }
 
   @override
+  Future<JobFamily> updateJobFamily({
+    required int id,
+    required String code,
+    required String nameEnglish,
+    required String nameArabic,
+    required String description,
+    String status = 'ACTIVE',
+  }) async {
+    return await remoteDataSource.updateJobFamily(
+      id: id,
+      code: code,
+      nameEnglish: nameEnglish,
+      nameArabic: nameArabic,
+      description: description,
+      status: status,
+    );
+  }
+
+  @override
   Future<void> deleteJobFamily({required int id, bool hard = true}) async {
     return await remoteDataSource.deleteJobFamily(id: id, hard: hard);
   }

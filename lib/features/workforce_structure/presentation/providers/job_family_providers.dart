@@ -9,8 +9,10 @@ import 'package:digify_hr_system/features/workforce_structure/domain/repositorie
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_families_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_create_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
 
 // Providers for dependency injection
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -38,6 +40,12 @@ final getJobFamiliesUseCaseProvider = Provider<GetJobFamiliesUseCase>((ref) {
 
 final createJobFamilyUseCaseProvider = Provider<CreateJobFamilyUseCase>((ref) {
   return CreateJobFamilyUseCase(
+    repository: ref.read(jobFamilyRepositoryProvider),
+  );
+});
+
+final updateJobFamilyUseCaseProvider = Provider<UpdateJobFamilyUseCase>((ref) {
+  return UpdateJobFamilyUseCase(
     repository: ref.read(jobFamilyRepositoryProvider),
   );
 });
@@ -190,6 +198,47 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     }
   }
 
+  Future<JobFamily> updateJobFamily(
+    WidgetRef ref,
+    UpdateJobFamilyUseCase updateUseCase, {
+    required int id,
+    required String code,
+    required String nameEnglish,
+    required String nameArabic,
+    required String description,
+    String status = 'ACTIVE',
+  }) async {
+    ref.read(jobFamilyUpdateStateProvider.notifier).state =
+        JobFamilyUpdateState(isUpdating: true, updatingId: id);
+
+    try {
+      final updatedJobFamily = await updateUseCase(
+        id: id,
+        code: code,
+        nameEnglish: nameEnglish,
+        nameArabic: nameArabic,
+        description: description,
+        status: status,
+      );
+
+      final currentItems = state.items;
+      final updatedItems = currentItems.map((item) {
+        return item.id == id ? updatedJobFamily : item;
+      }).toList();
+
+      state = state.copyWith(items: updatedItems);
+
+      ref.read(jobFamilyUpdateStateProvider.notifier).state =
+          const JobFamilyUpdateState(isUpdating: false);
+
+      return updatedJobFamily;
+    } catch (e) {
+      ref.read(jobFamilyUpdateStateProvider.notifier).state =
+          JobFamilyUpdateState(isUpdating: false, error: e.toString());
+      rethrow;
+    }
+  }
+
   @override
   Future<void> refresh() async {
     reset();
@@ -271,6 +320,26 @@ extension JobFamilyProviderExtensions on WidgetRef {
       read(deleteJobFamilyUseCaseProvider),
       id: id,
       hard: hard,
+    );
+  }
+
+  Future<JobFamily> updateJobFamily({
+    required int id,
+    required String code,
+    required String nameEnglish,
+    required String nameArabic,
+    required String description,
+    String status = 'ACTIVE',
+  }) {
+    return read(jobFamilyNotifierProvider.notifier).updateJobFamily(
+      this,
+      read(updateJobFamilyUseCaseProvider),
+      id: id,
+      code: code,
+      nameEnglish: nameEnglish,
+      nameArabic: nameArabic,
+      description: description,
+      status: status,
     );
   }
 }
