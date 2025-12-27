@@ -2731,4 +2731,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get step => 'الخطوة';
+
+  @override
+  String get deleteJobLevel => 'حذف مستوى الوظيفة';
+
+  @override
+  String get deleteJobLevelConfirmationMessage =>
+      'هل أنت متأكد من رغبتك في حذف مستوى الوظيفة هذا؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get jobLevelCreatedSuccessfully => 'تم إنشاء مستوى الوظيفة بنجاح';
+
+  @override
+  String get jobLevelUpdatedSuccessfully => 'تم تحديث مستوى الوظيفة بنجاح';
+
+  @override
+  String get jobLevelDeletedSuccessfully => 'تم حذف مستوى الوظيفة بنجاح';
+
+  @override
+  String get errorCreatingJobLevel => 'حدث خطأ أثناء إنشاء مستوى الوظيفة';
+
+  @override
+  String get errorDeletingJobLevel => 'حدث خطأ أثناء حذف مستوى الوظيفة';
 }

@@ -5395,6 +5395,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step'**
   String get step;
+
+  /// No description provided for @deleteJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Job Level'**
+  String get deleteJobLevel;
+
+  /// No description provided for @deleteJobLevelConfirmationMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this job level? This action cannot be undone.'**
+  String get deleteJobLevelConfirmationMessage;
+
+  /// No description provided for @jobLevelCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job level created successfully'**
+  String get jobLevelCreatedSuccessfully;
+
+  /// No description provided for @jobLevelUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job level updated successfully'**
+  String get jobLevelUpdatedSuccessfully;
+
+  /// No description provided for @jobLevelDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job level deleted successfully'**
+  String get jobLevelDeletedSuccessfully;
+
+  /// No description provided for @errorCreatingJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while creating the job level'**
+  String get errorCreatingJobLevel;
+
+  /// No description provided for @errorDeletingJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while deleting the job level'**
+  String get errorDeletingJobLevel;
 }
 
 class _AppLocalizationsDelegate

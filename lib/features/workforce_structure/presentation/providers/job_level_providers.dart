@@ -4,7 +4,9 @@ import 'package:digify_hr_system/features/workforce_structure/data/repositories/
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/job_level_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_job_level_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_level_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_levels_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_job_level_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_create_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +33,14 @@ final createJobLevelUseCaseProvider = Provider<CreateJobLevelUseCase>((ref) {
   return CreateJobLevelUseCase(ref.read(jobLevelRepositoryProvider));
 });
 
+final updateJobLevelUseCaseProvider = Provider<UpdateJobLevelUseCase>((ref) {
+  return UpdateJobLevelUseCase(ref.read(jobLevelRepositoryProvider));
+});
+
+final deleteJobLevelUseCaseProvider = Provider<DeleteJobLevelUseCase>((ref) {
+  return DeleteJobLevelUseCase(ref.read(jobLevelRepositoryProvider));
+});
+
 // Create operation state provider
 final jobLevelCreateStateProvider = StateProvider<JobLevelCreateState>(
   (ref) => const JobLevelCreateState(),
@@ -42,9 +52,15 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
     implements PaginationController<JobLevel> {
   final GetJobLevelsUseCase _getJobLevelsUseCase;
   final CreateJobLevelUseCase _createJobLevelUseCase;
+  final UpdateJobLevelUseCase _updateJobLevelUseCase;
+  final DeleteJobLevelUseCase _deleteJobLevelUseCase;
 
-  JobLevelNotifier(this._getJobLevelsUseCase, this._createJobLevelUseCase)
-    : super(const PaginationState());
+  JobLevelNotifier(
+    this._getJobLevelsUseCase,
+    this._createJobLevelUseCase,
+    this._updateJobLevelUseCase,
+    this._deleteJobLevelUseCase,
+  ) : super(const PaginationState());
 
   /// Create a job level and update the state
   Future<JobLevel> createJobLevel(WidgetRef ref, JobLevel jobLevel) async {
@@ -64,6 +80,32 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
       );
 
       return createdLevel;
+    } catch (e) {
+      ref.read(jobLevelCreateStateProvider.notifier).state =
+          JobLevelCreateState(isCreating: false, error: e.toString());
+      rethrow;
+    }
+  }
+
+  /// Update a job level and update the state
+  Future<JobLevel> updateJobLevel(WidgetRef ref, JobLevel jobLevel) async {
+    ref.read(jobLevelCreateStateProvider.notifier).state =
+        const JobLevelCreateState(isCreating: true);
+
+    try {
+      final updatedLevel = await _updateJobLevelUseCase.execute(jobLevel);
+
+      ref.read(jobLevelCreateStateProvider.notifier).state =
+          const JobLevelCreateState(isCreating: false);
+
+      // Update the list
+      state = state.copyWith(
+        items: state.items.map((item) {
+          return item.id == updatedLevel.id ? updatedLevel : item;
+        }).toList(),
+      );
+
+      return updatedLevel;
     } catch (e) {
       ref.read(jobLevelCreateStateProvider.notifier).state =
           JobLevelCreateState(isCreating: false, error: e.toString());
@@ -138,6 +180,26 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
   void reset() {
     state = const PaginationState();
   }
+
+  /// Delete a job level and update the state
+  Future<void> deleteJobLevel(int id) async {
+    final previousItems = state.items;
+    state = state.copyWith(
+      items: state.items.where((item) => item.id != id).toList(),
+      totalItems: state.totalItems - 1,
+    );
+
+    try {
+      await _deleteJobLevelUseCase.execute(id);
+    } catch (e) {
+      // Rollback on error
+      state = state.copyWith(
+        items: previousItems,
+        totalItems: previousItems.length,
+      );
+      rethrow;
+    }
+  }
 }
 
 // Provider for the notifier
@@ -146,6 +208,8 @@ final jobLevelNotifierProvider =
       return JobLevelNotifier(
         ref.read(getJobLevelsUseCaseProvider),
         ref.read(createJobLevelUseCaseProvider),
+        ref.read(updateJobLevelUseCaseProvider),
+        ref.read(deleteJobLevelUseCaseProvider),
       );
     });
 
