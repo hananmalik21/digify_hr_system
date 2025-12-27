@@ -8,6 +8,8 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/job_
 abstract class JobLevelRemoteDataSource {
   Future<JobLevelResponse> getJobLevels({int page = 1, int pageSize = 10});
   Future<JobLevel> createJobLevel(Map<String, dynamic> data);
+  Future<JobLevel> updateJobLevel(int id, Map<String, dynamic> data);
+  Future<void> deleteJobLevel(int id, {bool hard = true});
 }
 
 class JobLevelRemoteDataSourceImpl implements JobLevelRemoteDataSource {
@@ -38,5 +40,25 @@ class JobLevelRemoteDataSourceImpl implements JobLevelRemoteDataSource {
     return JobLevelModel.fromJson(
       response['data'] as Map<String, dynamic>,
     ).toEntity();
+  }
+
+  @override
+  Future<JobLevel> updateJobLevel(int id, Map<String, dynamic> data) async {
+    final response = await apiClient.put(
+      '${ApiEndpoints.jobLevels}/$id',
+      body: data,
+    );
+
+    return JobLevelModel.fromJson(
+      response['data'] as Map<String, dynamic>,
+    ).toEntity();
+  }
+
+  @override
+  Future<void> deleteJobLevel(int id, {bool hard = true}) async {
+    await apiClient.delete(
+      '${ApiEndpoints.jobLevels}/$id',
+      queryParameters: {'hard': hard.toString()},
+    );
   }
 }

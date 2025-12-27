@@ -32,11 +32,16 @@ class JobLevelRepositoryImpl implements JobLevelRepository {
 
   @override
   Future<JobLevel> updateJobLevel(JobLevel jobLevel) async {
-    throw UnimplementedError();
+    final data = {
+      'description': jobLevel.description,
+      'min_grade_id': jobLevel.minGradeId,
+      'max_grade_id': jobLevel.maxGradeId,
+    };
+    return await remoteDataSource.updateJobLevel(jobLevel.id, data);
   }
 
   @override
   Future<void> deleteJobLevel(int id) async {
-    throw UnimplementedError();
+    await remoteDataSource.deleteJobLevel(id, hard: true);
   }
 }

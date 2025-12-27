@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,6 +77,7 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
 
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
+    final localizations = AppLocalizations.of(context)!;
 
     try {
       final jobLevel = JobLevel(
@@ -89,20 +91,35 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
       );
 
       if (widget.isEdit) {
-        // Handle update later if needed
+        final updatedLevel = await ref
+            .read(jobLevelNotifierProvider.notifier)
+            .updateJobLevel(ref, jobLevel);
+
+        if (mounted) {
+          ToastService.success(
+            context,
+            localizations.jobLevelUpdatedSuccessfully,
+          );
+          widget.onSave?.call(updatedLevel);
+          Navigator.of(context).pop();
+        }
       } else {
         final createdLevel = await ref
             .read(jobLevelNotifierProvider.notifier)
             .createJobLevel(ref, jobLevel);
 
-        widget.onSave?.call(createdLevel);
-        if (mounted) Navigator.of(context).pop();
+        if (mounted) {
+          ToastService.success(
+            context,
+            localizations.jobLevelCreatedSuccessfully,
+          );
+          widget.onSave?.call(createdLevel);
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ToastService.error(context, localizations.errorCreatingJobLevel);
       }
     }
   }
@@ -168,12 +185,14 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
                   label: localizations.levelName,
                   hint: localizations.levelNameHint,
                   controller: nameController,
+                  readOnly: isEdit,
                 ),
                 SizedBox(height: 12.h),
                 _buildField(
                   label: localizations.jobLevelCode,
                   hint: localizations.jobLevelCodeHint,
                   controller: codeController,
+                  readOnly: isEdit,
                 ),
                 SizedBox(height: 12.h),
                 _buildField(
@@ -268,8 +287,9 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
               fontSize: 14.sp,
               color: AppColors.textSecondary,
             ),
-            fillColor: AppColors.inputBg,
+            fillColor: readOnly ? AppColors.inputBg : AppColors.inputBg,
             filled: true,
+            enabled: !readOnly,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 14.w,
               vertical: 12.h,

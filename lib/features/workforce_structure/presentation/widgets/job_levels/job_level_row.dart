@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_detail_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_form_dialog.dart';
@@ -7,13 +8,18 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class JobLevelRow extends StatelessWidget {
+import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class JobLevelRow extends ConsumerWidget {
   final JobLevel level;
 
   const JobLevelRow({super.key, required this.level});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -119,7 +125,39 @@ class JobLevelRow extends StatelessWidget {
                   },
                 ),
                 SizedBox(width: 8.w),
-                _buildActionIcon(Assets.icons.redDeleteIcon.path),
+                _buildActionIcon(
+                  Assets.icons.redDeleteIcon.path,
+                  onTap: () async {
+                    final localizations = AppLocalizations.of(context)!;
+                    final confirmed = await DeleteConfirmationDialog.show(
+                      context,
+                      title: localizations.deleteJobLevel,
+                      message: localizations.deleteJobLevelConfirmationMessage,
+                      itemName: level.nameEn,
+                    );
+
+                    if (confirmed == true) {
+                      try {
+                        await ref
+                            .read(jobLevelNotifierProvider.notifier)
+                            .deleteJobLevel(level.id);
+                        if (context.mounted) {
+                          ToastService.success(
+                            context,
+                            localizations.jobLevelDeletedSuccessfully,
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ToastService.error(
+                            context,
+                            localizations.errorDeletingJobLevel,
+                          );
+                        }
+                      }
+                    }
+                  },
+                ),
               ],
             ),
             170.w,
