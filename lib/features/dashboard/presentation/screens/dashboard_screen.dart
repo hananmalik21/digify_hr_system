@@ -184,7 +184,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;

@@ -104,10 +104,7 @@ class WorkforceStatsCards extends StatelessWidget {
                   height: 20 / 13.7,
                 ),
               ),
-              SvgIconWidget(
-                assetPath: iconPath,
-                size: 20.sp,
-              ),
+              SvgIconWidget(assetPath: iconPath, size: 20.sp),
             ],
           ),
           SizedBox(height: 8.h),

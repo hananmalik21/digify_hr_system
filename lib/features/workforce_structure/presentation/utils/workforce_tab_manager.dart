@@ -1,27 +1,24 @@
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/enums/workforce_enums.dart';
 
 class WorkforceTabManager {
-  static String getTabFromRoute(
-    String? routeTab,
-    AppLocalizations localizations,
-  ) {
-    if (routeTab == null) return localizations.positions;
+  static WorkforceTab getTabFromRoute(String? routeTab) {
+    if (routeTab == null) return WorkforceTab.positions;
 
     switch (routeTab) {
       case 'positions':
-        return localizations.positions;
+        return WorkforceTab.positions;
       case 'jobFamilies':
-        return localizations.jobFamilies;
+        return WorkforceTab.jobFamilies;
       case 'jobLevels':
-        return localizations.jobLevels;
+        return WorkforceTab.jobLevels;
       case 'gradeStructure':
-        return localizations.gradeStructure;
+        return WorkforceTab.gradeStructure;
       case 'reportingStructure':
-        return localizations.reportingStructure;
+        return WorkforceTab.reportingStructure;
       case 'positionTree':
-        return localizations.positionTree;
+        return WorkforceTab.positionTree;
       default:
-        return localizations.positions;
+        return WorkforceTab.positions;
     }
   }
 }
