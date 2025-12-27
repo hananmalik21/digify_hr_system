@@ -20,6 +20,7 @@ class DivisionOverview {
   final String? city;
   final String? establishedDate;
   final String? description;
+  final int? companyId;
 
   const DivisionOverview({
     required this.id,
@@ -40,6 +41,7 @@ class DivisionOverview {
     this.city,
     this.establishedDate,
     this.description,
+    this.companyId,
   });
 }
 

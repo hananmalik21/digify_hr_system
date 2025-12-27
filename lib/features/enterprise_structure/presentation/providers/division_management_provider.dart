@@ -1,103 +1,122 @@
+import 'dart:async';
+
+import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_divisions_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final divisionListProvider = Provider<List<DivisionOverview>>((ref) {
-  return const [
-    DivisionOverview(
-      id: '1',
-      name: 'Finance & Accounting Division',
-      nameArabic: 'قسم المالية والمحاسبة',
-      code: 'DIV-FIN',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Ahmed Al-Rashid',
-      isActive: true,
-      employees: 85,
-      departments: 6,
-      budget: '2.5M',
-      location: 'Kuwait City HQ',
-      industry: 'Financial Services',
-      headEmail: 'ahmed.rashid@kuwaitholdings.com',
-      headPhone: '+965 2222 3344',
-      address: 'Tower A, 5th Floor, Al-Shuhada Street',
-      city: 'Kuwait City',
-      establishedDate: '2010-01-15',
-      description: 'Responsible for all financial operations, accounting, and treasury management',
-    ),
-    DivisionOverview(
-      id: '2',
-      name: 'Human Resources Division',
-      nameArabic: 'قسم الموارد البشرية',
-      code: 'DIV-HR',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Fatima Al-Salem',
-      isActive: true,
-      employees: 45,
-      departments: 4,
-      budget: '1.8M',
-      location: 'Kuwait City HQ',
-      industry: 'People Management',
-      headEmail: 'fatima.salem@kuwaitholdings.com',
-      headPhone: '+965 2222 5566',
-      address: 'Tower A, 3rd Floor, Al-Shuhada Street',
-      city: 'Kuwait City',
-      establishedDate: '2012-03-20',
-      description: 'Managing talent acquisition, employee relations, and organizational development',
-    ),
-    DivisionOverview(
-      id: '3',
-      name: 'Operations Division',
-      nameArabic: 'قسم العمليات',
-      code: 'DIV-OPS',
-      companyName: 'Kuwait Petroleum Services',
-      headName: 'Mohammed Al-Kandari',
-      isActive: true,
-      employees: 320,
-      departments: 8,
-      budget: '8.5M',
-      location: 'Ahmadi Operations Center',
-      industry: 'Operational Excellence',
-      headEmail: 'mohammed.kandari@kps.com',
-      headPhone: '+965 2398 7700',
-      address: 'Industrial Zone B, Building 15',
-      city: 'Ahmadi',
-      establishedDate: '2005-08-10',
-      description: 'Overseeing daily operations, logistics, and production activities',
-    ),
-    DivisionOverview(
-      id: '4',
-      name: 'Information Technology Division',
-      nameArabic: 'قسم تقنية المعلومات',
-      code: 'DIV-IT',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Sara Al-Mutairi',
-      isActive: true,
-      employees: 62,
-      departments: 5,
-      budget: '3.2M',
-      location: 'Kuwait City HQ',
-      industry: 'Technology & Innovation',
-      headEmail: 'sara.mutairi@kuwaitholdings.com',
-      headPhone: '+965 2222 8899',
-      address: 'Tower B, 7th Floor, Al-Shuhada Street',
-      city: 'Kuwait City',
-      establishedDate: '2015-05-01',
-      description: 'Managing IT infrastructure, software development, and digital transformation initiatives',
-    ),
-  ];
+/// State for divisions list
+class DivisionsState {
+  final List<DivisionOverview> divisions;
+  final bool isLoading;
+  final String? errorMessage;
+  final bool hasError;
+  final String searchQuery;
+  final int currentPage;
+  final int pageSize;
+
+  const DivisionsState({
+    this.divisions = const [],
+    this.isLoading = false,
+    this.errorMessage,
+    this.hasError = false,
+    this.searchQuery = '',
+    this.currentPage = 1,
+    this.pageSize = 10,
+  });
+
+  DivisionsState copyWith({
+    List<DivisionOverview>? divisions,
+    bool? isLoading,
+    String? errorMessage,
+    bool? hasError,
+    String? searchQuery,
+    int? currentPage,
+    int? pageSize,
+  }) {
+    return DivisionsState(
+      divisions: divisions ?? this.divisions,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage ?? this.errorMessage,
+      hasError: hasError ?? this.hasError,
+      searchQuery: searchQuery ?? this.searchQuery,
+      currentPage: currentPage ?? this.currentPage,
+      pageSize: pageSize ?? this.pageSize,
+    );
+  }
+}
+
+/// Notifier for divisions list
+/// This provider automatically loads divisions when accessed
+class DivisionsNotifier extends StateNotifier<DivisionsState> {
+  final GetDivisionsUseCase getDivisionsUseCase;
+  Timer? _debounceTimer;
+
+  DivisionsNotifier({required this.getDivisionsUseCase})
+      : super(const DivisionsState()) {
+    _loadDivisions();
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadDivisions({String? search, int? page, int? pageSize}) async {
+    state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
+
+    try {
+      final divisions = await getDivisionsUseCase(
+        search: search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : null),
+        page: page ?? state.currentPage,
+        pageSize: pageSize ?? state.pageSize,
+      );
+      state = state.copyWith(
+        divisions: divisions,
+        isLoading: false,
+        hasError: false,
+        searchQuery: search != null ? search : state.searchQuery,
+        currentPage: page ?? state.currentPage,
+        pageSize: pageSize ?? state.pageSize,
+      );
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.message,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: 'Failed to load divisions: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Search divisions with debouncing
+  void searchDivisions(String query) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _loadDivisions(
+        search: query.trim(),
+        page: 1, // Reset to first page on search
+      );
+    });
+  }
+
+  Future<void> refresh() async {
+    await _loadDivisions();
+  }
+}
+
+/// Provider for divisions list
+/// This provider automatically loads divisions every time it's accessed
+final divisionsProvider =
+    StateNotifierProvider.autoDispose<DivisionsNotifier, DivisionsState>(
+        (ref) {
+  final getDivisionsUseCase = ref.watch(getDivisionsUseCaseProvider);
+  return DivisionsNotifier(getDivisionsUseCase: getDivisionsUseCase);
 });
-
-final divisionSearchQueryProvider = StateProvider<String>((ref) => '');
-
-final filteredDivisionProvider = Provider<List<DivisionOverview>>((ref) {
-  final divisions = ref.watch(divisionListProvider);
-  final query = ref.watch(divisionSearchQueryProvider).toLowerCase();
-
-  if (query.isEmpty) return divisions;
-
-  return divisions.where((division) {
-    return division.name.toLowerCase().contains(query) ||
-        division.code.toLowerCase().contains(query) ||
-        division.headName.toLowerCase().contains(query);
-  }).toList();
-});
-

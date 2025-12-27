@@ -47,5 +47,43 @@ class EnterpriseStructureRepositoryImpl
       );
     }
   }
+
+  @override
+  Future<EnterpriseStructure> updateEnterpriseStructure(
+    int structureId,
+    EnterpriseStructure structure,
+  ) async {
+    try {
+      // Convert domain model to DTO
+      final requestDto = SaveEnterpriseStructureRequestDto(
+        enterpriseId: structure.enterpriseId,
+        structureCode: structure.structureCode,
+        structureName: structure.structureName,
+        structureType: structure.structureType,
+        description: structure.description,
+        isActive: structure.isActive,
+        levels: structure.levels
+            .map((level) => StructureLevelDto(
+                  structureLevelId: level.structureLevelId,
+                  levelNumber: level.levelNumber,
+                  displayOrder: level.displayOrder,
+                ))
+            .toList(),
+      );
+
+      await remoteDataSource.updateEnterpriseStructure(structureId, requestDto);
+
+      // Convert response to domain model
+      // Assuming the API returns the updated structure
+      return structure; // Return the structure as-is, or parse from response if needed
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Repository error: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
 }
 

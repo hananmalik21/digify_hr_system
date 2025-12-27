@@ -1,100 +1,279 @@
+import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_business_units_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// State for business unit list with pagination
+class BusinessUnitListState {
+  final List<BusinessUnitOverview> businessUnits;
+  final bool isLoading;
+  final bool isLoadingMore;
+  final String? errorMessage;
+  final bool hasError;
+  final PaginationInfo? pagination;
+  final int total;
+  final int currentPage;
+  final int pageSize;
+  final String? searchQuery;
+
+  const BusinessUnitListState({
+    this.businessUnits = const [],
+    this.isLoading = false,
+    this.isLoadingMore = false,
+    this.errorMessage,
+    this.hasError = false,
+    this.pagination,
+    this.total = 0,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.searchQuery,
+  });
+
+  BusinessUnitListState copyWith({
+    List<BusinessUnitOverview>? businessUnits,
+    bool? isLoading,
+    bool? isLoadingMore,
+    String? errorMessage,
+    bool? hasError,
+    PaginationInfo? pagination,
+    int? total,
+    int? currentPage,
+    int? pageSize,
+    String? searchQuery,
+  }) {
+    return BusinessUnitListState(
+      businessUnits: businessUnits ?? this.businessUnits,
+      isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      errorMessage: errorMessage ?? this.errorMessage,
+      hasError: hasError ?? this.hasError,
+      pagination: pagination ?? this.pagination,
+      total: total ?? this.total,
+      currentPage: currentPage ?? this.currentPage,
+      pageSize: pageSize ?? this.pageSize,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
+
+  bool get hasMore => pagination?.hasNext ?? false;
+  bool get hasPrevious => pagination?.hasPrevious ?? false;
+}
+
+/// Notifier for business unit list with pagination
+class BusinessUnitListNotifier extends StateNotifier<BusinessUnitListState> {
+  final GetBusinessUnitsUseCase getBusinessUnitsUseCase;
+  bool _isDisposed = false;
+
+  BusinessUnitListNotifier({required this.getBusinessUnitsUseCase})
+      : super(const BusinessUnitListState()) {
+    Future.microtask(() {
+      if (!_isDisposed) {
+        loadBusinessUnits();
+      }
+    });
+  }
+
+  /// Constructor with custom page size
+  BusinessUnitListNotifier.withPageSize({
+    required this.getBusinessUnitsUseCase,
+    int pageSize = 1000,
+  }) : super(BusinessUnitListState(pageSize: pageSize)) {
+    Future.microtask(() {
+      if (!_isDisposed) {
+        loadBusinessUnits();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  /// Load business units for the first page
+  Future<void> loadBusinessUnits({bool refresh = false, String? search}) async {
+    if (_isDisposed) return;
+
+    final searchQuery = search ?? state.searchQuery;
+
+    if (refresh) {
+      if (_isDisposed) return;
+      state = state.copyWith(
+        isLoading: true,
+        hasError: false,
+        errorMessage: null,
+        currentPage: 1,
+        searchQuery: searchQuery,
+      );
+    } else if (state.isLoading) {
+      return; // Already loading
+    } else {
+      if (_isDisposed) return;
+      state = state.copyWith(
+        isLoading: true,
+        hasError: false,
+        errorMessage: null,
+        searchQuery: searchQuery,
+      );
+    }
+
+    try {
+      final result = await getBusinessUnitsUseCase(
+        search: searchQuery?.isEmpty == true ? null : searchQuery,
+        page: refresh ? 1 : state.currentPage,
+        pageSize: state.pageSize,
+      );
+
+      if (_isDisposed) return;
+
+      try {
+        state = state.copyWith(
+          businessUnits: result.businessUnits,
+          pagination: result.pagination,
+          total: result.total,
+          isLoading: false,
+          hasError: false,
+          currentPage: result.pagination.page,
+        );
+      } catch (e) {
+        if (!_isDisposed) rethrow;
+      }
+    } on AppException catch (e) {
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: e.message,
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
+    } catch (e) {
+      if (_isDisposed) return;
+      try {
+        state = state.copyWith(
+          isLoading: false,
+          hasError: true,
+          errorMessage: 'Failed to load business units: ${e.toString()}',
+        );
+      } catch (_) {
+        // Ignore if disposed
+      }
+    }
+  }
+
+  /// Load next page
+  Future<void> loadNextPage() async {
+    if (state.isLoadingMore || !state.hasMore) return;
+
+    state = state.copyWith(isLoadingMore: true);
+
+    try {
+      final nextPage = state.currentPage + 1;
+      final result = await getBusinessUnitsUseCase(
+        search: state.searchQuery?.isEmpty == true ? null : state.searchQuery,
+        page: nextPage,
+        pageSize: state.pageSize,
+      );
+
+      state = state.copyWith(
+        businessUnits: [...state.businessUnits, ...result.businessUnits],
+        pagination: result.pagination,
+        total: result.total,
+        isLoadingMore: false,
+        currentPage: nextPage,
+      );
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoadingMore: false,
+        hasError: true,
+        errorMessage: e.message,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoadingMore: false,
+        hasError: true,
+        errorMessage: 'Failed to load more business units: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Load previous page
+  Future<void> loadPreviousPage() async {
+    if (state.isLoading || !state.hasPrevious) return;
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final previousPage = state.currentPage - 1;
+      final result = await getBusinessUnitsUseCase(
+        search: state.searchQuery?.isEmpty == true ? null : state.searchQuery,
+        page: previousPage,
+        pageSize: state.pageSize,
+      );
+
+      state = state.copyWith(
+        businessUnits: result.businessUnits,
+        pagination: result.pagination,
+        total: result.total,
+        isLoading: false,
+        currentPage: previousPage,
+      );
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.message,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: 'Failed to load business units: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Refresh the list
+  Future<void> refresh() async {
+    await loadBusinessUnits(refresh: true);
+  }
+
+  /// Search business units
+  Future<void> search(String query) async {
+    await loadBusinessUnits(refresh: true, search: query);
+  }
+}
+
+/// Provider for business unit list notifier
+final businessUnitListNotifierProvider =
+    StateNotifierProvider.autoDispose<BusinessUnitListNotifier, BusinessUnitListState>(
+  (ref) {
+    final getBusinessUnitsUseCase = ref.watch(getBusinessUnitsUseCaseProvider);
+    return BusinessUnitListNotifier(getBusinessUnitsUseCase: getBusinessUnitsUseCase);
+  },
+);
+
+/// Legacy provider for backward compatibility (returns list directly)
 final businessUnitListProvider = Provider<List<BusinessUnitOverview>>((ref) {
-  return const [
-    BusinessUnitOverview(
-      id: '1',
-      name: 'Corporate Finance',
-      nameArabic: 'التمويل المؤسسي',
-      code: 'BU-CORP-FIN',
-      divisionName: 'Finance & Accounting Division',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Khaled Al-Mutawa',
-      headEmail: 'khaled.mutawa@kuwaitholdings.com',
-      headPhone: '+965 2200 3344',
-      isActive: true,
-      employees: 35,
-      departments: 3,
-      budget: '1.2M',
-      focusArea: 'Treasury & Investments',
-      location: 'Tower A, 5th Floor',
-      city: 'Kuwait City',
-      establishedDate: '2011-04-20',
-      description: 'Manages corporate treasury and investment strategies.',
-    ),
-    BusinessUnitOverview(
-      id: '2',
-      name: 'Accounting & Reporting',
-      nameArabic: 'المحاسبة والتقارير',
-      code: 'BU-ACCT',
-      divisionName: 'Finance & Accounting Division',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Nadia Al-Fahad',
-      headEmail: 'nadia.fahad@kuwaitholdings.com',
-      headPhone: '+965 2233 5566',
-      isActive: true,
-      employees: 28,
-      departments: 2,
-      budget: '0.9M',
-      focusArea: 'Financial Reporting',
-      location: 'Tower A, 3rd Floor',
-      city: 'Kuwait City',
-      establishedDate: '2013-07-12',
-      description: 'Handles statutory reporting and compliance.',
-    ),
-    BusinessUnitOverview(
-      id: '3',
-      name: 'Recruitment & Talent',
-      nameArabic: 'التوظيف والمواهب',
-      code: 'BU-REC',
-      divisionName: 'Human Resources Division',
-      companyName: 'Kuwait Holdings Corporation',
-      headName: 'Omar Al-Jasem',
-      headEmail: 'omar.jasem@kuwaitholdings.com',
-      headPhone: '+965 2244 7788',
-      isActive: true,
-      employees: 22,
-      departments: 2,
-      budget: '0.8M',
-      focusArea: 'Talent Management',
-      location: 'Tower B, 2nd Floor',
-      city: 'Kuwait City',
-      establishedDate: '2015-09-01',
-      description: 'Leads recruitment, onboarding, and talent planning.',
-    ),
-    BusinessUnitOverview(
-      id: '4',
-      name: 'Field Operations',
-      nameArabic: 'العمليات الميدانية',
-      code: 'BU-FIELD',
-      divisionName: 'Operations Division',
-      companyName: 'Kuwait Petroleum Services',
-      headName: 'Jassim Al-Ansari',
-      headEmail: 'jassim.ansari@kps.com',
-      headPhone: '+965 2299 1122',
-      isActive: true,
-      employees: 185,
-      departments: 4,
-      budget: '5.2M',
-      focusArea: 'Field Services',
-      location: 'Field Operations Center',
-      city: 'Ahmadi',
-      establishedDate: '2010-01-25',
-      description: 'Oversees operations across field networks.',
-    ),
-  ];
+  final state = ref.watch(businessUnitListNotifierProvider);
+  return state.businessUnits;
 });
 
 final businessUnitSearchQueryProvider = StateProvider<String>((ref) => '');
 
+/// Provider for filtered business units with search
 final filteredBusinessUnitsProvider = Provider<List<BusinessUnitOverview>>((ref) {
-  final businessUnits = ref.watch(businessUnitListProvider);
+  final state = ref.watch(businessUnitListNotifierProvider);
   final query = ref.watch(businessUnitSearchQueryProvider).toLowerCase();
 
-  if (query.isEmpty) return businessUnits;
+  if (query.isEmpty) return state.businessUnits;
 
-  return businessUnits.where((bu) {
+  return state.businessUnits.where((bu) {
     return bu.name.toLowerCase().contains(query) ||
         bu.code.toLowerCase().contains(query) ||
         bu.headName.toLowerCase().contains(query);

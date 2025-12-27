@@ -75,7 +75,7 @@ class EnterpriseStructureDropdown extends StatelessWidget {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: value,
+                value: (value != null && items.contains(value)) ? value : null,
                 isExpanded: true,
                 icon: Icon(
                   Icons.keyboard_arrow_down,

@@ -42,6 +42,7 @@ class EnterprisesNotifier extends StateNotifier<EnterprisesState> {
     _loadEnterprises();
   }
 
+
   Future<void> _loadEnterprises() async {
     state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
 

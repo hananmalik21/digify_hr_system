@@ -5,13 +5,17 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-class AddBusinessUnitDialog extends StatefulWidget {
+class AddBusinessUnitDialog extends ConsumerStatefulWidget {
   final bool isEditMode;
   final BusinessUnitOverview? businessUnit;
 
@@ -37,19 +41,17 @@ class AddBusinessUnitDialog extends StatefulWidget {
   }
 
   @override
-  State<AddBusinessUnitDialog> createState() => _AddBusinessUnitDialogState();
+  ConsumerState<AddBusinessUnitDialog> createState() => _AddBusinessUnitDialogState();
 }
 
-class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
+class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
   final Map<String, TextEditingController> _controllers = {};
   final List<String> _statusOptions = ['Active', 'Inactive'];
-  final List<String> _divisionOptions = [
-    'Finance & Accounting Division',
-    'Human Resources Division',
-    'Operations Division',
-  ];
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   late String? _selectedStatus;
   String? _selectedDivision;
+  int? _selectedDivisionId;
 
   @override
   void initState() {
@@ -80,6 +82,9 @@ class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
         ? (widget.businessUnit!.isActive ? 'Active' : 'Inactive')
         : 'Active';
     _selectedDivision = widget.businessUnit?.divisionName;
+    
+    // TODO: Load division ID from API when editing
+    // For now, we'll need to get it from the API response when submitting
   }
 
   String _getInitialValue(String key) {
@@ -207,9 +212,11 @@ class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
                   top: 24.h,
                   bottom: 0,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     _buildRow(
                       left: _buildTextField(
                         label: localizations.unitCode,
@@ -248,18 +255,7 @@ class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
                     ),
                     SizedBox(height: 8.h),
                     _buildRow(
-                      left: _buildDropdown(
-                        label: localizations.division,
-                        value: _selectedDivision,
-                        items: _divisionOptions,
-                        isRequired: true,
-                        hintText: localizations.hintSelectDivision,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedDivision = value;
-                          });
-                        },
-                      ),
+                      left: _buildDivisionDropdown(localizations),
                       right: _buildTextField(
                         label: localizations.headOfUnit,
                         keyName: 'headOfUnit',
@@ -336,7 +332,8 @@ class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
                       hintText: localizations.hintBusinessUnitDescription,
                     ),
                     SizedBox(height: 24.h),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -562,43 +559,266 @@ class _AddBusinessUnitDialogState extends State<AddBusinessUnitDialog> {
             ),
           ),
           SizedBox(width: 12.w),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(widget.isEditMode
-                      ? localizations.updateBusinessUnit
-                      : localizations.createBusinessUnit),
-                ),
-              );
-            },
-            icon: SvgIconWidget(
-              assetPath: 'assets/icons/add_business_unit_icon.svg',
-              size: 16.sp,
-              color: Colors.white,
-            ),
-            label: Text(
-              widget.isEditMode
-                  ? localizations.updateBusinessUnit
-                  : localizations.createBusinessUnit,
-              style: TextStyle(
-                fontSize: 15.3.sp,
-                fontWeight: FontWeight.w400,
-                color: Colors.white,
-                height: 24 / 15.3,
-              ),
-            ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _handleSubmit,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF155DFC),
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
               ),
+              disabledBackgroundColor: const Color(0xFF155DFC).withValues(alpha: 0.6),
             ),
+            child: _isLoading
+                ? SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgIconWidget(
+                        assetPath: 'assets/icons/add_business_unit_icon.svg',
+                        size: 16.sp,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        widget.isEditMode
+                            ? localizations.updateBusinessUnit
+                            : localizations.createBusinessUnit,
+                        style: TextStyle(
+                          fontSize: 15.3.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                          height: 24 / 15.3,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildDivisionDropdown(AppLocalizations localizations) {
+    final divisionsState = ref.watch(divisionsProvider);
+    final isDark = context.isDark;
+
+    if (divisionsState.isLoading) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.division,
+            style: TextStyle(
+              fontSize: 15.3.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            height: 42.h,
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 17.w),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.inputBgDark : Colors.white,
+              border: Border.all(
+                color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
+              ),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        ],
+      );
+    }
+
+    if (divisionsState.hasError) {
+      return _buildDropdown(
+        label: localizations.division,
+        value: _selectedDivision,
+        items: const [],
+        isRequired: true,
+        hintText: 'Error loading divisions',
+        onChanged: (_) {},
+      );
+    }
+
+    final divisions = divisionsState.divisions;
+    // Remove duplicates by keeping unique division names
+    final divisionNames = divisions.map((d) => d.name).toSet().toList();
+
+    // Validate and set selected division
+    String? validSelectedDivision = _selectedDivision;
+    
+    // If selected division doesn't exist in the list, set it to null
+    if (validSelectedDivision != null && !divisionNames.contains(validSelectedDivision)) {
+      // If editing and the division name doesn't match, try to find it by name (case-insensitive)
+      if (widget.isEditMode && widget.businessUnit != null && divisions.isNotEmpty) {
+        final matchingDivision = divisions.firstWhere(
+          (d) => d.name.toLowerCase() == widget.businessUnit!.divisionName.toLowerCase(),
+          orElse: () => divisions.first,
+        );
+        if (matchingDivision.name.toLowerCase() == widget.businessUnit!.divisionName.toLowerCase() &&
+            divisionNames.contains(matchingDivision.name)) {
+          validSelectedDivision = matchingDivision.name;
+        } else {
+          validSelectedDivision = null;
+        }
+      } else {
+        validSelectedDivision = null;
+      }
+    }
+    
+    // Ensure selected value is in the items list (handles case where items is empty)
+    if (validSelectedDivision != null && (divisionNames.isEmpty || !divisionNames.contains(validSelectedDivision))) {
+      validSelectedDivision = null;
+    }
+
+    // Initialize selected division ID if editing and we have a valid selection
+    if (widget.isEditMode &&
+        widget.businessUnit != null &&
+        _selectedDivisionId == null &&
+        validSelectedDivision != null) {
+      final matchingDivision = divisions.firstWhere(
+        (d) => d.name == validSelectedDivision,
+        orElse: () => divisions.isNotEmpty ? divisions.first : divisions.first,
+      );
+      if (matchingDivision.id.isNotEmpty) {
+        _selectedDivisionId = int.tryParse(matchingDivision.id);
+      }
+    }
+
+    return _buildDropdown(
+      label: localizations.division,
+      value: validSelectedDivision,
+      items: divisionNames,
+      isRequired: true,
+      hintText: localizations.hintSelectDivision,
+      onChanged: (value) {
+        setState(() {
+          _selectedDivision = value;
+          if (value != null && divisions.isNotEmpty) {
+            final division = divisions.firstWhere(
+              (d) => d.name == value,
+              orElse: () => divisions.first,
+            );
+            if (division.id.isNotEmpty) {
+              _selectedDivisionId = int.tryParse(division.id);
+            }
+          } else {
+            _selectedDivisionId = null;
+          }
+        });
+      },
+    );
+  }
+
+  Future<void> _handleSubmit() async {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+
+    if (_selectedDivisionId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a division')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Convert date from DD/MM/YYYY to YYYY-MM-DD
+      String? establishedDate;
+      if (_controllers['establishedDate']!.text.isNotEmpty) {
+        try {
+          final parts = _controllers['establishedDate']!.text.split('/');
+          if (parts.length == 3) {
+            establishedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+          }
+        } catch (_) {
+          establishedDate = _controllers['establishedDate']!.text;
+        }
+      }
+
+      final businessUnitData = <String, dynamic>{
+        'DIVISION_ID': _selectedDivisionId,
+        'UNIT_CODE': _controllers['unitCode']!.text.trim(),
+        'UNIT_NAME_EN': _controllers['unitNameEnglish']!.text.trim(),
+        'UNIT_NAME_AR': _controllers['unitNameArabic']!.text.trim(),
+        'STATUS': _selectedStatus ?? 'Active',
+        'HEAD_OF_UNIT': _controllers['headOfUnit']!.text.trim(),
+        if (_controllers['headEmail']!.text.isNotEmpty)
+          'HEAD_EMAIL': _controllers['headEmail']!.text.trim(),
+        if (_controllers['headPhone']!.text.isNotEmpty)
+          'HEAD_PHONE': _controllers['headPhone']!.text.trim(),
+        if (_controllers['location']!.text.isNotEmpty)
+          'LOCATION': _controllers['location']!.text.trim(),
+        if (_controllers['city']!.text.isNotEmpty)
+          'CITY': _controllers['city']!.text.trim(),
+        if (establishedDate != null) 'ESTABLISHED_DATE': establishedDate,
+        if (_controllers['businessFocus']!.text.isNotEmpty)
+          'BUSINESS_FOCUS': _controllers['businessFocus']!.text.trim(),
+        if (_controllers['totalEmployees']!.text.isNotEmpty)
+          'TOTAL_EMPLOYEES': int.tryParse(_controllers['totalEmployees']!.text),
+        if (_controllers['totalDepartments']!.text.isNotEmpty)
+          'TOTAL_DEPARTMENTS': int.tryParse(_controllers['totalDepartments']!.text),
+        if (_controllers['annualBudget']!.text.isNotEmpty)
+          'ANNUAL_BUDGET_KWD': double.tryParse(_controllers['annualBudget']!.text),
+        if (_controllers['description']!.text.isNotEmpty)
+          'DESCRIPTION': _controllers['description']!.text.trim(),
+      };
+
+      if (widget.isEditMode && widget.businessUnit != null) {
+        final updateUseCase = ref.read(updateBusinessUnitUseCaseProvider);
+        await updateUseCase(
+          int.parse(widget.businessUnit!.id),
+          businessUnitData,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Business unit updated successfully')),
+          );
+        }
+      } else {
+        final createUseCase = ref.read(createBusinessUnitUseCaseProvider);
+        await createUseCase(businessUnitData);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Business unit created successfully')),
+          );
+        }
+      }
+
+      // Refresh the list
+      if (mounted) {
+        ref.read(businessUnitListNotifierProvider.notifier).refresh();
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }

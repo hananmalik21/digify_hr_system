@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HierarchyLevel {
@@ -45,12 +46,14 @@ class EditEnterpriseStructureState {
   final String description;
   final List<HierarchyLevel> levels;
   final int? selectedEnterpriseId;
+  final bool isActive;
 
   const EditEnterpriseStructureState({
     required this.structureName,
     required this.description,
     required this.levels,
     this.selectedEnterpriseId,
+    this.isActive = true,
   });
 
   EditEnterpriseStructureState copyWith({
@@ -58,12 +61,14 @@ class EditEnterpriseStructureState {
     String? description,
     List<HierarchyLevel>? levels,
     int? selectedEnterpriseId,
+    bool? isActive,
   }) {
     return EditEnterpriseStructureState(
       structureName: structureName ?? this.structureName,
       description: description ?? this.description,
       levels: levels ?? this.levels,
       selectedEnterpriseId: selectedEnterpriseId ?? this.selectedEnterpriseId,
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -80,12 +85,14 @@ class EditEnterpriseStructureNotifier
     required String description,
     required List<HierarchyLevel> initialLevels,
     int? selectedEnterpriseId,
+    bool isActive = true,
   }) : super(
     EditEnterpriseStructureState(
       structureName: structureName,
       description: description,
       levels: List<HierarchyLevel>.from(initialLevels),
       selectedEnterpriseId: selectedEnterpriseId,
+      isActive: isActive,
     ),
   );
 
@@ -187,6 +194,10 @@ class EditEnterpriseStructureNotifier
     _initializedFromApi = true; // keep it initialized after reset
     state = state.copyWith(levels: _normalizeLevels(List.from(defaultLevels)));
   }
+
+  void updateIsActive(bool isActive) {
+    state = state.copyWith(isActive: isActive);
+  }
 }
 
 /// ✅ Provider (same pattern you already use)
@@ -198,17 +209,7 @@ final editEnterpriseStructureProvider = StateNotifierProvider.autoDispose.family
     structureName: params.structureName,
     description: params.description,
     initialLevels: params.initialLevels,
+    selectedEnterpriseId: params.selectedEnterpriseId,
+    isActive: params.isActive,
   ),
 );
-
-class EditDialogParams {
-  final String structureName;
-  final String description;
-  final List<HierarchyLevel> initialLevels;
-
-  const EditDialogParams({
-    required this.structureName,
-    required this.description,
-    required this.initialLevels,
-  });
-}

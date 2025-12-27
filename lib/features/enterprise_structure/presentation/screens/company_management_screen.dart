@@ -2,11 +2,13 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_company_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/company_details_dialog.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +21,8 @@ class CompanyManagementScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final companies = ref.watch(filteredCompanyProvider);
-    final allCompanies = ref.watch(companyListProvider);
+    final companiesState = ref.watch(companiesProvider);
+    final allCompanies = companiesState.companies;
     final totalEmployees = allCompanies.fold<int>(
       0,
       (previousValue, company) => previousValue + company.employees,
@@ -29,6 +31,7 @@ class CompanyManagementScreen extends ConsumerWidget {
         .where((company) => company.isActive)
         .length;
     final isDark = context.isDark;
+    final isRefreshing = companiesState.isLoading && allCompanies.isNotEmpty;
 
     final stats = [
       StatsCardData(
@@ -64,51 +67,105 @@ class CompanyManagementScreen extends ConsumerWidget {
     return Container(
       color: context.themeBackground,
       child: SafeArea(
-        child: SingleChildScrollView(
-          padding: ResponsiveHelper.getResponsivePadding(
-            context,
-            mobile: EdgeInsetsDirectional.only(
-              top: 16.h,
-              start: 16.w,
-              end: 16.w,
-              bottom: 24.h,
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: isRefreshing ? 0.5 : 1.0,
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref.read(companiesProvider.notifier).refresh();
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: ResponsiveHelper.getResponsivePadding(
+                    context,
+                    mobile: EdgeInsetsDirectional.only(
+                      top: 16.h,
+                      start: 16.w,
+                      end: 16.w,
+                      bottom: 24.h,
+                    ),
+                    tablet: EdgeInsetsDirectional.only(
+                      top: 24.h,
+                      start: 24.w,
+                      end: 24.w,
+                      bottom: 24.h,
+                    ),
+                    web: EdgeInsetsDirectional.only(
+                      top: 32.h,
+                      start: 32.w,
+                      end: 32.w,
+                      bottom: 32.h,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(context, localizations),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 20.h,
+                      ),
+                      _buildStatsSection(context, stats, isDark: isDark),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+                      ),
+                      _buildSearchBar(context, ref, localizations),
+                      SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
+                      ),
+              if (companiesState.isLoading && companiesState.companies.isEmpty)
+                _buildLoadingState(context, localizations)
+              else if (companiesState.hasError)
+                _buildErrorState(context, ref, companiesState.errorMessage ?? 'An error occurred while loading companies', localizations)
+              else
+                _buildCompanyList(
+                  context,
+                  companiesState.companies,
+                  localizations,
+                  isDark: isDark,
+                ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            tablet: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-            web: EdgeInsetsDirectional.only(
-              top: 32.h,
-              start: 32.w,
-              end: 32.w,
-              bottom: 32.h,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context, localizations),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 20.h,
+            if (isRefreshing)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.all(20.w),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          SizedBox(height: 16.h),
+                          Text(
+                            localizations.pleaseWait,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: context.themeTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              _buildStatsSection(context, stats, isDark: isDark),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-              ),
-              _buildSearchBar(context, ref, localizations),
-              SizedBox(
-                height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-              ),
-              _buildCompanyList(
-                context,
-                companies,
-                localizations,
-                isDark: isDark,
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -242,8 +299,9 @@ class CompanyManagementScreen extends ConsumerWidget {
       child: ClipRRect( // 🔑 FIX
         borderRadius: BorderRadius.circular(10.r),
         child: TextField(
-          onChanged: (value) =>
-          ref.read(companySearchQueryProvider.notifier).state = value,
+          onChanged: (value) {
+            ref.read(companiesProvider.notifier).searchCompanies(value);
+          },
           decoration: InputDecoration(
             isDense: true,
             filled: true,
@@ -329,10 +387,71 @@ class CompanyManagementScreen extends ConsumerWidget {
       },
     );
   }
+
+  Widget _buildLoadingState(BuildContext context, AppLocalizations localizations) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 48.h),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(),
+            SizedBox(height: 16.h),
+            Text(
+              'Loading companies...',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: context.themeTextSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(
+    BuildContext context,
+    WidgetRef ref,
+    String errorMessage,
+    AppLocalizations localizations,
+  ) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 48.h, horizontal: 16.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 48.sp,
+              color: context.themeTextSecondary,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              errorMessage,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: context.themeTextSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(companiesProvider.notifier).refresh();
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 
-class _CompanyCard extends StatelessWidget {
+class _CompanyCard extends ConsumerWidget {
   final CompanyOverview company;
   final AppLocalizations localizations;
   final bool isDark;
@@ -344,7 +463,7 @@ class _CompanyCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => CompanyDetailsDialog.show(context, company),
       child: Container(
@@ -414,19 +533,61 @@ class _CompanyCard extends StatelessWidget {
                 description: localizations.edit,
                 iconColor: context.themeTextSecondary,
                 onTap: () {
+                  // Format established date from YYYY-MM-DD to DD/MM/YYYY if available
+                  String? formattedDate;
+                  if (company.establishedDate != null && company.establishedDate!.isNotEmpty) {
+                    try {
+                      final dateParts = company.establishedDate!.split('-');
+                      if (dateParts.length == 3) {
+                        formattedDate = '${dateParts[2]}/${dateParts[1]}/${dateParts[0]}';
+                      } else {
+                        formattedDate = company.establishedDate;
+                      }
+                    } catch (e) {
+                      formattedDate = company.establishedDate;
+                    }
+                  }
+
+                  // Format currency for dropdown (e.g., "KWD" -> "KWD - Kuwaiti Dinar")
+                  String? currencyDisplay;
+                  if (company.currencyCode != null && company.currencyCode!.isNotEmpty) {
+                    final currencyMap = {
+                      'KWD': 'KWD - Kuwaiti Dinar',
+                      'USD': 'USD - US Dollar',
+                      'EUR': 'EUR - Euro',
+                      'GBP': 'GBP - British Pound',
+                    };
+                    currencyDisplay = currencyMap[company.currencyCode] ?? 
+                        '${company.currencyCode} - ${company.currencyCode}';
+                  }
+
                   AddCompanyDialog.show(
                     context,
                     isEditMode: true,
                     initialData: {
+                      'companyId': int.tryParse(company.id) ?? 0,
                       'companyCode': company.entityCode,
                       'status': company.isActive ? 'Active' : 'Inactive',
                       'nameEn': company.name,
                       'nameAr': company.nameArabic,
+                      'legalNameEn': company.legalNameEn ?? '',
+                      'legalNameAr': company.legalNameAr ?? '',
                       'registrationNumber': company.registrationNumber,
+                      'taxId': company.taxId ?? '',
+                      'establishedDate': formattedDate ?? '',
                       'industry': company.industry,
+                      'country': company.country ?? '',
+                      'city': company.city ?? '',
+                      'address': company.address ?? '',
+                      'poBox': company.poBox ?? '',
+                      'zipCode': company.zipCode ?? '',
                       'phone': company.phone,
                       'email': company.email,
+                      'website': company.website ?? '',
                       'totalEmployees': company.employees.toString(),
+                      'currency': currencyDisplay ?? 'KWD - Kuwaiti Dinar',
+                      'fiscalYearStart': company.fiscalYearStart ?? '',
+                      'orgStructureId': company.orgStructureId,
                     },
                   );
                 },
@@ -436,7 +597,41 @@ class _CompanyCard extends StatelessWidget {
                 assetPath: 'assets/icons/delete_icon_red.svg',
                 description: localizations.delete,
                 iconColor: AppColors.deleteIconRed,
-                onTap: () {},
+                onTap: () async {
+                  final confirmed = await DeleteConfirmationDialog.show(
+                    context,
+                    title: localizations.delete,
+                    message: 'Are you sure you want to delete this company? This action cannot be undone.',
+                    itemName: company.name,
+                  );
+                  
+                  if (confirmed == true) {
+                    try {
+                      final deleteUseCase = ref.read(deleteCompanyUseCaseProvider);
+                      await deleteUseCase(int.parse(company.id), hard: true);
+                      
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Company deleted successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        // Refresh the companies list
+                        ref.read(companiesProvider.notifier).refresh();
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to delete company: ${e.toString()}'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  }
+                },
               ),
             ],
           ),
@@ -450,13 +645,21 @@ class _CompanyCard extends StatelessWidget {
                 backgroundColor: const Color(0xFFF3F4F6),
               ),
               _Badge(
-                label: localizations.active,
-                backgroundColor: isDark
-                    ? AppColors.successBgDark
-                    : const Color(0xFFDCFCE7),
-                textColor: isDark
-                    ? AppColors.successTextDark
-                    : AppColors.success,
+                label: company.isActive ? localizations.active : localizations.inactive,
+                backgroundColor: company.isActive
+                    ? (isDark
+                        ? AppColors.successBgDark
+                        : AppColors.activeStatusBg)
+                    : (isDark
+                        ? AppColors.cardBackgroundGreyDark
+                        : AppColors.inactiveStatusBg),
+                textColor: company.isActive
+                    ? (isDark
+                        ? AppColors.successTextDark
+                        : AppColors.activeStatusText)
+                    : (isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.inactiveStatusText),
               ),
             ],
           ),
