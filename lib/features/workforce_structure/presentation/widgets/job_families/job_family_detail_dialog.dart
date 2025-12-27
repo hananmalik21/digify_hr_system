@@ -1,12 +1,16 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_family_form_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class JobFamilyDetailDialog extends StatelessWidget {
+class JobFamilyDetailDialog extends ConsumerWidget {
   final JobFamily jobFamily;
   final List<JobLevel> jobLevels;
 
@@ -29,11 +33,13 @@ class JobFamilyDetailDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final totalPositions = jobFamily.totalPositions.toString();
     final filledPositions = jobFamily.filledPositions.toString();
     final fillRate = '${jobFamily.fillRate.toStringAsFixed(0)}%';
+    final deleteState = ref.watch(jobFamilyDeleteStateProvider);
+    final isDeleting = deleteState.deletingId == jobFamily.id;
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -136,23 +142,32 @@ class JobFamilyDetailDialog extends StatelessWidget {
                     label: localizations.close,
                     backgroundColor: AppColors.inputBg,
                     foregroundColor: AppColors.textSecondary,
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: isDeleting
+                        ? null
+                        : () => Navigator.of(context).pop(),
+                  ),
+                  SizedBox(width: 12.w),
+                  _buildDeleteButton(
+                    context: context,
+                    ref: ref,
+                    localizations: localizations,
+                    isDeleting: isDeleting,
                   ),
                   SizedBox(width: 12.w),
                   _buildActionButton(
                     label: localizations.edit,
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
-                    onPressed: () {
-                      JobFamilyFormDialog.show(
-                        context,
-                        jobFamily: jobFamily,
-                        isEdit: true,
-                        onSave: (updated) {
-                          // handle optional update logic here
-                        },
-                      );
-                    },
+                    onPressed: isDeleting
+                        ? null
+                        : () {
+                            JobFamilyFormDialog.show(
+                              context,
+                              jobFamily: jobFamily,
+                              isEdit: true,
+                              onSave: (updated) {},
+                            );
+                          },
                   ),
                 ],
               ),
@@ -243,12 +258,14 @@ class JobFamilyDetailDialog extends StatelessWidget {
     required String label,
     required Color backgroundColor,
     required Color foregroundColor,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: foregroundColor,
+        disabledBackgroundColor: backgroundColor.withValues(alpha: 0.6),
+        disabledForegroundColor: foregroundColor.withValues(alpha: 0.6),
         elevation: 0,
         fixedSize: Size(100.w, 40.h),
         shape: RoundedRectangleBorder(
@@ -264,5 +281,66 @@ class JobFamilyDetailDialog extends StatelessWidget {
         style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
       ),
     );
+  }
+
+  Widget _buildDeleteButton({
+    required BuildContext context,
+    required WidgetRef ref,
+    required AppLocalizations localizations,
+    required bool isDeleting,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.error,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: AppColors.error.withValues(alpha: 0.6),
+        elevation: 0,
+        fixedSize: Size(100.w, 40.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+      ),
+      onPressed: isDeleting ? null : () => _handleDelete(context, ref),
+      child: isDeleting
+          ? SizedBox(
+              height: 16.h,
+              width: 16.w,
+              child: const CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              localizations.delete,
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+            ),
+    );
+  }
+
+  Future<void> _handleDelete(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref
+          .read(jobFamilyNotifierProvider.notifier)
+          .deleteJobFamily(
+            ref,
+            ref.read(deleteJobFamilyUseCaseProvider),
+            id: jobFamily.id,
+          );
+
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close detail dialog
+        ToastService.success(
+          context,
+          'Job family deleted successfully',
+          title: 'Deleted',
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ToastService.error(
+          context,
+          'Failed to delete job family',
+          title: 'Error',
+        );
+      }
+    }
   }
 }

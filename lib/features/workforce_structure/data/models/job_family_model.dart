@@ -3,6 +3,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/job_
 /// Job Family Data Model (Data Layer)
 /// Handles serialization/deserialization for API communication
 class JobFamilyModel {
+  final int id;
   final String code;
   final String nameEnglish;
   final String nameArabic;
@@ -15,6 +16,7 @@ class JobFamilyModel {
   final DateTime? updatedAt;
 
   const JobFamilyModel({
+    required this.id,
     required this.code,
     required this.nameEnglish,
     required this.nameArabic,
@@ -30,6 +32,7 @@ class JobFamilyModel {
   /// Create from API JSON response
   factory JobFamilyModel.fromJson(Map<String, dynamic> json) {
     return JobFamilyModel(
+      id: json['id'] as int? ?? 0,
       code: json['job_family_code'] as String? ?? json['code'] as String? ?? '',
       nameEnglish: json['job_family_name_en'] as String? ?? '',
       nameArabic: json['job_family_name_ar'] as String? ?? '',
@@ -66,6 +69,7 @@ class JobFamilyModel {
   /// Convert data model to domain entity
   JobFamily toEntity() {
     return JobFamily(
+      id: id,
       code: code,
       nameEnglish: nameEnglish,
       nameArabic: nameArabic,
@@ -82,6 +86,7 @@ class JobFamilyModel {
   /// Create data model from domain entity
   factory JobFamilyModel.fromEntity(JobFamily entity) {
     return JobFamilyModel(
+      id: entity.id,
       code: entity.code,
       nameEnglish: entity.nameEnglish,
       nameArabic: entity.nameArabic,

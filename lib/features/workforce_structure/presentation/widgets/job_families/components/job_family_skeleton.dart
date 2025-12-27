@@ -18,6 +18,7 @@ class JobFamilySkeleton extends StatelessWidget {
     final dummyJobFamilies = List.generate(
       itemCount,
       (index) => JobFamily(
+        id: index,
         code: 'JF00${index + 1}',
         nameEnglish: 'Skeleton Job Family Name',
         nameArabic: 'اسم عائلة الوظيفة',

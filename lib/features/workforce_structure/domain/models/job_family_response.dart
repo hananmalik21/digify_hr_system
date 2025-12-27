@@ -130,6 +130,7 @@ class JobFamilyData {
   // Convert to existing JobFamily model
   JobFamily toJobFamily() {
     return JobFamily(
+      id: jobFamilyId,
       code: jobFamilyCode,
       nameEnglish: jobFamilyNameEn,
       nameArabic: jobFamilyNameAr,

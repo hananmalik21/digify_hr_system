@@ -7,8 +7,10 @@ import 'package:digify_hr_system/features/workforce_structure/data/repositories/
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/job_family_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_job_family_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_families_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_create_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
 
 // Providers for dependency injection
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -36,6 +38,12 @@ final getJobFamiliesUseCaseProvider = Provider<GetJobFamiliesUseCase>((ref) {
 
 final createJobFamilyUseCaseProvider = Provider<CreateJobFamilyUseCase>((ref) {
   return CreateJobFamilyUseCase(
+    repository: ref.read(jobFamilyRepositoryProvider),
+  );
+});
+
+final deleteJobFamilyUseCaseProvider = Provider<DeleteJobFamilyUseCase>((ref) {
+  return DeleteJobFamilyUseCase(
     repository: ref.read(jobFamilyRepositoryProvider),
   );
 });
@@ -153,6 +161,35 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     }
   }
 
+  Future<void> deleteJobFamily(
+    WidgetRef ref,
+    DeleteJobFamilyUseCase deleteUseCase, {
+    required int id,
+    bool hard = true,
+  }) async {
+    ref.read(jobFamilyDeleteStateProvider.notifier).state =
+        JobFamilyDeleteState(isDeleting: true, deletingId: id);
+
+    try {
+      await deleteUseCase(id: id, hard: hard);
+
+      final currentItems = state.items;
+      final updatedItems = currentItems.where((item) => item.id != id).toList();
+
+      state = state.copyWith(
+        items: updatedItems,
+        totalItems: state.totalItems - 1,
+      );
+
+      ref.read(jobFamilyDeleteStateProvider.notifier).state =
+          const JobFamilyDeleteState(isDeleting: false);
+    } catch (e) {
+      ref.read(jobFamilyDeleteStateProvider.notifier).state =
+          JobFamilyDeleteState(isDeleting: false, error: e.toString());
+      rethrow;
+    }
+  }
+
   @override
   Future<void> refresh() async {
     reset();
@@ -225,6 +262,15 @@ extension JobFamilyProviderExtensions on WidgetRef {
       nameEnglish: nameEnglish,
       nameArabic: nameArabic,
       description: description,
+    );
+  }
+
+  Future<void> deleteJobFamily({required int id, bool hard = true}) {
+    return read(jobFamilyNotifierProvider.notifier).deleteJobFamily(
+      this,
+      read(deleteJobFamilyUseCaseProvider),
+      id: id,
+      hard: hard,
     );
   }
 }
