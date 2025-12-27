@@ -98,53 +98,37 @@ class SidebarConfig {
         children: [
           SidebarItem(
             id: 'positions',
-            svgPath: Assets
-                .icons
-                .businessUnitIcon
-                .path, // Replaced with what was in code
+            svgPath: Assets.icons.businessUnitIcon.path,
             labelKey: 'positions',
             route: '/workforce-structure/positions',
           ),
           SidebarItem(
             id: 'jobFamilies',
-            svgPath: Assets
-                .icons
-                .departmentIcon
-                .path, // Replaced with what was in code
+            svgPath: Assets.icons.workforce.workforceTab.path,
             labelKey: 'jobFamilies',
             route: '/workforce-structure/job-families',
           ),
           SidebarItem(
             id: 'jobLevels',
-            svgPath: Assets
-                .icons
-                .positionsIcon
-                .path, // Replaced with what was in code
+            svgPath: Assets.icons.workforce.fillRate.path,
             labelKey: 'jobLevels',
             route: '/workforce-structure/job-levels',
           ),
           SidebarItem(
             id: 'gradeStructure',
-            svgPath: Assets
-                .icons
-                .settingsIcon
-                .path, // Replaced with what was in code
+            svgPath: Assets.icons.sidebar.gradeSidebar.path,
             labelKey: 'gradeStructure',
             route: '/workforce-structure/grade-structure',
           ),
           SidebarItem(
             id: 'reportingStructure',
-            svgPath:
-                Assets.icons.companyIcon.path, // Replaced with what was in code
+            svgPath: Assets.icons.companyIcon.path,
             labelKey: 'reportingStructure',
             route: '/workforce-structure/reporting-structure',
           ),
           SidebarItem(
             id: 'positionTree',
-            svgPath: Assets
-                .icons
-                .departmentIcon
-                .path, // Replaced with what was in code
+            svgPath: Assets.icons.positionsIcon.path,
             labelKey: 'positionTree',
             route: '/workforce-structure/position-tree',
           ),

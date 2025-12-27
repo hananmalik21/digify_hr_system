@@ -311,6 +311,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
               color: isActive ? const Color(0xFFEFF6FF) : Colors.transparent,
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 _buildIcon(
                   item: item,
@@ -434,7 +435,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                       : null,
                                 ),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
                                       padding: EdgeInsetsDirectional.only(

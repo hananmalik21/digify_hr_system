@@ -716,6 +716,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/settings_main_icon.svg
   SvgGenImage get settingsMainIcon => const SvgGenImage('assets/icons/settings_main_icon.svg');
 
+  /// Directory path: assets/icons/sidebar
+  $AssetsIconsSidebarGen get sidebar => const $AssetsIconsSidebarGen();
+
   /// File path: assets/icons/structure_configuration_icon.svg
   SvgGenImage get structureConfigurationIcon => const SvgGenImage('assets/icons/structure_configuration_icon.svg');
 
@@ -1059,6 +1062,16 @@ class $AssetsIconsGen {
     workforceStructureIcon,
     workforceStructureMainIcon,
   ];
+}
+
+class $AssetsIconsSidebarGen {
+  const $AssetsIconsSidebarGen();
+
+  /// File path: assets/icons/sidebar/grade-sidebar.svg
+  SvgGenImage get gradeSidebar => const SvgGenImage('assets/icons/sidebar/grade-sidebar.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [gradeSidebar];
 }
 
 class $AssetsIconsWorkforceGen {

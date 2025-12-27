@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_empty_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_header.dart';
