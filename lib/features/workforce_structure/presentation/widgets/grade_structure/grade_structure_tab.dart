@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/widgets/add_position_button.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_structure.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_form_dialog.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_form_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,17 +35,9 @@ class GradeStructureTab extends ConsumerWidget {
             AddButton(
               customLabel: localizations.addGrade,
               onTap: () {
-                GradeFormDialog.show(
-                  context,
-                  onSave: (grade) {
-
-                  },
-                );
+                GradeFormDialog.show(context, onSave: (grade) {});
               },
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 8.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             ),
           ],
         ),
@@ -102,7 +94,10 @@ class GradeStructureTab extends ConsumerWidget {
                   ),
                   SizedBox(width: 10.w),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 2.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFE5F0FF),
                       borderRadius: BorderRadius.circular(6.r),
@@ -125,9 +120,7 @@ class GradeStructureTab extends ConsumerWidget {
                     context,
                     grade: grade,
                     isEdit: true,
-                    onSave: (updated) {
-
-                    },
+                    onSave: (updated) {},
                   );
                 },
                 child: SvgIconWidget(
@@ -137,16 +130,16 @@ class GradeStructureTab extends ConsumerWidget {
               ),
             ],
           ),
-              SizedBox(height: 6.h),
-              Text(
-                grade.description,
-                style: TextStyle(
-                  fontSize: 13.7.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textSecondary,
-                  height: 20 / 13.7,
-                ),
-              ),
+          SizedBox(height: 6.h),
+          Text(
+            grade.description,
+            style: TextStyle(
+              fontSize: 13.7.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.textSecondary,
+              height: 20 / 13.7,
+            ),
+          ),
           SizedBox(height: 16.h),
           Wrap(
             spacing: 12.w,
@@ -187,6 +180,4 @@ class GradeStructureTab extends ConsumerWidget {
       ),
     );
   }
-
 }
-

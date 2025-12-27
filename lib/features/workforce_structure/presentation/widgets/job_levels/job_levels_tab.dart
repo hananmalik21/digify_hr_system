@@ -4,8 +4,8 @@ import 'package:digify_hr_system/core/widgets/add_position_button.dart';
 import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_level_detail_dialog.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_level_form_dialog.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_detail_dialog.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_form_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,17 +36,9 @@ class JobLevelsTab extends ConsumerWidget {
             AddButton(
               customLabel: localizations.addJobLevel,
               onTap: () {
-                JobLevelFormDialog.show(
-                  context,
-                  onSave: (level) {
-
-                  },
-                );
+                JobLevelFormDialog.show(context, onSave: (level) {});
               },
-              padding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 8.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             ),
           ],
         ),
@@ -69,20 +61,20 @@ class JobLevelsTab extends ConsumerWidget {
               ),
             ],
           ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 1459),
-            child: Column(
-              children: [
-                _buildTableHeader(),
-                ...jobLevels.map((level) {
-                  return _buildTableRow(context, level);
-                }),
-              ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 1459),
+              child: Column(
+                children: [
+                  _buildTableHeader(),
+                  ...jobLevels.map((level) {
+                    return _buildTableRow(context, level);
+                  }),
+                ],
+              ),
             ),
           ),
-        ),
         ),
       ],
     );
@@ -115,34 +107,31 @@ class JobLevelsTab extends ConsumerWidget {
     Alignment alignment = Alignment.centerLeft,
     TextAlign textAlign = TextAlign.start,
   }) {
-      return Container(
-        width: width,
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 24.w,
-          vertical: 12.h,
+    return Container(
+      width: width,
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 12.h,
+      ),
+      alignment: alignment,
+      child: Text(
+        text.toUpperCase(),
+        textAlign: textAlign,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFF6A7282),
+          height: 16 / 12,
         ),
-        alignment: alignment,
-        child: Text(
-          text.toUpperCase(),
-          textAlign: textAlign,
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xFF6A7282),
-            height: 16 / 12,
-          ),
-        ),
-      );
+      ),
+    );
   }
 
   Widget _buildTableRow(BuildContext context, JobLevel level) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.cardBorder,
-            width: 1.w,
-          ),
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
@@ -161,10 +150,7 @@ class JobLevelsTab extends ConsumerWidget {
           ),
           _buildDataCell(
             Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 8.w,
-                vertical: 3.h,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
               decoration: BoxDecoration(
                 color: const Color(0xFFF3E8FF),
                 borderRadius: BorderRadius.circular(4.r),
@@ -219,31 +205,29 @@ class JobLevelsTab extends ConsumerWidget {
             160.w,
           ),
           _buildDataCell(
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _buildActionIcon(
-                      'assets/icons/blue_eye_icon.svg',
-                      onTap: () => JobLevelDetailDialog.show(context, level),
-                    ),
-                    SizedBox(width: 8.w),
-                  _buildActionIcon(
-                    'assets/icons/edit_icon.svg',
-                    onTap: () {
-                      JobLevelFormDialog.show(
-                        context,
-                        jobLevel: level,
-                        isEdit: true,
-                        onSave: (updated) {
-
-                        },
-                      );
-                    },
-                  ),
-                    SizedBox(width: 8.w),
-                    _buildActionIcon('assets/icons/red_delete_icon.svg'),
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _buildActionIcon(
+                  'assets/icons/blue_eye_icon.svg',
+                  onTap: () => JobLevelDetailDialog.show(context, level),
                 ),
+                SizedBox(width: 8.w),
+                _buildActionIcon(
+                  'assets/icons/edit_icon.svg',
+                  onTap: () {
+                    JobLevelFormDialog.show(
+                      context,
+                      jobLevel: level,
+                      isEdit: true,
+                      onSave: (updated) {},
+                    );
+                  },
+                ),
+                SizedBox(width: 8.w),
+                _buildActionIcon('assets/icons/red_delete_icon.svg'),
+              ],
+            ),
             170.w,
           ),
         ],
@@ -265,11 +249,7 @@ class JobLevelsTab extends ConsumerWidget {
   Widget _buildActionIcon(String assetPath, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: SvgIconWidget(
-        assetPath: assetPath,
-        size: 16.sp,
-      ),
+      child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
     );
   }
 }
-

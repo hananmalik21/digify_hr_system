@@ -199,7 +199,8 @@ final filteredPositionsProvider = Provider<List<Position>>((ref) {
 
   return positions.where((position) {
     // Search filter
-    final matchesSearch = searchQuery.isEmpty ||
+    final matchesSearch =
+        searchQuery.isEmpty ||
         position.titleEnglish.toLowerCase().contains(searchQuery) ||
         position.titleArabic.contains(searchQuery) ||
         position.code.toLowerCase().contains(searchQuery);
@@ -209,7 +210,8 @@ final filteredPositionsProvider = Provider<List<Position>>((ref) {
         departmentFilter == null || position.department == departmentFilter;
 
     // Status filter
-    final matchesStatus = statusFilter == null ||
+    final matchesStatus =
+        statusFilter == null ||
         (statusFilter == 'Active' && position.isActive) ||
         (statusFilter == 'Inactive' && !position.isActive);
 
@@ -239,8 +241,8 @@ final workforceStatsProvider = Provider<WorkforceStats>((ref) {
     (sum, position) => sum + position.vacant,
   );
 
-  final fillRate = totalPositions > 0 
-      ? (filledPositions / totalPositions) * 100 
+  final fillRate = totalPositions > 0
+      ? (filledPositions / totalPositions) * 100
       : 0.0;
 
   return WorkforceStats(
@@ -612,7 +614,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'FIN',
       nameEnglish: 'Finance & Accounting',
       nameArabic: 'المالية والمحاسبة',
-      description: 'Positions related to financial management, accounting, budgeting, and financial analysis',
+      description:
+          'Positions related to financial management, accounting, budgeting, and financial analysis',
       totalPositions: 25,
       filledPositions: 20,
       fillRate: 80.0,
@@ -624,7 +627,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'HR',
       nameEnglish: 'Human Resources',
       nameArabic: 'الموارد البشرية',
-      description: 'Positions related to recruitment, employee relations, training, and HR operations',
+      description:
+          'Positions related to recruitment, employee relations, training, and HR operations',
       totalPositions: 12,
       filledPositions: 10,
       fillRate: 83.0,
@@ -636,7 +640,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'IT',
       nameEnglish: 'Information Technology',
       nameArabic: 'تقنية المعلومات',
-      description: 'Positions related to software development, IT infrastructure, and technical support',
+      description:
+          'Positions related to software development, IT infrastructure, and technical support',
       totalPositions: 18,
       filledPositions: 15,
       fillRate: 83.0,
@@ -648,7 +653,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'SAL',
       nameEnglish: 'Sales & Marketing',
       nameArabic: 'المبيعات والتسويق',
-      description: 'Positions related to sales, marketing, customer relations, and business development',
+      description:
+          'Positions related to sales, marketing, customer relations, and business development',
       totalPositions: 30,
       filledPositions: 24,
       fillRate: 80.0,
@@ -660,7 +666,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'OPS',
       nameEnglish: 'Operations',
       nameArabic: 'العمليات',
-      description: 'Positions related to operations management, logistics, and supply chain',
+      description:
+          'Positions related to operations management, logistics, and supply chain',
       totalPositions: 45,
       filledPositions: 38,
       fillRate: 84.0,
@@ -672,7 +679,8 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       code: 'LEG',
       nameEnglish: 'Legal & Compliance',
       nameArabic: 'القانونية والامتثال',
-      description: 'Positions related to legal affairs, compliance, and regulatory matters',
+      description:
+          'Positions related to legal affairs, compliance, and regulatory matters',
       totalPositions: 8,
       filledPositions: 7,
       fillRate: 88.0,
@@ -684,8 +692,9 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
 });
 
 /// Provider for reporting structure positions
-final reportingPositionListProvider =
-    StateProvider<List<ReportingPosition>>((ref) {
+final reportingPositionListProvider = StateProvider<List<ReportingPosition>>((
+  ref,
+) {
   return const [
     ReportingPosition(
       positionCode: 'FIN-MGR-001',

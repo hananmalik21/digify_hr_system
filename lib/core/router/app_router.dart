@@ -22,7 +22,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: false,
     redirect: (context, state) {
       final isAuthenticated = authState.isAuthenticated;
-      final isLoggingIn = state.matchedLocation == '/login' ||
+      final isLoggingIn =
+          state.matchedLocation == '/login' ||
           state.matchedLocation == '/signup';
 
       if (!isAuthenticated && !isLoggingIn) {
@@ -54,46 +55,39 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'overview',
                 name: 'dashboard-overview',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Dashboard Overview',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Dashboard Overview'),
               ),
               GoRoute(
                 path: 'analytics',
                 name: 'dashboard-analytics',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Analytics',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Analytics'),
               ),
               GoRoute(
                 path: 'quick-actions',
                 name: 'dashboard-quick-actions',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Quick Actions',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Quick Actions'),
               ),
             ],
           ),
           GoRoute(
             path: '/module-catalogue',
             name: 'module-catalogue',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Module Catalogue',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Module Catalogue'),
           ),
           GoRoute(
             path: '/product-intro',
             name: 'product-intro',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Product Introduction',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Product Introduction'),
           ),
           GoRoute(
             path: '/enterprise-structure',
             name: 'enterprise-structure',
             redirect: (context, state) {
-              // Only redirect if we're on the exact parent path
-              // Don't redirect if we're already on a child route
               if (state.uri.path == '/enterprise-structure') {
                 return '/enterprise-structure/manage';
               }
@@ -115,14 +109,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'company',
                 name: 'enterprise-structure-company',
-                builder: (context, state) =>
-                    const CompanyManagementScreen(),
+                builder: (context, state) => const CompanyManagementScreen(),
               ),
               GoRoute(
                 path: 'division',
                 name: 'enterprise-structure-division',
-                builder: (context, state) =>
-                    const DivisionManagementScreen(),
+                builder: (context, state) => const DivisionManagementScreen(),
               ),
               GoRoute(
                 path: 'business-unit',
@@ -133,14 +125,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'department',
                 name: 'enterprise-structure-department',
-                builder: (context, state) =>
-                    const DepartmentManagementScreen(),
+                builder: (context, state) => const DepartmentManagementScreen(),
               ),
               GoRoute(
                 path: 'section',
                 name: 'enterprise-structure-section',
-                builder: (context, state) =>
-                    const SectionManagementScreen(),
+                builder: (context, state) => const SectionManagementScreen(),
               ),
             ],
           ),
@@ -175,14 +165,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'grade-structure',
                 name: 'workforce-structure-grade-structure',
-                builder: (context, state) =>
-                    const WorkforceStructureScreen(initialTab: 'gradeStructure'),
+                builder: (context, state) => const WorkforceStructureScreen(
+                  initialTab: 'gradeStructure',
+                ),
               ),
               GoRoute(
                 path: 'reporting-structure',
                 name: 'workforce-structure-reporting-structure',
                 builder: (context, state) => const WorkforceStructureScreen(
-                    initialTab: 'reportingStructure'),
+                  initialTab: 'reportingStructure',
+                ),
               ),
               GoRoute(
                 path: 'position-tree',
@@ -195,9 +187,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/time-management',
             name: 'time-management',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Time Management',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Time Management'),
           ),
           GoRoute(
             path: '/employees',
@@ -207,123 +198,106 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'list',
                 name: 'employees-list',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Employee List',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Employee List'),
               ),
               GoRoute(
                 path: 'add',
                 name: 'employees-add',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Add Employee',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Add Employee'),
               ),
               GoRoute(
                 path: 'actions',
                 name: 'employees-actions',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Employee Actions',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Employee Actions'),
               ),
               GoRoute(
                 path: 'org-structure',
                 name: 'employees-org-structure',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Org Structure',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Org Structure'),
               ),
               GoRoute(
                 path: 'workforce-planning',
                 name: 'employees-workforce-planning',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Workforce Planning',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Workforce Planning'),
               ),
               GoRoute(
                 path: 'positions',
                 name: 'employees-positions',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Positions',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Positions'),
               ),
               GoRoute(
                 path: 'contracts',
                 name: 'employees-contracts',
-                builder: (context, state) => const PlaceholderScreen(
-                  title: 'Contracts',
-                ),
+                builder: (context, state) =>
+                    const PlaceholderScreen(title: 'Contracts'),
               ),
             ],
           ),
           GoRoute(
             path: '/leave-management',
             name: 'leave-management',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Leave Management',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Leave Management'),
           ),
           GoRoute(
             path: '/attendance',
             name: 'attendance',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Attendance',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Attendance'),
           ),
           GoRoute(
             path: '/payroll',
             name: 'payroll',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Payroll',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Payroll'),
           ),
           GoRoute(
             path: '/compliance',
             name: 'compliance',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Compliance',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Compliance'),
           ),
           GoRoute(
             path: '/eos-calculator',
             name: 'eos-calculator',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'EOS Calculator',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'EOS Calculator'),
           ),
           GoRoute(
             path: '/reports',
             name: 'reports',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Reports',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Reports'),
           ),
           GoRoute(
             path: '/government-forms',
             name: 'government-forms',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Government Forms',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Government Forms'),
           ),
           GoRoute(
             path: '/dei-dashboard',
             name: 'dei-dashboard',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'DEI Dashboard',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'DEI Dashboard'),
           ),
           GoRoute(
             path: '/hr-operations',
             name: 'hr-operations',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'HR Operations',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'HR Operations'),
           ),
           GoRoute(
             path: '/settings',
             name: 'settings',
-            builder: (context, state) => const PlaceholderScreen(
-              title: 'Settings & Configurations',
-            ),
+            builder: (context, state) =>
+                const PlaceholderScreen(title: 'Settings & Configurations'),
           ),
           GoRoute(
             path: '/home',
@@ -335,5 +309,3 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-
