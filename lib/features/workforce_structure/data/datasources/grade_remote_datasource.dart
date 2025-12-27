@@ -1,0 +1,27 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_endpoints.dart';
+import 'package:digify_hr_system/features/workforce_structure/data/models/grade_response_model.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_response.dart';
+
+abstract class GradeRemoteDataSource {
+  Future<GradeResponse> getGrades({int page = 1, int pageSize = 10});
+}
+
+class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
+  final ApiClient apiClient;
+
+  const GradeRemoteDataSourceImpl({required this.apiClient});
+
+  @override
+  Future<GradeResponse> getGrades({int page = 1, int pageSize = 10}) async {
+    final response = await apiClient.get(
+      ApiEndpoints.grades,
+      queryParameters: {
+        'page': page.toString(),
+        'page_size': pageSize.toString(),
+      },
+    );
+
+    return GradeResponseModel.fromJson(response).toEntity();
+  }
+}

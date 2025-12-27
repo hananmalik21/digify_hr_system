@@ -24,10 +24,11 @@ class JobLevelSkeleton extends StatelessWidget {
         status: 'ACTIVE',
         totalPositions: 10,
         filledPositions: 5,
-        minGrade: const Grade(
+        minGrade: Grade(
           id: 1,
           gradeNumber: '1',
           gradeCategory: 'A',
+          currencyCode: 'KWD',
           step1Salary: 0,
           step2Salary: 0,
           step3Salary: 0,
@@ -35,11 +36,17 @@ class JobLevelSkeleton extends StatelessWidget {
           step5Salary: 0,
           status: 'ACTIVE',
           description: '',
+          createdBy: 'SYSTEM',
+          createdDate: DateTime.now(),
+          lastUpdatedBy: 'SYSTEM',
+          lastUpdatedDate: DateTime.now(),
+          lastUpdateLogin: 'SYSTEM',
         ),
-        maxGrade: const Grade(
+        maxGrade: Grade(
           id: 2,
           gradeNumber: '2',
           gradeCategory: 'A',
+          currencyCode: 'KWD',
           step1Salary: 0,
           step2Salary: 0,
           step3Salary: 0,
@@ -47,6 +54,11 @@ class JobLevelSkeleton extends StatelessWidget {
           step5Salary: 0,
           status: 'ACTIVE',
           description: '',
+          createdBy: 'SYSTEM',
+          createdDate: DateTime.now(),
+          lastUpdatedBy: 'SYSTEM',
+          lastUpdatedDate: DateTime.now(),
+          lastUpdateLogin: 'SYSTEM',
         ),
       ),
     );
