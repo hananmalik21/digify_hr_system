@@ -25,9 +25,7 @@ class JobFamilyHeader extends StatelessWidget {
           ),
         ),
         AddButton(
-          onTap: () {
-            JobFamilyFormDialog.show(context);
-          },
+          onTap: () => JobFamilyFormDialog.show(context),
           customLabel: localizations.addJobFamily,
         ),
       ],
