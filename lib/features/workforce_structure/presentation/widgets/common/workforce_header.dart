@@ -1,15 +1,14 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../core/widgets/assets/digify_asset.dart';
 
 class WorkforceHeader extends StatelessWidget {
   final AppLocalizations localizations;
 
-  const WorkforceHeader({
-    super.key,
-    required this.localizations,
-  });
+  const WorkforceHeader({super.key, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +63,9 @@ class WorkforceHeader extends StatelessWidget {
               ],
             ),
           ),
-          SvgIconWidget(
-            assetPath: 'assets/icons/workforce_structure_white.svg',
-            size: 64.sp,
-            color: Colors.white,
+          DigifyAsset(
+            assetPath: Assets.icons.workforce.workforceTab.path,
+            color: AppColors.background,
           ),
         ],
       ),

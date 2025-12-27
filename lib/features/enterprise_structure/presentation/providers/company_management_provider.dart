@@ -40,7 +40,7 @@ class CompaniesState {
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage ?? this.errorMessage,
       hasError: hasError ?? this.hasError,
-      searchQuery: searchQuery ?? this.searchQuery ?? '',
+      searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,
     );
@@ -54,7 +54,7 @@ class CompaniesNotifier extends StateNotifier<CompaniesState> {
   Timer? _debounceTimer;
 
   CompaniesNotifier({required this.getCompaniesUseCase})
-      : super(const CompaniesState()) {
+    : super(const CompaniesState()) {
     _loadCompanies();
   }
 
@@ -64,12 +64,21 @@ class CompaniesNotifier extends StateNotifier<CompaniesState> {
     super.dispose();
   }
 
-  Future<void> _loadCompanies({String? search, int? page, int? pageSize}) async {
-    state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
+  Future<void> _loadCompanies({
+    String? search,
+    int? page,
+    int? pageSize,
+  }) async {
+    state = state.copyWith(
+      isLoading: true,
+      hasError: false,
+      errorMessage: null,
+    );
 
     try {
       final companies = await getCompaniesUseCase(
-        search: search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : null),
+        search:
+            search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : null),
         page: page ?? state.currentPage,
         pageSize: pageSize ?? state.pageSize,
       );
@@ -115,17 +124,18 @@ class CompaniesNotifier extends StateNotifier<CompaniesState> {
 /// Provider for companies list
 /// This provider automatically loads companies every time it's accessed
 final companiesProvider =
-    StateNotifierProvider.autoDispose<CompaniesNotifier, CompaniesState>(
-        (ref) {
-  final getCompaniesUseCase = ref.watch(getCompaniesUseCaseProvider);
-  return CompaniesNotifier(getCompaniesUseCase: getCompaniesUseCase);
-});
+    StateNotifierProvider.autoDispose<CompaniesNotifier, CompaniesState>((ref) {
+      final getCompaniesUseCase = ref.watch(getCompaniesUseCaseProvider);
+      return CompaniesNotifier(getCompaniesUseCase: getCompaniesUseCase);
+    });
 
 /// Provider for filtered companies based on search query
 final companySearchQueryProvider = StateProvider.autoDispose<String>((_) => '');
 
 /// Provider for filtered companies list
-final filteredCompanyProvider = Provider.autoDispose<List<CompanyOverview>>((ref) {
+final filteredCompanyProvider = Provider.autoDispose<List<CompanyOverview>>((
+  ref,
+) {
   final query = ref.watch(companySearchQueryProvider).trim().toLowerCase();
   final companiesState = ref.watch(companiesProvider);
   final companies = companiesState.companies;
@@ -134,19 +144,19 @@ final filteredCompanyProvider = Provider.autoDispose<List<CompanyOverview>>((ref
     return companies;
   }
 
-  return companies
-      .where((company) {
-        final searchableData = '''
+  return companies.where((company) {
+    final searchableData =
+        '''
           ${company.name}
           ${company.nameArabic}
           ${company.entityCode}
           ${company.registrationNumber}
           ${company.industry}
           ${company.location}
-        '''.toLowerCase();
-        return searchableData.contains(query);
-      })
-      .toList();
+        '''
+            .toLowerCase();
+    return searchableData.contains(query);
+  }).toList();
 });
 
 /// Legacy provider for backward compatibility

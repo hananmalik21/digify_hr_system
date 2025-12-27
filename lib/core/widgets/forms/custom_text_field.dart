@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../constants/app_colors.dart';
-import '../theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 
 /// Universal CustomTextField Widget
 /// This is the ONLY text field widget that should be used across the entire app.

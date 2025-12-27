@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/widgets/custom_button.dart';
+import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class GradientIconButton extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -69,8 +69,7 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
     return _filteredItems.sublist(start, end);
   }
 
-  int get _totalPages =>
-      (_filteredItems.length / widget.itemsPerPage).ceil();
+  int get _totalPages => (_filteredItems.length / widget.itemsPerPage).ceil();
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +151,8 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? (isDark
-                                  ? AppColors.primary.withValues(alpha: 0.1)
-                                  : AppColors.primary.withValues(alpha: 0.05))
+                                    ? AppColors.primary.withValues(alpha: 0.1)
+                                    : AppColors.primary.withValues(alpha: 0.05))
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(6.r),
                         ),
@@ -169,8 +168,8 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
                                   color: isSelected
                                       ? AppColors.primary
                                       : (isDark
-                                          ? AppColors.textPrimaryDark
-                                          : AppColors.textPrimary),
+                                            ? AppColors.textPrimaryDark
+                                            : AppColors.textPrimary),
                                   height: 20 / 13.7,
                                 ),
                               ),
@@ -233,8 +232,8 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
           color: widget.enabled
               ? (isDark ? AppColors.inputBgDark : AppColors.inputBg)
               : (isDark
-                  ? AppColors.cardBackgroundGreyDark
-                  : AppColors.cardBackgroundGrey),
+                    ? AppColors.cardBackgroundGreyDark
+                    : AppColors.cardBackgroundGrey),
           border: Border.all(
             color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder,
             width: 1,
@@ -254,11 +253,11 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
                   fontWeight: FontWeight.w400,
                   color: widget.value != null
                       ? (isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A))
+                            ? AppColors.textPrimaryDark
+                            : const Color(0xFF0A0A0A))
                       : (isDark
-                          ? AppColors.textPlaceholderDark
-                          : AppColors.textPlaceholder),
+                            ? AppColors.textPlaceholderDark
+                            : AppColors.textPlaceholder),
                   height: 24 / 15.3,
                   letterSpacing: 0,
                 ),
@@ -278,4 +277,3 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
     );
   }
 }
-

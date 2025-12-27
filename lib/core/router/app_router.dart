@@ -1,5 +1,5 @@
 import 'package:digify_hr_system/core/navigation/app_layout.dart';
-import 'package:digify_hr_system/core/widgets/placeholder_screen.dart';
+import 'package:digify_hr_system/core/widgets/feedback/placeholder_screen.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/screens/login_screen.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/screens/dashboard_screen.dart';

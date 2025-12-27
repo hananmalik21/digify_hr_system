@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/custom_table.dart';
+import 'package:digify_hr_system/core/widgets/data/custom_table.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,46 +74,18 @@ class ActiveLevelsTableWidget extends StatelessWidget {
     }).toList();
 
     final columns = [
-      TableColumn(
-        key: 'org_unit_id',
-        label: 'Org Unit ID',
-        width: 120.w,
-      ),
+      TableColumn(key: 'org_unit_id', label: 'Org Unit ID', width: 120.w),
       TableColumn(
         key: 'org_structure_id',
         label: 'Org Structure ID',
         width: 140.w,
       ),
-      TableColumn(
-        key: 'enterprise_id',
-        label: 'Enterprise ID',
-        width: 120.w,
-      ),
-      TableColumn(
-        key: 'level_code',
-        label: 'Level Code',
-        width: 120.w,
-      ),
-      TableColumn(
-        key: 'org_unit_code',
-        label: 'Org Unit Code',
-        width: 140.w,
-      ),
-      TableColumn(
-        key: 'org_unit_name_en',
-        label: 'Name (EN)',
-        width: 180.w,
-      ),
-      TableColumn(
-        key: 'org_unit_name_ar',
-        label: 'Name (AR)',
-        width: 180.w,
-      ),
-      TableColumn(
-        key: 'parent_org_unit_id',
-        label: 'Parent ID',
-        width: 120.w,
-      ),
+      TableColumn(key: 'enterprise_id', label: 'Enterprise ID', width: 120.w),
+      TableColumn(key: 'level_code', label: 'Level Code', width: 120.w),
+      TableColumn(key: 'org_unit_code', label: 'Org Unit Code', width: 140.w),
+      TableColumn(key: 'org_unit_name_en', label: 'Name (EN)', width: 180.w),
+      TableColumn(key: 'org_unit_name_ar', label: 'Name (AR)', width: 180.w),
+      TableColumn(key: 'parent_org_unit_id', label: 'Parent ID', width: 120.w),
       TableColumn(
         key: 'is_active',
         label: 'Active',
@@ -126,11 +97,11 @@ class ActiveLevelsTableWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: isActive
                   ? (isDark
-                      ? AppColors.success.withValues(alpha: 0.2)
-                      : AppColors.successBg)
+                        ? AppColors.success.withValues(alpha: 0.2)
+                        : AppColors.successBg)
                   : (isDark
-                      ? AppColors.error.withValues(alpha: 0.2)
-                      : const Color(0xFFFEE2E2)),
+                        ? AppColors.error.withValues(alpha: 0.2)
+                        : const Color(0xFFFEE2E2)),
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
@@ -146,59 +117,29 @@ class ActiveLevelsTableWidget extends StatelessWidget {
           );
         },
       ),
-      TableColumn(
-        key: 'manager_name',
-        label: 'Manager',
-        width: 150.w,
-      ),
-      TableColumn(
-        key: 'manager_email',
-        label: 'Manager Email',
-        width: 200.w,
-      ),
-      TableColumn(
-        key: 'manager_phone',
-        label: 'Manager Phone',
-        width: 150.w,
-      ),
-      TableColumn(
-        key: 'location',
-        label: 'Location',
-        width: 150.w,
-      ),
-      TableColumn(
-        key: 'city',
-        label: 'City',
-        width: 120.w,
-      ),
-      TableColumn(
-        key: 'address',
-        label: 'Address',
-        width: 200.w,
-      ),
-      TableColumn(
-        key: 'description',
-        label: 'Description',
-        width: 250.w,
-      ),
+      TableColumn(key: 'manager_name', label: 'Manager', width: 150.w),
+      TableColumn(key: 'manager_email', label: 'Manager Email', width: 200.w),
+      TableColumn(key: 'manager_phone', label: 'Manager Phone', width: 150.w),
+      TableColumn(key: 'location', label: 'Location', width: 150.w),
+      TableColumn(key: 'city', label: 'City', width: 120.w),
+      TableColumn(key: 'address', label: 'Address', width: 200.w),
+      TableColumn(key: 'description', label: 'Description', width: 250.w),
     ];
 
     return Container(
-      constraints: BoxConstraints(
-        minHeight: 400.h,
-        maxHeight: 600.h,
-      ),
+      constraints: BoxConstraints(minHeight: 400.h, maxHeight: 600.h),
       child: CustomTable(
         columns: columns,
         data: tableData,
         isLoading: isLoading,
         showHeader: true,
-        headerBackgroundColor:
-            isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg,
-        rowBackgroundColor:
-            isDark ? AppColors.cardBackgroundDark : Colors.white,
+        headerBackgroundColor: isDark
+            ? AppColors.cardBackgroundGreyDark
+            : AppColors.grayBg,
+        rowBackgroundColor: isDark
+            ? AppColors.cardBackgroundDark
+            : Colors.white,
       ),
     );
   }
 }
-

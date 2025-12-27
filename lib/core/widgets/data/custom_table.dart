@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -74,7 +73,9 @@ class CustomTable extends StatelessWidget {
     }
 
     // Debug: Log table data
-    debugPrint('CustomTable: Building with ${data.length} rows, ${columns.length} columns');
+    debugPrint(
+      'CustomTable: Building with ${data.length} rows, ${columns.length} columns',
+    );
     if (data.isNotEmpty) {
       debugPrint('CustomTable: First row keys: ${data.first.keys}');
     }
@@ -93,7 +94,8 @@ class CustomTable extends StatelessWidget {
           if (showHeader) _buildHeader(context, isDark),
           if (data.isEmpty)
             Expanded(
-              child: emptyStateWidget ??
+              child:
+                  emptyStateWidget ??
                   Center(
                     child: Padding(
                       padding: EdgeInsets.all(40.h),
@@ -126,7 +128,8 @@ class CustomTable extends StatelessWidget {
   Widget _buildHeader(BuildContext context, bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        color: headerBackgroundColor ??
+        color:
+            headerBackgroundColor ??
             (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
         border: Border(
           bottom: BorderSide(
@@ -227,18 +230,12 @@ class CustomTable extends StatelessWidget {
           final index = entry.key;
           final row = entry.value;
           final isSelected = selectedIndices?.contains(index) ?? false;
-          
+
           if (index == 0) {
             debugPrint('CustomTable._buildTable: First row data: $row');
           }
 
-          return _buildTableRow(
-            context,
-            isDark,
-            row,
-            index,
-            isSelected,
-          );
+          return _buildTableRow(context, isDark, row, index, isSelected);
         }),
       ],
     );
@@ -252,17 +249,19 @@ class CustomTable extends StatelessWidget {
     bool isSelected,
   ) {
     return MouseRegion(
-      cursor: onRowTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: onRowTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: onRowTap != null ? () => onRowTap!(row) : null,
         child: Container(
           decoration: BoxDecoration(
             color: isSelected
                 ? (isDark
-                    ? AppColors.primary.withValues(alpha: 0.1)
-                    : AppColors.primary.withValues(alpha: 0.05))
+                      ? AppColors.primary.withValues(alpha: 0.1)
+                      : AppColors.primary.withValues(alpha: 0.05))
                 : (rowBackgroundColor ??
-                    (isDark ? AppColors.cardBackgroundDark : Colors.white)),
+                      (isDark ? AppColors.cardBackgroundDark : Colors.white)),
             border: Border(
               bottom: BorderSide(
                 color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
@@ -304,9 +303,7 @@ class CustomTable extends StatelessWidget {
         style: TextStyle(
           fontSize: 13.7.sp,
           fontWeight: FontWeight.w400,
-          color: isDark
-              ? AppColors.textPrimaryDark
-              : AppColors.textPrimary,
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           height: 20 / 13.7,
           letterSpacing: 0,
         ),
@@ -325,4 +322,3 @@ class CustomTable extends StatelessWidget {
     );
   }
 }
-

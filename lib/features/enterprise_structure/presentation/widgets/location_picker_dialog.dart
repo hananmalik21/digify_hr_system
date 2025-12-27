@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
-import 'package:digify_hr_system/core/widgets/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
 
 enum LocationMethod { currentLocation, markOnMap, sendEmail }
 
@@ -931,8 +931,8 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary.withValues(alpha: 
-                                0.5,
+                              backgroundColor: AppColors.primary.withValues(
+                                alpha: 0.5,
                               ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 24.w,
@@ -975,7 +975,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary.withValues(alpha: 0.5),
+                            backgroundColor: AppColors.primary.withValues(
+                              alpha: 0.5,
+                            ),
                             padding: EdgeInsets.symmetric(
                               horizontal: 24.w,
                               vertical: 8.h,
@@ -1317,8 +1319,8 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                               ),
                             ),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary.withValues(alpha: 
-                                0.5,
+                              backgroundColor: AppColors.primary.withValues(
+                                alpha: 0.5,
                               ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 24.w,
@@ -1361,7 +1363,9 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary.withValues(alpha: 0.5),
+                            backgroundColor: AppColors.primary.withValues(
+                              alpha: 0.5,
+                            ),
                             padding: EdgeInsets.symmetric(
                               horizontal: 24.w,
                               vertical: 8.h,
