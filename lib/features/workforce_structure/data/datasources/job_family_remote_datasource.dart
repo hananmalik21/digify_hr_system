@@ -13,6 +13,7 @@ abstract class JobFamilyRemoteDataSource {
     required String description,
     String status = 'ACTIVE',
   });
+  Future<void> deleteJobFamily({required int id, bool hard = true});
 }
 
 class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
@@ -58,5 +59,13 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
     // Parse response using data model, then convert to entity
     final model = JobFamilyModel.fromJson(response['data']);
     return model.toEntity();
+  }
+
+  @override
+  Future<void> deleteJobFamily({required int id, bool hard = true}) async {
+    await apiClient.delete(
+      '${ApiEndpoints.jobFamilies}/$id',
+      queryParameters: {'hard': hard.toString()},
+    );
   }
 }

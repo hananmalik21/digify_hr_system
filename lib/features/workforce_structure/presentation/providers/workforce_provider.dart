@@ -611,6 +611,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
   // Mock data - Replace with actual data source
   return [
     JobFamily(
+      id: 1,
       code: 'FIN',
       nameEnglish: 'Finance & Accounting',
       nameArabic: 'المالية والمحاسبة',
@@ -624,6 +625,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       updatedAt: DateTime(2024, 12, 18),
     ),
     JobFamily(
+      id: 2,
       code: 'HR',
       nameEnglish: 'Human Resources',
       nameArabic: 'الموارد البشرية',
@@ -637,6 +639,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       updatedAt: DateTime(2025, 1, 18),
     ),
     JobFamily(
+      id: 3,
       code: 'IT',
       nameEnglish: 'Information Technology',
       nameArabic: 'تقنية المعلومات',
@@ -650,6 +653,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       updatedAt: DateTime(2024, 11, 2),
     ),
     JobFamily(
+      id: 5,
       code: 'SAL',
       nameEnglish: 'Sales & Marketing',
       nameArabic: 'المبيعات والتسويق',
@@ -663,6 +667,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       updatedAt: DateTime(2025, 1, 20),
     ),
     JobFamily(
+      id: 4,
       code: 'OPS',
       nameEnglish: 'Operations',
       nameArabic: 'العمليات',
@@ -676,6 +681,7 @@ final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
       updatedAt: DateTime(2024, 12, 5),
     ),
     JobFamily(
+      id: 6,
       code: 'LEG',
       nameEnglish: 'Legal & Compliance',
       nameArabic: 'القانونية والامتثال',

@@ -35,4 +35,9 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
       status: status,
     );
   }
+
+  @override
+  Future<void> deleteJobFamily({required int id, bool hard = true}) async {
+    return await remoteDataSource.deleteJobFamily(id: id, hard: hard);
+  }
 }

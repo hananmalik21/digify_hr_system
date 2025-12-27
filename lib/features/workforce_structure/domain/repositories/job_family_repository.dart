@@ -10,4 +10,5 @@ abstract class JobFamilyRepository {
     required String description,
     String status = 'ACTIVE',
   });
+  Future<void> deleteJobFamily({required int id, bool hard = true});
 }
