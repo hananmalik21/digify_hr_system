@@ -216,6 +216,7 @@ class PositionModel {
     }
 
     return Position(
+      id: positionId,
       code: positionCode,
       titleEnglish: positionTitleEn,
       titleArabic: positionTitleAr,

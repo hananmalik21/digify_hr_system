@@ -1,5 +1,7 @@
 import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_position_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_positions_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,8 +11,14 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
     with PaginationMixin<Position>
     implements PaginationController<Position> {
   final GetPositionsUseCase _getPositionsUseCase;
+  final CreatePositionUseCase _createPositionUseCase;
+  final DeletePositionUseCase _deletePositionUseCase;
 
-  PositionNotifier(this._getPositionsUseCase) : super(const PaginationState());
+  PositionNotifier(
+    this._getPositionsUseCase,
+    this._createPositionUseCase,
+    this._deletePositionUseCase,
+  ) : super(const PaginationState());
 
   @override
   Future<void> loadFirstPage() async {
@@ -78,6 +86,47 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
   @override
   void reset() {
     state = const PaginationState();
+  }
+
+  /// Create a position
+  Future<Position> createPosition(Map<String, dynamic> positionData) async {
+    try {
+      final newPosition = await _createPositionUseCase(positionData);
+
+      // Update state optimistically after success (without full refresh)
+      state = state.copyWith(
+        items: [newPosition, ...state.items],
+        totalItems: state.totalItems + 1,
+      );
+
+      return newPosition;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Delete a position
+  Future<void> deletePosition(int id, {bool hard = true}) async {
+    // Keep a copy for rollback if needed?
+    // The user asked for optimistic update.
+    // Usually optimistic update in list means removing it immediately.
+
+    final previousItems = state.items;
+    final previousTotal = state.totalItems;
+
+    // Optimistically remove
+    state = state.copyWith(
+      items: state.items.where((p) => p.id != id).toList(),
+      totalItems: state.totalItems - 1,
+    );
+
+    try {
+      await _deletePositionUseCase.execute(id, hard: hard);
+    } catch (e) {
+      // Rollback on error
+      state = state.copyWith(items: previousItems, totalItems: previousTotal);
+      rethrow;
+    }
   }
 
   /// Update page size and refresh

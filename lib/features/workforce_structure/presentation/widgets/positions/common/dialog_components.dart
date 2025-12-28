@@ -99,11 +99,15 @@ class PositionFormRow extends StatelessWidget {
 class PositionLabeledField extends StatelessWidget {
   final String label;
   final Widget child;
+  final bool isRequired;
+  final FontWeight? fontWeight;
 
   const PositionLabeledField({
     super.key,
     required this.label,
     required this.child,
+    this.isRequired = false,
+    this.fontWeight,
   });
 
   @override
@@ -111,12 +115,29 @@ class PositionLabeledField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textSecondary,
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: fontWeight ?? FontWeight.w400,
+                  color: AppColors.textSecondary,
+                  fontFamily: 'Inter',
+                ),
+              ),
+              if (isRequired)
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: fontWeight ?? FontWeight.w400,
+                    color: AppColors.textSecondary,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+            ],
           ),
         ),
         SizedBox(height: 6.h),

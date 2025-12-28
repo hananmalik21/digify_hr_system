@@ -1,8 +1,9 @@
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/position_badges.dart';
 
@@ -175,24 +176,26 @@ class PositionTableRow extends StatelessWidget {
           ),
           _buildDataCell(
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildActionIcon(
-                  'assets/icons/blue_eye_icon.svg',
+                  Assets.icons.blueEyeIcon.path,
                   () => onView(position),
                 ),
                 SizedBox(width: 8.w),
                 _buildActionIcon(
-                  'assets/icons/edit_icon.svg',
+                  Assets.icons.editIcon.path,
                   () => onEdit(position),
                 ),
                 SizedBox(width: 8.w),
                 _buildActionIcon(
-                  'assets/icons/red_delete_icon.svg',
+                  Assets.icons.redDeleteIcon.path,
                   () => onDelete(position),
                 ),
               ],
             ),
-            112.03.w,
+            130.w,
           ),
         ],
       ),
@@ -214,7 +217,12 @@ class PositionTableRow extends StatelessWidget {
   Widget _buildActionIcon(String assetPath, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
+      child: DigifyAsset(
+        assetPath: assetPath,
+        width: 15,
+        height: 15,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }

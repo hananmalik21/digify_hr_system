@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart'
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/delete_position_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_details_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_form_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/workforce_positions_table.dart';
@@ -69,14 +70,14 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
         ),
         SizedBox(height: 24.h),
 
-        // Error state (when no data and not loading)
         if (positionState.hasError &&
             positionState.items.isEmpty &&
             !positionState.isLoading)
-          Expanded(
-            child: Center(
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 100.h),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
                   SizedBox(height: 16.h),
@@ -96,7 +97,6 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
               ),
             ),
           )
-        // Data or Loading state
         else
           WorkforcePositionsTable(
             localizations: localizations,
@@ -106,10 +106,10 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
             onView: (position) => _showPositionDetailsDialog(context, position),
             onEdit: (position) =>
                 _showPositionFormDialog(context, position, true),
-            onDelete: (position) {},
+            onDelete: (position) =>
+                DeletePositionDialog.show(context, position: position),
           ),
 
-        // Loading more indicator
         if (positionState.isLoadingMore)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 24.h),
