@@ -7,7 +7,6 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/org
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Widget for displaying org units data in a table
 /// Styled to match the workforce structure table
 class OrgUnitsTableWidget extends StatelessWidget {
   final List<OrgStructureLevel> units;
@@ -31,7 +30,9 @@ class OrgUnitsTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('OrgUnitsTableWidget: isLoading=$isLoading, units count=${units.length}');
+    debugPrint(
+      'OrgUnitsTableWidget: isLoading=$isLoading, units count=${units.length}',
+    );
 
     if (isLoading && units.isEmpty) {
       return Center(
@@ -92,7 +93,9 @@ class OrgUnitsTableWidget extends StatelessWidget {
   }
 
   Widget _buildTableHeader(BuildContext context, bool isDark) {
-    final headerColor = isDark ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB);
+    final headerColor = isDark
+        ? AppColors.cardBackgroundDark
+        : const Color(0xFFF9FAFB);
     return Container(
       color: headerColor,
       child: Row(
@@ -106,18 +109,6 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildHeaderCell('NAME (AR)', 180.w),
           _buildHeaderCell('PARENT', 120.w),
           _buildHeaderCell('ACTIVE', 130.w),
-          // _buildHeaderCell('MANAGER', 150.w),
-          // _buildHeaderCell('MANAGER EMAIL', 200.w),
-          // _buildHeaderCell('MANAGER PHONE', 150.w),
-          // _buildHeaderCell('LOCATION', 150.w),
-          // _buildHeaderCell('CITY', 120.w),
-          // _buildHeaderCell('ADDRESS', 200.w),
-          // _buildHeaderCell('DESCRIPTION', 250.w),
-          // _buildHeaderCell('CREATED BY', 120.w),
-          // _buildHeaderCell('CREATED DATE', 180.w),
-          // _buildHeaderCell('LAST UPDATED BY', 150.w),
-          // _buildHeaderCell('LAST UPDATED DATE', 180.w),
-          // _buildHeaderCell('LAST UPDATE LOGIN', 150.w),
           _buildHeaderCell('ACTIONS', 112.w),
         ],
       ),
@@ -148,10 +139,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.cardBorder,
-            width: 1.w,
-          ),
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
@@ -253,7 +241,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
           _buildDataCell(
             Text(
-              unit?.parentUnit?.name?? '-',
+              unit.parentUnit?.name ?? '-',
               style: TextStyle(
                 fontSize: 13.7.sp,
                 fontWeight: FontWeight.w400,
@@ -264,7 +252,12 @@ class OrgUnitsTableWidget extends StatelessWidget {
             120.w,
           ),
           _buildDataCell(
-            _buildStatusBadge(unit.isActive ? localizations.active.toUpperCase() : localizations.inactive.toUpperCase(), unit.isActive),
+            _buildStatusBadge(
+              unit.isActive
+                  ? localizations.active.toUpperCase()
+                  : localizations.inactive.toUpperCase(),
+              unit.isActive,
+            ),
             130.w,
           ),
           // _buildDataCell(
@@ -448,10 +441,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       onTap: onTap,
       child: Opacity(
         opacity: onTap != null ? 1.0 : 0.5,
-        child: SvgIconWidget(
-          assetPath: assetPath,
-          size: 16.sp,
-        ),
+        child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
       ),
     );
   }
@@ -459,10 +449,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildStatusBadge(String label, bool isActive) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8.w,
-          vertical: 3.h,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
         decoration: BoxDecoration(
           color: isActive ? AppColors.successBg : AppColors.orangeBg,
           borderRadius: BorderRadius.circular(9999.r),
