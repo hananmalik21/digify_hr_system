@@ -152,12 +152,6 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
         );
       }
       
-      debugPrint('OrgUnitsNotifier: Loaded ${paginatedResponse.units.length} units for level $levelCode (page $page)');
-      debugPrint('OrgUnitsNotifier: data is ${paginatedResponse.units.first.parentUnit}');
-      debugPrint('OrgUnitsNotifier: data is ${paginatedResponse.units.first.parentOrgUnitId}');
-      debugPrint('OrgUnitsNotifier: Response pagination - currentPage=${paginatedResponse.currentPage}, totalPages=${paginatedResponse.totalPages}, totalItems=${paginatedResponse.totalItems}');
-      debugPrint('OrgUnitsNotifier: Response pagination - pageSize=${paginatedResponse.pageSize}');
-      debugPrint('OrgUnitsNotifier: Calculating hasNextPage - currentPage=${paginatedResponse.currentPage} < totalPages=${paginatedResponse.totalPages} = ${paginatedResponse.currentPage < paginatedResponse.totalPages}');
       if (paginatedResponse.units.isNotEmpty) {
         debugPrint('OrgUnitsNotifier: First unit ID: ${paginatedResponse.units.first.orgUnitId}, Name: ${paginatedResponse.units.first.orgUnitNameEn}');
       }
@@ -188,7 +182,8 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       } catch (_) {
         return;
       }
-    } catch (e) {
+    } catch (e,stacktrace) {
+      print("stacktrace ${stacktrace.toString()}");
       try {
         state = state.copyWith(
           isLoading: false,
