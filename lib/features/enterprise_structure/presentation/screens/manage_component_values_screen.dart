@@ -681,6 +681,7 @@ class _ManageComponentValuesScreenState
       debugPrint('_buildContentView: Rendering OrgUnitsTableWidget with ${orgUnitsState.units.length} units');
       if (orgUnitsState.units.isNotEmpty) {
         debugPrint('_buildContentView: First unit: ${orgUnitsState.units.first.orgUnitNameEn}');
+        debugPrint('_buildContentView: First unit: ${orgUnitsState.units.first.parentUnit?.toJson()}');
       }
       return Column(
         children: [

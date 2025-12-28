@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_structure_level_dto.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -9,7 +10,13 @@ class OrgStructureLevel {
   final String orgUnitCode;
   final String orgUnitNameEn;
   final String orgUnitNameAr;
+
+  /// FK (used for save/update)
   final int? parentOrgUnitId;
+
+  /// ✅ Rich parent object (used for UI)
+  final ParentUnitDto? parentUnit;
+
   final bool isActive;
   final String managerName;
   final String managerEmail;
@@ -33,6 +40,7 @@ class OrgStructureLevel {
     required this.orgUnitNameEn,
     required this.orgUnitNameAr,
     this.parentOrgUnitId,
+    this.parentUnit,
     required this.isActive,
     required this.managerName,
     required this.managerEmail,
@@ -47,5 +55,12 @@ class OrgStructureLevel {
     required this.lastUpdatedDate,
     required this.lastUpdateLogin,
   });
-}
 
+  /// ✅ Preferred display name
+  String get displayName =>
+      orgUnitNameEn.isNotEmpty ? orgUnitNameEn : orgUnitNameAr;
+
+  /// ✅ Parent display helpers
+  String get parentName => parentUnit?.name ?? '';
+  String get parentLevel => parentUnit?.level ?? '';
+}

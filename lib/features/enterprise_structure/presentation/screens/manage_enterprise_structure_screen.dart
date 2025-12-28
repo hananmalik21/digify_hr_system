@@ -376,7 +376,6 @@ class _ManageEnterpriseStructureScreenState
               ),
             ];
             EnterpriseStructureDialog.showEdit(
-
               context,
               structureName: title,
               description: description,
