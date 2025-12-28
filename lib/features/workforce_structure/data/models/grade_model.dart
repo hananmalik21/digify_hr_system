@@ -38,24 +38,48 @@ class GradeModel {
     required this.lastUpdateLogin,
   });
 
+  // ---------- Safe parsers ----------
+  static String _asString(dynamic v, {String fallback = ''}) {
+    if (v == null) return fallback;
+    if (v is String) return v;
+    return v.toString();
+  }
+
+  static int _asInt(dynamic v, {int fallback = 0}) {
+    if (v == null) return fallback;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) return int.tryParse(v) ?? fallback;
+    return fallback;
+  }
+
+  static double _asDouble(dynamic v, {double fallback = 0.0}) {
+    if (v == null) return fallback;
+    if (v is double) return v;
+    if (v is int) return v.toDouble();
+    if (v is num) return v.toDouble();
+    if (v is String) return double.tryParse(v) ?? fallback;
+    return fallback;
+  }
+
   factory GradeModel.fromJson(Map<String, dynamic> json) {
     return GradeModel(
-      gradeId: json['grade_id'] as int,
-      gradeNumber: json['grade_number'] as String,
-      gradeCategory: json['grade_category'] as String,
-      currencyCode: json['currency_code'] as String,
-      step1Salary: (json['step_1_salary'] as num).toDouble(),
-      step2Salary: (json['step_2_salary'] as num).toDouble(),
-      step3Salary: (json['step_3_salary'] as num).toDouble(),
-      step4Salary: (json['step_4_salary'] as num).toDouble(),
-      step5Salary: (json['step_5_salary'] as num).toDouble(),
-      description: json['description'] as String,
-      status: json['status'] as String,
-      createdBy: json['created_by'] as String,
-      createdDate: json['created_date'] as String,
-      lastUpdatedBy: json['last_updated_by'] as String,
-      lastUpdatedDate: json['last_updated_date'] as String,
-      lastUpdateLogin: json['last_update_login'] as String,
+      gradeId: _asInt(json['grade_id']),
+      gradeNumber: _asString(json['grade_number']),
+      gradeCategory: _asString(json['grade_category']),
+      currencyCode: _asString(json['currency_code']), // may be missing in your API
+      step1Salary: _asDouble(json['step_1_salary']),
+      step2Salary: _asDouble(json['step_2_salary']),
+      step3Salary: _asDouble(json['step_3_salary']),
+      step4Salary: _asDouble(json['step_4_salary']),
+      step5Salary: _asDouble(json['step_5_salary']),
+      description: _asString(json['description']),
+      status: _asString(json['status'], fallback: 'ACTIVE'),
+      createdBy: _asString(json['created_by'], fallback: 'SYSTEM'),
+      createdDate: _asString(json['created_date']), // keep as string in DTO
+      lastUpdatedBy: _asString(json['last_updated_by'], fallback: 'SYSTEM'),
+      lastUpdatedDate: _asString(json['last_updated_date']),
+      lastUpdateLogin: _asString(json['last_update_login'], fallback: 'SYSTEM'),
     );
   }
 
@@ -80,6 +104,12 @@ class GradeModel {
     };
   }
 
+  // safer DateTime parsing (prevents crash if backend sends null/empty)
+  static DateTime _parseDate(String v) {
+    if (v.trim().isEmpty) return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+    return DateTime.tryParse(v) ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  }
+
   Grade toEntity() {
     return Grade(
       id: gradeId,
@@ -94,9 +124,9 @@ class GradeModel {
       description: description,
       status: status,
       createdBy: createdBy,
-      createdDate: DateTime.parse(createdDate),
+      createdDate: _parseDate(createdDate),
       lastUpdatedBy: lastUpdatedBy,
-      lastUpdatedDate: DateTime.parse(lastUpdatedDate),
+      lastUpdatedDate: _parseDate(lastUpdatedDate),
       lastUpdateLogin: lastUpdateLogin,
     );
   }
