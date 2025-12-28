@@ -37,4 +37,5 @@ class ApiEndpoints {
   static const String jobFamilies = '$api/job-families';
   static const String jobLevels = '$api/job-levels';
   static const String grades = '$api/grades';
+  static const String positions = '$api/positions';
 }

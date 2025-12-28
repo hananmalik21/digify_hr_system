@@ -1,11 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/add_position_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/export_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/import_button.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_filter_chip.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,13 +49,16 @@ class WorkforceSearchAndActions extends ConsumerWidget {
         alignment: WrapAlignment.start,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          _buildSearchField(context, ref),
-          _buildOptionChip(
+          WorkforceSearchBar(
+            hintText: localizations.searchPositionsPlaceholder,
+            isDark: isDark,
+          ),
+          WorkforceFilterChip(
             width: 200.w,
             label: localizations.allDepartments,
             isDark: isDark,
           ),
-          _buildOptionChip(
+          WorkforceFilterChip(
             width: 150.w,
             label: localizations.allStatus,
             isDark: isDark,
@@ -78,97 +80,6 @@ class WorkforceSearchAndActions extends ConsumerWidget {
             onTap: () {},
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSearchField(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: 520.w,
-      child: TextField(
-        onChanged: (value) {
-          ref.read(positionSearchQueryProvider.notifier).state = value;
-        },
-        decoration: InputDecoration(
-          isDense: true,
-          filled: true,
-          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: BorderSide(
-              color: isDark ? AppColors.inputBorderDark : AppColors.borderGrey,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: BorderSide(
-              color: isDark ? AppColors.inputBorderDark : AppColors.borderGrey,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-              width: 1.2,
-            ),
-          ),
-          prefixIcon: Padding(
-            padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/search_icon.svg',
-              size: 20.sp,
-              color: AppColors.textMuted,
-            ),
-          ),
-          prefixIconConstraints: const BoxConstraints(
-            minWidth: 0,
-            minHeight: 0,
-          ),
-          hintText: localizations.searchPositionsPlaceholder,
-          hintStyle: TextStyle(
-            fontSize: 15.3.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textPlaceholder,
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 12.h,
-            horizontal: 12.w,
-          ),
-        ),
-        style: TextStyle(
-          fontSize: 15.3.sp,
-          fontWeight: FontWeight.w400,
-          color: context.themeTextPrimary,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOptionChip({
-    required String label,
-    required bool isDark,
-    double? width,
-  }) {
-    return Container(
-      width: width,
-      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.inputBorderDark : AppColors.borderGrey,
-        ),
-        color: isDark ? AppColors.inputBgDark : Colors.white,
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 15.3.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textPrimary,
-            height: 19 / 15.3,
-          ),
-        ),
       ),
     );
   }
