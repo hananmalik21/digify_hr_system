@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise_structure.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for save enterprise structure operation
@@ -44,7 +43,7 @@ class SaveEnterpriseStructureNotifier
   final SaveEnterpriseStructureUseCase saveUseCase;
 
   SaveEnterpriseStructureNotifier({required this.saveUseCase})
-      : super(const SaveEnterpriseStructureState());
+    : super(const SaveEnterpriseStructureState());
 
   /// Saves or updates the enterprise structure
   /// Returns true on success, throws AppException on error
@@ -55,7 +54,8 @@ class SaveEnterpriseStructureNotifier
     int? enterpriseId,
     String? structureCode,
     bool isActive = true,
-    int? structureId, // If provided, performs update (PUT), otherwise create (POST)
+    int?
+    structureId, // If provided, performs update (PUT), otherwise create (POST)
   }) async {
     // Try to update loading state, but don't fail if provider is disposed
     try {
@@ -63,12 +63,13 @@ class SaveEnterpriseStructureNotifier
         isSaving: true,
         hasError: false,
         errorMessage: null,
-        loadingStructureId: structureId, // Track which structure is being activated
+        loadingStructureId:
+            structureId, // Track which structure is being activated
       );
     } catch (e) {
       // Provider might be disposed, continue anyway
     }
-    
+
     // Store error message to return if needed
     String? errorMessage;
 
@@ -89,12 +90,13 @@ class SaveEnterpriseStructureNotifier
             .entries
             .map((entry) {
               final level = entry.value;
-              final displayOrder = entry.key + 1; // 1-based index for display order
-              
+              final displayOrder =
+                  entry.key + 1; // 1-based index for display order
+
               // Parse structureLevelId from HierarchyLevel.id
               // HierarchyLevel.id should be the structure level ID from API
               final structureLevelId = int.tryParse(level.id) ?? 0;
-              
+
               return EnterpriseStructureLevel(
                 structureLevelId: structureLevelId,
                 levelNumber: level.level,
@@ -111,7 +113,8 @@ class SaveEnterpriseStructureNotifier
         structureType: 'ENTERPRISE',
         description: description,
         isActive: isActive,
-        levels: structureLevels, // Empty list for updates, populated for creates
+        levels:
+            structureLevels, // Empty list for updates, populated for creates
       );
 
       // Use PUT for updates, POST for creates
@@ -137,14 +140,11 @@ class SaveEnterpriseStructureNotifier
     } on ValidationException catch (e) {
       // Clear loading structure ID on error
       try {
-        state = state.copyWith(
-          isSaving: false,
-          loadingStructureId: null,
-        );
+        state = state.copyWith(isSaving: false, loadingStructureId: null);
       } catch (_) {
         // Provider might be disposed, continue anyway
       }
-      
+
       // Handle validation errors with detailed messages
       errorMessage = e.message;
       if (e.errors != null && e.errors!.isNotEmpty) {
@@ -161,35 +161,29 @@ class SaveEnterpriseStructureNotifier
           errorMessage = errorMessages.join('\n');
         }
       }
-      
+
       // Don't update state on error - just throw the exception
       // The caller will handle the exception and the provider might be disposed
       throw ValidationException(errorMessage, errors: e.errors);
-    } on AppException catch (e) {
+    } on AppException {
       // Clear loading structure ID on error
       try {
-        state = state.copyWith(
-          isSaving: false,
-          loadingStructureId: null,
-        );
+        state = state.copyWith(isSaving: false, loadingStructureId: null);
       } catch (_) {
         // Provider might be disposed, continue anyway
       }
-      
+
       // Don't update state on error - just rethrow the exception
       // The caller will handle the exception and the provider might be disposed
       rethrow;
     } catch (e) {
       // Clear loading structure ID on error
       try {
-        state = state.copyWith(
-          isSaving: false,
-          loadingStructureId: null,
-        );
+        state = state.copyWith(isSaving: false, loadingStructureId: null);
       } catch (_) {
         // Provider might be disposed, continue anyway
       }
-      
+
       errorMessage = 'Failed to save enterprise structure: ${e.toString()}';
       // Don't update state on error - just throw the exception
       // The caller will handle the exception and the provider might be disposed
@@ -228,5 +222,3 @@ class SaveEnterpriseStructureNotifier
 }
 
 /// Provider for save enterprise structure notifier
-
-

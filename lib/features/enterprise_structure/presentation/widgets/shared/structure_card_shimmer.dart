@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/shimmer_widget.dart';
+import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -30,7 +30,9 @@ class StructureCardShimmer extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10.r),
       ),
-      child: isMobile ? _buildMobileShimmer(isDark, isTablet) : _buildDesktopShimmer(isDark, isTablet),
+      child: isMobile
+          ? _buildMobileShimmer(isDark, isTablet)
+          : _buildDesktopShimmer(isDark, isTablet),
     );
   }
 
@@ -49,11 +51,7 @@ class StructureCardShimmer extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12.w),
-            ShimmerContainer(
-              width: 60.w,
-              height: 24.h,
-              borderRadius: 9999.r,
-            ),
+            ShimmerContainer(width: 60.w, height: 24.h, borderRadius: 9999.r),
           ],
         ),
         SizedBox(height: 8.h),
@@ -64,11 +62,7 @@ class StructureCardShimmer extends StatelessWidget {
           borderRadius: 4.r,
         ),
         SizedBox(height: 4.h),
-        ShimmerContainer(
-          width: 200.w,
-          height: 15.3.sp,
-          borderRadius: 4.r,
-        ),
+        ShimmerContainer(width: 200.w, height: 15.3.sp, borderRadius: 4.r),
         SizedBox(height: 8.h),
         // Hierarchy levels
         Row(
@@ -165,26 +159,50 @@ class StructureCardShimmer extends StatelessWidget {
               // Hierarchy levels
               Row(
                 children: [
-                  ShimmerContainer(width: 80.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 80.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                   SizedBox(width: 8.w),
-                  ShimmerContainer(width: 100.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 100.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                   SizedBox(width: 8.w),
-                  ShimmerContainer(width: 70.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 70.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                 ],
               ),
               SizedBox(height: 8.h),
               // Metrics
               Row(
                 children: [
-                  ShimmerContainer(width: 60.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 60.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                   SizedBox(width: 8.w),
                   ShimmerContainer(width: 4.w, height: 20.h, borderRadius: 2.r),
                   SizedBox(width: 8.w),
-                  ShimmerContainer(width: 80.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 80.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                   SizedBox(width: 8.w),
                   ShimmerContainer(width: 4.w, height: 20.h, borderRadius: 2.r),
                   SizedBox(width: 8.w),
-                  ShimmerContainer(width: 90.w, height: 20.h, borderRadius: 4.r),
+                  ShimmerContainer(
+                    width: 90.w,
+                    height: 20.h,
+                    borderRadius: 4.r,
+                  ),
                 ],
               ),
             ],
@@ -217,4 +235,3 @@ class StructureCardShimmer extends StatelessWidget {
     );
   }
 }
-

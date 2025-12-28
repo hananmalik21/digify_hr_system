@@ -2,30 +2,28 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/org_unit_repository.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Provider for parent org units
-final parentOrgUnitsProvider = FutureProvider.autoDispose.family<List<OrgStructureLevel>, ParentOrgUnitsParams>(
-  (ref, params) async {
-    final repository = ref.watch(orgUnitRepositoryProvider);
-    return await repository.getParentOrgUnits(params.structureId, params.levelCode);
-  },
-);
+final parentOrgUnitsProvider = FutureProvider.autoDispose
+    .family<List<OrgStructureLevel>, ParentOrgUnitsParams>((ref, params) async {
+      final repository = ref.watch(orgUnitRepositoryProvider);
+      return await repository.getParentOrgUnits(
+        params.structureId,
+        params.levelCode,
+      );
+    });
 
 class ParentOrgUnitsParams {
   final int structureId;
   final String levelCode;
 
-  ParentOrgUnitsParams({
-    required this.structureId,
-    required this.levelCode,
-  });
+  ParentOrgUnitsParams({required this.structureId, required this.levelCode});
 
   @override
   bool operator ==(Object other) =>
@@ -74,10 +72,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
 
     final parentUnitsAsync = ref.watch(
       parentOrgUnitsProvider(
-        ParentOrgUnitsParams(
-          structureId: structureId,
-          levelCode: levelCode,
-        ),
+        ParentOrgUnitsParams(structureId: structureId, levelCode: levelCode),
       ),
     );
 
@@ -154,10 +149,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                       children: [
                         Text(
                           'Failed to load parent units',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.red,
-                          ),
+                          style: TextStyle(fontSize: 14.sp, color: Colors.red),
                         ),
                         SizedBox(height: 16.h),
                         ElevatedButton(
@@ -202,9 +194,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: isDark
-                ? AppColors.cardBorderDark
-                : const Color(0xFFE5E7EB),
+            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
             width: 1,
           ),
         ),
@@ -260,9 +250,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
               : const Color(0xFFF9FAFB),
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: isDark
-                ? AppColors.cardBorderDark
-                : const Color(0xFFD1D5DB),
+            color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB),
             width: 1,
           ),
         ),
@@ -288,7 +276,9 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                       unit.orgUnitNameAr,
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
-                        fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.sp),
+                        fontSize: isMobile
+                            ? 12.sp
+                            : (isTablet ? 12.5.sp : 13.sp),
                         fontWeight: FontWeight.w400,
                         color: isDark
                             ? AppColors.textSecondaryDark
@@ -323,4 +313,3 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
     );
   }
 }
-

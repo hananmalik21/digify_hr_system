@@ -25,7 +25,6 @@
   "passwordTooShort": "Password must be at least 6 characters",
   "passwordsDoNotMatch": "Passwords do not match",
   "fieldRequired": "This field is required",
-  
   "home": "Home",
   "enterpriseStructure": "Enterprise Structure",
   "generalLedger": "General Ledger",
@@ -68,9 +67,7 @@
   "sessionManagement": "Session Management",
   "securityReports": "Security Reports",
   "dataSecurityPrivacy": "Data Security & Privacy",
-  "sessionManagement": "Session Management",
   "securityReportsAnalytics": "Security Reports & Analytics",
-  
   "dashboard": "Dashboard",
   "logout": "Logout",
   "settings": "Settings",
@@ -78,7 +75,6 @@
   "notifications": "Notifications",
   "help": "Help",
   "about": "About",
-  
   "securityOverview": "Security Overview",
   "totalUsers": "Total Users",
   "activeUsers": "Active Users",
@@ -93,7 +89,6 @@
   "inactive": "Inactive",
   "roleUsage": "Role Usage",
   "modules": "Modules",
-  
   "recentSecurityAlerts": "Recent Security Alerts",
   "failedLoginAttempts": "Failed Login Attempts",
   "unauthorizedAccess": "Unauthorized Access Attempt",
@@ -103,35 +98,38 @@
   "minutesAgo": "{count} minutes ago",
   "@minutesAgo": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "hoursAgo": "{count} hours ago",
   "@hoursAgo": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "daysAgo": "{count} days ago",
   "@daysAgo": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  
   "recentActivity": "Recent Activity",
   "userCreated": "User account created",
   "roleModified": "Role permissions modified",
   "policyUpdated": "Security policy updated",
   "privilegesRevoked": "Privileges revoked",
   "viewAll": "View All",
-  
   "quickActions": "Quick Actions",
   "createUser": "Create User",
   "assignRole": "Assign Role",
   "reviewAccess": "Review Access",
   "generateReport": "Generate Report",
-  
   "systemComplianceStatus": "System Compliance Status",
   "userAuthentication": "User Authentication",
   "dataEncryption": "Data Encryption",
@@ -140,7 +138,6 @@
   "activeSessions": "Active Sessions",
   "pendingReviews": "Pending Reviews",
   "criticalAlerts": "Critical Alerts",
-  
   "searchAccounts": "Search accounts...",
   "allTypes": "All Types",
   "allStatus": "All Status",
@@ -160,11 +157,14 @@
   "showingResults": "Showing {count} of {total} accounts",
   "@showingResults": {
     "placeholders": {
-      "count": {"type": "int"},
-      "total": {"type": "int"}
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
-  
   "accountDetails": "Account Details",
   "userInformation": "User Information",
   "userID": "User ID",
@@ -187,7 +187,6 @@
   "duration": "Duration",
   "close": "Close",
   "saveChanges": "Save Changes",
-  
   "manageRoles": "Manage Roles",
   "searchUsers": "Search users...",
   "role": "Role",
@@ -197,7 +196,9 @@
   "rolesLoadedSuccessfully": "{count} roles loaded successfully",
   "@rolesLoadedSuccessfully": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "currentlyAssignedRoles": "Currently Assigned Roles",
@@ -217,7 +218,6 @@
   "saveUpdates": "Save Updates",
   "unsavedChanges": "Unsaved Changes",
   "noRecentActivity": "No recent activity",
-  
   "userRoleAssignmentSubtitle": "Assign and manage security roles for users",
   "usersWithRoles": "Users with Roles",
   "avgRolesPerUser": "Avg Roles/User",
@@ -229,9 +229,7 @@
   "username": "Username",
   "currentRoles": "Current Roles",
   "actions": "Actions",
-  
   "roleManagementSubtitle": "Manage roles, permissions, and access levels",
-  "jobRoles": "Job Roles",
   "dutyRolesOnly": "Duty Roles",
   "standard": "Standard",
   "custom": "Custom",
@@ -242,13 +240,14 @@
   "usersAssigned": "Users Assigned ({count})",
   "@usersAssigned": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "privileges": "Privileges",
   "createdOn": "Created On",
   "createRole": "Create Role",
-  
   "createNewRole": "Create New Role",
   "editRole": "Edit Role",
   "roleInformation": "Role Information",
@@ -272,14 +271,12 @@
   "function": "Function",
   "accessLevel": "Access Level",
   "addPrivilege": "Add Privilege",
-  "dataSecurity": "Data Security",
   "dataAccessSet": "Data Access Set",
   "assignDataSets": "Assign Data Sets",
   "roleCreatedSuccessfully": "Role created successfully",
   "roleUpdatedSuccessfully": "Role updated successfully",
   "create": "Create",
   "update": "Update",
-  
   "roleHierarchySubtitle": "View and manage role hierarchy structure",
   "totalNodes": "Total Nodes",
   "maxDepth": "Max Depth",
@@ -294,7 +291,6 @@
   "usersAssignedLabel": "Users Assigned",
   "noResultsFound": "No results found",
   "tryAdjustingSearchCriteria": "Try adjusting your search criteria",
-  
   "addRoleToHierarchy": "Add Role to Hierarchy",
   "selectParentRole": "Select Parent Role (Optional)",
   "selectParent": "Select parent role...",
@@ -305,7 +301,6 @@
   "enterNewRoleName": "Enter new role name",
   "roleTypeLabel": "Role Type",
   "addRole": "Add Role",
-  
   "roleTemplatesSubtitle": "Pre-configured role templates for quick setup",
   "totalTemplates": "Total Templates",
   "industrySpecific": "Industry Specific",
@@ -323,16 +318,19 @@
   "privilegesCount": "{count} Privileges",
   "@privilegesCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "dataSetsCount": "{count} Data Sets",
   "@dataSetsCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
-  
   "createNewTemplate": "Create New Template",
   "creatingTemplate": "Creating Template",
   "templateInstructions": "Create a reusable role template with pre-configured permissions and access settings",
@@ -348,7 +346,9 @@
   "selectedPrivileges": "{count} selected",
   "@selectedPrivileges": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "includedDataSets": "Included Data Sets",
@@ -356,13 +356,14 @@
   "selectedDataSets": "{count} selected",
   "@selectedDataSets": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "makeDefaultTemplate": "Make Default Template",
   "setAsDefault": "Set as default for this category",
   "createTemplateButton": "Create Template",
-  
   "securityPoliciesSubtitle": "Configure and manage security policies",
   "activePolicies": "Active Policies",
   "pendingReview": "Pending Review",
@@ -373,7 +374,6 @@
   "enforcementLevel": "Enforcement Level",
   "lastModified": "Last Modified",
   "expiryDate": "Expiry Date",
-  
   "createNewPolicy": "Create New Policy",
   "editPolicy": "Edit Policy",
   "creatingPolicy": "Creating Policy",
@@ -396,7 +396,6 @@
   "policyRules": "Policy Rules",
   "addRule": "Add Rule",
   "createPolicyButton": "Create Policy",
-  
   "dataAccessSetsSubtitle": "Manage data access sets and permissions",
   "totalDataAccessSets": "Total Data Access Sets",
   "ledgerBased": "Ledger Based",
@@ -404,7 +403,6 @@
   "searchDataAccessSets": "Search data access sets...",
   "createDataAccessSet": "Create Data Access Set",
   "accessScope": "Access Scope",
-  
   "createNewDataAccessSet": "Create New Data Access Set",
   "creatingDataAccessSet": "Creating Data Access Set",
   "dataAccessSetInstructions": "Define data access boundaries for controlling which data users can view and modify",
@@ -419,22 +417,25 @@
   "ledgersSelected": "{count} Ledgers Selected",
   "@ledgersSelected": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "noLedgersFound": "No ledgers found",
   "legalEntitiesSelected": "{count} Legal Entities Selected",
   "@legalEntitiesSelected": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "noLegalEntitiesFound": "No legal entities found",
   "createSet": "Create Set",
   "editDataAccessSet": "Edit Data Access Set",
   "updateSet": "Update Set",
-  "enterDescription": "Enter description",
-  
+  "enterDescription": "Enter description (optional)",
   "noDataAccessSetsFound": "No data access sets found",
   "tryAdjustingFilters": "Try adjusting your filters or search criteria",
   "noPoliciesFound": "No policies found",
@@ -442,7 +443,6 @@
   "noRolesFound": "No roles found",
   "noUsersFound": "No users found",
   "noPrivilegesFound": "No privileges found",
-  
   "functionPrivilegesSubtitle": "Manage function-level security privileges",
   "createPrivilege": "Create Privilege",
   "searchPrivileges": "Search privileges...",
@@ -450,7 +450,9 @@
   "usedInRolesCount": "Used in {count} roles",
   "@usedInRolesCount": {
     "placeholders": {
-      "count": {"type": "int"}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "functionArea": "Function",
@@ -469,29 +471,17 @@
   "privilegeUpdatedSuccessfully": "Privilege updated successfully",
   "module": "Module",
   "privilege": "Privilege",
-  
   "rootRoles": "Root Roles",
-  "maxDepth": "Max Depth",
-  "createRootRole": "Create Root Role",
   "hierarchyStructure": "Hierarchy Structure",
-  "expandAll": "Expand All",
-  "collapseAll": "Collapse All",
-  "roleHierarchySubtitle": "View and manage role hierarchy structure",
-  
-  "createRole": "Create Role",
   "saveRole": "Save Role",
   "basicInformation": "Basic Information",
   "pleaseEnterRoleName": "Please enter role name",
   "pleaseEnterRoleCode": "Please enter role code",
   "description": "Description",
-  "roleConfiguration": "Role Configuration",
   "priority": "Priority",
   "activeRole": "Active Role",
-  "effectiveDates": "Effective Dates",
   "assignPrivileges": "Assign Privileges",
-  "addPrivilege": "Add Privilege",
   "functions": "Functions",
-  
   "securityIncidents": "Security Incidents",
   "securityAlerts": "Security Alerts",
   "recentSecurityActivities": "Recent Security Activities",
@@ -504,7 +494,6 @@
   "complianceStatus": "Compliance Status",
   "passwordsExpiring": "Passwords Expiring",
   "complianceScore": "Compliance Score",
-  
   "tasksEvents": "Tasks & Events",
   "attendanceLeaves": "Attendance & Leaves",
   "myTasks": "MY TASKS",
@@ -537,20 +526,17 @@
   "timeManagement": "Time Management",
   "leaveManagement": "Leave Management",
   "workforceStructure": "Workforce Structure",
-  "enterpriseStructure": "Enterprise Structure",
   "eosCalculator": "EOS Calculator",
   "governmentForms": "Government Forms",
   "hrOperations": "HR Operations",
   "deiDashboard": "DEI Dashboard",
   "moduleCatalogue": "Module Catalogue",
   "productIntroduction": "Product Introduction",
-  
   "employees": "Employees",
   "attendance": "Attendance",
   "payroll": "Payroll",
   "compliance": "Compliance",
   "reports": "Reports",
-  
   "manageEnterpriseStructure": "Manage Enterprise Structure",
   "configureManageHierarchy": "Configure and manage your organizational hierarchy structures",
   "configureManageHierarchyAr": "إدارة وتكوين هياكل التسلسل الإداري للمؤسسة",
@@ -571,8 +557,6 @@
   "created": "Created",
   "updated": "Updated",
   "modified": "Modified",
-  "view": "View",
-  "edit": "Edit",
   "duplicate": "Duplicate",
   "activate": "Activate",
   "delete": "Delete",
@@ -588,7 +572,6 @@
   "divisions": "Divisions",
   "businessUnit": "Business Unit",
   "businessUnits": "Business Units",
-  "department": "Department",
   "departments": "Departments",
   "section": "Section",
   "sections": "Sections",
@@ -607,7 +590,6 @@
   "currency": "Currency",
   "fiscalYearStart": "Fiscal Year Start (MM-DD)",
   "phone": "Phone",
-  "email": "Email",
   "viewEnterpriseStructureConfiguration": "View Enterprise Structure Configuration",
   "reviewOrganizationalHierarchy": "Review organizational hierarchy levels and sequence",
   "structureConfigurationActive": "Structure Configuration Active",
@@ -651,15 +633,12 @@
   "structureName": "Structure Name",
   "structureNamePlaceholder": "e.g., Standard Corporate Structure, Simplified Structure",
   "descriptionPlaceholder": "Describe this structure configuration and when it should be used...",
-  
   "manageComponentValues": "Manage Component Values",
   "componentValuesSubtitle": "Create and manage organizational components (Company, Division, Business Unit, Department, Section)",
   "manageOrganizationalHierarchy": "Manage organizational hierarchy and structure",
   "manageOrganizationalHierarchyAr": "إدارة الهيكل التنظيمي والتسلسل الإداري",
   "structureConfiguration": "Structure Configuration",
   "organizationalTreeStructure": "Organizational Tree Structure",
-  "expandAll": "Expand All",
-  "collapseAll": "Collapse All",
   "addNewComponent": "Add New Component",
   "bulkUpload": "Bulk Upload",
   "bulkUploadTitle": "Bulk Upload - Enterprise Structure Components",
@@ -705,8 +684,6 @@
   "componentName": "Name",
   "arabicName": "Arabic Name",
   "parentComponent": "Parent",
-  "manager": "Manager",
-  "location": "Location",
   "lastUpdated": "Last Updated",
   "createComponent": "Create Component",
   "editComponent": "Edit Component",
@@ -727,7 +704,6 @@
   "selectParentComponent": "Select parent component (optional)",
   "selectManager": "Select manager",
   "enterLocation": "Enter location",
-  "enterDescription": "Enter description (optional)",
   "componentCreatedSuccessfully": "Component created successfully",
   "componentUpdatedSuccessfully": "Component updated successfully",
   "componentDeletedSuccessfully": "Component deleted successfully",
@@ -740,7 +716,6 @@
   "uploadFailed": "Upload failed",
   "processingUpload": "Processing upload...",
   "selectComponentTypePlaceholder": "Select type...",
-  
   "componentDetails": "Component Details",
   "hierarchyRelationships": "Hierarchy & Relationships",
   "managementInformation": "Management Information",
@@ -777,7 +752,7 @@
   "hintLegalNameArabic": "أدخل الاسم القانوني بالعربية",
   "hintRegistrationNumber": "Enter registration number",
   "hintTaxId": "Enter tax ID",
-  "hintEstablishedDate": "DD/MM/YYYY",
+  "hintEstablishedDate": "dd/MM/yyyy",
   "hintIndustry": "Enter industry",
   "hintCountry": "Enter country",
   "hintCity": "Enter city",
@@ -790,7 +765,6 @@
   "hintTotalEmployees": "Enter total employees",
   "hintFiscalYearStart": "MM-DD",
   "companyDetails": "Company Details",
-  "basicInformation": "Basic Information",
   "contactInformation": "Contact Information",
   "financialAndOperational": "Financial & Operational",
   "established": "Established",
@@ -810,7 +784,6 @@
   "divisionCode": "Division Code",
   "divisionNameEnglish": "Division Name (English)",
   "divisionNameArabic": "Division Name (Arabic)",
-  "company": "Company",
   "headOfDivision": "Head of Division",
   "headEmail": "Head Email",
   "headPhone": "Head Phone",
@@ -858,14 +831,12 @@
   "hintHeadOfUnit": "Full Name",
   "hintBusinessUnitHeadEmail": "email@company.com",
   "hintBusinessUnitHeadPhone": "+965 XXXX XXXX",
-  "hintEstablishedDate": "dd/MM/yyyy",
   "hintBusinessUnitFocus": "e.g., Treasury & Investments",
   "hintBusinessUnitDescription": "Brief description of the business unit",
   "businessUnitDetails": "Business Unit Details",
   "departmentManagement": "Department Management",
   "manageDepartmentsSubtitle": "Manage departments within business units",
   "addDepartment": "Add Department",
-  "totalDepartments": "Total Departments",
   "activeDepartments": "Active Departments",
   "totalEmployeesDept": "Total Employees",
   "totalBudgetDept": "Total Budget",
@@ -875,7 +846,6 @@
   "departmentCode": "Department Code",
   "departmentNameEnglish": "Department Name (English)",
   "departmentNameArabic": "Department Name (Arabic)",
-  "businessUnit": "Business Unit",
   "headOfDepartment": "Head of Department",
   "hintDepartmentCode": "e.g., DEPT-TREAS",
   "hintDepartmentNameEnglish": "Department Name",
@@ -888,7 +858,6 @@
   "updateDepartment": "Update Department",
   "departmentDetails": "Department Details",
   "departmentLeadership": "Department Leadership",
-  "organizationalMetrics": "Organizational Metrics",
   "departmentDescription": "Department Description",
   "departmentBudget": "Annual Budget (KWD)",
   "sectionManagement": "Section Management",
@@ -902,8 +871,6 @@
   "totalEmployeesSection": "Total Employees",
   "totalBudgetSection": "Total Budget",
   "searchSectionsPlaceholder": "Search sections...",
-  
-  "workforceStructure": "Workforce Structure",
   "managePositionsJobFamilies": "Manage positions, job families, levels, and organizational structure",
   "managePositionsJobFamiliesAr": "إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي",
   "totalPositions": "Total Positions",
@@ -944,7 +911,6 @@
   "jobFamilyNameEnglishHint": "e.g., Finance & Accounting",
   "jobFamilyNameArabic": "Job Family Name (Arabic) *",
   "jobFamilyNameArabicHint": "مثال: المالية والمحاسبة",
-  "cancel": "Cancel",
   "createJobFamily": "Create Job Family",
   "editJobFamily": "Edit Job Family",
   "addNewJobLevel": "Add New Job Level",
@@ -959,7 +925,6 @@
   "createJobLevel": "Create Job Level",
   "jobLevelCodeHint": "e.g., EXEC",
   "code": "Code",
-  "description": "Description",
   "minimumGrade": "Minimum Grade",
   "maximumGrade": "Maximum Grade",
   "gradeStructure": "Grade Structure",
@@ -1025,6 +990,12 @@
   "budgetedMin": "Budgeted Min",
   "budgetedMax": "Budgeted Max",
   "actualAverage": "Actual Average",
-  "step": "Step"
+  "step": "Step",
+  "deleteJobLevel": "Delete Job Level",
+  "deleteJobLevelConfirmationMessage": "Are you sure you want to delete this job level? This action cannot be undone.",
+  "jobLevelCreatedSuccessfully": "Job level created successfully",
+  "jobLevelUpdatedSuccessfully": "Job level updated successfully",
+  "jobLevelDeletedSuccessfully": "Job level deleted successfully",
+  "errorCreatingJobLevel": "An error occurred while creating the job level",
+  "errorDeletingJobLevel": "An error occurred while deleting the job level"
 }
-

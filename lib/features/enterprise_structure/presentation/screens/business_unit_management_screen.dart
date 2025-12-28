@@ -4,9 +4,9 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/gradient_icon_button.dart';
-import 'package:digify_hr_system/core/widgets/stats_card.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
+import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -32,8 +32,8 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
       0,
       (previousValue, bu) => previousValue + bu.employees,
     );
-    final activeUnits = allBusinessUnits.where((bu) => bu.isActive).length;
-    final isDark = context.isDark;
+    final activeUnits = businessUnits.where((bu) => bu.isActive).length;
+
 
 
 

@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';

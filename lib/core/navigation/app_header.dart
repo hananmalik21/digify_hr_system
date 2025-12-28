@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/localization/locale_provider.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/theme/theme_provider.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

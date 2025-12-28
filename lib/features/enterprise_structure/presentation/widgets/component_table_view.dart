@@ -2,8 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/custom_status_cell.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,8 @@ class ComponentTableView extends StatelessWidget {
   final List<ComponentValue> components;
   final List<ComponentValue> allComponents; // Full list for parent lookup
   final ComponentType? filterType;
-  final List<StructureListItem>? orgStructures; // Org structures for company parent org lookup
+  final List<StructureListItem>?
+  orgStructures; // Org structures for company parent org lookup
   final Function(ComponentValue component)? onView;
   final Function(ComponentValue component)? onEdit;
   final Function(ComponentValue component)? onDelete;
@@ -74,7 +75,10 @@ class ComponentTableView extends StatelessWidget {
     final columnWidths = _getColumnWidths(filterType);
 
     // Calculate total table width
-    final totalWidth = columnWidths.values.fold<double>(0, (sum, width) => sum + width);
+    final totalWidth = columnWidths.values.fold<double>(
+      0,
+      (sum, width) => sum + width,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -197,17 +201,19 @@ class ComponentTableView extends StatelessWidget {
   ) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    final headerHeight = filterType == ComponentType.department 
+    final headerHeight = filterType == ComponentType.department
         ? (isMobile ? 64.h : (isTablet ? 60.h : 56.h))
         : (isMobile ? 48.h : (isTablet ? 44.h : 40.h));
-    final headerPadding = filterType == ComponentType.department 
+    final headerPadding = filterType == ComponentType.department
         ? (isMobile ? 12.h : (isTablet ? 16.h : 20.h))
         : (isMobile ? 10.h : (isTablet ? 11.h : 12.h));
 
     return Container(
       height: headerHeight,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
+        color: isDark
+            ? AppColors.cardBackgroundGreyDark
+            : const Color(0xFFF9FAFB),
         border: Border(
           bottom: BorderSide(
             color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
@@ -240,14 +246,18 @@ class ComponentTableView extends StatelessWidget {
           ),
           _buildHeaderCell(
             context,
-            filterType == ComponentType.company ? 'Parent Org' : localizations.parentComponent,
+            filterType == ComponentType.company
+                ? 'Parent Org'
+                : localizations.parentComponent,
             columnWidths['parent']!,
             headerPadding,
             isDark,
           ),
           _buildHeaderCell(
             context,
-            filterType == ComponentType.company ? 'Reg No' : localizations.manager,
+            filterType == ComponentType.company
+                ? 'Reg No'
+                : localizations.manager,
             columnWidths['manager']!,
             headerPadding,
             isDark,
@@ -298,7 +308,7 @@ class ComponentTableView extends StatelessWidget {
     final isTablet = ResponsiveHelper.isTablet(context);
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
     final fontSize = isMobile ? 10.sp : (isTablet ? 11.sp : 12.sp);
-    
+
     return Container(
       width: width.w,
       padding: EdgeInsetsDirectional.symmetric(
@@ -389,7 +399,9 @@ class ComponentTableView extends StatelessWidget {
     final parentName = _getParentName(component);
 
     // Row padding varies based on component type to match Figma
-    final rowPadding = filterType == ComponentType.department ? 24.25.h : 23.75.h;
+    final rowPadding = filterType == ComponentType.department
+        ? 24.25.h
+        : 23.75.h;
 
     return Container(
       decoration: BoxDecoration(
@@ -397,7 +409,9 @@ class ComponentTableView extends StatelessWidget {
             ? null
             : Border(
                 bottom: BorderSide(
-                  color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+                  color: isDark
+                      ? AppColors.cardBorderDark
+                      : AppColors.cardBorder,
                   width: 1,
                 ),
               ),
@@ -413,7 +427,9 @@ class ComponentTableView extends StatelessWidget {
             rowPadding,
             isDark,
             fontWeight: FontWeight.w500,
-            fontSize: filterType == ComponentType.department ? 13.8.sp : 13.9.sp,
+            fontSize: filterType == ComponentType.department
+                ? 13.8.sp
+                : 13.9.sp,
           ),
           // Name
           _buildCell(
@@ -422,8 +438,12 @@ class ComponentTableView extends StatelessWidget {
             columnWidths['name']!,
             rowPadding,
             isDark,
-            isMultiLine: filterType == ComponentType.department && component.name.contains(' '),
-            fontSize: filterType == ComponentType.department ? 13.5.sp : 13.6.sp,
+            isMultiLine:
+                filterType == ComponentType.department &&
+                component.name.contains(' '),
+            fontSize: filterType == ComponentType.department
+                ? 13.5.sp
+                : 13.6.sp,
           ),
           // Arabic Name
           _buildCell(
@@ -434,7 +454,9 @@ class ComponentTableView extends StatelessWidget {
             isDark,
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.end,
-            isMultiLine: filterType == ComponentType.department && component.arabicName.contains(' '),
+            isMultiLine:
+                filterType == ComponentType.department &&
+                component.arabicName.contains(' '),
             fontSize: 14.sp,
           ),
           // Parent
@@ -445,8 +467,12 @@ class ComponentTableView extends StatelessWidget {
             rowPadding,
             isDark,
             color: const Color(0xFF4A5565),
-            isMultiLine: filterType == ComponentType.department && parentName.contains('('),
-            fontSize: filterType == ComponentType.department ? 13.6.sp : 13.7.sp,
+            isMultiLine:
+                filterType == ComponentType.department &&
+                parentName.contains('('),
+            fontSize: filterType == ComponentType.department
+                ? 13.6.sp
+                : 13.7.sp,
           ),
           // Manager
           _buildCell(
@@ -456,8 +482,12 @@ class ComponentTableView extends StatelessWidget {
             rowPadding,
             isDark,
             color: const Color(0xFF4A5565),
-            isMultiLine: filterType == ComponentType.department && (component.managerId?.contains(' ') ?? false),
-            fontSize: filterType == ComponentType.department ? 13.6.sp : 13.7.sp,
+            isMultiLine:
+                filterType == ComponentType.department &&
+                (component.managerId?.contains(' ') ?? false),
+            fontSize: filterType == ComponentType.department
+                ? 13.6.sp
+                : 13.7.sp,
           ),
           // Location
           _buildCell(
@@ -467,8 +497,12 @@ class ComponentTableView extends StatelessWidget {
             rowPadding,
             isDark,
             color: const Color(0xFF4A5565),
-            isMultiLine: filterType == ComponentType.department && (component.location?.contains('-') ?? false),
-            fontSize: filterType == ComponentType.department ? 13.6.sp : 13.5.sp,
+            isMultiLine:
+                filterType == ComponentType.department &&
+                (component.location?.contains('-') ?? false),
+            fontSize: filterType == ComponentType.department
+                ? 13.6.sp
+                : 13.5.sp,
           ),
           // Status
           _buildStatusCell(
@@ -518,7 +552,7 @@ class ComponentTableView extends StatelessWidget {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
-    
+
     return Container(
       width: width.w,
       padding: EdgeInsetsDirectional.symmetric(
@@ -538,7 +572,8 @@ class ComponentTableView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: fontSize ?? 13.6.sp,
                     fontWeight: fontWeight,
-                    color: color ??
+                    color:
+                        color ??
                         (isDark
                             ? AppColors.textPrimaryDark
                             : const Color(0xFF101828)),
@@ -555,7 +590,8 @@ class ComponentTableView extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize ?? 13.6.sp,
                 fontWeight: fontWeight,
-                color: color ??
+                color:
+                    color ??
                     (isDark
                         ? AppColors.textPrimaryDark
                         : const Color(0xFF101828)),
@@ -579,9 +615,9 @@ class ComponentTableView extends StatelessWidget {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
-    
+
     // Status cell has different vertical padding to center the badge
-    final statusPadding = filterType == ComponentType.department 
+    final statusPadding = filterType == ComponentType.department
         ? EdgeInsetsDirectional.only(
             start: horizontalPadding,
             end: horizontalPadding,
@@ -617,8 +653,9 @@ class ComponentTableView extends StatelessWidget {
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
     final dateStr = _formatDate(component.updatedAt);
     final updatedBy = _getUpdatedBy(component);
-    final isMultiLineUpdatedBy = filterType == ComponentType.department && updatedBy.contains('\n');
-    final verticalPadding = filterType == ComponentType.department 
+    final isMultiLineUpdatedBy =
+        filterType == ComponentType.department && updatedBy.contains('\n');
+    final verticalPadding = filterType == ComponentType.department
         ? (isMobile ? 12.h : (isTablet ? 14.h : 16.h))
         : padding;
 
@@ -694,7 +731,7 @@ class ComponentTableView extends StatelessWidget {
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
     final showDuplicate = filterType == ComponentType.department;
     // Actions cell padding - top padding varies to align with content
-    final actionsTopPadding = filterType == ComponentType.department 
+    final actionsTopPadding = filterType == ComponentType.department
         ? (isMobile ? 22.h : (isTablet ? 28.h : 34.25.h))
         : (isMobile ? 18.h : (isTablet ? 22.h : 26.25.h));
 
@@ -744,9 +781,7 @@ class ComponentTableView extends StatelessWidget {
             _buildActionIconButton(
               context,
               'assets/icons/duplicate_icon.svg',
-              isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF4A5565),
+              isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
               () => onDuplicate!(component),
               localizations.duplicate,
             ),
@@ -769,11 +804,7 @@ class ComponentTableView extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: onTap,
-          child: SvgIconWidget(
-            assetPath: iconPath,
-            size: 16.sp,
-            color: color,
-          ),
+          child: SvgIconWidget(assetPath: iconPath, size: 16.sp, color: color),
         ),
       ),
     );
@@ -781,9 +812,10 @@ class ComponentTableView extends StatelessWidget {
 
   String _getParentName(ComponentValue component) {
     if (component.parentId == null) return '-';
-    
+
     // For companies, look up org structure name
-    if (filterType == ComponentType.company && component.type == ComponentType.company) {
+    if (filterType == ComponentType.company &&
+        component.type == ComponentType.company) {
       final orgStructureId = int.tryParse(component.parentId ?? '');
       if (orgStructureId != null && orgStructures != null) {
         try {
@@ -797,7 +829,7 @@ class ComponentTableView extends StatelessWidget {
       }
       return '-';
     }
-    
+
     // Find parent component from all components (not just filtered)
     final parent = allComponents.firstWhere(
       (c) => c.id == component.parentId,
@@ -878,7 +910,7 @@ class ComponentTableView extends StatelessWidget {
     if (filterType == ComponentType.company) {
       return managerName; // Already registration number
     }
-    
+
     if (filterType == ComponentType.department && managerName.contains(' ')) {
       // Split manager names with spaces into two lines
       final words = managerName.split(' ');
@@ -900,4 +932,3 @@ class ComponentTableView extends StatelessWidget {
     return location;
   }
 }
-

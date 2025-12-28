@@ -1,6 +1,8 @@
+import 'dart:developer';
+
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +32,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint('OrgUnitsTableWidget: isLoading=$isLoading, units count=${units.length}');
-    
+
     if (isLoading && units.isEmpty) {
       return Center(
         child: Padding(
@@ -102,7 +104,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildHeaderCell('ORG UNIT CODE', 140.w),
           _buildHeaderCell('NAME (EN)', 180.w),
           _buildHeaderCell('NAME (AR)', 180.w),
-          _buildHeaderCell('PARENT ID', 120.w),
+          _buildHeaderCell('PARENT', 120.w),
           _buildHeaderCell('ACTIVE', 130.w),
           // _buildHeaderCell('MANAGER', 150.w),
           // _buildHeaderCell('MANAGER EMAIL', 200.w),
@@ -142,6 +144,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   }
 
   Widget _buildTableRow(OrgStructureLevel unit, bool isDark) {
+    log("id is ${unit.parentUnit}");
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -250,7 +253,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
           _buildDataCell(
             Text(
-              unit.parentOrgUnitId?.toString() ?? '-',
+              unit?.parentUnit?.name?? '-',
               style: TextStyle(
                 fontSize: 13.7.sp,
                 fontWeight: FontWeight.w400,

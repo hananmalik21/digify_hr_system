@@ -1,7 +1,5 @@
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_structure.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_step.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/reporting_position.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -199,7 +197,8 @@ final filteredPositionsProvider = Provider<List<Position>>((ref) {
 
   return positions.where((position) {
     // Search filter
-    final matchesSearch = searchQuery.isEmpty ||
+    final matchesSearch =
+        searchQuery.isEmpty ||
         position.titleEnglish.toLowerCase().contains(searchQuery) ||
         position.titleArabic.contains(searchQuery) ||
         position.code.toLowerCase().contains(searchQuery);
@@ -209,7 +208,8 @@ final filteredPositionsProvider = Provider<List<Position>>((ref) {
         departmentFilter == null || position.department == departmentFilter;
 
     // Status filter
-    final matchesStatus = statusFilter == null ||
+    final matchesStatus =
+        statusFilter == null ||
         (statusFilter == 'Active' && position.isActive) ||
         (statusFilter == 'Inactive' && !position.isActive);
 
@@ -239,8 +239,8 @@ final workforceStatsProvider = Provider<WorkforceStats>((ref) {
     (sum, position) => sum + position.vacant,
   );
 
-  final fillRate = totalPositions > 0 
-      ? (filledPositions / totalPositions) * 100 
+  final fillRate = totalPositions > 0
+      ? (filledPositions / totalPositions) * 100
       : 0.0;
 
   return WorkforceStats(
@@ -416,276 +416,10 @@ final gradeStructureListProvider = StateProvider<List<GradeStructure>>((ref) {
   ];
 });
 
-/// Provider for job levels
-final jobLevelListProvider = StateProvider<List<JobLevel>>((ref) {
-  return [
-    JobLevel(
-      nameEnglish: 'Executive',
-      code: 'EXEC',
-      description: 'C-level and executive leadership positions',
-      gradeRange: 'Grade 10 - Grade 12',
-      totalPositions: 5,
-      isActive: true,
-      jobFamily: 'Corporate Leadership',
-      filledPositions: 4,
-      fillRate: 80.0,
-      minSalary: '7,500 KD',
-      maxSalary: '10,200 KD',
-      medianSalary: '8,600 KD',
-      averageTenure: '10 years',
-      talentStatus: 'Critical',
-      responsibilities: [
-        'Set strategy & vision',
-        'Drive cross-functional initiatives',
-        'Engage stakeholders & board',
-      ],
-      progressionLevels: [
-        'Explore global board roles',
-        'Mentor emerging executives',
-        'Lead transformation programs',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Director',
-      code: 'DIR',
-      description: 'Senior leadership and directorial positions',
-      gradeRange: 'Grade 9 - Grade 10',
-      totalPositions: 12,
-      isActive: true,
-      jobFamily: 'Strategy & Operations',
-      filledPositions: 10,
-      fillRate: 83.0,
-      minSalary: '5,800 KD',
-      maxSalary: '6,700 KD',
-      medianSalary: '6,150 KD',
-      averageTenure: '7 years',
-      talentStatus: 'Elevated',
-      responsibilities: [
-        'Align teams to strategic priorities',
-        'Coach managers & ensure accountability',
-        'Optimize governance & risk controls',
-      ],
-      progressionLevels: [
-        'Prepare for VP/GM roles',
-        'Partner on enterprise programs',
-        'Sponsor leadership academies',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Manager',
-      code: 'MGR',
-      description: 'Management and supervisory positions',
-      gradeRange: 'Grade 7 - Grade 8',
-      totalPositions: 28,
-      isActive: true,
-      jobFamily: 'Operations',
-      filledPositions: 24,
-      fillRate: 85.7,
-      minSalary: '4,200 KD',
-      maxSalary: '5,100 KD',
-      medianSalary: '4,550 KD',
-      averageTenure: '5 years',
-      talentStatus: 'On Track',
-      responsibilities: [
-        'Deliver monthly performance',
-        'Coach teams to targets',
-        'Ensure compliance & quality',
-      ],
-      progressionLevels: [
-        'Stretch to director mandates',
-        'Lead enterprise projects',
-        'Own cross-functional capability',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Supervisor',
-      code: 'SUP',
-      description: 'Team lead and supervisory positions',
-      gradeRange: 'Grade 6 - Grade 7',
-      totalPositions: 35,
-      isActive: true,
-      jobFamily: 'Customer Experience',
-      filledPositions: 30,
-      fillRate: 85.7,
-      minSalary: '3,400 KD',
-      maxSalary: '3,900 KD',
-      medianSalary: '3,650 KD',
-      averageTenure: '4 years',
-      talentStatus: 'Stable',
-      responsibilities: [
-        'Coach frontline staff daily',
-        'Lead weekly stand-ups',
-        'Report KPI variances',
-      ],
-      progressionLevels: [
-        'Lead division squads',
-        'Become a manager fellow',
-        'Support talent rotation',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Senior Professional',
-      code: 'SNR',
-      description: 'Senior individual contributor positions',
-      gradeRange: 'Grade 5 - Grade 6',
-      totalPositions: 42,
-      isActive: true,
-      jobFamily: 'Finance & Analytics',
-      filledPositions: 38,
-      fillRate: 90.4,
-      minSalary: '3,000 KD',
-      maxSalary: '3,600 KD',
-      medianSalary: '3,300 KD',
-      averageTenure: '3 years',
-      talentStatus: 'High Potential',
-      responsibilities: [
-        'Own complex projects',
-        'Provide technical guidance',
-        'Represent discipline SMEs',
-      ],
-      progressionLevels: [
-        'Mentor junior professionals',
-        'Lead capability communities',
-        'Champion internal mobility',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Professional',
-      code: 'PRO',
-      description: 'Mid-level professional positions',
-      gradeRange: 'Grade 4 - Grade 5',
-      totalPositions: 68,
-      isActive: true,
-      jobFamily: 'Technology & Delivery',
-      filledPositions: 62,
-      fillRate: 91.2,
-      minSalary: '2,400 KD',
-      maxSalary: '2,900 KD',
-      medianSalary: '2,650 KD',
-      averageTenure: '2.5 years',
-      talentStatus: 'Growing',
-      responsibilities: [
-        'Drive delivery excellence',
-        'Collaborate on solutions',
-        'Document best practices',
-      ],
-      progressionLevels: [
-        'Shadow senior professionals',
-        'Own end-to-end journeys',
-        'Build domain expertise',
-      ],
-    ),
-    JobLevel(
-      nameEnglish: 'Junior Professional',
-      code: 'JNR',
-      description: 'Entry-level and junior positions',
-      gradeRange: 'Grade 2 - Grade 3',
-      totalPositions: 45,
-      isActive: true,
-      jobFamily: 'General Services',
-      filledPositions: 41,
-      fillRate: 91.1,
-      minSalary: '1,500 KD',
-      maxSalary: '1,900 KD',
-      medianSalary: '1,700 KD',
-      averageTenure: '1.5 years',
-      talentStatus: 'Emerging',
-      responsibilities: [
-        'Learn & apply core tasks',
-        'Partner with peers',
-        'Log process learnings',
-      ],
-      progressionLevels: [
-        'Complete onboarding roadmap',
-        'Gain functional certifications',
-        'Step into professional roles',
-      ],
-    ),
-  ];
-});
-
-/// Provider for all job families
-final jobFamilyListProvider = StateProvider<List<JobFamily>>((ref) {
-  // Mock data - Replace with actual data source
-  return [
-    JobFamily(
-      code: 'FIN',
-      nameEnglish: 'Finance & Accounting',
-      nameArabic: 'المالية والمحاسبة',
-      description: 'Positions related to financial management, accounting, budgeting, and financial analysis',
-      totalPositions: 25,
-      filledPositions: 20,
-      fillRate: 80.0,
-      isActive: true,
-      createdAt: DateTime(2020, 4, 12),
-      updatedAt: DateTime(2024, 12, 18),
-    ),
-    JobFamily(
-      code: 'HR',
-      nameEnglish: 'Human Resources',
-      nameArabic: 'الموارد البشرية',
-      description: 'Positions related to recruitment, employee relations, training, and HR operations',
-      totalPositions: 12,
-      filledPositions: 10,
-      fillRate: 83.0,
-      isActive: true,
-      createdAt: DateTime(2021, 1, 17),
-      updatedAt: DateTime(2025, 1, 18),
-    ),
-    JobFamily(
-      code: 'IT',
-      nameEnglish: 'Information Technology',
-      nameArabic: 'تقنية المعلومات',
-      description: 'Positions related to software development, IT infrastructure, and technical support',
-      totalPositions: 18,
-      filledPositions: 15,
-      fillRate: 83.0,
-      isActive: true,
-      createdAt: DateTime(2019, 9, 2),
-      updatedAt: DateTime(2024, 11, 2),
-    ),
-    JobFamily(
-      code: 'SAL',
-      nameEnglish: 'Sales & Marketing',
-      nameArabic: 'المبيعات والتسويق',
-      description: 'Positions related to sales, marketing, customer relations, and business development',
-      totalPositions: 30,
-      filledPositions: 24,
-      fillRate: 80.0,
-      isActive: true,
-      createdAt: DateTime(2022, 3, 3),
-      updatedAt: DateTime(2025, 1, 20),
-    ),
-    JobFamily(
-      code: 'OPS',
-      nameEnglish: 'Operations',
-      nameArabic: 'العمليات',
-      description: 'Positions related to operations management, logistics, and supply chain',
-      totalPositions: 45,
-      filledPositions: 38,
-      fillRate: 84.0,
-      isActive: true,
-      createdAt: DateTime(2020, 7, 1),
-      updatedAt: DateTime(2024, 12, 5),
-    ),
-    JobFamily(
-      code: 'LEG',
-      nameEnglish: 'Legal & Compliance',
-      nameArabic: 'القانونية والامتثال',
-      description: 'Positions related to legal affairs, compliance, and regulatory matters',
-      totalPositions: 8,
-      filledPositions: 7,
-      fillRate: 88.0,
-      isActive: true,
-      createdAt: DateTime(2018, 6, 11),
-      updatedAt: DateTime(2025, 1, 2),
-    ),
-  ];
-});
-
 /// Provider for reporting structure positions
-final reportingPositionListProvider =
-    StateProvider<List<ReportingPosition>>((ref) {
+final reportingPositionListProvider = StateProvider<List<ReportingPosition>>((
+  ref,
+) {
   return const [
     ReportingPosition(
       positionCode: 'FIN-MGR-001',

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/paginated_org_units_response.dart';
@@ -137,6 +139,10 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       } else {
         // Fallback to non-paginated API
         final units = await getOrgUnitsByLevelUseCase(levelCode);
+        if(units.isNotEmpty){
+          log("units are ${units.first.parentUnit}");
+
+        }
         paginatedResponse = PaginatedOrgUnitsResponse(
           units: units,
           currentPage: 1,
@@ -147,6 +153,8 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       }
       
       debugPrint('OrgUnitsNotifier: Loaded ${paginatedResponse.units.length} units for level $levelCode (page $page)');
+      debugPrint('OrgUnitsNotifier: data is ${paginatedResponse.units.first.parentUnit}');
+      debugPrint('OrgUnitsNotifier: data is ${paginatedResponse.units.first.parentOrgUnitId}');
       debugPrint('OrgUnitsNotifier: Response pagination - currentPage=${paginatedResponse.currentPage}, totalPages=${paginatedResponse.totalPages}, totalItems=${paginatedResponse.totalItems}');
       debugPrint('OrgUnitsNotifier: Response pagination - pageSize=${paginatedResponse.pageSize}');
       debugPrint('OrgUnitsNotifier: Calculating hasNextPage - currentPage=${paginatedResponse.currentPage} < totalPages=${paginatedResponse.totalPages} = ${paginatedResponse.currentPage < paginatedResponse.totalPages}');

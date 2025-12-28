@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/shimmer_widget.dart';
+import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,13 +23,9 @@ class HierarchyLevelShimmer extends StatelessWidget {
         web: EdgeInsetsDirectional.all(18.w),
       ),
       decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.successBgDark
-            : const Color(0xFFF0FDF4),
+        color: isDark ? AppColors.successBgDark : const Color(0xFFF0FDF4),
         border: Border.all(
-          color: isDark
-              ? AppColors.successBorderDark
-              : const Color(0xFFB9F8CF),
+          color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(10.r),
@@ -173,4 +169,3 @@ class HierarchyLevelShimmer extends StatelessWidget {
     );
   }
 }
-
