@@ -4,6 +4,7 @@ import 'package:digify_hr_system/features/workforce_structure/data/repositories/
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/grade_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_grade_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,9 +29,14 @@ final createGradeUseCaseProvider = Provider<CreateGradeUseCase>((ref) {
   return CreateGradeUseCase(ref.read(gradeRepositoryProvider));
 });
 
+final deleteGradeUseCaseProvider = Provider<DeleteGradeUseCase>((ref) {
+  return DeleteGradeUseCase(ref.read(gradeRepositoryProvider));
+});
+
 // Grade State that extends PaginationState with creating status
 class GradeState extends PaginationState<Grade> {
   final bool isCreating;
+  final int? deletingGradeId;
 
   const GradeState({
     super.items = const [],
@@ -45,6 +51,7 @@ class GradeState extends PaginationState<Grade> {
     super.hasNextPage = false,
     super.hasPreviousPage = false,
     this.isCreating = false,
+    this.deletingGradeId,
   });
 
   @override
@@ -61,6 +68,8 @@ class GradeState extends PaginationState<Grade> {
     bool? hasNextPage,
     bool? hasPreviousPage,
     bool? isCreating,
+    int? deletingGradeId,
+    bool clearDeletingGradeId = false,
   }) {
     return GradeState(
       items: items ?? this.items,
@@ -75,6 +84,9 @@ class GradeState extends PaginationState<Grade> {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       isCreating: isCreating ?? this.isCreating,
+      deletingGradeId: clearDeletingGradeId
+          ? null
+          : (deletingGradeId ?? this.deletingGradeId),
     );
   }
 }
@@ -85,9 +97,13 @@ class GradeNotifier extends StateNotifier<GradeState>
     implements PaginationController<Grade> {
   final GetGradesUseCase _getGradesUseCase;
   final CreateGradeUseCase _createGradeUseCase;
+  final DeleteGradeUseCase _deleteGradeUseCase;
 
-  GradeNotifier(this._getGradesUseCase, this._createGradeUseCase)
-    : super(const GradeState());
+  GradeNotifier(
+    this._getGradesUseCase,
+    this._createGradeUseCase,
+    this._deleteGradeUseCase,
+  ) : super(const GradeState());
 
   @override
   Future<void> loadFirstPage() async {
@@ -176,6 +192,22 @@ class GradeNotifier extends StateNotifier<GradeState>
       rethrow;
     }
   }
+
+  Future<void> deleteGrade(int gradeId) async {
+    state = state.copyWith(deletingGradeId: gradeId);
+    try {
+      await _deleteGradeUseCase.execute(gradeId);
+      // Remove the grade from the list optimistically
+      state = state.copyWith(
+        items: state.items.where((g) => g.id != gradeId).toList(),
+        totalItems: state.totalItems - 1,
+        clearDeletingGradeId: true,
+      );
+    } catch (e) {
+      state = state.copyWith(clearDeletingGradeId: true);
+      rethrow;
+    }
+  }
 }
 
 // Provider for the notifier
@@ -185,6 +217,7 @@ final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((
   return GradeNotifier(
     ref.read(getGradesUseCaseProvider),
     ref.read(createGradeUseCaseProvider),
+    ref.read(deleteGradeUseCaseProvider),
   );
 });
 

@@ -8,6 +8,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/grad
 abstract class GradeRemoteDataSource {
   Future<GradeResponse> getGrades({int page = 1, int pageSize = 10});
   Future<Grade> createGrade(Map<String, dynamic> data);
+  Future<void> deleteGrade(int gradeId);
 }
 
 class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
@@ -35,5 +36,13 @@ class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
     return GradeModel.fromJson(
       response['data'] as Map<String, dynamic>,
     ).toEntity();
+  }
+
+  @override
+  Future<void> deleteGrade(int gradeId) async {
+    await apiClient.delete(
+      '${ApiEndpoints.grades}/$gradeId',
+      queryParameters: {'hard': 'true'},
+    );
   }
 }

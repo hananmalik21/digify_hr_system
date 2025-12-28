@@ -28,4 +28,9 @@ class GradeRepositoryImpl implements GradeRepository {
     };
     return await remoteDataSource.createGrade(data);
   }
+
+  @override
+  Future<void> deleteGrade(int gradeId) async {
+    return await remoteDataSource.deleteGrade(gradeId);
+  }
 }
