@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class EnterpriseStructureFields extends ConsumerStatefulWidget {
   final AppLocalizations localizations;
   final Map<String, int?> selectedUnitIds;
+  final Map<String, OrgUnit>? initialSelections;
   final Function(String levelCode, int? unitId) onSelectionChanged;
 
   const EnterpriseStructureFields({
@@ -20,6 +22,7 @@ class EnterpriseStructureFields extends ConsumerStatefulWidget {
     required this.localizations,
     required this.selectedUnitIds,
     required this.onSelectionChanged,
+    this.initialSelections,
   });
 
   @override
@@ -66,6 +69,15 @@ class _EnterpriseStructureFieldsState
         levels: activeLevels,
         structureId: structureId,
       ));
+
+      if (widget.initialSelections != null &&
+          _cachedSelectionProvider != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref
+              .read(_cachedSelectionProvider!.notifier)
+              .initialize(widget.initialSelections!);
+        });
+      }
     }
 
     final selectionProvider = _cachedSelectionProvider!;

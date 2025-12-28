@@ -70,11 +70,21 @@ class PositionFormNotifier extends StateNotifier<PositionFormState> {
     state = const PositionFormState();
   }
 
-  void initialize({String? employmentType, bool? isActive, String? step}) {
+  void initialize({
+    String? employmentType,
+    bool? isActive,
+    String? step,
+    JobFamily? jobFamily,
+    JobLevel? jobLevel,
+    Grade? grade,
+  }) {
     state = state.copyWith(
       employmentType: employmentType ?? state.employmentType,
       isActive: isActive ?? state.isActive,
       step: step ?? state.step,
+      jobFamily: jobFamily ?? state.jobFamily,
+      jobLevel: jobLevel ?? state.jobLevel,
+      grade: grade ?? state.grade,
     );
   }
 }

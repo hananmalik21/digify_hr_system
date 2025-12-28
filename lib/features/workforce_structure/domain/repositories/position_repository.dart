@@ -6,5 +6,6 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/posi
 abstract class PositionRepository {
   Future<PositionResponse> getPositions({int page = 1, int pageSize = 10});
   Future<Position> createPosition(Map<String, dynamic> positionData);
+  Future<Position> updatePosition(int id, Map<String, dynamic> positionData);
   Future<void> deletePosition(int id, {bool hard = true});
 }

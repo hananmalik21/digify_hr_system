@@ -62,6 +62,8 @@ class PositionFormHelpers {
     String? hint,
     bool isRequired = true,
     TextDirection? textDirection,
+    bool readOnly = false,
+    bool enabled = true,
   }) {
     return PositionLabeledField(
       label: label,
@@ -69,12 +71,17 @@ class PositionFormHelpers {
       child: TextFormField(
         controller: controller,
         textDirection: textDirection,
+        readOnly: readOnly,
+        enabled: enabled,
         textAlign: textDirection == TextDirection.rtl
             ? TextAlign.right
             : TextAlign.left,
+        style: TextStyle(
+          color: enabled ? AppColors.textPrimary : AppColors.textSecondary,
+        ),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: enabled ? Colors.white : AppColors.background,
           hintText: hint ?? label,
           hintTextDirection: textDirection,
           hintStyle: TextStyle(

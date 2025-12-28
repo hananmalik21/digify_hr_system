@@ -147,6 +147,10 @@ class EnterpriseSelectionNotifier
     );
   }
 
+  void initialize(Map<String, OrgUnit> selections) {
+    state = state.copyWith(selections: selections);
+  }
+
   void reset() {
     state = EnterpriseSelectionState(structureId: state.structureId);
   }
