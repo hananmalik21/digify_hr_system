@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/widgets/shimmer_widget.dart';
+import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/hierarchy_level_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,10 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ShimmerLoadingWidget extends StatelessWidget {
   final bool isMobile;
 
-  const ShimmerLoadingWidget({
-    super.key,
-    required this.isMobile,
-  });
+  const ShimmerLoadingWidget({super.key, required this.isMobile});
 
   @override
   Widget build(BuildContext context) {
@@ -30,4 +27,3 @@ class ShimmerLoadingWidget extends StatelessWidget {
     );
   }
 }
-

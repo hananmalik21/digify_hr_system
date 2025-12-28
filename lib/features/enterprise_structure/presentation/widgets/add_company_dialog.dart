@@ -3,13 +3,9 @@ import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_company_usecase.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_company_usecase.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +23,16 @@ class AddCompanyDialog extends ConsumerStatefulWidget {
     this.initialData,
   });
 
-  static Future<void> show(BuildContext context, {bool isEditMode = false, Map<String, dynamic>? initialData}) {
+  static Future<void> show(
+    BuildContext context, {
+    bool isEditMode = false,
+    Map<String, dynamic>? initialData,
+  }) {
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.45),
-      builder: (dialogContext) => AddCompanyDialog(
-        isEditMode: isEditMode,
-        initialData: initialData,
-      ),
+      builder: (dialogContext) =>
+          AddCompanyDialog(isEditMode: isEditMode, initialData: initialData),
     );
   }
 
@@ -61,29 +59,58 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   void initState() {
     super.initState();
     _selectedStatus = widget.initialData?['status'] ?? 'Active';
-    _selectedCurrency = widget.initialData?['currency'] ?? 'KWD - Kuwaiti Dinar';
+    _selectedCurrency =
+        widget.initialData?['currency'] ?? 'KWD - Kuwaiti Dinar';
     _selectedOrgStructureId = widget.initialData?['orgStructureId'] as int?;
-    
+
     _controllers = {
-      'companyCode': TextEditingController(text: widget.initialData?['companyCode'] ?? ''),
-      'nameEn': TextEditingController(text: widget.initialData?['nameEn'] ?? ''),
-      'nameAr': TextEditingController(text: widget.initialData?['nameAr'] ?? ''),
-      'legalNameEn': TextEditingController(text: widget.initialData?['legalNameEn'] ?? ''),
-      'legalNameAr': TextEditingController(text: widget.initialData?['legalNameAr'] ?? ''),
-      'registrationNumber': TextEditingController(text: widget.initialData?['registrationNumber'] ?? ''),
+      'companyCode': TextEditingController(
+        text: widget.initialData?['companyCode'] ?? '',
+      ),
+      'nameEn': TextEditingController(
+        text: widget.initialData?['nameEn'] ?? '',
+      ),
+      'nameAr': TextEditingController(
+        text: widget.initialData?['nameAr'] ?? '',
+      ),
+      'legalNameEn': TextEditingController(
+        text: widget.initialData?['legalNameEn'] ?? '',
+      ),
+      'legalNameAr': TextEditingController(
+        text: widget.initialData?['legalNameAr'] ?? '',
+      ),
+      'registrationNumber': TextEditingController(
+        text: widget.initialData?['registrationNumber'] ?? '',
+      ),
       'taxId': TextEditingController(text: widget.initialData?['taxId'] ?? ''),
-      'establishedDate': TextEditingController(text: widget.initialData?['establishedDate'] ?? ''),
-      'industry': TextEditingController(text: widget.initialData?['industry'] ?? ''),
-      'country': TextEditingController(text: widget.initialData?['country'] ?? ''),
+      'establishedDate': TextEditingController(
+        text: widget.initialData?['establishedDate'] ?? '',
+      ),
+      'industry': TextEditingController(
+        text: widget.initialData?['industry'] ?? '',
+      ),
+      'country': TextEditingController(
+        text: widget.initialData?['country'] ?? '',
+      ),
       'city': TextEditingController(text: widget.initialData?['city'] ?? ''),
-      'address': TextEditingController(text: widget.initialData?['address'] ?? ''),
+      'address': TextEditingController(
+        text: widget.initialData?['address'] ?? '',
+      ),
       'poBox': TextEditingController(text: widget.initialData?['poBox'] ?? ''),
-      'zipCode': TextEditingController(text: widget.initialData?['zipCode'] ?? ''),
+      'zipCode': TextEditingController(
+        text: widget.initialData?['zipCode'] ?? '',
+      ),
       'phone': TextEditingController(text: widget.initialData?['phone'] ?? ''),
       'email': TextEditingController(text: widget.initialData?['email'] ?? ''),
-      'website': TextEditingController(text: widget.initialData?['website'] ?? ''),
-      'totalEmployees': TextEditingController(text: widget.initialData?['totalEmployees'] ?? ''),
-      'fiscalYearStart': TextEditingController(text: widget.initialData?['fiscalYearStart'] ?? ''),
+      'website': TextEditingController(
+        text: widget.initialData?['website'] ?? '',
+      ),
+      'totalEmployees': TextEditingController(
+        text: widget.initialData?['totalEmployees'] ?? '',
+      ),
+      'fiscalYearStart': TextEditingController(
+        text: widget.initialData?['fiscalYearStart'] ?? '',
+      ),
     };
   }
 
@@ -98,7 +125,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   Future<void> _selectDate(BuildContext context) async {
     // Parse initial date if provided, otherwise use current date
     DateTime initialDate = DateTime.now();
-    if (widget.initialData?['establishedDate'] != null && 
+    if (widget.initialData?['establishedDate'] != null &&
         widget.initialData!['establishedDate'].toString().isNotEmpty) {
       try {
         final dateStr = widget.initialData!['establishedDate'].toString();
@@ -116,7 +143,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
         initialDate = DateTime.now();
       }
     }
-    
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -148,11 +175,10 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    
+
     // Pre-load organization structures when dialog opens (only once)
     // The provider will automatically load data when first accessed
     ref.read(orgStructuresDropdownProvider.notifier);
-    
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -362,7 +388,10 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   Widget _buildHeader(AppLocalizations localizations) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF4F39F6), Color(0xFF432DD7)],
@@ -383,7 +412,9 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
               ),
               SizedBox(width: 8.w),
               Text(
-                widget.isEditMode ? localizations.editCompany : localizations.addCompany,
+                widget.isEditMode
+                    ? localizations.editCompany
+                    : localizations.addCompany,
                 style: TextStyle(
                   fontSize: 18.8.sp,
                   fontWeight: FontWeight.w500,
@@ -413,10 +444,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
     );
   }
 
-  Widget _buildTwoColumnRow({
-    required Widget left,
-    required Widget right,
-  }) {
+  Widget _buildTwoColumnRow({required Widget left, required Widget right}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -465,7 +493,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   Widget _buildOrgStructureDropdown() {
     final structureListState = ref.watch(orgStructuresDropdownProvider);
     final structures = structureListState.structures;
-    
+
     if (structureListState.isLoading) {
       return EnterpriseStructureDropdown(
         label: 'Organization',
@@ -498,28 +526,34 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
 
     // Show all structures (both active and inactive)
     final structureItems = structures
-        .map((structure) => '${structure.structureName} (${structure.structureCode})')
+        .map(
+          (structure) =>
+              '${structure.structureName} (${structure.structureCode})',
+        )
         .toList();
-    
+
     // Find and set selected value based on orgStructureId
     String? selectedValue;
     // Only try to set selection if we have a valid orgStructureId (not null and not 0)
-    if (_selectedOrgStructureId != null && 
-        _selectedOrgStructureId! > 0 && 
+    if (_selectedOrgStructureId != null &&
+        _selectedOrgStructureId! > 0 &&
         structures.isNotEmpty) {
       // Try to find the structure by ID
       try {
         final matchingStructure = structures.firstWhere(
           (s) => s.structureId == _selectedOrgStructureId,
         );
-        selectedValue = '${matchingStructure.structureName} (${matchingStructure.structureCode})';
+        selectedValue =
+            '${matchingStructure.structureName} (${matchingStructure.structureCode})';
       } catch (e) {
         // If exact match not found, try string comparison as fallback
         try {
           final matchingByString = structures.firstWhere(
-            (s) => s.structureId.toString() == _selectedOrgStructureId.toString(),
+            (s) =>
+                s.structureId.toString() == _selectedOrgStructureId.toString(),
           );
-          selectedValue = '${matchingByString.structureName} (${matchingByString.structureCode})';
+          selectedValue =
+              '${matchingByString.structureName} (${matchingByString.structureCode})';
           // Update the state to use the correct ID format
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -536,7 +570,9 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
     }
 
     return EnterpriseStructureDropdown(
-      key: ValueKey('org_dropdown_${_selectedOrgStructureId}_${structures.length}'),
+      key: ValueKey(
+        'org_dropdown_${_selectedOrgStructureId}_${structures.length}',
+      ),
       label: 'Organization',
       isRequired: true,
       value: selectedValue,
@@ -554,13 +590,10 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
     );
   }
 
-  Widget _buildDateField({
-    required String label,
-    required String keyName,
-  }) {
+  Widget _buildDateField({required String label, required String keyName}) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -569,9 +602,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
           style: TextStyle(
             fontSize: 15.3.sp,
             fontWeight: FontWeight.w400,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF364153),
+            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
             height: 24 / 15.3,
           ),
         ),
@@ -607,11 +638,13 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
                       fontWeight: FontWeight.w400,
                       color: _controllers[keyName]!.text.isEmpty
                           ? (isDark
-                              ? AppColors.textPlaceholderDark
-                              : const Color(0xFF0A0A0A).withValues(alpha: 0.5))
+                                ? AppColors.textPlaceholderDark
+                                : const Color(
+                                    0xFF0A0A0A,
+                                  ).withValues(alpha: 0.5))
                           : (isDark
-                              ? AppColors.textPrimaryDark
-                              : const Color(0xFF0A0A0A)),
+                                ? AppColors.textPrimaryDark
+                                : const Color(0xFF0A0A0A)),
                       height: 24 / 15.6,
                     ),
                   ),
@@ -634,9 +667,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   Widget _buildFooter(AppLocalizations localizations) {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Color(0xFFE5E7EB)),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
       ),
       padding: EdgeInsetsDirectional.only(
         start: 24.w,
@@ -650,7 +681,8 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             style: TextButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),              backgroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
+              backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r),
                 side: const BorderSide(color: Color(0xFFD1D5DC)),
@@ -694,7 +726,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
                     ),
                   ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: _isSubmitting 
+              backgroundColor: _isSubmitting
                   ? const Color(0xFF4F39F6).withValues(alpha: 0.6)
                   : const Color(0xFF4F39F6),
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
@@ -710,8 +742,6 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
 
   Future<void> _handleSave() async {
     if (_isSubmitting) return;
-    
-    final localizations = AppLocalizations.of(context)!;
 
     // Validate required fields
     if (_controllers['companyCode']!.text.trim().isEmpty ||
@@ -784,11 +814,13 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
         if (_controllers['website']!.text.trim().isNotEmpty)
           'WEBSITE': _controllers['website']!.text.trim(),
         if (_controllers['totalEmployees']!.text.trim().isNotEmpty)
-          'TOTAL_EMPLOYEES': int.tryParse(_controllers['totalEmployees']!.text.trim()) ?? 0,
+          'TOTAL_EMPLOYEES': int.tryParse(
+            _controllers['totalEmployees']!.text.trim(),
+          ),
         if (currencyCode.isNotEmpty) 'CURRENCY_CODE': currencyCode,
         if (_controllers['fiscalYearStart']!.text.trim().isNotEmpty)
           'FISCAL_YEAR_START': _controllers['fiscalYearStart']!.text.trim(),
-        "LAST_UPDATE_LOGIN": "ADMIN"
+        "LAST_UPDATE_LOGIN": "ADMIN",
       };
 
       if (widget.isEditMode) {
@@ -815,8 +847,8 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
           SnackBar(
             content: Text(
               widget.isEditMode
-                  ? localizations.updateCompany ?? 'Company updated successfully'
-                  : localizations.addCompany ?? 'Company created successfully',
+                  ? 'Company updated successfully'
+                  : 'Company created successfully',
             ),
             backgroundColor: Colors.green,
           ),
@@ -826,7 +858,9 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to ${widget.isEditMode ? 'update' : 'create'} company: ${e.toString()}'),
+            content: Text(
+              'Failed to ${widget.isEditMode ? 'update' : 'create'} company: ${e.toString()}',
+            ),
             backgroundColor: Colors.red,
           ),
         );

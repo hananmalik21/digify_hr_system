@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -125,7 +124,6 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   final Ref ref;
   late final CompaniesNotifier _companiesNotifier;
   late final DivisionsNotifier _divisionsNotifier;
-  List<StructureListItem> _orgStructures = []; // Store org structures for lookup
 
   ComponentValuesNotifier(this.ref) : super(ComponentValuesState()) {
     // Create a new instance of CompaniesNotifier for this component values screen
@@ -136,8 +134,6 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     _divisionsNotifier = DivisionsNotifier(
       getDivisionsUseCase: ref.read(getDivisionsUseCaseProvider),
     );
-    // Load org structures for parent org lookup
-    _loadOrgStructures();
     loadComponents();
   }
 
@@ -146,17 +142,6 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     _companiesNotifier.dispose();
     _divisionsNotifier.dispose();
     super.dispose();
-  }
-
-  /// Load org structures for parent org lookup
-  Future<void> _loadOrgStructures() async {
-    try {
-      final orgStructuresState = ref.read(orgStructuresDropdownProvider);
-      _orgStructures = orgStructuresState.structures;
-    } catch (e) {
-      // If loading fails, continue with empty list
-      _orgStructures = [];
-    }
   }
 
   /// Convert CompanyOverview to ComponentValue
@@ -168,8 +153,10 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
       name: company.name,
       arabicName: company.nameArabic,
       type: ComponentType.company,
-      parentId: company.orgStructureId?.toString(), // Store org structure ID for lookup
-      managerId: company.registrationNumber, // Store registration number for display
+      parentId: company.orgStructureId
+          ?.toString(), // Store org structure ID for lookup
+      managerId:
+          company.registrationNumber, // Store registration number for display
       location: company.location,
       status: company.isActive,
       description: company.industry,
@@ -202,12 +189,12 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-
       // If filter is company, fetch from companies API using CompaniesNotifier
       if (state.filterType == ComponentType.company) {
         // Use search if provided, otherwise use existing search query
-        final searchQuery = search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : '');
-        
+        final searchQuery =
+            search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : '');
+
         if (searchQuery.isNotEmpty) {
           // Trigger search in companies notifier
           _companiesNotifier.searchCompanies(searchQuery);
@@ -215,16 +202,18 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
           // Refresh companies
           await _companiesNotifier.refresh();
         }
-        
+
         // Wait a bit for the notifier to load (debounce delay + API call)
         await Future.delayed(const Duration(milliseconds: 600));
-        
+
         // Get companies from the notifier state
         final companiesState = _companiesNotifier.state;
         final companies = companiesState.companies;
-        
-        final companyComponents = companies.map(_companyToComponentValue).toList();
-        
+
+        final companyComponents = companies
+            .map(_companyToComponentValue)
+            .toList();
+
         state = state.copyWith(
           components: companyComponents,
           isLoading: companiesState.isLoading,
@@ -444,18 +433,20 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   /// Search components
   void searchComponents(String query) {
     state = state.copyWith(searchQuery: query);
-    
+
     // If company filter is active, use companies notifier search
     if (state.filterType == ComponentType.company) {
       _companiesNotifier.searchCompanies(query);
-      
+
       // Update state after a delay to reflect the search results
       Future.delayed(const Duration(milliseconds: 600), () {
         if (state.filterType == ComponentType.company) {
           final companiesState = _companiesNotifier.state;
           final companies = companiesState.companies;
-          final companyComponents = companies.map(_companyToComponentValue).toList();
-          
+          final companyComponents = companies
+              .map(_companyToComponentValue)
+              .toList();
+
           state = state.copyWith(
             components: companyComponents,
             isLoading: companiesState.isLoading,
@@ -464,18 +455,20 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
         }
       });
     }
-    
+
     // If division filter is active, use divisions notifier search
     if (state.filterType == ComponentType.division) {
       _divisionsNotifier.searchDivisions(query);
-      
+
       // Update state after a delay to reflect the search results
       Future.delayed(const Duration(milliseconds: 600), () {
         if (state.filterType == ComponentType.division) {
           final divisionsState = _divisionsNotifier.state;
           final divisions = divisionsState.divisions;
-          final divisionComponents = divisions.map(_divisionToComponentValue).toList();
-          
+          final divisionComponents = divisions
+              .map(_divisionToComponentValue)
+              .toList();
+
           state = state.copyWith(
             components: divisionComponents,
             isLoading: divisionsState.isLoading,
@@ -496,7 +489,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
       isTreeView: type == null,
       searchQuery: '', // Clear search when changing filter
     );
-    
+
     // Reload components when filter changes (especially for company)
     loadComponents();
   }
@@ -600,7 +593,5 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
 /// Provider for component values
 final componentValuesProvider =
     StateNotifierProvider<ComponentValuesNotifier, ComponentValuesState>(
-
-  (ref) => ComponentValuesNotifier(ref),
-);
-
+      (ref) => ComponentValuesNotifier(ref),
+    );

@@ -1,6 +1,8 @@
-/// Job Family domain model
+/// Job Family domain model (Entity)
 /// Represents a job family grouping positions by function
+/// This is a pure domain entity with no serialization logic
 class JobFamily {
+  final int id;
   final String code;
   final String nameEnglish;
   final String nameArabic;
@@ -13,6 +15,7 @@ class JobFamily {
   final DateTime? updatedAt;
 
   const JobFamily({
+    required this.id,
     required this.code,
     required this.nameEnglish,
     required this.nameArabic,
@@ -28,6 +31,7 @@ class JobFamily {
   int get vacantPositions => totalPositions - filledPositions;
 
   JobFamily copyWith({
+    int? id,
     String? code,
     String? nameEnglish,
     String? nameArabic,
@@ -40,6 +44,7 @@ class JobFamily {
     DateTime? updatedAt,
   }) {
     return JobFamily(
+      id: id ?? this.id,
       code: code ?? this.code,
       nameEnglish: nameEnglish ?? this.nameEnglish,
       nameArabic: nameArabic ?? this.nameArabic,
@@ -67,4 +72,3 @@ class JobFamily {
     return 'JobFamily(code: $code, nameEnglish: $nameEnglish, nameArabic: $nameArabic)';
   }
 }
-

@@ -1,79 +1,85 @@
-/// Job Level domain model
+import 'grade.dart';
+
+/// Job Level domain model (Entity)
 class JobLevel {
-  final String nameEnglish;
+  final int id;
+  final String nameEn;
   final String code;
   final String description;
-  final String gradeRange;
+  final int minGradeId;
+  final int maxGradeId;
+  final String status;
+  final Grade? minGrade;
+  final Grade? maxGrade;
   final int totalPositions;
-  final bool isActive;
-  final String jobFamily;
   final int filledPositions;
-  final double fillRate;
-  final String minSalary;
-  final String maxSalary;
-  final String medianSalary;
-  final String averageTenure;
-  final String talentStatus;
-  final List<String> responsibilities;
-  final List<String> progressionLevels;
 
   const JobLevel({
-    required this.nameEnglish,
+    required this.id,
+    required this.nameEn,
     required this.code,
     required this.description,
-    required this.gradeRange,
-    required this.totalPositions,
-    required this.isActive,
-    required this.jobFamily,
-    required this.filledPositions,
-    required this.fillRate,
-    required this.minSalary,
-    required this.maxSalary,
-    required this.medianSalary,
-    required this.averageTenure,
-    required this.talentStatus,
-    required this.responsibilities,
-    required this.progressionLevels,
+    required this.minGradeId,
+    required this.maxGradeId,
+    required this.status,
+    this.minGrade,
+    this.maxGrade,
+    this.totalPositions = 0,
+    this.filledPositions = 0,
   });
 
-  int get vacantPositions => totalPositions - filledPositions;
+  bool get isActive => status == 'ACTIVE';
+
+  double get fillRate =>
+      totalPositions > 0 ? (filledPositions / totalPositions) * 100 : 0.0;
+
+  String get gradeRange {
+    if (minGrade != null && maxGrade != null) {
+      final minPrefix = minGrade!.gradeNumber.toLowerCase().contains('grade')
+          ? ''
+          : 'Grade ';
+      final maxPrefix = maxGrade!.gradeNumber.toLowerCase().contains('grade')
+          ? ''
+          : 'Grade ';
+      return '$minPrefix${minGrade!.gradeNumber} - $maxPrefix${maxGrade!.gradeNumber}';
+    }
+    return '-';
+  }
 
   JobLevel copyWith({
-    String? nameEnglish,
+    int? id,
+    String? nameEn,
     String? code,
     String? description,
-    String? gradeRange,
+    int? minGradeId,
+    int? maxGradeId,
+    String? status,
+    Grade? minGrade,
+    Grade? maxGrade,
     int? totalPositions,
-    bool? isActive,
-    String? jobFamily,
     int? filledPositions,
-    double? fillRate,
-    String? minSalary,
-    String? maxSalary,
-    String? medianSalary,
-    String? averageTenure,
-    String? talentStatus,
-    List<String>? responsibilities,
-    List<String>? progressionLevels,
   }) {
     return JobLevel(
-      nameEnglish: nameEnglish ?? this.nameEnglish,
+      id: id ?? this.id,
+      nameEn: nameEn ?? this.nameEn,
       code: code ?? this.code,
       description: description ?? this.description,
-      gradeRange: gradeRange ?? this.gradeRange,
+      minGradeId: minGradeId ?? this.minGradeId,
+      maxGradeId: maxGradeId ?? this.maxGradeId,
+      status: status ?? this.status,
+      minGrade: minGrade ?? this.minGrade,
+      maxGrade: maxGrade ?? this.maxGrade,
       totalPositions: totalPositions ?? this.totalPositions,
-      isActive: isActive ?? this.isActive,
-      jobFamily: jobFamily ?? this.jobFamily,
       filledPositions: filledPositions ?? this.filledPositions,
-      fillRate: fillRate ?? this.fillRate,
-      minSalary: minSalary ?? this.minSalary,
-      maxSalary: maxSalary ?? this.maxSalary,
-      medianSalary: medianSalary ?? this.medianSalary,
-      averageTenure: averageTenure ?? this.averageTenure,
-      talentStatus: talentStatus ?? this.talentStatus,
-      responsibilities: responsibilities ?? this.responsibilities,
-      progressionLevels: progressionLevels ?? this.progressionLevels,
     );
   }
-}
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is JobLevel && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+}

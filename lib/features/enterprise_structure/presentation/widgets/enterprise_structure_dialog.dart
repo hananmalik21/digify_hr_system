@@ -113,7 +113,11 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
 
   static Future<void> showCreate(
     BuildContext context, {
-    required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState>provider,
+    required AutoDisposeStateNotifierProvider<
+      StructureListNotifier,
+      StructureListState
+    >
+    provider,
   }) {
     return showDialog(
       context: context,
@@ -153,18 +157,18 @@ class _EnterpriseStructureDialogState
 
   final _editDialogProvider = StateNotifierProvider.autoDispose
       .family<
-      EditEnterpriseStructureNotifier,
-      EditEnterpriseStructureState,
-      EditDialogParams
-  >(
+        EditEnterpriseStructureNotifier,
+        EditEnterpriseStructureState,
+        EditDialogParams
+      >(
         (ref, params) => EditEnterpriseStructureNotifier(
-      structureName: params.structureName,
-      description: params.description,
-      initialLevels: params.initialLevels,
-      selectedEnterpriseId: params.selectedEnterpriseId,
-      isActive: params.isActive,
-    ),
-  );
+          structureName: params.structureName,
+          description: params.description,
+          initialLevels: params.initialLevels,
+          selectedEnterpriseId: params.selectedEnterpriseId,
+          isActive: params.isActive,
+        ),
+      );
 
   @override
   void initState() {
@@ -533,7 +537,7 @@ class _EnterpriseStructureDialogState
                                         )
                                         .updateIsActive(value);
                                   },
-                                  activeColor: AppColors.primary,
+                                  activeThumbColor: AppColors.primary,
                                 ),
                               ],
                             ),
@@ -613,8 +617,4 @@ class _EnterpriseStructureDialogState
       ),
     );
   }
-
 }
-
-
-

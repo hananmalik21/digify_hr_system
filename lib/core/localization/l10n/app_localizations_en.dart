@@ -2747,4 +2747,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get step => 'Step';
+
+  @override
+  String get deleteJobLevel => 'Delete Job Level';
+
+  @override
+  String get deleteJobLevelConfirmationMessage =>
+      'Are you sure you want to delete this job level? This action cannot be undone.';
+
+  @override
+  String get jobLevelCreatedSuccessfully => 'Job level created successfully';
+
+  @override
+  String get jobLevelUpdatedSuccessfully => 'Job level updated successfully';
+
+  @override
+  String get jobLevelDeletedSuccessfully => 'Job level deleted successfully';
+
+  @override
+  String get errorCreatingJobLevel =>
+      'An error occurred while creating the job level';
+
+  @override
+  String get errorDeletingJobLevel =>
+      'An error occurred while deleting the job level';
 }

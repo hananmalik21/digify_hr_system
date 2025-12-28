@@ -7,11 +7,7 @@ abstract class AppException implements Exception {
   final int? statusCode;
   final dynamic originalError;
 
-  const AppException(
-    this.message, {
-    this.statusCode,
-    this.originalError,
-  });
+  const AppException(this.message, {this.statusCode, this.originalError});
 
   @override
   String toString() => message;
@@ -28,20 +24,12 @@ class NetworkException extends AppException {
 
 /// Server error exceptions (5xx)
 class ServerException extends AppException {
-  const ServerException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const ServerException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Client error exceptions (4xx)
 class ClientException extends AppException {
-  const ClientException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const ClientException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Unauthorized exception (401)
@@ -109,4 +97,3 @@ class UnknownException extends AppException {
     super.originalError,
   });
 }
-

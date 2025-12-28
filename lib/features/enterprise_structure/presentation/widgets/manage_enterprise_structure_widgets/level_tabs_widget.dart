@@ -1,7 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -42,7 +40,9 @@ class LevelTabsWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6),
+        color: isDark
+            ? AppColors.cardBackgroundGreyDark
+            : const Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: SingleChildScrollView(
@@ -57,7 +57,11 @@ class LevelTabsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton(BuildContext context, LevelTabItem tab, bool isSelected) {
+  Widget _buildTabButton(
+    BuildContext context,
+    LevelTabItem tab,
+    bool isSelected,
+  ) {
     return GestureDetector(
       onTap: () => onTabSelected?.call(tab.code),
       child: Container(
@@ -89,7 +93,9 @@ class LevelTabsWidget extends StatelessWidget {
               size: 16.sp,
               color: isSelected
                   ? Colors.white
-                  : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                  : (isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary),
             ),
             SizedBox(width: 8.w),
             Text(
@@ -99,7 +105,9 @@ class LevelTabsWidget extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: isSelected
                     ? Colors.white
-                    : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
+                    : (isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary),
               ),
             ),
           ],
@@ -108,4 +116,3 @@ class LevelTabsWidget extends StatelessWidget {
     );
   }
 }
-
