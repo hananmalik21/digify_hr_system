@@ -33,7 +33,7 @@ class PositionTableHeader extends StatelessWidget {
           _buildHeaderCell(localizations.headcount, 125.12.w),
           _buildHeaderCell(localizations.vacancy, 108.22.w),
           _buildHeaderCell(localizations.status, 107.02.w),
-          _buildHeaderCell(localizations.actions, 112.03.w),
+          _buildHeaderCell(localizations.actions, 130.w),
         ],
       ),
     );

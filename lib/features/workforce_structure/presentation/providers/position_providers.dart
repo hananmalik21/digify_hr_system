@@ -3,6 +3,8 @@ import 'package:digify_hr_system/features/workforce_structure/data/datasources/p
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/position_repository_impl.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/position_repository.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_position_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_positions_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_notifier.dart';
@@ -28,9 +30,27 @@ final getPositionsUseCaseProvider = Provider<GetPositionsUseCase>((ref) {
   return GetPositionsUseCase(repository: repository);
 });
 
+/// Create position use case provider
+final createPositionUseCaseProvider = Provider<CreatePositionUseCase>((ref) {
+  final repository = ref.watch(positionRepositoryProvider);
+  return CreatePositionUseCase(repository: repository);
+});
+
+/// Delete position use case provider
+final deletePositionUseCaseProvider = Provider<DeletePositionUseCase>((ref) {
+  final repository = ref.watch(positionRepositoryProvider);
+  return DeletePositionUseCase(repository: repository);
+});
+
 /// Position notifier provider
 final positionNotifierProvider =
     StateNotifierProvider<PositionNotifier, PaginationState<Position>>((ref) {
       final getPositionsUseCase = ref.watch(getPositionsUseCaseProvider);
-      return PositionNotifier(getPositionsUseCase);
+      final createPositionUseCase = ref.watch(createPositionUseCaseProvider);
+      final deletePositionUseCase = ref.watch(deletePositionUseCaseProvider);
+      return PositionNotifier(
+        getPositionsUseCase,
+        createPositionUseCase,
+        deletePositionUseCase,
+      );
     });

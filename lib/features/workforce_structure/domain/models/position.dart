@@ -1,6 +1,7 @@
 /// Position domain model
 /// Represents a job position within the workforce structure
 class Position {
+  final int id;
   final String code;
   final String titleEnglish;
   final String titleArabic;
@@ -24,6 +25,7 @@ class Position {
   final DateTime? updatedAt;
 
   const Position({
+    required this.id,
     required this.code,
     required this.titleEnglish,
     required this.titleArabic,
@@ -48,26 +50,27 @@ class Position {
   });
 
   factory Position.empty() => const Position(
-        code: '',
-        titleEnglish: '',
-        titleArabic: '',
-        department: '',
-        jobFamily: '',
-        level: '',
-        grade: '',
-        step: '',
-        reportsTo: '',
-        division: '',
-        costCenter: '',
-        location: '',
-        budgetedMin: '',
-        budgetedMax: '',
-        actualAverage: '',
-        headcount: 0,
-        filled: 0,
-        vacant: 0,
-        isActive: true,
-      );
+    id: 0,
+    code: '',
+    titleEnglish: '',
+    titleArabic: '',
+    department: '',
+    jobFamily: '',
+    level: '',
+    grade: '',
+    step: '',
+    reportsTo: '',
+    division: '',
+    costCenter: '',
+    location: '',
+    budgetedMin: '',
+    budgetedMax: '',
+    actualAverage: '',
+    headcount: 0,
+    filled: 0,
+    vacant: 0,
+    isActive: true,
+  );
 
   /// Calculate vacancy status
   bool get hasVacancy => vacant > 0;
@@ -79,6 +82,7 @@ class Position {
   double get fillPercentage => headcount > 0 ? (filled / headcount) * 100 : 0;
 
   Position copyWith({
+    int? id,
     String? code,
     String? titleEnglish,
     String? titleArabic,
@@ -102,6 +106,7 @@ class Position {
     DateTime? updatedAt,
   }) {
     return Position(
+      id: id ?? this.id,
       code: code ?? this.code,
       titleEnglish: titleEnglish ?? this.titleEnglish,
       titleArabic: titleArabic ?? this.titleArabic,
@@ -130,15 +135,14 @@ class Position {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Position && other.code == code;
+    return other is Position && other.id == id;
   }
 
   @override
-  int get hashCode => code.hashCode;
+  int get hashCode => id.hashCode;
 
   @override
   String toString() {
-    return 'Position(code: $code, titleEnglish: $titleEnglish, titleArabic: $titleArabic)';
+    return 'Position(id: $id, code: $code, titleEnglish: $titleEnglish, titleArabic: $titleArabic)';
   }
 }
-

@@ -9,6 +9,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
   // Mock data - Replace with actual data source
   return [
     Position(
+      id: 1,
       code: 'FIN-MGR-001',
       titleEnglish: 'Finance Manager',
       titleArabic: 'مدير المالية',
@@ -30,6 +31,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 2,
       code: 'FIN-ACC-001',
       titleEnglish: 'Senior Accountant',
       titleArabic: 'محاسب أول',
@@ -51,6 +53,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 3,
       code: 'FIN-ACC-002',
       titleEnglish: 'Accountant',
       titleArabic: 'محاسب',
@@ -72,6 +75,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 4,
       code: 'HR-MGR-001',
       titleEnglish: 'HR Manager',
       titleArabic: 'مدير الموارد البشرية',
@@ -93,6 +97,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 5,
       code: 'HR-REC-001',
       titleEnglish: 'Recruitment Specialist',
       titleArabic: 'أخصائي توظيف',
@@ -114,6 +119,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 6,
       code: 'IT-MGR-001',
       titleEnglish: 'IT Manager',
       titleArabic: 'مدير تقنية المعلومات',
@@ -135,6 +141,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 7,
       code: 'SAL-REP-001',
       titleEnglish: 'Sales Representative',
       titleArabic: 'مندوب مبيعات',
@@ -156,6 +163,7 @@ final positionListProvider = StateProvider<List<Position>>((ref) {
       isActive: true,
     ),
     Position(
+      id: 8,
       code: 'OPS-SUP-001',
       titleEnglish: 'Operations Supervisor',
       titleArabic: 'مشرف العمليات',
