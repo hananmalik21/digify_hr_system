@@ -9,6 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/posi
 abstract class PositionRemoteDataSource {
   Future<PositionResponse> getPositions({int page = 1, int pageSize = 10});
   Future<Position> createPosition(Map<String, dynamic> positionData);
+  Future<Position> updatePosition(int id, Map<String, dynamic> positionData);
   Future<void> deletePosition(int id, {bool hard = true});
 }
 
@@ -38,6 +39,20 @@ class PositionRemoteDataSourceImpl implements PositionRemoteDataSource {
   Future<Position> createPosition(Map<String, dynamic> positionData) async {
     final response = await apiClient.post(
       ApiEndpoints.positions,
+      body: positionData,
+    );
+
+    final data = response['data'] as Map<String, dynamic>;
+    return PositionModel.fromJson(data).toEntity();
+  }
+
+  @override
+  Future<Position> updatePosition(
+    int id,
+    Map<String, dynamic> positionData,
+  ) async {
+    final response = await apiClient.put(
+      '${ApiEndpoints.positions}/$id',
       body: positionData,
     );
 

@@ -3,6 +3,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/posi
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_positions_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_position_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Position notifier with pagination support
@@ -12,11 +13,13 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
     implements PaginationController<Position> {
   final GetPositionsUseCase _getPositionsUseCase;
   final CreatePositionUseCase _createPositionUseCase;
+  final UpdatePositionUseCase _updatePositionUseCase;
   final DeletePositionUseCase _deletePositionUseCase;
 
   PositionNotifier(
     this._getPositionsUseCase,
     this._createPositionUseCase,
+    this._updatePositionUseCase,
     this._deletePositionUseCase,
   ) : super(const PaginationState());
 
@@ -105,12 +108,32 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
     }
   }
 
+  /// Update a position
+  Future<Position> updatePosition(
+    int id,
+    Map<String, dynamic> positionData,
+  ) async {
+    try {
+      final updatedPosition = await _updatePositionUseCase.execute(
+        id,
+        positionData,
+      );
+
+      // Update state optimistically after success
+      state = state.copyWith(
+        items: state.items
+            .map((p) => p.id == id ? updatedPosition : p)
+            .toList(),
+      );
+
+      return updatedPosition;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// Delete a position
   Future<void> deletePosition(int id, {bool hard = true}) async {
-    // Keep a copy for rollback if needed?
-    // The user asked for optimistic update.
-    // Usually optimistic update in list means removing it immediately.
-
     final previousItems = state.items;
     final previousTotal = state.totalItems;
 

@@ -49,7 +49,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     super.initState();
     final position = widget.initialPosition;
 
-    _selectedUnitIds = {};
+    _selectedUnitIds = Map<String, int?>.from(position.orgPathIds ?? {});
     _formControllers = {
       'code': TextEditingController(text: position.code),
       'titleEnglish': TextEditingController(text: position.titleEnglish),
@@ -72,6 +72,9 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
             employmentType: 'FULL_TIME',
             isActive: position.isActive,
             step: position.step.isEmpty ? null : position.step,
+            jobFamily: position.jobFamilyRef,
+            jobLevel: position.jobLevelRef,
+            grade: position.gradeRef,
           );
     });
   }
@@ -127,7 +130,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     }
 
     final payload = {
-      "position_code": _formControllers['code']!.text,
+      if (!widget.isEdit) "position_code": _formControllers['code']!.text,
       "position_title_en": _formControllers['titleEnglish']!.text,
       "position_title_ar": _formControllers['titleArabic']!.text,
       "status": formState.isActive ? "ACTIVE" : "INACTIVE",
@@ -156,12 +159,23 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     setState(() => _isSaving = true);
 
     try {
-      await ref.read(positionNotifierProvider.notifier).createPosition(payload);
+      if (widget.isEdit) {
+        await ref
+            .read(positionNotifierProvider.notifier)
+            .updatePosition(widget.initialPosition.id, payload);
+      } else {
+        await ref
+            .read(positionNotifierProvider.notifier)
+            .createPosition(payload);
+      }
+
       if (mounted) {
         Navigator.of(context).pop();
         ToastService.success(
           context,
-          'Position created successfully',
+          widget.isEdit
+              ? 'Position updated successfully'
+              : 'Position created successfully',
           title: 'Success',
         );
       }
@@ -169,7 +183,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       if (mounted) {
         ToastService.error(
           context,
-          'Failed to create position: ${e.toString()}',
+          'Failed to ${widget.isEdit ? 'update' : 'create'} position: ${e.toString()}',
           title: 'Error',
         );
       }
@@ -214,6 +228,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
                         titleEnglishController:
                             _formControllers['titleEnglish']!,
                         titleArabicController: _formControllers['titleArabic']!,
+                        isEdit: widget.isEdit,
                       ),
                       SizedBox(height: 24.h),
                       OrganizationalSection(
@@ -223,6 +238,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
                             _handleEnterpriseSelection,
                         costCenterController: _formControllers['costCenter']!,
                         locationController: _formControllers['location']!,
+                        initialSelections: widget.initialPosition.orgPathRefs,
                       ),
                       SizedBox(height: 24.h),
                       JobClassificationSection(

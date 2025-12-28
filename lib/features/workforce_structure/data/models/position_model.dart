@@ -1,3 +1,7 @@
+import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 
 /// Position data model (DTO)
@@ -152,7 +156,12 @@ class PositionModel {
           : null,
       orgPath: json['org_path'] != null
           ? (json['org_path'] as List)
-                .map((e) => OrgPathModel.fromJson(e as Map<String, dynamic>))
+                .map(
+                  (e) => OrgPathModel.fromJson(
+                    e as Map<String, dynamic>,
+                    orgStructureId: _asInt(json['org_structure_id']),
+                  ),
+                )
                 .toList()
           : null,
     );
@@ -244,6 +253,16 @@ class PositionModel {
       isActive: status == 'ACTIVE',
       createdAt: _parseDate(createdDate),
       updatedAt: _parseDate(lastUpdatedDate),
+      jobFamilyRef: jobFamily?.toEntity(),
+      jobLevelRef: jobLevel?.toEntity(),
+      gradeRef: grade?.toEntity(),
+      orgUnitId: orgUnitId,
+      orgPathIds: orgPath != null
+          ? {for (var node in orgPath!) node.levelCode: node.orgUnitId}
+          : null,
+      orgPathRefs: orgPath != null
+          ? {for (var node in orgPath!) node.levelCode: node.toEntity()}
+          : null,
     );
   }
 
@@ -320,6 +339,20 @@ class JobFamilyModel {
       jobFamilyNameAr: json['job_family_name_ar'] as String? ?? '',
     );
   }
+
+  JobFamily toEntity() {
+    return JobFamily(
+      id: jobFamilyId,
+      code: jobFamilyCode,
+      nameEnglish: jobFamilyNameEn,
+      nameArabic: jobFamilyNameAr,
+      description: '',
+      totalPositions: 0,
+      filledPositions: 0,
+      fillRate: 0,
+      isActive: true,
+    );
+  }
 }
 
 class JobLevelModel {
@@ -346,6 +379,18 @@ class JobLevelModel {
       maxGradeId: json['max_grade_id'] as int?,
     );
   }
+
+  JobLevel toEntity() {
+    return JobLevel(
+      id: jobLevelId,
+      nameEn: levelNameEn,
+      code: levelCode,
+      description: '',
+      minGradeId: minGradeId ?? 0,
+      maxGradeId: maxGradeId ?? 0,
+      status: 'ACTIVE',
+    );
+  }
 }
 
 class GradeModel {
@@ -358,6 +403,27 @@ class GradeModel {
     return GradeModel(
       gradeId: json['grade_id'] as int? ?? 0,
       gradeNumber: json['grade_number'] as String? ?? '',
+    );
+  }
+
+  Grade toEntity() {
+    return Grade(
+      id: gradeId,
+      gradeNumber: gradeNumber,
+      gradeCategory: '',
+      currencyCode: 'KD',
+      step1Salary: 0,
+      step2Salary: 0,
+      step3Salary: 0,
+      step4Salary: 0,
+      step5Salary: 0,
+      description: '',
+      status: 'ACTIVE',
+      createdBy: '',
+      createdDate: DateTime.now(),
+      lastUpdatedBy: '',
+      lastUpdatedDate: DateTime.now(),
+      lastUpdateLogin: '',
     );
   }
 }
@@ -387,20 +453,39 @@ class OrgPathModel {
   final int orgUnitId;
   final String nameEn;
   final String nameAr;
+  final int orgStructureId;
 
   const OrgPathModel({
     required this.levelCode,
     required this.orgUnitId,
     required this.nameEn,
     required this.nameAr,
+    required this.orgStructureId,
   });
 
-  factory OrgPathModel.fromJson(Map<String, dynamic> json) {
+  factory OrgPathModel.fromJson(
+    Map<String, dynamic> json, {
+    int orgStructureId = 0,
+  }) {
     return OrgPathModel(
       levelCode: json['level_code'] as String? ?? '',
       orgUnitId: json['org_unit_id'] as int? ?? 0,
       nameEn: json['name_en'] as String? ?? '',
       nameAr: json['name_ar'] as String? ?? '',
+      orgStructureId: orgStructureId,
+    );
+  }
+
+  OrgUnit toEntity() {
+    return OrgUnit(
+      orgUnitId: orgUnitId,
+      orgStructureId: orgStructureId,
+      enterpriseId: 0,
+      levelCode: levelCode,
+      orgUnitCode: '',
+      orgUnitNameEn: nameEn,
+      orgUnitNameAr: nameAr,
+      isActive: true,
     );
   }
 }

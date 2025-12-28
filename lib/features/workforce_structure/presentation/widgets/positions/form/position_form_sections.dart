@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_fields.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_helpers.dart';
@@ -14,6 +15,7 @@ class BasicInfoSection extends StatelessWidget {
   final TextEditingController codeController;
   final TextEditingController titleEnglishController;
   final TextEditingController titleArabicController;
+  final bool isEdit;
 
   const BasicInfoSection({
     super.key,
@@ -21,6 +23,7 @@ class BasicInfoSection extends StatelessWidget {
     required this.codeController,
     required this.titleEnglishController,
     required this.titleArabicController,
+    this.isEdit = false,
   });
 
   @override
@@ -32,6 +35,7 @@ class BasicInfoSection extends StatelessWidget {
           label: localizations.positionCode,
           controller: codeController,
           hint: 'e.g, FIN-MGR-001',
+          enabled: !isEdit,
         ),
 
         PositionFormRow(
@@ -57,6 +61,7 @@ class BasicInfoSection extends StatelessWidget {
 class OrganizationalSection extends ConsumerWidget {
   final AppLocalizations localizations;
   final Map<String, int?> selectedUnitIds;
+  final Map<String, OrgUnit>? initialSelections;
   final Function(String levelCode, int? unitId) onEnterpriseSelectionChanged;
   final TextEditingController costCenterController;
   final TextEditingController locationController;
@@ -68,6 +73,7 @@ class OrganizationalSection extends ConsumerWidget {
     required this.onEnterpriseSelectionChanged,
     required this.costCenterController,
     required this.locationController,
+    this.initialSelections,
   });
 
   @override
@@ -79,6 +85,7 @@ class OrganizationalSection extends ConsumerWidget {
           localizations: localizations,
           selectedUnitIds: selectedUnitIds,
           onSelectionChanged: onEnterpriseSelectionChanged,
+          initialSelections: initialSelections,
         ),
         PositionFormRow(
           children: [
