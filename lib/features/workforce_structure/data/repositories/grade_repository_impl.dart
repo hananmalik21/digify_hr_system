@@ -30,6 +30,20 @@ class GradeRepositoryImpl implements GradeRepository {
   }
 
   @override
+  Future<Grade> updateGrade(int gradeId, Grade grade) async {
+    final data = {
+      'grade_category': grade.gradeCategory,
+      'step_1_salary': grade.step1Salary,
+      'step_2_salary': grade.step2Salary,
+      'step_3_salary': grade.step3Salary,
+      'step_4_salary': grade.step4Salary,
+      'step_5_salary': grade.step5Salary,
+      'description': grade.description,
+    };
+    return await remoteDataSource.updateGrade(gradeId, data);
+  }
+
+  @override
   Future<void> deleteGrade(int gradeId) async {
     return await remoteDataSource.deleteGrade(gradeId);
   }

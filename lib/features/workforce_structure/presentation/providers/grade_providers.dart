@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/repositorie
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/create_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,10 +34,15 @@ final deleteGradeUseCaseProvider = Provider<DeleteGradeUseCase>((ref) {
   return DeleteGradeUseCase(ref.read(gradeRepositoryProvider));
 });
 
+final updateGradeUseCaseProvider = Provider<UpdateGradeUseCase>((ref) {
+  return UpdateGradeUseCase(ref.read(gradeRepositoryProvider));
+});
+
 // Grade State that extends PaginationState with creating status
 class GradeState extends PaginationState<Grade> {
   final bool isCreating;
   final int? deletingGradeId;
+  final int? updatingGradeId;
 
   const GradeState({
     super.items = const [],
@@ -52,6 +58,7 @@ class GradeState extends PaginationState<Grade> {
     super.hasPreviousPage = false,
     this.isCreating = false,
     this.deletingGradeId,
+    this.updatingGradeId,
   });
 
   @override
@@ -70,6 +77,8 @@ class GradeState extends PaginationState<Grade> {
     bool? isCreating,
     int? deletingGradeId,
     bool clearDeletingGradeId = false,
+    int? updatingGradeId,
+    bool clearUpdatingGradeId = false,
   }) {
     return GradeState(
       items: items ?? this.items,
@@ -87,6 +96,9 @@ class GradeState extends PaginationState<Grade> {
       deletingGradeId: clearDeletingGradeId
           ? null
           : (deletingGradeId ?? this.deletingGradeId),
+      updatingGradeId: clearUpdatingGradeId
+          ? null
+          : (updatingGradeId ?? this.updatingGradeId),
     );
   }
 }
@@ -98,11 +110,13 @@ class GradeNotifier extends StateNotifier<GradeState>
   final GetGradesUseCase _getGradesUseCase;
   final CreateGradeUseCase _createGradeUseCase;
   final DeleteGradeUseCase _deleteGradeUseCase;
+  final UpdateGradeUseCase _updateGradeUseCase;
 
   GradeNotifier(
     this._getGradesUseCase,
     this._createGradeUseCase,
     this._deleteGradeUseCase,
+    this._updateGradeUseCase,
   ) : super(const GradeState());
 
   @override
@@ -208,6 +222,21 @@ class GradeNotifier extends StateNotifier<GradeState>
       rethrow;
     }
   }
+
+  Future<void> updateGrade(int gradeId, Grade updatedGrade) async {
+    state = state.copyWith(updatingGradeId: gradeId);
+    try {
+      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade);
+      // Update the grade in the list optimistically
+      state = state.copyWith(
+        items: state.items.map((g) => g.id == gradeId ? grade : g).toList(),
+        clearUpdatingGradeId: true,
+      );
+    } catch (e) {
+      state = state.copyWith(clearUpdatingGradeId: true);
+      rethrow;
+    }
+  }
 }
 
 // Provider for the notifier
@@ -218,6 +247,7 @@ final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((
     ref.read(getGradesUseCaseProvider),
     ref.read(createGradeUseCaseProvider),
     ref.read(deleteGradeUseCaseProvider),
+    ref.read(updateGradeUseCaseProvider),
   );
 });
 
