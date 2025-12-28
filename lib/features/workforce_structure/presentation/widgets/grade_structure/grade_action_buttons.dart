@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/update_grade_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +29,7 @@ class GradeActionButtons extends ConsumerWidget {
   }
 
   void _handleEdit(BuildContext context) {
-    // TODO: Implement edit functionality
+    UpdateGradeDialog.show(context, grade: grade);
   }
 
   @override
