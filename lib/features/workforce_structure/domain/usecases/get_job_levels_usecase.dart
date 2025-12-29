@@ -6,7 +6,15 @@ class GetJobLevelsUseCase {
 
   GetJobLevelsUseCase(this.repository);
 
-  Future<JobLevelResponse> execute({int page = 1, int pageSize = 10}) {
-    return repository.getJobLevels(page: page, pageSize: pageSize);
+  Future<JobLevelResponse> execute({
+    int page = 1,
+    int pageSize = 10,
+    String? search,
+  }) {
+    return repository.getJobLevels(
+      page: page,
+      pageSize: pageSize,
+      search: search,
+    );
   }
 }

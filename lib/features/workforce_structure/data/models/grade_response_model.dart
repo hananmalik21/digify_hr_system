@@ -9,24 +9,31 @@ class GradeResponseModel {
   const GradeResponseModel({required this.data, required this.meta});
 
   factory GradeResponseModel.fromJson(Map<String, dynamic> json) {
+    final metaJson = json['meta'] as Map<String, dynamic>? ?? {};
+    final paginationJson =
+        metaJson['pagination'] as Map<String, dynamic>? ?? {};
+
     return GradeResponseModel(
-      data: (json['data'] as List<dynamic>)
-          .map((item) => GradeModel.fromJson(item as Map<String, dynamic>))
-          .toList(),
+      data:
+          (json['data'] as List<dynamic>?)
+              ?.map((item) => GradeModel.fromJson(item as Map<String, dynamic>))
+              .toList() ??
+          [],
       meta: JobLevelMeta(
-        version: json['meta']['version'] as String,
-        timestamp: json['meta']['timestamp'] as String,
-        requestId: json['meta']['request_id'] as String,
-        count: json['meta']['count'] as int,
-        total: json['meta']['total'] as int,
-        executionTime: json['meta']['execution_time'] as String,
+        version: metaJson['version'] as String? ?? '',
+        timestamp: metaJson['timestamp'] as String? ?? '',
+        requestId: metaJson['request_id'] as String? ?? '',
+        count: metaJson['count'] as int? ?? 0,
+        total:
+            metaJson['total'] as int? ?? (paginationJson['total'] as int? ?? 0),
+        executionTime: metaJson['execution_time'] as String? ?? '',
         pagination: JobLevelPagination(
-          page: json['meta']['pagination']['page'] as int,
-          pageSize: json['meta']['pagination']['page_size'] as int,
-          total: json['meta']['pagination']['total'] as int,
-          totalPages: json['meta']['pagination']['total_pages'] as int,
-          hasNext: json['meta']['pagination']['has_next'] as bool,
-          hasPrevious: json['meta']['pagination']['has_previous'] as bool,
+          page: paginationJson['page'] as int? ?? 1,
+          pageSize: paginationJson['page_size'] as int? ?? 10,
+          total: paginationJson['total'] as int? ?? 0,
+          totalPages: paginationJson['total_pages'] as int? ?? 0,
+          hasNext: paginationJson['has_next'] as bool? ?? false,
+          hasPrevious: paginationJson['has_previous'] as bool? ?? false,
         ),
       ),
     );

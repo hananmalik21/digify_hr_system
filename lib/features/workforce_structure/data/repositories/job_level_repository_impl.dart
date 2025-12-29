@@ -12,8 +12,13 @@ class JobLevelRepositoryImpl implements JobLevelRepository {
   Future<JobLevelResponse> getJobLevels({
     int page = 1,
     int pageSize = 10,
+    String? search,
   }) async {
-    return await remoteDataSource.getJobLevels(page: page, pageSize: pageSize);
+    return await remoteDataSource.getJobLevels(
+      page: page,
+      pageSize: pageSize,
+      search: search,
+    );
   }
 
   @override

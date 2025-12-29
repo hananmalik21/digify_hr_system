@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:flutter/material.dart';
 
 /// Generic pagination state
@@ -13,6 +14,8 @@ class PaginationState<T> {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
+  final String? searchQuery;
+  final PositionStatus? status;
 
   const PaginationState({
     this.items = const [],
@@ -26,6 +29,8 @@ class PaginationState<T> {
     this.totalPages = 0,
     this.hasNextPage = false,
     this.hasPreviousPage = false,
+    this.searchQuery,
+    this.status,
   });
 
   PaginationState<T> copyWith({
@@ -40,6 +45,9 @@ class PaginationState<T> {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
+    String? searchQuery,
+    PositionStatus? status,
+    bool clearStatus = false,
   }) {
     return PaginationState<T>(
       items: items ?? this.items,
@@ -53,6 +61,8 @@ class PaginationState<T> {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
+      searchQuery: searchQuery ?? this.searchQuery,
+      status: clearStatus ? null : (status ?? this.status),
     );
   }
 

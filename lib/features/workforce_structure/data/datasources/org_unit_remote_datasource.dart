@@ -7,6 +7,7 @@ abstract class OrgUnitRemoteDataSource {
     required int structureId,
     required String levelCode,
     int? parentOrgUnitId,
+    String? search,
     int page = 1,
     int pageSize = 100,
   });
@@ -22,6 +23,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     required int structureId,
     required String levelCode,
     int? parentOrgUnitId,
+    String? search,
     int page = 1,
     int pageSize = 100,
   }) async {
@@ -33,6 +35,10 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
 
     if (parentOrgUnitId != null) {
       queryParams['parent_org_unit_id'] = parentOrgUnitId.toString();
+    }
+
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
     }
 
     final response = await apiClient.get(

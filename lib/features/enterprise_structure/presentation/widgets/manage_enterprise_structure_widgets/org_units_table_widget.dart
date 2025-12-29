@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
@@ -107,7 +105,6 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildHeaderCell('Parent', 120.w),
           _buildHeaderCell('Active', 130.w),
           _buildHeaderCell('Actions', 112.w),
-
         ],
       ),
     );
@@ -116,7 +113,10 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildHeaderCell(String text, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 12.h,
+      ),
       child: Center(
         child: Text(
           text,
@@ -215,24 +215,24 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildDataCell(
             unit.orgUnitNameAr.isNotEmpty
                 ? Text(
-              unit.orgUnitNameAr,
-              textDirection: TextDirection.rtl,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                height: 20 / 14,
-              ),
-            )
+                    unit.orgUnitNameAr,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textSecondary,
+                      height: 20 / 14,
+                    ),
+                  )
                 : Text(
-              '-',
-              style: TextStyle(
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                height: 20 / 13.7,
-              ),
-            ),
+                    '-',
+                    style: TextStyle(
+                      fontSize: 13.7.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textSecondary,
+                      height: 20 / 13.7,
+                    ),
+                  ),
             180.w,
           ),
           _buildDataCell(
@@ -316,7 +316,10 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildDataCell(Widget child, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       child: Center(child: child),
     );
   }
@@ -384,7 +387,10 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _headerCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 12.h,
+      ),
       child: ShimmerContainer(
         width: (width.w * 0.6).clamp(40.w, 140.w),
         height: 10.h,
@@ -420,7 +426,10 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _cellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       child: ShimmerContainer(
         width: (width.w * 0.7).clamp(50.w, width.w - 24.w),
         height: 12.h,
@@ -432,13 +441,12 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _statusCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       child: Center(
-        child: ShimmerContainer(
-          width: 64.w,
-          height: 18.h,
-          borderRadius: 999,
-        ),
+        child: ShimmerContainer(width: 64.w, height: 18.h, borderRadius: 999),
       ),
     );
   }
@@ -446,7 +454,10 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _actionsCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       child: Row(
         children: [
           ShimmerContainer(width: 16.sp, height: 16.sp, borderRadius: 4),

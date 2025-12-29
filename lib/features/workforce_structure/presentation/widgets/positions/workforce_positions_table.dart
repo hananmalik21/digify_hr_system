@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/table/position_table_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkforcePositionsTable extends StatelessWidget {
   final AppLocalizations localizations;
@@ -49,23 +50,42 @@ class WorkforcePositionsTable extends StatelessWidget {
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PositionTableHeader(isDark: isDark, localizations: localizations),
-            if (isLoading && positions.isEmpty)
-              PositionTableSkeleton(localizations: localizations)
-            else
-              ...positions.map(
-                (position) => PositionTableRow(
-                  position: position,
-                  localizations: localizations,
-                  onView: onView,
-                  onEdit: onEdit,
-                  onDelete: onDelete,
+        child: Skeletonizer(
+          enabled: isLoading,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PositionTableHeader(isDark: isDark, localizations: localizations),
+              if (isLoading && positions.isEmpty)
+                PositionTableSkeleton(localizations: localizations)
+              else if (positions.isEmpty && !isLoading)
+                SizedBox(
+                  width: 1200.w,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 48.h),
+                    child: Center(
+                      child: Text(
+                        localizations.noResultsFound,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              else
+                ...positions.map(
+                  (position) => PositionTableRow(
+                    position: position,
+                    localizations: localizations,
+                    onView: onView,
+                    onEdit: onEdit,
+                    onDelete: onDelete,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -68,10 +68,6 @@ class StructureMetricsWidget extends StatelessWidget {
       );
     }
 
-    // Tablet/Desktop: row with Expanded + ellipsis
-    final labelSize = isTablet ? 12.8.sp : 14.sp;
-    final valueSize = isTablet ? 12.5.sp : 13.7.sp;
-
     return Row(
       children: [
         Expanded(
@@ -114,8 +110,6 @@ class StructureMetricsWidget extends StatelessWidget {
     );
   }
 }
-
-
 
 class InfoRichText extends StatelessWidget {
   final String label;

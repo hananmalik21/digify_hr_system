@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/job_level_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/job_level_repository_impl.dart';
@@ -54,6 +55,7 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
   final CreateJobLevelUseCase _createJobLevelUseCase;
   final UpdateJobLevelUseCase _updateJobLevelUseCase;
   final DeleteJobLevelUseCase _deleteJobLevelUseCase;
+  final _debouncer = Debouncer();
 
   JobLevelNotifier(
     this._getJobLevelsUseCase,
@@ -123,6 +125,7 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
       final response = await _getJobLevelsUseCase.execute(
         page: 1,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       state = handleSuccessState(
@@ -152,6 +155,7 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
       final response = await _getJobLevelsUseCase.execute(
         page: nextPage,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       state = handleSuccessState(
@@ -199,6 +203,22 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
       );
       rethrow;
     }
+  }
+
+  void search(String query) {
+    if (state.searchQuery == query) return;
+    state = state.copyWith(searchQuery: query, items: []);
+    _debouncer.run(() => loadFirstPage());
+  }
+
+  void clearSearch() {
+    search('');
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
   }
 }
 
