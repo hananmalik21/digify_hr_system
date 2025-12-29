@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/position_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position_response.dart';
@@ -14,8 +15,15 @@ class PositionRepositoryImpl implements PositionRepository {
   Future<PositionResponse> getPositions({
     int page = 1,
     int pageSize = 10,
+    String? search,
+    PositionStatus? status,
   }) async {
-    return await remoteDataSource.getPositions(page: page, pageSize: pageSize);
+    return await remoteDataSource.getPositions(
+      page: page,
+      pageSize: pageSize,
+      search: search,
+      status: status,
+    );
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 /// A reusable widget for handling any type of asset (SVG, PNG, JPEG, etc.)
 /// with proper error handling and customization options
@@ -195,19 +196,23 @@ class DigifyAsset extends StatelessWidget {
   Widget _buildPlaceholder() {
     if (placeholder != null) return placeholder!;
 
-    return Container(
-      width: width?.w,
-      height: height?.h,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: borderRadius,
-      ),
-      child: Icon(
-        Icons.image_outlined,
-        size: (width != null && height != null)
-            ? (width! < height! ? width! * 0.4 : height! * 0.4).w
-            : 24.w,
-        color: Colors.grey.shade400,
+    return Skeletonizer(
+      enabled: true,
+      child: Container(
+        width: width?.w,
+        height: height?.h,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: borderRadius ?? BorderRadius.circular(4.r),
+        ),
+        child:
+            (width != null && height != null && (width! > 24 || height! > 24))
+            ? Icon(
+                Icons.image_outlined,
+                size: (width! < height! ? width! * 0.4 : height! * 0.4).w,
+                color: Colors.grey.shade400,
+              )
+            : const SizedBox.shrink(),
       ),
     );
   }

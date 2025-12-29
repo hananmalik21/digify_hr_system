@@ -1,10 +1,11 @@
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 
 class WorkforceSearchBar extends ConsumerWidget {
   final String hintText;
@@ -18,12 +19,21 @@ class WorkforceSearchBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchQuery = ref.watch(
+      positionNotifierProvider.select((s) => s.searchQuery),
+    );
+
     return SizedBox(
       width: 520.w,
+      height: 40.h,
       child: TextField(
         onChanged: (value) {
-          ref.read(positionSearchQueryProvider.notifier).state = value;
+          ref.read(positionNotifierProvider.notifier).search(value);
         },
+        controller: TextEditingController(text: searchQuery ?? '')
+          ..selection = TextSelection.fromPosition(
+            TextPosition(offset: searchQuery?.length ?? 0),
+          ),
         decoration: InputDecoration(
           isDense: true,
           filled: true,
@@ -49,9 +59,10 @@ class WorkforceSearchBar extends ConsumerWidget {
           ),
           prefixIcon: Padding(
             padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/search_icon.svg',
-              size: 20.sp,
+            child: DigifyAsset(
+              assetPath: Assets.icons.searchIcon.path,
+              width: 20,
+              height: 20,
               color: AppColors.textMuted,
             ),
           ),
@@ -59,6 +70,19 @@ class WorkforceSearchBar extends ConsumerWidget {
             minWidth: 0,
             minHeight: 0,
           ),
+          suffixIcon: searchQuery != null && searchQuery.isNotEmpty
+              ? IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    Icons.clear,
+                    size: 20.sp,
+                    color: AppColors.textMuted,
+                  ),
+                  onPressed: () {
+                    ref.read(positionNotifierProvider.notifier).clearSearch();
+                  },
+                )
+              : null,
           hintText: hintText,
           hintStyle: TextStyle(
             fontSize: 15.3.sp,
@@ -66,7 +90,7 @@ class WorkforceSearchBar extends ConsumerWidget {
             color: AppColors.textPlaceholder,
           ),
           contentPadding: EdgeInsets.symmetric(
-            vertical: 12.h,
+            vertical: 14.h,
             horizontal: 12.w,
           ),
         ),

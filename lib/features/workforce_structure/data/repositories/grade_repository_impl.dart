@@ -9,8 +9,16 @@ class GradeRepositoryImpl implements GradeRepository {
   const GradeRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<GradeResponse> getGrades({int page = 1, int pageSize = 10}) async {
-    return await remoteDataSource.getGrades(page: page, pageSize: pageSize);
+  Future<GradeResponse> getGrades({
+    int page = 1,
+    int pageSize = 10,
+    String? search,
+  }) async {
+    return await remoteDataSource.getGrades(
+      page: page,
+      pageSize: pageSize,
+      search: search,
+    );
   }
 
   @override

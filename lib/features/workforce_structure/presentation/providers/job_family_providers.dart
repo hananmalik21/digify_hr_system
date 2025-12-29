@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
@@ -62,6 +63,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     implements PaginationController<JobFamily> {
   final GetJobFamiliesUseCase _getJobFamiliesUseCase;
   final CreateJobFamilyUseCase _createJobFamilyUseCase;
+  final _debouncer = Debouncer();
 
   JobFamilyNotifier(this._getJobFamiliesUseCase, this._createJobFamilyUseCase)
     : super(const PaginationState());
@@ -76,6 +78,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
       final response = await _getJobFamiliesUseCase(
         page: 1,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       final jobFamilies = response.data
@@ -109,6 +112,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
       final response = await _getJobFamiliesUseCase(
         page: nextPage,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       final jobFamilies = response.data
@@ -255,6 +259,22 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
       state = state.copyWith(pageSize: newPageSize);
       refresh();
     }
+  }
+
+  void search(String query) {
+    if (state.searchQuery == query) return;
+    state = state.copyWith(searchQuery: query, items: []);
+    _debouncer.run(() => loadFirstPage());
+  }
+
+  void clearSearch() {
+    search('');
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
   }
 }
 

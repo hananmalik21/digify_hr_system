@@ -102,6 +102,14 @@ class _OrgUnitSelectionDialogState
             OrgUnitSelectionHeader(
               levelName: widget.level.levelName,
               onClose: () => Navigator.of(context).pop(false),
+              onSearchChanged: (value) {
+                ref
+                    .read(widget.selectionProvider.notifier)
+                    .setSearchQuery(widget.level.levelCode, value);
+              },
+              initialSearchQuery: selectionState.getSearchQuery(
+                widget.level.levelCode,
+              ),
             ),
             Flexible(
               child: _buildContent(

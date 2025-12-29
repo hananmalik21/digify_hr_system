@@ -5,7 +5,11 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/job_
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family_response.dart';
 
 abstract class JobFamilyRemoteDataSource {
-  Future<JobFamilyResponse> getJobFamilies({int page = 1, int pageSize = 10});
+  Future<JobFamilyResponse> getJobFamilies({
+    int page = 1,
+    int pageSize = 10,
+    String? search,
+  });
   Future<JobFamily> createJobFamily({
     required String code,
     required String nameEnglish,
@@ -33,13 +37,20 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
   Future<JobFamilyResponse> getJobFamilies({
     int page = 1,
     int pageSize = 10,
+    String? search,
   }) async {
+    final queryParams = {
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
+    }
+
     final response = await apiClient.get(
       ApiEndpoints.jobFamilies,
-      queryParameters: {
-        'page': page.toString(),
-        'page_size': pageSize.toString(),
-      },
+      queryParameters: queryParams,
     );
 
     return JobFamilyResponse.fromJson(response);

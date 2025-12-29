@@ -1,13 +1,12 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/buttons/add_position_button.dart';
-import 'package:digify_hr_system/core/widgets/buttons/export_button.dart';
-import 'package:digify_hr_system/core/widgets/buttons/import_button.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_filter_chip.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_search_bar.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_status_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class WorkforceSearchAndActions extends ConsumerWidget {
   final AppLocalizations localizations;
@@ -53,31 +52,31 @@ class WorkforceSearchAndActions extends ConsumerWidget {
             hintText: localizations.searchPositionsPlaceholder,
             isDark: isDark,
           ),
-          WorkforceFilterChip(
-            width: 200.w,
-            label: localizations.allDepartments,
-            isDark: isDark,
-          ),
-          WorkforceFilterChip(
-            width: 150.w,
+          WorkforceStatusDropdown(
             label: localizations.allStatus,
             isDark: isDark,
           ),
-          AddButton(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-            onTap: onAddPosition,
+          AppButton(
+            label: localizations.addPosition,
+            onPressed: onAddPosition,
+            svgPath: Assets.icons.addDivisionIcon.path,
+            padding: EdgeInsets.zero,
           ),
-          ImportButton(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
-            backgroundColor: AppColors.greenButton,
-            textColor: Colors.white,
-            onTap: () {},
+          AppButton(
+            label: localizations.import,
+            onPressed: () {},
+            svgPath: Assets.icons.bulkUploadIconFigma.path,
+            backgroundColor: const Color(0xFFE7F2FF),
+            foregroundColor: const Color(0xFF155DFC),
+            padding: EdgeInsets.zero,
           ),
-          ExportButton(
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+          AppButton(
+            label: localizations.export,
+            onPressed: () {},
+            svgPath: Assets.icons.downloadIcon.path,
             backgroundColor: const Color(0xFF4A5565),
-            textColor: Colors.white,
-            onTap: () {},
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.zero,
           ),
         ],
       ),

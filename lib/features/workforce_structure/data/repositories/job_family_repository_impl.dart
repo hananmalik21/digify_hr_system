@@ -12,10 +12,12 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
   Future<JobFamilyResponse> getJobFamilies({
     int page = 1,
     int pageSize = 10,
+    String? search,
   }) async {
     return await remoteDataSource.getJobFamilies(
       page: page,
       pageSize: pageSize,
+      search: search,
     );
   }
 

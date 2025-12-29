@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/delete_position_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_details_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_form_dialog.dart';
@@ -49,15 +48,6 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final positionState = ref.watch(positionNotifierProvider);
-    final searchQuery = ref.watch(positionSearchQueryProvider).toLowerCase();
-
-    // Filter positions based on search query
-    final filteredPositions = positionState.items.where((position) {
-      if (searchQuery.isEmpty) return true;
-      return position.titleEnglish.toLowerCase().contains(searchQuery) ||
-          position.titleArabic.contains(searchQuery) ||
-          position.code.toLowerCase().contains(searchQuery);
-    }).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,9 +90,9 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
         else
           WorkforcePositionsTable(
             localizations: localizations,
-            positions: filteredPositions,
+            positions: positionState.items,
             isDark: isDark,
-            isLoading: positionState.isLoading && positionState.items.isEmpty,
+            isLoading: positionState.isLoading,
             onView: (position) => _showPositionDetailsDialog(context, position),
             onEdit: (position) =>
                 _showPositionFormDialog(context, position, true),

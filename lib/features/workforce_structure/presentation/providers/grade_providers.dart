@@ -1,3 +1,5 @@
+import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/grade_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/grade_repository_impl.dart';
@@ -56,6 +58,8 @@ class GradeState extends PaginationState<Grade> {
     super.totalPages = 0,
     super.hasNextPage = false,
     super.hasPreviousPage = false,
+    super.searchQuery,
+    super.status,
     this.isCreating = false,
     this.deletingGradeId,
     this.updatingGradeId,
@@ -74,6 +78,9 @@ class GradeState extends PaginationState<Grade> {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
+    String? searchQuery,
+    PositionStatus? status,
+    bool clearStatus = false,
     bool? isCreating,
     int? deletingGradeId,
     bool clearDeletingGradeId = false,
@@ -92,6 +99,8 @@ class GradeState extends PaginationState<Grade> {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
+      searchQuery: searchQuery ?? this.searchQuery,
+      status: clearStatus ? null : (status ?? this.status),
       isCreating: isCreating ?? this.isCreating,
       deletingGradeId: clearDeletingGradeId
           ? null
@@ -111,6 +120,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   final CreateGradeUseCase _createGradeUseCase;
   final DeleteGradeUseCase _deleteGradeUseCase;
   final UpdateGradeUseCase _updateGradeUseCase;
+  final _debouncer = Debouncer();
 
   GradeNotifier(
     this._getGradesUseCase,
@@ -129,6 +139,7 @@ class GradeNotifier extends StateNotifier<GradeState>
       final response = await _getGradesUseCase.execute(
         page: 1,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       state =
@@ -160,6 +171,7 @@ class GradeNotifier extends StateNotifier<GradeState>
       final response = await _getGradesUseCase.execute(
         page: nextPage,
         pageSize: state.pageSize,
+        search: state.searchQuery,
       );
 
       state =
@@ -236,6 +248,22 @@ class GradeNotifier extends StateNotifier<GradeState>
       state = state.copyWith(clearUpdatingGradeId: true);
       rethrow;
     }
+  }
+
+  void search(String query) {
+    if (state.searchQuery == query) return;
+    state = state.copyWith(searchQuery: query, items: []);
+    _debouncer.run(() => loadFirstPage());
+  }
+
+  void clearSearch() {
+    search('');
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
   }
 }
 

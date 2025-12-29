@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
@@ -11,11 +12,14 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final AppButtonType type;
   final IconData? icon;
+  final String? svgPath;
   final double? width;
   final double? height;
   final double? fontSize;
   final EdgeInsetsGeometry? padding;
   final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   const AppButton({
     super.key,
@@ -24,11 +28,14 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.type = AppButtonType.primary,
     this.icon,
-    this.width,
-    this.height,
+    this.svgPath,
+    this.width = 144,
+    this.height = 40,
     this.fontSize,
     this.padding,
     this.borderRadius,
+    this.backgroundColor,
+    this.foregroundColor,
   });
 
   factory AppButton.primary({
@@ -36,7 +43,9 @@ class AppButton extends StatelessWidget {
     VoidCallback? onPressed,
     bool isLoading = false,
     IconData? icon,
-    double? width,
+    String? svgPath,
+    double width = 144,
+    double height = 40,
   }) {
     return AppButton(
       label: label,
@@ -44,7 +53,9 @@ class AppButton extends StatelessWidget {
       isLoading: isLoading,
       type: AppButtonType.primary,
       icon: icon,
+      svgPath: svgPath,
       width: width,
+      height: height,
     );
   }
 
@@ -53,7 +64,9 @@ class AppButton extends StatelessWidget {
     VoidCallback? onPressed,
     bool isLoading = false,
     IconData? icon,
-    double? width,
+    String? svgPath,
+    double width = 144,
+    double height = 40,
   }) {
     return AppButton(
       label: label,
@@ -61,7 +74,9 @@ class AppButton extends StatelessWidget {
       isLoading: isLoading,
       type: AppButtonType.secondary,
       icon: icon,
+      svgPath: svgPath,
       width: width,
+      height: height,
     );
   }
 
@@ -70,7 +85,9 @@ class AppButton extends StatelessWidget {
     VoidCallback? onPressed,
     bool isLoading = false,
     IconData? icon,
-    double? width,
+    String? svgPath,
+    double width = 144,
+    double height = 40,
   }) {
     return AppButton(
       label: label,
@@ -78,7 +95,9 @@ class AppButton extends StatelessWidget {
       isLoading: isLoading,
       type: AppButtonType.outline,
       icon: icon,
+      svgPath: svgPath,
       width: width,
+      height: height,
     );
   }
 
@@ -87,7 +106,9 @@ class AppButton extends StatelessWidget {
     VoidCallback? onPressed,
     bool isLoading = false,
     IconData? icon,
-    double? width,
+    String? svgPath,
+    double width = 144,
+    double height = 40,
   }) {
     return AppButton(
       label: label,
@@ -95,7 +116,9 @@ class AppButton extends StatelessWidget {
       isLoading: isLoading,
       type: AppButtonType.danger,
       icon: icon,
+      svgPath: svgPath,
       width: width,
+      height: height,
     );
   }
 
@@ -107,6 +130,7 @@ class AppButton extends StatelessWidget {
   }
 
   Color _getBaseBackgroundColor() {
+    if (backgroundColor != null) return backgroundColor!;
     switch (type) {
       case AppButtonType.primary:
         return AppColors.primary;
@@ -120,6 +144,7 @@ class AppButton extends StatelessWidget {
   }
 
   Color _getTextColor() {
+    if (foregroundColor != null) return foregroundColor!;
     switch (type) {
       case AppButtonType.primary:
       case AppButtonType.secondary:
@@ -156,12 +181,20 @@ class AppButton extends StatelessWidget {
         color: _getTextColor(),
         size: 20.sp,
       );
-    } else if (icon != null) {
+    } else if (icon != null || svgPath != null) {
       buttonChild = Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 18.sp, color: _getTextColor()),
+          if (icon != null)
+            Icon(icon, size: 18.sp, color: _getTextColor())
+          else if (svgPath != null)
+            DigifyAsset(
+              assetPath: svgPath!,
+              width: 18,
+              height: 18,
+              color: _getTextColor(),
+            ),
           SizedBox(width: 8.w),
           Text(
             label,
@@ -198,13 +231,13 @@ class AppButton extends StatelessWidget {
           side: _getBorder() ?? BorderSide.none,
         ),
         padding: effectivePadding,
+        minimumSize: Size(width?.w ?? 0, height?.h ?? 0),
+        fixedSize: (width != null && height != null)
+            ? Size(width!.w, height!.h)
+            : null,
       ),
       child: buttonChild,
     );
-
-    if (width != null) {
-      return SizedBox(width: width, height: height, child: button);
-    }
 
     return button;
   }

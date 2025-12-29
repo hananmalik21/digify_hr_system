@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_org_units_by_level_usecase.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EnterpriseSelectionState {
@@ -11,6 +12,7 @@ class EnterpriseSelectionState {
   final Map<String, String?> errors;
   final Map<String, int> pages;
   final Map<String, bool> hasNextStates;
+  final Map<String, String> searchQueries;
   final int? structureId;
 
   const EnterpriseSelectionState({
@@ -21,6 +23,7 @@ class EnterpriseSelectionState {
     this.errors = const {},
     this.pages = const {},
     this.hasNextStates = const {},
+    this.searchQueries = const {},
     this.structureId,
   });
 
@@ -32,6 +35,7 @@ class EnterpriseSelectionState {
     Map<String, String?>? errors,
     Map<String, int>? pages,
     Map<String, bool>? hasNextStates,
+    Map<String, String>? searchQueries,
     int? structureId,
   }) {
     return EnterpriseSelectionState(
@@ -42,6 +46,7 @@ class EnterpriseSelectionState {
       errors: errors ?? this.errors,
       pages: pages ?? this.pages,
       hasNextStates: hasNextStates ?? this.hasNextStates,
+      searchQueries: searchQueries ?? this.searchQueries,
       structureId: structureId ?? this.structureId,
     );
   }
@@ -61,12 +66,15 @@ class EnterpriseSelectionState {
   int getPage(String levelCode) => pages[levelCode] ?? 1;
 
   bool hasNext(String levelCode) => hasNextStates[levelCode] ?? false;
+
+  String getSearchQuery(String levelCode) => searchQueries[levelCode] ?? '';
 }
 
 class EnterpriseSelectionNotifier
     extends StateNotifier<EnterpriseSelectionState> {
   final GetOrgUnitsByLevelUseCase getOrgUnitsByLevelUseCase;
   final List<OrgStructureLevel> levels;
+  final _debouncer = Debouncer();
 
   EnterpriseSelectionNotifier({
     required this.getOrgUnitsByLevelUseCase,
@@ -103,6 +111,7 @@ class EnterpriseSelectionNotifier
         structureId: state.structureId!,
         levelCode: levelCode,
         parentOrgUnitId: parentOrgUnitId,
+        search: state.getSearchQuery(levelCode),
         page: 1,
         pageSize: 10,
       );
@@ -144,6 +153,7 @@ class EnterpriseSelectionNotifier
         structureId: state.structureId!,
         levelCode: levelCode,
         parentOrgUnitId: parentOrgUnitId,
+        search: state.getSearchQuery(levelCode),
         page: nextPage,
         pageSize: 10,
       );
@@ -218,6 +228,22 @@ class EnterpriseSelectionNotifier
     state = state.copyWith(loadingStates: newLoadingStates, errors: newErrors);
   }
 
+  void setSearchQuery(String levelCode, String query) {
+    if (state.getSearchQuery(levelCode) == query) return;
+
+    final newSearchQueries = Map<String, String>.from(state.searchQueries);
+    newSearchQueries[levelCode] = query;
+    state = state.copyWith(searchQueries: newSearchQueries);
+
+    _debouncer.run(() {
+      loadOptionsForLevel(levelCode);
+    });
+  }
+
+  void clearSearch(String levelCode) {
+    setSearchQuery(levelCode, '');
+  }
+
   void selectUnit(String levelCode, OrgUnit? unit) {
     final newSelections = Map<String, OrgUnit?>.from(state.selections);
     newSelections[levelCode] = unit;
@@ -250,5 +276,11 @@ class EnterpriseSelectionNotifier
 
   void reset() {
     state = EnterpriseSelectionState(structureId: state.structureId);
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
   }
 }
