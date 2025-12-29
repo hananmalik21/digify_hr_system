@@ -13,7 +13,6 @@ class OrgUnitSelectionSkeleton extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(16.w),
         child: ListView.separated(
-          shrinkWrap: true,
           itemCount: 8,
           separatorBuilder: (context, index) => SizedBox(height: 12.h),
           itemBuilder: (context, index) {
