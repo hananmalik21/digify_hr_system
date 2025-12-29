@@ -6,6 +6,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
@@ -749,11 +750,9 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
         _controllers['nameAr']!.text.trim().isEmpty ||
         _controllers['registrationNumber']!.text.trim().isEmpty ||
         _selectedOrgStructureId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all required fields'),
-          backgroundColor: Colors.red,
-        ),
+      ToastService.error(
+        context,
+        'Please fill in all required fields',
       );
       return;
     }
@@ -843,26 +842,18 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
 
       if (mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.isEditMode
-                  ? 'Company updated successfully'
-                  : 'Company created successfully',
-            ),
-            backgroundColor: Colors.green,
-          ),
+        ToastService.success(
+          context,
+          widget.isEditMode
+              ? 'Company updated successfully'
+              : 'Company created successfully',
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Failed to ${widget.isEditMode ? 'update' : 'create'} company: ${e.toString()}',
-            ),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          'Failed to ${widget.isEditMode ? 'update' : 'create'} company: ${e.toString()}',
         );
       }
     } finally {

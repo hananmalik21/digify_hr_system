@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/action_button_widget.dart';
@@ -75,12 +76,10 @@ class ActionButtonsWidget extends ConsumerWidget {
             onTap: () async {
               if (structureId == null) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Structure ID is required'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+          ToastService.error(
+            context,
+            'Structure ID is required',
+          );
                 }
                 return;
               }
@@ -107,40 +106,28 @@ class ActionButtonsWidget extends ConsumerWidget {
                 // Check result and refresh
                 if (!context.mounted) return;
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Structure activated successfully'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
+              ToastService.success(
+                context,
+                'Structure activated successfully',
+              );
                 // Refresh the list
                 ref.read(structureListProvider.notifier).refresh();
               } on AppException catch (e) {
                 // Handle error - use exception message directly
                 if (!context.mounted) return;
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      e.message,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+              ToastService.error(
+                context,
+                e.message,
+              );
               } catch (e) {
                 // Handle unexpected errors
                 if (!context.mounted) return;
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Failed to activate structure: ${e.toString()}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+              ToastService.error(
+                context,
+                'Failed to activate structure: ${e.toString()}',
+              );
               }
             },
           ),

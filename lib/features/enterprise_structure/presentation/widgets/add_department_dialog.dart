@@ -9,6 +9,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/dep
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
@@ -122,8 +123,9 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
     }
 
     if (_selectedBusinessUnit == null || _selectedBusinessUnitId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a business unit')),
+      ToastService.error(
+        context,
+        'Please select a business unit',
       );
       return;
     }
@@ -163,10 +165,9 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
         if (mounted) {
           Navigator.of(context).pop();
           ref.read(departmentListNotifierProvider.notifier).refresh();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.updateDepartment),
-            ),
+          ToastService.success(
+            context,
+            AppLocalizations.of(context)!.updateDepartment,
           );
         }
       } else {
@@ -175,29 +176,24 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
         if (mounted) {
           Navigator.of(context).pop();
           ref.read(departmentListNotifierProvider.notifier).refresh();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.addDepartment),
-            ),
+          ToastService.success(
+            context,
+            AppLocalizations.of(context)!.addDepartment,
           );
         }
       }
     } on AppException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.message),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          e.message,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('An error occurred: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          'An error occurred: ${e.toString()}',
         );
       }
     } finally {

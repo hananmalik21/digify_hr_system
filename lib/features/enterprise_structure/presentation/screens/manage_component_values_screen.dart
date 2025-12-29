@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
@@ -754,13 +755,9 @@ class _ManageComponentValuesScreenState
 
                           if (context.mounted) {
                             Navigator.of(context).pop(true);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${unit.orgUnitNameEn} deleted successfully',
-                                ),
-                                backgroundColor: AppColors.success,
-                              ),
+                            ToastService.success(
+                              context,
+                              '${unit.orgUnitNameEn} deleted successfully',
                             );
                             // Refresh the org units list
                             ref
@@ -774,13 +771,9 @@ class _ManageComponentValuesScreenState
                             isLoading = false;
                           });
                           if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to delete: ${e.toString()}',
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
+                            ToastService.error(
+                              context,
+                              'Failed to delete: ${e.toString()}',
                             );
                           }
                         }
@@ -1112,11 +1105,9 @@ class _ManageComponentValuesScreenState
 
                   if (activeLevelsState.levels.isEmpty) {
                     debugPrint('No active levels available');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('No active levels available'),
-                        backgroundColor: Colors.red,
-                      ),
+                    ToastService.error(
+                      context,
+                      'No active levels available',
                     );
                     return;
                   }
@@ -1138,11 +1129,9 @@ class _ManageComponentValuesScreenState
                 } catch (e, stackTrace) {
                   debugPrint('Error opening AddOrgUnitDialog: $e');
                   debugPrint('Stack trace: $stackTrace');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error opening dialog: ${e.toString()}'),
-                      backgroundColor: Colors.red,
-                    ),
+                  ToastService.error(
+                    context,
+                    'Error opening dialog: ${e.toString()}',
                   );
                 }
               } else {
@@ -1223,11 +1212,9 @@ class _ManageComponentValuesScreenState
 
                 if (activeLevelsState.levels.isEmpty) {
                   debugPrint('No active levels available');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('No active levels available'),
-                      backgroundColor: Colors.red,
-                    ),
+                  ToastService.error(
+                    context,
+                    'No active levels available',
                   );
                   return;
                 }
@@ -1249,11 +1236,9 @@ class _ManageComponentValuesScreenState
               } catch (e, stackTrace) {
                 debugPrint('Error opening AddOrgUnitDialog: $e');
                 debugPrint('Stack trace: $stackTrace');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error opening dialog: ${e.toString()}'),
-                    backgroundColor: Colors.red,
-                  ),
+                ToastService.error(
+                  context,
+                  'Error opening dialog: ${e.toString()}',
                 );
               }
             } else {

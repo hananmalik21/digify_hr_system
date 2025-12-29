@@ -8,6 +8,7 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/parent_org_unit_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -229,27 +230,20 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
 
       if (mounted) {
         Navigator.of(context).pop();
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isEdit
-                  ? 'Org unit updated successfully'
-                  : 'Org unit created successfully',
-            ),
-            backgroundColor: Colors.green,
-          ),
+        ToastService.success(
+          context,
+          isEdit
+              ? 'Org unit updated successfully'
+              : 'Org unit created successfully',
         );
         // Refresh the org units list
         ref.read(orgUnitsProvider(widget.levelCode).notifier).refresh();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to create org unit: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          'Failed to create org unit: ${e.toString()}',
         );
       }
     } finally {

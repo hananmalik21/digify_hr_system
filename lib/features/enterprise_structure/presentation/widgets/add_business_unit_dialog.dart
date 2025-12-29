@@ -8,6 +8,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/bus
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
@@ -726,8 +727,9 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
     }
 
     if (_selectedDivisionId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select a division')),
+      ToastService.error(
+        context,
+        'Please select a division',
       );
       return;
     }
@@ -785,16 +787,18 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
           businessUnitData,
         );
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Business unit updated successfully')),
+          ToastService.success(
+            context,
+            'Business unit updated successfully',
           );
         }
       } else {
         final createUseCase = ref.read(createBusinessUnitUseCaseProvider);
         await createUseCase(businessUnitData);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Business unit created successfully')),
+          ToastService.success(
+            context,
+            'Business unit created successfully',
           );
         }
       }
@@ -806,11 +810,9 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          'Error: ${e.toString()}',
         );
       }
     } finally {

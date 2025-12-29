@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
@@ -677,11 +678,9 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
         _controllers['nameAr']!.text.trim().isEmpty ||
         _selectedCompanyId == null ||
         _controllers['headOfDivision']!.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all required fields'),
-          backgroundColor: Colors.red,
-        ),
+      ToastService.error(
+        context,
+        'Please fill in all required fields',
       );
       return;
     }
@@ -755,28 +754,20 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
 
       if (mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.isEditMode
-                  ? localizations.updateDivision
-                  : localizations.createDivision,
-            ),
-            backgroundColor: Colors.green,
-          ),
+        ToastService.success(
+          context,
+          widget.isEditMode
+              ? localizations.updateDivision
+              : localizations.createDivision,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              widget.isEditMode
-                  ? 'Failed to update division: ${e.toString()}'
-                  : 'Failed to create division: ${e.toString()}',
-            ),
-            backgroundColor: Colors.red,
-          ),
+        ToastService.error(
+          context,
+          widget.isEditMode
+              ? 'Failed to update division: ${e.toString()}'
+              : 'Failed to create division: ${e.toString()}',
         );
       }
     } finally {
