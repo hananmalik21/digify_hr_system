@@ -120,12 +120,12 @@ class SidebarConfig {
             labelKey: 'gradeStructure',
             route: '/workforce-structure/grade-structure',
           ),
-          SidebarItem(
-            id: 'reportingStructure',
-            svgPath: Assets.icons.companyIcon.path,
-            labelKey: 'reportingStructure',
-            route: '/workforce-structure/reporting-structure',
-          ),
+          // SidebarItem(
+          //   id: 'reportingStructure',
+          //   svgPath: Assets.icons.companyIcon.path,
+          //   labelKey: 'reportingStructure',
+          //   route: '/workforce-structure/reporting-structure',
+          // ),
           SidebarItem(
             id: 'positionTree',
             svgPath: Assets.icons.positionsIcon.path,
