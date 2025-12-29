@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/date_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
@@ -261,7 +262,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    unit.orgUnitNameEn,
+                    unit.displayName,
                     style: TextStyle(
                       fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
                       fontWeight: FontWeight.w500,
@@ -270,25 +271,25 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                           : const Color(0xFF101828),
                     ),
                   ),
-                  if (unit.orgUnitNameAr.isNotEmpty) ...[
-                    SizedBox(height: 4.h),
-                    Text(
-                      unit.orgUnitNameAr,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        fontSize: isMobile
-                            ? 12.sp
-                            : (isTablet ? 12.5.sp : 13.sp),
-                        fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
+                  // if (unit.orgUnitNameAr.isNotEmpty) ...[
+                  //   SizedBox(height: 4.h),
+                  //   Text(
+                  //     unit.orgUnitNameAr,
+                  //     textDirection: TextDirection.rtl,
+                  //     style: TextStyle(
+                  //       fontSize: isMobile
+                  //           ? 12.sp
+                  //           : (isTablet ? 12.5.sp : 13.sp),
+                  //       fontWeight: FontWeight.w400,
+                  //       color: isDark
+                  //           ? AppColors.textSecondaryDark
+                  //           : AppColors.textSecondary,
+                  //     ),
+                  //   ),
+                  // ],
                   SizedBox(height: 4.h),
                   Text(
-                    'Code: ${unit.orgUnitCode}',
+                    'Parent Type: ${unit.levelCode.toTitleCase()}',
                     style: TextStyle(
                       fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                       fontWeight: FontWeight.w400,
