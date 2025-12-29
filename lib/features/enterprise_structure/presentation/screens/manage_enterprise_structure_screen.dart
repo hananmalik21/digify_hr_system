@@ -103,11 +103,11 @@ class _ManageEnterpriseStructureScreenState
                   ),
                   SizedBox(height: isMobile ? 16.h : 24.h),
 
-                  StructureConfigurationsHeaderWidget(
-                    localizations: localizations,
-                    isDark: isDark,
-                    structureListProvider: structureListProvider,
-                  ),
+                  // StructureConfigurationsHeaderWidget(
+                  //   localizations: localizations,
+                  //   isDark: isDark,
+                  //   structureListProvider: structureListProvider,
+                  // ),
                   SizedBox(height: isMobile ? 12.h : 16.h),
 
                   StructuresListWidget(

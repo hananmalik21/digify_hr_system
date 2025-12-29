@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,17 +32,9 @@ class OrgUnitsTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      'OrgUnitsTableWidget: isLoading=$isLoading, units count=${units.length}',
-    );
-
+    // Shimmer while loading first page (no data yet)
     if (isLoading && units.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(40.h),
-          child: CircularProgressIndicator(color: AppColors.primary),
-        ),
-      );
+      return _buildTableShimmer(context);
     }
 
     return Container(
@@ -66,7 +60,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTableHeader(context, isDark),
+            _buildTableHeader(context),
             if (units.isEmpty)
               Container(
                 padding: EdgeInsets.all(40.h),
@@ -83,33 +77,37 @@ class OrgUnitsTableWidget extends StatelessWidget {
                 ),
               )
             else
-              ...units.map((unit) {
-                return _buildTableRow(unit, isDark);
-              }),
+              ...units.map((unit) => _buildTableRow(unit)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTableHeader(BuildContext context, bool isDark) {
+  // =========================
+  // Real table header/rows
+  // =========================
+
+  Widget _buildTableHeader(BuildContext context) {
     final headerColor = isDark
         ? AppColors.cardBackgroundDark
         : const Color(0xFFF9FAFB);
+
     return Container(
       color: headerColor,
       child: Row(
         children: [
-          _buildHeaderCell('ORG UNIT ID', 120.w),
-          _buildHeaderCell('ORG STRUCTURE ID', 140.w),
-          _buildHeaderCell('ENTERPRISE ID', 120.w),
-          _buildHeaderCell('LEVEL CODE', 120.w),
-          _buildHeaderCell('ORG UNIT CODE', 140.w),
-          _buildHeaderCell('NAME (EN)', 180.w),
-          _buildHeaderCell('NAME (AR)', 180.w),
-          _buildHeaderCell('PARENT', 120.w),
-          _buildHeaderCell('ACTIVE', 130.w),
-          _buildHeaderCell('ACTIONS', 112.w),
+          _buildHeaderCell('Org Unit Id', 120.w),
+          _buildHeaderCell('Org Structure Id', 140.w),
+          _buildHeaderCell('Enterprise Id', 120.w),
+          _buildHeaderCell('Level Code', 120.w),
+          _buildHeaderCell('Org Unit Code', 140.w),
+          _buildHeaderCell('Name (En)', 180.w),
+          _buildHeaderCell('Name (Ar)', 180.w),
+          _buildHeaderCell('Parent', 120.w),
+          _buildHeaderCell('Active', 130.w),
+          _buildHeaderCell('Actions', 112.w),
+
         ],
       ),
     );
@@ -118,24 +116,22 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildHeaderCell(String text, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 12.h,
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF6A7282),
-          height: 16 / 12,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF6A7282),
+            height: 16 / 12,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTableRow(OrgStructureLevel unit, bool isDark) {
-    log("id is ${unit.parentUnit}");
+  Widget _buildTableRow(OrgStructureLevel unit) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -219,24 +215,24 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildDataCell(
             unit.orgUnitNameAr.isNotEmpty
                 ? Text(
-                    unit.orgUnitNameAr,
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textSecondary,
-                      height: 20 / 14,
-                    ),
-                  )
+              unit.orgUnitNameAr,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textSecondary,
+                height: 20 / 14,
+              ),
+            )
                 : Text(
-                    '-',
-                    style: TextStyle(
-                      fontSize: 13.7.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textSecondary,
-                      height: 20 / 13.7,
-                    ),
-                  ),
+              '-',
+              style: TextStyle(
+                fontSize: 13.7.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textSecondary,
+                height: 20 / 13.7,
+              ),
+            ),
             180.w,
           ),
           _buildDataCell(
@@ -260,156 +256,6 @@ class OrgUnitsTableWidget extends StatelessWidget {
             ),
             130.w,
           ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.managerName.isNotEmpty ? unit.managerName : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textPrimary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   150.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.managerEmail.isNotEmpty ? unit.managerEmail : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   200.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.managerPhone.isNotEmpty ? unit.managerPhone : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   150.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.location.isNotEmpty ? unit.location : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   150.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.city.isNotEmpty ? unit.city : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   120.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.address.isNotEmpty ? unit.address : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   200.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.description.isNotEmpty ? unit.description : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //     maxLines: 2,
-          //     overflow: TextOverflow.ellipsis,
-          //   ),
-          //   250.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.createdBy.isNotEmpty ? unit.createdBy : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   120.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.createdDate.isNotEmpty
-          //         ? (unit.createdDate.length > 10 ? unit.createdDate.substring(0, 10) : unit.createdDate)
-          //         : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.7.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.7,
-          //     ),
-          //   ),
-          //   180.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.lastUpdatedBy.isNotEmpty ? unit.lastUpdatedBy : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   150.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.lastUpdatedDate.isNotEmpty
-          //         ? (unit.lastUpdatedDate.length > 10 ? unit.lastUpdatedDate.substring(0, 10) : unit.lastUpdatedDate)
-          //         : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.7.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.7,
-          //     ),
-          //   ),
-          //   180.w,
-          // ),
-          // _buildDataCell(
-          //   Text(
-          //     unit.lastUpdateLogin.isNotEmpty ? unit.lastUpdateLogin : '-',
-          //     style: TextStyle(
-          //       fontSize: 13.6.sp,
-          //       fontWeight: FontWeight.w400,
-          //       color: AppColors.textSecondary,
-          //       height: 20 / 13.6,
-          //     ),
-          //   ),
-          //   150.w,
-          // ),
           _buildDataCell(
             Row(
               children: [
@@ -470,11 +316,146 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildDataCell(Widget child, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 16.h,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: Center(child: child),
+    );
+  }
+
+  // =========================
+  // Shimmer table (loading)
+  // =========================
+
+  Widget _buildTableShimmer(BuildContext context) {
+    final isDarkTheme = context.isDark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.10),
+            offset: const Offset(0, 1),
+            blurRadius: 3,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.10),
+            offset: const Offset(0, 1),
+            blurRadius: 2,
+            spreadRadius: -1,
+          ),
+        ],
       ),
-      child: child,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeaderShimmer(isDarkTheme),
+            ...List.generate(6, (_) => _buildRowShimmer()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderShimmer(bool isDarkTheme) {
+    return Container(
+      color: isDarkTheme
+          ? AppColors.cardBackgroundDark
+          : const Color(0xFFF9FAFB),
+      child: Row(
+        children: [
+          _headerCellShimmer(120),
+          _headerCellShimmer(140),
+          _headerCellShimmer(120),
+          _headerCellShimmer(120),
+          _headerCellShimmer(140),
+          _headerCellShimmer(180),
+          _headerCellShimmer(180),
+          _headerCellShimmer(120),
+          _headerCellShimmer(130),
+          _headerCellShimmer(112),
+        ],
+      ),
+    );
+  }
+
+  Widget _headerCellShimmer(double width) {
+    return Container(
+      width: width.w,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+      child: ShimmerContainer(
+        width: (width.w * 0.6).clamp(40.w, 140.w),
+        height: 10.h,
+        borderRadius: 6,
+      ),
+    );
+  }
+
+  Widget _buildRowShimmer() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
+        ),
+      ),
+      child: Row(
+        children: [
+          _cellShimmer(120),
+          _cellShimmer(140),
+          _cellShimmer(120),
+          _cellShimmer(120),
+          _cellShimmer(140),
+          _cellShimmer(180),
+          _cellShimmer(180),
+          _cellShimmer(120),
+          _statusCellShimmer(130),
+          _actionsCellShimmer(112),
+        ],
+      ),
+    );
+  }
+
+  Widget _cellShimmer(double width) {
+    return Container(
+      width: width.w,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: ShimmerContainer(
+        width: (width.w * 0.7).clamp(50.w, width.w - 24.w),
+        height: 12.h,
+        borderRadius: 6,
+      ),
+    );
+  }
+
+  Widget _statusCellShimmer(double width) {
+    return Container(
+      width: width.w,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: Center(
+        child: ShimmerContainer(
+          width: 64.w,
+          height: 18.h,
+          borderRadius: 999,
+        ),
+      ),
+    );
+  }
+
+  Widget _actionsCellShimmer(double width) {
+    return Container(
+      width: width.w,
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: Row(
+        children: [
+          ShimmerContainer(width: 16.sp, height: 16.sp, borderRadius: 4),
+          SizedBox(width: 8.w),
+          ShimmerContainer(width: 16.sp, height: 16.sp, borderRadius: 4),
+          SizedBox(width: 8.w),
+          ShimmerContainer(width: 16.sp, height: 16.sp, borderRadius: 4),
+        ],
+      ),
     );
   }
 }

@@ -20,27 +20,23 @@ class HierarchyLevelsWidget extends StatelessWidget {
     required this.levelCount,
   });
 
+  /// Use these 5 icons cyclically for any number of levels.
+  static const List<String> _iconPool = [
+    'assets/icons/company_icon_purple.svg',
+    'assets/icons/division_icon_purple.svg',
+    'assets/icons/business_unit_icon.svg',
+    'assets/icons/department_icon.svg',
+    'assets/icons/section_icon_purple.svg',
+  ];
+
+  String _resolveIconByIndex(int index) {
+    return _iconPool[index % _iconPool.length];
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-
-    final levelLabels = {
-      'Company': localizations.company,
-      'Division': localizations.division,
-      'Business Unit': localizations.businessUnit,
-      'Department': localizations.department,
-      'Sections': localizations.section,
-    };
-
-    final levelIcons = {
-      'Company': 'assets/icons/company_icon_purple.svg',
-      'Division': 'assets/icons/assets/icons/division_icon_purple.svg',
-      'Business Unit': 'assets/icons/business_unit_icon.svg',
-      'Department': 'assets/icons/department_icon.svg',
-      'Sections': 'assets/icons/section_icon_purple.svg',
-      'Updated Division': 'assets/icons/division_icon_purple.svg',
-    };
 
     return Wrap(
       spacing: isMobile ? 6.w : (isTablet ? 7.w : 8.w),
@@ -62,6 +58,7 @@ class HierarchyLevelsWidget extends StatelessWidget {
         ...levels.asMap().entries.map((entry) {
           final index = entry.key;
           final level = entry.value;
+
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -86,19 +83,16 @@ class HierarchyLevelsWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SvgIconWidget(
-                      assetPath: levelIcons[level] ?? '',
+                      assetPath: _resolveIconByIndex(index),
                       size: isMobile ? 12.sp : (isTablet ? 13.sp : 14.sp),
-                      color: isDark
-                          ? AppColors.purpleTextDark
-                          : const Color(0xFF59168B),
+                      color: Color(0xff9810FA),
                     ),
                     SizedBox(width: isMobile ? 3.w : 4.w),
                     Text(
-                      levelLabels[level] ?? level,
+                      level,
                       style: TextStyle(
-                        fontSize: isMobile
-                            ? 11.sp
-                            : (isTablet ? 11.5.sp : 12.sp),
+                        fontSize:
+                        isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                         fontWeight: FontWeight.w500,
                         color: isDark
                             ? AppColors.purpleTextDark
@@ -146,4 +140,3 @@ class HierarchyLevelsWidget extends StatelessWidget {
     );
   }
 }
-
