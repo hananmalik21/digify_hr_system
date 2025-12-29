@@ -119,7 +119,7 @@ class OrgStructureLevelDto {
 
     return OrgStructureLevelDto(
       orgUnitId: (json['org_unit_id'] as num?)?.toInt() ??
-          (json['orgUnitId'] as num?)?.toInt() ??
+          (json['orgUnitId'] as num?)?.toInt() ??  json["id"]??
           0,
       orgStructureId: (json['org_structure_id'] as num?)?.toInt() ??
           (json['orgStructureId'] as num?)?.toInt() ??
@@ -128,13 +128,13 @@ class OrgStructureLevelDto {
           (json['enterpriseId'] as num?)?.toInt() ??
           0,
       levelCode: json['level_code'] as String? ??
-          json['levelCode'] as String? ??
+          json['levelCode'] as String? ??  json["level"]??
           '',
       orgUnitCode: json['org_unit_code'] as String? ??
           json['orgUnitCode'] as String? ??
           '',
       orgUnitNameEn: json['org_unit_name_en'] as String? ??
-          json['orgUnitNameEn'] as String? ??
+          json['orgUnitNameEn'] as String? ??  json["name"]??
           '',
       orgUnitNameAr: json['org_unit_name_ar'] as String? ??
           json['orgUnitNameAr'] as String? ??

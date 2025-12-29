@@ -213,7 +213,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     bottom: 24.h,
                   ),
                   web: EdgeInsetsDirectional.only(
-                    top: 88.h,
+                    top: 10.h,
                     start: 32.w,
                     end: 32.w,
                     bottom: 24.h,

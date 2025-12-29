@@ -306,6 +306,7 @@ class StructureCardWidget extends StatelessWidget {
                               isDark: isDark,
                               levels: levels,
                               levelCount: levelCount,
+
                             ),
                           ),
                           Padding(

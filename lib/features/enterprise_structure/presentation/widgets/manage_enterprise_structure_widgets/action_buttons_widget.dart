@@ -206,23 +206,23 @@ class ActionButtonsWidget extends ConsumerWidget {
             );
           },
         ),
-        SizedBox(height: 8.h),
-        ActionButtonWidget(
-          context: context,
-          localizations: localizations,
-          isDark: isDark,
-          label: localizations.duplicate,
-          icon: 'assets/icons/duplicate_icon.svg',
-          backgroundColor: isDark
-              ? AppColors.cardBackgroundGreyDark
-              : const Color(0xFFF9FAFB),
-          textColor: isDark
-              ? AppColors.textSecondaryDark
-              : const Color(0xFF4A5565),
-          onTap: () {
-            // TODO: Duplicate structure
-          },
-        ),
+        // SizedBox(height: 8.h),
+        // ActionButtonWidget(
+        //   context: context,
+        //   localizations: localizations,
+        //   isDark: isDark,
+        //   label: localizations.duplicate,
+        //   icon: 'assets/icons/duplicate_icon.svg',
+        //   backgroundColor: isDark
+        //       ? AppColors.cardBackgroundGreyDark
+        //       : const Color(0xFFF9FAFB),
+        //   textColor: isDark
+        //       ? AppColors.textSecondaryDark
+        //       : const Color(0xFF4A5565),
+        //   onTap: () {
+        //     // TODO: Duplicate structure
+        //   },
+        // ),
         if (!isActive) ...[
           SizedBox(height: 8.h),
           ActionButtonWidget(

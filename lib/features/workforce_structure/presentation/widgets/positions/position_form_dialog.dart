@@ -1,10 +1,17 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_actions.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PositionFormDialog extends StatefulWidget {
+class PositionFormDialog extends ConsumerStatefulWidget {
   final Position initialPosition;
   final bool isEdit;
 
@@ -27,98 +34,171 @@ class PositionFormDialog extends StatefulWidget {
   }
 
   @override
-  State<PositionFormDialog> createState() => _PositionFormDialogState();
+  ConsumerState<PositionFormDialog> createState() => _PositionFormDialogState();
 }
 
-class _PositionFormDialogState extends State<PositionFormDialog> {
+class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final TextEditingController _codeController;
-  late final TextEditingController _statusController;
-  late final TextEditingController _titleEnglishController;
-  late final TextEditingController _titleArabicController;
-  late final TextEditingController _divisionController;
-  late final TextEditingController _departmentController;
-  late final TextEditingController _costCenterController;
-  late final TextEditingController _locationController;
-  late final TextEditingController _jobFamilyController;
-  late final TextEditingController _jobLevelController;
-  late final TextEditingController _gradeController;
-  late final TextEditingController _stepController;
-  late final TextEditingController _positionsController;
-  late final TextEditingController _filledController;
-  late final TextEditingController _employmentController;
-  late final TextEditingController _budgetedMinController;
-  late final TextEditingController _budgetedMaxController;
-  late final TextEditingController _actualAverageController;
-  late final TextEditingController _reportsTitleController;
-  late final TextEditingController _reportsCodeController;
+
+  late final Map<String, TextEditingController> _formControllers;
+  late final Map<String, int?> _selectedUnitIds;
+  bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
     final position = widget.initialPosition;
-    _codeController = TextEditingController(text: position.code);
-    _statusController = TextEditingController(
-      text: position.isActive ? 'Active' : 'Inactive',
-    );
-    _titleEnglishController = TextEditingController(
-      text: position.titleEnglish,
-    );
-    _titleArabicController = TextEditingController(text: position.titleArabic);
-    _divisionController = TextEditingController(text: position.division);
-    _departmentController = TextEditingController(text: position.department);
-    _costCenterController = TextEditingController(text: position.costCenter);
-    _locationController = TextEditingController(text: position.location);
-    _jobFamilyController = TextEditingController(text: position.jobFamily);
-    _jobLevelController = TextEditingController(text: position.level);
-    _gradeController = TextEditingController(text: position.grade);
-    _stepController = TextEditingController(text: position.step);
-    _positionsController = TextEditingController(
-      text: position.headcount.toString(),
-    );
-    _filledController = TextEditingController(text: position.filled.toString());
-    _employmentController = TextEditingController(text: 'Full-Time');
-    _budgetedMinController = TextEditingController(text: position.budgetedMin);
-    _budgetedMaxController = TextEditingController(text: position.budgetedMax);
-    _actualAverageController = TextEditingController(
-      text: position.actualAverage,
-    );
-    _reportsTitleController = TextEditingController(
-      text: position.reportsTo ?? '',
-    );
-    _reportsCodeController = TextEditingController(
-      text: position.reportsTo ?? '',
-    );
+
+    _selectedUnitIds = Map<String, int?>.from(position.orgPathIds ?? {});
+    _formControllers = {
+      'code': TextEditingController(text: position.code),
+      'titleEnglish': TextEditingController(text: position.titleEnglish),
+      'titleArabic': TextEditingController(text: position.titleArabic),
+      'costCenter': TextEditingController(text: position.costCenter),
+      'location': TextEditingController(text: position.location),
+      'positions': TextEditingController(text: position.headcount.toString()),
+      'filled': TextEditingController(text: position.filled.toString()),
+      'budgetedMin': TextEditingController(text: position.budgetedMin),
+      'budgetedMax': TextEditingController(text: position.budgetedMax),
+      'actualAverage': TextEditingController(text: position.actualAverage),
+      'reportsTitle': TextEditingController(text: position.reportsTo ?? ''),
+      'reportsCode': TextEditingController(text: position.reportsTo ?? ''),
+    };
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(positionFormNotifierProvider.notifier)
+          .initialize(
+            employmentType: 'FULL_TIME',
+            isActive: position.isActive,
+            step: position.step.isEmpty ? null : position.step,
+            jobFamily: position.jobFamilyRef,
+            jobLevel: position.jobLevelRef,
+            grade: position.gradeRef,
+          );
+    });
   }
 
   @override
   void dispose() {
-    _codeController.dispose();
-    _statusController.dispose();
-    _titleEnglishController.dispose();
-    _titleArabicController.dispose();
-    _divisionController.dispose();
-    _departmentController.dispose();
-    _costCenterController.dispose();
-    _locationController.dispose();
-    _jobFamilyController.dispose();
-    _jobLevelController.dispose();
-    _gradeController.dispose();
-    _stepController.dispose();
-    _positionsController.dispose();
-    _filledController.dispose();
-    _employmentController.dispose();
-    _budgetedMinController.dispose();
-    _budgetedMaxController.dispose();
-    _actualAverageController.dispose();
-    _reportsTitleController.dispose();
-    _reportsCodeController.dispose();
+    for (var controller in _formControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void _handleEnterpriseSelection(String levelCode, int? unitId) {
+    setState(() {
+      _selectedUnitIds[levelCode] = unitId;
+    });
+  }
+
+  Future<void> _handleSave() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    final formState = ref.read(positionFormNotifierProvider);
+    final orgStructureState = ref.read(orgStructureNotifierProvider);
+
+    if (formState.jobFamily == null ||
+        formState.jobLevel == null ||
+        formState.grade == null) {
+      ToastService.error(
+        context,
+        'Please select Job Family, Level and Grade',
+        title: 'Selection Required',
+      );
+      return;
+    }
+
+    // Get the deepest selected org unit
+    int? lastUnitId;
+    final levels = orgStructureState.orgStructure?.activeLevels ?? [];
+    for (final level in levels) {
+      final id = _selectedUnitIds[level.levelCode];
+      if (id != null) {
+        lastUnitId = id;
+      }
+    }
+
+    if (lastUnitId == null) {
+      ToastService.error(
+        context,
+        'Please select at least one organizational unit',
+        title: 'Structure Required',
+      );
+      return;
+    }
+
+    final payload = {
+      if (!widget.isEdit) "position_code": _formControllers['code']!.text,
+      "position_title_en": _formControllers['titleEnglish']!.text,
+      "position_title_ar": _formControllers['titleArabic']!.text,
+      "status": formState.isActive ? "ACTIVE" : "INACTIVE",
+      "org_structure_id": orgStructureState.orgStructure?.structureId,
+      "org_unit_id": lastUnitId,
+      "cost_center": _formControllers['costCenter']!.text,
+      "location": _formControllers['location']!.text,
+      "job_family_id": formState.jobFamily!.id,
+      "job_level_id": formState.jobLevel!.id,
+      "grade_id": formState.grade!.id,
+      "step_no":
+          int.tryParse(formState.step?.replaceAll('Step ', '') ?? '') ?? 1,
+      "number_of_positions":
+          int.tryParse(_formControllers['positions']!.text) ?? 0,
+      "filled_positions": int.tryParse(_formControllers['filled']!.text) ?? 0,
+      "employment_type": formState.employmentType,
+      "budgeted_min_kd":
+          double.tryParse(_formControllers['budgetedMin']!.text) ?? 0.0,
+      "budgeted_max_kd":
+          double.tryParse(_formControllers['budgetedMax']!.text) ?? 0.0,
+      "actual_avg_kd":
+          double.tryParse(_formControllers['actualAverage']!.text) ?? 0.0,
+      "last_update_login": "HR_ADMIN",
+    };
+
+    setState(() => _isSaving = true);
+
+    try {
+      if (widget.isEdit) {
+        await ref
+            .read(positionNotifierProvider.notifier)
+            .updatePosition(widget.initialPosition.id, payload);
+      } else {
+        await ref
+            .read(positionNotifierProvider.notifier)
+            .createPosition(payload);
+      }
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        ToastService.success(
+          context,
+          widget.isEdit
+              ? 'Position updated successfully'
+              : 'Position created successfully',
+          title: 'Success',
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastService.error(
+          context,
+          'Failed to ${widget.isEdit ? 'update' : 'create'} position: ${e.toString()}',
+          title: 'Error',
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final formState = ref.watch(positionFormNotifierProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
@@ -128,8 +208,13 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildHeader(localizations),
-              Divider(height: 1.h, color: Color(0xffD1D5DC)),
+              PositionDialogHeader(
+                title: widget.isEdit
+                    ? localizations.editPosition
+                    : 'Add New Position',
+                onClose: () => Navigator.of(context).pop(),
+              ),
+              const Divider(height: 1, color: Color(0xffD1D5DC)),
               Padding(
                 padding: EdgeInsets.all(24.w),
                 child: Form(
@@ -137,303 +222,79 @@ class _PositionFormDialogState extends State<PositionFormDialog> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSection(localizations.basicInformation, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.positionCode,
-                            _codeController,
-                          ),
-                          _buildLabeledField(
-                            localizations.status,
-                            _statusController,
-                          ),
-                        ]),
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.titleEnglish,
-                            _titleEnglishController,
-                          ),
-                          _buildLabeledField(
-                            localizations.titleArabic,
-                            _titleArabicController,
-                          ),
-                        ]),
-                      ]),
+                      BasicInfoSection(
+                        localizations: localizations,
+                        codeController: _formControllers['code']!,
+                        titleEnglishController:
+                            _formControllers['titleEnglish']!,
+                        titleArabicController: _formControllers['titleArabic']!,
+                        isEdit: widget.isEdit,
+                      ),
                       SizedBox(height: 24.h),
-                      _buildSection(localizations.organizationalInformation, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.division,
-                            _divisionController,
-                          ),
-                          _buildLabeledField(
-                            localizations.department,
-                            _departmentController,
-                          ),
-                        ]),
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.costCenter,
-                            _costCenterController,
-                          ),
-                          _buildLabeledField(
-                            localizations.location,
-                            _locationController,
-                          ),
-                        ]),
-                      ]),
+                      OrganizationalSection(
+                        localizations: localizations,
+                        selectedUnitIds: _selectedUnitIds,
+                        onEnterpriseSelectionChanged:
+                            _handleEnterpriseSelection,
+                        costCenterController: _formControllers['costCenter']!,
+                        locationController: _formControllers['location']!,
+                        initialSelections: widget.initialPosition.orgPathRefs,
+                      ),
                       SizedBox(height: 24.h),
-                      _buildSection(localizations.jobClassification, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.jobFamily,
-                            _jobFamilyController,
-                          ),
-                          _buildLabeledField(
-                            localizations.jobLevel,
-                            _jobLevelController,
-                          ),
-                        ]),
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.gradeStep,
-                            _gradeController,
-                          ),
-                          _buildLabeledField(
-                            localizations.step,
-                            _stepController,
-                          ),
-                        ]),
-                      ]),
+                      JobClassificationSection(
+                        localizations: localizations,
+                        selectedStep: formState.step,
+                        onStepChanged: (val) => ref
+                            .read(positionFormNotifierProvider.notifier)
+                            .setStep(val),
+                      ),
                       SizedBox(height: 24.h),
-                      _buildSection(localizations.headcountInformation, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.positionCode,
-                            _positionsController,
-                          ),
-                          _buildLabeledField(
-                            localizations.filled,
-                            _filledController,
-                          ),
-                          _buildLabeledField(
-                            localizations.employmentType,
-                            _employmentController,
-                          ),
-                        ]),
-                      ]),
+                      HeadcountSection(
+                        localizations: localizations,
+                        positionsController: _formControllers['positions']!,
+                        filledController: _formControllers['filled']!,
+                        selectedEmploymentType: formState.employmentType,
+                        onEmploymentTypeChanged: (val) => ref
+                            .read(positionFormNotifierProvider.notifier)
+                            .setEmploymentType(val),
+                      ),
                       SizedBox(height: 24.h),
-                      _buildSection(localizations.salaryInformation, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.budgetedMin,
-                            _budgetedMinController,
-                          ),
-                          _buildLabeledField(
-                            localizations.budgetedMax,
-                            _budgetedMaxController,
-                          ),
-                          _buildLabeledField(
-                            localizations.actualAverage,
-                            _actualAverageController,
-                          ),
-                        ]),
-                      ]),
+                      SalarySection(
+                        localizations: localizations,
+                        budgetedMinController: _formControllers['budgetedMin']!,
+                        budgetedMaxController: _formControllers['budgetedMax']!,
+                        actualAverageController:
+                            _formControllers['actualAverage']!,
+                      ),
                       SizedBox(height: 24.h),
-                      _buildSection(localizations.reportingRelationship, [
-                        _buildFormRow([
-                          _buildLabeledField(
-                            localizations.reportsTo,
-                            _reportsTitleController,
-                          ),
-                          _buildLabeledField(
-                            localizations.reportsTo,
-                            _reportsCodeController,
-                          ),
-                        ]),
-                      ]),
+                      ReportingSection(
+                        localizations: localizations,
+                        reportsTitleController:
+                            _formControllers['reportsTitle']!,
+                        reportsCodeController: _formControllers['reportsCode']!,
+                      ),
+                      SizedBox(height: 24.h),
+                      StatusSection(
+                        localizations: localizations,
+                        isActive: formState.isActive,
+                        onStatusChanged: (val) => ref
+                            .read(positionFormNotifierProvider.notifier)
+                            .setIsActive(val),
+                      ),
                     ],
                   ),
                 ),
               ),
-              Divider(height: 1.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _buildTextButton(
-                      localizations.cancel,
-                      () => Navigator.of(context).pop(),
-                    ),
-                    SizedBox(width: 12.w),
-                    _buildPrimaryButton(
-                      widget.isEdit
-                          ? localizations.saveUpdates
-                          : localizations.saveChanges,
-                      () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                    ),
-                  ],
-                ),
+              const Divider(height: 1, color: Color(0xffD1D5DC)),
+              PositionFormActions(
+                localizations: localizations,
+                isEdit: widget.isEdit,
+                isLoading: _isSaving,
+                onCancel: () => Navigator.of(context).pop(),
+                onSave: _handleSave,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(AppLocalizations localizations) {
-    final title = widget.isEdit
-        ? localizations.editPosition
-        : localizations.addPosition;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-            icon: Icon(
-              Icons.close,
-              size: 20.sp,
-              color: AppColors.textSecondary,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection(String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Wrap(spacing: 16.w, runSpacing: 16.h, children: children),
-      ],
-    );
-  }
-
-  Widget _buildFormRow(List<Widget> columns) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: columns.asMap().entries.map((entry) {
-        final isLast = entry.key == columns.length - 1;
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(end: isLast ? 0 : 16.w),
-            child: entry.value,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildLabeledField(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textSecondary,
-          ),
-        ),
-        SizedBox(height: 6.h),
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.inputBg,
-            hintText: label,
-            hintStyle: TextStyle(
-              color: AppColors.textSecondary.withValues(alpha: 0.6),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.borderGrey),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 12.h,
-            ),
-          ),
-          validator: (value) =>
-              (value ?? '').isEmpty ? label + ' is required' : null,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTextButton(String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: AppColors.cardBorder),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textPrimary,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPrimaryButton(String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.save, size: 16.sp, color: Colors.white),
-            SizedBox(width: 8.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
       ),
     );
