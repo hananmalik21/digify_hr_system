@@ -1040,5 +1040,13 @@
   "tmFilterAll": "All Status",
   "tmFilterPending": "Pending",
   "tmFilterApproved": "Approved",
-  "tmFilterRejected": "Rejected"
+  "tmFilterRejected": "Rejected",
+  "manageShiftsWorkPatterns": "Manage shifts, work patterns, schedules, and assignments",
+  "manageShiftsWorkPatternsAr": "إدارة الورديات وأنماط العمل والجداول والتعيينات",
+  "shifts": "Shifts",
+  "workPatterns": "Work Patterns",
+  "workSchedules": "Work Schedules",
+  "scheduleAssignments": "Schedule Assignments",
+  "viewCalendar": "View Calendar",
+  "publicHolidays": "Public Holidays"
 }

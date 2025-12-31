@@ -2889,4 +2889,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tmFilterRejected => 'Rejected';
+
+  @override
+  String get manageShiftsWorkPatterns =>
+      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+
+  @override
+  String get manageShiftsWorkPatternsAr =>
+      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+
+  @override
+  String get shifts => 'الورديات';
+
+  @override
+  String get workPatterns => 'أنماط العمل';
+
+  @override
+  String get workSchedules => 'جداول العمل';
+
+  @override
+  String get scheduleAssignments => 'تعيينات الجدول';
+
+  @override
+  String get viewCalendar => 'عرض التقويم';
+
+  @override
+  String get publicHolidays => 'العطلات الرسمية';
 }

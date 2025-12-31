@@ -136,9 +136,46 @@ class SidebarConfig {
       ),
       SidebarItem(
         id: 'timeManagement',
-        svgPath: Assets.icons.timeManagementIcon.path,
+        svgPath: Assets.icons.clockIcon.path,
         labelKey: 'timeManagement',
-        route: '/time-management',
+        children: [
+          SidebarItem(
+            id: 'shifts',
+            svgPath: Assets.icons.clockIcon.path,
+            labelKey: 'shifts',
+            route: '/time-management/shifts',
+          ),
+          SidebarItem(
+            id: 'workPatterns',
+            svgPath: Assets.icons.leaveManagementIcon.path,
+            labelKey: 'workPatterns',
+            route: '/time-management/work-patterns',
+          ),
+          SidebarItem(
+            id: 'workSchedules',
+            svgPath: Assets.icons.sidebar.workSchedules.path,
+            labelKey: 'workSchedules',
+            route: '/time-management/work-schedules',
+          ),
+          SidebarItem(
+            id: 'scheduleAssignments',
+            svgPath: Assets.icons.sidebar.scheduleAssignments.path,
+            labelKey: 'scheduleAssignments',
+            route: '/time-management/schedule-assignments',
+          ),
+          SidebarItem(
+            id: 'viewCalendar',
+            svgPath: Assets.icons.sidebar.workSchedules.path,
+            labelKey: 'viewCalendar',
+            route: '/time-management/view-calendar',
+          ),
+          SidebarItem(
+            id: 'publicHolidays',
+            svgPath: Assets.icons.sidebar.publicHolidays.path,
+            labelKey: 'publicHolidays',
+            route: '/time-management/public-holidays',
+          ),
+        ],
       ),
       SidebarItem(
         id: 'employees',
@@ -328,6 +365,18 @@ class SidebarConfig {
         return localizations.workforceStructure;
       case 'timeManagement':
         return localizations.timeManagement;
+      case 'shifts':
+        return 'Shifts';
+      case 'workPatterns':
+        return 'Work Patterns';
+      case 'workSchedules':
+        return 'Work Schedules';
+      case 'scheduleAssignments':
+        return 'Schedule Assignments';
+      case 'viewCalendar':
+        return 'View Calendar';
+      case 'publicHolidays':
+        return 'Public Holidays';
       case 'employees':
         return localizations.employees;
       case 'employeeList':
