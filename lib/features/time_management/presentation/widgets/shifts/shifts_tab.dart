@@ -79,28 +79,16 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
               setState(() => _selectedStatus = status);
             }
           },
-          onCreateShift: () {
-            // TODO: Implement create shift
-          },
-          onUpload: () {
-            // TODO: Implement upload
-          },
-          onExport: () {
-            // TODO: Implement export
-          },
+          onCreateShift: () {},
+          onUpload: () {},
+          onExport: () {},
         ),
         SizedBox(height: 24.h),
         ShiftsGrid(
           shifts: _mockShifts,
-          onView: (shift) {
-            // TODO: Navigate to view
-          },
-          onEdit: (shift) {
-            // TODO: Navigate to edit
-          },
-          onCopy: (shift) {
-            // TODO: Implement copy
-          },
+          onView: (shift) {},
+          onEdit: (shift) {},
+          onCopy: (shift) {},
         ),
       ],
     );
