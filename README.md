@@ -1,16 +1,74 @@
-# digify_hr_system
+# Digify HR System
 
-A new Flutter project.
+A comprehensive Human Resources management system built with Flutter for web.
 
-## Getting Started
+## Architecture
 
-This project is a starting point for a Flutter application.
+**Clean Architecture** with Riverpod state management:
 
-A few resources to get you started if this is your first Flutter project:
+- **Presentation**: UI widgets, screens, providers
+- **Domain**: Business logic, use cases, repository interfaces
+- **Data**: API clients, DTOs, repository implementations
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Tech Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter (SDK 3.35.0)
+- Riverpod (v2.6.1) - State management
+- GoRouter (v14.6.2) - Routing
+- Dio (v5.4.0) - Networking
+- ScreenUtil - Responsive design
+- Localization (English + Arabic RTL)
+
+## Project Structure
+
+```
+lib/
+├── core/              # Shared infrastructure
+│   ├── constants/    # Colors, constants
+│   ├── localization/ # i18n (EN/AR)
+│   ├── navigation/   # Layout, sidebar
+│   ├── network/      # API client, endpoints
+│   ├── router/       # GoRouter config
+│   ├── theme/        # Light/Dark themes
+│   └── widgets/      # Reusable components
+│
+└── features/         # Feature modules
+    ├── auth/
+    ├── dashboard/
+    ├── enterprise_structure/
+    └── workforce_structure/
+
+    Each feature:
+    ├── presentation/  # screens/, widgets/, providers/
+    ├── domain/        # models/, repositories/, usecases/
+    └── data/          # datasources/, dto/, repositories/
+```
+
+## Setup
+
+```bash
+# Install dependencies
+flutter pub get
+
+# Generate localizations
+flutter gen-l10n
+
+# Run web app
+flutter run -d chrome
+```
+
+## Configuration
+
+Update API URL in `lib/core/network/api_config.dart`:
+
+## Features
+
+- Enterprise Structure Management (Companies, Divisions, Business Units, etc.)
+- Workforce Structure Management (Positions, Job Families, Job Levels, etc.)
+- Multi-language support (English/Arabic RTL)
+- Responsive design
+- Dark mode
+
+---
+
+**Built with Flutter** 🚀
