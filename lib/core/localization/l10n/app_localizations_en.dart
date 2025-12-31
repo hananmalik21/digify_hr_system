@@ -57,6 +57,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmPasswordHint => 'Confirm your password';
 
   @override
+  String get usernameHint => 'Enter your username';
+
+  @override
+  String get welcomeBack => 'Welcome Back';
+
+  @override
+  String get signInToAccessDashboard => 'Sign in to access your HR dashboard';
+
+  @override
+  String get demoCredentials => 'Demo Credentials:';
+
+  @override
+  String get resetDemoUsers => 'Reset Demo Users';
+
+  @override
+  String get copyrightText => '© 2024 Digify HR. Kuwait Labor Law Compliant.';
+
+  @override
+  String get kuwaitLaborLawCompliant => 'Kuwait Labor Law Compliant';
+
+  @override
+  String get digifyHrTitle => 'Digify HR';
+
+  @override
+  String get systemDescription =>
+      'Comprehensive Human Resource Management System with advanced security and compliance features.';
+
+  @override
+  String get completeHrSuite => 'Complete HR Suite';
+
+  @override
+  String get completeHrSuiteDescription =>
+      '19 integrated modules managing all aspects of human resources';
+
+  @override
+  String get advancedSecurity => 'Advanced Security';
+
+  @override
+  String get advancedSecurityDescription =>
+      'Role-based access control with 60+ security functions';
+
+  @override
+  String get kuwaitCompliance => 'Kuwait Compliance';
+
+  @override
+  String get kuwaitComplianceDescription =>
+      'Fully compliant with Kuwait Labor Law No. 6/2010';
+
+  @override
+  String get realTimeAnalytics => 'Real-time Analytics';
+
+  @override
+  String get realTimeAnalyticsDescription =>
+      'Comprehensive reporting and analytics dashboard';
+
+  @override
+  String get invalidCredentials =>
+      'Invalid email or password. Please try again.';
+
+  @override
   String get fullNameHint => 'Enter your full name';
 
   @override
@@ -2771,4 +2831,79 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorDeletingJobLevel =>
       'An error occurred while deleting the job level';
+
+  @override
+  String get timeManagementTitle => 'Time Management';
+
+  @override
+  String get tmAttendance => 'Attendance';
+
+  @override
+  String get tmLate => 'Late';
+
+  @override
+  String get tmOvertime => 'Overtime';
+
+  @override
+  String get tmAbsences => 'Absences';
+
+  @override
+  String get tmPendingApprovals => 'Pending Approvals';
+
+  @override
+  String get tmCheckIn => 'Check In';
+
+  @override
+  String get tmCheckOut => 'Check Out';
+
+  @override
+  String get tmRequestLeave => 'Request Leave';
+
+  @override
+  String get tmAssignSchedule => 'Assign Schedule';
+
+  @override
+  String get tmApprovals => 'Approvals';
+
+  @override
+  String get tmOverview => 'Overview';
+
+  @override
+  String get tmSchedules => 'Schedules';
+
+  @override
+  String get tmRequests => 'Requests';
+
+  @override
+  String get tmEmployee => 'Employee';
+
+  @override
+  String get tmType => 'Type';
+
+  @override
+  String get tmDate => 'Date';
+
+  @override
+  String get tmDuration => 'Duration';
+
+  @override
+  String get tmStatus => 'Status';
+
+  @override
+  String get tmAction => 'Action';
+
+  @override
+  String get tmSearchPlaceholder => 'Search by employee, type...';
+
+  @override
+  String get tmFilterAll => 'All Status';
+
+  @override
+  String get tmFilterPending => 'Pending';
+
+  @override
+  String get tmFilterApproved => 'Approved';
+
+  @override
+  String get tmFilterRejected => 'Rejected';
 }

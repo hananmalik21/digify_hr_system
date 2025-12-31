@@ -18,7 +18,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
-    initialLocation: '/dashboard',
+    initialLocation: '/login',
     debugLogDiagnostics: false,
     redirect: (context, state) {
       final isAuthenticated = authState.isAuthenticated;
@@ -184,12 +184,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          GoRoute(
-            path: '/time-management',
-            name: 'time-management',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Time Management'),
-          ),
+          // GoRoute(
+          //   path: '/time-management',
+          //   name: 'time-management',
+          //   builder: (context, state) => const TimeManagementScreen(),
+          // ),
           GoRoute(
             path: '/employees',
             name: 'employees',

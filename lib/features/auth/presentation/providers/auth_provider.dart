@@ -25,7 +25,11 @@ class AuthState {
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(AuthState(isAuthenticated: true));
+  // TODO: Replace with real API authentication
+  static const String _demoEmail = 'admin';
+  static const String _demoPassword = 'Digify@@2025';
+
+  AuthNotifier() : super(AuthState(isAuthenticated: false));
 
   Future<void> login(String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -34,8 +38,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // Simulate API call
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // For demo purposes, accept any non-empty credentials
-      if (email.isNotEmpty && password.isNotEmpty) {
+      // Demo credentials check
+      if (email.trim().toLowerCase() == _demoEmail.toLowerCase() &&
+          password == _demoPassword) {
         state = state.copyWith(isAuthenticated: true, isLoading: false);
       } else {
         state = state.copyWith(

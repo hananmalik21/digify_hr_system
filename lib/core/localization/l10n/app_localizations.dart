@@ -194,6 +194,114 @@ abstract class AppLocalizations {
   /// **'Confirm your password'**
   String get confirmPasswordHint;
 
+  /// No description provided for @usernameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
+  String get usernameHint;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back'**
+  String get welcomeBack;
+
+  /// No description provided for @signInToAccessDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to access your HR dashboard'**
+  String get signInToAccessDashboard;
+
+  /// No description provided for @demoCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo Credentials:'**
+  String get demoCredentials;
+
+  /// No description provided for @resetDemoUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Demo Users'**
+  String get resetDemoUsers;
+
+  /// No description provided for @copyrightText.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2024 Digify HR. Kuwait Labor Law Compliant.'**
+  String get copyrightText;
+
+  /// No description provided for @kuwaitLaborLawCompliant.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait Labor Law Compliant'**
+  String get kuwaitLaborLawCompliant;
+
+  /// No description provided for @digifyHrTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Digify HR'**
+  String get digifyHrTitle;
+
+  /// No description provided for @systemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehensive Human Resource Management System with advanced security and compliance features.'**
+  String get systemDescription;
+
+  /// No description provided for @completeHrSuite.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete HR Suite'**
+  String get completeHrSuite;
+
+  /// No description provided for @completeHrSuiteDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'19 integrated modules managing all aspects of human resources'**
+  String get completeHrSuiteDescription;
+
+  /// No description provided for @advancedSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Security'**
+  String get advancedSecurity;
+
+  /// No description provided for @advancedSecurityDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Role-based access control with 60+ security functions'**
+  String get advancedSecurityDescription;
+
+  /// No description provided for @kuwaitCompliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait Compliance'**
+  String get kuwaitCompliance;
+
+  /// No description provided for @kuwaitComplianceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully compliant with Kuwait Labor Law No. 6/2010'**
+  String get kuwaitComplianceDescription;
+
+  /// No description provided for @realTimeAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time Analytics'**
+  String get realTimeAnalytics;
+
+  /// No description provided for @realTimeAnalyticsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehensive reporting and analytics dashboard'**
+  String get realTimeAnalyticsDescription;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password. Please try again.'**
+  String get invalidCredentials;
+
   /// No description provided for @fullNameHint.
   ///
   /// In en, this message translates to:
@@ -5437,6 +5545,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred while deleting the job level'**
   String get errorDeletingJobLevel;
+
+  /// No description provided for @timeManagementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Management'**
+  String get timeManagementTitle;
+
+  /// No description provided for @tmAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get tmAttendance;
+
+  /// No description provided for @tmLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Late'**
+  String get tmLate;
+
+  /// No description provided for @tmOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime'**
+  String get tmOvertime;
+
+  /// No description provided for @tmAbsences.
+  ///
+  /// In en, this message translates to:
+  /// **'Absences'**
+  String get tmAbsences;
+
+  /// No description provided for @tmPendingApprovals.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approvals'**
+  String get tmPendingApprovals;
+
+  /// No description provided for @tmCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check In'**
+  String get tmCheckIn;
+
+  /// No description provided for @tmCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Out'**
+  String get tmCheckOut;
+
+  /// No description provided for @tmRequestLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Leave'**
+  String get tmRequestLeave;
+
+  /// No description provided for @tmAssignSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Schedule'**
+  String get tmAssignSchedule;
+
+  /// No description provided for @tmApprovals.
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals'**
+  String get tmApprovals;
+
+  /// No description provided for @tmOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get tmOverview;
+
+  /// No description provided for @tmSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules'**
+  String get tmSchedules;
+
+  /// No description provided for @tmRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get tmRequests;
+
+  /// No description provided for @tmEmployee.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee'**
+  String get tmEmployee;
+
+  /// No description provided for @tmType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get tmType;
+
+  /// No description provided for @tmDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get tmDate;
+
+  /// No description provided for @tmDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get tmDuration;
+
+  /// No description provided for @tmStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get tmStatus;
+
+  /// No description provided for @tmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get tmAction;
+
+  /// No description provided for @tmSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by employee, type...'**
+  String get tmSearchPlaceholder;
+
+  /// No description provided for @tmFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All Status'**
+  String get tmFilterAll;
+
+  /// No description provided for @tmFilterPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get tmFilterPending;
+
+  /// No description provided for @tmFilterApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get tmFilterApproved;
+
+  /// No description provided for @tmFilterRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get tmFilterRejected;
 }
 
 class _AppLocalizationsDelegate
