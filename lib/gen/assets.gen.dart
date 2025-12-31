@@ -560,6 +560,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/location_small_icon.svg
   SvgGenImage get locationSmallIcon => const SvgGenImage('assets/icons/location_small_icon.svg');
 
+  /// File path: assets/icons/lock_icon.svg
+  SvgGenImage get lockIcon => const SvgGenImage('assets/icons/lock_icon.svg');
+
   /// File path: assets/icons/manage_component_icon.svg
   SvgGenImage get manageComponentIcon => const SvgGenImage('assets/icons/manage_component_icon.svg');
 
@@ -706,6 +709,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/section_tree_icon.svg
   SvgGenImage get sectionTreeIcon => const SvgGenImage('assets/icons/section_tree_icon.svg');
+
+  /// File path: assets/icons/security_icon.svg
+  SvgGenImage get securityIcon => const SvgGenImage('assets/icons/security_icon.svg');
 
   /// File path: assets/icons/send_email_purple.svg
   SvgGenImage get sendEmailPurple => const SvgGenImage('assets/icons/send_email_purple.svg');
@@ -983,6 +989,7 @@ class $AssetsIconsGen {
     locationPinIcon,
     locationSectionIcon,
     locationSmallIcon,
+    lockIcon,
     manageComponentIcon,
     manageEnterpriseIcon,
     managementIcon,
@@ -1032,6 +1039,7 @@ class $AssetsIconsGen {
     sectionIconSmall,
     sectionStatIcon,
     sectionTreeIcon,
+    securityIcon,
     sendEmailPurple,
     settingsIcon,
     settingsMainIcon,
