@@ -6,6 +6,10 @@ import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart'
 
 enum AppButtonType { primary, secondary, outline, danger }
 
+/// A customizable button widget that supports various types (primary, secondary, outline, danger)
+/// and integrates with the app's design system.
+///
+/// It uses [Material] and [InkWell] for touch ripples and precise sizing control.
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -169,76 +173,88 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectivePadding = padding ?? EdgeInsets.symmetric(vertical: 14.h);
+    final effectiveHeight = height?.h ?? 40.h;
+    final effectiveWidth = width?.w;
+
+    final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w);
     final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(10.r);
     final effectiveFontSize = fontSize ?? 14.sp;
 
-    Widget buttonChild;
+    final isDisabled = isLoading || onPressed == null;
+    final backgroundColor = _getBackgroundColor();
+    final contentColor = _getTextColor();
+    final borderProp = _getBorder();
+
+    Widget buttonContent;
 
     if (isLoading) {
-      buttonChild = AppLoadingIndicator(
+      buttonContent = AppLoadingIndicator(
         type: LoadingType.threeBounce,
-        color: _getTextColor(),
+        color: contentColor,
         size: 20.sp,
       );
-    } else if (icon != null || svgPath != null) {
-      buttonChild = Row(
+    } else {
+      List<Widget> children = [];
+
+      if (icon != null) {
+        children.add(Icon(icon, size: 18.sp, color: contentColor));
+        children.add(SizedBox(width: 8.w));
+      } else if (svgPath != null) {
+        children.add(
+          DigifyAsset(
+            assetPath: svgPath!,
+            width: 18,
+            height: 18,
+            color: contentColor,
+          ),
+        );
+        children.add(SizedBox(width: 8.w));
+      }
+
+      children.add(
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: effectiveFontSize,
+            fontWeight: FontWeight.w600,
+            color: contentColor,
+            height: 1.0,
+          ),
+        ),
+      );
+
+      buttonContent = Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (icon != null)
-            Icon(icon, size: 18.sp, color: _getTextColor())
-          else if (svgPath != null)
-            DigifyAsset(
-              assetPath: svgPath!,
-              width: 18,
-              height: 18,
-              color: _getTextColor(),
-            ),
-          SizedBox(width: 8.w),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: effectiveFontSize,
-              fontWeight: FontWeight.w600,
-              color: _getTextColor(),
-            ),
-          ),
-        ],
-      );
-    } else {
-      buttonChild = Text(
-        label,
-        style: TextStyle(
-          fontSize: effectiveFontSize,
-          fontWeight: FontWeight.w600,
-          color: _getTextColor(),
-        ),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
       );
     }
 
-    final button = ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: _getBackgroundColor(),
-        foregroundColor: _getTextColor(),
-        disabledBackgroundColor: _getBackgroundColor(),
-        disabledForegroundColor: _getTextColor(),
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
+    return Material(
+      color: Colors.transparent,
+      child: Ink(
+        width: effectiveWidth,
+        height: effectiveHeight,
+        decoration: BoxDecoration(
+          color: backgroundColor,
           borderRadius: effectiveBorderRadius,
-          side: _getBorder() ?? BorderSide.none,
+          border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
         ),
-        padding: effectivePadding,
-        minimumSize: Size(width?.w ?? 0, height?.h ?? 0),
-        fixedSize: (width != null && height != null)
-            ? Size(width!.w, height!.h)
-            : null,
+        child: InkWell(
+          onTap: isDisabled ? null : onPressed,
+          borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
+          child: Container(
+            padding: effectivePadding,
+            alignment: Alignment.center,
+            constraints: BoxConstraints(
+              minWidth: effectiveWidth ?? 0,
+              minHeight: effectiveHeight,
+            ),
+            child: buttonContent,
+          ),
+        ),
       ),
-      child: buttonChild,
     );
-
-    return button;
   }
 }

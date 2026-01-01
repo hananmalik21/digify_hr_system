@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_detail_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
@@ -44,7 +45,7 @@ class ShiftCard extends StatelessWidget {
         children: [
           // Header section
           Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(24.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,24 +126,24 @@ class ShiftCard extends StatelessWidget {
           ),
 
           const Spacer(),
-          Divider(
+          DigifyDivider(
             height: 1,
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+            thickness: 1,
+            color: Color(0xFFE5E7EB),
+            margin: EdgeInsets.symmetric(horizontal: 24.w),
           ),
 
           // Actions
           Padding(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(24.w),
             child: Row(
               children: [
                 Expanded(
                   child: _buildActionButton(
                     label: 'View',
                     icon: Icons.visibility_outlined,
-                    bgColor: isDark ? AppColors.infoBgDark : AppColors.infoBg,
-                    textColor: isDark
-                        ? AppColors.infoTextDark
-                        : AppColors.infoText,
+                    bgColor: AppColors.shiftViewButtonBg,
+                    textColor: AppColors.shiftViewButtonText,
                     onPressed: onView,
                   ),
                 ),
@@ -151,22 +152,16 @@ class ShiftCard extends StatelessWidget {
                   child: _buildActionButton(
                     label: 'Edit',
                     icon: Icons.edit_outlined,
-                    bgColor: isDark
-                        ? AppColors.successBgDark
-                        : AppColors.successBg,
-                    textColor: isDark
-                        ? AppColors.successTextDark
-                        : AppColors.successText,
+                    bgColor: AppColors.shiftEditButtonBg,
+                    textColor: AppColors.shiftEditButtonText,
                     onPressed: onEdit,
                   ),
                 ),
                 SizedBox(width: 8.w),
                 _buildIconButton(
                   icon: Icons.copy_rounded,
-                  bgColor: isDark ? AppColors.purpleBgDark : AppColors.purpleBg,
-                  iconColor: isDark
-                      ? AppColors.purpleTextDark
-                      : AppColors.purpleText,
+                  bgColor: AppColors.shiftCopyButtonBg,
+                  iconColor: AppColors.shiftCopyButtonText,
                   onPressed: onCopy,
                 ),
               ],
@@ -216,12 +211,12 @@ class ShiftCard extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(4.r),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8.h),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(4.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -251,12 +246,12 @@ class ShiftCard extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(4.r),
       child: Container(
         padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(4.r),
         ),
         child: Icon(icon, size: 16.sp, color: iconColor),
       ),

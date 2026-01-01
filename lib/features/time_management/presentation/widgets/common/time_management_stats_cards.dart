@@ -80,7 +80,7 @@ class TimeManagementStatsCards extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,

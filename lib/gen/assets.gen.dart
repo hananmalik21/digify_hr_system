@@ -734,6 +734,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/tasks_icon.svg
   SvgGenImage get tasksIcon => const SvgGenImage('assets/icons/tasks_icon.svg');
 
+  /// Directory path: assets/icons/time_management
+  $AssetsIconsTimeManagementGen get timeManagement => const $AssetsIconsTimeManagementGen();
+
   /// File path: assets/icons/time_management_icon.svg
   SvgGenImage get timeManagementIcon => const SvgGenImage('assets/icons/time_management_icon.svg');
 
@@ -1089,6 +1092,22 @@ class $AssetsIconsSidebarGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [gradeSidebar, publicHolidays, scheduleAssignments, workSchedules];
+}
+
+class $AssetsIconsTimeManagementGen {
+  const $AssetsIconsTimeManagementGen();
+
+  /// File path: assets/icons/time_management/copy.svg
+  SvgGenImage get copy => const SvgGenImage('assets/icons/time_management/copy.svg');
+
+  /// File path: assets/icons/time_management/edit.svg
+  SvgGenImage get edit => const SvgGenImage('assets/icons/time_management/edit.svg');
+
+  /// File path: assets/icons/time_management/view.svg
+  SvgGenImage get view => const SvgGenImage('assets/icons/time_management/view.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [copy, edit, view];
 }
 
 class $AssetsIconsWorkforceGen {
