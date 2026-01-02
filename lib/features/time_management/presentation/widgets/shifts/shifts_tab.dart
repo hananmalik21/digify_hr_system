@@ -21,7 +21,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(shiftsNotifierProvider.notifier).loadShifts();
+      ref.read(shiftsNotifierProvider.notifier).loadFirstPage();
     });
 
     _searchController.addListener(_onSearchChanged);
@@ -36,33 +36,19 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
 
   void _onSearchChanged() {
     final search = _searchController.text;
-    final isActive = _selectedStatus == 'All Status'
-        ? null
-        : _selectedStatus == 'Active'
-        ? true
-        : false;
-
-    ref
-        .read(shiftsNotifierProvider.notifier)
-        .loadShifts(search: search.isEmpty ? null : search, isActive: isActive);
+    ref.read(shiftsNotifierProvider.notifier).search(search);
   }
 
   void _onStatusChanged(String? status) {
     if (status != null) {
       setState(() => _selectedStatus = status);
-      final search = _searchController.text;
       final isActive = status == 'All Status'
           ? null
           : status == 'Active'
           ? true
           : false;
 
-      ref
-          .read(shiftsNotifierProvider.notifier)
-          .loadShifts(
-            search: search.isEmpty ? null : search,
-            isActive: isActive,
-          );
+      ref.read(shiftsNotifierProvider.notifier).setStatusFilter(isActive);
     }
   }
 
@@ -84,19 +70,19 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
         SizedBox(height: 24.h),
         if (shiftsState.isLoading)
           const ShiftsGridSkeleton()
-        else if (shiftsState.error != null)
+        else if (shiftsState.hasError)
           Center(
             child: Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(
-                shiftsState.error!,
+                shiftsState.errorMessage ?? 'An error occurred',
                 style: const TextStyle(color: Colors.red),
               ),
             ),
           )
         else
           ShiftsGrid(
-            shifts: shiftsState.shifts,
+            shifts: shiftsState.items,
             onView: (shift) {},
             onEdit: (shift) {},
             onCopy: (shift) {},

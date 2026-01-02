@@ -42,33 +42,7 @@ class ApiEndpoints {
   // Organization Structure Levels (alias for convenience)
   static const String orgStructureLevels = hrOrgStructuresActiveLevels;
 
-  // Time Management endpoints
-  static const String attendances = '$api/attendances';
-  static String attendanceById(int attendanceId) => '$attendances/$attendanceId';
-  static const String checkIn = '$attendances/check-in';
-  static String checkOut(int attendanceId) => '$attendances/$attendanceId/check-out';
-  
-  static const String timesheets = '$api/timesheets';
-  static String timesheetById(int timesheetId) => '$timesheets/$timesheetId';
-  static String submitTimesheet(int timesheetId) => '$timesheets/$timesheetId/submit';
-  static String approveTimesheet(int timesheetId) => '$timesheets/$timesheetId/approve';
-  static String rejectTimesheet(int timesheetId) => '$timesheets/$timesheetId/reject';
-  
-  static const String shifts = '$api/shifts';
-  static String shiftById(int shiftId) => '$shifts/$shiftId';
-  static String assignShift(int shiftId) => '$shifts/$shiftId/assign';
-  static String removeShift(int shiftId, int employeeId) => '$shifts/$shiftId/assign/$employeeId';
-  
-  static const String timeOffRequests = '$api/time-off-requests';
-  static String timeOffRequestById(int requestId) => '$timeOffRequests/$requestId';
-  static String approveTimeOffRequest(int requestId) => '$timeOffRequests/$requestId/approve';
-  static String rejectTimeOffRequest(int requestId) => '$timeOffRequests/$requestId/reject';
-  static String cancelTimeOffRequest(int requestId) => '$timeOffRequests/$requestId/cancel';
-  
-  static const String overtimes = '$api/overtimes';
-  static String overtimeById(int overtimeId) => '$overtimes/$overtimeId';
-  static String approveOvertime(int overtimeId) => '$overtimes/$overtimeId/approve';
-  static String rejectOvertime(int overtimeId) => '$overtimes/$overtimeId/reject';
-  
-  static const String timeStatistics = '$api/time-statistics';
+  // Time Management (TM) endpoints
+  static const String tmShifts = '$api/tm/shifts';
+  static String tmShiftById(int shiftId) => '$tmShifts/$shiftId';
 }
