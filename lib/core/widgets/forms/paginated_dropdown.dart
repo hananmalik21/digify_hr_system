@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -128,7 +128,7 @@ class _PaginatedDropdownState<T> extends State<PaginatedDropdown<T>> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextField.search(
+                  DigifyTextField.search(
                     controller: _searchController,
                     hintText: widget.hintText ?? 'Search...',
                     height: 39.h,

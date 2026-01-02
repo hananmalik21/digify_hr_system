@@ -9,26 +9,18 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class JobFamilyDetailDialog extends ConsumerWidget {
   final JobFamily jobFamily;
   final List<JobLevel> jobLevels;
 
-  const JobFamilyDetailDialog({
-    super.key,
-    required this.jobFamily,
-    required this.jobLevels,
-  });
+  const JobFamilyDetailDialog({super.key, required this.jobFamily, required this.jobLevels});
 
-  static Future<void> show(
-    BuildContext context, {
-    required JobFamily jobFamily,
-    required List<JobLevel> jobLevels,
-  }) {
+  static Future<void> show(BuildContext context, {required JobFamily jobFamily, required List<JobLevel> jobLevels}) {
     return showDialog<void>(
       context: context,
-      builder: (_) =>
-          JobFamilyDetailDialog(jobFamily: jobFamily, jobLevels: jobLevels),
+      builder: (_) => JobFamilyDetailDialog(jobFamily: jobFamily, jobLevels: jobLevels),
     );
   }
 
@@ -41,138 +33,123 @@ class JobFamilyDetailDialog extends ConsumerWidget {
     final deleteState = ref.watch(jobFamilyDeleteStateProvider);
     final isDeleting = deleteState.deletingId == jobFamily.id;
 
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      child: Container(
-        width: 540.w,
-        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(context, localizations),
-            SizedBox(height: 12.h),
-            Text(
-              jobFamily.nameArabic,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Container(
+          width: 540.w,
+          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context, localizations),
+              SizedBox(height: 12.h),
+              Text(
+                jobFamily.nameArabic,
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.textSecondary),
               ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              localizations.basicInformation,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+              SizedBox(height: 24.h),
+              Text(
+                localizations.basicInformation,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
               ),
-            ),
-            SizedBox(height: 16.h),
-            _buildCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(height: 16.h),
+              _buildCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.description,
+                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      jobFamily.description,
+                      style: TextStyle(
+                        fontSize: 15.4.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                        height: 22 / 15.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 24.h),
+              Text(
+                localizations.positionStatistics,
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 16.h),
+              Row(
                 children: [
-                  Text(
-                    localizations.description,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
-                    ),
+                  _buildStatBlock(
+                    label: localizations.totalPositions,
+                    value: totalPositions,
+                    backgroundColor: const Color(0xFFE8F0FE),
+                    valueColor: AppColors.primary,
                   ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    jobFamily.description,
-                    style: TextStyle(
-                      fontSize: 15.4.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                      height: 22 / 15.4,
-                    ),
+                  SizedBox(width: 8.w),
+                  _buildStatBlock(
+                    label: localizations.filledPositions,
+                    value: filledPositions,
+                    backgroundColor: const Color(0xFFEAF8F1),
+                    valueColor: AppColors.greenButton,
+                  ),
+                  SizedBox(width: 8.w),
+                  _buildStatBlock(
+                    label: localizations.fillRate,
+                    value: fillRate,
+                    backgroundColor: const Color(0xFFF4EBFF),
+                    valueColor: const Color(0xFF6D2AE6),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              localizations.positionStatistics,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+              SizedBox(height: 30.h),
+              Divider(color: AppColors.cardBorder, thickness: 1),
+              SizedBox(height: 20.h),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildActionButton(
+                      label: localizations.close,
+                      backgroundColor: AppColors.inputBg,
+                      foregroundColor: AppColors.textSecondary,
+                      onPressed: isDeleting ? null : () => Navigator.of(context).pop(),
+                    ),
+                    SizedBox(width: 12.w),
+                    _buildDeleteButton(
+                      context: context,
+                      ref: ref,
+                      localizations: localizations,
+                      isDeleting: isDeleting,
+                    ),
+                    SizedBox(width: 12.w),
+                    _buildActionButton(
+                      label: localizations.edit,
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      onPressed: isDeleting
+                          ? null
+                          : () {
+                              JobFamilyFormDialog.show(
+                                context,
+                                jobFamily: jobFamily,
+                                isEdit: true,
+                                onSave: (updated) {},
+                              );
+                            },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16.h),
-            Row(
-              children: [
-                _buildStatBlock(
-                  label: localizations.totalPositions,
-                  value: totalPositions,
-                  backgroundColor: const Color(0xFFE8F0FE),
-                  valueColor: AppColors.primary,
-                ),
-                SizedBox(width: 8.w),
-                _buildStatBlock(
-                  label: localizations.filledPositions,
-                  value: filledPositions,
-                  backgroundColor: const Color(0xFFEAF8F1),
-                  valueColor: AppColors.greenButton,
-                ),
-                SizedBox(width: 8.w),
-                _buildStatBlock(
-                  label: localizations.fillRate,
-                  value: fillRate,
-                  backgroundColor: const Color(0xFFF4EBFF),
-                  valueColor: const Color(0xFF6D2AE6),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.h),
-            Divider(color: AppColors.cardBorder, thickness: 1),
-            SizedBox(height: 20.h),
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildActionButton(
-                    label: localizations.close,
-                    backgroundColor: AppColors.inputBg,
-                    foregroundColor: AppColors.textSecondary,
-                    onPressed: isDeleting
-                        ? null
-                        : () => Navigator.of(context).pop(),
-                  ),
-                  SizedBox(width: 12.w),
-                  _buildDeleteButton(
-                    context: context,
-                    ref: ref,
-                    localizations: localizations,
-                    isDeleting: isDeleting,
-                  ),
-                  SizedBox(width: 12.w),
-                  _buildActionButton(
-                    label: localizations.edit,
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    onPressed: isDeleting
-                        ? null
-                        : () {
-                            JobFamilyFormDialog.show(
-                              context,
-                              jobFamily: jobFamily,
-                              isEdit: true,
-                              onSave: (updated) {},
-                            );
-                          },
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -185,11 +162,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
         Expanded(
           child: Text(
             localizations.jobFamilyDetails,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
         ),
         IconButton(
@@ -206,10 +179,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F6FB),
-        borderRadius: BorderRadius.circular(14.r),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFF4F6FB), borderRadius: BorderRadius.circular(14.r)),
       child: child,
     );
   }
@@ -224,29 +194,18 @@ class JobFamilyDetailDialog extends ConsumerWidget {
       child: Container(
         height: 88.h,
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(14.r),
-        ),
+        decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(14.r)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textSecondary,
-              ),
+              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
             ),
             Spacer(),
             Text(
               value,
-              style: TextStyle(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w600,
-                color: valueColor,
-              ),
+              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600, color: valueColor),
             ),
           ],
         ),
@@ -270,9 +229,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
         fixedSize: Size(100.w, 40.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
-          side: backgroundColor == Colors.white
-              ? BorderSide(color: AppColors.cardBorder)
-              : BorderSide.none,
+          side: backgroundColor == Colors.white ? BorderSide(color: AppColors.cardBorder) : BorderSide.none,
         ),
       ),
       onPressed: onPressed,
@@ -319,27 +276,15 @@ class JobFamilyDetailDialog extends ConsumerWidget {
     try {
       await ref
           .read(jobFamilyNotifierProvider.notifier)
-          .deleteJobFamily(
-            ref,
-            ref.read(deleteJobFamilyUseCaseProvider),
-            id: jobFamily.id,
-          );
+          .deleteJobFamily(ref, ref.read(deleteJobFamilyUseCaseProvider), id: jobFamily.id);
 
       if (context.mounted) {
         Navigator.of(context).pop(); // Close detail dialog
-        ToastService.success(
-          context,
-          'Job family deleted successfully',
-          title: 'Deleted',
-        );
+        ToastService.success(context, 'Job family deleted successfully', title: 'Deleted');
       }
     } catch (e) {
       if (context.mounted) {
-        ToastService.error(
-          context,
-          'Failed to delete job family',
-          title: 'Error',
-        );
+        ToastService.error(context, 'Failed to delete job family', title: 'Error');
       }
     }
   }

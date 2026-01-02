@@ -10,12 +10,7 @@ class PaginationListener extends StatefulWidget {
   final VoidCallback onLoadMore;
   final double threshold;
 
-  const PaginationListener({
-    super.key,
-    required this.child,
-    required this.onLoadMore,
-    this.threshold = 200.0,
-  });
+  const PaginationListener({super.key, required this.child, required this.onLoadMore, this.threshold = 200.0});
 
   @override
   State<PaginationListener> createState() => _PaginationListenerState();
@@ -33,16 +28,10 @@ class _PaginationListenerState extends State<PaginationListener> {
           final metrics = notification.metrics;
           final distanceFromBottom = metrics.maxScrollExtent - metrics.pixels;
 
-          if (distanceFromBottom < widget.threshold + 100) {
-            print(
-              '📜 Scroll position - pixels: ${metrics.pixels.toStringAsFixed(0)}, max: ${metrics.maxScrollExtent.toStringAsFixed(0)}, distance from bottom: ${distanceFromBottom.toStringAsFixed(0)}px',
-            );
-          }
+          if (distanceFromBottom < widget.threshold + 100) {}
 
           // Check if we're near the bottom and not already loading
-          if (!_isLoading &&
-              metrics.pixels >= metrics.maxScrollExtent - widget.threshold) {
-            print('🎯 Pagination threshold reached! Triggering load more...');
+          if (!_isLoading && metrics.pixels >= metrics.maxScrollExtent - widget.threshold) {
             _isLoading = true;
 
             // Call the load more callback

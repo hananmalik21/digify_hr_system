@@ -5,14 +5,12 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class DivisionDetailsDialog extends StatelessWidget {
   final DivisionOverview division;
 
-  const DivisionDetailsDialog({
-    super.key,
-    required this.division,
-  });
+  const DivisionDetailsDialog({super.key, required this.division});
 
   static Future<void> show(BuildContext context, DivisionOverview division) {
     return showDialog<void>(
@@ -27,51 +25,46 @@ class DivisionDetailsDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: Container(
-        width: 700.w,
-        constraints: BoxConstraints(maxHeight: 750.h),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 50,
-              offset: const Offset(0, 25),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context, localizations),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildBasicInformation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildLeadership(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildLocation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildOrganizationalMetrics(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildDescription(localizations, isDark),
-                    ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Container(
+          width: 700.w,
+          constraints: BoxConstraints(maxHeight: 750.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.backgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 50, offset: const Offset(0, 25))],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context, localizations),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBasicInformation(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildLeadership(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildLocation(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildOrganizationalMetrics(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildDescription(localizations, isDark),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -94,11 +87,7 @@ class DivisionDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/division_header_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              SvgIconWidget(assetPath: 'assets/icons/division_header_icon.svg', size: 20.sp, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.divisionDetails,
@@ -119,11 +108,7 @@ class DivisionDetailsDialog extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(
-                assetPath: 'assets/icons/close_dialog_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
             ),
           ),
         ],
@@ -135,11 +120,7 @@ class DivisionDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.basicInformation,
-          'assets/icons/basic_info_division_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.basicInformation, 'assets/icons/basic_info_division_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -150,11 +131,7 @@ class DivisionDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(
-                '${localizations.divisionCode}:',
-                division.code,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.divisionCode}:', division.code, isDark),
               SizedBox(height: 8.h),
               _buildInfoRowWithBadge(
                 '${localizations.status}:',
@@ -163,23 +140,11 @@ class DivisionDetailsDialog extends StatelessWidget {
                 isDark,
               ),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.company}:',
-                division.companyName,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.company}:', division.companyName, isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.established}:',
-                division.establishedDate ?? '2010-01-15',
-                isDark,
-              ),
+              _buildInfoRow('${localizations.established}:', division.establishedDate ?? '2010-01-15', isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.businessFocus}:',
-                division.industry,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.businessFocus}:', division.industry, isDark),
             ],
           ),
         ),
@@ -191,11 +156,7 @@ class DivisionDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.leadership,
-          'assets/icons/leadership_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.leadership, 'assets/icons/leadership_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -206,11 +167,7 @@ class DivisionDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(
-                '${localizations.headOfDivision}:',
-                division.headName,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.headOfDivision}:', division.headName, isDark),
               SizedBox(height: 8.h),
               _buildContactIconRow(
                 'assets/icons/email_detail_icon.svg',
@@ -234,11 +191,7 @@ class DivisionDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.location,
-          'assets/icons/location_section_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.location, 'assets/icons/location_section_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -313,19 +266,13 @@ class DivisionDetailsDialog extends StatelessWidget {
     // Parse budget value
     final budgetStr = division.budget.replaceAll('M', '').replaceAll(' KWD', '');
     final budgetValue = double.tryParse(budgetStr) ?? 0;
-    final formattedBudget = '${(budgetValue * 1000000).toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    )} KWD';
+    final formattedBudget =
+        '${(budgetValue * 1000000).toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} KWD';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.organizationalMetrics,
-          'assets/icons/metrics_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.organizationalMetrics, 'assets/icons/metrics_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -336,23 +283,11 @@ class DivisionDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(
-                '${localizations.totalEmployees}:',
-                division.employees.toString(),
-                isDark,
-              ),
+              _buildInfoRow('${localizations.totalEmployees}:', division.employees.toString(), isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.totalDepartments}:',
-                division.departments.toString(),
-                isDark,
-              ),
+              _buildInfoRow('${localizations.totalDepartments}:', division.departments.toString(), isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.annualBudget}:',
-                formattedBudget,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.annualBudget}:', formattedBudget, isDark),
             ],
           ),
         ),
@@ -364,11 +299,7 @@ class DivisionDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.divisionDescription,
-          'assets/icons/description_section_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.divisionDescription, 'assets/icons/description_section_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -498,4 +429,3 @@ class DivisionDetailsDialog extends StatelessWidget {
     );
   }
 }
-

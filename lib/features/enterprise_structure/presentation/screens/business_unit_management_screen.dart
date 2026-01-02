@@ -28,14 +28,8 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     final isDark = context.isDark;
 
     // Calculate stats from current list
-    final totalEmployees = businessUnits.fold<int>(
-      0,
-      (previousValue, bu) => previousValue + bu.employees,
-    );
+    final totalEmployees = businessUnits.fold<int>(0, (previousValue, bu) => previousValue + bu.employees);
     final activeUnits = businessUnits.where((bu) => bu.isActive).length;
-
-
-
 
     // Calculate total budget
     double totalBudget = 0;
@@ -87,48 +81,20 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 child: SingleChildScrollView(
                   padding: ResponsiveHelper.getResponsivePadding(
                     context,
-                    mobile: EdgeInsetsDirectional.only(
-                      top: 16.h,
-                      start: 16.w,
-                      end: 16.w,
-                      bottom: 24.h,
-                    ),
-                    tablet: EdgeInsetsDirectional.only(
-                      top: 24.h,
-                      start: 24.w,
-                      end: 24.w,
-                      bottom: 24.h,
-                    ),
-                    web: EdgeInsetsDirectional.only(
-                      top: 24.h,
-                      start: 24.w,
-                      end: 24.w,
-                      bottom: 24.h,
-                    ),
+                    mobile: EdgeInsetsDirectional.only(top: 16.h, start: 16.w, end: 16.w, bottom: 24.h),
+                    tablet: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
+                    web: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildHeader(context, localizations),
-                      SizedBox(
-                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                      ),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
                       _buildStatsSection(context, stats, isDark: isDark),
-                      SizedBox(
-                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                      ),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
                       _buildSearchBar(context, ref, localizations),
-                      SizedBox(
-                        height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h,
-                      ),
-                      _buildBusinessUnitList(
-                        context,
-                        ref,
-                        listState,
-                        businessUnits,
-                        localizations,
-                        isDark: isDark,
-                      ),
+                      SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
+                      _buildBusinessUnitList(context, ref, listState, businessUnits, localizations, isDark: isDark),
                     ],
                   ),
                 ),
@@ -159,10 +125,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                           SizedBox(height: 16.h),
                           Text(
                             localizations.pleaseWait,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: context.themeTextSecondary,
-                            ),
+                            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
                           ),
                         ],
                       ),
@@ -184,16 +147,9 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
         Container(
           width: 48.r,
           height: 48.r,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2B7FFF),
-            borderRadius: BorderRadius.circular(14.r),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFF2B7FFF), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/business_unit_icon.svg',
-              size: 24.sp,
-              color: Colors.white,
-            ),
+            child: SvgIconWidget(assetPath: 'assets/icons/business_unit_icon.svg', size: 24.sp, color: Colors.white),
           ),
         ),
         SizedBox(width: 12.w),
@@ -206,9 +162,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
-                  color:
-                      Theme.of(context).textTheme.titleLarge?.color ??
-                      context.themeTextPrimary,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? context.themeTextPrimary,
                   height: 36 / 22.1,
                 ),
               ),
@@ -236,24 +190,13 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsSection(
-    BuildContext context,
-    List<StatsCardData> stats, {
-    required bool isDark,
-  }) {
+  Widget _buildStatsSection(BuildContext context, List<StatsCardData> stats, {required bool isDark}) {
     final gap = 16.w;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 4,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 4);
         final totalSpacing = gap * (columns - 1);
-        final width = constraints.maxWidth.isFinite
-            ? (constraints.maxWidth - totalSpacing) / columns
-            : double.infinity;
+        final width = constraints.maxWidth.isFinite ? (constraints.maxWidth - totalSpacing) / columns : double.infinity;
 
         return Wrap(
           spacing: gap,
@@ -269,26 +212,16 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchBar(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildSearchBar(BuildContext context, WidgetRef ref, AppLocalizations localizations) {
     final isDark = context.isDark;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB),
-        ),
+        border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB)),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -303,7 +236,6 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
-
                 onChanged: (value) {
                   ref.read(businessUnitSearchQueryProvider.notifier).state = value;
                   // Debounce API search - only search if user stops typing for 500ms
@@ -316,19 +248,11 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
-                  fillColor: isDark
-                      ? AppColors.cardBackgroundDark
-                      : Colors.white,
+                  fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
                   border: InputBorder.none,
                   hintText: localizations.searchBusinessUnitsPlaceholder,
-                  hintStyle: TextStyle(
-                    color: const Color(0xFF364153).withValues(alpha: 0.5),
-                    fontSize: 15.3.sp,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 14.h,
-                  ),
+                  hintStyle: TextStyle(color: const Color(0xFF364153).withValues(alpha: 0.5), fontSize: 15.3.sp),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
                     child: SvgIconWidget(
@@ -337,15 +261,9 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                       color: context.themeTextSecondary,
                     ),
                   ),
-                  prefixIconConstraints: const BoxConstraints(
-                    minHeight: 0,
-                    minWidth: 0,
-                  ),
+                  prefixIconConstraints: const BoxConstraints(minHeight: 0, minWidth: 0),
                 ),
-                style: TextStyle(
-                  color: context.themeTextPrimary,
-                  fontSize: 15.3.sp,
-                ),
+                style: TextStyle(color: context.themeTextPrimary, fontSize: 15.3.sp),
               ),
             ),
           ),
@@ -360,10 +278,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8.w),
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 21.w,
-                    vertical: 9.h,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 9.h),
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFFD1D5DC)),
                     borderRadius: BorderRadius.circular(10.r),
@@ -373,9 +288,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 15.4.sp,
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A),
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                       height: 19 / 15.4,
                     ),
                   ),
@@ -398,10 +311,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
   }) {
     if (listState.isLoading && businessUnits.isEmpty) {
       return Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.h),
-          child: CircularProgressIndicator(),
-        ),
+        child: Padding(padding: EdgeInsets.all(24.h), child: CircularProgressIndicator()),
       );
     }
 
@@ -414,10 +324,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
             children: [
               Text(
                 listState.errorMessage ?? 'An error occurred',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.red,
-                ),
+                style: TextStyle(fontSize: 14.sp, color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.h),
@@ -433,26 +340,19 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
 
     if (businessUnits.isEmpty) {
       return Center(
-
         child: Padding(
           padding: EdgeInsets.all(24.h),
           child: Text(
             localizations.noResultsFound,
             style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
           ),
-
         ),
       );
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 2,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 2);
         const gap = 24.0;
         final totalSpacing = gap * (columns - 1);
         final cardWidth = constraints.maxWidth.isFinite
@@ -486,45 +386,40 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
   ) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Delete Business Unit'),
-        content: Text(
-          'Are you sure you want to delete ${businessUnit.name}?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(localizations.cancel),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(dialogContext).pop();
-              try {
-                final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
-                await deleteUseCase(int.parse(businessUnit.id), hard: true);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Business unit deleted successfully')),
-                  );
-                  ref.read(businessUnitListNotifierProvider.notifier).refresh();
+      builder: (dialogContext) => BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: AlertDialog(
+          title: Text('Delete Business Unit'),
+          content: Text('Are you sure you want to delete ${businessUnit.name}?'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(localizations.cancel)),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                try {
+                  final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
+                  await deleteUseCase(int.parse(businessUnit.id), hard: true);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
+                    ref.read(businessUnitListNotifierProvider.notifier).refresh();
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error deleting business unit: ${e.toString()}'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error deleting business unit: ${e.toString()}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text(
-              'Delete',
-              style: TextStyle(color: Colors.red),
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -556,11 +451,7 @@ class _BusinessUnitCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: context.themeCardBorder),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.10),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.10),
               offset: const Offset(0, 1),
@@ -592,8 +483,7 @@ class _BusinessUnitCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: SvgIconWidget(
-                                assetPath:
-                                    'assets/icons/business_unit_card_icon.svg',
+                                assetPath: 'assets/icons/business_unit_card_icon.svg',
                                 size: 20.sp,
                                 color: const Color(0xFF3B82F6),
                               ),
@@ -639,15 +529,9 @@ class _BusinessUnitCard extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: businessUnit.isActive
-                                ? localizations.active
-                                : localizations.inactive,
-                            backgroundColor: isDark
-                                ? AppColors.successBgDark
-                                : const Color(0xFFDCFCE7),
-                            textColor: isDark
-                                ? AppColors.successTextDark
-                                : const Color(0xFF016630),
+                            label: businessUnit.isActive ? localizations.active : localizations.inactive,
+                            backgroundColor: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
+                            textColor: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                           ),
                         ],
                       ),
@@ -706,19 +590,11 @@ class _BusinessUnitCard extends StatelessWidget {
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
                       onTap: () {
-                        AddBusinessUnitDialog.show(
-                          context,
-                          isEditMode: true,
-                          businessUnit: businessUnit,
-                        );
+                        AddBusinessUnitDialog.show(context, isEditMode: true, businessUnit: businessUnit);
                       },
                     ),
                     SizedBox(width: 8.w),
-                    _ActionIcon(
-                      assetPath: 'assets/icons/delete_icon_red.svg',
-
-                      onTap: () => onDelete(businessUnit),
-                    ),
+                    _ActionIcon(assetPath: 'assets/icons/delete_icon_red.svg', onTap: () => onDelete(businessUnit)),
                   ],
                 ),
               ],
@@ -731,9 +607,7 @@ class _BusinessUnitCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.inputBgDark
-                        : const Color(0xFFF9FAFB),
+                    color: isDark ? AppColors.inputBgDark : const Color(0xFFF9FAFB),
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Row(
@@ -795,8 +669,7 @@ class _BusinessUnitCard extends StatelessWidget {
                       child: Row(
                         children: [
                           SvgIconWidget(
-                            assetPath:
-                                'assets/icons/departments_small_icon.svg',
+                            assetPath: 'assets/icons/departments_small_icon.svg',
                             size: 16.sp,
                             color: context.themeTextSecondary,
                           ),
@@ -879,16 +752,9 @@ class _ActionIcon extends StatelessWidget {
       child: Container(
         width: 32.r,
         height: 32.r,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-          color: context.themeCardBackground,
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
         child: Center(
-          child: SvgIconWidget(
-            assetPath: assetPath,
-            size: 16.sp,
-            color: context.themeTextSecondary,
-          ),
+          child: SvgIconWidget(assetPath: assetPath, size: 16.sp, color: context.themeTextSecondary),
         ),
       ),
     );
@@ -900,28 +766,16 @@ class _Badge extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
 
-  const _Badge({
-    required this.label,
-    required this.backgroundColor,
-    required this.textColor,
-  });
+  const _Badge({required this.label, required this.backgroundColor, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(4.r)),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13.5.sp,
-          fontWeight: FontWeight.w400,
-          color: textColor,
-          height: 20 / 13.5,
-        ),
+        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w400, color: textColor, height: 20 / 13.5),
       ),
     );
   }

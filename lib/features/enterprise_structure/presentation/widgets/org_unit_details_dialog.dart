@@ -5,14 +5,12 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class OrgUnitDetailsDialog extends StatelessWidget {
   final OrgStructureLevel unit;
 
-  const OrgUnitDetailsDialog({
-    super.key,
-    required this.unit,
-  });
+  const OrgUnitDetailsDialog({super.key, required this.unit});
 
   static Future<void> show(BuildContext context, OrgStructureLevel unit) {
     return showDialog<void>(
@@ -27,51 +25,48 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: Container(
-        width: 800.w,
-        constraints: BoxConstraints(maxHeight: 700.h),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 50,
-              offset: const Offset(0, 25),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(localizations),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildBasicInformation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildManagerInformation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildLocationInformation(localizations, isDark),
-                      if (unit.description.isNotEmpty) ...[
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Container(
+          width: 800.w,
+          constraints: BoxConstraints(maxHeight: 700.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.backgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 50, offset: const Offset(0, 25)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(localizations),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBasicInformation(localizations, isDark),
                         SizedBox(height: 24.h),
-                        _buildDescription(localizations, isDark),
+                        _buildManagerInformation(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildLocationInformation(localizations, isDark),
+                        if (unit.description.isNotEmpty) ...[
+                          SizedBox(height: 24.h),
+                          _buildDescription(localizations, isDark),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -94,11 +89,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/company_stat_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              SvgIconWidget(assetPath: 'assets/icons/company_stat_icon.svg', size: 20.sp, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 'Unit Details - ${unit.levelCode}',
@@ -120,11 +111,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
-                child: SvgIconWidget(
-                  assetPath: 'assets/icons/close_dialog_icon.svg',
-                  size: 20.sp,
-                  color: Colors.white,
-                ),
+                child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
               ),
             ),
           ),
@@ -137,11 +124,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.basicInformation,
-          'assets/icons/company_stat_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.basicInformation, 'assets/icons/company_stat_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -152,23 +135,11 @@ class OrgUnitDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(
-                'Unit Code:',
-                unit.orgUnitCode,
-                isDark,
-              ),
+              _buildInfoRow('Unit Code:', unit.orgUnitCode, isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                'Unit Name (English):',
-                unit.orgUnitNameEn,
-                isDark,
-              ),
+              _buildInfoRow('Unit Name (English):', unit.orgUnitNameEn, isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                'Unit Name (Arabic):',
-                unit.orgUnitNameAr,
-                isDark,
-              ),
+              _buildInfoRow('Unit Name (Arabic):', unit.orgUnitNameAr, isDark),
               SizedBox(height: 8.h),
               _buildInfoRowWithBadge(
                 '${localizations.status}:',
@@ -177,31 +148,15 @@ class OrgUnitDetailsDialog extends StatelessWidget {
                 isDark,
               ),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                'Level Code:',
-                unit.levelCode,
-                isDark,
-              ),
+              _buildInfoRow('Level Code:', unit.levelCode, isDark),
               if (unit.parentOrgUnitId != null) ...[
                 SizedBox(height: 8.h),
-                _buildInfoRow(
-                  'Parent Unit ID:',
-                  unit.parentOrgUnitId.toString(),
-                  isDark,
-                ),
+                _buildInfoRow('Parent Unit ID:', unit.parentOrgUnitId.toString(), isDark),
               ],
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                'Structure ID:',
-                unit.orgStructureId.toString(),
-                isDark,
-              ),
+              _buildInfoRow('Structure ID:', unit.orgStructureId.toString(), isDark),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                'Enterprise ID:',
-                unit.enterpriseId.toString(),
-                isDark,
-              ),
+              _buildInfoRow('Enterprise ID:', unit.enterpriseId.toString(), isDark),
             ],
           ),
         ),
@@ -213,11 +168,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          'Manager Information',
-          'assets/icons/phone_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader('Manager Information', 'assets/icons/phone_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -229,27 +180,15 @@ class OrgUnitDetailsDialog extends StatelessWidget {
           child: Column(
             children: [
               if (unit.managerName.isNotEmpty) ...[
-                _buildInfoRow(
-                  'Manager Name:',
-                  unit.managerName,
-                  isDark,
-                ),
+                _buildInfoRow('Manager Name:', unit.managerName, isDark),
                 SizedBox(height: 8.h),
               ],
               if (unit.managerEmail.isNotEmpty) ...[
-                _buildContactIconRow(
-                  'assets/icons/email_envelope_purple.svg',
-                  unit.managerEmail,
-                  isDark,
-                ),
+                _buildContactIconRow('assets/icons/email_envelope_purple.svg', unit.managerEmail, isDark),
                 SizedBox(height: 8.h),
               ],
               if (unit.managerPhone.isNotEmpty) ...[
-                _buildContactIconRow(
-                  'assets/icons/phone_icon.svg',
-                  unit.managerPhone,
-                  isDark,
-                ),
+                _buildContactIconRow('assets/icons/phone_icon.svg', unit.managerPhone, isDark),
               ],
             ],
           ),
@@ -262,11 +201,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          'Location Information',
-          'assets/icons/location_header_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader('Location Information', 'assets/icons/location_header_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -278,27 +213,15 @@ class OrgUnitDetailsDialog extends StatelessWidget {
           child: Column(
             children: [
               if (unit.location.isNotEmpty) ...[
-                _buildInfoRow(
-                  '${localizations.location}:',
-                  unit.location,
-                  isDark,
-                ),
+                _buildInfoRow('${localizations.location}:', unit.location, isDark),
                 SizedBox(height: 8.h),
               ],
               if (unit.city.isNotEmpty) ...[
-                _buildInfoRow(
-                  '${localizations.city}:',
-                  unit.city,
-                  isDark,
-                ),
+                _buildInfoRow('${localizations.city}:', unit.city, isDark),
                 SizedBox(height: 8.h),
               ],
               if (unit.address.isNotEmpty) ...[
-                _buildContactRow(
-                  'assets/icons/location_header_icon.svg',
-                  [unit.address],
-                  isDark,
-                ),
+                _buildContactRow('assets/icons/location_header_icon.svg', [unit.address], isDark),
               ],
             ],
           ),
@@ -311,11 +234,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.description,
-          'assets/icons/company_stat_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.description, 'assets/icons/company_stat_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -486,4 +405,3 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     );
   }
 }
-

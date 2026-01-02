@@ -63,6 +63,106 @@ class ShiftOverview {
   });
 
   bool get isActive => status.isActive;
+
+  /// Factory method to create ShiftOverview from API response JSON
+  factory ShiftOverview.fromJson(Map<String, dynamic> json) {
+    int parseInt(dynamic value, {int defaultValue = 0}) {
+      if (value == null) return defaultValue;
+      if (value is int) return value;
+      if (value is String) {
+        final parsed = int.tryParse(value);
+        return parsed ?? defaultValue;
+      }
+      if (value is num) return value.toInt();
+      return defaultValue;
+    }
+
+    String parseString(dynamic value, {String defaultValue = ''}) {
+      if (value == null) return defaultValue;
+      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
+      return value.toString().trim();
+    }
+
+    final shiftId = parseInt(json['shift_id'], defaultValue: 0);
+    if (shiftId <= 0) {
+      throw FormatException('Invalid shift_id: must be greater than 0');
+    }
+
+    final shiftCode = parseString(json['shift_code']);
+    if (shiftCode.isEmpty) {
+      throw FormatException('shift_code is required and cannot be empty');
+    }
+
+    final shiftNameEn = parseString(json['shift_name_en']);
+    if (shiftNameEn.isEmpty) {
+      throw FormatException('shift_name_en is required and cannot be empty');
+    }
+
+    final shiftNameAr = parseString(json['shift_name_ar'], defaultValue: shiftNameEn);
+    final shiftType = parseString(json['shift_type'], defaultValue: 'REGULAR');
+
+    final startMinutes = parseInt(json['start_minutes'], defaultValue: 0);
+    if (startMinutes < 0 || startMinutes >= 1440) {
+      throw FormatException('Invalid start_minutes: must be between 0 and 1439');
+    }
+
+    final endMinutes = parseInt(json['end_minutes'], defaultValue: 0);
+    if (endMinutes < 0 || endMinutes >= 1440) {
+      throw FormatException('Invalid end_minutes: must be between 0 and 1439');
+    }
+
+    if (endMinutes <= startMinutes) {
+      throw FormatException('Invalid time range: end_minutes must be greater than start_minutes');
+    }
+
+    final durationHours = parseInt(json['duration_hours'], defaultValue: 0);
+    if (durationHours < 0 || durationHours > 24) {
+      throw FormatException('Invalid duration_hours: must be between 0 and 24');
+    }
+
+    final breakHours = parseInt(json['break_hours'], defaultValue: 0);
+    if (breakHours < 0 || breakHours > durationHours) {
+      throw FormatException('Invalid break_hours: must be between 0 and duration_hours');
+    }
+
+    final colorHex = parseString(json['color_hex'], defaultValue: '#000000');
+    if (!colorHex.startsWith('#') || colorHex.length != 7) {
+      throw FormatException('Invalid color_hex: must be in format #RRGGBB');
+    }
+
+    final status = parseString(json['status'], defaultValue: 'ACTIVE').toUpperCase();
+    if (status != 'ACTIVE' && status != 'INACTIVE') {
+      throw FormatException('Invalid status: must be ACTIVE or INACTIVE');
+    }
+
+    // Convert minutes to TimeOfDay and format
+    TimeOfDay _minutesToTimeOfDay(int minutes) {
+      final clampedMinutes = minutes.clamp(0, 1439);
+      final hours = clampedMinutes ~/ 60;
+      final mins = clampedMinutes % 60;
+      final validHours = hours.clamp(0, 23);
+      final validMins = mins.clamp(0, 59);
+      return TimeOfDay(hour: validHours, minute: validMins);
+    }
+
+    final startTime = _minutesToTimeOfDay(startMinutes);
+    final endTime = _minutesToTimeOfDay(endMinutes);
+
+    return ShiftOverview(
+      id: shiftId,
+      name: shiftNameEn,
+      nameAr: shiftNameAr,
+      code: shiftCode,
+      startTime: startTime.formatted,
+      endTime: endTime.formatted,
+      totalHours: durationHours.toDouble(),
+      breakHours: breakHours,
+      shiftType: ShiftType.fromString(shiftType),
+      shiftTypeRaw: shiftType,
+      status: ShiftStatus.fromString(status),
+      colorHex: colorHex,
+    );
+  }
 }
 
 /// Shift working days

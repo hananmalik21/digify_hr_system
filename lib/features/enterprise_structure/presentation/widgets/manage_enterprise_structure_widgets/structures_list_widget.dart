@@ -14,12 +14,9 @@ import 'package:intl/intl.dart';
 class StructuresListWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
-  final AutoDisposeStateNotifierProvider<
-      SaveEnterpriseStructureNotifier,
-      SaveEnterpriseStructureState> saveEnterpriseStructureProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>
+  saveEnterpriseStructureProvider;
 
   const StructuresListWidget({
     super.key,
@@ -60,8 +57,7 @@ class StructuresListWidget extends ConsumerWidget {
             ),
             SizedBox(height: 16.h),
             ElevatedButton(
-              onPressed: () =>
-                  ref.read(structureListProvider.notifier).refresh(),
+              onPressed: () => ref.read(structureListProvider.notifier).refresh(),
               child: const Text('Retry'),
             ),
           ],
@@ -79,12 +75,7 @@ class StructuresListWidget extends ConsumerWidget {
         child: Center(
           child: Text(
             'No structures found',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF4A5565),
-            ),
+            style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565)),
           ),
         ),
       );
@@ -93,9 +84,7 @@ class StructuresListWidget extends ConsumerWidget {
     return Column(
       children: [
         ...listState.structures.map((structure) {
-          final activeLevels = structure.levels
-              .where((l) => l.isActive)
-              .toList();
+          final activeLevels = structure.levels.where((l) => l.isActive).toList();
           final levelNames = activeLevels.map((l) => l.levelName).toList();
 
           final dateFormat = DateFormat('yyyy-MM-dd');
@@ -116,9 +105,7 @@ class StructuresListWidget extends ConsumerWidget {
               levels: levelNames,
               levelCount: activeLevels.length,
               components: 0,
-              // TODO: Get from API if available
               employees: 0,
-              // TODO: Get from API if available
               created: createdDate,
               modified: modifiedDate,
               showInfoMessage: structure.isActive,
@@ -152,4 +139,3 @@ class StructuresListWidget extends ConsumerWidget {
     );
   }
 }
-

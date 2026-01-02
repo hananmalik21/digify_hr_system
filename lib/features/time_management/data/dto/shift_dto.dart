@@ -39,7 +39,7 @@ class ShiftDto {
   });
 
   factory ShiftDto.fromJson(Map<String, dynamic> json) {
-    int _parseInt(dynamic value, {int defaultValue = 0}) {
+    int parseInt(dynamic value, {int defaultValue = 0}) {
       if (value == null) return defaultValue;
       if (value is int) return value;
       if (value is String) {
@@ -50,93 +50,74 @@ class ShiftDto {
       return defaultValue;
     }
 
-    String _parseString(dynamic value, {String defaultValue = ''}) {
+    String parseString(dynamic value, {String defaultValue = ''}) {
       if (value == null) return defaultValue;
-      if (value is String)
-        return value.trim().isEmpty ? defaultValue : value.trim();
+      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
 
-    final shiftId = _parseInt(json['shift_id'], defaultValue: 0);
+    final shiftId = parseInt(json['shift_id'], defaultValue: 0);
     if (shiftId <= 0) {
       throw FormatException('Invalid shift_id: must be greater than 0');
     }
 
-    final tenantId = _parseInt(json['tenant_id'], defaultValue: 0);
+    final tenantId = parseInt(json['tenant_id'], defaultValue: 0);
     if (tenantId <= 0) {
       throw FormatException('Invalid tenant_id: must be greater than 0');
     }
 
-    final shiftCode = _parseString(json['shift_code']);
+    final shiftCode = parseString(json['shift_code']);
     if (shiftCode.isEmpty) {
       throw FormatException('shift_code is required and cannot be empty');
     }
 
-    final shiftNameEn = _parseString(json['shift_name_en']);
+    final shiftNameEn = parseString(json['shift_name_en']);
     if (shiftNameEn.isEmpty) {
       throw FormatException('shift_name_en is required and cannot be empty');
     }
 
-    final shiftNameAr = _parseString(
-      json['shift_name_ar'],
-      defaultValue: shiftNameEn,
-    );
+    final shiftNameAr = parseString(json['shift_name_ar'], defaultValue: shiftNameEn);
 
-    final shiftType = _parseString(json['shift_type'], defaultValue: 'DAY');
+    final shiftType = parseString(json['shift_type'], defaultValue: 'DAY');
 
-    final startMinutes = _parseInt(json['start_minutes'], defaultValue: 0);
+    final startMinutes = parseInt(json['start_minutes'], defaultValue: 0);
     if (startMinutes < 0 || startMinutes >= 1440) {
-      throw FormatException(
-        'Invalid start_minutes: must be between 0 and 1439',
-      );
+      throw FormatException('Invalid start_minutes: must be between 0 and 1439');
     }
 
-    final endMinutes = _parseInt(json['end_minutes'], defaultValue: 0);
+    final endMinutes = parseInt(json['end_minutes'], defaultValue: 0);
     if (endMinutes < 0 || endMinutes >= 1440) {
       throw FormatException('Invalid end_minutes: must be between 0 and 1439');
     }
 
     if (endMinutes <= startMinutes) {
-      throw FormatException(
-        'Invalid time range: end_minutes must be greater than start_minutes',
-      );
+      throw FormatException('Invalid time range: end_minutes must be greater than start_minutes');
     }
 
-    final durationHours = _parseInt(json['duration_hours'], defaultValue: 0);
+    final durationHours = parseInt(json['duration_hours'], defaultValue: 0);
     if (durationHours < 0 || durationHours > 24) {
       throw FormatException('Invalid duration_hours: must be between 0 and 24');
     }
 
-    final breakHours = _parseInt(json['break_hours'], defaultValue: 0);
+    final breakHours = parseInt(json['break_hours'], defaultValue: 0);
     if (breakHours < 0 || breakHours > durationHours) {
-      throw FormatException(
-        'Invalid break_hours: must be between 0 and duration_hours',
-      );
+      throw FormatException('Invalid break_hours: must be between 0 and duration_hours');
     }
 
-    final colorHex = _parseString(json['color_hex'], defaultValue: '#000000');
+    final colorHex = parseString(json['color_hex'], defaultValue: '#000000');
     if (!colorHex.startsWith('#') || colorHex.length != 7) {
       throw FormatException('Invalid color_hex: must be in format #RRGGBB');
     }
 
-    final status = _parseString(
-      json['status'],
-      defaultValue: 'ACTIVE',
-    ).toUpperCase();
+    final status = parseString(json['status'], defaultValue: 'ACTIVE').toUpperCase();
     if (status != 'ACTIVE' && status != 'INACTIVE') {
       throw FormatException('Invalid status: must be ACTIVE or INACTIVE');
     }
 
-    final creationDate = _parseString(json['creation_date'], defaultValue: '');
-    final createdBy = _parseString(json['created_by'], defaultValue: 'SYSTEM');
-    final lastUpdateDate = _parseString(
-      json['last_update_date'],
-      defaultValue: creationDate,
-    );
-    final lastUpdatedBy = _parseString(
-      json['last_updated_by'],
-      defaultValue: createdBy,
-    );
+    final creationDate = parseString(json['creation_date'], defaultValue: '');
+    final createdBy = parseString(json['created_by'], defaultValue: 'SYSTEM');
+    final lastUpdateDate = parseString(json['last_update_date'], defaultValue: creationDate);
+    final lastUpdatedBy = parseString(json['last_updated_by'], defaultValue: createdBy);
 
     return ShiftDto(
       shiftId: shiftId,
@@ -195,11 +176,7 @@ class PaginatedShiftsDto {
   final List<ShiftDto> data;
   final PaginationMetaDto meta;
 
-  const PaginatedShiftsDto({
-    required this.success,
-    required this.data,
-    required this.meta,
-  });
+  const PaginatedShiftsDto({required this.success, required this.data, required this.meta});
 
   factory PaginatedShiftsDto.fromJson(Map<String, dynamic> json) {
     final success = json['success'] as bool? ?? true;
@@ -278,9 +255,7 @@ class PaginationMetaDto {
       throw FormatException('pagination field is required and must be a Map');
     }
 
-    return PaginationMetaDto(
-      pagination: PaginationInfoDto.fromJson(paginationValue),
-    );
+    return PaginationMetaDto(pagination: PaginationInfoDto.fromJson(paginationValue));
   }
 }
 
@@ -302,7 +277,7 @@ class PaginationInfoDto {
   });
 
   factory PaginationInfoDto.fromJson(Map<String, dynamic> json) {
-    int _parseInt(dynamic value, {required int defaultValue, int min = 0}) {
+    int parseInt(dynamic value, {required int defaultValue, int min = 0}) {
       if (value == null) return defaultValue;
       if (value is int) return value < min ? defaultValue : value;
       if (value is String) {
@@ -316,7 +291,7 @@ class PaginationInfoDto {
       return defaultValue;
     }
 
-    bool _parseBool(dynamic value, {bool defaultValue = false}) {
+    bool parseBool(dynamic value, {bool defaultValue = false}) {
       if (value == null) return defaultValue;
       if (value is bool) return value;
       if (value is String) {
@@ -326,16 +301,16 @@ class PaginationInfoDto {
       return defaultValue;
     }
 
-    final page = _parseInt(json['page'], defaultValue: 1, min: 1);
+    final page = parseInt(json['page'], defaultValue: 1, min: 1);
 
-    final pageSize = _parseInt(json['page_size'], defaultValue: 10, min: 1);
+    final pageSize = parseInt(json['page_size'], defaultValue: 10, min: 1);
 
-    final total = _parseInt(json['total'], defaultValue: 0, min: 0);
+    final total = parseInt(json['total'], defaultValue: 0, min: 0);
 
-    final totalPages = _parseInt(json['total_pages'], defaultValue: 0, min: 0);
+    final totalPages = parseInt(json['total_pages'], defaultValue: 0, min: 0);
 
-    final hasNext = _parseBool(json['has_next'], defaultValue: false);
-    final hasPrevious = _parseBool(json['has_previous'], defaultValue: false);
+    final hasNext = parseBool(json['has_next'], defaultValue: false);
+    final hasPrevious = parseBool(json['has_previous'], defaultValue: false);
 
     return PaginationInfoDto(
       page: page,

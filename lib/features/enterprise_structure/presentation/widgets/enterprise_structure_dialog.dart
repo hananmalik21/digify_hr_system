@@ -24,6 +24,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 enum EnterpriseStructureDialogMode { view, edit, create }
 
@@ -35,11 +36,7 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
   final int? enterpriseId;
   final int? structureId; // For update operations
   final bool? isActive; // Current active status
-  final AutoDisposeStateNotifierProvider<
-    StructureListNotifier,
-    StructureListState
-  >
-  provider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider;
 
   const EnterpriseStructureDialog({
     super.key,
@@ -59,11 +56,7 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
     required String description,
     int? enterpriseId,
     List<HierarchyLevel>? initialLevels,
-    required AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState
-    >
-    provider,
+    required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {
     return showDialog(
       context: context,
@@ -87,11 +80,7 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
     int? enterpriseId,
     int? structureId,
     bool? isActive,
-    required AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState
-    >
-    provider,
+    required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {
     return showDialog(
       context: context,
@@ -113,31 +102,22 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
 
   static Future<void> showCreate(
     BuildContext context, {
-    required AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState
-    >
-    provider,
+    required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => ProviderScope(
-        child: EnterpriseStructureDialog(
-          mode: EnterpriseStructureDialogMode.create,
-          provider: provider,
-        ),
+        child: EnterpriseStructureDialog(mode: EnterpriseStructureDialogMode.create, provider: provider),
       ),
     );
   }
 
   @override
-  ConsumerState<EnterpriseStructureDialog> createState() =>
-      _EnterpriseStructureDialogState();
+  ConsumerState<EnterpriseStructureDialog> createState() => _EnterpriseStructureDialogState();
 }
 
-class _EnterpriseStructureDialogState
-    extends ConsumerState<EnterpriseStructureDialog> {
+class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureDialog> {
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
   late final EditDialogParams _params;
@@ -147,20 +127,13 @@ class _EnterpriseStructureDialogState
   ProviderSubscription<EnterpriseStructureDialogState>? _apiSub;
 
   final saveEnterpriseStructureProvider =
-      StateNotifierProvider.autoDispose<
-        SaveEnterpriseStructureNotifier,
-        SaveEnterpriseStructureState
-      >((ref) {
+      StateNotifierProvider.autoDispose<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>((ref) {
         final saveUseCase = ref.watch(saveEnterpriseStructureUseCaseProvider);
         return SaveEnterpriseStructureNotifier(saveUseCase: saveUseCase);
       });
 
   final _editDialogProvider = StateNotifierProvider.autoDispose
-      .family<
-        EditEnterpriseStructureNotifier,
-        EditEnterpriseStructureState,
-        EditDialogParams
-      >(
+      .family<EditEnterpriseStructureNotifier, EditEnterpriseStructureState, EditDialogParams>(
         (ref, params) => EditEnterpriseStructureNotifier(
           structureName: params.structureName,
           description: params.description,
@@ -176,13 +149,8 @@ class _EnterpriseStructureDialogState
 
     _dialogId = '${DateTime.now().millisecondsSinceEpoch}_${widget.hashCode}';
 
-    final initialName = widget.mode == EnterpriseStructureDialogMode.create
-        ? ''
-        : (widget.structureName ?? '');
-    final initialDescription =
-        widget.mode == EnterpriseStructureDialogMode.create
-        ? ''
-        : (widget.description ?? '');
+    final initialName = widget.mode == EnterpriseStructureDialogMode.create ? '' : (widget.structureName ?? '');
+    final initialDescription = widget.mode == EnterpriseStructureDialogMode.create ? '' : (widget.description ?? '');
 
     _nameController = TextEditingController(text: initialName);
     _descriptionController = TextEditingController(text: initialDescription);
@@ -215,13 +183,10 @@ class _EnterpriseStructureDialogState
     }
 
     // Auto-select enterprise in create mode if provided
-    if (widget.mode == EnterpriseStructureDialogMode.create &&
-        widget.enterpriseId != null) {
+    if (widget.mode == EnterpriseStructureDialogMode.create && widget.enterpriseId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          ref
-              .read(_editDialogProvider(_params).notifier)
-              .updateSelectedEnterprise(widget.enterpriseId);
+          ref.read(_editDialogProvider(_params).notifier).updateSelectedEnterprise(widget.enterpriseId);
         }
       });
     }
@@ -229,26 +194,26 @@ class _EnterpriseStructureDialogState
     // ✅ Only load from API in create mode
     // In view/edit mode, use the structure's levels (initialLevels)
     if (widget.mode == EnterpriseStructureDialogMode.create) {
-      _apiSub = ref.listenManual<EnterpriseStructureDialogState>(
-        enterpriseStructureDialogProvider(_dialogId),
-        (previous, next) {
-          if (!mounted) return;
-          if (_syncedApiToEditOnce) return;
-          if (next.isLoading) return;
+      _apiSub = ref.listenManual<EnterpriseStructureDialogState>(enterpriseStructureDialogProvider(_dialogId), (
+        previous,
+        next,
+      ) {
+        if (!mounted) return;
+        if (_syncedApiToEditOnce) return;
+        if (next.isLoading) return;
 
-          final loc = AppLocalizations.of(context);
-          if (loc == null) return;
+        final loc = AppLocalizations.of(context);
+        if (loc == null) return;
 
-          final apiLevels = next.toHierarchyLevels(loc);
-          if (apiLevels.isEmpty) return;
+        final apiLevels = next.toHierarchyLevels(loc);
+        if (apiLevels.isEmpty) return;
 
-          final editState = ref.read(_editDialogProvider(_params));
-          if (editState.levels.isNotEmpty) return;
+        final editState = ref.read(_editDialogProvider(_params));
+        if (editState.levels.isNotEmpty) return;
 
-          _syncedApiToEditOnce = true;
-          ref.read(_editDialogProvider(_params).notifier).setLevels(apiLevels);
-        },
-      );
+        _syncedApiToEditOnce = true;
+        ref.read(_editDialogProvider(_params).notifier).setLevels(apiLevels);
+      });
     }
   }
 
@@ -318,8 +283,7 @@ class _EnterpriseStructureDialogState
       levels = widget.initialLevels ?? const <HierarchyLevel>[];
     } else if (widget.mode == EnterpriseStructureDialogMode.edit) {
       // Edit mode: use edit provider levels (initialized from structure's levels)
-      levels =
-          editState?.levels ?? widget.initialLevels ?? const <HierarchyLevel>[];
+      levels = editState?.levels ?? widget.initialLevels ?? const <HierarchyLevel>[];
     } else {
       // Create mode: use API levels synced to edit provider
       levels = editState?.levels ?? apiLevels;
@@ -336,283 +300,230 @@ class _EnterpriseStructureDialogState
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
-      ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
-          maxHeight:
-              MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+          vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
         ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            EnterpriseStructureDialogHeader(
-              title: _getTitle(localizations),
-              subtitle: _getSubtitle(localizations),
-              iconPath: _getIconPath(),
-              onClose: () => Navigator.of(context).pop(),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: ResponsiveHelper.getResponsivePadding(
-                  context,
-                  mobile: EdgeInsetsDirectional.all(16.w),
-                  tablet: EdgeInsetsDirectional.all(20.w),
-                  web: EdgeInsetsDirectional.all(24.w),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.mode == EnterpriseStructureDialogMode.create)
-                      WarningStatusCard(
-                        title: localizations.noConfigurationFound,
-                        message:
-                            localizations.pleaseConfigureEnterpriseStructure,
-                      )
-                    else
-                      ActiveStatusCard(
-                        title: localizations.structureConfigurationActive,
-                        message: localizations.enterpriseStructureActiveMessage,
-                      ),
-                    SizedBox(height: isMobile ? 16.h : 24.h),
-                    ConfigurationInstructionsCard(
-                      title: localizations.configurationInstructions,
-                      instructions: [
-                        localizations.companyMandatoryInstruction,
-                        localizations.enableDisableLevelsInstruction,
-                        localizations.useArrowsInstruction,
-                        localizations.orderDeterminesRelationshipsInstruction,
-                        localizations.changesAffectComponentsInstruction,
-                      ],
-                      boldText: localizations.company,
-                    ),
-                    SizedBox(height: isMobile ? 16.h : 24.h),
-                    // Enterprise dropdown (only for create/edit modes)
-                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final enterprisesState = ref.watch(
-                            enterprisesProvider,
-                          );
-                          final editState = ref.watch(
-                            _editDialogProvider(_params),
-                          );
-
-                          // Use editState's selectedEnterpriseId, fallback to widget's enterpriseId
-                          final preferredId =
-                              editState.selectedEnterpriseId ??
-                              widget.enterpriseId;
-
-                          // Validate that the selected ID exists in the enterprises list
-                          // If not, set to null to avoid dropdown assertion error
-                          final selectedId =
-                              preferredId != null &&
-                                  enterprisesState.enterprises.any(
-                                    (e) => e.id == preferredId,
-                                  )
-                              ? preferredId
-                              : null;
-
-                          return EnterpriseDropdown(
-                            label: 'Enterprise',
-                            isRequired: true,
-                            selectedEnterpriseId: selectedId,
-                            enterprises: enterprisesState.enterprises,
-                            isLoading: enterprisesState.isLoading,
-                            readOnly:
-                                widget.mode ==
-                                EnterpriseStructureDialogMode.view,
-                            onChanged: (enterpriseId) {
-                              ref
-                                  .read(_editDialogProvider(_params).notifier)
-                                  .updateSelectedEnterprise(enterpriseId);
-                            },
-                            errorText: enterprisesState.hasError
-                                ? enterprisesState.errorMessage
-                                : null,
-                          );
-                        },
-                      ),
-                      SizedBox(height: isMobile ? 12.h : 16.h),
-                    ],
-                    EnterpriseStructureTextField(
-                      label: localizations.structureName,
-                      isRequired: true,
-                      controller:
-                          widget.mode == EnterpriseStructureDialogMode.view
-                          ? null
-                          : _nameController,
-                      value: widget.mode == EnterpriseStructureDialogMode.view
-                          ? structureName
-                          : null,
-                      readOnly:
-                          widget.mode == EnterpriseStructureDialogMode.view,
-                      hintText:
-                          widget.mode == EnterpriseStructureDialogMode.create
-                          ? localizations.structureNamePlaceholder
-                          : null,
-                      onChanged:
-                          widget.mode != EnterpriseStructureDialogMode.view
-                          ? (value) => ref
-                                .read(_editDialogProvider(_params).notifier)
-                                .updateStructureName(value)
-                          : null,
-                    ),
-                    SizedBox(height: isMobile ? 12.h : 16.h),
-                    EnterpriseStructureTextArea(
-                      label: localizations.description,
-                      isRequired: true,
-                      controller:
-                          widget.mode == EnterpriseStructureDialogMode.view
-                          ? null
-                          : _descriptionController,
-                      value: widget.mode == EnterpriseStructureDialogMode.view
-                          ? description
-                          : null,
-                      readOnly:
-                          widget.mode == EnterpriseStructureDialogMode.view,
-                      hintText:
-                          widget.mode == EnterpriseStructureDialogMode.create
-                          ? localizations.descriptionPlaceholder
-                          : null,
-                      onChanged:
-                          widget.mode != EnterpriseStructureDialogMode.view
-                          ? (value) => ref
-                                .read(_editDialogProvider(_params).notifier)
-                                .updateDescription(value)
-                          : null,
-                    ),
-                    SizedBox(height: isMobile ? 12.h : 16.h),
-                    // IS_ACTIVE toggle switch (only for create/edit modes)
-                    if (widget.mode != EnterpriseStructureDialogMode.view) ...[
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final editState = ref.watch(
-                            _editDialogProvider(_params),
-                          );
-                          return Container(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              horizontal: isMobile ? 12.w : 16.w,
-                              vertical: isMobile ? 12.h : 16.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? AppColors.cardBackgroundDark
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(8.r),
-                              border: Border.all(
-                                color: isDark
-                                    ? AppColors.cardBorderDark
-                                    : const Color(0xFFE5E7EB),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Active',
-                                  style: TextStyle(
-                                    fontSize: isMobile ? 13.sp : 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF101828),
-                                  ),
-                                ),
-                                Switch(
-                                  value: editState.isActive,
-                                  onChanged: (value) {
-                                    ref
-                                        .read(
-                                          _editDialogProvider(_params).notifier,
-                                        )
-                                        .updateIsActive(value);
-                                  },
-                                  activeThumbColor: AppColors.primary,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
+            maxHeight: MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
+          ),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              EnterpriseStructureDialogHeader(
+                title: _getTitle(localizations),
+                subtitle: _getSubtitle(localizations),
+                iconPath: _getIconPath(),
+                onClose: () => Navigator.of(context).pop(),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: ResponsiveHelper.getResponsivePadding(
+                    context,
+                    mobile: EdgeInsetsDirectional.all(16.w),
+                    tablet: EdgeInsetsDirectional.all(20.w),
+                    web: EdgeInsetsDirectional.all(24.w),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (widget.mode == EnterpriseStructureDialogMode.create)
+                        WarningStatusCard(
+                          title: localizations.noConfigurationFound,
+                          message: localizations.pleaseConfigureEnterpriseStructure,
+                        )
+                      else
+                        ActiveStatusCard(
+                          title: localizations.structureConfigurationActive,
+                          message: localizations.enterpriseStructureActiveMessage,
+                        ),
+                      SizedBox(height: isMobile ? 16.h : 24.h),
+                      ConfigurationInstructionsCard(
+                        title: localizations.configurationInstructions,
+                        instructions: [
+                          localizations.companyMandatoryInstruction,
+                          localizations.enableDisableLevelsInstruction,
+                          localizations.useArrowsInstruction,
+                          localizations.orderDeterminesRelationshipsInstruction,
+                          localizations.changesAffectComponentsInstruction,
+                        ],
+                        boldText: localizations.company,
                       ),
                       SizedBox(height: isMobile ? 16.h : 24.h),
-                    ],
+                      // Enterprise dropdown (only for create/edit modes)
+                      if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final enterprisesState = ref.watch(enterprisesProvider);
+                            final editState = ref.watch(_editDialogProvider(_params));
 
-                    // Only show loading/error in create mode (when dialogState is available)
-                    if (widget.mode == EnterpriseStructureDialogMode.create &&
-                        levels.isEmpty &&
-                        dialogState != null &&
-                        dialogState.isLoading)
-                      ShimmerLoadingWidget(isMobile: isMobile)
-                    else if (widget.mode ==
-                            EnterpriseStructureDialogMode.create &&
-                        levels.isEmpty &&
-                        dialogState != null &&
-                        dialogState.hasError)
-                      Padding(
-                        padding: EdgeInsetsDirectional.all(16.w),
-                        child: Text(
-                          dialogState.errorMessage ??
-                              'Failed to load structure levels',
-                          style: TextStyle(fontSize: 13.sp, color: Colors.red),
+                            // Use editState's selectedEnterpriseId, fallback to widget's enterpriseId
+                            final preferredId = editState.selectedEnterpriseId ?? widget.enterpriseId;
+
+                            // Validate that the selected ID exists in the enterprises list
+                            // If not, set to null to avoid dropdown assertion error
+                            final selectedId =
+                                preferredId != null && enterprisesState.enterprises.any((e) => e.id == preferredId)
+                                ? preferredId
+                                : null;
+
+                            return EnterpriseDropdown(
+                              label: 'Enterprise',
+                              isRequired: true,
+                              selectedEnterpriseId: selectedId,
+                              enterprises: enterprisesState.enterprises,
+                              isLoading: enterprisesState.isLoading,
+                              readOnly: widget.mode == EnterpriseStructureDialogMode.view,
+                              onChanged: (enterpriseId) {
+                                ref.read(_editDialogProvider(_params).notifier).updateSelectedEnterprise(enterpriseId);
+                              },
+                              errorText: enterprisesState.hasError ? enterprisesState.errorMessage : null,
+                            );
+                          },
                         ),
-                      )
-                    else if (levels.isEmpty &&
-                        (dialogState == null || !dialogState.isLoading))
-                      Padding(
-                        padding: EdgeInsetsDirectional.all(16.w),
-                        child: Center(
+                        SizedBox(height: isMobile ? 12.h : 16.h),
+                      ],
+                      EnterpriseStructureTextField(
+                        label: localizations.structureName,
+                        isRequired: true,
+                        controller: widget.mode == EnterpriseStructureDialogMode.view ? null : _nameController,
+                        value: widget.mode == EnterpriseStructureDialogMode.view ? structureName : null,
+                        readOnly: widget.mode == EnterpriseStructureDialogMode.view,
+                        hintText: widget.mode == EnterpriseStructureDialogMode.create
+                            ? localizations.structureNamePlaceholder
+                            : null,
+                        onChanged: widget.mode != EnterpriseStructureDialogMode.view
+                            ? (value) => ref.read(_editDialogProvider(_params).notifier).updateStructureName(value)
+                            : null,
+                      ),
+                      SizedBox(height: isMobile ? 12.h : 16.h),
+                      EnterpriseStructureTextArea(
+                        label: localizations.description,
+                        isRequired: true,
+                        controller: widget.mode == EnterpriseStructureDialogMode.view ? null : _descriptionController,
+                        value: widget.mode == EnterpriseStructureDialogMode.view ? description : null,
+                        readOnly: widget.mode == EnterpriseStructureDialogMode.view,
+                        hintText: widget.mode == EnterpriseStructureDialogMode.create
+                            ? localizations.descriptionPlaceholder
+                            : null,
+                        onChanged: widget.mode != EnterpriseStructureDialogMode.view
+                            ? (value) => ref.read(_editDialogProvider(_params).notifier).updateDescription(value)
+                            : null,
+                      ),
+                      SizedBox(height: isMobile ? 12.h : 16.h),
+                      // IS_ACTIVE toggle switch (only for create/edit modes)
+                      if (widget.mode != EnterpriseStructureDialogMode.view) ...[
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final editState = ref.watch(_editDialogProvider(_params));
+                            return Container(
+                              padding: EdgeInsetsDirectional.symmetric(
+                                horizontal: isMobile ? 12.w : 16.w,
+                                vertical: isMobile ? 12.h : 16.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Active',
+                                    style: TextStyle(
+                                      fontSize: isMobile ? 13.sp : 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+                                    ),
+                                  ),
+                                  Switch(
+                                    value: editState.isActive,
+                                    onChanged: (value) {
+                                      ref.read(_editDialogProvider(_params).notifier).updateIsActive(value);
+                                    },
+                                    activeThumbColor: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: isMobile ? 16.h : 24.h),
+                      ],
+
+                      // Only show loading/error in create mode (when dialogState is available)
+                      if (widget.mode == EnterpriseStructureDialogMode.create &&
+                          levels.isEmpty &&
+                          dialogState != null &&
+                          dialogState.isLoading)
+                        ShimmerLoadingWidget(isMobile: isMobile)
+                      else if (widget.mode == EnterpriseStructureDialogMode.create &&
+                          levels.isEmpty &&
+                          dialogState != null &&
+                          dialogState.hasError)
+                        Padding(
+                          padding: EdgeInsetsDirectional.all(16.w),
                           child: Text(
-                            'No structure levels found',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : const Color(0xFF4A5565),
+                            dialogState.errorMessage ?? 'Failed to load structure levels',
+                            style: TextStyle(fontSize: 13.sp, color: Colors.red),
+                          ),
+                        )
+                      else if (levels.isEmpty && (dialogState == null || !dialogState.isLoading))
+                        Padding(
+                          padding: EdgeInsetsDirectional.all(16.w),
+                          child: Center(
+                            child: Text(
+                              'No structure levels found',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+                              ),
                             ),
                           ),
+                        )
+                      else
+                        OrganizationalHierarchyLevelsSection(
+                          mode: widget.mode,
+                          levels: levels,
+                          state: editState,
+                          dialogState: dialogState,
+                          params: _params,
+                          editDialogProvider: _editDialogProvider,
                         ),
-                      )
-                    else
-                      OrganizationalHierarchyLevelsSection(
-                        mode: widget.mode,
-                        levels: levels,
-                        state: editState,
-                        dialogState: dialogState,
-                        params: _params,
-                        editDialogProvider: _editDialogProvider,
-                      ),
-                    SizedBox(height: 24.h),
-                    HierarchyPreviewSection(levels: levels),
+                      SizedBox(height: 24.h),
+                      HierarchyPreviewSection(levels: levels),
 
-                    SizedBox(height: isMobile ? 16.h : 24.h),
-                    ConfigurationSummaryWidget(
-                      totalLevels: levels.length,
-                      activeLevels: levels.where((l) => l.isActive).length,
-                      hierarchyDepth: levels.where((l) => l.isActive).length,
-                      topLevel: levels.isNotEmpty ? levels.first.name : '',
-                    ),
-                  ],
+                      SizedBox(height: isMobile ? 16.h : 24.h),
+                      ConfigurationSummaryWidget(
+                        totalLevels: levels.length,
+                        activeLevels: levels.where((l) => l.isActive).length,
+                        hierarchyDepth: levels.where((l) => l.isActive).length,
+                        topLevel: levels.isNotEmpty ? levels.first.name : '',
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            DialogFooter(
-              mode: widget.mode,
-              editState: editState,
-              structureId: widget.structureId,
-              provider: widget.provider,
-              saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
-            ),
-          ],
+              DialogFooter(
+                mode: widget.mode,
+                editState: editState,
+                structureId: widget.structureId,
+                provider: widget.provider,
+                saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
+              ),
+            ],
+          ),
         ),
       ),
     );

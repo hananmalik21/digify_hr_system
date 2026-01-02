@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class JobLevelDetailDialog extends StatelessWidget {
   final JobLevel jobLevel;
@@ -20,83 +21,68 @@ class JobLevelDetailDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      child: Container(
-        width: 540.w,
-        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context, localizations),
-            SizedBox(height: 12.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildField(
-                    label: localizations.levelName,
-                    value: jobLevel.nameEn,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Container(
+          width: 540.w,
+          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context, localizations),
+              SizedBox(height: 12.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildField(label: localizations.levelName, value: jobLevel.nameEn),
                   ),
-                ),
-                SizedBox(width: 12.h),
-                Flexible(
-                  child: _buildField(
-                    label: localizations.code,
-                    value: jobLevel.code,
+                  SizedBox(width: 12.h),
+                  Flexible(
+                    child: _buildField(label: localizations.code, value: jobLevel.code),
                   ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 26.5.h),
-            Align(
-              alignment: AlignmentDirectional.topStart,
-              child: _buildField(
-                label: localizations.description,
-                value: jobLevel.description,
+                ],
               ),
-            ),
-            SizedBox(height: 30.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildField(
-                  label: localizations.minimumGrade,
-                  value: jobLevel.gradeRange.split('-').first.trim(),
-                ),
-                _buildField(
-                  label: localizations.maximumGrade,
-                  value: jobLevel.gradeRange.split('-').last.trim(),
-                ),
-                _buildField(
-                  label: localizations.totalPositions,
-                  value: '${jobLevel.totalPositions}',
-                ),
-              ],
-            ),
-            SizedBox(height: 24.h),
-            Divider(color: AppColors.cardBorder, thickness: 1),
-            SizedBox(height: 16.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _buildActionButton(
-                  label: localizations.close,
-                  backgroundColor: AppColors.inputBg,
-                  foregroundColor: AppColors.textSecondary,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                SizedBox(width: 12.w),
-                _buildActionButton(
-                  label: localizations.edit,
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ],
+
+              SizedBox(height: 26.5.h),
+              Align(
+                alignment: AlignmentDirectional.topStart,
+                child: _buildField(label: localizations.description, value: jobLevel.description),
+              ),
+              SizedBox(height: 30.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildField(label: localizations.minimumGrade, value: jobLevel.gradeRange.split('-').first.trim()),
+                  _buildField(label: localizations.maximumGrade, value: jobLevel.gradeRange.split('-').last.trim()),
+                  _buildField(label: localizations.totalPositions, value: '${jobLevel.totalPositions}'),
+                ],
+              ),
+              SizedBox(height: 24.h),
+              Divider(color: AppColors.cardBorder, thickness: 1),
+              SizedBox(height: 16.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildActionButton(
+                    label: localizations.close,
+                    backgroundColor: AppColors.inputBg,
+                    foregroundColor: AppColors.textSecondary,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  SizedBox(width: 12.w),
+                  _buildActionButton(
+                    label: localizations.edit,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -109,11 +95,7 @@ class JobLevelDetailDialog extends StatelessWidget {
         Expanded(
           child: Text(
             localizations.jobLevelDetails,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
         ),
         IconButton(
@@ -164,9 +146,7 @@ class JobLevelDetailDialog extends StatelessWidget {
       height: 40.h,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.r),
-        side: backgroundColor == Colors.white
-            ? BorderSide(color: AppColors.cardBorder)
-            : BorderSide.none,
+        side: backgroundColor == Colors.white ? BorderSide(color: AppColors.cardBorder) : BorderSide.none,
       ),
       color: backgroundColor,
       textColor: foregroundColor,

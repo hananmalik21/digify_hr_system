@@ -4,18 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 
-/// Universal CustomTextField Widget
+/// Universal DigifyTextField Widget
 /// This is the ONLY text field widget that should be used across the entire app.
-/// It supports all variations: standard input, search, password, multi-line, date pickers, etc.
-///
-/// Usage Examples:
-/// - Standard: CustomTextField(controller: controller, hintText: 'Enter name')
-/// - Search: CustomTextField.search(controller: controller)
-/// - Password: CustomTextField(controller: controller, obscureText: true)
-/// - With Label: CustomTextField(labelText: 'Email', isRequired: true)
-/// - Multi-line: CustomTextField(maxLines: 5, expands: false)
-/// - Read-only/Date: CustomTextField(readOnly: true, onTap: () => pickDate())
-class CustomTextField extends StatefulWidget {
+class DigifyTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
@@ -55,8 +46,10 @@ class CustomTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final FocusNode? focusNode;
   final AutovalidateMode? autovalidateMode;
+  final TextAlign textAlign;
+  final TextDirection? textDirection;
 
-  const CustomTextField({
+  const DigifyTextField({
     super.key,
     this.controller,
     this.hintText,
@@ -97,10 +90,12 @@ class CustomTextField extends StatefulWidget {
     this.inputFormatters,
     this.focusNode,
     this.autovalidateMode,
+    this.textAlign = TextAlign.start,
+    this.textDirection,
   });
 
   /// Factory for search fields with consistent styling
-  factory CustomTextField.search({
+  factory DigifyTextField.search({
     required TextEditingController controller,
     String? hintText,
     double? height,
@@ -111,11 +106,11 @@ class CustomTextField extends StatefulWidget {
     ValueChanged<String>? onSubmitted,
     double? borderRadius,
   }) {
-    return CustomTextField(
+    return DigifyTextField(
       controller: controller,
       hintText: hintText,
       height: height ?? 40.h,
-      borderRadius: borderRadius ?? 8.r,
+      borderRadius: borderRadius ?? 10.r,
       fontSize: 15.sp,
       filled: filled,
       fillColor: fillColor,
@@ -128,12 +123,10 @@ class CustomTextField extends StatefulWidget {
   }
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<DigifyTextField> createState() => _DigifyTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
-  // Default design constants - now using ScreenUtil
-
+class _DigifyTextFieldState extends State<DigifyTextField> {
   late TextEditingController _controller;
   bool _obscureText = true;
   bool _isUserTyping = false;
@@ -141,18 +134,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     if (widget.controller != null && widget.initialValue != null) {
       widget.controller!.text = widget.initialValue!;
     }
     _obscureText = widget.obscureText;
 
-    // Track when user is typing
     final controller = widget.controller ?? _controller;
     controller.addListener(() {
       _isUserTyping = true;
-      // Reset flag after a short delay
       Future.delayed(const Duration(milliseconds: 100), () {
         if (mounted) {
           _isUserTyping = false;
@@ -162,19 +152,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 
   @override
-  void didUpdateWidget(CustomTextField oldWidget) {
+  void didUpdateWidget(DigifyTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Only update controller if initialValue changed AND user is not currently typing
-    // This prevents overwriting user input when the widget rebuilds due to form state changes
     if (widget.initialValue != oldWidget.initialValue && !_isUserTyping) {
       final currentController = widget.controller ?? _controller;
       final currentText = currentController.text;
-
-      // Only update if the new initialValue is actually different from current text
       if (widget.initialValue != null && widget.initialValue != currentText) {
         currentController.text = widget.initialValue!;
       } else if (widget.initialValue == null && currentText.isNotEmpty) {
-        // Only clear if initialValue is explicitly set to null
         currentController.text = '';
       }
     }
@@ -193,23 +178,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     Theme.of(context);
 
-    // Theme-aware colors
-    final effectiveBorderColor =
-        widget.borderColor ??
-        (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
-    final effectiveFocusedBorderColor =
-        widget.focusedBorderColor ?? AppColors.primary;
-    final effectiveFillColor =
-        widget.fillColor ??
-        (isDark ? AppColors.inputBgDark : AppColors.inputBg);
-    final effectiveTextColor = isDark
-        ? context.themeTextPrimary
-        : AppColors.textPrimary;
-    final effectiveHintColor = isDark
-        ? context.themeTextMuted
-        : AppColors.textTertiary;
+    final effectiveBorderColor = widget.borderColor ?? (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
+    final effectiveFocusedBorderColor = widget.focusedBorderColor ?? AppColors.primary;
+    final effectiveFillColor = widget.fillColor ?? (isDark ? AppColors.inputBgDark : AppColors.inputBg);
+    final effectiveTextColor = isDark ? context.themeTextPrimary : AppColors.textPrimary;
 
-    // Build label if provided
+    // Custom hint color for light mode as requested: #0A0A0A with 0.5 alpha
+    final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
+
+    // Provide defaults for height and radius
+    final double effectiveHeight = widget.height ?? 40.h;
+    final double effectiveRadius = widget.borderRadius ?? 10.r;
+
     Widget? labelWidget;
     if (widget.labelText != null) {
       labelWidget = Row(
@@ -224,8 +204,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   fontFamily: 'Inter',
                   fontSize: 13.8.sp,
                   fontWeight: FontWeight.w500,
-                  height: 1.0,
-                  color: effectiveTextColor,
+                  height: 20 / 13.8,
+                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
                 ),
           ),
           if (widget.isRequired) ...[
@@ -236,7 +216,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 fontFamily: 'Inter',
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
-                height: 1.0,
+                height: 20 / 13.8,
                 color: AppColors.deleteIconRed,
               ),
             ),
@@ -246,16 +226,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             Icon(
               Icons.info_outline,
               size: 12.sp,
-              color: isDark
-                  ? AppColors.textPlaceholderDark
-                  : AppColors.textPlaceholder,
+              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
             ),
           ],
         ],
       );
     }
 
-    // Build suffix icon for password visibility toggle
     Widget? effectiveSuffixIcon = widget.suffixIcon;
     if (widget.obscureText && widget.suffixIcon == null) {
       effectiveSuffixIcon = InkWell(
@@ -265,25 +242,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
           });
         },
         child: Icon(
-          _obscureText
-              ? Icons.visibility_off_outlined
-              : Icons.visibility_outlined,
+          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           size: 16.sp,
-          color: isDark
-              ? AppColors.textPlaceholderDark
-              : AppColors.textPlaceholder,
+          color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
         ),
       );
     }
 
     Widget textField = TextFormField(
       controller: _controller,
+      textAlign: widget.textAlign,
+      textDirection: widget.textDirection,
       obscureText: widget.obscureText ? _obscureText : false,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
-      maxLines: widget.expands
-          ? null
-          : (widget.obscureText ? 1 : widget.maxLines),
+      maxLines: widget.expands ? null : (widget.obscureText ? 1 : widget.maxLines),
       minLines: widget.minLines,
       expands: widget.expands,
       textInputAction: widget.textInputAction,
@@ -306,9 +279,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       decoration: InputDecoration(
         hintText: widget.hintText,
         errorText: widget.errorText,
-        labelText: widget.labelText == null || labelWidget != null
-            ? null
-            : widget.labelText,
+        labelText: widget.labelText == null || labelWidget != null ? null : widget.labelText,
         prefixIcon: widget.prefixIcon,
         suffixIcon: effectiveSuffixIcon,
         filled: widget.filled,
@@ -317,30 +288,31 @@ class _CustomTextFieldState extends State<CustomTextField> {
             widget.hintStyle ??
             TextStyle(
               fontFamily: 'Inter',
-              fontSize: widget.fontSize ?? 13.7.sp,
+              // Font size 15.3 as requested for hint
+              fontSize: 15.3.sp,
               fontWeight: FontWeight.w400,
+              fontStyle: FontStyle.normal,
               color: effectiveHintColor,
             ),
         prefixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
         suffixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
-        contentPadding:
-            widget.contentPadding ??
-            EdgeInsetsDirectional.fromSTEB(17.w, 9.h, 29.w, 9.h),
+        isDense: true,
+        errorStyle: TextStyle(fontSize: 12.sp, color: AppColors.error, height: 1),
         border: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(effectiveRadius),
                 borderSide: BorderSide(color: effectiveBorderColor),
               )
             : InputBorder.none,
         enabledBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(effectiveRadius),
                 borderSide: BorderSide(color: effectiveBorderColor),
               )
             : InputBorder.none,
         disabledBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(effectiveRadius),
                 borderSide: BorderSide(
                   color: isDark
                       ? AppColors.borderGreyDark.withValues(alpha: 0.5)
@@ -350,43 +322,40 @@ class _CustomTextFieldState extends State<CustomTextField> {
             : InputBorder.none,
         focusedBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
-                borderSide: BorderSide(
-                  color: effectiveFocusedBorderColor,
-                  width: 1.5.w,
-                ),
+                borderRadius: BorderRadius.circular(effectiveRadius),
+                borderSide: BorderSide(color: effectiveFocusedBorderColor, width: 1.5.w),
               )
             : InputBorder.none,
         errorBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(effectiveRadius),
                 borderSide: const BorderSide(color: AppColors.error),
               )
             : InputBorder.none,
         focusedErrorBorder: widget.showBorder
             ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 8.r),
+                borderRadius: BorderRadius.circular(effectiveRadius),
                 borderSide: BorderSide(color: AppColors.error, width: 1.5.w),
               )
             : InputBorder.none,
       ),
     );
 
-    // For date fields (readOnly with onTap), we need to prevent text input but allow taps
     final isDateField = widget.onTap != null && widget.readOnly;
 
-    // Apply default height if provided, otherwise let the field size naturally
-    Widget field = widget.height != null
-        ? SizedBox(height: widget.height, child: textField)
-        : textField;
+    // For heights below 48, isDense: true is required for proper layout.
+    // Use minHeight instead of a fixed-height SizedBox to prevent shrinking when error text appears.
+    Widget field = ConstrainedBox(
+      constraints: BoxConstraints(minHeight: effectiveHeight),
+      child: textField,
+    );
 
-    // Add label and helper text if provided
     if (labelWidget != null || widget.helperText != null) {
       Widget content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (labelWidget != null) ...[labelWidget, SizedBox(height: 14.h)],
+          if (labelWidget != null) ...[labelWidget, SizedBox(height: 8.h)],
           field,
           if (widget.helperText != null) ...[
             SizedBox(height: 12.h),
@@ -399,16 +368,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     fontSize: 11.8.sp,
                     fontWeight: FontWeight.w400,
                     height: 16 / 11.8,
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                   ),
             ),
           ],
         ],
       );
 
-      // Only wrap in GestureDetector and AbsorbPointer for date fields
       if (isDateField) {
         return GestureDetector(
           onTap: widget.onTap,
@@ -417,7 +383,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (labelWidget != null) ...[labelWidget, SizedBox(height: 14.h)],
+              if (labelWidget != null) ...[labelWidget, SizedBox(height: 8.h)],
               AbsorbPointer(child: field),
               if (widget.helperText != null) ...[
                 SizedBox(height: 12.h),
@@ -430,9 +396,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         fontSize: 11.8.sp,
                         fontWeight: FontWeight.w400,
                         height: 16 / 11.8,
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
+                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                       ),
                 ),
               ],
@@ -440,12 +404,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         );
       }
-
-      // Regular fields - return content without any blocking
       return content;
     }
 
-    // If date field (and no label/helper), wrap field in GestureDetector with AbsorbPointer
     if (isDateField) {
       return GestureDetector(
         onTap: widget.onTap,
@@ -454,7 +415,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       );
     }
 
-    // Regular fields - return field without any blocking
     return field;
   }
 }

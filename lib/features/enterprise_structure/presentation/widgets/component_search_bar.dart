@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/filter_pill_dropdown.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
@@ -83,7 +83,7 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
         children: [
           // Search input
           Expanded(
-            child: CustomTextField(
+            child: DigifyTextField(
               controller: _searchController,
               hintText: localizations.searchComponents,
               height: 39.h,

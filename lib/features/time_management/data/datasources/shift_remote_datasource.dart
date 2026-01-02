@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_management/data/dto/shift_dto.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 
 /// Remote data source for shift operations
 abstract class ShiftRemoteDataSource {
@@ -12,6 +13,8 @@ abstract class ShiftRemoteDataSource {
     int page = 1,
     int pageSize = 10,
   });
+
+  Future<ShiftOverview> createShift({required int tenantId, required Map<String, dynamic> shiftData});
 }
 
 class ShiftRemoteDataSourceImpl implements ShiftRemoteDataSource {
@@ -57,10 +60,7 @@ class ShiftRemoteDataSourceImpl implements ShiftRemoteDataSource {
         queryParameters['status'] = isActive ? 'ACTIVE' : 'INACTIVE';
       }
 
-      final response = await apiClient.get(
-        ApiEndpoints.tmShifts,
-        queryParameters: queryParameters,
-      );
+      final response = await apiClient.get(ApiEndpoints.tmShifts, queryParameters: queryParameters);
 
       if (response.isEmpty) {
         throw UnknownException('Empty response from server');
@@ -70,15 +70,44 @@ class ShiftRemoteDataSourceImpl implements ShiftRemoteDataSource {
     } on AppException {
       rethrow;
     } on FormatException catch (e) {
-      throw ValidationException(
-        'Invalid data format: ${e.message}',
-        originalError: e,
-      );
+      throw ValidationException('Invalid data format: ${e.message}', originalError: e);
     } catch (e) {
-      throw UnknownException(
-        'Failed to fetch shifts: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to fetch shifts: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<ShiftOverview> createShift({required int tenantId, required Map<String, dynamic> shiftData}) async {
+    try {
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
+      final response = await apiClient.post(ApiEndpoints.tmShifts, body: shiftData);
+
+      Map<String, dynamic> data;
+      if (response.containsKey('data') && response['data'] is Map) {
+        data = response['data'] as Map<String, dynamic>;
+
+        // Optionally validate response status if present
+        if (response.containsKey('status')) {
+          final status = response['status'];
+          if (status is bool && !status) {
+            final message = response['message'] as String? ?? 'Failed to create shift';
+            throw ValidationException(message);
+          }
+        }
+      } else {
+        data = response;
+      }
+
+      return ShiftOverview.fromJson(data);
+    } on AppException {
+      rethrow;
+    } on FormatException catch (e) {
+      throw ValidationException('Invalid data format: ${e.message}', originalError: e);
+    } catch (e) {
+      throw UnknownException('Failed to create shift: ${e.toString()}', originalError: e);
     }
   }
 }

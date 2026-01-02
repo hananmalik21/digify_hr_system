@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/core/widgets/forms/custom_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_primary_button.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          CustomTextField(
+          DigifyTextField(
             controller: usernameController,
             focusNode: usernameFocusNode,
             labelText: localizations.username,
@@ -59,7 +59,7 @@ class LoginForm extends StatelessWidget {
                 : null,
           ),
           SizedBox(height: 18.h),
-          CustomTextField(
+          DigifyTextField(
             controller: passwordController,
             focusNode: passwordFocusNode,
             labelText: localizations.password,

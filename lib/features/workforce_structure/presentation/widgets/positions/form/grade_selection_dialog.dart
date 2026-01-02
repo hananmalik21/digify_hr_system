@@ -9,16 +9,14 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class GradeSelectionDialog extends ConsumerStatefulWidget {
   final Grade? selectedGrade;
 
   const GradeSelectionDialog({super.key, this.selectedGrade});
 
-  static Future<Grade?> show({
-    required BuildContext context,
-    Grade? selectedGrade,
-  }) async {
+  static Future<Grade?> show({required BuildContext context, Grade? selectedGrade}) async {
     return await showDialog<Grade>(
       context: context,
       barrierDismissible: false,
@@ -27,8 +25,7 @@ class GradeSelectionDialog extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<GradeSelectionDialog> createState() =>
-      _GradeSelectionDialogState();
+  ConsumerState<GradeSelectionDialog> createState() => _GradeSelectionDialogState();
 }
 
 class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
@@ -48,8 +45,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
       ref.read(gradeNotifierProvider.notifier).loadNextPage();
     }
   }
@@ -62,30 +58,23 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
     final errorMessage = gradesState.errorMessage;
     final isLoadingMore = gradesState.isLoadingMore;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      elevation: 8,
-      child: Container(
-        width: 550.w,
-        constraints: BoxConstraints(maxHeight: 650.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context),
-            Flexible(
-              child: _buildContent(
-                context,
-                items,
-                isLoading,
-                errorMessage,
-                isLoadingMore,
-              ),
-            ),
-          ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        elevation: 8,
+        child: Container(
+          width: 550.w,
+          constraints: BoxConstraints(maxHeight: 650.h),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context),
+              Flexible(child: _buildContent(context, items, isLoading, errorMessage, isLoadingMore)),
+            ],
+          ),
         ),
       ),
     );
@@ -96,23 +85,12 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.primary.withValues(alpha: 0.05),
-          ],
+          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+        border: Border(bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,11 +104,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(
-                  Icons.grade_rounded,
-                  color: AppColors.primary,
-                  size: 24.sp,
-                ),
+                child: Icon(Icons.grade_rounded, color: AppColors.primary, size: 24.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -139,19 +113,12 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
                   children: [
                     Text(
                       'Select Grade',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       'Choose a grade from the list',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -163,9 +130,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
                 constraints: const BoxConstraints(),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 ),
               ),
             ],
@@ -186,13 +151,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    List<Grade> items,
-    bool isLoading,
-    String? error,
-    bool isLoadingMore,
-  ) {
+  Widget _buildContent(BuildContext context, List<Grade> items, bool isLoading, String? error, bool isLoadingMore) {
     if (isLoading && items.isEmpty) {
       return const OrgUnitSelectionSkeleton();
     }
@@ -221,10 +180,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
               child: SizedBox(
                 width: 24.w,
                 height: 24.w,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.primary,
-                ),
+                child: const CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
               ),
             ),
           );
@@ -233,11 +189,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
         final grade = items[index];
         final isSelected = widget.selectedGrade?.id == grade.id;
 
-        return GradeListItem(
-          grade: grade,
-          isSelected: isSelected,
-          onTap: () => Navigator.of(context).pop(grade),
-        );
+        return GradeListItem(grade: grade, isSelected: isSelected, onTap: () => Navigator.of(context).pop(grade));
       },
     );
   }

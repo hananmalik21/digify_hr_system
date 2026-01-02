@@ -1,6 +1,3 @@
-/// Custom exception classes for precise error handling
-/// These exceptions provide detailed information about different error types
-
 /// Base exception for all API-related errors
 abstract class AppException implements Exception {
   final String message;
@@ -15,11 +12,7 @@ abstract class AppException implements Exception {
 
 /// Network-related exceptions
 class NetworkException extends AppException {
-  const NetworkException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const NetworkException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Server error exceptions (5xx)
@@ -34,66 +27,37 @@ class ClientException extends AppException {
 
 /// Unauthorized exception (401)
 class UnauthorizedException extends ClientException {
-  const UnauthorizedException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const UnauthorizedException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Forbidden exception (403)
 class ForbiddenException extends ClientException {
-  const ForbiddenException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const ForbiddenException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Not found exception (404)
 class NotFoundException extends ClientException {
-  const NotFoundException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const NotFoundException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Validation exception (422)
 class ValidationException extends ClientException {
   final Map<String, dynamic>? errors;
 
-  const ValidationException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-    this.errors,
-  });
+  const ValidationException(super.message, {super.statusCode, super.originalError, this.errors});
 }
 
 /// Timeout exception
 class TimeoutException extends NetworkException {
-  const TimeoutException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const TimeoutException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Connection exception
 class ConnectionException extends NetworkException {
-  const ConnectionException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const ConnectionException(super.message, {super.statusCode, super.originalError});
 }
 
 /// Unknown exception
 class UnknownException extends AppException {
-  const UnknownException(
-    super.message, {
-    super.statusCode,
-    super.originalError,
-  });
+  const UnknownException(super.message, {super.statusCode, super.originalError});
 }

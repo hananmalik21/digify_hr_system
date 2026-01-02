@@ -15,35 +15,24 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:ui';
 
 class AddDepartmentDialog extends ConsumerStatefulWidget {
   final bool isEditMode;
   final DepartmentOverview? department;
 
-  const AddDepartmentDialog({
-    super.key,
-    this.isEditMode = false,
-    this.department,
-  });
+  const AddDepartmentDialog({super.key, this.isEditMode = false, this.department});
 
-  static Future<void> show(
-    BuildContext context, {
-    bool isEditMode = false,
-    DepartmentOverview? department,
-  }) {
+  static Future<void> show(BuildContext context, {bool isEditMode = false, DepartmentOverview? department}) {
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.45),
-      builder: (dialogContext) => AddDepartmentDialog(
-        isEditMode: isEditMode,
-        department: department,
-      ),
+      builder: (dialogContext) => AddDepartmentDialog(isEditMode: isEditMode, department: department),
     );
   }
 
   @override
-  ConsumerState<AddDepartmentDialog> createState() =>
-      _AddDepartmentDialogState();
+  ConsumerState<AddDepartmentDialog> createState() => _AddDepartmentDialogState();
 }
 
 class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
@@ -75,9 +64,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
       _controllers[key] = TextEditingController(text: initialValue);
     }
 
-    _selectedStatus = widget.department != null
-        ? (widget.department!.isActive ? 'Active' : 'Inactive')
-        : 'Active';
+    _selectedStatus = widget.department != null ? (widget.department!.isActive ? 'Active' : 'Inactive') : 'Active';
     _selectedBusinessUnit = widget.department?.businessUnitName;
   }
 
@@ -123,10 +110,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
     }
 
     if (_selectedBusinessUnit == null || _selectedBusinessUnitId == null) {
-      ToastService.error(
-        context,
-        'Please select a business unit',
-      );
+      ToastService.error(context, 'Please select a business unit');
       return;
     }
 
@@ -142,10 +126,8 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
         'DEPARTMENT_NAME_AR': _controllers['departmentNameArabic']!.text.trim(),
         'STATUS': _selectedStatus?.toUpperCase() ?? 'ACTIVE',
         'HEAD_OF_DEPARTMENT': _controllers['headOfDepartment']!.text.trim(),
-        if (_controllers['headEmail']!.text.trim().isNotEmpty)
-          'HEAD_EMAIL': _controllers['headEmail']!.text.trim(),
-        if (_controllers['headPhone']!.text.trim().isNotEmpty)
-          'HEAD_PHONE': _controllers['headPhone']!.text.trim(),
+        if (_controllers['headEmail']!.text.trim().isNotEmpty) 'HEAD_EMAIL': _controllers['headEmail']!.text.trim(),
+        if (_controllers['headPhone']!.text.trim().isNotEmpty) 'HEAD_PHONE': _controllers['headPhone']!.text.trim(),
         if (_controllers['employees']!.text.trim().isNotEmpty)
           'TOTAL_EMPLOYEES': int.tryParse(_controllers['employees']!.text.trim()),
         if (_controllers['sections']!.text.trim().isNotEmpty)
@@ -158,17 +140,11 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
 
       if (widget.isEditMode && widget.department != null) {
         final updateUseCase = ref.read(updateDepartmentUseCaseProvider);
-        await updateUseCase(
-          int.parse(widget.department!.id),
-          departmentData,
-        );
+        await updateUseCase(int.parse(widget.department!.id), departmentData);
         if (mounted) {
           Navigator.of(context).pop();
           ref.read(departmentListNotifierProvider.notifier).refresh();
-          ToastService.success(
-            context,
-            AppLocalizations.of(context)!.updateDepartment,
-          );
+          ToastService.success(context, AppLocalizations.of(context)!.updateDepartment);
         }
       } else {
         final createUseCase = ref.read(createDepartmentUseCaseProvider);
@@ -176,25 +152,16 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
         if (mounted) {
           Navigator.of(context).pop();
           ref.read(departmentListNotifierProvider.notifier).refresh();
-          ToastService.success(
-            context,
-            AppLocalizations.of(context)!.addDepartment,
-          );
+          ToastService.success(context, AppLocalizations.of(context)!.addDepartment);
         }
       }
     } on AppException catch (e) {
       if (mounted) {
-        ToastService.error(
-          context,
-          e.message,
-        );
+        ToastService.error(context, e.message);
       }
     } catch (e) {
       if (mounted) {
-        ToastService.error(
-          context,
-          'An error occurred: ${e.toString()}',
-        );
+        ToastService.error(context, 'An error occurred: ${e.toString()}');
       }
     } finally {
       if (mounted) {
@@ -211,181 +178,178 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
     final businessUnitsState = ref.watch(businessUnitsDropdownProvider);
     final isDark = context.isDark;
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: 960.w,
-          maxHeight: MediaQuery.of(context).size.height * 0.95,
-        ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: double.infinity,
-              padding:
-                  EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF009689), Color(0xFF00817A)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgIconWidget(
-                        assetPath: 'assets/icons/department_card_icon.svg',
-                        size: 20.sp,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        widget.isEditMode
-                            ? localizations.editDepartment
-                            : localizations.addDepartment,
-                        style: TextStyle(
-                          fontSize: 18.6.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                          height: 30 / 18.6,
-                        ),
-                      ),
-                    ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 960.w, maxHeight: MediaQuery.of(context).size.height * 0.95),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF009689), Color(0xFF00817A)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: SvgIconWidget(
-                        assetPath: 'assets/icons/close_dialog_icon.svg',
-                        size: 20.sp,
-                        color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SvgIconWidget(
+                          assetPath: 'assets/icons/department_card_icon.svg',
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          widget.isEditMode ? localizations.editDepartment : localizations.addDepartment,
+                          style: TextStyle(
+                            fontSize: 18.6.sp,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                            height: 30 / 18.6,
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        padding: EdgeInsets.all(4.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: SvgIconWidget(
+                          assetPath: 'assets/icons/close_dialog_icon.svg',
+                          size: 20.sp,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(24.w),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildRow(
-                        left: _buildTextField(
-                          label: localizations.departmentCode,
-                          keyName: 'departmentCode',
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(24.w),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildRow(
+                          left: _buildTextField(
+                            label: localizations.departmentCode,
+                            keyName: 'departmentCode',
+                            isRequired: true,
+                            hintText: localizations.hintDepartmentCode,
+                          ),
+                          right: _buildDropdown(
+                            label: localizations.status,
+                            value: _selectedStatus,
+                            items: _statusOptions,
+                            isRequired: true,
+                            hintText: _selectedStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedStatus = value;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildRow(
+                          left: _buildTextField(
+                            label: localizations.departmentNameEnglish,
+                            keyName: 'departmentNameEnglish',
+                            isRequired: true,
+                            hintText: localizations.hintDepartmentNameEnglish,
+                          ),
+                          right: _buildTextField(
+                            label: localizations.departmentNameArabic,
+                            keyName: 'departmentNameArabic',
+                            isRequired: true,
+                            hintText: localizations.hintDepartmentNameArabic,
+                            textDirection: ui.TextDirection.rtl,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildBusinessUnitDropdown(localizations, businessUnitsState, isDark),
+                        SizedBox(height: 8.h),
+                        _buildTextField(
+                          label: localizations.headOfDepartment,
+                          keyName: 'headOfDepartment',
                           isRequired: true,
-                          hintText: localizations.hintDepartmentCode,
+                          hintText: localizations.hintHeadOfDepartment,
                         ),
-                        right: _buildDropdown(
-                          label: localizations.status,
-                          value: _selectedStatus,
-                          items: _statusOptions,
-                          isRequired: true,
-                          hintText: _selectedStatus,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedStatus = value;
-                            });
-                          },
+                        SizedBox(height: 8.h),
+                        _buildRow(
+                          left: _buildTextField(
+                            label: localizations.headEmail,
+                            keyName: 'headEmail',
+                            hintText: localizations.hintEmail,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          right: _buildTextField(
+                            label: localizations.headPhone,
+                            keyName: 'headPhone',
+                            hintText: localizations.hintPhone,
+                            keyboardType: TextInputType.phone,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildRow(
-                        left: _buildTextField(
-                          label: localizations.departmentNameEnglish,
-                          keyName: 'departmentNameEnglish',
-                          isRequired: true,
-                          hintText: localizations.hintDepartmentNameEnglish,
+                        SizedBox(height: 8.h),
+                        _buildRow(
+                          left: _buildTextField(
+                            label: localizations.totalEmployees,
+                            keyName: 'employees',
+                            hintText: localizations.hintTotalEmployees,
+                            keyboardType: TextInputType.number,
+                          ),
+                          right: _buildTextField(
+                            label: localizations.totalDepartments,
+                            keyName: 'sections',
+                            hintText: localizations.hintTotalDepartments,
+                            keyboardType: TextInputType.number,
+                          ),
                         ),
-                        right: _buildTextField(
-                          label: localizations.departmentNameArabic,
-                          keyName: 'departmentNameArabic',
-                          isRequired: true,
-                          hintText: localizations.hintDepartmentNameArabic,
-                          textDirection: ui.TextDirection.rtl,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildBusinessUnitDropdown(localizations, businessUnitsState, isDark),
-                      SizedBox(height: 8.h),
-                      _buildTextField(
-                        label: localizations.headOfDepartment,
-                        keyName: 'headOfDepartment',
-                        isRequired: true,
-                        hintText: localizations.hintHeadOfDepartment,
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildRow(
-                        left: _buildTextField(
-                          label: localizations.headEmail,
-                          keyName: 'headEmail',
-                          hintText: localizations.hintEmail,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        right: _buildTextField(
-                          label: localizations.headPhone,
-                          keyName: 'headPhone',
-                          hintText: localizations.hintPhone,
-                          keyboardType: TextInputType.phone,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildRow(
-                        left: _buildTextField(
-                          label: localizations.totalEmployees,
-                          keyName: 'employees',
-                          hintText: localizations.hintTotalEmployees,
+                        SizedBox(height: 8.h),
+                        _buildTextField(
+                          label: localizations.totalBudgetDept,
+                          keyName: 'annualBudget',
+                          hintText: localizations.hintAnnualBudgetDepartment,
                           keyboardType: TextInputType.number,
                         ),
-                        right: _buildTextField(
-                          label: localizations.totalDepartments,
-                          keyName: 'sections',
-                          hintText: localizations.hintTotalDepartments,
-                          keyboardType: TextInputType.number,
+                        SizedBox(height: 8.h),
+                        _buildTextArea(
+                          label: localizations.description,
+                          keyName: 'description',
+                          hintText: localizations.hintDescriptionDepartment,
                         ),
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildTextField(
-                        label: localizations.totalBudgetDept,
-                        keyName: 'annualBudget',
-                        hintText: localizations.hintAnnualBudgetDepartment,
-                        keyboardType: TextInputType.number,
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildTextArea(
-                        label: localizations.description,
-                        keyName: 'description',
-                        hintText: localizations.hintDescriptionDepartment,
-                      ),
-                      SizedBox(height: 24.h),
-                    ],
+                        SizedBox(height: 24.h),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Divider(color: const Color(0xFFE5E7EB), height: 1, thickness: 1),
-            _buildFooter(localizations),
-            20.verticalSpace,
-          ],
+              Divider(color: const Color(0xFFE5E7EB), height: 1, thickness: 1),
+              _buildFooter(localizations),
+              20.verticalSpace,
+            ],
+          ),
         ),
       ),
     );
@@ -414,17 +378,10 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
             padding: EdgeInsetsDirectional.symmetric(horizontal: 17.w),
             decoration: BoxDecoration(
               color: isDark ? AppColors.inputBgDark : Colors.white,
-              border: Border.all(
-                color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              ),
+              border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC)),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColors.primary,
-              ),
-            ),
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary)),
           ),
         ],
       );
@@ -466,7 +423,8 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
     }
 
     // Ensure selected value is in the items list
-    if (validSelectedBusinessUnit != null && (businessUnitNames.isEmpty || !businessUnitNames.contains(validSelectedBusinessUnit))) {
+    if (validSelectedBusinessUnit != null &&
+        (businessUnitNames.isEmpty || !businessUnitNames.contains(validSelectedBusinessUnit))) {
       validSelectedBusinessUnit = null;
     }
 
@@ -494,10 +452,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
         setState(() {
           _selectedBusinessUnit = value;
           if (value != null && businessUnits.isNotEmpty) {
-            final bu = businessUnits.firstWhere(
-              (bu) => bu.name == value,
-              orElse: () => businessUnits.first,
-            );
+            final bu = businessUnits.firstWhere((bu) => bu.name == value, orElse: () => businessUnits.first);
             if (bu.id.isNotEmpty) {
               _selectedBusinessUnitId = int.tryParse(bu.id);
             }
@@ -558,11 +513,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
     );
   }
 
-  Widget _buildTextArea({
-    required String label,
-    required String keyName,
-    String? hintText,
-  }) {
+  Widget _buildTextArea({required String label, required String keyName, String? hintText}) {
     return EnterpriseStructureTextField(
       label: label,
       controller: _controllers[keyName],
@@ -573,12 +524,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
 
   Widget _buildFooter(AppLocalizations localizations) {
     return Container(
-      padding: EdgeInsetsDirectional.only(
-        start: 24.w,
-        end: 24.w,
-        top: 24.h,
-        bottom: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.only(start: 24.w, end: 24.w, top: 24.h, bottom: 16.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -609,9 +555,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF009689),
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
               disabledBackgroundColor: const Color(0xFF009689).withValues(alpha: 0.6),
             ),
             child: _isLoading
@@ -633,9 +577,7 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
                       ),
                       SizedBox(width: 8.w),
                       Text(
-                        widget.isEditMode
-                            ? localizations.updateDepartment
-                            : localizations.addDepartment,
+                        widget.isEditMode ? localizations.updateDepartment : localizations.addDepartment,
                         style: TextStyle(
                           fontSize: 15.3.sp,
                           fontWeight: FontWeight.w400,

@@ -29,21 +29,17 @@ class DepartmentManagementScreen extends ConsumerWidget {
     final isDark = context.isDark;
 
     // Calculate stats from current list
-    final totalEmployees = departments.fold<int>(
-      0,
-      (prev, department) => prev + department.employees,
-    );
-    final activeDepartments =
-        departments.where((department) => department.isActive).length;
-    final totalBudget = departments.fold<double>(
-      0,
-      (prev, department) {
-        final sanitized =
-            department.budget.replaceAll('M', '').replaceAll(' KWD', '').replaceAll(',', '').replaceAll(' ', '');
-        final parsed = double.tryParse(sanitized);
-        return prev + (parsed ?? 0);
-      },
-    );
+    final totalEmployees = departments.fold<int>(0, (prev, department) => prev + department.employees);
+    final activeDepartments = departments.where((department) => department.isActive).length;
+    final totalBudget = departments.fold<double>(0, (prev, department) {
+      final sanitized = department.budget
+          .replaceAll('M', '')
+          .replaceAll(' KWD', '')
+          .replaceAll(',', '')
+          .replaceAll(' ', '');
+      final parsed = double.tryParse(sanitized);
+      return prev + (parsed ?? 0);
+    });
 
     final stats = [
       StatsCardData(
@@ -88,24 +84,9 @@ class DepartmentManagementScreen extends ConsumerWidget {
                 child: SingleChildScrollView(
                   padding: ResponsiveHelper.getResponsivePadding(
                     context,
-                    mobile: EdgeInsetsDirectional.only(
-                      top: 16.h,
-                      start: 16.w,
-                      end: 16.w,
-                      bottom: 24.h,
-                    ),
-                    tablet: EdgeInsetsDirectional.only(
-                      top: 24.h,
-                      start: 24.w,
-                      end: 24.w,
-                      bottom: 24.h,
-                    ),
-                    web: EdgeInsetsDirectional.only(
-                      top: 24.h,
-                      start: 24.w,
-                      end: 24.w,
-                      bottom: 24.h,
-                    ),
+                    mobile: EdgeInsetsDirectional.only(top: 16.h, start: 16.w, end: 16.w, bottom: 24.h),
+                    tablet: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
+                    web: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,14 +97,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                       SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
                       _buildSearchBar(context, ref, localizations),
                       SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-                      _buildDepartmentList(
-                        context,
-                        ref,
-                        listState,
-                        departments,
-                        localizations,
-                        isDark: isDark,
-                      ),
+                      _buildDepartmentList(context, ref, listState, departments, localizations, isDark: isDark),
                     ],
                   ),
                 ),
@@ -154,10 +128,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                           SizedBox(height: 16.h),
                           Text(
                             localizations.pleaseWait,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: context.themeTextSecondary,
-                            ),
+                            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
                           ),
                         ],
                       ),
@@ -179,10 +150,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
         Container(
           width: 48.r,
           height: 48.r,
-          decoration: BoxDecoration(
-            color: const Color(0xFF00BBA7),
-            borderRadius: BorderRadius.circular(14.r),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFF00BBA7), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
             child: SvgIconWidget(
               assetPath: 'assets/icons/department_management_header.svg',
@@ -201,8 +169,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.titleLarge?.color ??
-                      context.themeTextPrimary,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? context.themeTextPrimary,
                   height: 36 / 22.1,
                 ),
               ),
@@ -230,23 +197,13 @@ class DepartmentManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsSection(
-    BuildContext context,
-    List<StatsCardData> stats,
-  ) {
+  Widget _buildStatsSection(BuildContext context, List<StatsCardData> stats) {
     final gap = 16.w;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 4,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 4);
         final totalSpacing = gap * (columns - 1);
-        final width = constraints.maxWidth.isFinite
-            ? (constraints.maxWidth - totalSpacing) / columns
-            : double.infinity;
+        final width = constraints.maxWidth.isFinite ? (constraints.maxWidth - totalSpacing) / columns : double.infinity;
 
         return Wrap(
           spacing: gap,
@@ -262,26 +219,16 @@ class DepartmentManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchBar(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildSearchBar(BuildContext context, WidgetRef ref, AppLocalizations localizations) {
     final isDark = context.isDark;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB),
-        ),
+        border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB)),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -311,14 +258,8 @@ class DepartmentManagementScreen extends ConsumerWidget {
                   fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
                   border: InputBorder.none,
                   hintText: localizations.searchDepartmentsPlaceholder,
-                  hintStyle: TextStyle(
-                    color: const Color(0xFF364153).withValues(alpha: 0.5),
-                    fontSize: 15.3.sp,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 14.h,
-                  ),
+                  hintStyle: TextStyle(color: const Color(0xFF364153).withValues(alpha: 0.5), fontSize: 15.3.sp),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
                     child: SvgIconWidget(
@@ -327,15 +268,9 @@ class DepartmentManagementScreen extends ConsumerWidget {
                       color: context.themeTextSecondary,
                     ),
                   ),
-                  prefixIconConstraints: const BoxConstraints(
-                    minHeight: 0,
-                    minWidth: 0,
-                  ),
+                  prefixIconConstraints: const BoxConstraints(minHeight: 0, minWidth: 0),
                 ),
-                style: TextStyle(
-                  color: context.themeTextPrimary,
-                  fontSize: 15.3.sp,
-                ),
+                style: TextStyle(color: context.themeTextPrimary, fontSize: 15.3.sp),
               ),
             ),
           ),
@@ -360,9 +295,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 15.4.sp,
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A),
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                       height: 19 / 15.4,
                     ),
                   ),
@@ -385,10 +318,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
   }) {
     if (listState.isLoading && departments.isEmpty) {
       return Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.h),
-          child: CircularProgressIndicator(),
-        ),
+        child: Padding(padding: EdgeInsets.all(24.h), child: CircularProgressIndicator()),
       );
     }
 
@@ -401,10 +331,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
             children: [
               Text(
                 listState.errorMessage ?? 'An error occurred',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.red,
-                ),
+                style: TextStyle(fontSize: 14.sp, color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.h),
@@ -432,12 +359,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 2,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 2);
         const gap = 24.0;
         final totalSpacing = gap * (columns - 1);
         final cardWidth = constraints.maxWidth.isFinite
@@ -494,10 +416,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                 if (context.mounted) {
                   Navigator.of(context).pop(true);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Department deleted successfully'),
-                      backgroundColor: Colors.green,
-                    ),
+                    const SnackBar(content: Text('Department deleted successfully'), backgroundColor: Colors.green),
                   );
                   ref.read(departmentListNotifierProvider.notifier).refresh();
                 }
@@ -507,10 +426,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
                 });
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to delete department: ${e.message}'),
-                      backgroundColor: Colors.red,
-                    ),
+                    SnackBar(content: Text('Failed to delete department: ${e.message}'), backgroundColor: Colors.red),
                   );
                 }
               } catch (e) {
@@ -561,268 +477,223 @@ class _DeleteConfirmationDialogWithLoader extends StatelessWidget {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context);
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 500.w),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 25,
-              offset: const Offset(0, 12),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header with gradient
-            Container(
-              padding: EdgeInsetsDirectional.all(24.w),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.error.withValues(alpha: 0.1),
-                    AppColors.error.withValues(alpha: 0.05),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+    return BackdropFilter(
+      filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 500.w),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header with gradient
+              Container(
+                padding: EdgeInsetsDirectional.all(24.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.error.withValues(alpha: 0.1), AppColors.error.withValues(alpha: 0.05)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
                 ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.errorBg,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.error.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/delete_icon_red.svg',
-                      size: 24.sp,
-                      color: AppColors.error,
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary,
-                        height: 28 / 20,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                  ),
-                  if (!isLoading)
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(false);
-                        onCancel?.call();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(4.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: SvgIconWidget(
-                          assetPath: 'assets/icons/close_dialog_icon.svg',
-                          size: 20.sp,
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : AppColors.textPrimary,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            // Content
-            Padding(
-              padding: EdgeInsetsDirectional.all(24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message,
-                    style: TextStyle(
-                      fontSize: 15.3.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
-                      height: 24 / 15.3,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  if (itemName != null) ...[
-                    SizedBox(height: 16.h),
+                child: Row(
+                  children: [
                     Container(
-                      padding: EdgeInsetsDirectional.all(16.w),
+                      padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.cardBackgroundGreyDark
-                            : AppColors.grayBg,
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(
-                          color: isDark
-                              ? AppColors.cardBorderDark
-                              : AppColors.cardBorder,
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 4.w,
-                            height: 40.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.error,
-                              borderRadius: BorderRadius.circular(2.r),
-                            ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: Text(
-                              itemName!,
-                              style: TextStyle(
-                                fontSize: 15.3.sp,
-                                fontWeight: FontWeight.w500,
-                                color: isDark
-                                    ? AppColors.textPrimaryDark
-                                    : AppColors.textPrimary,
-                                height: 24 / 15.3,
-                              ),
-                            ),
+                        color: AppColors.errorBg,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.error.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            // Footer
-            Container(
-              padding: EdgeInsetsDirectional.only(
-                start: 24.w,
-                end: 24.w,
-                top: 20.h,
-                bottom: 24.h,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: isDark
-                        ? AppColors.cardBorderDark
-                        : AppColors.cardBorder,
-                    width: 1,
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: isLoading
-                        ? null
-                        : () {
-                            Navigator.of(context).pop(false);
-                            onCancel?.call();
-                          },
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 24.w,
-                        vertical: 14.h,
+                      child: SvgIconWidget(
+                        assetPath: 'assets/icons/delete_icon_red.svg',
+                        size: 24.sp,
+                        color: AppColors.error,
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        side: BorderSide(
-                          color: isDark
-                              ? AppColors.cardBorderDark
-                              : const Color(0xFFD1D5DC),
-                          width: 1,
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                          height: 28 / 20,
+                          letterSpacing: -0.2,
                         ),
                       ),
                     ),
-                    child: Text(
-                      localizations?.cancel ?? 'Cancel',
+                    if (!isLoading)
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop(false);
+                          onCancel?.call();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: SvgIconWidget(
+                            assetPath: 'assets/icons/close_dialog_icon.svg',
+                            size: 20.sp,
+                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // Content
+              Padding(
+                padding: EdgeInsetsDirectional.all(24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message,
                       style: TextStyle(
                         fontSize: 15.3.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF364153),
+                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                         height: 24 / 15.3,
+                        letterSpacing: 0,
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                  ElevatedButton(
-                    onPressed: isLoading ? null : onConfirm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.error,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 24.w,
-                        vertical: 14.h,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      elevation: 0,
-                      disabledBackgroundColor: AppColors.error.withValues(alpha: 0.6),
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            width: 20.w,
-                            height: 20.h,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SvgIconWidget(
-                                assetPath: 'assets/icons/delete_icon_red.svg',
-                                size: 16.sp,
-                                color: Colors.white,
+                    if (itemName != null) ...[
+                      SizedBox(height: 16.h),
+                      Container(
+                        padding: EdgeInsetsDirectional.all(16.w),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 4.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.error,
+                                borderRadius: BorderRadius.circular(2.r),
                               ),
-                              SizedBox(width: 8.w),
-                              Text(
-                                localizations?.delete ?? 'Delete',
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Text(
+                                itemName!,
                                 style: TextStyle(
                                   fontSize: 15.3.sp,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                                   height: 24 / 15.3,
                                 ),
                               ),
-                            ],
-                          ),
-                  ),
-                ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              // Footer
+              Container(
+                padding: EdgeInsetsDirectional.only(start: 24.w, end: 24.w, top: 20.h, bottom: 24.h),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              Navigator.of(context).pop(false);
+                              onCancel?.call();
+                            },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
+                          side: BorderSide(
+                            color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DC),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        localizations?.cancel ?? 'Cancel',
+                        style: TextStyle(
+                          fontSize: 15.3.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+                          height: 24 / 15.3,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    ElevatedButton(
+                      onPressed: isLoading ? null : onConfirm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.error,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 14.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                        elevation: 0,
+                        disabledBackgroundColor: AppColors.error.withValues(alpha: 0.6),
+                      ),
+                      child: isLoading
+                          ? SizedBox(
+                              width: 20.w,
+                              height: 20.h,
+                              child: const CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgIconWidget(
+                                  assetPath: 'assets/icons/delete_icon_red.svg',
+                                  size: 16.sp,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  localizations?.delete ?? 'Delete',
+                                  style: TextStyle(fontSize: 15.3.sp, fontWeight: FontWeight.w400, height: 24 / 15.3),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -853,11 +724,7 @@ class _DepartmentCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: context.themeCardBorder),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.10),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.10),
               offset: const Offset(0, 1),
@@ -932,28 +799,16 @@ class _DepartmentCard extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: department.isActive
-                                ? localizations.active
-                                : localizations.inactive,
-                            backgroundColor: isDark
-                                ? AppColors.successBgDark
-                                : const Color(0xFFDCFCE7),
-                            textColor: isDark
-                                ? AppColors.successTextDark
-                                : const Color(0xFF016630),
+                            label: department.isActive ? localizations.active : localizations.inactive,
+                            backgroundColor: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
+                            textColor: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                           ),
                         ],
                       ),
                       SizedBox(height: 8.h),
-                      _detailRow(
-                        'assets/icons/division_small_icon_2.svg',
-                        department.divisionName,
-                      ),
+                      _detailRow('assets/icons/division_small_icon_2.svg', department.divisionName),
                       SizedBox(height: 4.h),
-                      _detailRow(
-                        'assets/icons/business_unit_small_icon.svg',
-                        department.businessUnitName,
-                      ),
+                      _detailRow('assets/icons/business_unit_small_icon.svg', department.businessUnitName),
                     ],
                   ),
                 ),
@@ -962,18 +817,11 @@ class _DepartmentCard extends StatelessWidget {
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
                       onTap: () {
-                        AddDepartmentDialog.show(
-                          context,
-                          isEditMode: true,
-                          department: department,
-                        );
+                        AddDepartmentDialog.show(context, isEditMode: true, department: department);
                       },
                     ),
                     SizedBox(width: 8.w),
-                    _ActionIcon(
-                      assetPath: 'assets/icons/delete_icon_red.svg',
-                      onTap: () => onDelete(department),
-                    ),
+                    _ActionIcon(assetPath: 'assets/icons/delete_icon_red.svg', onTap: () => onDelete(department)),
                   ],
                 ),
               ],
@@ -1039,11 +887,7 @@ class _DepartmentCard extends StatelessWidget {
                   '${department.sections} ${localizations.depts}',
                   context,
                 ),
-                _iconStat(
-                  'assets/icons/department_metric3_icon.svg',
-                  department.budget,
-                  context,
-                ),
+                _iconStat('assets/icons/department_metric3_icon.svg', department.budget, context),
               ],
             ),
             SizedBox(height: 12.h),
@@ -1075,11 +919,7 @@ class _DepartmentCard extends StatelessWidget {
   Widget _detailRow(String iconPath, String text) {
     return Row(
       children: [
-        SvgIconWidget(
-          assetPath: iconPath,
-          size: 12.sp,
-          color: const Color(0xFF6A7282),
-        ),
+        SvgIconWidget(assetPath: iconPath, size: 12.sp, color: const Color(0xFF6A7282)),
         SizedBox(width: 4.w),
         Expanded(
           child: Text(
@@ -1101,11 +941,7 @@ class _DepartmentCard extends StatelessWidget {
       width: 140.w,
       child: Row(
         children: [
-          SvgIconWidget(
-            assetPath: iconPath,
-            size: 16.sp,
-            color: const Color(0xFF6A7282),
-          ),
+          SvgIconWidget(assetPath: iconPath, size: 16.sp, color: const Color(0xFF6A7282)),
           SizedBox(width: 4.w),
           Expanded(
             child: Text(
@@ -1129,28 +965,16 @@ class _Badge extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
 
-  const _Badge({
-    required this.label,
-    required this.backgroundColor,
-    required this.textColor,
-  });
+  const _Badge({required this.label, required this.backgroundColor, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(4.r)),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13.5.sp,
-          fontWeight: FontWeight.w400,
-          color: textColor,
-          height: 20 / 13.5,
-        ),
+        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w400, color: textColor, height: 20 / 13.5),
       ),
     );
   }
@@ -1160,10 +984,7 @@ class _ActionIcon extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
 
-  const _ActionIcon({
-    required this.assetPath,
-    required this.onTap,
-  });
+  const _ActionIcon({required this.assetPath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -1172,16 +993,9 @@ class _ActionIcon extends StatelessWidget {
       child: Container(
         width: 32.r,
         height: 32.r,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-          color: context.themeCardBackground,
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
         child: Center(
-          child: SvgIconWidget(
-            assetPath: assetPath,
-            size: 16.sp,
-            color: context.themeTextSecondary,
-          ),
+          child: SvgIconWidget(assetPath: assetPath, size: 16.sp, color: context.themeTextSecondary),
         ),
       ),
     );

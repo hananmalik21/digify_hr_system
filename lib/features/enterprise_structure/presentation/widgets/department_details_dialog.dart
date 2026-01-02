@@ -5,25 +5,18 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class DepartmentDetailsDialog extends StatelessWidget {
   final DepartmentOverview department;
 
-  const DepartmentDetailsDialog({
-    super.key,
-    required this.department,
-  });
+  const DepartmentDetailsDialog({super.key, required this.department});
 
-  static Future<void> show(
-    BuildContext context,
-    DepartmentOverview department,
-  ) {
+  static Future<void> show(BuildContext context, DepartmentOverview department) {
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.45),
-      builder: (dialogContext) => DepartmentDetailsDialog(
-        department: department,
-      ),
+      builder: (dialogContext) => DepartmentDetailsDialog(department: department),
     );
   }
 
@@ -32,49 +25,48 @@ class DepartmentDetailsDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-      child: Container(
-        width: 860.w,
-        constraints: BoxConstraints(maxHeight: 780.h),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 50,
-              offset: const Offset(0, 16),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context, localizations),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-            _buildTitleBlock(context, localizations),
-            SizedBox(height: 24.h),
-            _buildBasicInformationSection(context, localizations, isDark),
-            SizedBox(height: 24.h),
-            _buildLeadershipSection(context, localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildMetricsSection(context, localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildDescription(context, localizations, isDark),
-                    ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        child: Container(
+          width: 860.w,
+          constraints: BoxConstraints(maxHeight: 780.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.backgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 50, offset: const Offset(0, 16)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context, localizations),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleBlock(context, localizations),
+                        SizedBox(height: 24.h),
+                        _buildBasicInformationSection(context, localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildLeadershipSection(context, localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildMetricsSection(context, localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildDescription(context, localizations, isDark),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -97,11 +89,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/department_card_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              SvgIconWidget(assetPath: 'assets/icons/department_card_icon.svg', size: 20.sp, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.departmentDetails,
@@ -122,11 +110,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(6.r),
               ),
-              child: SvgIconWidget(
-                assetPath: 'assets/icons/close_dialog_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
             ),
           ),
         ],
@@ -175,20 +159,11 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildBasicInformationSection(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildBasicInformationSection(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          context,
-          localizations.basicInformation,
-          'assets/icons/company_stat_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(context, localizations.basicInformation, 'assets/icons/company_stat_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -246,20 +221,11 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildLeadershipSection(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildLeadershipSection(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          context,
-          localizations.departmentLeadership,
-          'assets/icons/head_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(context, localizations.departmentLeadership, 'assets/icons/head_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -299,11 +265,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricsSection(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildMetricsSection(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -345,11 +307,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildDescription(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -381,12 +339,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(
-    BuildContext context,
-    String title,
-    String iconPath,
-    bool isDark,
-  ) {
+  Widget _buildSectionHeader(BuildContext context, String title, String iconPath, bool isDark) {
     return Row(
       children: [
         SvgIconWidget(
@@ -411,18 +364,10 @@ class DepartmentDetailsDialog extends StatelessWidget {
   Widget _buildBadge(String label, Color background, Color textColor) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(6.r),
-      ),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(6.r)),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13.5.sp,
-          fontWeight: FontWeight.w400,
-          color: textColor,
-          height: 18 / 13.5,
-        ),
+        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w400, color: textColor, height: 18 / 13.5),
       ),
     );
   }
@@ -473,19 +418,10 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContactRow(
-    BuildContext context,
-    String iconPath,
-    String value,
-    bool isDark,
-  ) {
+  Widget _buildContactRow(BuildContext context, String iconPath, String value, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
-          assetPath: iconPath,
-          size: 16.sp,
-          color: context.themeTextSecondary,
-        ),
+        SvgIconWidget(assetPath: iconPath, size: 16.sp, color: context.themeTextSecondary),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
@@ -502,13 +438,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCard(
-    BuildContext context,
-    String value,
-    String label,
-    String iconPath,
-    bool isDark,
-  ) {
+  Widget _buildMetricCard(BuildContext context, String value, String label, String iconPath, bool isDark) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
@@ -522,11 +452,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
           children: [
             Row(
               children: [
-                SvgIconWidget(
-                  assetPath: iconPath,
-                  size: 20.sp,
-                  color: const Color(0xFF101828),
-                ),
+                SvgIconWidget(assetPath: iconPath, size: 20.sp, color: const Color(0xFF101828)),
                 SizedBox(width: 8.w),
                 Text(
                   value,
