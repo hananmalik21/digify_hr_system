@@ -921,5 +921,13 @@
   "jobLevelUpdatedSuccessfully": "تم تحديث مستوى الوظيفة بنجاح",
   "jobLevelDeletedSuccessfully": "تم حذف مستوى الوظيفة بنجاح",
   "errorCreatingJobLevel": "حدث خطأ أثناء إنشاء مستوى الوظيفة",
-  "errorDeletingJobLevel": "حدث خطأ أثناء حذف مستوى الوظيفة"
+  "errorDeletingJobLevel": "حدث خطأ أثناء حذف مستوى الوظيفة",
+  "manageShiftsWorkPatterns": "إدارة الورديات وأنماط العمل والجداول والتعيينات",
+  "manageShiftsWorkPatternsAr": "إدارة الورديات وأنماط العمل والجداول والتعيينات",
+  "shifts": "الورديات",
+  "workPatterns": "أنماط العمل",
+  "workSchedules": "جداول العمل",
+  "scheduleAssignments": "تعيينات الجدول",
+  "viewCalendar": "عرض التقويم",
+  "publicHolidays": "العطلات الرسمية"
 }

@@ -560,6 +560,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/location_small_icon.svg
   SvgGenImage get locationSmallIcon => const SvgGenImage('assets/icons/location_small_icon.svg');
 
+  /// File path: assets/icons/lock_icon.svg
+  SvgGenImage get lockIcon => const SvgGenImage('assets/icons/lock_icon.svg');
+
   /// File path: assets/icons/manage_component_icon.svg
   SvgGenImage get manageComponentIcon => const SvgGenImage('assets/icons/manage_component_icon.svg');
 
@@ -707,6 +710,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/section_tree_icon.svg
   SvgGenImage get sectionTreeIcon => const SvgGenImage('assets/icons/section_tree_icon.svg');
 
+  /// File path: assets/icons/security_icon.svg
+  SvgGenImage get securityIcon => const SvgGenImage('assets/icons/security_icon.svg');
+
   /// File path: assets/icons/send_email_purple.svg
   SvgGenImage get sendEmailPurple => const SvgGenImage('assets/icons/send_email_purple.svg');
 
@@ -727,6 +733,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/tasks_icon.svg
   SvgGenImage get tasksIcon => const SvgGenImage('assets/icons/tasks_icon.svg');
+
+  /// Directory path: assets/icons/time_management
+  $AssetsIconsTimeManagementGen get timeManagement => const $AssetsIconsTimeManagementGen();
 
   /// File path: assets/icons/time_management_icon.svg
   SvgGenImage get timeManagementIcon => const SvgGenImage('assets/icons/time_management_icon.svg');
@@ -983,6 +992,7 @@ class $AssetsIconsGen {
     locationPinIcon,
     locationSectionIcon,
     locationSmallIcon,
+    lockIcon,
     manageComponentIcon,
     manageEnterpriseIcon,
     managementIcon,
@@ -1032,6 +1042,7 @@ class $AssetsIconsGen {
     sectionIconSmall,
     sectionStatIcon,
     sectionTreeIcon,
+    securityIcon,
     sendEmailPurple,
     settingsIcon,
     settingsMainIcon,
@@ -1070,8 +1081,33 @@ class $AssetsIconsSidebarGen {
   /// File path: assets/icons/sidebar/grade-sidebar.svg
   SvgGenImage get gradeSidebar => const SvgGenImage('assets/icons/sidebar/grade-sidebar.svg');
 
+  /// File path: assets/icons/sidebar/public-holidays.svg
+  SvgGenImage get publicHolidays => const SvgGenImage('assets/icons/sidebar/public-holidays.svg');
+
+  /// File path: assets/icons/sidebar/schedule-assignments.svg
+  SvgGenImage get scheduleAssignments => const SvgGenImage('assets/icons/sidebar/schedule-assignments.svg');
+
+  /// File path: assets/icons/sidebar/work-schedules.svg
+  SvgGenImage get workSchedules => const SvgGenImage('assets/icons/sidebar/work-schedules.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [gradeSidebar];
+  List<SvgGenImage> get values => [gradeSidebar, publicHolidays, scheduleAssignments, workSchedules];
+}
+
+class $AssetsIconsTimeManagementGen {
+  const $AssetsIconsTimeManagementGen();
+
+  /// File path: assets/icons/time_management/copy.svg
+  SvgGenImage get copy => const SvgGenImage('assets/icons/time_management/copy.svg');
+
+  /// File path: assets/icons/time_management/edit.svg
+  SvgGenImage get edit => const SvgGenImage('assets/icons/time_management/edit.svg');
+
+  /// File path: assets/icons/time_management/view.svg
+  SvgGenImage get view => const SvgGenImage('assets/icons/time_management/view.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [copy, edit, view];
 }
 
 class $AssetsIconsWorkforceGen {

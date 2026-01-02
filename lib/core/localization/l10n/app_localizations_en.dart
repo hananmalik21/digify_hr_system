@@ -2906,4 +2906,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tmFilterRejected => 'Rejected';
+
+  @override
+  String get manageShiftsWorkPatterns =>
+      'Manage shifts, work patterns, schedules, and assignments';
+
+  @override
+  String get manageShiftsWorkPatternsAr =>
+      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+
+  @override
+  String get shifts => 'Shifts';
+
+  @override
+  String get workPatterns => 'Work Patterns';
+
+  @override
+  String get workSchedules => 'Work Schedules';
+
+  @override
+  String get scheduleAssignments => 'Schedule Assignments';
+
+  @override
+  String get viewCalendar => 'View Calendar';
+
+  @override
+  String get publicHolidays => 'Public Holidays';
 }

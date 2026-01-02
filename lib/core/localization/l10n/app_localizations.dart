@@ -5695,6 +5695,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rejected'**
   String get tmFilterRejected;
+
+  /// No description provided for @manageShiftsWorkPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage shifts, work patterns, schedules, and assignments'**
+  String get manageShiftsWorkPatterns;
+
+  /// No description provided for @manageShiftsWorkPatternsAr.
+  ///
+  /// In en, this message translates to:
+  /// **'إدارة الورديات وأنماط العمل والجداول والتعيينات'**
+  String get manageShiftsWorkPatternsAr;
+
+  /// No description provided for @shifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Shifts'**
+  String get shifts;
+
+  /// No description provided for @workPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Patterns'**
+  String get workPatterns;
+
+  /// No description provided for @workSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedules'**
+  String get workSchedules;
+
+  /// No description provided for @scheduleAssignments.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Assignments'**
+  String get scheduleAssignments;
+
+  /// No description provided for @viewCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'View Calendar'**
+  String get viewCalendar;
+
+  /// No description provided for @publicHolidays.
+  ///
+  /// In en, this message translates to:
+  /// **'Public Holidays'**
+  String get publicHolidays;
 }
 
 class _AppLocalizationsDelegate

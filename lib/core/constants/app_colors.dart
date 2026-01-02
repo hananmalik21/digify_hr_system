@@ -72,22 +72,27 @@ class AppColors {
   static const Color purpleBorder = Color(0xFFE9D4FF);
   static const Color purpleText = Color(0xFF59168B);
   static const Color purpleTextSecondary = Color(0xFF6E11B0);
-  
+
   // Green Colors
   static const Color greenBg = Color(0xFFF0FDF4);
   static const Color greenBorder = Color(0xFFB9F8CF);
   static const Color greenText = Color(0xFF0D542B);
   static const Color greenTextSecondary = Color(0xFF016630);
-  
+
   // Red Error Colors (enhanced)
   static const Color redBg = Color(0xFFFEF2F2);
   static const Color redBorder = Color(0xFFFFA2A2);
   static const Color redText = Color(0xFF82181A);
   static const Color redTextSecondary = Color(0xFF9F0712);
   static const Color redButton = Color(0xFFE7000B);
-  
+
   // Green Action Colors
   static const Color greenButton = Color(0xFF00A63E);
+
+  // Shift Action Button Colors
+  static const Color shiftCreateButton = Color(0xFF155DFC);
+  static const Color shiftUploadButton = Color(0xFF00A63E);
+  static const Color shiftExportButton = Color(0xFF4A5565);
 
   static const Color orange = Color(0xFFEA580C);
   static const Color orangeBg = Color(0xFFFFEDD5);
@@ -170,44 +175,57 @@ class AppColors {
   static const Color securityProfilesIconBg = Color(0xFFEFF6FF);
   static const Color securityProfilesButtonBg = Color(0xFF030213);
   static const Color securityProfilesSearchBg = Color(0xFFF3F3F5);
-  
+
   // Status Badge Colors
   static const Color activeStatusBgLight = Color(0xFFECFDF5);
   static const Color activeStatusBorderLight = Color(0xFFB9F8CF);
   static const Color activeStatusTextLight = Color(0xFF008236);
-  
+
   // Permission Badge Colors
   static const Color permissionBadgeBg = Color(0xFFEFF6FF);
   static const Color permissionBadgeBorder = Color(0xFFBEDBFF);
   static const Color permissionBadgeText = Color(0xFF1447E6);
-  
+
   // Sidebar Footer Colors
   static const Color sidebarFooterBg = Color(0xFFEFF6FF);
   static const Color sidebarFooterTitle = Color(0xFF1C398E);
   static const Color sidebarFooterSubtitle = Color(0xFF1447E6);
-  
+
   // Sidebar Menu Item Colors
   static const Color sidebarMenuItemText = Color(0xFF364153);
   static const Color sidebarChildItemText = Color(0xFF4A5565);
-  
+
   // Category Badge Colors
   static const Color categoryBadgeBorder = Color(0xFFE5E7EB);
-  
+
   // Stat Card Icon Colors
   static const Color statIconBlue = Color(0xFF155DFC);
   static const Color statIconGreen = Color(0xFF00A63E);
   static const Color statIconOrange = Color(0xFFF54900);
   static const Color statIconPurple = Color(0xFF9810FA);
-  
+
   // Delete Icon Color
   static const Color deleteIconRed = Color(0xFFFB2C36);
-  
+
   // Input Colors
   static const Color inputBg = Color(0xFFF3F4F6);
   static const Color inputBorder = Color(0xFFD1D5DC);
-  
+
   // Dark Mode Input Colors
   static const Color inputBgDark = Color(0xFF334155);
   static const Color inputBorderDark = Color(0xFF475569);
-}
 
+  // Shift Card Action Button Colors
+  static const Color shiftViewButtonBg = Color(0xFFEFF6FF);
+  static const Color shiftViewButtonText = Color(0xFF155DFC);
+  static const Color shiftEditButtonBg = Color(0xFFF0FDF4);
+  static const Color shiftEditButtonText = Color(0xFF00A63E);
+  static const Color shiftCopyButtonBg = Color(0xFFFAF5FF);
+  static const Color shiftCopyButtonText = Color(0xFF9810FA);
+  
+  // Shift Status Badge Colors
+  static const Color shiftActiveStatusBg = Color(0xFFDCFCE7);
+  static const Color shiftActiveStatusText = Color(0xFF016630);
+  static const Color shiftInactiveStatusBg = Color(0xFFFEE2E2);
+  static const Color shiftInactiveStatusText = Color(0xFF991B1B);
+}
