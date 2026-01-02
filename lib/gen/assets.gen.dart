@@ -1103,11 +1103,20 @@ class $AssetsIconsTimeManagementGen {
   /// File path: assets/icons/time_management/edit.svg
   SvgGenImage get edit => const SvgGenImage('assets/icons/time_management/edit.svg');
 
+  /// File path: assets/icons/time_management/evening.svg
+  SvgGenImage get evening => const SvgGenImage('assets/icons/time_management/evening.svg');
+
+  /// File path: assets/icons/time_management/morning.svg
+  SvgGenImage get morning => const SvgGenImage('assets/icons/time_management/morning.svg');
+
+  /// File path: assets/icons/time_management/night.svg
+  SvgGenImage get night => const SvgGenImage('assets/icons/time_management/night.svg');
+
   /// File path: assets/icons/time_management/view.svg
   SvgGenImage get view => const SvgGenImage('assets/icons/time_management/view.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [copy, edit, view];
+  List<SvgGenImage> get values => [copy, edit, evening, morning, night, view];
 }
 
 class $AssetsIconsWorkforceGen {

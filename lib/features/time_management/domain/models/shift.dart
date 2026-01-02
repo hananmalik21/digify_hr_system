@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
 /// Domain model for Shift
@@ -35,23 +36,33 @@ class Shift {
 class ShiftOverview {
   final int id;
   final String name;
+  final String nameAr;
   final String code;
   final String startTime;
   final String endTime;
   final double totalHours;
-  final bool isActive;
-  final int assignedEmployeesCount;
+  final int breakHours;
+  final ShiftType shiftType;
+  final String shiftTypeRaw;
+  final ShiftStatus status;
+  final String colorHex;
 
   const ShiftOverview({
     required this.id,
     required this.name,
+    required this.nameAr,
     required this.code,
     required this.startTime,
     required this.endTime,
     required this.totalHours,
-    required this.isActive,
-    required this.assignedEmployeesCount,
+    required this.breakHours,
+    required this.shiftType,
+    required this.shiftTypeRaw,
+    required this.status,
+    required this.colorHex,
   });
+
+  bool get isActive => status.isActive;
 }
 
 /// Shift working days
