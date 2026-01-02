@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class UpdateGradeDialog extends ConsumerStatefulWidget {
   final Grade grade;
@@ -47,24 +48,12 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
   @override
   void initState() {
     super.initState();
-    descriptionController = TextEditingController(
-      text: widget.grade.description,
-    );
-    step1Controller = TextEditingController(
-      text: widget.grade.step1Salary.toString(),
-    );
-    step2Controller = TextEditingController(
-      text: widget.grade.step2Salary.toString(),
-    );
-    step3Controller = TextEditingController(
-      text: widget.grade.step3Salary.toString(),
-    );
-    step4Controller = TextEditingController(
-      text: widget.grade.step4Salary.toString(),
-    );
-    step5Controller = TextEditingController(
-      text: widget.grade.step5Salary.toString(),
-    );
+    descriptionController = TextEditingController(text: widget.grade.description);
+    step1Controller = TextEditingController(text: widget.grade.step1Salary.toString());
+    step2Controller = TextEditingController(text: widget.grade.step2Salary.toString());
+    step3Controller = TextEditingController(text: widget.grade.step3Salary.toString());
+    step4Controller = TextEditingController(text: widget.grade.step4Salary.toString());
+    step5Controller = TextEditingController(text: widget.grade.step5Salary.toString());
     // Normalize grade category to match dropdown keys (handle case variations from API)
     selectedGradeCategory = widget.grade.gradeCategory.toUpperCase();
   }
@@ -94,9 +83,7 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
         description: descriptionController.text,
       );
 
-      await ref
-          .read(gradeNotifierProvider.notifier)
-          .updateGrade(widget.grade.id, updatedGrade);
+      await ref.read(gradeNotifierProvider.notifier).updateGrade(widget.grade.id, updatedGrade);
 
       if (mounted) {
         ToastService.success(context, 'Grade updated successfully');
@@ -115,32 +102,35 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
     final updatingGradeId = ref.watch(gradeNotifierProvider).updatingGradeId;
     final isUpdating = updatingGradeId == widget.grade.id;
 
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 896.w, maxWidth: 896.w),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(localizations),
-                  SizedBox(height: 16.h),
-                  _buildGradeInfo(localizations),
-                  SizedBox(height: 16.h),
-                  _buildGradeCategoryDropdown(localizations),
-                  SizedBox(height: 16.h),
-                  _buildStepSalaries(localizations),
-                  SizedBox(height: 18.h),
-                  _buildDescription(localizations),
-                  SizedBox(height: 24.h),
-                  _buildActions(localizations, isUpdating),
-                ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: 896.w, maxWidth: 896.w),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(localizations),
+                    SizedBox(height: 16.h),
+                    _buildGradeInfo(localizations),
+                    SizedBox(height: 16.h),
+                    _buildGradeCategoryDropdown(localizations),
+                    SizedBox(height: 16.h),
+                    _buildStepSalaries(localizations),
+                    SizedBox(height: 18.h),
+                    _buildDescription(localizations),
+                    SizedBox(height: 24.h),
+                    _buildActions(localizations, isUpdating),
+                  ],
+                ),
               ),
             ),
           ),
@@ -155,21 +145,13 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
         Expanded(
           child: Text(
             localizations.editGrade,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
         ),
         IconButton(
           padding: EdgeInsets.zero,
           constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-          icon: Icon(
-            Icons.close_rounded,
-            size: 20.sp,
-            color: AppColors.textSecondary,
-          ),
+          icon: Icon(Icons.close_rounded, size: 20.sp, color: AppColors.textSecondary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],
@@ -179,21 +161,14 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
   Widget _buildGradeInfo(AppLocalizations localizations) {
     return Container(
       padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFF9FAFB), borderRadius: BorderRadius.circular(10.r)),
       child: Row(
         children: [
           Icon(Icons.info_outline, size: 20.sp, color: AppColors.textSecondary),
           SizedBox(width: 8.w),
           Text(
             '${localizations.gradeNumber}: ${widget.grade.gradeLabel}',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
           ),
           SizedBox(width: 8.w),
           Text(
@@ -216,27 +191,17 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
       children: [
         Text(
           localizations.gradeCategory,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
-          ),
+          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
         ),
         SizedBox(height: 4.h),
         DropdownButtonFormField<String>(
           initialValue: selectedGradeCategory,
           decoration: InputDecoration(
             hintText: localizations.selectCategory,
-            hintStyle: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textSecondary,
-            ),
+            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
             fillColor: AppColors.inputBg,
             filled: true,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 12.h,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide(color: AppColors.cardBorder),
@@ -266,24 +231,14 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
   }
 
   Widget _buildStepSalaries(AppLocalizations localizations) {
-    final controllers = [
-      step1Controller,
-      step2Controller,
-      step3Controller,
-      step4Controller,
-      step5Controller,
-    ];
+    final controllers = [step1Controller, step2Controller, step3Controller, step4Controller, step5Controller];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           localizations.stepSalaryStructureTitle,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
+          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         ),
         SizedBox(height: 12.h),
         Row(
@@ -291,11 +246,7 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: entry.key == 0 ? 0 : 12.w),
-                child: _buildStepInput(
-                  localizations,
-                  '${localizations.step} ${entry.key + 1}',
-                  entry.value,
-                ),
+                child: _buildStepInput(localizations, '${localizations.step} ${entry.key + 1}', entry.value),
               ),
             );
           }).toList(),
@@ -304,46 +255,27 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
     );
   }
 
-  Widget _buildStepInput(
-    AppLocalizations localizations,
-    String label,
-    TextEditingController controller,
-  ) {
+  Widget _buildStepInput(AppLocalizations localizations, String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
-          ),
+          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
         ),
         SizedBox(height: 6.h),
         TextFormField(
           controller: controller,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-          ],
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
           decoration: InputDecoration(
             hintText: '0.00',
-            hintStyle: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textSecondary,
-            ),
+            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
             suffixText: localizations.kdSymbol,
-            suffixStyle: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textSecondary,
-            ),
+            suffixStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
             fillColor: AppColors.inputBg,
             filled: true,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 12.w,
-              vertical: 12.h,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide(color: AppColors.cardBorder),
@@ -374,11 +306,7 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
       children: [
         Text(
           localizations.descriptionOptional,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
+          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
         ),
         SizedBox(height: 8.h),
         TextFormField(
@@ -386,16 +314,10 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
           maxLines: 3,
           decoration: InputDecoration(
             hintText: localizations.gradeDescriptionHint,
-            hintStyle: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textSecondary,
-            ),
+            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
             fillColor: AppColors.inputBg,
             filled: true,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 12.h,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide(color: AppColors.cardBorder),
@@ -421,11 +343,7 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
         ),
         SizedBox(width: 12.w),
         Expanded(
-          child: AppButton.primary(
-            label: 'Update Grade',
-            onPressed: _handleSave,
-            isLoading: isUpdating,
-          ),
+          child: AppButton.primary(label: 'Update Grade', onPressed: _handleSave, isLoading: isUpdating),
         ),
       ],
     );

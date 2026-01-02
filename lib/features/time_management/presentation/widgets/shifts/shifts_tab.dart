@@ -2,6 +2,7 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid_skeleton.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,7 +64,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
           searchController: _searchController,
           selectedStatus: _selectedStatus,
           onStatusChanged: _onStatusChanged,
-          onCreateShift: () {},
+          onCreateShift: () => CreateShiftDialog.show(context),
           onUpload: () {},
           onExport: () {},
         ),

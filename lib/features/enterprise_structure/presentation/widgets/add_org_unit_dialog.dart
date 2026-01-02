@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 /// Dialog for adding or editing an org unit
 class AddOrgUnitDialog extends ConsumerStatefulWidget {
@@ -21,12 +22,7 @@ class AddOrgUnitDialog extends ConsumerStatefulWidget {
   final String levelCode;
   final OrgStructureLevel? initialValue;
 
-  const AddOrgUnitDialog({
-    super.key,
-    required this.structureId,
-    required this.levelCode,
-    this.initialValue,
-  });
+  const AddOrgUnitDialog({super.key, required this.structureId, required this.levelCode, this.initialValue});
 
   static Future<void> show(
     BuildContext context, {
@@ -42,11 +38,7 @@ class AddOrgUnitDialog extends ConsumerStatefulWidget {
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (dialogContext) {
         debugPrint('AddOrgUnitDialog builder called');
-        return AddOrgUnitDialog(
-          structureId: structureId,
-          levelCode: levelCode,
-          initialValue: initialValue,
-        );
+        return AddOrgUnitDialog(structureId: structureId, levelCode: levelCode, initialValue: initialValue);
       },
     );
   }
@@ -109,30 +101,21 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             'AddOrgUnitDialog: Pre-fetching parent org units for structureId=${widget.structureId}, levelCode=${widget.levelCode}',
           );
           // Trigger the provider to fetch data by refreshing it
-          final params = ParentOrgUnitsParams(
-            structureId: widget.structureId,
-            levelCode: widget.levelCode,
-          );
+          final params = ParentOrgUnitsParams(structureId: widget.structureId, levelCode: widget.levelCode);
           ref.invalidate(parentOrgUnitsProvider(params));
 
           // Watch the provider to get the parent name when data is loaded
           if (_selectedParentId != null) {
-            ref.listen<
-              AsyncValue<List<OrgStructureLevel>>
-            >(parentOrgUnitsProvider(params), (previous, next) {
+            ref.listen<AsyncValue<List<OrgStructureLevel>>>(parentOrgUnitsProvider(params), (previous, next) {
               if (mounted && next.hasValue && _selectedParentId != null) {
                 try {
-                  final parentUnit = next.value!.firstWhere(
-                    (unit) => unit.orgUnitId == _selectedParentId,
-                  );
+                  final parentUnit = next.value!.firstWhere((unit) => unit.orgUnitId == _selectedParentId);
                   setState(() {
                     _selectedParentName = parentUnit.orgUnitNameEn;
                   });
                 } catch (e) {
                   // Parent not found in the list, keep parent ID but no name
-                  debugPrint(
-                    'Parent unit with ID $_selectedParentId not found in parent units list',
-                  );
+                  debugPrint('Parent unit with ID $_selectedParentId not found in parent units list');
                 }
               }
             });
@@ -187,9 +170,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
         'org_unit_name_en': _controllers['nameEn']!.text.trim(),
         'org_unit_name_ar': _controllers['nameAr']!.text.trim(),
         // For COMPANY level, send null; for other levels, send the selected parent ID
-        'parent_org_unit_id': widget.levelCode.toUpperCase() == 'COMPANY'
-            ? null
-            : _selectedParentId,
+        'parent_org_unit_id': widget.levelCode.toUpperCase() == 'COMPANY' ? null : _selectedParentId,
         'is_active': _selectedStatus == 'Active' ? 'Y' : 'N',
         'manager_name': _controllers['managerName']!.text.trim(),
         'manager_email': _controllers['managerEmail']!.text.trim(),
@@ -210,18 +191,12 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
         requestData['last_update_login'] = 'SYSTEM';
       }
 
-      debugPrint(
-        'AddOrgUnitDialog: Submitting data (isEdit=$isEdit): $requestData',
-      );
+      debugPrint('AddOrgUnitDialog: Submitting data (isEdit=$isEdit): $requestData');
 
       if (isEdit) {
         // Call API to update org unit
         final updateUseCase = ref.read(updateOrgUnitUseCaseProvider);
-        await updateUseCase.call(
-          widget.structureId,
-          widget.initialValue!.orgUnitId,
-          requestData,
-        );
+        await updateUseCase.call(widget.structureId, widget.initialValue!.orgUnitId, requestData);
       } else {
         // Call API to create org unit
         final createUseCase = ref.read(createOrgUnitUseCaseProvider);
@@ -230,21 +205,13 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
 
       if (mounted) {
         Navigator.of(context).pop();
-        ToastService.success(
-          context,
-          isEdit
-              ? 'Org unit updated successfully'
-              : 'Org unit created successfully',
-        );
+        ToastService.success(context, isEdit ? 'Org unit updated successfully' : 'Org unit created successfully');
         // Refresh the org units list
         ref.read(orgUnitsProvider(widget.levelCode).notifier).refresh();
       }
     } catch (e) {
       if (mounted) {
-        ToastService.error(
-          context,
-          'Failed to create org unit: ${e.toString()}',
-        );
+        ToastService.error(context, 'Failed to create org unit: ${e.toString()}');
       }
     } finally {
       if (mounted) {
@@ -262,252 +229,219 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
-      ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: 862.w,
-          maxHeight: MediaQuery.of(context).size.height * 0.95,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+          vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
         ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              _buildHeader(context, localizations, isDark, isMobile, isTablet),
-              // Form content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: EdgeInsetsDirectional.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Org Unit Code
-                      _buildTextField(
-                        context,
-                        localizations,
-                        isDark,
-                        controller: _controllers['orgUnitCode']!,
-                        label: 'Org Unit Code',
-                        hint: 'Enter org unit code',
-                        isRequired: true,
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                        inputFormatters: [
-                          AppInputFormatters.orgUnitCode,
-                          AppInputFormatters.maxLen(30),
-                        ],
-                      ),
-                      SizedBox(height: 24.h),
-                      // Name (English) and Name (Arabic) side by side
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['nameEn']!,
-                              label: localizations.nameEnglish,
-                              hint: 'Enter name in English',
-                              isRequired: true,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                              inputFormatters: [
-                                AppInputFormatters.nameEn,
-                                AppInputFormatters.maxLen(120),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 16.w),
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['nameAr']!,
-                              label: localizations.nameArabic,
-                              hint: 'Enter name in Arabic',
-                              isRequired: true,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                              inputFormatters: [
-                                AppInputFormatters.nameAr,
-                                AppInputFormatters.maxLen(120),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 24.h),
-                      // Status
-                      _buildStatusDropdown(
-                        context,
-                        localizations,
-                        isDark,
-                        isMobile,
-                        isTablet,
-                      ),
-                      SizedBox(height: 24.h),
-                      // Country and City
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['address']!,
-                              label: localizations.address,
-                              hint: 'Enter address',
-                              isRequired: false,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                            ),
-                          ),
-                          SizedBox(width: 16.w),
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['city']!,
-                              label: localizations.city,
-                              hint: 'Enter city',
-                              isRequired: false,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Address
-                      SizedBox(height: 24.h),
-                      // Currency and Fiscal Year Start
-
-                      // Parent Org Unit (only show if not COMPANY level)
-                      if (widget.levelCode.toUpperCase() != 'COMPANY') ...[
-                        _buildParentField(
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 862.w, maxHeight: MediaQuery.of(context).size.height * 0.95),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                _buildHeader(context, localizations, isDark, isMobile, isTablet),
+                // Form content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsetsDirectional.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Org Unit Code
+                        _buildTextField(
                           context,
                           localizations,
                           isDark,
-                          isMobile,
-                          isTablet,
+                          controller: _controllers['orgUnitCode']!,
+                          label: 'Org Unit Code',
+                          hint: 'Enter org unit code',
+                          isRequired: true,
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                          inputFormatters: [AppInputFormatters.orgUnitCode, AppInputFormatters.maxLen(30)],
                         ),
                         SizedBox(height: 24.h),
-                      ],
-                      // Manager Name
-                      _buildTextField(
-                        context,
-                        localizations,
-                        isDark,
-                        controller: _controllers['managerName']!,
-                        label: localizations.manager,
-                        hint: 'Enter manager name',
-                        isRequired: false,
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      ),
-                      SizedBox(height: 24.h),
-                      // Manager Email and Phone side by side
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['managerEmail']!,
-                              label: 'Manager Email',
-                              hint: 'Enter manager email',
-                              isRequired: false,
-                              keyboardType: TextInputType.emailAddress,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                              inputFormatters: [
-                                AppInputFormatters.email,
-                                AppInputFormatters.maxLen(150),
-                              ],
+                        // Name (English) and Name (Arabic) side by side
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['nameEn']!,
+                                label: localizations.nameEnglish,
+                                hint: 'Enter name in English',
+                                isRequired: true,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                                inputFormatters: [AppInputFormatters.nameEn, AppInputFormatters.maxLen(120)],
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 16.w),
-                          Expanded(
-                            child: _buildTextField(
-                              context,
-                              localizations,
-                              isDark,
-                              controller: _controllers['managerPhone']!,
-                              label: 'Manager Phone',
-                              hint: 'Enter manager phone',
-                              isRequired: false,
-                              keyboardType: TextInputType.phone,
-                              isMobile: isMobile,
-                              isTablet: isTablet,
-                              inputFormatters: [
-                                AppInputFormatters.phone,
-                                AppInputFormatters.maxLen(20),
-                              ],
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['nameAr']!,
+                                label: localizations.nameArabic,
+                                hint: 'Enter name in Arabic',
+                                isRequired: true,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                                inputFormatters: [AppInputFormatters.nameAr, AppInputFormatters.maxLen(120)],
+                              ),
                             ),
-                          ),
+                          ],
+                        ),
+                        SizedBox(height: 24.h),
+                        // Status
+                        _buildStatusDropdown(context, localizations, isDark, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Country and City
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['address']!,
+                                label: localizations.address,
+                                hint: 'Enter address',
+                                isRequired: false,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['city']!,
+                                label: localizations.city,
+                                hint: 'Enter city',
+                                isRequired: false,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Address
+                        SizedBox(height: 24.h),
+                        // Currency and Fiscal Year Start
+
+                        // Parent Org Unit (only show if not COMPANY level)
+                        if (widget.levelCode.toUpperCase() != 'COMPANY') ...[
+                          _buildParentField(context, localizations, isDark, isMobile, isTablet),
+                          SizedBox(height: 24.h),
                         ],
-                      ),
-                      SizedBox(height: 24.h),
-                      // Location
-                      _buildTextField(
-                        context,
-                        localizations,
-                        isDark,
-                        controller: _controllers['location']!,
-                        label: localizations.location,
-                        hint: 'Enter location',
-                        isRequired: false,
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      ),
-                      SizedBox(height: 24.h),
-                      // Description
-                      _buildTextField(
-                        context,
-                        localizations,
-                        isDark,
-                        controller: _controllers['description']!,
-                        label: localizations.description,
-                        hint: 'Enter description',
-                        isRequired: false,
-                        maxLines: 3,
-                        isMobile: isMobile,
-                        isTablet: isTablet,
-                      ),
-                    ],
+                        // Manager Name
+                        _buildTextField(
+                          context,
+                          localizations,
+                          isDark,
+                          controller: _controllers['managerName']!,
+                          label: localizations.manager,
+                          hint: 'Enter manager name',
+                          isRequired: false,
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        ),
+                        SizedBox(height: 24.h),
+                        // Manager Email and Phone side by side
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['managerEmail']!,
+                                label: 'Manager Email',
+                                hint: 'Enter manager email',
+                                isRequired: false,
+                                keyboardType: TextInputType.emailAddress,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                                inputFormatters: [AppInputFormatters.email, AppInputFormatters.maxLen(150)],
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: _buildTextField(
+                                context,
+                                localizations,
+                                isDark,
+                                controller: _controllers['managerPhone']!,
+                                label: 'Manager Phone',
+                                hint: 'Enter manager phone',
+                                isRequired: false,
+                                keyboardType: TextInputType.phone,
+                                isMobile: isMobile,
+                                isTablet: isTablet,
+                                inputFormatters: [AppInputFormatters.phone, AppInputFormatters.maxLen(20)],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 24.h),
+                        // Location
+                        _buildTextField(
+                          context,
+                          localizations,
+                          isDark,
+                          controller: _controllers['location']!,
+                          label: localizations.location,
+                          hint: 'Enter location',
+                          isRequired: false,
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        ),
+                        SizedBox(height: 24.h),
+                        // Description
+                        _buildTextField(
+                          context,
+                          localizations,
+                          isDark,
+                          controller: _controllers['description']!,
+                          label: localizations.description,
+                          hint: 'Enter description',
+                          isRequired: false,
+                          maxLines: 3,
+                          isMobile: isMobile,
+                          isTablet: isTablet,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // Footer
-              _buildFooter(context, localizations, isDark, isMobile, isTablet),
-            ],
+                // Footer
+                _buildFooter(context, localizations, isDark, isMobile, isTablet),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    bool isMobile,
-    bool isTablet,
-  ) {
+  Widget _buildHeader(BuildContext context, AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
     return Container(
       padding: EdgeInsetsDirectional.only(
         start: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
@@ -517,10 +451,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       child: Row(
@@ -533,9 +464,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 15.6.sp),
                 fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -546,9 +475,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             child: SvgIconWidget(
               assetPath: 'assets/icons/close_icon_edit.svg',
               size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
         ],
@@ -599,31 +526,17 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             hintStyle: TextStyle(
               fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPlaceholderDark
-                  : AppColors.textPlaceholder,
+              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
             ),
             filled: true,
-            fillColor: isDark
-                ? AppColors.cardBackgroundGreyDark
-                : const Color(0xFFF9FAFB),
+            fillColor: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(
-                color: isDark
-                    ? AppColors.cardBorderDark
-                    : const Color(0xFFD1D5DB),
-                width: 1,
-              ),
+              borderSide: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(
-                color: isDark
-                    ? AppColors.cardBorderDark
-                    : const Color(0xFFD1D5DB),
-                width: 1,
-              ),
+              borderSide: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
@@ -683,16 +596,9 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
               vertical: isMobile ? 14.h : (isTablet ? 13.h : 12.h),
             ),
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppColors.cardBackgroundGreyDark
-                  : const Color(0xFFF9FAFB),
+              color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(
-                color: isDark
-                    ? AppColors.cardBorderDark
-                    : const Color(0xFFD1D5DB),
-                width: 1,
-              ),
+              border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
             ),
             child: Row(
               children: [
@@ -703,12 +609,8 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                       fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
                       fontWeight: FontWeight.w400,
                       color: _selectedParentName != null
-                          ? (isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF101828))
-                          : (isDark
-                                ? AppColors.textPlaceholderDark
-                                : AppColors.textPlaceholder),
+                          ? (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828))
+                          : (isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder),
                     ),
                   ),
                 ),
@@ -746,40 +648,23 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             vertical: isMobile ? 14.h : (isTablet ? 13.h : 12.h),
           ),
           decoration: BoxDecoration(
-            color: isDark
-                ? AppColors.cardBackgroundGreyDark
-                : const Color(0xFFF9FAFB),
+            color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: isDark
-                  ? AppColors.cardBorderDark
-                  : const Color(0xFFD1D5DB),
-              width: 1,
-            ),
+            border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: _selectedStatus,
               isExpanded: true,
               isDense: true,
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
-              ),
+              icon: Icon(Icons.arrow_drop_down, color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828)),
               style: TextStyle(
                 fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
                 fontWeight: FontWeight.w400,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
               ),
               items: _statusOptions.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
+                return DropdownMenuItem<String>(value: value, child: Text(value));
               }).toList(),
               onChanged: _isLoading
                   ? null
@@ -797,22 +682,11 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     );
   }
 
-  Widget _buildFooter(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    bool isMobile,
-    bool isTablet,
-  ) {
+  Widget _buildFooter(BuildContext context, AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
     return Container(
       padding: EdgeInsetsDirectional.all(24.w),
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -824,9 +698,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
               style: TextStyle(
                 fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondary,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
           ),
@@ -836,9 +708,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
             ),
             child: _isLoading
                 ? SizedBox(

@@ -6,16 +6,13 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class ComponentDetailDialog extends StatelessWidget {
   final ComponentValue component;
   final List<ComponentValue> allComponents;
 
-  const ComponentDetailDialog({
-    super.key,
-    required this.component,
-    required this.allComponents,
-  });
+  const ComponentDetailDialog({super.key, required this.component, required this.allComponents});
 
   static Future<void> show(
     BuildContext context, {
@@ -25,10 +22,7 @@ class ComponentDetailDialog extends StatelessWidget {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
-      builder: (context) => ComponentDetailDialog(
-        component: component,
-        allComponents: allComponents,
-      ),
+      builder: (context) => ComponentDetailDialog(component: component, allComponents: allComponents),
     );
   }
 
@@ -41,88 +35,88 @@ class ComponentDetailDialog extends StatelessWidget {
 
     // Get parent component
     final parentComponent = component.parentId != null
-        ? allComponents.firstWhere(
-            (c) => c.id == component.parentId,
-            orElse: () => component,
-          )
+        ? allComponents.firstWhere((c) => c.id == component.parentId, orElse: () => component)
         : null;
 
     // Get child components count
-    final childComponents = allComponents
-        .where((c) => c.parentId == component.id)
-        .toList();
+    final childComponents = allComponents.where((c) => c.parentId == component.id).toList();
 
     // Build hierarchy path
     final hierarchyPath = _buildHierarchyPath(component, allComponents);
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
-      ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
-          maxHeight: MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+          vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
         ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header - pixel perfect: pt-[24px] pb-[25px] px-[24px]
-            _buildHeader(context, localizations, isDark, isMobile, isTablet),
-            // Content - pixel perfect: left-[24px] right-[24px] top-[96.95px] gap-[24px]
-            Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsetsDirectional.only(
-                  start: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-                  end: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-                  top: isMobile ? 16.h : 0.h, // Content starts immediately after header
-                  bottom: isMobile ? 16.h : 24.h,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Basic Information - gap-[24px] between sections
-                    _buildBasicInformationSection(
-                        context, localizations, isDark, isMobile, isTablet),
-                    SizedBox(height: 24.h),
-                    // Hierarchy & Relationships
-                    _buildHierarchySection(context, localizations, isDark,
-                        isMobile, isTablet, parentComponent, childComponents, hierarchyPath),
-                    SizedBox(height: 24.h),
-                    // Management Information
-                    _buildManagementSection(
-                        context, localizations, isDark, isMobile, isTablet),
-                    SizedBox(height: 24.h),
-                    // Audit Trail
-                    _buildAuditTrailSection(
-                        context, localizations, isDark, isMobile, isTablet),
-                    SizedBox(height: 24.h),
-                    // Description
-                    _buildDescriptionSection(
-                        context, localizations, isDark, isMobile, isTablet),
-                    SizedBox(height: 24.h),
-                    // Additional Fields - Only show for Company
-                    if (component.type == ComponentType.company)
-                      _buildAdditionalFieldsSection(
-                          context, localizations, isDark, isMobile, isTablet),
-                  ],
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: isMobile ? double.infinity : (isTablet ? 700.w : 900.w),
+            maxHeight: MediaQuery.of(context).size.height * (isMobile ? 0.95 : 0.9),
+          ),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header - pixel perfect: pt-[24px] pb-[25px] px-[24px]
+              _buildHeader(context, localizations, isDark, isMobile, isTablet),
+              // Content - pixel perfect: left-[24px] right-[24px] top-[96.95px] gap-[24px]
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsetsDirectional.only(
+                    start: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+                    end: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+                    top: isMobile ? 16.h : 0.h, // Content starts immediately after header
+                    bottom: isMobile ? 16.h : 24.h,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Basic Information - gap-[24px] between sections
+                      _buildBasicInformationSection(context, localizations, isDark, isMobile, isTablet),
+                      SizedBox(height: 24.h),
+                      // Hierarchy & Relationships
+                      _buildHierarchySection(
+                        context,
+                        localizations,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        parentComponent,
+                        childComponents,
+                        hierarchyPath,
+                      ),
+                      SizedBox(height: 24.h),
+                      // Management Information
+                      _buildManagementSection(context, localizations, isDark, isMobile, isTablet),
+                      SizedBox(height: 24.h),
+                      // Audit Trail
+                      _buildAuditTrailSection(context, localizations, isDark, isMobile, isTablet),
+                      SizedBox(height: 24.h),
+                      // Description
+                      _buildDescriptionSection(context, localizations, isDark, isMobile, isTablet),
+                      SizedBox(height: 24.h),
+                      // Additional Fields - Only show for Company
+                      if (component.type == ComponentType.company)
+                        _buildAdditionalFieldsSection(context, localizations, isDark, isMobile, isTablet),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations localizations,
-      bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildHeader(BuildContext context, AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
     // Pixel perfect: pt-[24px] pb-[25px] px-[24px]
     return Container(
       padding: EdgeInsetsDirectional.only(
@@ -133,10 +127,7 @@ class ComponentDetailDialog extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       child: Row(
@@ -149,9 +140,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 15.6.sp),
                 fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -164,9 +153,7 @@ class ComponentDetailDialog extends StatelessWidget {
               assetPath: 'assets/icons/close_icon.svg',
               // Pixel perfect: size-[24px]
               size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
         ],
@@ -174,8 +161,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildBasicInformationSection(BuildContext context,
-      AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildBasicInformationSection(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -198,9 +190,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp),
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.5,
                 letterSpacing: 0,
               ),
@@ -215,33 +205,57 @@ class ComponentDetailDialog extends StatelessWidget {
             ? Column(
                 children: [
                   _buildInfoField(
-                      context,
-                      localizations.componentType,
-                      component.type.displayName.toLowerCase(),
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: 15.5.sp),
+                    context,
+                    localizations.componentType,
+                    component.type.displayName.toLowerCase(),
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.5.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.componentCode, component.code,
-                      isDark, isMobile, isTablet,
-                      valueFontSize: component.type == ComponentType.company ? 15.6.sp : 15.5.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.componentCode,
+                    component.code,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: component.type == ComponentType.company ? 15.6.sp : 15.5.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.nameEnglish,
-                      component.name, isDark, isMobile, isTablet,
-                      valueFontSize: 15.4.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.nameEnglish,
+                    component.name,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.4.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.nameArabic,
-                      component.arabicName, isDark, isMobile, isTablet,
-                      isArabic: true,
-                      valueFontSize: 16.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.nameArabic,
+                    component.arabicName,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    isArabic: true,
+                    valueFontSize: 16.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildStatusField(
-                      context, localizations.status, component.status, isDark, isMobile, isTablet),
+                  _buildStatusField(context, localizations.status, component.status, isDark, isMobile, isTablet),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.costCenter, 'CC-0000',
-                      isDark, isMobile, isTablet,
-                      valueFontSize: 15.5.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.costCenter,
+                    'CC-0000',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.5.sp,
+                  ),
                 ],
               )
             : SizedBox(
@@ -254,39 +268,58 @@ class ComponentDetailDialog extends StatelessWidget {
                       right: 432.w + 16.w,
                       top: 0,
                       child: _buildInfoField(
-                          context,
-                          localizations.componentType,
-                          component.type.displayName.toLowerCase(),
-                          isDark,
-                          isMobile,
-                          isTablet,
-                          valueFontSize: 15.5.sp),
+                        context,
+                        localizations.componentType,
+                        component.type.displayName.toLowerCase(),
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.5.sp,
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 0,
-                      child: _buildInfoField(context, localizations.componentCode,
-                          component.code, isDark, isMobile, isTablet,
-                          valueFontSize: component.type == ComponentType.company ? 15.6.sp : 15.5.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.componentCode,
+                        component.code,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: component.type == ComponentType.company ? 15.6.sp : 15.5.sp,
+                      ),
                     ),
                     // Row 2: Name English (left) and Name Arabic (right)
                     Positioned(
                       left: 0,
                       right: 432.w + 16.w,
                       top: 96.h,
-                      child: _buildInfoField(context, localizations.nameEnglish,
-                          component.name, isDark, isMobile, isTablet,
-                          valueFontSize: 15.4.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.nameEnglish,
+                        component.name,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.4.sp,
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 96.h,
-                      child: _buildInfoField(context, localizations.nameArabic,
-                          component.arabicName, isDark, isMobile, isTablet,
-                          isArabic: true,
-                          valueFontSize: 16.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.nameArabic,
+                        component.arabicName,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        isArabic: true,
+                        valueFontSize: 16.sp,
+                      ),
                     ),
                     // Row 3: Status (left) and Cost Center (right)
                     Positioned(
@@ -294,15 +327,27 @@ class ComponentDetailDialog extends StatelessWidget {
                       right: 432.w + 16.w,
                       top: 192.h,
                       child: _buildStatusField(
-                          context, localizations.status, component.status, isDark, isMobile, isTablet),
+                        context,
+                        localizations.status,
+                        component.status,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 192.h,
-                      child: _buildInfoField(context, localizations.costCenter,
-                          'CC-0000', isDark, isMobile, isTablet,
-                          valueFontSize: 15.5.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.costCenter,
+                        'CC-0000',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.5.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -312,14 +357,15 @@ class ComponentDetailDialog extends StatelessWidget {
   }
 
   Widget _buildHierarchySection(
-      BuildContext context,
-      AppLocalizations localizations,
-      bool isDark,
-      bool isMobile,
-      bool isTablet,
-      ComponentValue? parentComponent,
-      List<ComponentValue> childComponents,
-      String hierarchyPath) {
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+    ComponentValue? parentComponent,
+    List<ComponentValue> childComponents,
+    String hierarchyPath,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -341,9 +387,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.6.sp),
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -356,49 +400,53 @@ class ComponentDetailDialog extends StatelessWidget {
             ? Column(
                 children: [
                   _buildInfoField(
-                      context,
-                      localizations.parentComponent,
-                      parentComponent != null
-                          ? '${parentComponent.name} (${parentComponent.code})'
-                          : localizations.rootLevelNoParent,
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: 15.5.sp),
+                    context,
+                    localizations.parentComponent,
+                    parentComponent != null
+                        ? '${parentComponent.name} (${parentComponent.code})'
+                        : localizations.rootLevelNoParent,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.5.sp,
+                  ),
                   SizedBox(height: 12.h),
                   _buildInfoField(
-                      context,
-                      localizations.childComponents,
-                      '${childComponents.length} ${localizations.components}',
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: 15.5.sp),
-                  SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.hierarchyPath,
-                      hierarchyPath, isDark, isMobile, isTablet,
-                      valueFontSize: component.type == ComponentType.company
-                          ? 13.9.sp
-                          : (component.type == ComponentType.businessUnit ? 13.7.sp : 13.8.sp),
-                      customPadding: EdgeInsetsDirectional.only(
-                        start: 16.w,
-                        end: 16.w,
-                        top: 16.h,
-                        bottom: 20.h,
-                      )),
+                    context,
+                    localizations.childComponents,
+                    '${childComponents.length} ${localizations.components}',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.5.sp,
+                  ),
                   SizedBox(height: 12.h),
                   _buildInfoField(
-                      context,
-                      localizations.hierarchyLevel,
-                      '${localizations.level} ${_getHierarchyLevel(component, allComponents)}',
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: component.type == ComponentType.company
-                          ? 15.3.sp
-                          : (component.type == ComponentType.businessUnit
+                    context,
+                    localizations.hierarchyPath,
+                    hierarchyPath,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: component.type == ComponentType.company
+                        ? 13.9.sp
+                        : (component.type == ComponentType.businessUnit ? 13.7.sp : 13.8.sp),
+                    customPadding: EdgeInsetsDirectional.only(start: 16.w, end: 16.w, top: 16.h, bottom: 20.h),
+                  ),
+                  SizedBox(height: 12.h),
+                  _buildInfoField(
+                    context,
+                    localizations.hierarchyLevel,
+                    '${localizations.level} ${_getHierarchyLevel(component, allComponents)}',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: component.type == ComponentType.company
+                        ? 15.3.sp
+                        : (component.type == ComponentType.businessUnit
                               ? 15.3.sp
-                              : (component.type == ComponentType.department ? 15.4.sp : 15.4.sp))),
+                              : (component.type == ComponentType.department ? 15.4.sp : 15.4.sp)),
+                  ),
                 ],
               )
             : SizedBox(
@@ -411,64 +459,69 @@ class ComponentDetailDialog extends StatelessWidget {
                       right: 432.w + 16.w,
                       top: 0,
                       child: _buildInfoField(
-                          context,
-                          localizations.parentComponent,
-                          parentComponent != null
-                              ? '${parentComponent.name} (${parentComponent.code})'
-                              : localizations.rootLevelNoParent,
-                          isDark,
-                          isMobile,
-                          isTablet,
-                          valueFontSize: 15.5.sp),
+                        context,
+                        localizations.parentComponent,
+                        parentComponent != null
+                            ? '${parentComponent.name} (${parentComponent.code})'
+                            : localizations.rootLevelNoParent,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.5.sp,
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 0,
                       child: _buildInfoField(
-                          context,
-                          localizations.childComponents,
-                          '${childComponents.length} ${localizations.components}',
-                          isDark,
-                          isMobile,
-                          isTablet,
-                          valueFontSize: 15.5.sp),
+                        context,
+                        localizations.childComponents,
+                        '${childComponents.length} ${localizations.components}',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.5.sp,
+                      ),
                     ),
                     // Row 2: Hierarchy Path (left) and Hierarchy Level (right)
                     Positioned(
                       left: 0,
                       right: 432.w + 16.w,
                       top: 96.h,
-                      child: _buildInfoField(context, localizations.hierarchyPath,
-                          hierarchyPath, isDark, isMobile, isTablet,
-                          valueFontSize: component.type == ComponentType.company
-                          ? 13.9.sp
-                          : (component.type == ComponentType.businessUnit || component.type == ComponentType.department
-                              ? 13.7.sp
-                              : 13.8.sp),
-                          customPadding: EdgeInsetsDirectional.only(
-                            start: 16.w,
-                            end: 16.w,
-                            top: 16.h,
-                            bottom: 20.h,
-                          )),
+                      child: _buildInfoField(
+                        context,
+                        localizations.hierarchyPath,
+                        hierarchyPath,
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: component.type == ComponentType.company
+                            ? 13.9.sp
+                            : (component.type == ComponentType.businessUnit ||
+                                      component.type == ComponentType.department
+                                  ? 13.7.sp
+                                  : 13.8.sp),
+                        customPadding: EdgeInsetsDirectional.only(start: 16.w, end: 16.w, top: 16.h, bottom: 20.h),
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 96.h,
                       child: _buildInfoField(
-                          context,
-                          localizations.hierarchyLevel,
-                          '${localizations.level} ${_getHierarchyLevel(component, allComponents)}',
-                          isDark,
-                          isMobile,
-                          isTablet,
-                          valueFontSize: component.type == ComponentType.company
-                          ? 15.3.sp
-                          : (component.type == ComponentType.businessUnit
-                              ? 15.3.sp
-                              : (component.type == ComponentType.department ? 15.4.sp : 15.4.sp))),
+                        context,
+                        localizations.hierarchyLevel,
+                        '${localizations.level} ${_getHierarchyLevel(component, allComponents)}',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: component.type == ComponentType.company
+                            ? 15.3.sp
+                            : (component.type == ComponentType.businessUnit
+                                  ? 15.3.sp
+                                  : (component.type == ComponentType.department ? 15.4.sp : 15.4.sp)),
+                      ),
                     ),
                   ],
                 ),
@@ -477,8 +530,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildManagementSection(BuildContext context,
-      AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildManagementSection(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -500,9 +558,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp),
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.5,
                 letterSpacing: 0,
               ),
@@ -516,23 +572,32 @@ class ComponentDetailDialog extends StatelessWidget {
                 children: [
                   _buildManagerField(context, localizations, isDark, isMobile, isTablet),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.location,
-                      component.location ?? localizations.notSpecified, isDark, isMobile, isTablet,
-                      valueFontSize: 15.4.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.location,
+                    component.location ?? localizations.notSpecified,
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.4.sp,
+                  ),
                 ],
               )
             : Row(
                 children: [
-                  SizedBox(
-                    width: 416.w,
-                    child: _buildManagerField(context, localizations, isDark, isMobile, isTablet),
-                  ),
+                  SizedBox(width: 416.w, child: _buildManagerField(context, localizations, isDark, isMobile, isTablet)),
                   SizedBox(width: 16.w),
                   SizedBox(
                     width: 416.w,
-                    child: _buildInfoField(context, localizations.location,
-                        component.location ?? localizations.notSpecified, isDark, isMobile, isTablet,
-                        valueFontSize: 15.4.sp),
+                    child: _buildInfoField(
+                      context,
+                      localizations.location,
+                      component.location ?? localizations.notSpecified,
+                      isDark,
+                      isMobile,
+                      isTablet,
+                      valueFontSize: 15.4.sp,
+                    ),
                   ),
                 ],
               ),
@@ -540,8 +605,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildAuditTrailSection(BuildContext context,
-      AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildAuditTrailSection(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -563,9 +633,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 14.3.sp : 15.3.sp),
                 fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.3,
                 letterSpacing: 0,
               ),
@@ -578,22 +646,24 @@ class ComponentDetailDialog extends StatelessWidget {
             ? Column(
                 children: [
                   _buildInfoField(
-                      context,
-                      localizations.lastUpdatedDate,
-                      _formatDate(component.updatedAt),
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: 15.6.sp),
+                    context,
+                    localizations.lastUpdatedDate,
+                    _formatDate(component.updatedAt),
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.6.sp,
+                  ),
                   SizedBox(height: 12.h),
                   _buildInfoField(
-                      context,
-                      localizations.lastUpdatedBy,
-                      'HR Admin',
-                      isDark,
-                      isMobile,
-                      isTablet,
-                      valueFontSize: component.type == ComponentType.businessUnit ? 15.4.sp : 15.6.sp),
+                    context,
+                    localizations.lastUpdatedBy,
+                    'HR Admin',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: component.type == ComponentType.businessUnit ? 15.4.sp : 15.6.sp,
+                  ),
                 ],
               )
             : Row(
@@ -601,27 +671,29 @@ class ComponentDetailDialog extends StatelessWidget {
                   SizedBox(
                     width: 416.w,
                     child: _buildInfoField(
-                        context,
-                        localizations.lastUpdatedDate,
-                        _formatDate(component.updatedAt),
-                        isDark,
-                        isMobile,
-                        isTablet,
-                        valueFontSize: 15.6.sp),
+                      context,
+                      localizations.lastUpdatedDate,
+                      _formatDate(component.updatedAt),
+                      isDark,
+                      isMobile,
+                      isTablet,
+                      valueFontSize: 15.6.sp,
+                    ),
                   ),
                   SizedBox(width: 16.w),
                   SizedBox(
                     width: 416.w,
                     child: _buildInfoField(
-                        context,
-                        localizations.lastUpdatedBy,
-                        'HR Admin',
-                        isDark,
-                        isMobile,
-                        isTablet,
-                        valueFontSize: component.type == ComponentType.businessUnit
-                            ? 15.4.sp
-                            : (component.type == ComponentType.department ? 15.5.sp : 15.6.sp)),
+                      context,
+                      localizations.lastUpdatedBy,
+                      'HR Admin',
+                      isDark,
+                      isMobile,
+                      isTablet,
+                      valueFontSize: component.type == ComponentType.businessUnit
+                          ? 15.4.sp
+                          : (component.type == ComponentType.department ? 15.5.sp : 15.6.sp),
+                    ),
                   ),
                 ],
               ),
@@ -629,8 +701,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionSection(BuildContext context,
-      AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildDescriptionSection(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -640,9 +717,7 @@ class ComponentDetailDialog extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp),
             fontWeight: FontWeight.w500,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF101828),
+            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             height: 24 / 15.5,
             letterSpacing: 0,
           ),
@@ -662,9 +737,7 @@ class ComponentDetailDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.3.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: 24 / 15.3,
               letterSpacing: 0,
             ),
@@ -674,8 +747,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildAdditionalFieldsSection(BuildContext context,
-      AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildAdditionalFieldsSection(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -685,9 +763,7 @@ class ComponentDetailDialog extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 14.sp : (isTablet ? 14.4.sp : 15.4.sp),
             fontWeight: FontWeight.w500,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF101828),
+            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             height: 24 / 15.4,
             letterSpacing: 0,
           ),
@@ -697,20 +773,38 @@ class ComponentDetailDialog extends StatelessWidget {
         isMobile
             ? Column(
                 children: [
-                  _buildInfoField(context, localizations.establishedDate,
-                      '1990-01-01', isDark, isMobile, isTablet,
-                      valueFontSize: 15.6.sp,
-                      labelFontSize: 13.6.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.establishedDate,
+                    '1990-01-01',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.6.sp,
+                    labelFontSize: 13.6.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.registrationNumber,
-                      'CR-123456', isDark, isMobile, isTablet,
-                      valueFontSize: 15.6.sp,
-                      labelFontSize: 13.7.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.registrationNumber,
+                    'CR-123456',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.6.sp,
+                    labelFontSize: 13.7.sp,
+                  ),
                   SizedBox(height: 12.h),
-                  _buildInfoField(context, localizations.taxId, 'TAX-KW-001',
-                      isDark, isMobile, isTablet,
-                      valueFontSize: 15.6.sp,
-                      labelFontSize: 13.3.sp),
+                  _buildInfoField(
+                    context,
+                    localizations.taxId,
+                    'TAX-KW-001',
+                    isDark,
+                    isMobile,
+                    isTablet,
+                    valueFontSize: 15.6.sp,
+                    labelFontSize: 13.3.sp,
+                  ),
                 ],
               )
             : SizedBox(
@@ -722,29 +816,47 @@ class ComponentDetailDialog extends StatelessWidget {
                       left: 0,
                       right: 432.w + 16.w,
                       top: 0,
-                      child: _buildInfoField(context, localizations.establishedDate,
-                          '1990-01-01', isDark, isMobile, isTablet,
-                          valueFontSize: 15.6.sp,
-                          labelFontSize: 13.6.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.establishedDate,
+                        '1990-01-01',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.6.sp,
+                        labelFontSize: 13.6.sp,
+                      ),
                     ),
                     Positioned(
                       left: 432.w + 16.w,
                       right: 0,
                       top: 0,
-                      child: _buildInfoField(context, localizations.registrationNumber,
-                          'CR-123456', isDark, isMobile, isTablet,
-                          valueFontSize: 15.6.sp,
-                          labelFontSize: 13.7.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.registrationNumber,
+                        'CR-123456',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.6.sp,
+                        labelFontSize: 13.7.sp,
+                      ),
                     ),
                     // Row 2: Tax ID (left only)
                     Positioned(
                       left: 0,
                       right: 432.w + 16.w,
                       top: 96.h,
-                      child: _buildInfoField(context, localizations.taxId, 'TAX-KW-001',
-                          isDark, isMobile, isTablet,
-                          valueFontSize: 15.6.sp,
-                          labelFontSize: 13.3.sp),
+                      child: _buildInfoField(
+                        context,
+                        localizations.taxId,
+                        'TAX-KW-001',
+                        isDark,
+                        isMobile,
+                        isTablet,
+                        valueFontSize: 15.6.sp,
+                        labelFontSize: 13.3.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -753,12 +865,18 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoField(BuildContext context, String label, String value,
-      bool isDark, bool isMobile, bool isTablet,
-      {bool isArabic = false,
-      double? valueFontSize,
-      double? labelFontSize,
-      EdgeInsetsDirectional? customPadding}) {
+  Widget _buildInfoField(
+    BuildContext context,
+    String label,
+    String value,
+    bool isDark,
+    bool isMobile,
+    bool isTablet, {
+    bool isArabic = false,
+    double? valueFontSize,
+    double? labelFontSize,
+    EdgeInsetsDirectional? customPadding,
+  }) {
     // Pixel perfect: p-[16px], gap-[4px]
     return Container(
       width: double.infinity,
@@ -776,9 +894,7 @@ class ComponentDetailDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: labelFontSize ?? (isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.6.sp)),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF4A5565),
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
               height: 20 / (labelFontSize ?? 13.6),
               letterSpacing: 0,
             ),
@@ -791,11 +907,12 @@ class ComponentDetailDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: valueFontSize ?? (isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp)),
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
-              height: (valueFontSize != null && (valueFontSize == 13.7.sp || valueFontSize == 13.8.sp || valueFontSize == 13.9.sp))
-                  ? 20 / valueFontSize  // Special case for Hierarchy Path (leading-[20px])
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+              height:
+                  (valueFontSize != null &&
+                      (valueFontSize == 13.7.sp || valueFontSize == 13.8.sp || valueFontSize == 13.9.sp))
+                  ? 20 /
+                        valueFontSize // Special case for Hierarchy Path (leading-[20px])
                   : 24 / (valueFontSize ?? 15.5),
               letterSpacing: 0,
             ),
@@ -807,8 +924,14 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusField(BuildContext context, String label, bool isActive,
-      bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildStatusField(
+    BuildContext context,
+    String label,
+    bool isActive,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Container(
       width: double.infinity,
       // Pixel perfect: p-[16px]
@@ -826,9 +949,7 @@ class ComponentDetailDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.7.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF4A5565),
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
               height: 20 / 13.7,
               letterSpacing: 0,
             ),
@@ -836,21 +957,14 @@ class ComponentDetailDialog extends StatelessWidget {
           SizedBox(height: 4.h),
           // Pixel perfect: pt-[2.5px] px-[8px] py-[3px]
           Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: 2.5.h,
-            ),
+            padding: EdgeInsetsDirectional.only(top: 2.5.h),
             child: Container(
-              padding: EdgeInsetsDirectional.symmetric(
-                horizontal: 8.w,
-                vertical: 3.h,
-              ),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
               decoration: BoxDecoration(
                 // Pixel perfect: bg-[#dcfce7] for active
                 color: isActive
                     ? (isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7))
-                    : (isDark
-                        ? AppColors.errorBgDark
-                        : const Color(0xFFFFE2E2)),
+                    : (isDark ? AppColors.errorBgDark : const Color(0xFFFFE2E2)),
                 // Pixel perfect: rounded-[16777200px] (fully rounded)
                 borderRadius: BorderRadius.circular(9999.r),
               ),
@@ -861,12 +975,8 @@ class ComponentDetailDialog extends StatelessWidget {
                   fontSize: 11.8.sp,
                   fontWeight: FontWeight.w500,
                   color: isActive
-                      ? (isDark
-                          ? AppColors.successTextDark
-                          : const Color(0xFF016630))
-                      : (isDark
-                          ? AppColors.errorTextDark
-                          : const Color(0xFFC10007)),
+                      ? (isDark ? AppColors.successTextDark : const Color(0xFF016630))
+                      : (isDark ? AppColors.errorTextDark : const Color(0xFFC10007)),
                   height: 16 / 11.8,
                   letterSpacing: 0,
                 ),
@@ -878,8 +988,13 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildManagerField(BuildContext context, AppLocalizations localizations,
-      bool isDark, bool isMobile, bool isTablet) {
+  Widget _buildManagerField(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    bool isMobile,
+    bool isTablet,
+  ) {
     return Container(
       width: double.infinity,
       // Pixel perfect: p-[16px]
@@ -897,9 +1012,7 @@ class ComponentDetailDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.6.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF4A5565),
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
               height: 20 / 13.6,
               letterSpacing: 0,
             ),
@@ -912,14 +1025,12 @@ class ComponentDetailDialog extends StatelessWidget {
               fontSize: isMobile
                   ? 14.sp
                   : (isTablet
-                      ? 14.5.sp
-                      : (component.type == ComponentType.businessUnit
-                          ? 15.6.sp
-                          : (component.type == ComponentType.department ? 15.4.sp : 15.5.sp))),
+                        ? 14.5.sp
+                        : (component.type == ComponentType.businessUnit
+                              ? 15.6.sp
+                              : (component.type == ComponentType.department ? 15.4.sp : 15.5.sp))),
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
               height: component.type == ComponentType.businessUnit
                   ? 24 / 15.6
                   : (component.type == ComponentType.department ? 24 / 15.4 : 24 / 15.5),
@@ -934,9 +1045,7 @@ class ComponentDetailDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                 fontWeight: FontWeight.w400,
-                color: isDark
-                    ? AppColors.textTertiaryDark
-                    : const Color(0xFF6A7282),
+                color: isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
                 height: 16 / 12,
                 letterSpacing: 0,
               ),
@@ -947,18 +1056,14 @@ class ComponentDetailDialog extends StatelessWidget {
     );
   }
 
-  String _buildHierarchyPath(
-      ComponentValue component, List<ComponentValue> allComponents) {
+  String _buildHierarchyPath(ComponentValue component, List<ComponentValue> allComponents) {
     final path = <String>[];
     ComponentValue? current = component;
 
     while (current != null) {
       path.insert(0, current.code);
       if (current.parentId != null) {
-        current = allComponents.firstWhere(
-          (c) => c.id == current!.parentId,
-          orElse: () => current!,
-        );
+        current = allComponents.firstWhere((c) => c.id == current!.parentId, orElse: () => current!);
         if (current.parentId == null) break;
       } else {
         break;
@@ -969,17 +1074,13 @@ class ComponentDetailDialog extends StatelessWidget {
     return path.join(' → ');
   }
 
-  int _getHierarchyLevel(
-      ComponentValue component, List<ComponentValue> allComponents) {
+  int _getHierarchyLevel(ComponentValue component, List<ComponentValue> allComponents) {
     int level = 1;
     ComponentValue? current = component;
 
     while (current?.parentId != null) {
       level++;
-      current = allComponents.firstWhere(
-        (c) => c.id == current!.parentId,
-        orElse: () => current!,
-      );
+      current = allComponents.firstWhere((c) => c.id == current!.parentId, orElse: () => current!);
       if (current.parentId == null) break;
     }
 

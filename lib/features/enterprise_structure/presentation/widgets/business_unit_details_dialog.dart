@@ -5,25 +5,18 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class BusinessUnitDetailsDialog extends StatelessWidget {
   final BusinessUnitOverview businessUnit;
 
-  const BusinessUnitDetailsDialog({
-    super.key,
-    required this.businessUnit,
-  });
+  const BusinessUnitDetailsDialog({super.key, required this.businessUnit});
 
-  static Future<void> show(
-    BuildContext context,
-    BusinessUnitOverview businessUnit,
-  ) {
+  static Future<void> show(BuildContext context, BusinessUnitOverview businessUnit) {
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.45),
-      builder: (dialogContext) => BusinessUnitDetailsDialog(
-        businessUnit: businessUnit,
-      ),
+      builder: (dialogContext) => BusinessUnitDetailsDialog(businessUnit: businessUnit),
     );
   }
 
@@ -32,74 +25,46 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        width: 760.w,
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 25,
-              offset: const Offset(0, 25),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context, localizations),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSection(
-                      context,
-                      localizations.basicInformation,
-                      'assets/icons/business_unit_basic_icon.svg',
-                      [
-                        _buildInfoRow(
-                          localizations.unitCode,
-                          businessUnit.code,
-                        ),
-                        _buildStatusRow(
-                          localizations.status,
-                          businessUnit.isActive,
-                          isDark,
-                        ),
-                        _buildInfoRow(
-                          localizations.division,
-                          businessUnit.divisionName,
-                        ),
-                        _buildInfoRow(
-                          localizations.company,
-                          businessUnit.companyName,
-                        ),
-                        _buildInfoRow(
-                          localizations.establishedDate,
-                          businessUnit.establishedDate ?? 'N/A',
-                        ),
-                        _buildInfoRow(
-                          localizations.businessFocus,
-                          businessUnit.focusArea,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    _buildSection(
-                      context,
-                      localizations.leadership,
-                      'assets/icons/leadership_icon.svg',
-                      [
-                        _buildInfoRow(
-                          '${localizations.headOfUnit}:',
-                          businessUnit.headName,
-                        ),
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 760.w,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.backgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 25)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context, localizations),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSection(
+                        context,
+                        localizations.basicInformation,
+                        'assets/icons/business_unit_basic_icon.svg',
+                        [
+                          _buildInfoRow(localizations.unitCode, businessUnit.code),
+                          _buildStatusRow(localizations.status, businessUnit.isActive, isDark),
+                          _buildInfoRow(localizations.division, businessUnit.divisionName),
+                          _buildInfoRow(localizations.company, businessUnit.companyName),
+                          _buildInfoRow(localizations.establishedDate, businessUnit.establishedDate ?? 'N/A'),
+                          _buildInfoRow(localizations.businessFocus, businessUnit.focusArea),
+                        ],
+                      ),
+                      SizedBox(height: 24.h),
+                      _buildSection(context, localizations.leadership, 'assets/icons/leadership_icon.svg', [
+                        _buildInfoRow('${localizations.headOfUnit}:', businessUnit.headName),
                         SizedBox(height: 8.h),
                         _buildIconRow(
                           context,
@@ -114,45 +79,23 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
                           businessUnit.headPhone ?? localizations.notSpecified,
                           'assets/icons/head_phone_icon.svg',
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    _buildSection(
-                      context,
-                      localizations.organizationalMetrics,
-                      'assets/icons/metrics_icon.svg',
-                      [
-                        _buildInfoRow(
-                          localizations.totalEmployees,
-                          '${businessUnit.employees}',
-                        ),
-                        _buildInfoRow(
-                          localizations.totalDepartments,
-                          '${businessUnit.departments}',
-                        ),
-                        _buildInfoRow(
-                          localizations.annualBudget,
-                          '${businessUnit.budget} KWD'.replaceAll('M M', 'M'),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    _buildSection(
-                      context,
-                      localizations.description,
-                      'assets/icons/description_icon.svg',
-                      [
-                        _buildLongText(
-                          businessUnit.description ??
-                              localizations.hintBusinessUnitDescription,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ]),
+                      SizedBox(height: 24.h),
+                      _buildSection(context, localizations.organizationalMetrics, 'assets/icons/metrics_icon.svg', [
+                        _buildInfoRow(localizations.totalEmployees, '${businessUnit.employees}'),
+                        _buildInfoRow(localizations.totalDepartments, '${businessUnit.departments}'),
+                        _buildInfoRow(localizations.annualBudget, '${businessUnit.budget} KWD'.replaceAll('M M', 'M')),
+                      ]),
+                      SizedBox(height: 24.h),
+                      _buildSection(context, localizations.description, 'assets/icons/description_icon.svg', [
+                        _buildLongText(businessUnit.description ?? localizations.hintBusinessUnitDescription),
+                      ]),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -175,11 +118,7 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/business_unit_details_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              SvgIconWidget(assetPath: 'assets/icons/business_unit_details_icon.svg', size: 20.sp, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.businessUnitDetails,
@@ -200,11 +139,7 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(
-                assetPath: 'assets/icons/close_dialog_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
             ),
           ),
         ],
@@ -212,23 +147,14 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(
-    BuildContext context,
-    String title,
-    String iconPath,
-    List<Widget> children,
-  ) {
+  Widget _buildSection(BuildContext context, String title, String iconPath, List<Widget> children) {
     final isDark = context.isDark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            SvgIconWidget(
-              assetPath: iconPath,
-              size: 20.sp,
-              color: context.themeTextPrimary,
-            ),
+            SvgIconWidget(assetPath: iconPath, size: 20.sp, color: context.themeTextPrimary),
             SizedBox(width: 8.w),
             Text(
               title,
@@ -249,10 +175,7 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
             color: isDark ? AppColors.inputBgDark : const Color(0xFFF9FAFB),
             borderRadius: BorderRadius.circular(10.r),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
-          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
         ),
       ],
     );
@@ -326,20 +249,11 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildIconRow(
-    BuildContext context,
-    String label,
-    String value,
-    String iconPath,
-  ) {
+  Widget _buildIconRow(BuildContext context, String label, String value, String iconPath) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgIconWidget(
-          assetPath: iconPath,
-          size: 16.sp,
-          color: context.themeTextSecondary,
-        ),
+        SvgIconWidget(assetPath: iconPath, size: 16.sp, color: context.themeTextSecondary),
         SizedBox(width: 8.w),
         Expanded(
           child: Column(
@@ -383,4 +297,3 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
     );
   }
 }
-

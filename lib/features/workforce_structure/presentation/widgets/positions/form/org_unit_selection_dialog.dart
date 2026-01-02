@@ -10,48 +10,32 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class OrgUnitSelectionDialog extends ConsumerStatefulWidget {
   final OrgStructureLevel level;
-  final StateNotifierProvider<
-    EnterpriseSelectionNotifier,
-    EnterpriseSelectionState
-  >
-  selectionProvider;
+  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
 
-  const OrgUnitSelectionDialog({
-    super.key,
-    required this.level,
-    required this.selectionProvider,
-  });
+  const OrgUnitSelectionDialog({super.key, required this.level, required this.selectionProvider});
 
   static Future<bool> show({
     required BuildContext context,
     required OrgStructureLevel level,
-    required StateNotifierProvider<
-      EnterpriseSelectionNotifier,
-      EnterpriseSelectionState
-    >
-    selectionProvider,
+    required StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider,
   }) async {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => OrgUnitSelectionDialog(
-        level: level,
-        selectionProvider: selectionProvider,
-      ),
+      builder: (context) => OrgUnitSelectionDialog(level: level, selectionProvider: selectionProvider),
     );
     return result ?? false;
   }
 
   @override
-  ConsumerState<OrgUnitSelectionDialog> createState() =>
-      _OrgUnitSelectionDialogState();
+  ConsumerState<OrgUnitSelectionDialog> createState() => _OrgUnitSelectionDialogState();
 }
 
-class _OrgUnitSelectionDialogState
-    extends ConsumerState<OrgUnitSelectionDialog> {
+class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -68,11 +52,8 @@ class _OrgUnitSelectionDialogState
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      ref
-          .read(widget.selectionProvider.notifier)
-          .loadMoreOptionsForLevel(widget.level.levelCode);
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      ref.read(widget.selectionProvider.notifier).loadMoreOptionsForLevel(widget.level.levelCode);
     }
   }
 
@@ -81,47 +62,33 @@ class _OrgUnitSelectionDialogState
     final selectionState = ref.watch(widget.selectionProvider);
     final options = selectionState.getOptions(widget.level.levelCode);
     final isLoading = selectionState.isLoading(widget.level.levelCode);
-    final isFetchingMore = selectionState.isFetchingMore(
-      widget.level.levelCode,
-    );
+    final isFetchingMore = selectionState.isFetchingMore(widget.level.levelCode);
     final error = selectionState.getError(widget.level.levelCode);
 
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      elevation: 8,
-      child: Container(
-        width: 550.w,
-        constraints: BoxConstraints(maxHeight: 650.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            OrgUnitSelectionHeader(
-              levelName: widget.level.levelName,
-              onClose: () => Navigator.of(context).pop(false),
-              onSearchChanged: (value) {
-                ref
-                    .read(widget.selectionProvider.notifier)
-                    .setSearchQuery(widget.level.levelCode, value);
-              },
-              initialSearchQuery: selectionState.getSearchQuery(
-                widget.level.levelCode,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        elevation: 8,
+        child: Container(
+          width: 550.w,
+          constraints: BoxConstraints(maxHeight: 650.h),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              OrgUnitSelectionHeader(
+                levelName: widget.level.levelName,
+                onClose: () => Navigator.of(context).pop(false),
+                onSearchChanged: (value) {
+                  ref.read(widget.selectionProvider.notifier).setSearchQuery(widget.level.levelCode, value);
+                },
+                initialSearchQuery: selectionState.getSearchQuery(widget.level.levelCode),
               ),
-            ),
-            Flexible(
-              child: _buildContent(
-                context,
-                ref,
-                options,
-                isLoading,
-                isFetchingMore,
-                error,
-              ),
-            ),
-          ],
+              Flexible(child: _buildContent(context, ref, options, isLoading, isFetchingMore, error)),
+            ],
+          ),
         ),
       ),
     );
@@ -143,9 +110,7 @@ class _OrgUnitSelectionDialogState
       return OrgUnitSelectionErrorState(
         error: error,
         onRetry: () {
-          ref
-              .read(widget.selectionProvider.notifier)
-              .loadOptionsForLevel(widget.level.levelCode);
+          ref.read(widget.selectionProvider.notifier).loadOptionsForLevel(widget.level.levelCode);
         },
       );
     }
@@ -157,12 +122,7 @@ class _OrgUnitSelectionDialogState
     return _buildOptionsList(context, ref, options, isFetchingMore);
   }
 
-  Widget _buildOptionsList(
-    BuildContext context,
-    WidgetRef ref,
-    List<OrgUnit> options,
-    bool isFetchingMore,
-  ) {
+  Widget _buildOptionsList(BuildContext context, WidgetRef ref, List<OrgUnit> options, bool isFetchingMore) {
     final selectionState = ref.watch(widget.selectionProvider);
     final selectedUnit = selectionState.getSelection(widget.level.levelCode);
 
@@ -182,9 +142,7 @@ class _OrgUnitSelectionDialogState
           unit: unit,
           isSelected: isSelected,
           onTap: () {
-            ref
-                .read(widget.selectionProvider.notifier)
-                .selectUnit(widget.level.levelCode, unit);
+            ref.read(widget.selectionProvider.notifier).selectUnit(widget.level.levelCode, unit);
             Navigator.of(context).pop(true);
           },
         );

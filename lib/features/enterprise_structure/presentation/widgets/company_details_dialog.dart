@@ -5,14 +5,12 @@ import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class CompanyDetailsDialog extends StatelessWidget {
   final CompanyOverview company;
 
-  const CompanyDetailsDialog({
-    super.key,
-    required this.company,
-  });
+  const CompanyDetailsDialog({super.key, required this.company});
 
   static Future<void> show(BuildContext context, CompanyOverview company) {
     return showDialog<void>(
@@ -27,47 +25,44 @@ class CompanyDetailsDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: Container(
-        width: 800.w,
-        constraints: BoxConstraints(maxHeight: 700.h),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.25),
-              blurRadius: 50,
-              offset: const Offset(0, 25),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(localizations),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildBasicInformation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildContactInformation(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildFinancialAndOperational(localizations, isDark),
-                    ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Container(
+          width: 800.w,
+          constraints: BoxConstraints(maxHeight: 700.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.backgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 50, offset: const Offset(0, 25)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(localizations),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBasicInformation(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildContactInformation(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildFinancialAndOperational(localizations, isDark),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -90,11 +85,7 @@ class CompanyDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/company_stat_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              SvgIconWidget(assetPath: 'assets/icons/company_stat_icon.svg', size: 20.sp, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.companyDetails,
@@ -110,18 +101,14 @@ class CompanyDetailsDialog extends StatelessWidget {
           Builder(
             builder: (innerContext) => GestureDetector(
               onTap: () => Navigator.of(innerContext).pop(),
-            child: Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(4.r),
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
               ),
-              child: SvgIconWidget(
-                assetPath: 'assets/icons/close_dialog_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
-            ),
             ),
           ),
         ],
@@ -133,11 +120,7 @@ class CompanyDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.basicInformation,
-          'assets/icons/company_stat_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.basicInformation, 'assets/icons/company_stat_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -148,11 +131,7 @@ class CompanyDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildInfoRow(
-                '${localizations.companyCode}:',
-                company.entityCode,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.companyCode}:', company.entityCode, isDark),
               SizedBox(height: 8.h),
               _buildInfoRowWithBadge(
                 '${localizations.status}:',
@@ -161,11 +140,7 @@ class CompanyDetailsDialog extends StatelessWidget {
                 isDark,
               ),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.registrationNumber}:',
-                company.registrationNumber,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.registrationNumber}:', company.registrationNumber, isDark),
               SizedBox(height: 8.h),
               _buildInfoRow(
                 '${localizations.taxId}:',
@@ -179,11 +154,7 @@ class CompanyDetailsDialog extends StatelessWidget {
                 isDark,
               ),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.industry}:',
-                company.industry,
-                isDark,
-              ),
+              _buildInfoRow('${localizations.industry}:', company.industry, isDark),
             ],
           ),
         ),
@@ -195,11 +166,7 @@ class CompanyDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.contactInformation,
-          'assets/icons/phone_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.contactInformation, 'assets/icons/phone_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -210,27 +177,15 @@ class CompanyDetailsDialog extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildContactRow(
-                'assets/icons/location_header_icon.svg',
-                [
-                  company.location.split(',').first,
-                  company.location.split(',').skip(1).join(','),
-                  'P.O. Box 12345, 13001', // Mock data
-                ],
-                isDark,
-              ),
+              _buildContactRow('assets/icons/location_header_icon.svg', [
+                company.location.split(',').first,
+                company.location.split(',').skip(1).join(','),
+                'P.O. Box 12345, 13001', // Mock data
+              ], isDark),
               SizedBox(height: 8.h),
-              _buildContactIconRow(
-                'assets/icons/phone_icon.svg',
-                company.phone,
-                isDark,
-              ),
+              _buildContactIconRow('assets/icons/phone_icon.svg', company.phone, isDark),
               SizedBox(height: 8.h),
-              _buildContactIconRow(
-                'assets/icons/email_envelope_purple.svg',
-                company.email,
-                isDark,
-              ),
+              _buildContactIconRow('assets/icons/email_envelope_purple.svg', company.email, isDark),
               SizedBox(height: 8.h),
               _buildContactIconRow(
                 'assets/icons/circle_icon.svg',
@@ -248,11 +203,7 @@ class CompanyDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          localizations.financialAndOperational,
-          'assets/icons/financial_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(localizations.financialAndOperational, 'assets/icons/financial_icon.svg', isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -275,11 +226,7 @@ class CompanyDetailsDialog extends StatelessWidget {
                 isDark,
               ),
               SizedBox(height: 8.h),
-              _buildInfoRow(
-                '${localizations.totalEmployees}:',
-                company.employees.toString(),
-                isDark,
-              ),
+              _buildInfoRow('${localizations.totalEmployees}:', company.employees.toString(), isDark),
             ],
           ),
         ),
@@ -430,4 +377,3 @@ class CompanyDetailsDialog extends StatelessWidget {
     );
   }
 }
-

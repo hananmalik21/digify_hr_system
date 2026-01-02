@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,64 +26,54 @@ class BulkUploadDialog extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final isMobile = ResponsiveHelper.isMobile(context);
 
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      backgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
-      child: Container(
-        width: isMobile ? double.infinity : 684.w,
-        constraints: BoxConstraints(maxHeight: 900.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context, isDark, localizations, isMobile),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 16.w : 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 24.h),
-                      _buildInstructions(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildStepDownload(localizations),
-                      SizedBox(height: 24.h),
-                      _buildStepUpload(localizations, isDark),
-                      SizedBox(height: 24.h),
-                      _buildTemplatePreview(localizations, isDark, isMobile),
-                      SizedBox(height: 24.h),
-                    ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        backgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        child: Container(
+          width: isMobile ? double.infinity : 684.w,
+          constraints: BoxConstraints(maxHeight: 900.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context, isDark, localizations, isMobile),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: isMobile ? 16.w : 24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 24.h),
+                        _buildInstructions(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildStepDownload(localizations),
+                        SizedBox(height: 24.h),
+                        _buildStepUpload(localizations, isDark),
+                        SizedBox(height: 24.h),
+                        _buildTemplatePreview(localizations, isDark, isMobile),
+                        SizedBox(height: 24.h),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            _buildFooter(context, isDark, localizations, isMobile),
-          ],
+              _buildFooter(context, isDark, localizations, isMobile),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    bool isDark,
-    AppLocalizations localizations,
-    bool isMobile,
-  ) {
+  Widget _buildHeader(BuildContext context, bool isDark, AppLocalizations localizations, bool isMobile) {
     return Container(
-      padding: EdgeInsets.fromLTRB(
-        isMobile ? 18.w : 24.w,
-        24.h,
-        isMobile ? 18.w : 24.w,
-        25.h,
-      ),
+      padding: EdgeInsets.fromLTRB(isMobile ? 18.w : 24.w, 24.h, isMobile ? 18.w : 24.w, 25.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       child: Row(
@@ -128,10 +119,7 @@ class BulkUploadDialog extends StatelessWidget {
       padding: EdgeInsets.all(17.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.infoBgDark : AppColors.infoBg,
-        border: Border.all(
-          color: isDark ? AppColors.infoBorderDark : AppColors.infoBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.infoBorderDark : AppColors.infoBorder, width: 1),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -203,11 +191,7 @@ class BulkUploadDialog extends StatelessWidget {
         SizedBox(height: 8.h),
         ElevatedButton.icon(
           onPressed: () {},
-          icon: SvgIconWidget(
-            assetPath: 'assets/icons/download_icon.svg',
-            size: 20.sp,
-            color: Colors.white,
-          ),
+          icon: SvgIconWidget(assetPath: 'assets/icons/download_icon.svg', size: 20.sp, color: Colors.white),
           label: Text(
             localizations.bulkUploadDownloadTemplate,
             style: TextStyle(
@@ -297,11 +281,7 @@ class BulkUploadDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildTemplatePreview(
-    AppLocalizations localizations,
-    bool isDark,
-    bool isMobile,
-  ) {
+  Widget _buildTemplatePreview(AppLocalizations localizations, bool isDark, bool isMobile) {
     final columns = [
       localizations.bulkUploadTypeHeader,
       localizations.bulkUploadCodeHeader,
@@ -336,44 +316,71 @@ class BulkUploadDialog extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            localizations.bulkUploadTemplatePreview,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 13.8.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF364153),
-              height: 20 / 13.8,
-            ),
+      children: [
+        Text(
+          localizations.bulkUploadTemplatePreview,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 13.8.sp,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF364153),
+            height: 20 / 13.8,
           ),
-          SizedBox(height: 8.h),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                margin: EdgeInsets.all(1.r),
-                child: Column(
-                  children: [
-                    Container(
-                      color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.r),
+            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              margin: EdgeInsets.all(1.r),
+              child: Column(
+                children: [
+                  Container(
+                    color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
+                    child: Row(
+                      children: List.generate(
+                        columns.length,
+                        (index) => Container(
+                          width: widths[index].w * (isMobile ? 0.8 : 1),
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 17.75.h),
+                          child: Text(
+                            columns[index],
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 13.7.sp,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF4A5565),
+                              height: 20 / 13.7,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  ...sampleRows.map(
+                    (row) => Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                        ),
+                      ),
                       child: Row(
                         children: List.generate(
-                          columns.length,
+                          row.length,
                           (index) => Container(
                             width: widths[index].w * (isMobile ? 0.8 : 1),
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 17.75.h),
+                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.25.h),
                             child: Text(
-                              columns[index],
+                              row[index],
                               style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 13.7.sp,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF4A5565),
+                                fontFamily: index == 3 ? '.SF Arabic' : 'Inter',
+                                fontSize: index == 3 || index == 5 ? 14.sp : 13.7.sp,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF101828),
                                 height: 20 / 13.7,
                               ),
                             ),
@@ -381,59 +388,21 @@ class BulkUploadDialog extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ...sampleRows.map(
-                      (row) => Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: List.generate(
-                            row.length,
-                            (index) => Container(
-                              width: widths[index].w * (isMobile ? 0.8 : 1),
-                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.25.h),
-                              child: Text(
-                                row[index],
-                                style: TextStyle(
-                                  fontFamily: index == 3 ? '.SF Arabic' : 'Inter',
-                                  fontSize: index == 3 || index == 5 ? 14.sp : 13.7.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: const Color(0xFF101828),
-                                  height: 20 / 13.7,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  Widget _buildFooter(
-    BuildContext context,
-    bool isDark,
-    AppLocalizations localizations,
-    bool isMobile,
-  ) {
+  Widget _buildFooter(BuildContext context, bool isDark, AppLocalizations localizations, bool isMobile) {
     final cancelButton = OutlinedButton(
       onPressed: () => Navigator.of(context).pop(),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: const Color(0xFFD1D5DC),
-          width: 1,
-        ),
+        side: BorderSide(color: const Color(0xFFD1D5DC), width: 1),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         backgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
@@ -452,11 +421,7 @@ class BulkUploadDialog extends StatelessWidget {
 
     final uploadButton = ElevatedButton.icon(
       onPressed: () {},
-      icon: SvgIconWidget(
-        assetPath: 'assets/icons/bulk_upload_icon_figma.svg',
-        size: 20.sp,
-        color: Colors.white,
-      ),
+      icon: SvgIconWidget(assetPath: 'assets/icons/bulk_upload_icon_figma.svg', size: 20.sp, color: Colors.white),
       label: Text(
         localizations.bulkUploadUploadButton,
         style: TextStyle(
@@ -479,26 +444,15 @@ class BulkUploadDialog extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(24.w, 17.h, 24.w, 24.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1)),
       ),
       child: isMobile
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: cancelButton,
-                ),
+                SizedBox(width: double.infinity, child: cancelButton),
                 SizedBox(height: 12.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: uploadButton,
-                ),
+                SizedBox(width: double.infinity, child: uploadButton),
               ],
             )
           : Row(
@@ -541,10 +495,7 @@ class DashedBorder extends StatelessWidget {
         gapLength: gapLength,
         borderRadius: borderRadius,
       ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: child,
-      ),
+      child: ClipRRect(borderRadius: borderRadius, child: child),
     );
   }
 }
@@ -601,4 +552,3 @@ class _DashedBorderPainter extends CustomPainter {
         oldDelegate.borderRadius != borderRadius;
   }
 }
-

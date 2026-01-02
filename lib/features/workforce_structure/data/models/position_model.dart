@@ -119,15 +119,9 @@ class PositionModel {
       numberOfPositions: _asInt(json['number_of_positions']),
       filledPositions: _asInt(json['filled_positions']),
       employmentType: json['employment_type'] as String?,
-      budgetedMinKd: json['budgeted_min_kd'] != null
-          ? _asDouble(json['budgeted_min_kd'])
-          : null,
-      budgetedMaxKd: json['budgeted_max_kd'] != null
-          ? _asDouble(json['budgeted_max_kd'])
-          : null,
-      actualAvgKd: json['actual_avg_kd'] != null
-          ? _asDouble(json['actual_avg_kd'])
-          : null,
+      budgetedMinKd: json['budgeted_min_kd'] != null ? _asDouble(json['budgeted_min_kd']) : null,
+      budgetedMaxKd: json['budgeted_max_kd'] != null ? _asDouble(json['budgeted_max_kd']) : null,
+      actualAvgKd: json['actual_avg_kd'] != null ? _asDouble(json['actual_avg_kd']) : null,
       reportsToPositionId: json['reports_to_position_id'] as int?,
       createdBy: _asString(json['created_by'], fallback: 'SYSTEM'),
       createdDate: _asString(json['created_date']),
@@ -135,22 +129,14 @@ class PositionModel {
       lastUpdatedDate: _asString(json['last_updated_date']),
       lastUpdateLogin: _asString(json['last_update_login'], fallback: 'SYSTEM'),
       orgStructure: json['org_structure'] != null
-          ? OrgStructureModel.fromJson(
-              json['org_structure'] as Map<String, dynamic>,
-            )
+          ? OrgStructureModel.fromJson(json['org_structure'] as Map<String, dynamic>)
           : null,
-      orgUnit: json['org_unit'] != null
-          ? OrgUnitModel.fromJson(json['org_unit'] as Map<String, dynamic>)
-          : null,
+      orgUnit: json['org_unit'] != null ? OrgUnitModel.fromJson(json['org_unit'] as Map<String, dynamic>) : null,
       jobFamily: json['job_family'] != null
           ? JobFamilyModel.fromJson(json['job_family'] as Map<String, dynamic>)
           : null,
-      jobLevel: json['job_level'] != null
-          ? JobLevelModel.fromJson(json['job_level'] as Map<String, dynamic>)
-          : null,
-      grade: json['grade'] != null
-          ? GradeModel.fromJson(json['grade'] as Map<String, dynamic>)
-          : null,
+      jobLevel: json['job_level'] != null ? JobLevelModel.fromJson(json['job_level'] as Map<String, dynamic>) : null,
+      grade: json['grade'] != null ? GradeModel.fromJson(json['grade'] as Map<String, dynamic>) : null,
       reportsTo: json['reports_to'] != null
           ? ReportsToModel.fromJson(json['reports_to'] as Map<String, dynamic>)
           : null,
@@ -205,10 +191,7 @@ class PositionModel {
     // Get department from org path or org unit
     String department = '';
     if (orgPath != null && orgPath!.isNotEmpty) {
-      final deptNode = orgPath!.firstWhere(
-        (node) => node.levelCode == 'DEPARTMENT',
-        orElse: () => orgPath!.last,
-      );
+      final deptNode = orgPath!.firstWhere((node) => node.levelCode == 'DEPARTMENT', orElse: () => orgPath!.last);
       department = deptNode.nameEn;
     } else if (orgUnit != null) {
       department = orgUnit!.nameEn;
@@ -217,10 +200,7 @@ class PositionModel {
     // Get division from org path
     String division = '';
     if (orgPath != null && orgPath!.isNotEmpty) {
-      final divNode = orgPath!.firstWhere(
-        (node) => node.levelCode == 'DIVISION',
-        orElse: () => orgPath!.first,
-      );
+      final divNode = orgPath!.firstWhere((node) => node.levelCode == 'DIVISION', orElse: () => orgPath!.first);
       division = divNode.nameEn;
     }
 
@@ -238,15 +218,9 @@ class PositionModel {
       division: division,
       costCenter: costCenter ?? '',
       location: location ?? '',
-      budgetedMin: budgetedMinKd != null
-          ? '${budgetedMinKd!.toStringAsFixed(0)} KD'
-          : '',
-      budgetedMax: budgetedMaxKd != null
-          ? '${budgetedMaxKd!.toStringAsFixed(0)} KD'
-          : '',
-      actualAverage: actualAvgKd != null
-          ? '${actualAvgKd!.toStringAsFixed(0)} KD'
-          : '',
+      budgetedMin: budgetedMinKd != null ? '${budgetedMinKd!.toStringAsFixed(0)} KD' : '',
+      budgetedMax: budgetedMaxKd != null ? '${budgetedMaxKd!.toStringAsFixed(0)} KD' : '',
+      actualAverage: actualAvgKd != null ? '${actualAvgKd!.toStringAsFixed(0)} KD' : '',
       headcount: numberOfPositions,
       filled: filledPositions,
       vacant: vacant,
@@ -257,20 +231,16 @@ class PositionModel {
       jobLevelRef: jobLevel?.toEntity(),
       gradeRef: grade?.toEntity(),
       orgUnitId: orgUnitId,
-      orgPathIds: orgPath != null
-          ? {for (var node in orgPath!) node.levelCode: node.orgUnitId}
-          : null,
-      orgPathRefs: orgPath != null
-          ? {for (var node in orgPath!) node.levelCode: node.toEntity()}
-          : null,
+      orgPathIds: orgPath != null ? {for (var node in orgPath!) node.levelCode: node.orgUnitId} : null,
+      orgPathRefs: orgPath != null ? {for (var node in orgPath!) node.levelCode: node.toEntity()} : null,
     );
   }
 
   static DateTime _parseDate(String v) {
-    if (v.trim().isEmpty)
+    if (v.trim().isEmpty) {
       return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
-    return DateTime.tryParse(v) ??
-        DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+    }
+    return DateTime.tryParse(v) ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
   }
 }
 
@@ -280,11 +250,7 @@ class OrgStructureModel {
   final String structureCode;
   final String structureName;
 
-  const OrgStructureModel({
-    required this.structureId,
-    required this.structureCode,
-    required this.structureName,
-  });
+  const OrgStructureModel({required this.structureId, required this.structureCode, required this.structureName});
 
   factory OrgStructureModel.fromJson(Map<String, dynamic> json) {
     return OrgStructureModel(
@@ -301,12 +267,7 @@ class OrgUnitModel {
   final String nameAr;
   final String levelCode;
 
-  const OrgUnitModel({
-    required this.orgUnitId,
-    required this.nameEn,
-    required this.nameAr,
-    required this.levelCode,
-  });
+  const OrgUnitModel({required this.orgUnitId, required this.nameEn, required this.nameAr, required this.levelCode});
 
   factory OrgUnitModel.fromJson(Map<String, dynamic> json) {
     return OrgUnitModel(
@@ -400,10 +361,7 @@ class GradeModel {
   const GradeModel({required this.gradeId, required this.gradeNumber});
 
   factory GradeModel.fromJson(Map<String, dynamic> json) {
-    return GradeModel(
-      gradeId: json['grade_id'] as int? ?? 0,
-      gradeNumber: json['grade_number'] as String? ?? '',
-    );
+    return GradeModel(gradeId: json['grade_id'] as int? ?? 0, gradeNumber: json['grade_number'] as String? ?? '');
   }
 
   Grade toEntity() {
@@ -433,11 +391,7 @@ class ReportsToModel {
   final String positionCode;
   final String positionTitleEn;
 
-  const ReportsToModel({
-    required this.positionId,
-    required this.positionCode,
-    required this.positionTitleEn,
-  });
+  const ReportsToModel({required this.positionId, required this.positionCode, required this.positionTitleEn});
 
   factory ReportsToModel.fromJson(Map<String, dynamic> json) {
     return ReportsToModel(
@@ -463,10 +417,7 @@ class OrgPathModel {
     required this.orgStructureId,
   });
 
-  factory OrgPathModel.fromJson(
-    Map<String, dynamic> json, {
-    int orgStructureId = 0,
-  }) {
+  factory OrgPathModel.fromJson(Map<String, dynamic> json, {int orgStructureId = 0}) {
     return OrgPathModel(
       levelCode: json['level_code'] as String? ?? '',
       orgUnitId: json['org_unit_id'] as int? ?? 0,

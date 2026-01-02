@@ -48,13 +48,13 @@ class ShiftCardIcon extends StatelessWidget {
 
   String _getIconPath(ShiftType type) {
     switch (type) {
-      case ShiftType.morning:
+      case ShiftType.day:
         return Assets.icons.timeManagement.morning.path;
       case ShiftType.evening:
         return Assets.icons.timeManagement.evening.path;
       case ShiftType.night:
         return Assets.icons.timeManagement.night.path;
-      case ShiftType.day:
+      case ShiftType.rotating:
         return Assets.icons.timeManagement.morning.path;
     }
   }

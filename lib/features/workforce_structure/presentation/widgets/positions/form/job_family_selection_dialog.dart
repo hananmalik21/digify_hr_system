@@ -9,31 +9,26 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class JobFamilySelectionDialog extends ConsumerStatefulWidget {
   final JobFamily? selectedJobFamily;
 
   const JobFamilySelectionDialog({super.key, this.selectedJobFamily});
 
-  static Future<JobFamily?> show({
-    required BuildContext context,
-    JobFamily? selectedJobFamily,
-  }) async {
+  static Future<JobFamily?> show({required BuildContext context, JobFamily? selectedJobFamily}) async {
     return await showDialog<JobFamily>(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          JobFamilySelectionDialog(selectedJobFamily: selectedJobFamily),
+      builder: (context) => JobFamilySelectionDialog(selectedJobFamily: selectedJobFamily),
     );
   }
 
   @override
-  ConsumerState<JobFamilySelectionDialog> createState() =>
-      _JobFamilySelectionDialogState();
+  ConsumerState<JobFamilySelectionDialog> createState() => _JobFamilySelectionDialogState();
 }
 
-class _JobFamilySelectionDialogState
-    extends ConsumerState<JobFamilySelectionDialog> {
+class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDialog> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -50,8 +45,7 @@ class _JobFamilySelectionDialogState
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
       ref.read(jobFamilyNotifierProvider.notifier).loadNextPage();
     }
   }
@@ -64,30 +58,23 @@ class _JobFamilySelectionDialogState
     final errorMessage = jobFamiliesState.errorMessage;
     final isLoadingMore = jobFamiliesState.isLoadingMore;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      elevation: 8,
-      child: Container(
-        width: 550.w,
-        constraints: BoxConstraints(maxHeight: 650.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context),
-            Flexible(
-              child: _buildContent(
-                context,
-                items,
-                isLoading,
-                errorMessage,
-                isLoadingMore,
-              ),
-            ),
-          ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        elevation: 8,
+        child: Container(
+          width: 550.w,
+          constraints: BoxConstraints(maxHeight: 650.h),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context),
+              Flexible(child: _buildContent(context, items, isLoading, errorMessage, isLoadingMore)),
+            ],
+          ),
         ),
       ),
     );
@@ -98,23 +85,12 @@ class _JobFamilySelectionDialogState
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.primary.withValues(alpha: 0.05),
-          ],
+          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+        border: Border(bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,11 +104,7 @@ class _JobFamilySelectionDialogState
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(
-                  Icons.work_rounded,
-                  color: AppColors.primary,
-                  size: 24.sp,
-                ),
+                child: Icon(Icons.work_rounded, color: AppColors.primary, size: 24.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -141,19 +113,12 @@ class _JobFamilySelectionDialogState
                   children: [
                     Text(
                       'Select Job Family',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       'Choose a job family from the list',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -165,9 +130,7 @@ class _JobFamilySelectionDialogState
                 constraints: const BoxConstraints(),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 ),
               ),
             ],
@@ -188,13 +151,7 @@ class _JobFamilySelectionDialogState
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    List<JobFamily> items,
-    bool isLoading,
-    String? error,
-    bool isLoadingMore,
-  ) {
+  Widget _buildContent(BuildContext context, List<JobFamily> items, bool isLoading, String? error, bool isLoadingMore) {
     if (isLoading && items.isEmpty) {
       return const OrgUnitSelectionSkeleton();
     }
@@ -223,10 +180,7 @@ class _JobFamilySelectionDialogState
               child: SizedBox(
                 width: 24.w,
                 height: 24.w,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.primary,
-                ),
+                child: const CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
               ),
             ),
           );

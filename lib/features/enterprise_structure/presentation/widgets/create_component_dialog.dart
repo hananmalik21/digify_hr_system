@@ -9,50 +9,35 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 /// Create/Edit Component Dialog
 class CreateComponentDialog extends ConsumerStatefulWidget {
   final ComponentValue? initialValue;
   final ComponentType? defaultType;
 
-  const CreateComponentDialog({
-    super.key,
-    this.initialValue,
-    this.defaultType,
-  });
+  const CreateComponentDialog({super.key, this.initialValue, this.defaultType});
 
-  static Future<void> show(
-    BuildContext context, {
-    ComponentValue? initialValue,
-    ComponentType? defaultType,
-  }) {
+  static Future<void> show(BuildContext context, {ComponentValue? initialValue, ComponentType? defaultType}) {
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => ProviderScope(
         overrides: [
           componentFormProvider.overrideWith(
-            (ref) => ComponentFormNotifier(
-              initialValue: initialValue,
-              defaultType: defaultType,
-            ),
+            (ref) => ComponentFormNotifier(initialValue: initialValue, defaultType: defaultType),
           ),
         ],
-        child: CreateComponentDialog(
-          initialValue: initialValue,
-          defaultType: defaultType,
-        ),
+        child: CreateComponentDialog(initialValue: initialValue, defaultType: defaultType),
       ),
     );
   }
 
   @override
-  ConsumerState<CreateComponentDialog> createState() =>
-      _CreateComponentDialogState();
+  ConsumerState<CreateComponentDialog> createState() => _CreateComponentDialogState();
 }
 
-class _CreateComponentDialogState
-    extends ConsumerState<CreateComponentDialog> {
+class _CreateComponentDialogState extends ConsumerState<CreateComponentDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _codeController;
   late final TextEditingController _nameController;
@@ -69,14 +54,12 @@ class _CreateComponentDialogState
     final initial = widget.initialValue;
     _codeController = TextEditingController(text: initial?.code ?? '');
     _nameController = TextEditingController(text: initial?.name ?? '');
-    _arabicNameController =
-        TextEditingController(text: initial?.arabicName ?? '');
+    _arabicNameController = TextEditingController(text: initial?.arabicName ?? '');
     _managerCodeController = TextEditingController(text: 'EMP-001');
     _managerNameController = TextEditingController(text: 'Abdullah Al-Sabah');
     _costCenterController = TextEditingController(text: 'CC-0000');
     _locationController = TextEditingController(text: initial?.location ?? '');
-    _descriptionController =
-        TextEditingController(text: initial?.description ?? '');
+    _descriptionController = TextEditingController(text: initial?.description ?? '');
   }
 
   @override
@@ -106,65 +89,73 @@ class _CreateComponentDialogState
         ? localizations.createComponent
         : '${localizations.editComponent} - ${state.name.isNotEmpty ? state.name : widget.initialValue?.name ?? ''}';
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
-      ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: 862.w,
-          maxHeight: MediaQuery.of(context).size.height * 0.95,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+          vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
         ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              _buildHeader(context, localizations, isDark, isMobile, isTablet, title),
-              // Form content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: EdgeInsetsDirectional.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Component Type
-                      _buildTypeDropdown(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Component Code
-                      _buildComponentCodeField(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Name (English) and Name (Arabic) side by side
-                      _buildNameFields(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Parent Component
-                      _buildParentDropdown(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Manager (Code and Name side by side)
-                      _buildManagerFields(context, localizations, isDark, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Cost Center and Location side by side
-                      _buildCostCenterLocationFields(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Status radio buttons
-                      _buildStatusRadioButtons(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                      SizedBox(height: 24.h),
-                      // Description
-                      _buildDescriptionField(context, localizations, isDark, state, notifier, isMobile, isTablet),
-                    ],
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 862.w, maxHeight: MediaQuery.of(context).size.height * 0.95),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                _buildHeader(context, localizations, isDark, isMobile, isTablet, title),
+                // Form content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsetsDirectional.all(24.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Component Type
+                        _buildTypeDropdown(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Component Code
+                        _buildComponentCodeField(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Name (English) and Name (Arabic) side by side
+                        _buildNameFields(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Parent Component
+                        _buildParentDropdown(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Manager (Code and Name side by side)
+                        _buildManagerFields(context, localizations, isDark, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Cost Center and Location side by side
+                        _buildCostCenterLocationFields(
+                          context,
+                          localizations,
+                          isDark,
+                          state,
+                          notifier,
+                          isMobile,
+                          isTablet,
+                        ),
+                        SizedBox(height: 24.h),
+                        // Status radio buttons
+                        _buildStatusRadioButtons(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                        SizedBox(height: 24.h),
+                        // Description
+                        _buildDescriptionField(context, localizations, isDark, state, notifier, isMobile, isTablet),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // Footer
-              _buildFooter(context, localizations, isDark, state, notifier, isMobile, isTablet),
-            ],
+                // Footer
+                _buildFooter(context, localizations, isDark, state, notifier, isMobile, isTablet),
+              ],
+            ),
           ),
         ),
       ),
@@ -188,12 +179,7 @@ class _CreateComponentDialogState
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark
-                ? AppColors.cardBorderDark
-                : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       child: Row(
@@ -204,9 +190,7 @@ class _CreateComponentDialogState
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 15.6.sp),
                 fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -217,9 +201,7 @@ class _CreateComponentDialogState
             child: SvgIconWidget(
               assetPath: 'assets/icons/close_icon_edit.svg',
               size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
         ],
@@ -270,20 +252,14 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: 20 / 13.7,
               letterSpacing: 0,
             ),
             children: [
               TextSpan(
                 text: ' *',
-                style: TextStyle(
-                  color: isDark
-                      ? AppColors.errorTextDark
-                      : const Color(0xFFFB2C36),
-                ),
+                style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
               ),
             ],
           ),
@@ -315,9 +291,7 @@ class _CreateComponentDialogState
                 localizations.selectComponentTypePlaceholder,
                 style: TextStyle(
                   fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.4.sp),
-                  color: isDark
-                      ? AppColors.textPlaceholderDark
-                      : AppColors.textPlaceholder,
+                  color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                 ),
               ),
               items: types.map((type) {
@@ -327,9 +301,7 @@ class _CreateComponentDialogState
                     getTypeLabel(type),
                     style: TextStyle(
                       fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.4.sp),
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A),
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                       height: 19 / 15.4,
                       letterSpacing: 0,
                     ),
@@ -353,9 +325,7 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 11.8.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : const Color(0xFF6A7282),
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
               height: 16 / 11.8,
               letterSpacing: 0,
             ),
@@ -366,10 +336,7 @@ class _CreateComponentDialogState
             padding: EdgeInsetsDirectional.only(top: 4.h),
             child: Text(
               state.errors['type']!,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.error,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.error),
             ),
           ),
       ],
@@ -393,9 +360,7 @@ class _CreateComponentDialogState
           style: TextStyle(
             fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
             fontWeight: FontWeight.w500,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF364153),
+            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
             height: 20 / 13.7,
             letterSpacing: 0,
           ),
@@ -410,10 +375,7 @@ class _CreateComponentDialogState
           ),
           decoration: BoxDecoration(
             color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
+            border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: DropdownButtonHideUnderline(
@@ -425,9 +387,7 @@ class _CreateComponentDialogState
                 localizations.selectParentComponent,
                 style: TextStyle(
                   fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
-                  color: isDark
-                      ? AppColors.textPlaceholderDark
-                      : AppColors.textPlaceholder,
+                  color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                 ),
               ),
               items: [
@@ -437,9 +397,7 @@ class _CreateComponentDialogState
                     'No Parent (Root Level)',
                     style: TextStyle(
                       fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF0A0A0A),
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                       height: 19 / 15.3,
                       letterSpacing: 0,
                     ),
@@ -471,9 +429,7 @@ class _CreateComponentDialogState
           style: TextStyle(
             fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
             fontWeight: FontWeight.w500,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF364153),
+            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
             height: 20 / 13.7,
             letterSpacing: 0,
           ),
@@ -487,22 +443,17 @@ class _CreateComponentDialogState
                   horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
                   vertical: 9.h,
                 ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: TextField(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.inputBgDark : Colors.white,
+                  border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
                   controller: _managerCodeController,
                   style: TextStyle(
                     fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.6.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 15.6,
                     letterSpacing: 0,
                   ),
@@ -528,22 +479,17 @@ class _CreateComponentDialogState
                   horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
                   vertical: 9.h,
                 ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: TextField(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.inputBgDark : Colors.white,
+                  border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
                   controller: _managerNameController,
                   style: TextStyle(
                     fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.4.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 15.4,
                     letterSpacing: 0,
                   ),
@@ -586,20 +532,14 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.6.sp),
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: 20 / 13.6,
               letterSpacing: 0,
             ),
             children: [
               TextSpan(
                 text: ' *',
-                style: TextStyle(
-                  color: isDark
-                      ? AppColors.errorTextDark
-                      : const Color(0xFFFB2C36),
-                ),
+                style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
               ),
             ],
           ),
@@ -669,10 +609,7 @@ class _CreateComponentDialogState
                     child: Container(
                       width: isMobile ? 8.sp : (isTablet ? 8.5.sp : 9.6.sp),
                       height: isMobile ? 8.sp : (isTablet ? 8.5.sp : 9.6.sp),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0075FF),
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: const Color(0xFF0075FF), shape: BoxShape.circle),
                     ),
                   )
                 : null,
@@ -683,9 +620,7 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : (label == localizations.active ? 13.5.sp : 13.6.sp)),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: label == localizations.active ? (20 / 13.5) : (20 / 13.6),
               letterSpacing: 0,
             ),
@@ -713,20 +648,14 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.6.sp),
               fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: 20 / 13.6,
               letterSpacing: 0,
             ),
             children: [
               TextSpan(
                 text: ' *',
-                style: TextStyle(
-                  color: isDark
-                      ? AppColors.errorTextDark
-                      : const Color(0xFFFB2C36),
-                ),
+                style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
               ),
             ],
           ),
@@ -753,9 +682,7 @@ class _CreateComponentDialogState
             style: TextStyle(
               fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.6.sp),
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF0A0A0A),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
               height: 24 / 15.6,
               letterSpacing: 0,
             ),
@@ -774,9 +701,7 @@ class _CreateComponentDialogState
               hintStyle: TextStyle(
                 fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.6.sp),
                 fontWeight: FontWeight.w400,
-                color: isDark
-                    ? AppColors.textPlaceholderDark
-                    : AppColors.textPlaceholder,
+                color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -788,10 +713,7 @@ class _CreateComponentDialogState
             padding: EdgeInsetsDirectional.only(top: 4.h),
             child: Text(
               state.errors['code']!,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.error,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.error),
             ),
           ),
       ],
@@ -819,20 +741,14 @@ class _CreateComponentDialogState
                   style: TextStyle(
                     fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.8.sp),
                     fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF364153),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                     height: 20 / 13.8,
                     letterSpacing: 0,
                   ),
                   children: [
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(
-                        color: isDark
-                            ? AppColors.errorTextDark
-                            : const Color(0xFFFB2C36),
-                      ),
+                      style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
                     ),
                   ],
                 ),
@@ -859,9 +775,7 @@ class _CreateComponentDialogState
                   style: TextStyle(
                     fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 15.3,
                     letterSpacing: 0,
                   ),
@@ -880,9 +794,7 @@ class _CreateComponentDialogState
                     hintStyle: TextStyle(
                       fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPlaceholderDark
-                          : AppColors.textPlaceholder,
+                      color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                       height: 24 / 15.3,
                       letterSpacing: 0,
                     ),
@@ -903,20 +815,14 @@ class _CreateComponentDialogState
                   style: TextStyle(
                     fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
                     fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF364153),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                     height: 20 / 13.7,
                     letterSpacing: 0,
                   ),
                   children: [
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(
-                        color: isDark
-                            ? AppColors.errorTextDark
-                            : const Color(0xFFFB2C36),
-                      ),
+                      style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
                     ),
                   ],
                 ),
@@ -945,9 +851,7 @@ class _CreateComponentDialogState
                   style: TextStyle(
                     fontSize: isMobile ? 15.sp : (isTablet ? 15.5.sp : 16.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 16,
                     letterSpacing: 0,
                   ),
@@ -966,9 +870,7 @@ class _CreateComponentDialogState
                     hintStyle: TextStyle(
                       fontSize: isMobile ? 15.sp : (isTablet ? 15.5.sp : 16.sp),
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPlaceholderDark
-                          : AppColors.textPlaceholder,
+                      color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                       height: 24 / 16,
                       letterSpacing: 0,
                     ),
@@ -1002,9 +904,7 @@ class _CreateComponentDialogState
                 style: TextStyle(
                   fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
                   fontWeight: FontWeight.w500,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : const Color(0xFF364153),
+                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                   height: 20 / 13.7,
                   letterSpacing: 0,
                 ),
@@ -1015,22 +915,17 @@ class _CreateComponentDialogState
                   horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
                   vertical: 9.h,
                 ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: TextField(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.inputBgDark : Colors.white,
+                  border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
                   controller: _costCenterController,
                   style: TextStyle(
                     fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.5.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 15.5,
                     letterSpacing: 0,
                   ),
@@ -1049,9 +944,7 @@ class _CreateComponentDialogState
                     hintStyle: TextStyle(
                       fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.5.sp),
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPlaceholderDark
-                          : AppColors.textPlaceholder,
+                      color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                       height: 24 / 15.5,
                       letterSpacing: 0,
                     ),
@@ -1071,9 +964,7 @@ class _CreateComponentDialogState
                 style: TextStyle(
                   fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
                   fontWeight: FontWeight.w500,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : const Color(0xFF364153),
+                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                   height: 20 / 13.7,
                   letterSpacing: 0,
                 ),
@@ -1084,34 +975,29 @@ class _CreateComponentDialogState
                   horizontal: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
                   vertical: 9.h,
                 ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-              child: TextField(
-                controller: _locationController,
-                readOnly: true,
-                onTap: () async {
-                  final location = await LocationPickerDialog.show(
-                    context,
-                    departmentName: state.name,
-                    location: _locationController.text,
-                  );
-                  if (location != null) {
-                    _locationController.text = location;
-                    notifier.updateField('location', location);
-                  }
-                },
-                style: TextStyle(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.inputBgDark : Colors.white,
+                  border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
+                  controller: _locationController,
+                  readOnly: true,
+                  onTap: () async {
+                    final location = await LocationPickerDialog.show(
+                      context,
+                      departmentName: state.name,
+                      location: _locationController.text,
+                    );
+                    if (location != null) {
+                      _locationController.text = location;
+                      notifier.updateField('location', location);
+                    }
+                  },
+                  style: TextStyle(
                     fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.1.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF0A0A0A),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                     height: 24 / 15.1,
                     letterSpacing: 0,
                   ),
@@ -1130,9 +1016,7 @@ class _CreateComponentDialogState
                     hintStyle: TextStyle(
                       fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.1.sp),
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPlaceholderDark
-                          : AppColors.textPlaceholder,
+                      color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                       height: 24 / 15.1,
                       letterSpacing: 0,
                     ),
@@ -1156,78 +1040,67 @@ class _CreateComponentDialogState
     bool isTablet,
   ) {
     return Padding(
-      padding: EdgeInsetsDirectional.only(
-        bottom: isMobile ? 4.h : (isTablet ? 5.h : 6.h),
-      ),
+      padding: EdgeInsetsDirectional.only(bottom: isMobile ? 4.h : (isTablet ? 5.h : 6.h)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        Text(
-          localizations.description,
-          style: TextStyle(
-            fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.8.sp),
-            fontWeight: FontWeight.w500,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : const Color(0xFF364153),
-            height: 20 / 13.8,
-            letterSpacing: 0,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsetsDirectional.only(
-            start: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
-            end: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
-            top: 9.h,
-            bottom: isMobile ? 40.h : (isTablet ? 50.h : 57.h),
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: TextField(
-            controller: _descriptionController,
-            onChanged: (value) => notifier.updateField('description', value),
-            maxLines: null,
+          Text(
+            localizations.description,
             style: TextStyle(
-              fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
-              fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF0A0A0A),
-              height: 24 / 15.3,
+              fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.8.sp),
+              fontWeight: FontWeight.w500,
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+              height: 20 / 13.8,
               letterSpacing: 0,
             ),
-            decoration: InputDecoration(
-              filled: false,
-              fillColor: Colors.transparent,
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              focusedErrorBorder: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              hintText: localizations.enterDescription,
-              hintStyle: TextStyle(
+          ),
+          SizedBox(height: 8.h),
+          Container(
+            padding: EdgeInsetsDirectional.only(
+              start: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
+              end: isMobile ? 12.w : (isTablet ? 15.w : 17.w),
+              top: 9.h,
+              bottom: isMobile ? 40.h : (isTablet ? 50.h : 57.h),
+            ),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.inputBgDark : Colors.white,
+              border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: TextField(
+              controller: _descriptionController,
+              onChanged: (value) => notifier.updateField('description', value),
+              maxLines: null,
+              style: TextStyle(
                 fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
                 fontWeight: FontWeight.w400,
-                color: isDark
-                    ? AppColors.textPlaceholderDark
-                    : AppColors.textPlaceholder,
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                 height: 24 / 15.3,
                 letterSpacing: 0,
               ),
+              decoration: InputDecoration(
+                filled: false,
+                fillColor: Colors.transparent,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: localizations.enterDescription,
+                hintStyle: TextStyle(
+                  fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
+                  fontWeight: FontWeight.w400,
+                  color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
+                  height: 24 / 15.3,
+                  letterSpacing: 0,
+                ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
       ),
     );
   }
@@ -1249,112 +1122,89 @@ class _CreateComponentDialogState
         bottom: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
       ),
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-            // Cancel button
-            Material(
-              color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+          // Cancel button
+          Material(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+            child: InkWell(
+              onTap: () => Navigator.of(context).pop(),
               borderRadius: BorderRadius.circular(10.r),
-              child: InkWell(
-                onTap: () => Navigator.of(context).pop(),
-                borderRadius: BorderRadius.circular(10.r),
-                child: Container(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 25.w,
-                    vertical: 9.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-                    border: Border.all(
-                      color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Text(
-                    localizations.cancel,
-                    style: TextStyle(
-                      fontSize: 15.3.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF364153),
-                      height: 24 / 15.3,
-                      letterSpacing: 0,
-                    ),
+              child: Container(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 25.w, vertical: 9.h),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                  border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Text(
+                  localizations.cancel,
+                  style: TextStyle(
+                    fontSize: 15.3.sp,
+                    fontWeight: FontWeight.w400,
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
+                    height: 24 / 15.3,
+                    letterSpacing: 0,
                   ),
                 ),
               ),
             ),
-            SizedBox(width: 12.w),
-            // Save Changes button
-            Material(
-              color: const Color(0xFF155DFC),
-              borderRadius: BorderRadius.circular(10.r),
-              child: InkWell(
-                onTap: state.isLoading
-                    ? null
-                    : () async {
-                        if (await notifier.submit()) {
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                          }
+          ),
+          SizedBox(width: 12.w),
+          // Save Changes button
+          Material(
+            color: const Color(0xFF155DFC),
+            borderRadius: BorderRadius.circular(10.r),
+            child: InkWell(
+              onTap: state.isLoading
+                  ? null
+                  : () async {
+                      if (await notifier.submit()) {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
                         }
-                      },
-                borderRadius: BorderRadius.circular(10.r),
-                child: Container(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 24.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF155DFC),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (state.isLoading)
-                        SizedBox(
-                          width: 20.sp,
-                          height: 20.sp,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      else
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/save_icon.svg',
-                          size: 20.sp,
-                          color: Colors.white,
+                      }
+                    },
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 8.h),
+                decoration: BoxDecoration(color: const Color(0xFF155DFC), borderRadius: BorderRadius.circular(10.r)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (state.isLoading)
+                      SizedBox(
+                        width: 20.sp,
+                        height: 20.sp,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        localizations.saveChanges,
-                        style: TextStyle(
-                          fontSize: 15.1.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                          height: 24 / 15.1,
-                          letterSpacing: 0,
-                        ),
+                      )
+                    else
+                      SvgIconWidget(assetPath: 'assets/icons/save_icon.svg', size: 20.sp, color: Colors.white),
+                    SizedBox(width: 8.w),
+                    Text(
+                      localizations.saveChanges,
+                      style: TextStyle(
+                        fontSize: 15.1.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        height: 24 / 15.1,
+                        letterSpacing: 0,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 }

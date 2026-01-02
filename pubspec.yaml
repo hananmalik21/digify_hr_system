@@ -33,6 +33,9 @@ dependencies:
   # Utilities
   intl: any
   skeletonizer: ^2.1.2
+  flutter_colorpicker: ^1.1.0
+  pull_down_button: ^0.10.2
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   # Testing

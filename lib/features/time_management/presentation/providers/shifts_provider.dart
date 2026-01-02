@@ -23,10 +23,7 @@ final shiftRemoteDataSourceProvider = Provider<ShiftRemoteDataSource>((ref) {
 
 final shiftRepositoryProvider = Provider<ShiftRepository>((ref) {
   final remoteDataSource = ref.watch(shiftRemoteDataSourceProvider);
-  return ShiftRepositoryImpl(
-    remoteDataSource: remoteDataSource,
-    tenantId: _defaultTenantId,
-  );
+  return ShiftRepositoryImpl(remoteDataSource: remoteDataSource, tenantId: _defaultTenantId);
 });
 
 final getShiftsUseCaseProvider = Provider<GetShiftsUseCase>((ref) {
@@ -38,9 +35,7 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
     with PaginationMixin<ShiftOverview>
     implements PaginationController<ShiftOverview> {
   final GetShiftsUseCase _getShiftsUseCase;
-  final Debouncer _debouncer = Debouncer(
-    delay: const Duration(milliseconds: 500),
-  );
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   ShiftsNotifier(this._getShiftsUseCase) : super(const PaginationState());
 
@@ -64,23 +59,13 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
         pageSize: state.pageSize.clamp(1, 100),
       );
 
-      final shifts = response.shifts.isEmpty
-          ? <ShiftOverview>[]
-          : response.shifts;
+      final shifts = response.shifts.isEmpty ? <ShiftOverview>[] : response.shifts;
       final pagination = response.pagination;
 
-      final validCurrentPage = pagination.currentPage < 1
-          ? 1
-          : pagination.currentPage;
-      final validPageSize = pagination.pageSize < 1
-          ? state.pageSize
-          : pagination.pageSize;
-      final validTotalItems = pagination.totalItems < 0
-          ? 0
-          : pagination.totalItems;
-      final validTotalPages = pagination.totalPages < 0
-          ? 0
-          : pagination.totalPages;
+      final validCurrentPage = pagination.currentPage < 1 ? 1 : pagination.currentPage;
+      final validPageSize = pagination.pageSize < 1 ? state.pageSize : pagination.pageSize;
+      final validTotalItems = pagination.totalItems < 0 ? 0 : pagination.totalItems;
+      final validTotalPages = pagination.totalPages < 0 ? 0 : pagination.totalPages;
 
       state = handleSuccessState(
         currentState: state,
@@ -95,17 +80,15 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
       );
     } catch (e) {
       final errorMessage = e.toString();
-      state = handleErrorState(
-        state,
-        errorMessage.isEmpty ? 'An unexpected error occurred' : errorMessage,
-      );
+      state = handleErrorState(state, errorMessage.isEmpty ? 'An unexpected error occurred' : errorMessage);
     }
   }
 
   @override
   Future<void> loadNextPage() async {
-    if (state.isLoadingMore || !state.hasNextPage || state.currentPage < 1)
+    if (state.isLoadingMore || !state.hasNextPage || state.currentPage < 1) {
       return;
+    }
 
     state = handleLoadingState(state, false);
 
@@ -128,23 +111,13 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
         pageSize: state.pageSize.clamp(1, 100),
       );
 
-      final shifts = response.shifts.isEmpty
-          ? <ShiftOverview>[]
-          : response.shifts;
+      final shifts = response.shifts.isEmpty ? <ShiftOverview>[] : response.shifts;
       final pagination = response.pagination;
 
-      final validCurrentPage = pagination.currentPage < 1
-          ? nextPage
-          : pagination.currentPage;
-      final validPageSize = pagination.pageSize < 1
-          ? state.pageSize
-          : pagination.pageSize;
-      final validTotalItems = pagination.totalItems < 0
-          ? state.totalItems
-          : pagination.totalItems;
-      final validTotalPages = pagination.totalPages < 0
-          ? state.totalPages
-          : pagination.totalPages;
+      final validCurrentPage = pagination.currentPage < 1 ? nextPage : pagination.currentPage;
+      final validPageSize = pagination.pageSize < 1 ? state.pageSize : pagination.pageSize;
+      final validTotalItems = pagination.totalItems < 0 ? state.totalItems : pagination.totalItems;
+      final validTotalPages = pagination.totalPages < 0 ? state.totalPages : pagination.totalPages;
 
       state = handleSuccessState(
         currentState: state,
@@ -159,10 +132,7 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
       );
     } catch (e) {
       final errorMessage = e.toString();
-      state = handleErrorState(
-        state,
-        errorMessage.isEmpty ? 'An unexpected error occurred' : errorMessage,
-      );
+      state = handleErrorState(state, errorMessage.isEmpty ? 'An unexpected error occurred' : errorMessage);
     }
   }
 
@@ -188,9 +158,7 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
   }
 
   void setStatusFilter(bool? isActive) {
-    final status = isActive == null
-        ? null
-        : (isActive ? PositionStatus.active : PositionStatus.inactive);
+    final status = isActive == null ? null : (isActive ? PositionStatus.active : PositionStatus.inactive);
 
     if (state.status == status) return;
 
@@ -206,11 +174,15 @@ class ShiftsNotifier extends StateNotifier<PaginationState<ShiftOverview>>
     if (state.status == null) return null;
     return state.status == PositionStatus.active;
   }
+
+  void addShiftOptimistically(ShiftOverview shift) {
+    final currentItems = List<ShiftOverview>.from(state.items);
+    currentItems.insert(0, shift);
+
+    state = state.copyWith(items: currentItems, totalItems: state.totalItems + 1);
+  }
 }
 
-final shiftsNotifierProvider =
-    StateNotifierProvider<ShiftsNotifier, PaginationState<ShiftOverview>>((
-      ref,
-    ) {
-      return ShiftsNotifier(ref.read(getShiftsUseCaseProvider));
-    });
+final shiftsNotifierProvider = StateNotifierProvider<ShiftsNotifier, PaginationState<ShiftOverview>>((ref) {
+  return ShiftsNotifier(ref.read(getShiftsUseCaseProvider));
+});

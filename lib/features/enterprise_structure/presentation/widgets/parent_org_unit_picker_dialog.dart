@@ -9,16 +9,16 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 /// Provider for parent org units
-final parentOrgUnitsProvider = FutureProvider.autoDispose
-    .family<List<OrgStructureLevel>, ParentOrgUnitsParams>((ref, params) async {
-      final repository = ref.watch(orgUnitRepositoryProvider);
-      return await repository.getParentOrgUnits(
-        params.structureId,
-        params.levelCode,
-      );
-    });
+final parentOrgUnitsProvider = FutureProvider.autoDispose.family<List<OrgStructureLevel>, ParentOrgUnitsParams>((
+  ref,
+  params,
+) async {
+  final repository = ref.watch(orgUnitRepositoryProvider);
+  return await repository.getParentOrgUnits(params.structureId, params.levelCode);
+});
 
 class ParentOrgUnitsParams {
   final int structureId;
@@ -43,24 +43,13 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
   final int structureId;
   final String levelCode;
 
-  const ParentOrgUnitPickerDialog({
-    super.key,
-    required this.structureId,
-    required this.levelCode,
-  });
+  const ParentOrgUnitPickerDialog({super.key, required this.structureId, required this.levelCode});
 
-  static Future<OrgStructureLevel?> show(
-    BuildContext context, {
-    required int structureId,
-    required String levelCode,
-  }) {
+  static Future<OrgStructureLevel?> show(BuildContext context, {required int structureId, required String levelCode}) {
     return showDialog<OrgStructureLevel>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
-      builder: (context) => ParentOrgUnitPickerDialog(
-        structureId: structureId,
-        levelCode: levelCode,
-      ),
+      builder: (context) => ParentOrgUnitPickerDialog(structureId: structureId, levelCode: levelCode),
     );
   }
 
@@ -72,119 +61,98 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
     final isTablet = ResponsiveHelper.isTablet(context);
 
     final parentUnitsAsync = ref.watch(
-      parentOrgUnitsProvider(
-        ParentOrgUnitsParams(structureId: structureId, levelCode: levelCode),
-      ),
+      parentOrgUnitsProvider(ParentOrgUnitsParams(structureId: structureId, levelCode: levelCode)),
     );
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
-        vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
-      ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: 600.w,
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
+          vertical: isMobile ? 16.h : (isTablet ? 20.h : 24.h),
         ),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header
-            _buildHeader(context, localizations, isDark, isMobile, isTablet),
-            // Content
-            Flexible(
-              child: parentUnitsAsync.when(
-                data: (units) {
-                  if (units.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(40.w),
-                        child: Text(
-                          'No parent units available',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 600.w, maxHeight: MediaQuery.of(context).size.height * 0.8),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              _buildHeader(context, localizations, isDark, isMobile, isTablet),
+              // Content
+              Flexible(
+                child: parentUnitsAsync.when(
+                  data: (units) {
+                    if (units.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(40.w),
+                          child: Text(
+                            'No parent units available',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    padding: EdgeInsetsDirectional.all(16.w),
-                    itemCount: units.length,
-                    itemBuilder: (context, index) {
-                      final unit = units[index];
-                      return _buildUnitItem(
-                        context,
-                        localizations,
-                        isDark,
-                        unit,
-                        isMobile,
-                        isTablet,
-                        () {
-                          Navigator.of(context).pop(unit);
-                        },
                       );
-                    },
-                  );
-                },
-                loading: () => Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(40.w),
-                    child: CircularProgressIndicator(color: AppColors.primary),
+                    }
+                    return ListView.builder(
+                      padding: EdgeInsetsDirectional.all(16.w),
+                      itemCount: units.length,
+                      itemBuilder: (context, index) {
+                        final unit = units[index];
+                        return _buildUnitItem(context, localizations, isDark, unit, isMobile, isTablet, () {
+                          Navigator.of(context).pop(unit);
+                        });
+                      },
+                    );
+                  },
+                  loading: () => Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(40.w),
+                      child: CircularProgressIndicator(color: AppColors.primary),
+                    ),
                   ),
-                ),
-                error: (error, stack) => Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(40.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Failed to load parent units',
-                          style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                        ),
-                        SizedBox(height: 16.h),
-                        ElevatedButton(
-                          onPressed: () {
-                            ref.invalidate(
-                              parentOrgUnitsProvider(
-                                ParentOrgUnitsParams(
-                                  structureId: structureId,
-                                  levelCode: levelCode,
+                  error: (error, stack) => Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(40.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Failed to load parent units',
+                            style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                          ),
+                          SizedBox(height: 16.h),
+                          ElevatedButton(
+                            onPressed: () {
+                              ref.invalidate(
+                                parentOrgUnitsProvider(
+                                  ParentOrgUnitsParams(structureId: structureId, levelCode: levelCode),
                                 ),
-                              ),
-                            );
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
+                              );
+                            },
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-    bool isMobile,
-    bool isTablet,
-  ) {
+  Widget _buildHeader(BuildContext context, AppLocalizations localizations, bool isDark, bool isMobile, bool isTablet) {
     return Container(
       padding: EdgeInsetsDirectional.only(
         start: isMobile ? 16.w : (isTablet ? 20.w : 24.w),
@@ -194,10 +162,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
       ),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       child: Row(
@@ -208,9 +173,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
               style: TextStyle(
                 fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 15.6.sp),
                 fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : const Color(0xFF101828),
+                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                 height: 24 / 15.6,
                 letterSpacing: 0,
               ),
@@ -221,9 +184,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
             child: SvgIconWidget(
               assetPath: 'assets/icons/close_icon_edit.svg',
               size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF101828),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
         ],
@@ -246,14 +207,9 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
         margin: EdgeInsetsDirectional.only(bottom: 8.h),
         padding: EdgeInsetsDirectional.all(16.w),
         decoration: BoxDecoration(
-          color: isDark
-              ? AppColors.cardBackgroundGreyDark
-              : const Color(0xFFF9FAFB),
+          color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB),
-            width: 1,
-          ),
+          border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
         ),
         child: Row(
           children: [
@@ -266,9 +222,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
                       fontWeight: FontWeight.w500,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : const Color(0xFF101828),
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                     ),
                   ),
                   // if (unit.orgUnitNameAr.isNotEmpty) ...[
@@ -293,9 +247,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                       fontWeight: FontWeight.w400,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -304,9 +256,7 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
             Icon(
               Icons.chevron_right,
               size: 16.sp,
-              color: isDark
-                  ? AppColors.textPlaceholderDark
-                  : AppColors.textPlaceholder,
+              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
             ),
           ],
         ),

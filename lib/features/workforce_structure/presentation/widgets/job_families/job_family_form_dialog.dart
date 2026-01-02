@@ -8,6 +8,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 import 'package:go_router/go_router.dart';
 
 class JobFamilyFormDialog extends ConsumerStatefulWidget {
@@ -15,12 +16,7 @@ class JobFamilyFormDialog extends ConsumerStatefulWidget {
   final ValueChanged<JobFamily>? onSave;
   final bool isEdit;
 
-  const JobFamilyFormDialog({
-    super.key,
-    this.jobFamily,
-    this.onSave,
-    this.isEdit = false,
-  });
+  const JobFamilyFormDialog({super.key, this.jobFamily, this.onSave, this.isEdit = false});
 
   static Future<void> show(
     BuildContext context, {
@@ -31,17 +27,12 @@ class JobFamilyFormDialog extends ConsumerStatefulWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => JobFamilyFormDialog(
-        jobFamily: jobFamily,
-        onSave: onSave,
-        isEdit: isEdit,
-      ),
+      builder: (_) => JobFamilyFormDialog(jobFamily: jobFamily, onSave: onSave, isEdit: isEdit),
     );
   }
 
   @override
-  ConsumerState<JobFamilyFormDialog> createState() =>
-      _JobFamilyFormDialogState();
+  ConsumerState<JobFamilyFormDialog> createState() => _JobFamilyFormDialogState();
 }
 
 class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
@@ -56,13 +47,9 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
     super.initState();
     final jobFamily = widget.jobFamily;
     codeController = TextEditingController(text: jobFamily?.code ?? '');
-    englishController = TextEditingController(
-      text: jobFamily?.nameEnglish ?? '',
-    );
+    englishController = TextEditingController(text: jobFamily?.nameEnglish ?? '');
     arabicController = TextEditingController(text: jobFamily?.nameArabic ?? '');
-    descriptionController = TextEditingController(
-      text: jobFamily?.description ?? '',
-    );
+    descriptionController = TextEditingController(text: jobFamily?.description ?? '');
   }
 
   @override
@@ -88,11 +75,7 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
         );
         if (mounted) {
           context.pop();
-          ToastService.success(
-            context,
-            'Job family updated successfully',
-            title: 'Success',
-          );
+          ToastService.success(context, 'Job family updated successfully', title: 'Success');
         }
       } else {
         await ref.createJobFamily(
@@ -103,11 +86,7 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
         );
         if (mounted) {
           context.pop();
-          ToastService.success(
-            context,
-            'Job family created successfully',
-            title: 'Success',
-          );
+          ToastService.success(context, 'Job family created successfully', title: 'Success');
         }
       }
     } catch (e) {
@@ -121,120 +100,105 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isEdit = widget.isEdit;
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      child: Container(
-        width: 540.w,
-        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      isEdit
-                          ? localizations.editJobFamily
-                          : localizations.addNewJobFamily,
-                      style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        child: Container(
+          width: 540.w,
+          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        isEdit ? localizations.editJobFamily : localizations.addNewJobFamily,
+                        style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-                    icon: Icon(
-                      Icons.close_rounded,
-                      size: 20.sp,
-                      color: AppColors.textSecondary,
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints.tight(Size(32.w, 32.h)),
+                      icon: Icon(Icons.close_rounded, size: 20.sp, color: AppColors.textSecondary),
+                      onPressed: () => context.pop(),
                     ),
-                    onPressed: () => context.pop(),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.h),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  localizations.basicInformation,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    localizations.basicInformation,
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                   ),
                 ),
-              ),
-              SizedBox(height: 22.h),
-              _buildField(
-                label: localizations.jobFamilyCode,
-                hint: localizations.jobFamilyCodeHint,
-                controller: codeController,
-                readOnly: isEdit,
-              ),
-              SizedBox(height: 12.h),
-              _buildField(
-                label: localizations.jobFamilyNameEnglish,
-                hint: localizations.jobFamilyNameEnglishHint,
-                controller: englishController,
-              ),
-              SizedBox(height: 12.h),
-              _buildField(
-                label: localizations.jobFamilyNameArabic,
-                hint: localizations.jobFamilyNameArabicHint,
-                controller: arabicController,
-                isRtl: true,
-              ),
-              SizedBox(height: 12.h),
-              _buildField(
-                label: localizations.description,
-                hint: localizations.positionFamilyDescription,
-                controller: descriptionController,
-                maxLines: 3,
-              ),
-              SizedBox(height: 24.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => context.pop(),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.cardBorder),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
+                SizedBox(height: 22.h),
+                _buildField(
+                  label: localizations.jobFamilyCode,
+                  hint: localizations.jobFamilyCodeHint,
+                  controller: codeController,
+                  readOnly: isEdit,
+                ),
+                SizedBox(height: 12.h),
+                _buildField(
+                  label: localizations.jobFamilyNameEnglish,
+                  hint: localizations.jobFamilyNameEnglishHint,
+                  controller: englishController,
+                ),
+                SizedBox(height: 12.h),
+                _buildField(
+                  label: localizations.jobFamilyNameArabic,
+                  hint: localizations.jobFamilyNameArabicHint,
+                  controller: arabicController,
+                  isRtl: true,
+                ),
+                SizedBox(height: 12.h),
+                _buildField(
+                  label: localizations.description,
+                  hint: localizations.positionFamilyDescription,
+                  controller: descriptionController,
+                  maxLines: 3,
+                ),
+                SizedBox(height: 24.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => context.pop(),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: AppColors.cardBorder),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                          padding: EdgeInsets.symmetric(vertical: 14.h),
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 14.h),
-                      ),
-                      child: Text(
-                        localizations.cancel,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textSecondary,
+                        child: Text(
+                          localizations.cancel,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: AppButton.primary(
-                      label: isEdit
-                          ? localizations.saveChanges
-                          : localizations.createJobFamily,
-                      onPressed: _handleSubmit,
-                      isLoading: isEdit
-                          ? ref.watch(jobFamilyUpdateStateProvider).isUpdating
-                          : ref.watch(jobFamilyCreatingProvider),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: AppButton.primary(
+                        label: isEdit ? localizations.saveChanges : localizations.createJobFamily,
+                        onPressed: _handleSubmit,
+                        isLoading: isEdit
+                            ? ref.watch(jobFamilyUpdateStateProvider).isUpdating
+                            : ref.watch(jobFamilyCreatingProvider),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -255,11 +219,7 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
-          ),
+          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
         ),
         SizedBox(height: 4.h),
         TextFormField(
@@ -270,16 +230,10 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
           readOnly: readOnly,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textSecondary,
-            ),
+            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
             fillColor: AppColors.inputBg,
             filled: true,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 14.w,
-              vertical: 12.h,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.r),
               borderSide: BorderSide(color: AppColors.cardBorder),

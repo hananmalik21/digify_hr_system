@@ -210,6 +210,7 @@ class AppColors {
   // Input Colors
   static const Color inputBg = Color(0xFFF3F4F6);
   static const Color inputBorder = Color(0xFFD1D5DC);
+  static const Color inputLabel = Color(0xFF364153);
 
   // Dark Mode Input Colors
   static const Color inputBgDark = Color(0xFF334155);
@@ -222,10 +223,15 @@ class AppColors {
   static const Color shiftEditButtonText = Color(0xFF00A63E);
   static const Color shiftCopyButtonBg = Color(0xFFFAF5FF);
   static const Color shiftCopyButtonText = Color(0xFF9810FA);
-  
+
   // Shift Status Badge Colors
   static const Color shiftActiveStatusBg = Color(0xFFDCFCE7);
   static const Color shiftActiveStatusText = Color(0xFF016630);
   static const Color shiftInactiveStatusBg = Color(0xFFFEE2E2);
   static const Color shiftInactiveStatusText = Color(0xFF991B1B);
+
+  // Dialog Colors
+  static const Color dialogCloseIcon = Color(0xFF99A1AF);
+  static const Color dialogTitle = Color(0xFF101828);
+  static const Color colorBorder = Color(0xFF777777);
 }

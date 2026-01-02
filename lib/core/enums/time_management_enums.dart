@@ -1,29 +1,22 @@
-enum TimeManagementTab {
-  shifts,
-  workPatterns,
-  workSchedules,
-  scheduleAssignments,
-  viewCalendar,
-  publicHolidays,
-}
+enum TimeManagementTab { shifts, workPatterns, workSchedules, scheduleAssignments, viewCalendar, publicHolidays }
 
 enum ShiftType {
   day,
-  morning,
   evening,
-  night;
+  night,
+  rotating;
 
   static ShiftType fromString(String value) {
     final normalized = value.toUpperCase().trim();
     switch (normalized) {
       case 'DAY':
         return ShiftType.day;
-      case 'MORNING':
-        return ShiftType.morning;
       case 'EVENING':
         return ShiftType.evening;
       case 'NIGHT':
         return ShiftType.night;
+      case 'ROTATING':
+        return ShiftType.rotating;
       default:
         return ShiftType.day;
     }
@@ -32,13 +25,26 @@ enum ShiftType {
   String get displayName {
     switch (this) {
       case ShiftType.day:
-        return 'Day';
-      case ShiftType.morning:
-        return 'Morning';
+        return 'Day Shift';
       case ShiftType.evening:
-        return 'Evening';
+        return 'Evening Shift';
       case ShiftType.night:
-        return 'Night';
+        return 'Night Shift';
+      case ShiftType.rotating:
+        return 'Rotating Shift';
+    }
+  }
+
+  String get apiValue {
+    switch (this) {
+      case ShiftType.day:
+        return 'DAY';
+      case ShiftType.evening:
+        return 'EVENING';
+      case ShiftType.night:
+        return 'NIGHT';
+      case ShiftType.rotating:
+        return 'ROTATING';
     }
   }
 }

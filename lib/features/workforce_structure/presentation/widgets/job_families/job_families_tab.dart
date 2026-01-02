@@ -22,8 +22,7 @@ class JobFamiliesTab extends ConsumerStatefulWidget {
   ConsumerState<JobFamiliesTab> createState() => _JobFamiliesTabState();
 }
 
-class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab>
-    with ScrollPaginationMixin {
+class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPaginationMixin {
   @override
   ScrollController? get scrollController => widget.scrollController;
 
@@ -34,11 +33,6 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -61,13 +55,7 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab>
       children: [
         JobFamilyHeader(localizations: localizations),
         SizedBox(height: 24.h),
-        _buildContent(
-          context,
-          localizations,
-          paginationState,
-          jobLevels,
-          isDark,
-        ),
+        _buildContent(context, localizations, paginationState, jobLevels, isDark),
       ],
     );
   }

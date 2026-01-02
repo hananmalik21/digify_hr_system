@@ -9,18 +9,10 @@ class ShiftRepositoryImpl implements ShiftRepository {
   final ShiftRemoteDataSource remoteDataSource;
   final int tenantId;
 
-  const ShiftRepositoryImpl({
-    required this.remoteDataSource,
-    required this.tenantId,
-  });
+  const ShiftRepositoryImpl({required this.remoteDataSource, required this.tenantId});
 
   @override
-  Future<PaginatedShifts> getShifts({
-    String? search,
-    bool? isActive,
-    int page = 1,
-    int pageSize = 10,
-  }) async {
+  Future<PaginatedShifts> getShifts({String? search, bool? isActive, int page = 1, int pageSize = 10}) async {
     try {
       if (page < 1) {
         throw ValidationException('page must be greater than or equal to 1');
@@ -57,13 +49,9 @@ class ShiftRepositoryImpl implements ShiftRepository {
       final paginationTotalPages = dto.meta.pagination.totalPages;
 
       final validPage = paginationPage < 1 ? 1 : paginationPage;
-      final validPageSize = paginationPageSize < 1
-          ? pageSize
-          : paginationPageSize;
+      final validPageSize = paginationPageSize < 1 ? pageSize : paginationPageSize;
       final validTotal = paginationTotal < 0 ? 0 : paginationTotal;
-      final validTotalPages = paginationTotalPages < 0
-          ? 0
-          : paginationTotalPages;
+      final validTotalPages = paginationTotalPages < 0 ? 0 : paginationTotalPages;
 
       final pagination = PaginationInfo(
         currentPage: validPage,
@@ -78,10 +66,18 @@ class ShiftRepositoryImpl implements ShiftRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to get shifts: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to get shifts: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<ShiftOverview> createShift({required Map<String, dynamic> shiftData}) async {
+    try {
+      return await remoteDataSource.createShift(tenantId: tenantId, shiftData: shiftData);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create shift: ${e.toString()}', originalError: e);
     }
   }
 }

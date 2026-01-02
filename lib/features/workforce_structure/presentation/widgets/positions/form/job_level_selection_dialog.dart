@@ -9,31 +9,26 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:ui';
 
 class JobLevelSelectionDialog extends ConsumerStatefulWidget {
   final JobLevel? selectedJobLevel;
 
   const JobLevelSelectionDialog({super.key, this.selectedJobLevel});
 
-  static Future<JobLevel?> show({
-    required BuildContext context,
-    JobLevel? selectedJobLevel,
-  }) async {
+  static Future<JobLevel?> show({required BuildContext context, JobLevel? selectedJobLevel}) async {
     return await showDialog<JobLevel>(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          JobLevelSelectionDialog(selectedJobLevel: selectedJobLevel),
+      builder: (context) => JobLevelSelectionDialog(selectedJobLevel: selectedJobLevel),
     );
   }
 
   @override
-  ConsumerState<JobLevelSelectionDialog> createState() =>
-      _JobLevelSelectionDialogState();
+  ConsumerState<JobLevelSelectionDialog> createState() => _JobLevelSelectionDialogState();
 }
 
-class _JobLevelSelectionDialogState
-    extends ConsumerState<JobLevelSelectionDialog> {
+class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -50,8 +45,7 @@ class _JobLevelSelectionDialogState
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.8) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
       ref.read(jobLevelNotifierProvider.notifier).loadNextPage();
     }
   }
@@ -64,30 +58,23 @@ class _JobLevelSelectionDialogState
     final errorMessage = jobLevelsState.errorMessage;
     final isLoadingMore = jobLevelsState.isLoadingMore;
 
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      elevation: 8,
-      child: Container(
-        width: 550.w,
-        constraints: BoxConstraints(maxHeight: 650.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildHeader(context),
-            Flexible(
-              child: _buildContent(
-                context,
-                items,
-                isLoading,
-                errorMessage,
-                isLoadingMore,
-              ),
-            ),
-          ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        elevation: 8,
+        child: Container(
+          width: 550.w,
+          constraints: BoxConstraints(maxHeight: 650.h),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildHeader(context),
+              Flexible(child: _buildContent(context, items, isLoading, errorMessage, isLoadingMore)),
+            ],
+          ),
         ),
       ),
     );
@@ -98,23 +85,12 @@ class _JobLevelSelectionDialogState
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.primary.withValues(alpha: 0.05),
-          ],
+          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
+        border: Border(bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,11 +104,7 @@ class _JobLevelSelectionDialogState
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(
-                  Icons.layers,
-                  color: AppColors.primary,
-                  size: 24.sp,
-                ),
+                child: Icon(Icons.layers, color: AppColors.primary, size: 24.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -141,19 +113,12 @@ class _JobLevelSelectionDialogState
                   children: [
                     Text(
                       'Select Job Level',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
-                      ),
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       'Choose a job level from the list',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textSecondary,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -165,9 +130,7 @@ class _JobLevelSelectionDialogState
                 constraints: const BoxConstraints(),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                 ),
               ),
             ],
@@ -188,13 +151,7 @@ class _JobLevelSelectionDialogState
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    List<JobLevel> items,
-    bool isLoading,
-    String? error,
-    bool isLoadingMore,
-  ) {
+  Widget _buildContent(BuildContext context, List<JobLevel> items, bool isLoading, String? error, bool isLoadingMore) {
     if (isLoading && items.isEmpty) {
       return const OrgUnitSelectionSkeleton();
     }
@@ -223,10 +180,7 @@ class _JobLevelSelectionDialogState
               child: SizedBox(
                 width: 24.w,
                 height: 24.w,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.primary,
-                ),
+                child: const CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
               ),
             ),
           );
