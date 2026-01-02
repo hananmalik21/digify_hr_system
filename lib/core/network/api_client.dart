@@ -16,10 +16,7 @@ class ApiClient {
             connectTimeout: const Duration(seconds: 30),
             receiveTimeout: const Duration(seconds: 30),
             sendTimeout: const Duration(seconds: 30),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
+            headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
           ),
         );
 
@@ -43,18 +40,11 @@ class ApiClient {
     } on DioException catch (e) {
       throw _mapDioException(e);
     } catch (e) {
-      throw UnknownException(
-        'Unexpected error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
     }
   }
 
-  Future<Map<String, dynamic>> post(
-    String endpoint, {
-    Map<String, dynamic>? body,
-    Map<String, String>? headers,
-  }) async {
+  Future<Map<String, dynamic>> post(String endpoint, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
     try {
       final response = await _dio.post(
         endpoint,
@@ -66,22 +56,21 @@ class ApiClient {
     } on DioException catch (e) {
       throw _mapDioException(e);
     } catch (e) {
-      throw UnknownException(
-        'Unexpected error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
     }
   }
 
   Future<Map<String, dynamic>> put(
     String endpoint, {
     Map<String, dynamic>? body,
+    Map<String, String>? queryParameters,
     Map<String, String>? headers,
   }) async {
     try {
       final response = await _dio.put(
         endpoint,
         data: body,
+        queryParameters: queryParameters,
         options: Options(headers: headers),
       );
 
@@ -89,10 +78,7 @@ class ApiClient {
     } on DioException catch (e) {
       throw _mapDioException(e);
     } catch (e) {
-      throw UnknownException(
-        'Unexpected error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -108,26 +94,19 @@ class ApiClient {
         data: body,
 
         queryParameters: queryParameters,
-        options: Options(
-          headers: headers,
-        ),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);
     } on DioException catch (e) {
       throw _mapDioException(e);
     } catch (e) {
-      throw UnknownException(
-        'Unexpected error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
     }
   }
 
   Map<String, dynamic> _handleResponse(Response response) {
-    if (response.statusCode != null &&
-        response.statusCode! >= 200 &&
-        response.statusCode! < 300) {
+    if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300) {
       if (response.data == null || response.data.toString().isEmpty) {
         return {};
       }
@@ -141,10 +120,7 @@ class ApiClient {
         return {'data': response.data};
       }
     } else {
-      throw ServerException(
-        'Server error: ${response.statusCode} - ${response.data}',
-        statusCode: response.statusCode,
-      );
+      throw ServerException('Server error: ${response.statusCode} - ${response.data}', statusCode: response.statusCode);
     }
   }
 
@@ -178,11 +154,7 @@ class ApiClient {
         );
 
       case DioExceptionType.cancel:
-        return NetworkException(
-          'Request cancelled',
-          statusCode: statusCode,
-          originalError: error,
-        );
+        return NetworkException('Request cancelled', statusCode: statusCode, originalError: error);
 
       case DioExceptionType.badResponse:
         return _mapHttpStatusError(statusCode, responseData, error);
@@ -205,11 +177,7 @@ class ApiClient {
   }
 
   /// Maps HTTP status codes to appropriate exceptions
-  AppException _mapHttpStatusError(
-    int? statusCode,
-    dynamic responseData,
-    DioException originalError,
-  ) {
+  AppException _mapHttpStatusError(int? statusCode, dynamic responseData, DioException originalError) {
     final message = _extractErrorMessage(responseData);
 
     switch (statusCode) {
@@ -224,11 +192,7 @@ class ApiClient {
             errors: validationErrors,
           );
         }
-        return ClientException(
-          message ?? 'Bad request',
-          statusCode: statusCode,
-          originalError: originalError,
-        );
+        return ClientException(message ?? 'Bad request', statusCode: statusCode, originalError: originalError);
       case 401:
         return UnauthorizedException(
           message ?? 'Unauthorized. Please login again.',
@@ -236,17 +200,9 @@ class ApiClient {
           originalError: originalError,
         );
       case 403:
-        return ForbiddenException(
-          message ?? 'Access forbidden',
-          statusCode: statusCode,
-          originalError: originalError,
-        );
+        return ForbiddenException(message ?? 'Access forbidden', statusCode: statusCode, originalError: originalError);
       case 404:
-        return NotFoundException(
-          message ?? 'Resource not found',
-          statusCode: statusCode,
-          originalError: originalError,
-        );
+        return NotFoundException(message ?? 'Resource not found', statusCode: statusCode, originalError: originalError);
       case 422:
         return ValidationException(
           message ?? 'Validation error',
@@ -265,23 +221,11 @@ class ApiClient {
         );
       default:
         if (statusCode != null && statusCode >= 400 && statusCode < 500) {
-          return ClientException(
-            message ?? 'Client error',
-            statusCode: statusCode,
-            originalError: originalError,
-          );
+          return ClientException(message ?? 'Client error', statusCode: statusCode, originalError: originalError);
         } else if (statusCode != null && statusCode >= 500) {
-          return ServerException(
-            message ?? 'Server error',
-            statusCode: statusCode,
-            originalError: originalError,
-          );
+          return ServerException(message ?? 'Server error', statusCode: statusCode, originalError: originalError);
         }
-        return UnknownException(
-          message ?? 'Unknown error',
-          statusCode: statusCode,
-          originalError: originalError,
-        );
+        return UnknownException(message ?? 'Unknown error', statusCode: statusCode, originalError: originalError);
     }
   }
 
@@ -302,9 +246,7 @@ class ApiClient {
         }
       }
 
-      return responseData['message'] as String? ??
-          responseData['error'] as String? ??
-          responseData['msg'] as String?;
+      return responseData['message'] as String? ?? responseData['error'] as String? ?? responseData['msg'] as String?;
     }
 
     if (responseData is String) {
@@ -321,9 +263,7 @@ class ApiClient {
             }
           }
 
-          return decoded['message'] as String? ??
-              decoded['error'] as String? ??
-              decoded['msg'] as String?;
+          return decoded['message'] as String? ?? decoded['error'] as String? ?? decoded['msg'] as String?;
         }
       } catch (_) {
         return responseData;
@@ -409,9 +349,7 @@ class _LoggingInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (kDebugMode) {
       debugPrint('┌─────────────────────────────────────────────────────────');
-      debugPrint(
-        '│ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}',
-      );
+      debugPrint('│ RESPONSE: ${response.statusCode} ${response.requestOptions.uri}');
       debugPrint('│ Data: ${response.data}');
       debugPrint('└─────────────────────────────────────────────────────────');
     }

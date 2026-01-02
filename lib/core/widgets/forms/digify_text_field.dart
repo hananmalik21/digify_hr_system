@@ -343,8 +343,6 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
 
     final isDateField = widget.onTap != null && widget.readOnly;
 
-    // For heights below 48, isDense: true is required for proper layout.
-    // Use minHeight instead of a fixed-height SizedBox to prevent shrinking when error text appears.
     Widget field = ConstrainedBox(
       constraints: BoxConstraints(minHeight: effectiveHeight),
       child: textField,

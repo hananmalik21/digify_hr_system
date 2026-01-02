@@ -2,7 +2,11 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid_skeleton.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,6 +57,41 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
     }
   }
 
+  Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Shift'),
+        content: Text('Are you sure you want to delete "${shift.name}"?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      final success = await ref.read(shiftsNotifierProvider.notifier).deleteShift(shiftId: shift.id, hard: true);
+
+      if (success && context.mounted) {
+        ToastService.success(context, 'Shift deleted successfully', title: 'Success');
+      }
+    } on AppException catch (e) {
+      if (context.mounted) {
+        ToastService.error(context, e.message, title: 'Error');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ToastService.error(context, 'Failed to delete shift: ${e.toString()}', title: 'Error');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final shiftsState = ref.watch(shiftsNotifierProvider);
@@ -75,18 +114,17 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(32.0),
-              child: Text(
-                shiftsState.errorMessage ?? 'An error occurred',
-                style: const TextStyle(color: Colors.red),
-              ),
+              child: Text(shiftsState.errorMessage ?? 'An error occurred', style: const TextStyle(color: Colors.red)),
             ),
           )
         else
           ShiftsGrid(
             shifts: shiftsState.items,
-            onView: (shift) {},
+            onView: (shift) => ShiftDetailsDialog.show(context, shift),
             onEdit: (shift) {},
             onCopy: (shift) {},
+            onDelete: (shift) => _handleDelete(context, shift),
+            deletingShiftId: shiftsState.deletingShiftId,
           ),
       ],
     );

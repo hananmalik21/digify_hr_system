@@ -8,12 +8,16 @@ class ShiftCardActions extends StatelessWidget {
   final VoidCallback onView;
   final VoidCallback onEdit;
   final VoidCallback onCopy;
+  final VoidCallback? onDelete;
+  final bool isDeleting;
 
   const ShiftCardActions({
     super.key,
     required this.onView,
     required this.onEdit,
     required this.onCopy,
+    this.onDelete,
+    this.isDeleting = false,
   });
 
   @override
@@ -46,6 +50,16 @@ class ShiftCardActions extends StatelessWidget {
           iconColor: AppColors.shiftCopyButtonText,
           onPressed: onCopy,
         ),
+        if (onDelete != null) ...[
+          SizedBox(width: 8.w),
+          ShiftCardIconButton(
+            icon: Icons.delete_outline,
+            bgColor: AppColors.errorBg,
+            iconColor: AppColors.error,
+            onPressed: isDeleting ? null : onDelete,
+            isLoading: isDeleting,
+          ),
+        ],
       ],
     );
   }

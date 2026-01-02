@@ -15,6 +15,14 @@ abstract class ShiftRemoteDataSource {
   });
 
   Future<ShiftOverview> createShift({required int tenantId, required Map<String, dynamic> shiftData});
+
+  Future<ShiftOverview> updateShift({
+    required int shiftId,
+    required int tenantId,
+    required Map<String, dynamic> shiftData,
+  });
+
+  Future<void> deleteShift({required int shiftId, required int tenantId, required bool hard});
 }
 
 class ShiftRemoteDataSourceImpl implements ShiftRemoteDataSource {
@@ -108,6 +116,85 @@ class ShiftRemoteDataSourceImpl implements ShiftRemoteDataSource {
       throw ValidationException('Invalid data format: ${e.message}', originalError: e);
     } catch (e) {
       throw UnknownException('Failed to create shift: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<ShiftOverview> updateShift({
+    required int shiftId,
+    required int tenantId,
+    required Map<String, dynamic> shiftData,
+  }) async {
+    try {
+      if (shiftId <= 0) {
+        throw ValidationException('shift_id must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
+      final endpoint = ApiEndpoints.tmShiftById(shiftId);
+      final queryParameters = <String, String>{'tenant_id': tenantId.toString()};
+      final response = await apiClient.put(endpoint, body: shiftData, queryParameters: queryParameters);
+
+      Map<String, dynamic> data;
+      if (response.containsKey('data') && response['data'] is Map) {
+        data = response['data'] as Map<String, dynamic>;
+
+        if (response.containsKey('status')) {
+          final status = response['status'];
+          if (status is bool && !status) {
+            final message = response['message'] as String? ?? 'Failed to update shift';
+            throw ValidationException(message);
+          }
+        }
+      } else {
+        data = response;
+      }
+
+      return ShiftOverview.fromJson(data);
+    } on AppException {
+      rethrow;
+    } on FormatException catch (e) {
+      throw ValidationException('Invalid data format: ${e.message}', originalError: e);
+    } catch (e) {
+      throw UnknownException('Failed to update shift: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteShift({required int shiftId, required int tenantId, required bool hard}) async {
+    try {
+      if (shiftId <= 0) {
+        throw ValidationException('shift_id must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
+      final queryParameters = <String, String>{'tenant_id': tenantId.toString(), 'hard': hard.toString()};
+
+      final endpoint = ApiEndpoints.tmShiftById(shiftId);
+      final response = await apiClient.delete(endpoint, queryParameters: queryParameters);
+
+      if (response.containsKey('status')) {
+        final status = response['status'];
+        if (status is bool && !status) {
+          final message = response['message'] as String? ?? 'Failed to delete shift';
+          throw ValidationException(message);
+        }
+      }
+
+      final data = response['data'];
+      if (data != null && data != shiftId) {
+        throw ValidationException('Delete response data mismatch');
+      }
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete shift: ${e.toString()}', originalError: e);
     }
   }
 }
