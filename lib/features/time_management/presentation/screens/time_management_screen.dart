@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
-import 'package:digify_hr_system/features/time_management/data/config/time_management_tabs_config.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/utils/time_management_tab_manager.dart';
@@ -58,7 +57,7 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final stats = ref.watch(timeManagementStatsProvider);
 
     // Get tab label for tab bar
-    final tabLabel = _getTabLabel(selectedTab, localizations);
+    final tabLabel = _getTabLabel(selectedTab);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
@@ -91,7 +90,7 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
                   localizations: localizations,
                   selectedTab: tabLabel,
                   onTabSelected: (label) {
-                    final tab = _getTabFromLabel(label, localizations);
+                    final tab = _getTabFromLabel(label);
                     ref
                         .read(timeManagementTabStateProvider.notifier)
                         .setTab(tab);
@@ -127,55 +126,39 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     }
   }
 
-  String _getTabLabel(TimeManagementTab tab, AppLocalizations localizations) {
+  String _getTabLabel(TimeManagementTab tab) {
     switch (tab) {
       case TimeManagementTab.shifts:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'shifts',
-          localizations,
-        );
+        return 'Shifts';
       case TimeManagementTab.workPatterns:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'workPatterns',
-          localizations,
-        );
+        return 'Work Patterns';
       case TimeManagementTab.workSchedules:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'workSchedules',
-          localizations,
-        );
+        return 'Work Schedules';
       case TimeManagementTab.scheduleAssignments:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'scheduleAssignments',
-          localizations,
-        );
+        return 'Schedule Assignments';
       case TimeManagementTab.viewCalendar:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'viewCalendar',
-          localizations,
-        );
+        return 'View Calendar';
       case TimeManagementTab.publicHolidays:
-        return TimeManagementTabsConfig.getLocalizedLabel(
-          'publicHolidays',
-          localizations,
-        );
+        return 'Public Holidays';
     }
   }
 
-  TimeManagementTab _getTabFromLabel(
-    String label,
-    AppLocalizations localizations,
-  ) {
-    final tabs = TimeManagementTabsConfig.getTabs();
-    for (final tab in tabs) {
-      final tabLabel = TimeManagementTabsConfig.getLocalizedLabel(
-        tab.labelKey,
-        localizations,
-      );
-      if (tabLabel == label) {
-        return TimeManagementTabManager.getTabFromRoute(tab.id);
-      }
+  TimeManagementTab _getTabFromLabel(String label) {
+    switch (label) {
+      case 'Shifts':
+        return TimeManagementTab.shifts;
+      case 'Work Patterns':
+        return TimeManagementTab.workPatterns;
+      case 'Work Schedules':
+        return TimeManagementTab.workSchedules;
+      case 'Schedule Assignments':
+        return TimeManagementTab.scheduleAssignments;
+      case 'View Calendar':
+        return TimeManagementTab.viewCalendar;
+      case 'Public Holidays':
+        return TimeManagementTab.publicHolidays;
+      default:
+        return TimeManagementTab.shifts;
     }
-    return TimeManagementTab.shifts;
   }
 }
