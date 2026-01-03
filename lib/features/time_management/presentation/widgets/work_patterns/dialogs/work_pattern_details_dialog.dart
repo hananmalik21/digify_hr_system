@@ -61,7 +61,7 @@ class WorkPatternDetailsDialog extends StatelessWidget with DateTimeConversionMi
   }
 
   Widget _buildHeader(bool isDark) {
-    return Container(
+    return SizedBox(
       height: 113.h,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
