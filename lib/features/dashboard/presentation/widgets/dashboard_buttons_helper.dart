@@ -1,0 +1,151 @@
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
+
+import 'dashboard_button_model.dart';
+
+List<DashboardButton> getDashboardButtons(AppLocalizations loc) {
+  return [
+    DashboardButton(
+      id: 'dashboard',
+      icon: 'assets/icons/dashboard_main_icon.svg',
+      label: loc.dashboard,
+      color: const Color(0xFF2B7FFF),
+      route: '/dashboard',
+    ),
+    DashboardButton(
+      id: 'employees',
+      icon: 'assets/icons/employees_main_icon.svg',
+      label: loc.employees,
+      color: const Color(0xFF00C950),
+      route: '/employees',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'recruitment',
+      icon: 'assets/icons/hr_operations_main_icon.svg',
+      label: 'Recruitment',
+      color: const Color(0xFF7CCF00),
+      route: '/recruitment',
+    ),
+    DashboardButton(
+      id: 'time-management',
+      icon: 'assets/icons/time_management_main_icon.svg',
+      label: loc.timeManagement,
+      color: const Color(0xFFFF6900),
+      route: '/time-management',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'leave-management',
+      icon: 'assets/icons/leave_management_main_icon.svg',
+      label: loc.leaveManagement,
+      color: const Color(0xFF00B8DB),
+      route: '/leave-management',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'attendance',
+      icon: 'assets/icons/attendance_main_icon.svg',
+      label: loc.attendance,
+      color: const Color(0xFFFE9A00),
+      route: '/attendance',
+    ),
+    DashboardButton(
+      id: 'payroll',
+      icon: 'assets/icons/payroll_main_icon.svg',
+      label: loc.payroll,
+      color: const Color(0xFF00BC7D),
+      route: '/payroll',
+    ),
+    DashboardButton(
+      id: 'compensation',
+      icon: 'assets/icons/payroll_main_icon.svg',
+      label: 'Compensation',
+      color: const Color(0xFFF0B100),
+      route: '/compensation',
+    ),
+    DashboardButton(
+      id: 'compliance',
+      icon: 'assets/icons/compliance_main_icon.svg',
+      label: loc.compliance,
+      color: const Color(0xFFFB2C36),
+      route: '/compliance',
+    ),
+    DashboardButton(
+      id: 'workforce-structure',
+      icon: 'assets/icons/workforce_structure_main_icon.svg',
+      label: loc.workforceStructure,
+      color: const Color(0xFF00BBA7),
+      route: '/workforce-structure',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'enterprise-structure',
+      icon: 'assets/icons/enterprise_structure_main_icon.svg',
+      label: loc.enterpriseStructure,
+      color: const Color(0xFF615FFF),
+      route: '/enterprise-structure',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'reports',
+      icon: 'assets/icons/reports_main_icon.svg',
+      label: loc.reports,
+      color: const Color(0xFF62748E),
+      route: '/reports',
+    ),
+    DashboardButton(
+      id: 'eos-calculator',
+      icon: 'assets/icons/eos_calculator_main_icon.svg',
+      label: loc.eosCalculator,
+      color: const Color(0xFF8E51FF),
+      route: '/eos-calculator',
+    ),
+    DashboardButton(
+      id: 'government-forms',
+      icon: 'assets/icons/government_forms_main_icon.svg',
+      label: loc.governmentForms,
+      color: const Color(0xFFFF2056),
+      route: '/government-forms',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'dei-dashboard',
+      icon: 'assets/icons/dei_dashboard_main_icon.svg',
+      label: loc.deiDashboard,
+      color: const Color(0xFFE12AFB),
+      route: '/dei-dashboard',
+    ),
+    DashboardButton(
+      id: 'module-catalogue',
+      icon: 'assets/icons/module_catalogue_main_icon.svg',
+      label: loc.moduleCatalogue,
+      color: const Color(0xFFAD46FF),
+      route: '/module-catalogue',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'product-intro',
+      icon: 'assets/icons/product_intro_main_icon.svg',
+      label: loc.productIntroduction,
+      color: const Color(0xFFF6339A),
+      route: '/product-intro',
+      isMultiLine: true,
+    ),
+    DashboardButton(
+      id: 'page-preview',
+      icon: 'assets/icons/preview_icon.svg',
+      label: 'Page Preview',
+      color: const Color(0xFF00A6F4),
+      route: '/page-preview',
+    ),
+    DashboardButton(
+      id: 'settings',
+      icon: 'assets/icons/settings_main_icon.svg',
+      label: loc.settings,
+      color: const Color(0xFF6A7282),
+      route: '/settings',
+    ),
+  ];
+}
+

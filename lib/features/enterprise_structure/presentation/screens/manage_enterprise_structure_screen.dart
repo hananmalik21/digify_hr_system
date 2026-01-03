@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../widgets/manage_enterprise_structure_widgets/structure_configurations_header_widget.dart' show StructureConfigurationsHeaderWidget;
+
 class ManageEnterpriseStructureScreen extends ConsumerStatefulWidget {
   const ManageEnterpriseStructureScreen({super.key});
 
@@ -95,6 +97,7 @@ class _ManageEnterpriseStructureScreenState
                   ),
                   SizedBox(height: isMobile ? 16.h : 24.h),
 
+
                   StatsCardsWidget(
                     localizations: localizations,
                     isDark: isDark,
@@ -102,11 +105,11 @@ class _ManageEnterpriseStructureScreenState
                   ),
                   SizedBox(height: isMobile ? 16.h : 24.h),
 
-                  // StructureConfigurationsHeaderWidget(
-                  //   localizations: localizations,
-                  //   isDark: isDark,
-                  //   structureListProvider: structureListProvider,
-                  // ),
+                  StructureConfigurationsHeaderWidget(
+                    localizations: localizations,
+                    isDark: isDark,
+                    structureListProvider: structureListProvider,
+                  ),
                   SizedBox(height: isMobile ? 12.h : 16.h),
 
                   StructuresListWidget(
