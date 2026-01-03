@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
@@ -335,7 +336,7 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/business_unit_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.businessUnitIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 widget.isEditMode ? localizations.editBusinessUnit : localizations.addBusinessUnit,
@@ -356,7 +357,12 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+              child: DigifyAsset(
+                assetPath: Assets.icons.closeDialogIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -457,9 +463,10 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
                     ),
                   ),
                 ),
-                SvgIconWidget(
-                  assetPath: 'assets/icons/calendar_icon.svg',
-                  size: 20.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.calendarIcon.path,
+                  width: 20,
+                  height: 20,
                   color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                 ),
               ],
@@ -526,9 +533,10 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgIconWidget(
-                        assetPath: 'assets/icons/add_business_unit_icon.svg',
-                        size: 16.sp,
+                      DigifyAsset(
+                        assetPath: Assets.icons.addBusinessUnitIcon.path,
+                        width: 16,
+                        height: 16,
                         color: Colors.white,
                       ),
                       SizedBox(width: 8.w),

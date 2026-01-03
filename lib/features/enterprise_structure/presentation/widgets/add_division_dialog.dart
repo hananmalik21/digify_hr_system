@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -313,7 +314,7 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/division_header_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.divisionHeaderIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 widget.isEditMode ? localizations.editDivision : localizations.addNewDivision,
@@ -334,7 +335,12 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+              child: DigifyAsset(
+                assetPath: Assets.icons.closeDialogIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -443,9 +449,10 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
                     ),
                   ),
                 ),
-                SvgIconWidget(
-                  assetPath: 'assets/icons/calendar_icon.svg',
-                  size: 20.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.calendarIcon.path,
+                  width: 20,
+                  height: 20,
                   color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                 ),
               ],
@@ -497,7 +504,12 @@ class _AddDivisionDialogState extends ConsumerState<AddDivisionDialog> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : SvgIconWidget(assetPath: 'assets/icons/save_division_icon.svg', size: 16.sp, color: Colors.white),
+                : DigifyAsset(
+                    assetPath: Assets.icons.saveDivisionIcon.path,
+                    width: 16,
+                    height: 16,
+                    color: Colors.white,
+                  ),
             label: _isSubmitting
                 ? SizedBox(
                     width: 16.sp,

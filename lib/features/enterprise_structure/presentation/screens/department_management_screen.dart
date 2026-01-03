@@ -6,7 +6,8 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';
@@ -152,9 +153,10 @@ class DepartmentManagementScreen extends ConsumerWidget {
           height: 48.r,
           decoration: BoxDecoration(color: const Color(0xFF00BBA7), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/department_management_header.svg',
-              size: 24.sp,
+            child: DigifyAsset(
+              assetPath: Assets.icons.departmentManagementHeader.path,
+              width: 24,
+              height: 24,
               color: Colors.white,
             ),
           ),
@@ -262,9 +264,10 @@ class DepartmentManagementScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/search_department_icon.svg',
-                      size: 20.sp,
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.searchDepartmentIcon.path,
+                      width: 20,
+                      height: 20,
                       color: context.themeTextSecondary,
                     ),
                   ),
@@ -278,9 +281,10 @@ class DepartmentManagementScreen extends ConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Row(
               children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/business_unit_filter_icon.svg',
-                  size: 20.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.businessUnitFilterIcon.path,
+                  width: 20,
+                  height: 20,
                   color: context.themeTextSecondary,
                 ),
                 SizedBox(width: 8.w),
@@ -520,9 +524,10 @@ class _DeleteConfirmationDialogWithLoader extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: SvgIconWidget(
-                        assetPath: 'assets/icons/delete_icon_red.svg',
-                        size: 24.sp,
+                      child: DigifyAsset(
+                        assetPath: Assets.icons.deleteIconRed.path,
+                        width: 24,
+                        height: 24,
                         color: AppColors.error,
                       ),
                     ),
@@ -551,9 +556,10 @@ class _DeleteConfirmationDialogWithLoader extends StatelessWidget {
                             color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
-                          child: SvgIconWidget(
-                            assetPath: 'assets/icons/close_dialog_icon.svg',
-                            size: 20.sp,
+                          child: DigifyAsset(
+                            assetPath: Assets.icons.closeDialogIcon.path,
+                            width: 20,
+                            height: 20,
                             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                           ),
                         ),
@@ -676,9 +682,10 @@ class _DeleteConfirmationDialogWithLoader extends StatelessWidget {
                           : Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                SvgIconWidget(
-                                  assetPath: 'assets/icons/delete_icon_red.svg',
-                                  size: 16.sp,
+                                DigifyAsset(
+                                  assetPath: Assets.icons.deleteIconRed.path,
+                                  width: 16,
+                                  height: 16,
                                   color: Colors.white,
                                 ),
                                 SizedBox(width: 8.w),
@@ -753,9 +760,10 @@ class _DepartmentCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
-                              child: SvgIconWidget(
-                                assetPath: 'assets/icons/department_card_icon.svg',
-                                size: 20.sp,
+                              child: DigifyAsset(
+                                assetPath: Assets.icons.departmentCardIcon.path,
+                                width: 20,
+                                height: 20,
                                 color: const Color(0xFF00BBA7),
                               ),
                             ),
@@ -835,9 +843,10 @@ class _DepartmentCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/head_icon.svg',
-                    size: 16.sp,
+                  DigifyAsset(
+                    assetPath: Assets.icons.headIcon.path,
+                    width: 16,
+                    height: 16,
                     color: context.themeTextSecondary,
                   ),
                   SizedBox(width: 8.w),
@@ -893,9 +902,10 @@ class _DepartmentCard extends StatelessWidget {
             SizedBox(height: 12.h),
             Row(
               children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/department_card_icon.svg',
-                  size: 16.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.departmentCardIcon.path,
+                  width: 16,
+                  height: 16,
                   color: context.themeTextSecondary,
                 ),
                 SizedBox(width: 8.w),
@@ -919,7 +929,7 @@ class _DepartmentCard extends StatelessWidget {
   Widget _detailRow(String iconPath, String text) {
     return Row(
       children: [
-        SvgIconWidget(assetPath: iconPath, size: 12.sp, color: const Color(0xFF6A7282)),
+        DigifyAsset(assetPath: iconPath, width: 12, height: 12, color: const Color(0xFF6A7282)),
         SizedBox(width: 4.w),
         Expanded(
           child: Text(
@@ -941,7 +951,7 @@ class _DepartmentCard extends StatelessWidget {
       width: 140.w,
       child: Row(
         children: [
-          SvgIconWidget(assetPath: iconPath, size: 16.sp, color: const Color(0xFF6A7282)),
+          DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: const Color(0xFF6A7282)),
           SizedBox(width: 4.w),
           Expanded(
             child: Text(
@@ -995,7 +1005,7 @@ class _ActionIcon extends StatelessWidget {
         height: 32.r,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
         child: Center(
-          child: SvgIconWidget(assetPath: assetPath, size: 16.sp, color: context.themeTextSecondary),
+          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: context.themeTextSecondary),
         ),
       ),
     );

@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
@@ -345,7 +346,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/company_stat_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.companyStatIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 widget.isEditMode ? localizations.editCompany : localizations.addCompany,
@@ -366,7 +367,12 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+              child: DigifyAsset(
+                assetPath: Assets.icons.closeDialogIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -551,9 +557,10 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
                     ),
                   ),
                 ),
-                SvgIconWidget(
-                  assetPath: 'assets/icons/calendar_icon.svg',
-                  size: 20.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.calendarIcon.path,
+                  width: 20,
+                  height: 20,
                   color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                 ),
               ],
@@ -596,7 +603,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
           SizedBox(width: 12.w),
           ElevatedButton.icon(
             onPressed: _isSubmitting ? null : _handleSave,
-            icon: SvgIconWidget(assetPath: 'assets/icons/save_icon.svg', size: 16.sp, color: Colors.white),
+            icon: DigifyAsset(assetPath: Assets.icons.saveIcon.path, width: 16, height: 16, color: Colors.white),
             label: _isSubmitting
                 ? SizedBox(
                     width: 16.sp,

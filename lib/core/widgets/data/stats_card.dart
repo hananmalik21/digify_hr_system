@@ -1,5 +1,5 @@
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,10 +22,7 @@ class StatsCardData {
 class StatsCard extends StatelessWidget {
   final StatsCardData data;
 
-  const StatsCard({
-    super.key,
-    required this.data,
-  });
+  const StatsCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +33,7 @@ class StatsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: context.themeCardBorder),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -81,16 +74,9 @@ class StatsCard extends StatelessWidget {
           Container(
             width: 48.r,
             height: 48.r,
-            decoration: BoxDecoration(
-              color: data.iconBackground,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
+            decoration: BoxDecoration(color: data.iconBackground, borderRadius: BorderRadius.circular(10.r)),
             child: Center(
-              child: SvgIconWidget(
-                assetPath: data.iconPath,
-                size: 24.sp,
-                color: data.iconColor,
-              ),
+              child: DigifyAsset(assetPath: data.iconPath, width: 24, height: 24, color: data.iconColor),
             ),
           ),
         ],
@@ -98,4 +84,3 @@ class StatsCard extends StatelessWidget {
     );
   }
 }
-

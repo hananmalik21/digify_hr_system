@@ -1,5 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,11 +9,7 @@ class LevelTabItem {
   final String label;
   final String iconPath;
 
-  const LevelTabItem({
-    required this.code,
-    required this.label,
-    required this.iconPath,
-  });
+  const LevelTabItem({required this.code, required this.label, required this.iconPath});
 }
 
 /// Widget for displaying level tabs (Tree View, Company, Division, etc.)
@@ -40,9 +36,7 @@ class LevelTabsWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.cardBackgroundGreyDark
-            : const Color(0xFFF3F4F6),
+        color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: SingleChildScrollView(
@@ -57,45 +51,27 @@ class LevelTabsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton(
-    BuildContext context,
-    LevelTabItem tab,
-    bool isSelected,
-  ) {
+  Widget _buildTabButton(BuildContext context, LevelTabItem tab, bool isSelected) {
     return GestureDetector(
       onTap: () => onTabSelected?.call(tab.code),
       child: Container(
         margin: EdgeInsetsDirectional.only(end: 4.w),
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 16.w,
-          vertical: 10.h,
-        ),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary
-              : (isDark ? AppColors.cardBackgroundDark : Colors.white),
+          color: isSelected ? AppColors.primary : (isDark ? AppColors.cardBackgroundDark : Colors.white),
           borderRadius: BorderRadius.circular(8.r),
           boxShadow: isSelected
               ? null
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 1),
-                    blurRadius: 2,
-                  ),
-                ],
+              : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 1), blurRadius: 2)],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: tab.iconPath,
-              size: 16.sp,
-              color: isSelected
-                  ? Colors.white
-                  : (isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary),
+              width: 16,
+              height: 16,
+              color: isSelected ? Colors.white : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
             ),
             SizedBox(width: 8.w),
             Text(
@@ -103,11 +79,7 @@ class LevelTabsWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
-                color: isSelected
-                    ? Colors.white
-                    : (isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary),
+                color: isSelected ? Colors.white : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
               ),
             ),
           ],

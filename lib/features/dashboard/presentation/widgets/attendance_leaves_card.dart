@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -66,9 +67,10 @@ class AttendanceLeavesCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/attendance_icon.svg',
-                      size: 14.sp,
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.attendanceIcon.path,
+                      width: 14,
+                      height: 14,
                       color: Colors.white,
                     ),
                   ),
@@ -95,14 +97,14 @@ class AttendanceLeavesCard extends StatelessWidget {
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: SvgIconWidget(assetPath: 'assets/icons/arrow_up.svg', size: 14.sp, color: textColor),
+                    icon: DigifyAsset(assetPath: Assets.icons.arrowUp.path, width: 14, height: 14, color: textColor),
                     onPressed: () {},
                   ),
                   SizedBox(width: 3.5.w),
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: SvgIconWidget(assetPath: 'assets/icons/eyes_icon.svg', size: 14.sp, color: textColor),
+                    icon: DigifyAsset(assetPath: Assets.icons.eyesIcon.path, width: 14, height: 14, color: textColor),
                     onPressed: onEyeIconTap,
                   ),
                 ],
@@ -138,9 +140,10 @@ class AttendanceLeavesCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(5.25.w),
                   decoration: BoxDecoration(color: const Color(0xFF00C950), shape: BoxShape.circle),
-                  child: SvgIconWidget(
-                    assetPath: 'assets/icons/check_icon_green.svg',
-                    size: 14.sp,
+                  child: DigifyAsset(
+                    assetPath: Assets.icons.checkIconGreen.path,
+                    width: 14,
+                    height: 14,
                     color: Colors.white,
                   ),
                 ),
@@ -219,7 +222,12 @@ class AttendanceLeavesCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(5.25.w),
                   decoration: BoxDecoration(color: const Color(0xFF2B7FFF), borderRadius: BorderRadius.circular(7.r)),
-                  child: SvgIconWidget(assetPath: 'assets/icons/calendar_icon.svg', size: 14.sp, color: Colors.white),
+                  child: DigifyAsset(
+                    assetPath: Assets.icons.calendarIcon.path,
+                    width: 14,
+                    height: 14,
+                    color: Colors.white,
+                  ),
                 ),
                 SizedBox(width: 7.w),
                 Expanded(

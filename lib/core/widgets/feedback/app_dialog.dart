@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,11 +39,7 @@ class AppDialog extends StatelessWidget {
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 25,
-                offset: const Offset(0, 12),
-              ),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
             ],
           ),
           child: Column(
@@ -55,12 +51,7 @@ class AppDialog extends StatelessWidget {
                 padding: EdgeInsetsDirectional.all(24.w),
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(
-                      color: isDark
-                          ? AppColors.cardBorderDark
-                          : AppColors.cardBorder,
-                      width: 1,
-                    ),
+                    bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
                   ),
                 ),
                 child: Row(
@@ -69,17 +60,14 @@ class AppDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontFamily: 'Inter',
-                              fontSize: 15.6.sp,
-                              fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : AppColors.dialogTitle,
-                              height: 24 / 15.6,
-                              letterSpacing: 0,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontFamily: 'Inter',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                          height: 24 / 15.6,
+                          letterSpacing: 0,
+                        ),
                       ),
                     ),
                     Material(
@@ -89,9 +77,10 @@ class AppDialog extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.r),
                         child: Padding(
                           padding: EdgeInsets.all(6.w),
-                          child: SvgIconWidget(
+                          child: DigifyAsset(
                             assetPath: Assets.icons.closeIcon.path,
-                            size: 24.sp,
+                            width: 24,
+                            height: 24,
                             color: AppColors.dialogCloseIcon,
                           ),
                         ),
@@ -103,35 +92,19 @@ class AppDialog extends StatelessWidget {
 
               // Content
               Flexible(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(24.w),
-                  child: content,
-                ),
+                child: SingleChildScrollView(padding: EdgeInsets.all(24.w), child: content),
               ),
 
               // Footer
               if (actions != null)
                 Container(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 24.w,
-                    end: 24.w,
-                    top: 20.h,
-                    bottom: 24.h,
-                  ),
+                  padding: EdgeInsetsDirectional.only(start: 24.w, end: 24.w, top: 20.h, bottom: 24.h),
                   decoration: BoxDecoration(
                     border: Border(
-                      top: BorderSide(
-                        color: isDark
-                            ? AppColors.cardBorderDark
-                            : AppColors.cardBorder,
-                        width: 1,
-                      ),
+                      top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: actions!,
-                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
                 ),
             ],
           ),

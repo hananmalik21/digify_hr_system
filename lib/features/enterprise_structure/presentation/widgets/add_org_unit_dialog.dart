@@ -4,7 +4,8 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -472,9 +473,10 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
           ),
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/close_icon_edit.svg',
-              size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+            child: DigifyAsset(
+              assetPath: Assets.icons.closeIconEdit.path,
+              width: isMobile ? 20 : (isTablet ? 22 : 24),
+              height: isMobile ? 20 : (isTablet ? 22 : 24),
               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),

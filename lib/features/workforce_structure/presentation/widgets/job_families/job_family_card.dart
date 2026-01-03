@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_family_detail_dialog.dart';
@@ -32,11 +33,7 @@ class JobFamilyCard extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -79,10 +76,7 @@ class JobFamilyCard extends StatelessWidget {
                     ),
                     SizedBox(height: 8.h),
                     Container(
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFDBEAFE),
                         borderRadius: BorderRadius.circular(4.r),
@@ -100,10 +94,11 @@ class JobFamilyCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SvgIconWidget(
-                assetPath: 'assets/icons/business_unit_details_icon.svg',
+              DigifyAsset(
+                assetPath: Assets.icons.businessUnitDetailsIcon.path,
                 color: const Color(0xFF2B7FFF),
-                size: 24.sp,
+                width: 24,
+                height: 24,
               ),
             ],
           ),
@@ -128,17 +123,10 @@ class JobFamilyCard extends StatelessWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => JobFamilyDetailDialog.show(
-                      context,
-                      jobFamily: jobFamily,
-                      jobLevels: jobLevels,
-                    ),
+                    onTap: () => JobFamilyDetailDialog.show(context, jobFamily: jobFamily, jobLevels: jobLevels),
                     borderRadius: BorderRadius.circular(4.r),
                     child: Container(
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 12.w,
-                        vertical: 8.h,
-                      ),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEFF6FF),
                         borderRadius: BorderRadius.circular(4.r),
@@ -146,9 +134,10 @@ class JobFamilyCard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/view_icon_blue.svg',
-                            size: 16.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.viewIconBlue.path,
+                            width: 16,
+                            height: 16,
                             color: AppColors.primary,
                           ),
                           SizedBox(width: 8.w),
@@ -173,19 +162,11 @@ class JobFamilyCard extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      JobFamilyFormDialog.show(
-                        context,
-                        jobFamily: jobFamily,
-                        isEdit: true,
-                        onSave: (updated) {},
-                      );
+                      JobFamilyFormDialog.show(context, jobFamily: jobFamily, isEdit: true, onSave: (updated) {});
                     },
                     borderRadius: BorderRadius.circular(4.r),
                     child: Container(
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 12.w,
-                        vertical: 8.h,
-                      ),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF0FDF4),
                         borderRadius: BorderRadius.circular(4.r),
@@ -193,9 +174,10 @@ class JobFamilyCard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/edit_icon_green.svg',
-                            size: 16.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.editIconGreen.path,
+                            width: 16,
+                            height: 16,
                             color: AppColors.greenButton,
                           ),
                           SizedBox(width: 8.w),
@@ -220,10 +202,6 @@ class JobFamilyCard extends StatelessWidget {
       ),
     );
 
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(10.r),
-      child: cardContent,
-    );
+    return Material(color: Colors.transparent, borderRadius: BorderRadius.circular(10.r), child: cardContent);
   }
 }

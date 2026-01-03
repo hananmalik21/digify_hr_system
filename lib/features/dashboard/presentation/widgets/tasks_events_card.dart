@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -66,7 +67,12 @@ class TasksEventsCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: SvgIconWidget(assetPath: 'assets/icons/tasks_icon.svg', size: 14.sp, color: Colors.white),
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.tasksIcon.path,
+                      width: 14,
+                      height: 14,
+                      color: Colors.white,
+                    ),
                   ),
                   SizedBox(width: 7.w),
                   Text(
@@ -86,14 +92,14 @@ class TasksEventsCard extends StatelessWidget {
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: SvgIconWidget(assetPath: 'assets/icons/arrow_up.svg', size: 14.sp, color: textColor),
+                    icon: DigifyAsset(assetPath: Assets.icons.arrowUp.path, width: 14, height: 14, color: textColor),
                     onPressed: () {},
                   ),
                   SizedBox(width: 3.5.w),
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: SvgIconWidget(assetPath: 'assets/icons/eyes_icon.svg', size: 14.sp, color: textColor),
+                    icon: DigifyAsset(assetPath: Assets.icons.eyesIcon.path, width: 14, height: 14, color: textColor),
                     onPressed: onEyeIconTap,
                   ),
                 ],

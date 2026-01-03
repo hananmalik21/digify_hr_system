@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,10 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class HeaderWidget extends StatelessWidget {
   final AppLocalizations localizations;
 
-  const HeaderWidget({
-    super.key,
-    required this.localizations,
-  });
+  const HeaderWidget({super.key, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +67,10 @@ class HeaderWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/manage_enterprise_icon.svg',
-                      size: 24.sp,
+                    DigifyAsset(
+                      assetPath: Assets.icons.manageEnterpriseIcon.path,
+                      width: 24,
+                      height: 24,
                       color: Colors.white,
                     ),
                   ],
@@ -132,9 +131,10 @@ class HeaderWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: isTablet ? 12.w : 16.w),
-                SvgIconWidget(
-                  assetPath: 'assets/icons/manage_enterprise_icon.svg',
-                  size: isTablet ? 28.sp : 32.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.manageEnterpriseIcon.path,
+                  width: isTablet ? 28 : 32,
+                  height: isTablet ? 28 : 32,
                   color: Colors.white,
                 ),
               ],
@@ -142,13 +142,3 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-

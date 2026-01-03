@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
@@ -40,11 +40,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -67,9 +63,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
                     localizations.noResultsFound,
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -87,9 +81,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   // =========================
 
   Widget _buildTableHeader(BuildContext context) {
-    final headerColor = isDark
-        ? AppColors.cardBackgroundDark
-        : const Color(0xFFF9FAFB);
+    final headerColor = isDark ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB);
 
     return Container(
       color: headerColor,
@@ -113,10 +105,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildHeaderCell(String text, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 12.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
       child: Center(
         child: Text(
           text,
@@ -249,9 +238,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
           _buildDataCell(
             _buildStatusBadge(
-              unit.isActive
-                  ? localizations.active.toUpperCase()
-                  : localizations.inactive.toUpperCase(),
+              unit.isActive ? localizations.active.toUpperCase() : localizations.inactive.toUpperCase(),
               unit.isActive,
             ),
             130.w,
@@ -259,20 +246,11 @@ class OrgUnitsTableWidget extends StatelessWidget {
           _buildDataCell(
             Row(
               children: [
-                _buildActionIcon(
-                  'assets/icons/blue_eye_icon.svg',
-                  onView != null ? () => onView!(unit) : null,
-                ),
+                _buildActionIcon('assets/icons/blue_eye_icon.svg', onView != null ? () => onView!(unit) : null),
                 SizedBox(width: 8.w),
-                _buildActionIcon(
-                  'assets/icons/edit_icon.svg',
-                  onEdit != null ? () => onEdit!(unit) : null,
-                ),
+                _buildActionIcon('assets/icons/edit_icon.svg', onEdit != null ? () => onEdit!(unit) : null),
                 SizedBox(width: 8.w),
-                _buildActionIcon(
-                  'assets/icons/red_delete_icon.svg',
-                  onDelete != null ? () => onDelete!(unit) : null,
-                ),
+                _buildActionIcon('assets/icons/red_delete_icon.svg', onDelete != null ? () => onDelete!(unit) : null),
               ],
             ),
             112.w,
@@ -287,7 +265,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       onTap: onTap,
       child: Opacity(
         opacity: onTap != null ? 1.0 : 0.5,
-        child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
+        child: DigifyAsset(assetPath: assetPath, width: 16, height: 16),
       ),
     );
   }
@@ -316,10 +294,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _buildDataCell(Widget child, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Center(child: child),
     );
   }
@@ -336,11 +311,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -353,10 +324,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeaderShimmer(isDarkTheme),
-            ...List.generate(6, (_) => _buildRowShimmer()),
-          ],
+          children: [_buildHeaderShimmer(isDarkTheme), ...List.generate(6, (_) => _buildRowShimmer())],
         ),
       ),
     );
@@ -364,9 +332,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
 
   Widget _buildHeaderShimmer(bool isDarkTheme) {
     return Container(
-      color: isDarkTheme
-          ? AppColors.cardBackgroundDark
-          : const Color(0xFFF9FAFB),
+      color: isDarkTheme ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB),
       child: Row(
         children: [
           _headerCellShimmer(120),
@@ -387,15 +353,8 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _headerCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 12.h,
-      ),
-      child: ShimmerContainer(
-        width: (width.w * 0.6).clamp(40.w, 140.w),
-        height: 10.h,
-        borderRadius: 6,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+      child: ShimmerContainer(width: (width.w * 0.6).clamp(40.w, 140.w), height: 10.h, borderRadius: 6),
     );
   }
 
@@ -426,25 +385,15 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _cellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 16.h,
-      ),
-      child: ShimmerContainer(
-        width: (width.w * 0.7).clamp(50.w, width.w - 24.w),
-        height: 12.h,
-        borderRadius: 6,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: ShimmerContainer(width: (width.w * 0.7).clamp(50.w, width.w - 24.w), height: 12.h, borderRadius: 6),
     );
   }
 
   Widget _statusCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Center(
         child: ShimmerContainer(width: 64.w, height: 18.h, borderRadius: 999),
       ),
@@ -454,10 +403,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   Widget _actionsCellShimmer(double width) {
     return Container(
       width: width.w,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 24.w,
-        vertical: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Row(
         children: [
           ShimmerContainer(width: 16.sp, height: 16.sp, borderRadius: 4),

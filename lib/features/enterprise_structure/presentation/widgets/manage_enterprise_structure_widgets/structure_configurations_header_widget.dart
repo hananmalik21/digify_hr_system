@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class StructureConfigurationsHeaderWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
 
   const StructureConfigurationsHeaderWidget({
     super.key,
@@ -39,16 +38,8 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: isMobile
@@ -60,9 +51,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : const Color(0xFF101828),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                     height: 24 / 15.6,
                     letterSpacing: 0,
                   ),
@@ -73,9 +62,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : const Color(0xFF4A5565),
+                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                     height: 20 / 13.6,
                     letterSpacing: 0,
                   ),
@@ -94,17 +81,11 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                 SizedBox(height: 12.h),
                 GestureDetector(
                   onTap: () {
-                    EnterpriseStructureDialog.showCreate(
-                      context,
-                      provider: structureListProvider,
-                    );
+                    EnterpriseStructureDialog.showCreate(context, provider: structureListProvider);
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsetsDirectional.symmetric(
-                      horizontal: 16.w,
-                      vertical: 10.h,
-                    ),
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 10.h),
                     decoration: BoxDecoration(
                       color: const Color(0xFF9810FA),
                       borderRadius: BorderRadius.circular(10.r),
@@ -112,9 +93,10 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/create_new_structure_icon.svg',
-                          size: 18.sp,
+                        DigifyAsset(
+                          assetPath: Assets.icons.createNewStructureIcon.path,
+                          width: 18,
+                          height: 18,
                           color: Colors.white,
                         ),
                         SizedBox(width: 8.w),
@@ -146,9 +128,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: isTablet ? 14.5.sp : 15.6.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : const Color(0xFF101828),
+                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                           height: 24 / 15.6,
                           letterSpacing: 0,
                         ),
@@ -159,9 +139,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: isTablet ? 12.5.sp : 13.6.sp,
                           fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : const Color(0xFF4A5565),
+                          color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                           height: 20 / 13.6,
                           letterSpacing: 0,
                         ),
@@ -177,23 +155,16 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                           letterSpacing: 0,
                         ),
                       ),
-
                     ],
                   ),
                 ),
                 SizedBox(width: isTablet ? 12.w : 16.w),
                 GestureDetector(
                   onTap: () {
-                    EnterpriseStructureDialog.showCreate(
-                      context,
-                      provider: structureListProvider,
-                    );
+                    EnterpriseStructureDialog.showCreate(context, provider: structureListProvider);
                   },
                   child: Container(
-                    padding: EdgeInsetsDirectional.symmetric(
-                      horizontal: isTablet ? 20.w : 24.w,
-                      vertical: 12.h,
-                    ),
+                    padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 20.w : 24.w, vertical: 12.h),
                     decoration: BoxDecoration(
                       color: const Color(0xFF9810FA),
                       borderRadius: BorderRadius.circular(10.r),
@@ -201,9 +172,10 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/create_new_structure_icon.svg',
-                          size: isTablet ? 18.sp : 20.sp,
+                        DigifyAsset(
+                          assetPath: Assets.icons.createNewStructureIcon.path,
+                          width: isTablet ? 18 : 20,
+                          height: isTablet ? 18 : 20,
                           color: Colors.white,
                         ),
                         SizedBox(width: 8.w),
@@ -226,4 +198,3 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
     );
   }
 }
-

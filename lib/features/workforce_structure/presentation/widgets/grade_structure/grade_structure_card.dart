@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_action_buttons.dart';
@@ -26,11 +27,7 @@ class GradeStructureCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: AppColors.cardBorder),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              offset: const Offset(0, 1),
-              blurRadius: 4,
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 1), blurRadius: 4),
           ],
         ),
         child: Column(
@@ -41,10 +38,11 @@ class GradeStructureCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/grade_icon.svg',
+                    DigifyAsset(
+                      assetPath: Assets.icons.gradeIcon.path,
                       color: const Color(0xff2B7FFF),
-                      size: 24.sp,
+                      width: 24,
+                      height: 24,
                     ),
                     SizedBox(width: 12.w),
                     Text(
@@ -58,10 +56,7 @@ class GradeStructureCard extends ConsumerWidget {
                     ),
                     SizedBox(width: 10.w),
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 2.h,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFFE5F0FF),
                         borderRadius: BorderRadius.circular(6.r),
@@ -99,28 +94,17 @@ class GradeStructureCard extends ConsumerWidget {
                 return Container(
                   width: 266.4.w,
                   padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF9FAFB),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
+                  decoration: BoxDecoration(color: const Color(0xFFF9FAFB), borderRadius: BorderRadius.circular(6.r)),
                   child: Column(
                     children: [
                       Text(
                         'Step ${step.step}',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
-                        ),
+                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         '${step.salary.toStringAsFixed(0)} ${grade.currencyCode}',
-                        style: TextStyle(
-                          fontSize: 15.8.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
+                        style: TextStyle(fontSize: 15.8.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                       ),
                     ],
                   ),
