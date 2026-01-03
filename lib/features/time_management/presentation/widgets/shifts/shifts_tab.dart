@@ -10,9 +10,9 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShiftsTab extends ConsumerStatefulWidget {
   const ShiftsTab({super.key});
@@ -106,7 +106,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
           onUpload: () {},
           onExport: () {},
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
         if (shiftsState.isLoading)
           const ShiftsGridSkeleton()
         else if (shiftsState.hasError)
