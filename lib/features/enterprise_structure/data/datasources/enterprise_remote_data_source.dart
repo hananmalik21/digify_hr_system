@@ -22,8 +22,7 @@ class EnterpriseRemoteDataSourceImpl implements EnterpriseRemoteDataSource {
       List<dynamic> data;
       if (response.containsKey('data') && response['data'] is List) {
         data = response['data'] as List<dynamic>;
-      } else if (response.containsKey('enterprises') &&
-          response['enterprises'] is List) {
+      } else if (response.containsKey('enterprises') && response['enterprises'] is List) {
         data = response['enterprises'] as List<dynamic>;
       } else if (response is List) {
         data = response as List<dynamic>;
@@ -31,18 +30,11 @@ class EnterpriseRemoteDataSourceImpl implements EnterpriseRemoteDataSource {
         data = [];
       }
 
-      return data
-          .where((item) => item is Map<String, dynamic>)
-          .map((json) => EnterpriseDto.fromJson(json as Map<String, dynamic>))
-          .toList();
+      return data.whereType<Map<String, dynamic>>().map((json) => EnterpriseDto.fromJson(json)).toList();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to fetch enterprises: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to fetch enterprises: ${e.toString()}', originalError: e);
     }
   }
 }
-

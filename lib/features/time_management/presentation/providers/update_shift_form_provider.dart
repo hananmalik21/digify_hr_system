@@ -1,13 +1,14 @@
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart' hide TimeOfDay;
-import 'package:digify_hr_system/features/time_management/domain/usecases/create_shift_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// State for shift form
-class ShiftFormState {
+/// State for update shift form
+class UpdateShiftFormState {
+  final int shiftId;
   final String code;
   final String nameEn;
   final String nameAr;
@@ -20,10 +21,11 @@ class ShiftFormState {
   final String status;
   final Map<String, String> errors;
   final bool isLoading;
-  final ShiftOverview? createdShift;
+  final ShiftOverview? updatedShift;
   final String? errorMessage;
 
-  ShiftFormState({
+  UpdateShiftFormState({
+    required this.shiftId,
     this.code = '',
     this.nameEn = '',
     this.nameAr = '',
@@ -36,12 +38,13 @@ class ShiftFormState {
     String? status,
     this.errors = const {},
     this.isLoading = false,
-    this.createdShift,
+    this.updatedShift,
     this.errorMessage,
   }) : selectedColor = selectedColor ?? ShiftFormConfig.defaultColor,
        status = status ?? ShiftFormConfig.statusOptions.first;
 
-  ShiftFormState copyWith({
+  UpdateShiftFormState copyWith({
+    int? shiftId,
     String? code,
     String? nameEn,
     String? nameAr,
@@ -55,12 +58,13 @@ class ShiftFormState {
     Map<String, String>? errors,
     bool? isLoading,
     bool clearErrors = false,
-    ShiftOverview? createdShift,
+    ShiftOverview? updatedShift,
     String? errorMessage,
-    bool clearCreatedShift = false,
+    bool clearUpdatedShift = false,
     bool clearErrorMessage = false,
   }) {
-    return ShiftFormState(
+    return UpdateShiftFormState(
+      shiftId: shiftId ?? this.shiftId,
       code: code ?? this.code,
       nameEn: nameEn ?? this.nameEn,
       nameAr: nameAr ?? this.nameAr,
@@ -73,14 +77,13 @@ class ShiftFormState {
       status: status ?? this.status,
       errors: clearErrors ? {} : (errors ?? this.errors),
       isLoading: isLoading ?? this.isLoading,
-      createdShift: clearCreatedShift ? null : (createdShift ?? this.createdShift),
+      updatedShift: clearUpdatedShift ? null : (updatedShift ?? this.updatedShift),
       errorMessage: clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
     );
   }
 
   bool get isValid {
-    return code.isNotEmpty &&
-        nameEn.isNotEmpty &&
+    return nameEn.isNotEmpty &&
         nameAr.isNotEmpty &&
         shiftType != null &&
         startTime != null &&
@@ -90,19 +93,72 @@ class ShiftFormState {
   }
 }
 
-/// StateNotifier for managing shift form
-class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
-  final CreateShiftUseCase? _createShiftUseCase;
+/// StateNotifier for managing update shift form
+class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
+  final ShiftsNotifier? _shiftsNotifier;
 
-  ShiftFormNotifier({CreateShiftUseCase? createShiftUseCase})
-    : _createShiftUseCase = createShiftUseCase,
-      super(ShiftFormState());
+  UpdateShiftFormNotifier({ShiftsNotifier? shiftsNotifier, required ShiftOverview initialShift})
+    : _shiftsNotifier = shiftsNotifier,
+      super(_initializeFromShift(initialShift));
 
-  /// Update code field
-  void updateCode(String value) {
-    final errors = Map<String, String>.from(state.errors);
-    errors.remove('code');
-    state = state.copyWith(code: value, errors: errors);
+  static UpdateShiftFormState _initializeFromShift(ShiftOverview shift) {
+    TimeOfDay? parseTime(String timeStr) {
+      try {
+        final parts = timeStr.split(':');
+        if (parts.length == 2) {
+          final hour = int.tryParse(parts[0]);
+          final minute = int.tryParse(parts[1]);
+          if (hour != null && minute != null) {
+            return TimeOfDay(hour: hour, minute: minute);
+          }
+        }
+      } catch (_) {
+        // Ignore parsing errors and return null
+      }
+      return null;
+    }
+
+    Color parseColor(String hexColor) {
+      try {
+        final hex = hexColor.replaceAll('#', '');
+        if (hex.length == 6) {
+          return Color(int.parse('FF$hex', radix: 16));
+        }
+      } catch (_) {
+        // Ignore parsing errors and return default color
+      }
+      return ShiftFormConfig.defaultColor;
+    }
+
+    String getStatusDisplayName(ShiftStatus status) {
+      return status.displayName;
+    }
+
+    String getShiftTypeDisplayName(ShiftType type) {
+      return type.displayName;
+    }
+
+    String formatDuration(double value) {
+      if (value.truncateToDouble() == value) {
+        return value.truncate().toString();
+      } else {
+        return value.toStringAsFixed(1);
+      }
+    }
+
+    return UpdateShiftFormState(
+      shiftId: shift.id,
+      code: shift.code,
+      nameEn: shift.name,
+      nameAr: shift.nameAr,
+      shiftType: getShiftTypeDisplayName(shift.shiftType),
+      startTime: parseTime(shift.startTime),
+      endTime: parseTime(shift.endTime),
+      duration: formatDuration(shift.totalHours),
+      breakDuration: shift.breakHours.toString(),
+      selectedColor: parseColor(shift.colorHex),
+      status: getStatusDisplayName(shift.status),
+    );
   }
 
   /// Update name (English) field
@@ -166,10 +222,6 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
   bool validate() {
     final errors = <String, String>{};
 
-    if (state.code.isEmpty) {
-      errors['code'] = 'Required';
-    }
-
     if (state.nameEn.isEmpty) {
       errors['nameEn'] = 'Required';
     }
@@ -200,7 +252,7 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
 
   /// Reset form
   void reset() {
-    state = ShiftFormState();
+    state = UpdateShiftFormState(shiftId: state.shiftId, code: state.code);
   }
 
   /// Convert Flutter TimeOfDay to minutes since midnight
@@ -216,62 +268,61 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
     return '#$r$g$b'.toUpperCase();
   }
 
-  /// Create shift
-  Future<ShiftOverview?> createShift() async {
-    final useCase = _createShiftUseCase;
-    if (useCase == null) {
-      state = state.copyWith(errorMessage: 'Create shift use case not available', isLoading: false);
+  /// Update shift
+  Future<ShiftOverview?> updateShift() async {
+    if (_shiftsNotifier == null) {
+      state = state.copyWith(errorMessage: 'Shifts notifier not available', isLoading: false);
       return null;
     }
 
-    // Validate form first
     if (!validate()) {
       state = state.copyWith(isLoading: false);
       return null;
     }
 
-    state = state.copyWith(isLoading: true, errorMessage: null, clearErrorMessage: true, clearCreatedShift: true);
+    state = state.copyWith(isLoading: true, errorMessage: null, clearErrorMessage: true, clearUpdatedShift: true);
 
     try {
+      final durationValue = double.tryParse(state.duration) ?? 0.0;
+      final breakDurationValue = state.breakDuration.isEmpty ? 0.0 : (double.tryParse(state.breakDuration) ?? 0.0);
+
       final shiftData = <String, dynamic>{
         'tenant_id': 1001,
-        'shift_code': state.code.trim(),
         'shift_name_en': state.nameEn.trim(),
         'shift_name_ar': state.nameAr.trim(),
         'shift_type': state.shiftType ?? 'REGULAR',
         'start_minutes': _timeOfDayToMinutes(state.startTime!),
         'end_minutes': _timeOfDayToMinutes(state.endTime!),
-        'duration_hours': int.tryParse(state.duration) ?? 0,
-        'break_hours': int.tryParse(state.breakDuration.isEmpty ? '0' : state.breakDuration) ?? 0,
+        'duration_hours': durationValue.round(),
+        'break_hours': breakDurationValue.round(),
         'color_hex': _colorToHex(state.selectedColor),
         'status': state.status.toUpperCase(),
       };
 
-      final createdShift = await useCase.call(shiftData: shiftData);
+      final updatedShift = await _shiftsNotifier.updateShift(shiftId: state.shiftId, shiftData: shiftData);
 
-      state = state.copyWith(isLoading: false, createdShift: createdShift, errorMessage: null, clearErrorMessage: true);
+      state = state.copyWith(isLoading: false, updatedShift: updatedShift, errorMessage: null, clearErrorMessage: true);
 
-      return createdShift;
+      return updatedShift;
     } on AppException catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString(), clearCreatedShift: true);
+      state = state.copyWith(isLoading: false, errorMessage: e.toString(), clearUpdatedShift: true);
       return null;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: 'Failed to create shift: ${e.toString()}',
-        clearCreatedShift: true,
+        errorMessage: 'Failed to update shift: ${e.toString()}',
+        clearUpdatedShift: true,
       );
       return null;
     }
   }
 }
 
-/// Provider for create shift use case
-final createShiftUseCaseProvider = Provider<CreateShiftUseCase>((ref) {
-  return CreateShiftUseCase(repository: ref.read(shiftRepositoryProvider));
-});
-
-/// Provider for shift form
-final shiftFormProvider = StateNotifierProvider.autoDispose<ShiftFormNotifier, ShiftFormState>(
-  (ref) => ShiftFormNotifier(createShiftUseCase: ref.read(createShiftUseCaseProvider)),
-);
+/// Provider for update shift form
+final updateShiftFormProvider = StateNotifierProvider.autoDispose
+    .family<UpdateShiftFormNotifier, UpdateShiftFormState, ShiftOverview>((ref, initialShift) {
+      return UpdateShiftFormNotifier(
+        shiftsNotifier: ref.read(shiftsNotifierProvider.notifier),
+        initialShift: initialShift,
+      );
+    });

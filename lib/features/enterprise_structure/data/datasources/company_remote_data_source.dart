@@ -5,11 +5,7 @@ import 'package:digify_hr_system/features/enterprise_structure/data/dto/company_
 
 /// Remote data source for company operations
 abstract class CompanyRemoteDataSource {
-  Future<List<CompanyDto>> getCompanies({
-    String? search,
-    int? page,
-    int? pageSize,
-  });
+  Future<List<CompanyDto>> getCompanies({String? search, int? page, int? pageSize});
   Future<CompanyDto> createCompany(Map<String, dynamic> companyData);
   Future<CompanyDto> updateCompany(int companyId, Map<String, dynamic> companyData);
   Future<void> deleteCompany(int companyId, {bool hard = true});
@@ -21,11 +17,7 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
   CompanyRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<List<CompanyDto>> getCompanies({
-    String? search,
-    int? page,
-    int? pageSize,
-  }) async {
+  Future<List<CompanyDto>> getCompanies({String? search, int? page, int? pageSize}) async {
     try {
       // Build query parameters
       final queryParameters = <String, String>{};
@@ -48,8 +40,7 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
       List<dynamic> data;
       if (response.containsKey('data') && response['data'] is List) {
         data = response['data'] as List<dynamic>;
-      } else if (response.containsKey('companies') &&
-          response['companies'] is List) {
+      } else if (response.containsKey('companies') && response['companies'] is List) {
         data = response['companies'] as List<dynamic>;
       } else if (response is List) {
         data = response as List<dynamic>;
@@ -57,27 +48,18 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
         data = [];
       }
 
-      return data
-          .where((item) => item is Map<String, dynamic>)
-          .map((json) => CompanyDto.fromJson(json as Map<String, dynamic>))
-          .toList();
+      return data.whereType<Map<String, dynamic>>().map((json) => CompanyDto.fromJson(json)).toList();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to fetch companies: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to fetch companies: ${e.toString()}', originalError: e);
     }
   }
 
   @override
   Future<CompanyDto> createCompany(Map<String, dynamic> companyData) async {
     try {
-      final response = await apiClient.post(
-        ApiEndpoints.companies,
-        body: companyData,
-      );
+      final response = await apiClient.post(ApiEndpoints.companies, body: companyData);
 
       // Handle different response formats
       Map<String, dynamic> data;
@@ -91,20 +73,14 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to create company: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to create company: ${e.toString()}', originalError: e);
     }
   }
 
   @override
   Future<CompanyDto> updateCompany(int companyId, Map<String, dynamic> companyData) async {
     try {
-      final response = await apiClient.put(
-        '${ApiEndpoints.companies}/$companyId',
-        body: companyData,
-      );
+      final response = await apiClient.put('${ApiEndpoints.companies}/$companyId', body: companyData);
 
       // Handle different response formats
       Map<String, dynamic> data;
@@ -118,28 +94,18 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to update company: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to update company: ${e.toString()}', originalError: e);
     }
   }
 
   @override
   Future<void> deleteCompany(int companyId, {bool hard = true}) async {
     try {
-      await apiClient.delete(
-        '${ApiEndpoints.companies}/$companyId',
-        queryParameters: {'hard': hard.toString()},
-      );
+      await apiClient.delete('${ApiEndpoints.companies}/$companyId', queryParameters: {'hard': hard.toString()});
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to delete company: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to delete company: ${e.toString()}', originalError: e);
     }
   }
 }
-

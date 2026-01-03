@@ -172,7 +172,7 @@ class ShiftOverview {
     }
 
     // Convert minutes to TimeOfDay and format
-    TimeOfDay _minutesToTimeOfDay(int minutes) {
+    TimeOfDay minutesToTimeOfDay(int minutes) {
       final clampedMinutes = minutes.clamp(0, 1439);
       final hours = clampedMinutes ~/ 60;
       final mins = clampedMinutes % 60;
@@ -181,8 +181,8 @@ class ShiftOverview {
       return TimeOfDay(hour: validHours, minute: validMins);
     }
 
-    final startTime = _minutesToTimeOfDay(startMinutes);
-    final endTime = _minutesToTimeOfDay(endMinutes);
+    final startTime = minutesToTimeOfDay(startMinutes);
+    final endTime = minutesToTimeOfDay(endMinutes);
 
     final creationDate = parseString(json['creation_date']);
     final createdBy = parseString(json['created_by']);

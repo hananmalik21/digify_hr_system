@@ -89,10 +89,11 @@ class ShiftDetailsDialog extends StatelessWidget with DateTimeConversionMixin {
         ],
       ),
       actions: [
-        AppButton.outline(label: 'Close', onPressed: () => Navigator.of(context).pop()),
+        AppButton.outline(label: 'Close', width: null, onPressed: () => Navigator.of(context).pop()),
         SizedBox(width: 8.w),
         AppButton(
           label: 'Edit Shift',
+          width: null,
           onPressed: () {},
           svgPath: Assets.icons.editIcon.path,
           backgroundColor: AppColors.greenButton,

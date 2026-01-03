@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,7 +122,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
           ShiftsGrid(
             shifts: shiftsState.items,
             onView: (shift) => ShiftDetailsDialog.show(context, shift),
-            onEdit: (shift) {},
+            onEdit: (shift) => UpdateShiftDialog.show(context, shift),
             onCopy: (shift) {},
             onDelete: (shift) => _handleDelete(context, shift),
             deletingShiftId: shiftsState.deletingShiftId,

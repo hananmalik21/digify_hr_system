@@ -26,12 +26,9 @@ class ActionButtonsWidget extends ConsumerWidget {
   final int? enterpriseId;
   final int? structureId;
   final bool? structureIsActive;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
-  final AutoDisposeStateNotifierProvider<
-      SaveEnterpriseStructureNotifier,
-      SaveEnterpriseStructureState> saveEnterpriseStructureProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>
+  saveEnterpriseStructureProvider;
 
   const ActionButtonsWidget({
     super.key,
@@ -55,13 +52,10 @@ class ActionButtonsWidget extends ConsumerWidget {
 
     // Watch the save state to show loader only on the specific button being activated
     final saveState = ref.watch(saveEnterpriseStructureProvider);
-    final isActivating =
-        saveState.isSaving && saveState.loadingStructureId == structureId;
+    final isActivating = saveState.isSaving && saveState.loadingStructureId == structureId;
 
     return Column(
-      crossAxisAlignment: isMobile
-          ? CrossAxisAlignment.stretch
-          : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.stretch : CrossAxisAlignment.start,
       children: [
         if (!isActive)
           ActionButtonWidget(
@@ -76,10 +70,7 @@ class ActionButtonsWidget extends ConsumerWidget {
             onTap: () async {
               if (structureId == null) {
                 if (context.mounted) {
-          ToastService.error(
-            context,
-            'Structure ID is required',
-          );
+                  ToastService.error(context, 'Structure ID is required');
                 }
                 return;
               }
@@ -87,9 +78,7 @@ class ActionButtonsWidget extends ConsumerWidget {
               if (!context.mounted) return;
 
               // Get the notifier before the async operation
-              final saveNotifier = ref.read(
-                saveEnterpriseStructureProvider.notifier,
-              );
+              final saveNotifier = ref.read(saveEnterpriseStructureProvider.notifier);
 
               try {
                 // Call update API with isActive: true
@@ -106,28 +95,19 @@ class ActionButtonsWidget extends ConsumerWidget {
                 // Check result and refresh
                 if (!context.mounted) return;
 
-              ToastService.success(
-                context,
-                'Structure activated successfully',
-              );
+                ToastService.success(context, 'Structure activated successfully');
                 // Refresh the list
                 ref.read(structureListProvider.notifier).refresh();
               } on AppException catch (e) {
                 // Handle error - use exception message directly
                 if (!context.mounted) return;
 
-              ToastService.error(
-                context,
-                e.message,
-              );
+                ToastService.error(context, e.message);
               } catch (e) {
                 // Handle unexpected errors
                 if (!context.mounted) return;
 
-              ToastService.error(
-                context,
-                'Failed to activate structure: ${e.toString()}',
-              );
+                ToastService.error(context, 'Failed to activate structure: ${e.toString()}');
               }
             },
           ),
@@ -138,17 +118,12 @@ class ActionButtonsWidget extends ConsumerWidget {
           isDark: isDark,
           label: localizations.view,
           icon: 'assets/icons/view_icon_blue.svg',
-          backgroundColor: isDark
-              ? AppColors.infoBgDark
-              : const Color(0xFFEFF6FF),
+          backgroundColor: isDark ? AppColors.infoBgDark : const Color(0xFFEFF6FF),
           textColor: AppColors.primary,
           onTap: () {
             // Convert StructureLevelItem to HierarchyLevel for view mode
             final viewLevels = (structureLevels?.isNotEmpty ?? false)
-                ? structureLevels!
-                      .map((level) => convertToHierarchyLevel(level))
-                      .toList()
-                      .cast<HierarchyLevel>()
+                ? structureLevels!.map((level) => convertToHierarchyLevel(level)).toList().cast<HierarchyLevel>()
                 : <HierarchyLevel>[];
 
             EnterpriseStructureDialog.showView(
@@ -168,17 +143,12 @@ class ActionButtonsWidget extends ConsumerWidget {
           isDark: isDark,
           label: localizations.edit,
           icon: 'assets/icons/edit_icon_purple.svg',
-          backgroundColor: isDark
-              ? AppColors.purpleBgDark
-              : const Color(0xFFFAF5FF),
+          backgroundColor: isDark ? AppColors.purpleBgDark : const Color(0xFFFAF5FF),
           textColor: const Color(0xFF9810FA),
           onTap: () {
             // Convert StructureLevelItem to HierarchyLevel
             final initialLevels = (structureLevels?.isNotEmpty ?? false)
-                ? structureLevels!
-                      .map((level) => convertToHierarchyLevel(level))
-                      .toList()
-                      .cast<HierarchyLevel>()
+                ? structureLevels!.map((level) => convertToHierarchyLevel(level)).toList().cast<HierarchyLevel>()
                 : <HierarchyLevel>[];
 
             EnterpriseStructureDialog.showEdit(
@@ -207,7 +177,7 @@ class ActionButtonsWidget extends ConsumerWidget {
         //       ? AppColors.textSecondaryDark
         //       : const Color(0xFF4A5565),
         //   onTap: () {
-        //     // TODO: Duplicate structure
+        //
         //   },
         // ),
         if (!isActive) ...[
@@ -218,9 +188,7 @@ class ActionButtonsWidget extends ConsumerWidget {
             isDark: isDark,
             label: localizations.delete,
             icon: 'assets/icons/delete_icon_red.svg',
-            backgroundColor: isDark
-                ? AppColors.errorBgDark
-                : const Color(0xFFFEF2F2),
+            backgroundColor: isDark ? AppColors.errorBgDark : const Color(0xFFFEF2F2),
             textColor: AppColors.brandRed,
             onTap: () {
               // TODO: Delete structure
@@ -231,4 +199,3 @@ class ActionButtonsWidget extends ConsumerWidget {
     );
   }
 }
-

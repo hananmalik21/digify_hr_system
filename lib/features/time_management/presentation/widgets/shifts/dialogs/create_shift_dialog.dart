@@ -94,6 +94,7 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
         AppButton(
           label: 'Cancel',
           type: AppButtonType.outline,
+          width: null,
           onPressed: formState.isLoading
               ? null
               : () {
@@ -105,6 +106,7 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
         AppButton(
           label: 'Create Shift',
           svgPath: Assets.icons.saveIcon.path,
+          width: null,
           onPressed: formState.isLoading ? null : _handleCreate,
           isLoading: formState.isLoading,
           backgroundColor: AppColors.primary,
