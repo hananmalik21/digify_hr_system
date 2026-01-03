@@ -80,4 +80,26 @@ class ShiftRepositoryImpl implements ShiftRepository {
       throw UnknownException('Failed to create shift: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<ShiftOverview> updateShift({required int shiftId, required Map<String, dynamic> shiftData}) async {
+    try {
+      return await remoteDataSource.updateShift(shiftId: shiftId, tenantId: tenantId, shiftData: shiftData);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update shift: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteShift({required int shiftId, required bool hard}) async {
+    try {
+      await remoteDataSource.deleteShift(shiftId: shiftId, tenantId: tenantId, hard: hard);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete shift: ${e.toString()}', originalError: e);
+    }
+  }
 }

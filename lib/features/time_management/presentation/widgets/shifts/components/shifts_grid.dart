@@ -9,6 +9,8 @@ class ShiftsGrid extends StatelessWidget {
   final Function(ShiftOverview) onView;
   final Function(ShiftOverview) onEdit;
   final Function(ShiftOverview) onCopy;
+  final Function(ShiftOverview)? onDelete;
+  final int? deletingShiftId;
 
   const ShiftsGrid({
     super.key,
@@ -16,16 +18,13 @@ class ShiftsGrid extends StatelessWidget {
     required this.onView,
     required this.onEdit,
     required this.onCopy,
+    this.onDelete,
+    this.deletingShiftId,
   });
 
   @override
   Widget build(BuildContext context) {
-    final columns = ResponsiveHelper.getResponsiveColumns(
-      context,
-      mobile: 1,
-      tablet: 2,
-      web: 3,
-    );
+    final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 3);
 
     return GridView.builder(
       shrinkWrap: true,
@@ -44,6 +43,8 @@ class ShiftsGrid extends StatelessWidget {
           onView: () => onView(shift),
           onEdit: () => onEdit(shift),
           onCopy: () => onCopy(shift),
+          onDelete: onDelete != null ? () => onDelete!(shift) : null,
+          isDeleting: deletingShiftId == shift.id,
         );
       },
     );

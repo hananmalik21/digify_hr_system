@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 
 /// Domain model for Shift
 class Shift {
@@ -46,6 +47,10 @@ class ShiftOverview {
   final String shiftTypeRaw;
   final ShiftStatus status;
   final String colorHex;
+  final String? createdDate;
+  final String? createdBy;
+  final String? updatedDate;
+  final String? updatedBy;
 
   const ShiftOverview({
     required this.id,
@@ -60,9 +65,40 @@ class ShiftOverview {
     required this.shiftTypeRaw,
     required this.status,
     required this.colorHex,
+    this.createdDate,
+    this.createdBy,
+    this.updatedDate,
+    this.updatedBy,
   });
 
   bool get isActive => status.isActive;
+
+  /// Get icon asset path based on shift type using generated assets
+  String get iconPath {
+    switch (shiftType) {
+      case ShiftType.day:
+        return Assets.icons.timeManagement.morning.path;
+      case ShiftType.evening:
+        return Assets.icons.timeManagement.evening.path;
+      case ShiftType.night:
+        return Assets.icons.timeManagement.night.path;
+      case ShiftType.rotating:
+        return Assets.icons.timeManagement.morning.path;
+    }
+  }
+
+  /// Parse color hex string to Color value
+  int get colorValue {
+    try {
+      final hexColor = colorHex.replaceAll('#', '');
+      if (hexColor.length == 6) {
+        return int.parse('FF$hexColor', radix: 16);
+      }
+      return 0xFF000000;
+    } catch (e) {
+      return 0xFF000000;
+    }
+  }
 
   /// Factory method to create ShiftOverview from API response JSON
   factory ShiftOverview.fromJson(Map<String, dynamic> json) {
@@ -99,7 +135,7 @@ class ShiftOverview {
     }
 
     final shiftNameAr = parseString(json['shift_name_ar'], defaultValue: shiftNameEn);
-    final shiftType = parseString(json['shift_type'], defaultValue: 'REGULAR');
+    final shiftType = parseString(json['shift_type'], defaultValue: 'DAY');
 
     final startMinutes = parseInt(json['start_minutes'], defaultValue: 0);
     if (startMinutes < 0 || startMinutes >= 1440) {
@@ -148,6 +184,11 @@ class ShiftOverview {
     final startTime = _minutesToTimeOfDay(startMinutes);
     final endTime = _minutesToTimeOfDay(endMinutes);
 
+    final creationDate = parseString(json['creation_date']);
+    final createdBy = parseString(json['created_by']);
+    final lastUpdateDate = parseString(json['last_update_date']);
+    final lastUpdatedBy = parseString(json['last_updated_by']);
+
     return ShiftOverview(
       id: shiftId,
       name: shiftNameEn,
@@ -161,6 +202,10 @@ class ShiftOverview {
       shiftTypeRaw: shiftType,
       status: ShiftStatus.fromString(status),
       colorHex: colorHex,
+      createdDate: creationDate.isNotEmpty ? creationDate : null,
+      createdBy: createdBy.isNotEmpty ? createdBy : null,
+      updatedDate: lastUpdateDate.isNotEmpty ? lastUpdateDate : null,
+      updatedBy: lastUpdatedBy.isNotEmpty ? lastUpdatedBy : null,
     );
   }
 }

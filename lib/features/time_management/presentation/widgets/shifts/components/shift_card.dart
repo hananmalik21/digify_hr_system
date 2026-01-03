@@ -12,6 +12,8 @@ class ShiftCard extends StatelessWidget {
   final VoidCallback onView;
   final VoidCallback onEdit;
   final VoidCallback onCopy;
+  final VoidCallback? onDelete;
+  final bool isDeleting;
 
   const ShiftCard({
     super.key,
@@ -19,6 +21,8 @@ class ShiftCard extends StatelessWidget {
     required this.onView,
     required this.onEdit,
     required this.onCopy,
+    this.onDelete,
+    this.isDeleting = false,
   });
 
   @override
@@ -29,16 +33,8 @@ class ShiftCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +52,8 @@ class ShiftCard extends StatelessWidget {
               onView: onView,
               onEdit: onEdit,
               onCopy: onCopy,
+              onDelete: onDelete,
+              isDeleting: isDeleting,
             ),
           ),
         ],

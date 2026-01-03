@@ -85,8 +85,7 @@ class PaginationScrollListener {
   }
 
   void _scrollListener() {
-    if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent - threshold) {
+    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - threshold) {
       onLoadMore();
     }
   }
@@ -108,10 +107,7 @@ abstract class PaginationController<T> {
 
 /// Pagination helper mixin
 mixin PaginationMixin<T> {
-  PaginationState<T> handleLoadingState(
-    PaginationState<T> currentState,
-    bool isFirstPage,
-  ) {
+  PaginationState<T> handleLoadingState(PaginationState<T> currentState, bool isFirstPage) {
     return currentState.copyWith(
       isLoading: isFirstPage,
       isLoadingMore: !isFirstPage,
@@ -131,9 +127,7 @@ mixin PaginationMixin<T> {
     required bool hasPreviousPage,
     required bool isFirstPage,
   }) {
-    final updatedItems = isFirstPage
-        ? newItems
-        : [...currentState.items, ...newItems];
+    final updatedItems = isFirstPage ? newItems : [...currentState.items, ...newItems];
 
     return currentState.copyWith(
       items: updatedItems,
@@ -150,15 +144,7 @@ mixin PaginationMixin<T> {
     );
   }
 
-  PaginationState<T> handleErrorState(
-    PaginationState<T> currentState,
-    String error,
-  ) {
-    return currentState.copyWith(
-      isLoading: false,
-      isLoadingMore: false,
-      hasError: true,
-      errorMessage: error,
-    );
+  PaginationState<T> handleErrorState(PaginationState<T> currentState, String error) {
+    return currentState.copyWith(isLoading: false, isLoadingMore: false, hasError: true, errorMessage: error);
   }
 }

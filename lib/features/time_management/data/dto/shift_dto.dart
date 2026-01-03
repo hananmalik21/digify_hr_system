@@ -167,6 +167,10 @@ class ShiftDto {
       shiftTypeRaw: shiftType,
       status: ShiftStatus.fromString(status),
       colorHex: colorHex,
+      createdDate: creationDate.isNotEmpty ? creationDate : null,
+      createdBy: createdBy.isNotEmpty ? createdBy : null,
+      updatedDate: lastUpdateDate.isNotEmpty ? lastUpdateDate : null,
+      updatedBy: lastUpdatedBy.isNotEmpty ? lastUpdatedBy : null,
     );
   }
 }
