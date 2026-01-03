@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -378,50 +379,35 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     );
   }
 
-  void _handleDelete(
+  Future<void> _handleDelete(
     BuildContext context,
     WidgetRef ref,
     BusinessUnitOverview businessUnit,
     AppLocalizations localizations,
-  ) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: AlertDialog(
-          title: Text('Delete Business Unit'),
-          content: Text('Are you sure you want to delete ${businessUnit.name}?'),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(localizations.cancel)),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
-                try {
-                  final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
-                  await deleteUseCase(int.parse(businessUnit.id), hard: true);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
-                    ref.read(businessUnitListNotifierProvider.notifier).refresh();
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error deleting business unit: ${e.toString()}'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                }
-              },
-              child: Text('Delete', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
-      ),
+  ) async {
+    final confirmed = await DeleteConfirmationDialog.show(
+      context,
+      title: localizations.delete,
+      message: 'Are you sure you want to delete this business unit? This action cannot be undone.',
+      itemName: businessUnit.name,
     );
+
+    if (confirmed == true) {
+      try {
+        final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
+        await deleteUseCase(int.parse(businessUnit.id), hard: true);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
+          ref.read(businessUnitListNotifierProvider.notifier).refresh();
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error deleting business unit: ${e.toString()}'), backgroundColor: Colors.red),
+          );
+        }
+      }
+    }
   }
 }
 

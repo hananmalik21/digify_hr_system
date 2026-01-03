@@ -62,8 +62,8 @@ class GradeActionButtons extends ConsumerWidget {
               final confirmed = await DeleteConfirmationDialog.show(
                 context,
                 title: 'Delete Grade',
-                message:
-                    'Are you sure you want to delete ${grade.gradeLabel}? This action cannot be undone.',
+                message: 'Are you sure you want to delete this grade? This action cannot be undone.',
+                itemName: grade.gradeLabel,
               );
               if (confirmed == true && context.mounted) {
                 await _handleDelete(context, ref);

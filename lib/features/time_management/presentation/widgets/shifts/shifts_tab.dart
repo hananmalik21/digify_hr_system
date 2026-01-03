@@ -8,6 +8,8 @@ import 'package:digify_hr_system/features/time_management/domain/models/shift.da
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,19 +61,15 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
   }
 
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Shift'),
-        content: Text('Are you sure you want to delete "${shift.name}"?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: 'Delete Shift',
+      message: 'Are you sure you want to delete this shift? This action cannot be undone.',
+      itemName: shift.name,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      type: ConfirmationType.danger,
+      svgPath: Assets.icons.deleteIconRed.path,
     );
 
     if (confirmed != true) return;
