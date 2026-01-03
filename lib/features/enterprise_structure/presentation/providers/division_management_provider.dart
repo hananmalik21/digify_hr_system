@@ -53,8 +53,7 @@ class DivisionsNotifier extends StateNotifier<DivisionsState> {
   final GetDivisionsUseCase getDivisionsUseCase;
   Timer? _debounceTimer;
 
-  DivisionsNotifier({required this.getDivisionsUseCase})
-      : super(const DivisionsState()) {
+  DivisionsNotifier({required this.getDivisionsUseCase}) : super(const DivisionsState()) {
     _loadDivisions();
   }
 
@@ -77,16 +76,12 @@ class DivisionsNotifier extends StateNotifier<DivisionsState> {
         divisions: divisions,
         isLoading: false,
         hasError: false,
-        searchQuery: search != null ? search : state.searchQuery,
+        searchQuery: search ?? state.searchQuery,
         currentPage: page ?? state.currentPage,
         pageSize: pageSize ?? state.pageSize,
       );
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -114,9 +109,7 @@ class DivisionsNotifier extends StateNotifier<DivisionsState> {
 
 /// Provider for divisions list
 /// This provider automatically loads divisions every time it's accessed
-final divisionsProvider =
-    StateNotifierProvider.autoDispose<DivisionsNotifier, DivisionsState>(
-        (ref) {
+final divisionsProvider = StateNotifierProvider.autoDispose<DivisionsNotifier, DivisionsState>((ref) {
   final getDivisionsUseCase = ref.watch(getDivisionsUseCaseProvider);
   return DivisionsNotifier(getDivisionsUseCase: getDivisionsUseCase);
 });

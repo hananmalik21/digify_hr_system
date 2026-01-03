@@ -182,8 +182,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       } catch (_) {
         return;
       }
-    } catch (e,stacktrace) {
-      print("stacktrace ${stacktrace.toString()}");
+    } catch (e) {
       try {
         state = state.copyWith(
           isLoading: false,

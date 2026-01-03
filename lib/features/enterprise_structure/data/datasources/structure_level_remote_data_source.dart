@@ -9,8 +9,7 @@ abstract class StructureLevelRemoteDataSource {
   Future<List<StructureLevelDto>> getStructureLevels();
 }
 
-class StructureLevelRemoteDataSourceImpl
-    implements StructureLevelRemoteDataSource {
+class StructureLevelRemoteDataSourceImpl implements StructureLevelRemoteDataSource {
   final ApiClient apiClient;
 
   StructureLevelRemoteDataSourceImpl({required this.apiClient});
@@ -24,11 +23,9 @@ class StructureLevelRemoteDataSourceImpl
       List<dynamic> data;
       if (response.containsKey('data') && response['data'] is List) {
         data = response['data'] as List<dynamic>;
-      } else if (response.containsKey('structureLevels') &&
-          response['structureLevels'] is List) {
+      } else if (response.containsKey('structureLevels') && response['structureLevels'] is List) {
         data = response['structureLevels'] as List<dynamic>;
-      } else if (response.containsKey('levels') &&
-          response['levels'] is List) {
+      } else if (response.containsKey('levels') && response['levels'] is List) {
         data = response['levels'] as List<dynamic>;
       } else if (response is List) {
         data = response as List<dynamic>;
@@ -36,19 +33,11 @@ class StructureLevelRemoteDataSourceImpl
         data = [];
       }
 
-      return data
-          .where((item) => item is Map<String, dynamic>)
-          .map((json) => StructureLevelDto.fromJson(
-              json as Map<String, dynamic>))
-          .toList();
+      return data.whereType<Map<String, dynamic>>().map((json) => StructureLevelDto.fromJson(json)).toList();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to fetch structure levels: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to fetch structure levels: ${e.toString()}', originalError: e);
     }
   }
 }
-

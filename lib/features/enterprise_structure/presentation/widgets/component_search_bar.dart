@@ -62,8 +62,9 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
       if (value == localizations.allTypes) return null;
       if (value == localizations.company) return ComponentType.company;
       if (value == localizations.division) return ComponentType.division;
-      if (value == localizations.businessUnit)
+      if (value == localizations.businessUnit) {
         return ComponentType.businessUnit;
+      }
       if (value == localizations.department) return ComponentType.department;
       if (value == localizations.section) return ComponentType.section;
       return null;
@@ -74,10 +75,7 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
       child: Row(
         children: [
@@ -90,9 +88,7 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
               fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
               prefixIcon: const Icon(Icons.search, size: 16),
               onChanged: (value) {
-                ref
-                    .read(componentValuesProvider.notifier)
-                    .searchComponents(value);
+                ref.read(componentValuesProvider.notifier).searchComponents(value);
               },
             ),
           ),
@@ -104,9 +100,7 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
             isDark: isDark,
             onChanged: (value) {
               if (value != null) {
-                ref
-                    .read(componentValuesProvider.notifier)
-                    .filterByType(getTypeFromString(value));
+                ref.read(componentValuesProvider.notifier).filterByType(getTypeFromString(value));
               }
             },
           ),
@@ -117,23 +111,16 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
               ref.read(componentValuesProvider.notifier).toggleTreeView();
             },
             child: Container(
-              padding: EdgeInsetsDirectional.symmetric(
-                horizontal: 16.w,
-                vertical: 9.h,
-              ),
+              padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 9.h),
               decoration: BoxDecoration(
                 color: state.isTreeView
                     ? AppColors.primary
-                    : (isDark
-                          ? AppColors.cardBackgroundGreyDark
-                          : AppColors.grayBg),
+                    : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
                 borderRadius: BorderRadius.circular(10.r),
                 border: Border.all(
                   color: state.isTreeView
                       ? AppColors.primary
-                      : (isDark
-                            ? AppColors.inputBorderDark
-                            : AppColors.inputBorder),
+                      : (isDark ? AppColors.inputBorderDark : AppColors.inputBorder),
                   width: 1,
                 ),
               ),
@@ -145,23 +132,17 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
                     size: 18.sp,
                     color: state.isTreeView
                         ? Colors.white
-                        : (isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondary),
+                        : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    state.isTreeView
-                        ? localizations.listView
-                        : localizations.treeView,
+                    state.isTreeView ? localizations.listView : localizations.treeView,
                     style: TextStyle(
                       fontSize: 13.7.sp,
                       fontWeight: FontWeight.w400,
                       color: state.isTreeView
                           ? Colors.white
-                          : (isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary),
+                          : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
                       height: 20 / 13.7,
                     ),
                   ),

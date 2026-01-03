@@ -36,7 +36,9 @@ class DivisionDetailsDialog extends StatelessWidget {
           decoration: BoxDecoration(
             color: isDark ? AppColors.backgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(14.r),
-            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 50, offset: const Offset(0, 25))],
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 50, offset: const Offset(0, 25)),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

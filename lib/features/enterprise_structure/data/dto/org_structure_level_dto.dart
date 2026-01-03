@@ -10,30 +10,19 @@ class ParentUnitDto {
   /// ✅ Parent LEVEL_CODE (e.g. COMPANY, BUSINESS_UNIT, DEPARTMENT)
   final String? level;
 
-  const ParentUnitDto({
-    required this.id,
-    required this.name,
-    this.level,
-  });
+  const ParentUnitDto({required this.id, required this.name, this.level});
 
   factory ParentUnitDto.fromJson(Map<String, dynamic> json) {
-    log("parent is ${json}");
+    log("parent is $json");
     return ParentUnitDto(
-      id: (json['id'] as num?)?.toInt() ??
-          0,
-      name: json['name'] as String? ??
-          '',
-      level: json['level'] as String? ??""
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      name: json['name'] as String? ?? '',
+      level: json['level'] as String? ?? "",
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    if (level != null) 'level': level,
-  };
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, if (level != null) 'level': level};
 }
-
 
 /// DTO for Organization Structure Level
 class OrgStructureLevelDto {
@@ -94,9 +83,7 @@ class OrgStructureLevelDto {
   factory OrgStructureLevelDto.fromJson(Map<String, dynamic> json) {
     // parent_org_unit_id (FK)
 
-
-    final parentId = (json['parent_org_unit_id'] as num?)?.toInt() ??
-        (json['parentOrgUnitId'] as num?)?.toInt();
+    final parentId = (json['parent_org_unit_id'] as num?)?.toInt() ?? (json['parentOrgUnitId'] as num?)?.toInt();
 
     // ✅ parent_unit object (preferred)
     ParentUnitDto? parentUnit;
@@ -104,66 +91,38 @@ class OrgStructureLevelDto {
     if (parentUnitJson is Map<String, dynamic>) {
       parentUnit = ParentUnitDto.fromJson(parentUnitJson);
       log("parent is ${parentUnit.name}");
-
     } else {
       // backward compatibility if API sends parent_id / parent_name
       final fallbackParentId = (json['parent_org_unit_id'] as num?)?.toInt();
       final fallbackParentName = json['parent_name'] as String?;
       if (fallbackParentId != null) {
-        parentUnit = ParentUnitDto(
-          id: fallbackParentId,
-          name: fallbackParentName ?? '',
-        );
+        parentUnit = ParentUnitDto(id: fallbackParentId, name: fallbackParentName ?? '');
       }
     }
 
     return OrgStructureLevelDto(
-      orgUnitId: (json['org_unit_id'] as num?)?.toInt() ??
-          (json['orgUnitId'] as num?)?.toInt() ??  json["id"]??
-          0,
-      orgStructureId: (json['org_structure_id'] as num?)?.toInt() ??
-          (json['orgStructureId'] as num?)?.toInt() ??
-          0,
-      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ??
-          (json['enterpriseId'] as num?)?.toInt() ??
-          0,
-      levelCode: json['level_code'] as String? ??
-          json['levelCode'] as String? ??  json["level"]??
-          '',
-      orgUnitCode: json['org_unit_code'] as String? ??
-          json['orgUnitCode'] as String? ??
-          '',
-      orgUnitNameEn: json['org_unit_name_en'] as String? ??
-          json['orgUnitNameEn'] as String? ??  json["name"]??
-          '',
-      orgUnitNameAr: json['org_unit_name_ar'] as String? ??
-          json['orgUnitNameAr'] as String? ??
-          '',
+      orgUnitId: (json['org_unit_id'] as num?)?.toInt() ?? (json['orgUnitId'] as num?)?.toInt() ?? json["id"] ?? 0,
+      orgStructureId: (json['org_structure_id'] as num?)?.toInt() ?? (json['orgStructureId'] as num?)?.toInt() ?? 0,
+      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? (json['enterpriseId'] as num?)?.toInt() ?? 0,
+      levelCode: json['level_code'] as String? ?? json['levelCode'] as String? ?? json["level"] ?? '',
+      orgUnitCode: json['org_unit_code'] as String? ?? json['orgUnitCode'] as String? ?? '',
+      orgUnitNameEn: json['org_unit_name_en'] as String? ?? json['orgUnitNameEn'] as String? ?? json["name"] ?? '',
+      orgUnitNameAr: json['org_unit_name_ar'] as String? ?? json['orgUnitNameAr'] as String? ?? '',
       parentOrgUnitId: parentId,
       parentUnit: parentUnit,
-      isActive: json['is_active'] as String? ??
-          json['isActive'] as String? ??
-          'N',
-      managerName: json['manager_name'] as String? ??
-          json['managerName'] as String?,
-      managerEmail: json['manager_email'] as String? ??
-          json['managerEmail'] as String?,
-      managerPhone: json['manager_phone'] as String? ??
-          json['managerPhone'] as String?,
+      isActive: json['is_active'] as String? ?? json['isActive'] as String? ?? 'N',
+      managerName: json['manager_name'] as String? ?? json['managerName'] as String?,
+      managerEmail: json['manager_email'] as String? ?? json['managerEmail'] as String?,
+      managerPhone: json['manager_phone'] as String? ?? json['managerPhone'] as String?,
       location: json['location'] as String?,
       city: json['city'] as String?,
       address: json['address'] as String?,
       description: json['description'] as String?,
-      createdBy: json['created_by'] as String? ??
-          json['createdBy'] as String?,
-      createdDate: json['created_date'] as String? ??
-          json['createdDate'] as String?,
-      lastUpdatedBy: json['last_updated_by'] as String? ??
-          json['lastUpdatedBy'] as String?,
-      lastUpdatedDate: json['last_updated_date'] as String? ??
-          json['lastUpdatedDate'] as String?,
-      lastUpdateLogin: json['last_update_login'] as String? ??
-          json['lastUpdateLogin'] as String?,
+      createdBy: json['created_by'] as String? ?? json['createdBy'] as String?,
+      createdDate: json['created_date'] as String? ?? json['createdDate'] as String?,
+      lastUpdatedBy: json['last_updated_by'] as String? ?? json['lastUpdatedBy'] as String?,
+      lastUpdatedDate: json['last_updated_date'] as String? ?? json['lastUpdatedDate'] as String?,
+      lastUpdateLogin: json['last_update_login'] as String? ?? json['lastUpdateLogin'] as String?,
     );
   }
 

@@ -48,8 +48,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double width = 144,
-    double height = 40,
+    double? width = 144,
+    double? height = 40,
   }) {
     return AppButton(
       label: label,
@@ -69,8 +69,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double width = 144,
-    double height = 40,
+    double? width = 144,
+    double? height = 40,
   }) {
     return AppButton(
       label: label,
@@ -90,8 +90,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double width = 144,
-    double height = 40,
+    double? width = 144,
+    double? height = 40,
   }) {
     return AppButton(
       label: label,
@@ -111,8 +111,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double width = 144,
-    double height = 40,
+    double? width = 144,
+    double? height = 40,
   }) {
     return AppButton(
       label: label,
@@ -161,12 +161,7 @@ class AppButton extends StatelessWidget {
 
   BorderSide? _getBorder() {
     if (type == AppButtonType.outline) {
-      return BorderSide(
-        color: isLoading || onPressed == null
-            ? AppColors.borderGrey
-            : AppColors.primary,
-        width: 1.5,
-      );
+      return BorderSide(color: isLoading || onPressed == null ? AppColors.borderGrey : AppColors.primary, width: 1.5);
     }
     return null;
   }
@@ -188,11 +183,7 @@ class AppButton extends StatelessWidget {
     Widget buttonContent;
 
     if (isLoading) {
-      buttonContent = AppLoadingIndicator(
-        type: LoadingType.threeBounce,
-        color: contentColor,
-        size: 20.sp,
-      );
+      buttonContent = AppLoadingIndicator(type: LoadingType.threeBounce, color: contentColor, size: 20.sp);
     } else {
       List<Widget> children = [];
 
@@ -200,26 +191,14 @@ class AppButton extends StatelessWidget {
         children.add(Icon(icon, size: 18.sp, color: contentColor));
         children.add(SizedBox(width: 8.w));
       } else if (svgPath != null) {
-        children.add(
-          DigifyAsset(
-            assetPath: svgPath!,
-            width: 18,
-            height: 18,
-            color: contentColor,
-          ),
-        );
+        children.add(DigifyAsset(assetPath: svgPath!, width: 18, height: 18, color: contentColor));
         children.add(SizedBox(width: 8.w));
       }
 
       children.add(
         Text(
           label,
-          style: TextStyle(
-            fontSize: effectiveFontSize,
-            fontWeight: FontWeight.w600,
-            color: contentColor,
-            height: 1.0,
-          ),
+          style: TextStyle(fontSize: effectiveFontSize, fontWeight: FontWeight.w600, color: contentColor, height: 1.0),
         ),
       );
 
@@ -247,10 +226,7 @@ class AppButton extends StatelessWidget {
           child: Container(
             padding: effectivePadding,
             alignment: Alignment.center,
-            constraints: BoxConstraints(
-              minWidth: effectiveWidth ?? 0,
-              minHeight: effectiveHeight,
-            ),
+            constraints: BoxConstraints(minWidth: effectiveWidth ?? 0, minHeight: effectiveHeight),
             child: buttonContent,
           ),
         ),
