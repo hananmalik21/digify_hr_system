@@ -7,8 +7,10 @@ import 'package:digify_hr_system/core/widgets/forms/filter_pill_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ShiftActionBar extends StatelessWidget {
-  final TextEditingController searchController;
+import '../../../../../../gen/assets.gen.dart';
+
+class ShiftActionBar extends StatefulWidget {
+  final ValueChanged<String> onSearchChanged;
   final String selectedStatus;
   final ValueChanged<String?> onStatusChanged;
   final VoidCallback onCreateShift;
@@ -17,13 +19,32 @@ class ShiftActionBar extends StatelessWidget {
 
   const ShiftActionBar({
     super.key,
-    required this.searchController,
+    required this.onSearchChanged,
     required this.selectedStatus,
     required this.onStatusChanged,
     required this.onCreateShift,
     required this.onUpload,
     required this.onExport,
   });
+
+  @override
+  State<ShiftActionBar> createState() => _ShiftActionBarState();
+}
+
+class _ShiftActionBarState extends State<ShiftActionBar> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,21 +70,22 @@ class ShiftActionBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DigifyTextField.search(
-                  controller: searchController,
+                  controller: _searchController,
                   hintText: 'Search shifts...',
                   height: 44.h,
                   borderRadius: 10.r,
                   fillColor: isDark ? AppColors.inputBgDark : Colors.white,
                   borderColor: isDark ? AppColors.inputBorderDark : const Color(0xFFD0D5DD),
+                  onChanged: widget.onSearchChanged,
                 ),
                 SizedBox(height: 12.h),
                 Row(
                   children: [
                     Expanded(
                       child: FilterPillDropdown(
-                        value: selectedStatus,
+                        value: widget.selectedStatus,
                         items: const ['All Status', 'Active', 'Inactive'],
-                        onChanged: onStatusChanged,
+                        onChanged: widget.onStatusChanged,
                         isDark: isDark,
                       ),
                     ),
@@ -74,16 +96,16 @@ class ShiftActionBar extends StatelessWidget {
                   spacing: 8.w,
                   runSpacing: 8.h,
                   children: [
-                    _buildActionButton(context, onPressed: onCreateShift, label: 'Create', icon: Icons.add),
+                    _buildActionButton(context, onPressed: widget.onCreateShift, label: 'Create', icon: Icons.add),
                     _buildActionButton(
                       context,
-                      onPressed: onUpload,
+                      onPressed: widget.onUpload,
                       label: 'Upload',
                       svgPath: 'assets/icons/bulk_upload_icon_figma.svg',
                     ),
                     _buildActionButton(
                       context,
-                      onPressed: onExport,
+                      onPressed: widget.onExport,
                       label: 'Export',
                       svgPath: 'assets/icons/download_icon.svg',
                     ),
@@ -95,24 +117,25 @@ class ShiftActionBar extends StatelessWidget {
               children: [
                 Expanded(
                   child: DigifyTextField.search(
-                    controller: searchController,
+                    controller: _searchController,
                     hintText: 'Search shifts...',
                     height: 40.h,
                     borderRadius: 10.r,
                     fillColor: isDark ? AppColors.inputBgDark : Colors.white,
                     borderColor: isDark ? AppColors.inputBorderDark : const Color(0xFFD0D5DD),
+                    onChanged: widget.onSearchChanged,
                   ),
                 ),
                 SizedBox(width: 16.w),
                 FilterPillDropdown(
-                  value: selectedStatus,
+                  value: widget.selectedStatus,
                   items: const ['All Status', 'Active', 'Inactive'],
-                  onChanged: onStatusChanged,
+                  onChanged: widget.onStatusChanged,
                   isDark: isDark,
                 ),
                 SizedBox(width: 16.w),
                 AppButton(
-                  onPressed: onCreateShift,
+                  onPressed: widget.onCreateShift,
                   label: 'Create Shift',
                   icon: Icons.add,
                   height: 40.h,
@@ -125,9 +148,9 @@ class ShiftActionBar extends StatelessWidget {
                 ),
                 SizedBox(width: 16.w),
                 AppButton(
-                  onPressed: onUpload,
+                  onPressed: widget.onUpload,
                   label: 'Upload',
-                  svgPath: 'assets/icons/bulk_upload_icon_figma.svg',
+                  svgPath: Assets.icons.bulkUploadIconFigma.path,
                   height: 40.h,
                   width: null,
                   borderRadius: BorderRadius.circular(10.r),
@@ -138,9 +161,9 @@ class ShiftActionBar extends StatelessWidget {
                 ),
                 SizedBox(width: 16.w),
                 AppButton(
-                  onPressed: onExport,
+                  onPressed: widget.onExport,
                   label: 'Export',
-                  svgPath: 'assets/icons/download_icon.svg',
+                  svgPath: Assets.icons.downloadIcon.path,
                   height: 40.h,
                   width: null,
                   borderRadius: BorderRadius.circular(10.r),

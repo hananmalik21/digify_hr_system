@@ -113,6 +113,18 @@ class ShiftOverview {
       return defaultValue;
     }
 
+    double parseDouble(dynamic value, {double defaultValue = 0.0}) {
+      if (value == null) return defaultValue;
+      if (value is double) return value;
+      if (value is int) return value.toDouble();
+      if (value is String) {
+        final parsed = double.tryParse(value);
+        return parsed ?? defaultValue;
+      }
+      if (value is num) return value.toDouble();
+      return defaultValue;
+    }
+
     String parseString(dynamic value, {String defaultValue = ''}) {
       if (value == null) return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
@@ -151,7 +163,7 @@ class ShiftOverview {
       throw FormatException('Invalid time range: end_minutes must be greater than start_minutes');
     }
 
-    final durationHours = parseInt(json['duration_hours'], defaultValue: 0);
+    final durationHours = parseDouble(json['duration_hours'], defaultValue: 0.0);
     if (durationHours < 0 || durationHours > 24) {
       throw FormatException('Invalid duration_hours: must be between 0 and 24');
     }
@@ -196,7 +208,7 @@ class ShiftOverview {
       code: shiftCode,
       startTime: startTime.formatted,
       endTime: endTime.formatted,
-      totalHours: durationHours.toDouble(),
+      totalHours: durationHours,
       breakHours: breakHours,
       shiftType: ShiftType.fromString(shiftType),
       shiftTypeRaw: shiftType,

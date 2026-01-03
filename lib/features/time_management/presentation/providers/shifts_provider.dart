@@ -13,8 +13,6 @@ import 'package:digify_hr_system/features/time_management/domain/usecases/get_sh
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_shift_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const int _defaultTenantId = 1001;
-
 final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(baseUrl: ApiConfig.baseUrl);
 });
@@ -24,21 +22,28 @@ final shiftRemoteDataSourceProvider = Provider<ShiftRemoteDataSource>((ref) {
   return ShiftRemoteDataSourceImpl(apiClient: apiClient);
 });
 
-final shiftRepositoryProvider = Provider<ShiftRepository>((ref) {
+/// Family provider for shift repository that accepts enterprise ID
+final shiftRepositoryProvider = Provider.family<ShiftRepository, int>((ref, enterpriseId) {
   final remoteDataSource = ref.watch(shiftRemoteDataSourceProvider);
-  return ShiftRepositoryImpl(remoteDataSource: remoteDataSource, tenantId: _defaultTenantId);
+  return ShiftRepositoryImpl(remoteDataSource: remoteDataSource, tenantId: enterpriseId);
 });
 
-final getShiftsUseCaseProvider = Provider<GetShiftsUseCase>((ref) {
-  return GetShiftsUseCase(repository: ref.read(shiftRepositoryProvider));
+/// Family provider for get shifts use case that accepts enterprise ID
+final getShiftsUseCaseProvider = Provider.family<GetShiftsUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(shiftRepositoryProvider(enterpriseId));
+  return GetShiftsUseCase(repository: repository);
 });
 
-final deleteShiftUseCaseProvider = Provider<DeleteShiftUseCase>((ref) {
-  return DeleteShiftUseCase(repository: ref.read(shiftRepositoryProvider));
+/// Family provider for delete shift use case that accepts enterprise ID
+final deleteShiftUseCaseProvider = Provider.family<DeleteShiftUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(shiftRepositoryProvider(enterpriseId));
+  return DeleteShiftUseCase(repository: repository);
 });
 
-final updateShiftUseCaseProvider = Provider<UpdateShiftUseCase>((ref) {
-  return UpdateShiftUseCase(repository: ref.read(shiftRepositoryProvider));
+/// Family provider for update shift use case that accepts enterprise ID
+final updateShiftUseCaseProvider = Provider.family<UpdateShiftUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(shiftRepositoryProvider(enterpriseId));
+  return UpdateShiftUseCase(repository: repository);
 });
 
 /// Shift State that extends PaginationState with deletion status
@@ -102,6 +107,12 @@ class ShiftState extends PaginationState<ShiftOverview> {
       deletingShiftId: clearDeletingShiftId ? null : (deletingShiftId ?? this.deletingShiftId),
     );
   }
+
+  /// Returns the status as a string for UI display
+  String get statusString {
+    if (status == null) return 'All Status';
+    return status == PositionStatus.active ? 'Active' : 'Inactive';
+  }
 }
 
 /// Shifts Notifier with pagination support
@@ -112,9 +123,19 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
   final UpdateShiftUseCase _updateShiftUseCase;
   final DeleteShiftUseCase _deleteShiftUseCase;
   final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
+  int? _currentEnterpriseId;
 
   ShiftsNotifier(this._getShiftsUseCase, this._updateShiftUseCase, this._deleteShiftUseCase)
     : super(const ShiftState());
+
+  /// Updates the enterprise ID and refreshes data
+  void setEnterpriseId(int enterpriseId) {
+    if (_currentEnterpriseId != enterpriseId) {
+      _currentEnterpriseId = enterpriseId;
+      reset();
+      loadFirstPage();
+    }
+  }
 
   @override
   void dispose() {
@@ -253,6 +274,19 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
     refresh();
   }
 
+  /// Sets status filter from string value ('All Status', 'Active', 'Inactive')
+  void setStatusFilterFromString(String? statusString) {
+    if (statusString == null) return;
+
+    final isActive = statusString == 'All Status'
+        ? null
+        : statusString == 'Active'
+        ? true
+        : false;
+
+    setStatusFilter(isActive);
+  }
+
   bool? _getActiveStatusFilter() {
     if (state.status == null) return null;
     return state.status == PositionStatus.active;
@@ -310,10 +344,11 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
   }
 }
 
-final shiftsNotifierProvider = StateNotifierProvider<ShiftsNotifier, ShiftState>((ref) {
+/// Family provider for shifts notifier that accepts enterprise ID
+final shiftsNotifierProvider = StateNotifierProvider.family<ShiftsNotifier, ShiftState, int>((ref, enterpriseId) {
   return ShiftsNotifier(
-    ref.read(getShiftsUseCaseProvider),
-    ref.read(updateShiftUseCaseProvider),
-    ref.read(deleteShiftUseCaseProvider),
+    ref.read(getShiftsUseCaseProvider(enterpriseId)),
+    ref.read(updateShiftUseCaseProvider(enterpriseId)),
+    ref.read(deleteShiftUseCaseProvider(enterpriseId)),
   );
 });

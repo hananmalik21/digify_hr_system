@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/utils/duration_formatter.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_detail_row.dart';
@@ -23,8 +24,12 @@ class ShiftCardContent extends StatelessWidget {
           ShiftCardHeader(shift: shift, isDark: isDark),
           SizedBox(height: spacing),
           ShiftCardDetailRow(label: 'Time', value: '${shift.startTime} - ${shift.endTime}'),
-          ShiftCardDetailRow(label: 'Duration', value: '${shift.totalHours} hours'),
-          ShiftCardDetailRow(label: 'Break', value: '${shift.breakHours} ${shift.breakHours == 1 ? 'hour' : 'hours'}'),
+          ShiftCardDetailRow(label: 'Duration', value: '${DurationFormatter.formatHours(shift.totalHours)} hours'),
+          ShiftCardDetailRow(
+            label: 'Break',
+            value:
+                '${DurationFormatter.formatHours(shift.breakHours.toDouble())} ${shift.breakHours == 1 ? 'hour' : 'hours'}',
+          ),
           ShiftCardDetailRow(label: 'Type', value: shift.shiftTypeRaw),
         ],
       ),
