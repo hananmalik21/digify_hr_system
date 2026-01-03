@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,7 +90,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/company_stat_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.companyStatIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 'Unit Details - ${unit.levelCode}',
@@ -111,7 +112,12 @@ class OrgUnitDetailsDialog extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
-                child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+                child: DigifyAsset(
+                  assetPath: Assets.icons.closeDialogIcon.path,
+                  width: 20,
+                  height: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -124,7 +130,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(localizations.basicInformation, 'assets/icons/company_stat_icon.svg', isDark),
+        _buildSectionHeader(localizations.basicInformation, Assets.icons.companyStatIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -168,7 +174,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('Manager Information', 'assets/icons/phone_icon.svg', isDark),
+        _buildSectionHeader('Manager Information', Assets.icons.phoneIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -184,11 +190,11 @@ class OrgUnitDetailsDialog extends StatelessWidget {
                 SizedBox(height: 8.h),
               ],
               if (unit.managerEmail.isNotEmpty) ...[
-                _buildContactIconRow('assets/icons/email_envelope_purple.svg', unit.managerEmail, isDark),
+                _buildContactIconRow(Assets.icons.emailEnvelopePurple.path, unit.managerEmail, isDark),
                 SizedBox(height: 8.h),
               ],
               if (unit.managerPhone.isNotEmpty) ...[
-                _buildContactIconRow('assets/icons/phone_icon.svg', unit.managerPhone, isDark),
+                _buildContactIconRow(Assets.icons.phoneIcon.path, unit.managerPhone, isDark),
               ],
             ],
           ),
@@ -201,7 +207,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('Location Information', 'assets/icons/location_header_icon.svg', isDark),
+        _buildSectionHeader('Location Information', Assets.icons.locationHeaderIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -221,7 +227,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
                 SizedBox(height: 8.h),
               ],
               if (unit.address.isNotEmpty) ...[
-                _buildContactRow('assets/icons/location_header_icon.svg', [unit.address], isDark),
+                _buildContactRow(Assets.icons.locationHeaderIcon.path, [unit.address], isDark),
               ],
             ],
           ),
@@ -234,7 +240,7 @@ class OrgUnitDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(localizations.description, 'assets/icons/company_stat_icon.svg', isDark),
+        _buildSectionHeader(localizations.description, Assets.icons.companyStatIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -260,9 +266,10 @@ class OrgUnitDetailsDialog extends StatelessWidget {
   Widget _buildSectionHeader(String title, String iconPath, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
+        DigifyAsset(
           assetPath: iconPath,
-          size: 20.sp,
+          width: 20,
+          height: 20,
           color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
         ),
         SizedBox(width: 8.w),
@@ -351,9 +358,10 @@ class OrgUnitDetailsDialog extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 2.h),
-          child: SvgIconWidget(
+          child: DigifyAsset(
             assetPath: iconPath,
-            size: 16.sp,
+            width: 16,
+            height: 16,
             color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
           ),
         ),
@@ -384,9 +392,10 @@ class OrgUnitDetailsDialog extends StatelessWidget {
   Widget _buildContactIconRow(String iconPath, String value, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
+        DigifyAsset(
           assetPath: iconPath,
-          size: 16.sp,
+          width: 16,
+          height: 16,
           color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
         ),
         SizedBox(width: 8.w),

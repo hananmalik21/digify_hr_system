@@ -6,7 +6,9 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -149,7 +151,12 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
           height: 48.r,
           decoration: BoxDecoration(color: const Color(0xFF2B7FFF), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
-            child: SvgIconWidget(assetPath: 'assets/icons/business_unit_icon.svg', size: 24.sp, color: Colors.white),
+            child: DigifyAsset(
+              assetPath: Assets.icons.businessUnitIcon.path,
+              width: 24,
+              height: 24,
+              color: Colors.white,
+            ),
           ),
         ),
         SizedBox(width: 12.w),
@@ -255,9 +262,10 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/search_icon_bu.svg',
-                      size: 20.sp,
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.searchIconBu.path,
+                      width: 20,
+                      height: 20,
                       color: context.themeTextSecondary,
                     ),
                   ),
@@ -271,9 +279,10 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: Row(
               children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/division_filter_icon.svg',
-                  size: 20.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.divisionFilterIcon.path,
+                  width: 20,
+                  height: 20,
                   color: context.themeTextSecondary,
                 ),
                 SizedBox(width: 8.w),
@@ -378,50 +387,35 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     );
   }
 
-  void _handleDelete(
+  Future<void> _handleDelete(
     BuildContext context,
     WidgetRef ref,
     BusinessUnitOverview businessUnit,
     AppLocalizations localizations,
-  ) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: AlertDialog(
-          title: Text('Delete Business Unit'),
-          content: Text('Are you sure you want to delete ${businessUnit.name}?'),
-          actions: [
-            TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: Text(localizations.cancel)),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
-                try {
-                  final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
-                  await deleteUseCase(int.parse(businessUnit.id), hard: true);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
-                    ref.read(businessUnitListNotifierProvider.notifier).refresh();
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error deleting business unit: ${e.toString()}'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                }
-              },
-              child: Text('Delete', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
-      ),
+  ) async {
+    final confirmed = await DeleteConfirmationDialog.show(
+      context,
+      title: localizations.delete,
+      message: 'Are you sure you want to delete this business unit? This action cannot be undone.',
+      itemName: businessUnit.name,
     );
+
+    if (confirmed == true) {
+      try {
+        final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
+        await deleteUseCase(int.parse(businessUnit.id), hard: true);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
+          ref.read(businessUnitListNotifierProvider.notifier).refresh();
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error deleting business unit: ${e.toString()}'), backgroundColor: Colors.red),
+          );
+        }
+      }
+    }
   }
 }
 
@@ -482,9 +476,10 @@ class _BusinessUnitCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
-                              child: SvgIconWidget(
-                                assetPath: 'assets/icons/business_unit_card_icon.svg',
-                                size: 20.sp,
+                              child: DigifyAsset(
+                                assetPath: Assets.icons.businessUnitCardIcon.path,
+                                width: 20,
+                                height: 20,
                                 color: const Color(0xFF3B82F6),
                               ),
                             ),
@@ -539,9 +534,10 @@ class _BusinessUnitCard extends StatelessWidget {
                       // Division Name
                       Row(
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/division_small_icon.svg',
-                            size: 12.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.divisionSmallIcon.path,
+                            width: 12,
+                            height: 12,
                             color: context.themeTextSecondary,
                           ),
                           SizedBox(width: 4.w),
@@ -562,9 +558,10 @@ class _BusinessUnitCard extends StatelessWidget {
                       // Company Name
                       Row(
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/building_small2_icon.svg',
-                            size: 12.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.buildingSmall2Icon.path,
+                            width: 12,
+                            height: 12,
                             color: const Color(0xFF6A7282),
                           ),
                           SizedBox(width: 4.w),
@@ -612,9 +609,10 @@ class _BusinessUnitCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      SvgIconWidget(
-                        assetPath: 'assets/icons/head_person_small_icon.svg',
-                        size: 16.sp,
+                      DigifyAsset(
+                        assetPath: Assets.icons.headPersonSmallIcon.path,
+                        width: 16,
+                        height: 16,
                         color: context.themeTextSecondary,
                       ),
                       SizedBox(width: 8.w),
@@ -647,9 +645,10 @@ class _BusinessUnitCard extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/employees_small2_icon.svg',
-                            size: 16.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.employeesSmall2Icon.path,
+                            width: 16,
+                            height: 16,
                             color: context.themeTextSecondary,
                           ),
                           SizedBox(width: 4.w),
@@ -668,9 +667,10 @@ class _BusinessUnitCard extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/departments_small_icon.svg',
-                            size: 16.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.departmentsSmallIcon.path,
+                            width: 16,
+                            height: 16,
                             color: context.themeTextSecondary,
                           ),
                           SizedBox(width: 4.w),
@@ -689,9 +689,10 @@ class _BusinessUnitCard extends StatelessWidget {
                     Expanded(
                       child: Row(
                         children: [
-                          SvgIconWidget(
-                            assetPath: 'assets/icons/budget_small2_icon.svg',
-                            size: 16.sp,
+                          DigifyAsset(
+                            assetPath: Assets.icons.budgetSmall2Icon.path,
+                            width: 16,
+                            height: 16,
                             color: context.themeTextSecondary,
                           ),
                           SizedBox(width: 4.w),
@@ -713,9 +714,10 @@ class _BusinessUnitCard extends StatelessWidget {
                 // Focus Area Row
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/focus_area_icon.svg',
-                      size: 16.sp,
+                    DigifyAsset(
+                      assetPath: Assets.icons.focusAreaIcon.path,
+                      width: 16,
+                      height: 16,
                       color: context.themeTextSecondary,
                     ),
                     SizedBox(width: 8.w),
@@ -754,7 +756,7 @@ class _ActionIcon extends StatelessWidget {
         height: 32.r,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
         child: Center(
-          child: SvgIconWidget(assetPath: assetPath, size: 16.sp, color: context.themeTextSecondary),
+          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: context.themeTextSecondary),
         ),
       ),
     );

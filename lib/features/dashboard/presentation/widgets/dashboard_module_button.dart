@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,12 +9,7 @@ class DashboardModuleButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool isDragging;
 
-  const DashboardModuleButton({
-    super.key,
-    required this.button,
-    required this.onTap,
-    required this.isDragging,
-  });
+  const DashboardModuleButton({super.key, required this.button, required this.onTap, required this.isDragging});
 
   @override
   State<DashboardModuleButton> createState() => _DashboardModuleButtonState();
@@ -56,16 +51,9 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
               curve: Curves.easeOutCubic,
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: canShowHover
-                    ? Colors.white.withValues(alpha: 0.95)
-                    : Colors.transparent,
+                color: canShowHover ? Colors.white.withValues(alpha: 0.95) : Colors.transparent,
                 borderRadius: BorderRadius.circular(9.r),
-                border: Border.all(
-                  color: canShowHover
-                      ? const Color(0xFFE5E7EB)
-                      : Colors.transparent,
-                  width: 1.5,
-                ),
+                border: Border.all(color: canShowHover ? const Color(0xFFE5E7EB) : Colors.transparent, width: 1.5),
                 boxShadow: canShowHover
                     ? [
                         BoxShadow(
@@ -101,16 +89,8 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
             color: button.color,
             borderRadius: BorderRadius.circular(14.r),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 10),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 4),
-              ),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 10)),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 4)),
             ],
           ),
           child: Stack(
@@ -121,10 +101,7 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.2),
-                      Colors.white.withValues(alpha: 0.0),
-                    ],
+                    colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.0)],
                   ),
                 ),
               ),
@@ -133,11 +110,7 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
                   duration: const Duration(milliseconds: 180),
                   curve: Curves.easeOutCubic,
                   turns: canShowHover ? 0.01 : 0.0,
-                  child: SvgIconWidget(
-                    assetPath: button.icon,
-                    size: 28.sp,
-                    color: Colors.white,
-                  ),
+                  child: DigifyAsset(assetPath: button.icon, width: 28, height: 28, color: Colors.white),
                 ),
               ),
             ],
@@ -152,9 +125,7 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
           style: TextStyle(
             fontSize: 10.5.sp,
             fontWeight: FontWeight.w600,
-            color: canShowHover
-                ? const Color(0xFF1D4ED8)
-                : const Color(0xFF1E2939),
+            color: canShowHover ? const Color(0xFF1D4ED8) : const Color(0xFF1E2939),
             height: 13.13 / 10.5,
           ),
         ),
@@ -162,4 +133,3 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
     );
   }
 }
-

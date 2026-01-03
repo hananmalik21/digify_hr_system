@@ -4,7 +4,8 @@ import 'dart:ui';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 
 enum LocationMethod { currentLocation, markOnMap, sendEmail }
@@ -119,9 +120,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               children: [
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/location_header_icon.svg',
-                      size: 24.sp,
+                    DigifyAsset(
+                      assetPath: Assets.icons.locationHeaderIcon.path,
+                      width: 24,
+                      height: 24,
                       color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                     ),
                     SizedBox(width: 8.w),
@@ -168,9 +170,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           ),
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: SvgIconWidget(
-              assetPath: 'assets/icons/close_dialog_icon.svg',
-              size: 24.sp,
+            icon: DigifyAsset(
+              assetPath: Assets.icons.closeDialogIcon.path,
+              width: 24,
+              height: 24,
               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
             padding: EdgeInsets.zero,
@@ -194,9 +197,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 2.h),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/info_circle_blue.svg',
-              size: 20.sp,
+            child: DigifyAsset(
+              assetPath: Assets.icons.infoCircleBlue.path,
+              width: 20,
+              height: 20,
               color: isDark ? AppColors.infoTextDark : AppColors.infoText,
             ),
           ),
@@ -270,7 +274,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               width: isMobile ? double.infinity : 272.w,
               child: _buildMethodCard(
                 method: LocationMethod.currentLocation,
-                icon: 'assets/icons/map_pin_blue.svg',
+                icon: Assets.icons.mapPinBlue.path,
                 title: 'Get Current Location',
                 subtitle: 'Use GPS to capture location',
                 isDark: isDark,
@@ -280,7 +284,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               width: isMobile ? double.infinity : 272.w,
               child: _buildMethodCard(
                 method: LocationMethod.markOnMap,
-                icon: 'assets/icons/location_header_icon.svg',
+                icon: Assets.icons.locationHeaderIcon.path,
                 title: 'Mark on Map',
                 subtitle: 'Enter coordinates manually',
                 isDark: isDark,
@@ -290,7 +294,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               width: isMobile ? double.infinity : 272.w,
               child: _buildMethodCard(
                 method: LocationMethod.sendEmail,
-                icon: 'assets/icons/email_envelope_purple.svg',
+                icon: Assets.icons.emailEnvelopePurple.path,
                 title: 'Send Email Request',
                 subtitle: 'Ask someone to mark location',
                 isDark: isDark,
@@ -335,9 +339,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: icon,
-              size: 24.sp,
+              width: 24,
+              height: 24,
               color: isDark
                   ? (isSelected ? AppColors.infoTextDark : AppColors.textSecondaryDark)
                   : (isSelected ? AppColors.primary : const Color(0xFF4A5565)),
@@ -397,9 +402,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/gps_location_blue.svg',
-                size: 20.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.gpsLocationBlue.path,
+                width: 20,
+                height: 20,
                 color: isDark ? AppColors.infoTextDark : AppColors.infoText,
               ),
               SizedBox(width: 8.w),
@@ -440,9 +446,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: 2.h),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/error_circle_red.svg',
-                      size: 24.sp,
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.errorCircleRed.path,
+                      width: 24,
+                      height: 24,
                       color: isDark ? AppColors.errorTextDark : AppColors.redText,
                     ),
                   ),
@@ -504,7 +511,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           SizedBox(height: 16.h),
           ElevatedButton.icon(
             onPressed: () {},
-            icon: SvgIconWidget(assetPath: 'assets/icons/location_pin_blue.svg', size: 20.sp, color: Colors.white),
+            icon: DigifyAsset(assetPath: Assets.icons.locationPinBlue.path, width: 20, height: 20, color: Colors.white),
             label: Text(
               'Get My Current Location',
               style: TextStyle(
@@ -525,9 +532,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           SizedBox(height: 18.h),
           TextButton.icon(
             onPressed: () {},
-            icon: SvgIconWidget(
-              assetPath: 'assets/icons/refresh_gray.svg',
-              size: 16.sp,
+            icon: DigifyAsset(
+              assetPath: Assets.icons.refreshGray.path,
+              width: 16,
+              height: 16,
               color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
             ),
             label: Text(
@@ -610,9 +618,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/map_location_green.svg',
-                size: 20.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.mapLocationGreen.path,
+                width: 20,
+                height: 20,
                 color: isDark ? AppColors.successTextDark : AppColors.greenText,
               ),
               SizedBox(width: 8.w),
@@ -659,7 +668,12 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           SizedBox(height: 16.h),
           ElevatedButton.icon(
             onPressed: () {},
-            icon: SvgIconWidget(assetPath: 'assets/icons/check_circle_green.svg', size: 20.sp, color: Colors.white),
+            icon: DigifyAsset(
+              assetPath: Assets.icons.checkCircleGreen.path,
+              width: 20,
+              height: 20,
+              color: Colors.white,
+            ),
             label: Text(
               'Set Map Location',
               style: TextStyle(
@@ -724,9 +738,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               children: [
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/search_green.svg',
-                      size: 18.sp,
+                    DigifyAsset(
+                      assetPath: Assets.icons.searchGreen.path,
+                      width: 18,
+                      height: 18,
                       color: isDark ? AppColors.successTextDark : AppColors.greenText,
                     ),
                     SizedBox(width: 8.w),
@@ -767,9 +782,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                           SizedBox(height: 8.h),
                           ElevatedButton.icon(
                             onPressed: null,
-                            icon: SvgIconWidget(
-                              assetPath: 'assets/icons/search_white.svg',
-                              size: 16.sp,
+                            icon: DigifyAsset(
+                              assetPath: Assets.icons.searchWhite.path,
+                              width: 16,
+                              height: 16,
                               color: Colors.white.withValues(alpha: 0.5),
                             ),
                             label: Text(
@@ -803,9 +819,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                         SizedBox(width: 8.w),
                         ElevatedButton.icon(
                           onPressed: null,
-                          icon: SvgIconWidget(
-                            assetPath: 'assets/icons/search_white.svg',
-                            size: 16.sp,
+                          icon: DigifyAsset(
+                            assetPath: Assets.icons.searchWhite.path,
+                            width: 16,
+                            height: 16,
                             color: Colors.white.withValues(alpha: 0.5),
                           ),
                           label: Text(
@@ -918,9 +935,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/email_envelope_purple.svg',
-                size: 20.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.emailEnvelopePurple.path,
+                width: 20,
+                height: 20,
                 color: isDark ? AppColors.purpleTextDark : AppColors.purpleText,
               ),
               SizedBox(width: 8.w),
@@ -972,7 +990,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           SizedBox(height: 16.h),
           ElevatedButton.icon(
             onPressed: () {},
-            icon: SvgIconWidget(assetPath: 'assets/icons/send_email_purple.svg', size: 20.sp, color: Colors.white),
+            icon: DigifyAsset(assetPath: Assets.icons.sendEmailPurple.path, width: 20, height: 20, color: Colors.white),
             label: Text(
               'Send Location Request Email',
               style: TextStyle(
@@ -995,9 +1013,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
             children: [
               TextButton.icon(
                 onPressed: () {},
-                icon: SvgIconWidget(
-                  assetPath: 'assets/icons/copy_gray.svg',
-                  size: 16.sp,
+                icon: DigifyAsset(
+                  assetPath: Assets.icons.copyGray.path,
+                  width: 16,
+                  height: 16,
                   color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
                 ),
                 label: Text(
@@ -1042,9 +1061,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
               children: [
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/search_purple.svg',
-                      size: 18.sp,
+                    DigifyAsset(
+                      assetPath: Assets.icons.searchPurple.path,
+                      width: 18,
+                      height: 18,
                       color: isDark ? AppColors.purpleTextDark : AppColors.purpleText,
                     ),
                     SizedBox(width: 8.w),
@@ -1085,9 +1105,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                           SizedBox(height: 8.h),
                           ElevatedButton.icon(
                             onPressed: null,
-                            icon: SvgIconWidget(
-                              assetPath: 'assets/icons/search_white.svg',
-                              size: 16.sp,
+                            icon: DigifyAsset(
+                              assetPath: Assets.icons.searchWhite.path,
+                              width: 16,
+                              height: 16,
                               color: Colors.white.withValues(alpha: 0.5),
                             ),
                             label: Text(
@@ -1121,9 +1142,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
                         SizedBox(width: 8.w),
                         ElevatedButton.icon(
                           onPressed: null,
-                          icon: SvgIconWidget(
-                            assetPath: 'assets/icons/search_white.svg',
-                            size: 16.sp,
+                          icon: DigifyAsset(
+                            assetPath: Assets.icons.searchWhite.path,
+                            width: 16,
+                            height: 16,
                             color: Colors.white.withValues(alpha: 0.5),
                           ),
                           label: Text(
@@ -1270,9 +1292,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
         children: [
           Row(
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/info_circle_attendance.svg',
-                size: 18.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.infoCircleAttendance.path,
+                width: 18,
+                height: 18,
                 color: isDark ? AppColors.infoTextDark : AppColors.infoText,
               ),
               SizedBox(width: 8.w),
@@ -1449,9 +1472,10 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/reset_icon.svg',
-                size: 18.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.resetIcon.path,
+                width: 18,
+                height: 18,
                 color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               ),
               SizedBox(width: 8.w),
@@ -1484,7 +1508,7 @@ class _LocationPickerDialogState extends State<LocationPickerDialog> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgIconWidget(assetPath: 'assets/icons/save_location_icon.svg', size: 18.sp, color: Colors.white),
+                DigifyAsset(assetPath: Assets.icons.saveLocationIcon.path, width: 18, height: 18, color: Colors.white),
                 SizedBox(width: 8.w),
                 Text(
                   'Save Geo-Location',

@@ -1,11 +1,10 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
 
 class DeletePositionDialog extends ConsumerStatefulWidget {
   final Position position;
@@ -39,6 +38,7 @@ class _DeletePositionDialogState extends ConsumerState<DeletePositionDialog> {
     } catch (e) {
       if (mounted) {
         setState(() => _isDeleting = false);
+        Navigator.of(context).pop();
         ToastService.error(context, 'Failed to delete position: ${e.toString()}', title: 'Error');
       }
     }
@@ -46,97 +46,17 @@ class _DeletePositionDialogState extends ConsumerState<DeletePositionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-        title: Row(
-          children: [
-            Icon(Icons.warning_rounded, color: AppColors.error, size: 24.sp),
-            SizedBox(width: 12.w),
-            Text(
-              'Delete Position',
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Are you sure you want to delete this position?',
-              style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            ),
-            SizedBox(height: 12.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: AppColors.errorBg,
-                borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.position.titleEnglish,
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.errorText),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    widget.position.code,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.errorText.withValues(alpha: 0.8),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              'This action cannot be undone.',
-              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.error),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: _isDeleting ? null : () => Navigator.of(context).pop(),
-            child: Text(
-              'Cancel',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _isDeleting ? null : _handleDelete,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: AppColors.error.withValues(alpha: 0.6),
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-            ),
-            child: _isDeleting
-                ? SizedBox(
-                    height: 16.h,
-                    width: 16.w,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Text(
-                    'Delete',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-                  ),
-          ),
-        ],
-      ),
+    final localizations = AppLocalizations.of(context);
+
+    return AppConfirmationDialog.delete(
+      title: localizations?.delete ?? 'Delete Position',
+      message: 'Are you sure you want to delete this position? This action cannot be undone.',
+      itemName: widget.position.titleEnglish,
+      confirmLabel: localizations?.delete ?? 'Delete',
+      cancelLabel: localizations?.cancel ?? 'Cancel',
+      isLoading: _isDeleting,
+      onConfirm: _handleDelete,
+      onCancel: () => Navigator.of(context).pop(),
     );
   }
 }

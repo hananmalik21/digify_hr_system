@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/time_management/data/config/time_management_tabs_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,11 +30,7 @@ class TimeManagementTabBar extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -47,18 +43,11 @@ class TimeManagementTabBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: tabs.map((tab) {
-            final label = TimeManagementTabsConfig.getLocalizedLabel(
-              tab.labelKey,
-              localizations,
-            );
+            final label = TimeManagementTabsConfig.getLocalizedLabel(tab.labelKey, localizations);
             final isSelected = selectedTab == label;
             return Padding(
               padding: EdgeInsetsDirectional.only(end: 8.w),
-              child: _buildTabButton(
-                label: label,
-                icon: tab.iconPath,
-                isSelected: isSelected,
-              ),
+              child: _buildTabButton(label: label, icon: tab.iconPath, isSelected: isSelected),
             );
           }).toList(),
         ),
@@ -66,21 +55,14 @@ class TimeManagementTabBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton({
-    required String label,
-    required String icon,
-    required bool isSelected,
-  }) {
+  Widget _buildTabButton({required String label, required String icon, required bool isSelected}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () => onTabSelected(label),
         borderRadius: BorderRadius.circular(6.r),
         child: Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 18.w,
-            vertical: 8.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(6.r),
@@ -88,9 +70,10 @@ class TimeManagementTabBar extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIconWidget(
+              DigifyAsset(
                 assetPath: icon,
-                size: 16.sp,
+                width: 16,
+                height: 16,
                 color: isSelected ? Colors.white : AppColors.textSecondary,
               ),
               SizedBox(width: 8.w),

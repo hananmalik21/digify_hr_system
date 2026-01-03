@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,7 +90,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/department_card_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.departmentCardIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.departmentDetails,
@@ -110,7 +111,12 @@ class DepartmentDetailsDialog extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(6.r),
               ),
-              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+              child: DigifyAsset(
+                assetPath: Assets.icons.closeDialogIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -163,7 +169,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(context, localizations.basicInformation, 'assets/icons/company_stat_icon.svg', isDark),
+        _buildSectionHeader(context, localizations.basicInformation, Assets.icons.companyStatIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -225,7 +231,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(context, localizations.departmentLeadership, 'assets/icons/head_icon.svg', isDark),
+        _buildSectionHeader(context, localizations.departmentLeadership, Assets.icons.headIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           width: double.infinity,
@@ -247,14 +253,14 @@ class DepartmentDetailsDialog extends StatelessWidget {
               SizedBox(height: 12.h),
               _buildContactRow(
                 context,
-                'assets/icons/email_icon.svg',
+                Assets.icons.emailIcon.path,
                 department.headEmail ?? localizations.notSpecified,
                 isDark,
               ),
               SizedBox(height: 12.h),
               _buildContactRow(
                 context,
-                'assets/icons/phone_icon.svg',
+                Assets.icons.phoneIcon.path,
                 department.headPhone ?? localizations.notSpecified,
                 isDark,
               ),
@@ -272,7 +278,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
         _buildSectionHeader(
           context,
           localizations.organizationalMetrics,
-          'assets/icons/department_metric_icon.svg',
+          Assets.icons.departmentMetricIcon.path,
           isDark,
         ),
         SizedBox(height: 12.h),
@@ -282,7 +288,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
               context,
               '${department.employees}',
               localizations.totalEmployees,
-              'assets/icons/department_metric_icon.svg',
+              Assets.icons.departmentMetricIcon.path,
               isDark,
             ),
             SizedBox(width: 12.w),
@@ -290,7 +296,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
               context,
               '${department.sections}',
               localizations.totalDepartments,
-              'assets/icons/department_metric2_icon.svg',
+              Assets.icons.departmentMetric2Icon.path,
               isDark,
             ),
             SizedBox(width: 12.w),
@@ -298,7 +304,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
               context,
               department.budget,
               localizations.departmentBudget,
-              'assets/icons/department_metric3_icon.svg',
+              Assets.icons.departmentMetric3Icon.path,
               isDark,
             ),
           ],
@@ -311,12 +317,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(
-          context,
-          localizations.departmentDescription,
-          'assets/icons/department_card_icon.svg',
-          isDark,
-        ),
+        _buildSectionHeader(context, localizations.departmentDescription, Assets.icons.departmentCardIcon.path, isDark),
         SizedBox(height: 12.h),
         Container(
           padding: EdgeInsets.all(16.w),
@@ -342,9 +343,10 @@ class DepartmentDetailsDialog extends StatelessWidget {
   Widget _buildSectionHeader(BuildContext context, String title, String iconPath, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
+        DigifyAsset(
           assetPath: iconPath,
-          size: 20.sp,
+          width: 20,
+          height: 20,
           color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
         ),
         SizedBox(width: 8.w),
@@ -421,7 +423,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
   Widget _buildContactRow(BuildContext context, String iconPath, String value, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(assetPath: iconPath, size: 16.sp, color: context.themeTextSecondary),
+        DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: context.themeTextSecondary),
         SizedBox(width: 8.w),
         Expanded(
           child: Text(
@@ -452,7 +454,7 @@ class DepartmentDetailsDialog extends StatelessWidget {
           children: [
             Row(
               children: [
-                SvgIconWidget(assetPath: iconPath, size: 20.sp, color: const Color(0xFF101828)),
+                DigifyAsset(assetPath: iconPath, width: 20, height: 20, color: const Color(0xFF101828)),
                 SizedBox(width: 8.w),
                 Text(
                   value,

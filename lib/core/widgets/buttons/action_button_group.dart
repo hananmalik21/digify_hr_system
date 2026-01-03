@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -40,29 +41,27 @@ class ActionButtonGroup extends StatelessWidget {
           _buildActionButton(
             context,
             isDark,
-            iconPath: 'assets/icons/view_icon_blue.svg',
+            iconPath: Assets.icons.viewIconBlue.path,
             color: AppColors.viewIconBlue,
             onTap: onView!,
             tooltip: viewTooltip ?? 'View',
           ),
-        if (showView && onView != null && (showEdit || showDelete))
-          SizedBox(width: 8.w),
+        if (showView && onView != null && (showEdit || showDelete)) SizedBox(width: 8.w),
         if (showEdit && onEdit != null)
           _buildActionButton(
             context,
             isDark,
-            iconPath: 'assets/icons/edit_icon_green.svg',
+            iconPath: Assets.icons.editIconGreen.path,
             color: AppColors.editIconGreen,
             onTap: onEdit!,
             tooltip: editTooltip ?? 'Edit',
           ),
-        if (showEdit && onEdit != null && showDelete)
-          SizedBox(width: 8.w),
+        if (showEdit && onEdit != null && showDelete) SizedBox(width: 8.w),
         if (showDelete && onDelete != null)
           _buildActionButton(
             context,
             isDark,
-            iconPath: 'assets/icons/delete_icon_red.svg',
+            iconPath: Assets.icons.deleteIconRed.path,
             color: AppColors.deleteIconRed,
             onTap: onDelete!,
             tooltip: deleteTooltip ?? 'Delete',
@@ -87,19 +86,11 @@ class ActionButtonGroup extends StatelessWidget {
           onTap: onTap,
           child: Container(
             padding: EdgeInsets.all(6.w),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-            child: SvgIconWidget(
-              assetPath: iconPath,
-              size: 18.sp,
-              color: color,
-            ),
+            decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(6.r)),
+            child: DigifyAsset(assetPath: iconPath, width: 18, height: 18, color: color),
           ),
         ),
       ),
     );
   }
 }
-

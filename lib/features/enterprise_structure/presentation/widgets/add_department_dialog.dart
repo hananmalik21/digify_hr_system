@@ -4,7 +4,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/department.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/department_management_provider.dart';
@@ -208,9 +209,10 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
                   children: [
                     Row(
                       children: [
-                        SvgIconWidget(
-                          assetPath: 'assets/icons/department_card_icon.svg',
-                          size: 20.sp,
+                        DigifyAsset(
+                          assetPath: Assets.icons.departmentCardIcon.path,
+                          width: 20,
+                          height: 20,
                           color: Colors.white,
                         ),
                         SizedBox(width: 8.w),
@@ -233,9 +235,10 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
                           color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4.r),
                         ),
-                        child: SvgIconWidget(
-                          assetPath: 'assets/icons/close_dialog_icon.svg',
-                          size: 20.sp,
+                        child: DigifyAsset(
+                          assetPath: Assets.icons.closeDialogIcon.path,
+                          width: 20,
+                          height: 20,
                           color: Colors.white,
                         ),
                       ),
@@ -570,9 +573,10 @@ class _AddDepartmentDialogState extends ConsumerState<AddDepartmentDialog> {
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgIconWidget(
-                        assetPath: 'assets/icons/add_department_icon.svg',
-                        size: 16.sp,
+                      DigifyAsset(
+                        assetPath: Assets.icons.addDepartmentIcon.path,
+                        width: 16,
+                        height: 16,
                         color: Colors.white,
                       ),
                       SizedBox(width: 8.w),

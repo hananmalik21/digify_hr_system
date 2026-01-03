@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,30 +21,12 @@ class WorkforceTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      {
-        'label': localizations.positions,
-        'icon': 'assets/icons/business_unit_card_icon.svg',
-      },
-      {
-        'label': localizations.jobFamilies,
-        'icon': 'assets/icons/hierarchy_icon_department.svg',
-      },
-      {
-        'label': localizations.jobLevels,
-        'icon': 'assets/icons/levels_icon.svg',
-      },
-      {
-        'label': localizations.gradeStructure,
-        'icon': 'assets/icons/grade_icon.svg',
-      },
-      {
-        'label': localizations.reportingStructure,
-        'icon': 'assets/icons/company_filter_icon.svg',
-      },
-      {
-        'label': localizations.positionTree,
-        'icon': 'assets/icons/hierarchy_icon_department.svg',
-      },
+      {'label': localizations.positions, 'icon': 'assets/icons/business_unit_card_icon.svg'},
+      {'label': localizations.jobFamilies, 'icon': 'assets/icons/hierarchy_icon_department.svg'},
+      {'label': localizations.jobLevels, 'icon': 'assets/icons/levels_icon.svg'},
+      {'label': localizations.gradeStructure, 'icon': 'assets/icons/grade_icon.svg'},
+      {'label': localizations.reportingStructure, 'icon': 'assets/icons/company_filter_icon.svg'},
+      {'label': localizations.positionTree, 'icon': 'assets/icons/hierarchy_icon_department.svg'},
     ];
 
     return Container(
@@ -54,11 +36,7 @@ class WorkforceTabBar extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -74,11 +52,7 @@ class WorkforceTabBar extends StatelessWidget {
             final isSelected = selectedTab == tab['label'];
             return Padding(
               padding: EdgeInsetsDirectional.only(end: 8.w),
-              child: _buildTabButton(
-                label: tab['label']!,
-                icon: tab['icon']!,
-                isSelected: isSelected,
-              ),
+              child: _buildTabButton(label: tab['label']!, icon: tab['icon']!, isSelected: isSelected),
             );
           }).toList(),
         ),
@@ -86,21 +60,14 @@ class WorkforceTabBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton({
-    required String label,
-    required String icon,
-    required bool isSelected,
-  }) {
+  Widget _buildTabButton({required String label, required String icon, required bool isSelected}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () => onTabSelected(label),
         borderRadius: BorderRadius.circular(6.r),
         child: Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 18.w,
-            vertical: 8.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 8.h),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(6.r),
@@ -108,9 +75,10 @@ class WorkforceTabBar extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIconWidget(
+              DigifyAsset(
                 assetPath: icon,
-                size: 16.sp,
+                width: 16,
+                height: 16,
                 color: isSelected ? Colors.white : AppColors.textSecondary,
               ),
               SizedBox(width: 8.w),

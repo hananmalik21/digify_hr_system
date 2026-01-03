@@ -2,7 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -47,15 +48,8 @@ class HierarchyLevelCard extends StatelessWidget {
         web: EdgeInsetsDirectional.all(18.w),
       ),
       decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.successBgDark
-            : const Color(0xFFF0FDF4),
-        border: Border.all(
-          color: isDark
-              ? AppColors.successBorderDark
-              : const Color(0xFFB9F8CF),
-          width: 2,
-        ),
+        color: isDark ? AppColors.successBgDark : const Color(0xFFF0FDF4),
+        border: Border.all(color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF), width: 2),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: isMobile
@@ -72,11 +66,7 @@ class HierarchyLevelCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Center(
-                        child: SvgIconWidget(
-                          assetPath: icon,
-                          size: 16.sp,
-                          color: Colors.white,
-                        ),
+                        child: DigifyAsset(assetPath: icon, width: 16, height: 16, color: Colors.white),
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -93,27 +83,18 @@ class HierarchyLevelCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF101828),
+                                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                                   height: 24 / 15.5,
                                   letterSpacing: 0,
                                 ),
                               ),
                               if (isMandatory)
                                 Container(
-                                  padding: EdgeInsetsDirectional.symmetric(
-                                    horizontal: 7.w,
-                                    vertical: 2.h,
-                                  ),
+                                  padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 2.h),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppColors.errorBgDark
-                                        : const Color(0xFFFFE2E2),
+                                    color: isDark ? AppColors.errorBgDark : const Color(0xFFFFE2E2),
                                     border: Border.all(
-                                      color: isDark
-                                          ? AppColors.errorBorderDark
-                                          : const Color(0xFFFFC9C9),
+                                      color: isDark ? AppColors.errorBorderDark : const Color(0xFFFFC9C9),
                                       width: 1,
                                     ),
                                     borderRadius: BorderRadius.circular(4.r),
@@ -123,27 +104,18 @@ class HierarchyLevelCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 10.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: isDark
-                                          ? AppColors.errorTextDark
-                                          : const Color(0xFFC10007),
+                                      color: isDark ? AppColors.errorTextDark : const Color(0xFFC10007),
                                       height: 16 / 11.8,
                                       letterSpacing: 0,
                                     ),
                                   ),
                                 ),
                               Container(
-                                padding: EdgeInsetsDirectional.symmetric(
-                                  horizontal: 7.w,
-                                  vertical: 2.h,
-                                ),
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 2.h),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? AppColors.successBgDark
-                                      : const Color(0xFFDCFCE7),
+                                  color: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
                                   border: Border.all(
-                                    color: isDark
-                                        ? AppColors.successBorderDark
-                                        : const Color(0xFFB9F8CF),
+                                    color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF),
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(4.r),
@@ -153,9 +125,7 @@ class HierarchyLevelCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.successTextDark
-                                        : const Color(0xFF008236),
+                                    color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                                     height: 16 / 11.8,
                                     letterSpacing: 0,
                                   ),
@@ -169,9 +139,7 @@ class HierarchyLevelCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : const Color(0xFF4A5565),
+                              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                               height: 20 / 13.6,
                               letterSpacing: 0,
                             ),
@@ -191,19 +159,14 @@ class HierarchyLevelCard extends StatelessWidget {
                           onTap: canMoveUp ? onMoveUp : null,
                           child: Container(
                             padding: EdgeInsetsDirectional.all(6.w),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: SvgIconWidget(
-                              assetPath: 'assets/icons/up_arrow_icon.svg',
-                              size: 18.sp,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.r)),
+                            child: DigifyAsset(
+                              assetPath: Assets.icons.upArrowIcon.path,
+                              width: 18,
+                              height: 18,
                               color: canMoveUp
-                                  ? (isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF101828))
-                                  : (isDark
-                                      ? AppColors.textTertiaryDark
-                                      : const Color(0xFF9CA3AF)),
+                                  ? (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828))
+                                  : (isDark ? AppColors.textTertiaryDark : const Color(0xFF9CA3AF)),
                             ),
                           ),
                         ),
@@ -212,19 +175,14 @@ class HierarchyLevelCard extends StatelessWidget {
                           onTap: canMoveDown ? onMoveDown : null,
                           child: Container(
                             padding: EdgeInsetsDirectional.all(6.w),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: SvgIconWidget(
-                              assetPath: 'assets/icons/down_arrow_icon.svg',
-                              size: 18.sp,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.r)),
+                            child: DigifyAsset(
+                              assetPath: Assets.icons.downArrowIcon.path,
+                              width: 18,
+                              height: 18,
                               color: canMoveDown
-                                  ? (isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF101828))
-                                  : (isDark
-                                      ? AppColors.textTertiaryDark
-                                      : const Color(0xFF9CA3AF)),
+                                  ? (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828))
+                                  : (isDark ? AppColors.textTertiaryDark : const Color(0xFF9CA3AF)),
                             ),
                           ),
                         ),
@@ -239,9 +197,7 @@ class HierarchyLevelCard extends StatelessWidget {
                         activeTrackColor: const Color(0xFF00A63E),
                         activeThumbColor: Colors.white,
                         inactiveThumbColor: Colors.white,
-                        inactiveTrackColor: isDark
-                            ? AppColors.cardBorderDark
-                            : const Color(0xFFD1D5DC),
+                        inactiveTrackColor: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DC),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                     ),
@@ -262,9 +218,10 @@ class HierarchyLevelCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Center(
-                          child: SvgIconWidget(
+                          child: DigifyAsset(
                             assetPath: icon,
-                            size: isTablet ? 18.sp : 20.sp,
+                            width: isTablet ? 18 : 20,
+                            height: isTablet ? 18 : 20,
                             color: Colors.white,
                           ),
                         ),
@@ -283,9 +240,7 @@ class HierarchyLevelCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: isTablet ? 14.5.sp : 15.5.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF101828),
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                                     height: 24 / 15.5,
                                     letterSpacing: 0,
                                   ),
@@ -297,13 +252,9 @@ class HierarchyLevelCard extends StatelessWidget {
                                       vertical: 3.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? AppColors.errorBgDark
-                                          : const Color(0xFFFFE2E2),
+                                      color: isDark ? AppColors.errorBgDark : const Color(0xFFFFE2E2),
                                       border: Border.all(
-                                        color: isDark
-                                            ? AppColors.errorBorderDark
-                                            : const Color(0xFFFFC9C9),
+                                        color: isDark ? AppColors.errorBorderDark : const Color(0xFFFFC9C9),
                                         width: 1,
                                       ),
                                       borderRadius: BorderRadius.circular(4.r),
@@ -313,9 +264,7 @@ class HierarchyLevelCard extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: isTablet ? 11.sp : 11.8.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: isDark
-                                            ? AppColors.errorTextDark
-                                            : const Color(0xFFC10007),
+                                        color: isDark ? AppColors.errorTextDark : const Color(0xFFC10007),
                                         height: 16 / 11.8,
                                         letterSpacing: 0,
                                       ),
@@ -327,13 +276,9 @@ class HierarchyLevelCard extends StatelessWidget {
                                     vertical: 3.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppColors.successBgDark
-                                        : const Color(0xFFDCFCE7),
+                                    color: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
                                     border: Border.all(
-                                      color: isDark
-                                          ? AppColors.successBorderDark
-                                          : const Color(0xFFB9F8CF),
+                                      color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF),
                                       width: 1,
                                     ),
                                     borderRadius: BorderRadius.circular(4.r),
@@ -343,9 +288,7 @@ class HierarchyLevelCard extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: isTablet ? 11.sp : 11.8.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: isDark
-                                          ? AppColors.successTextDark
-                                          : const Color(0xFF008236),
+                                      color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                                       height: 16 / 11.8,
                                       letterSpacing: 0,
                                     ),
@@ -359,9 +302,7 @@ class HierarchyLevelCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: isTablet ? 12.5.sp : 13.6.sp,
                                 fontWeight: FontWeight.w400,
-                                color: isDark
-                                    ? AppColors.textSecondaryDark
-                                    : const Color(0xFF4A5565),
+                                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                                 height: 20 / 13.6,
                                 letterSpacing: 0,
                               ),
@@ -379,19 +320,14 @@ class HierarchyLevelCard extends StatelessWidget {
                       onTap: canMoveUp ? onMoveUp : null,
                       child: Container(
                         padding: EdgeInsetsDirectional.all(4.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: SvgIconWidget(
-                          assetPath: 'assets/icons/up_arrow_icon.svg',
-                          size: isTablet ? 15.sp : 16.sp,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.r)),
+                        child: DigifyAsset(
+                          assetPath: Assets.icons.upArrowIcon.path,
+                          width: isTablet ? 15 : 16,
+                          height: isTablet ? 15 : 16,
                           color: canMoveUp
-                              ? (isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828))
-                              : (isDark
-                                  ? AppColors.textTertiaryDark
-                                  : const Color(0xFF9CA3AF)),
+                              ? (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828))
+                              : (isDark ? AppColors.textTertiaryDark : const Color(0xFF9CA3AF)),
                         ),
                       ),
                     ),
@@ -400,19 +336,14 @@ class HierarchyLevelCard extends StatelessWidget {
                       onTap: canMoveDown ? onMoveDown : null,
                       child: Container(
                         padding: EdgeInsetsDirectional.all(4.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: SvgIconWidget(
-                          assetPath: 'assets/icons/down_arrow_icon.svg',
-                          size: isTablet ? 15.sp : 16.sp,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4.r)),
+                        child: DigifyAsset(
+                          assetPath: Assets.icons.downArrowIcon.path,
+                          width: isTablet ? 15 : 16,
+                          height: isTablet ? 15 : 16,
                           color: canMoveDown
-                              ? (isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828))
-                              : (isDark
-                                  ? AppColors.textTertiaryDark
-                                  : const Color(0xFF9CA3AF)),
+                              ? (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828))
+                              : (isDark ? AppColors.textTertiaryDark : const Color(0xFF9CA3AF)),
                         ),
                       ),
                     ),
@@ -428,9 +359,7 @@ class HierarchyLevelCard extends StatelessWidget {
                     activeTrackColor: const Color(0xFF00A63E),
                     activeThumbColor: Colors.white,
                     inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: isDark
-                        ? AppColors.cardBorderDark
-                        : const Color(0xFFD1D5DC),
+                    inactiveTrackColor: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DC),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
@@ -439,4 +368,3 @@ class HierarchyLevelCard extends StatelessWidget {
     );
   }
 }
-

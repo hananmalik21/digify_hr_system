@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -68,29 +68,22 @@ class ActionButtonWidget extends StatelessWidget {
           top: isMobile ? 10.h : 8.h,
           bottom: isMobile ? 10.h : 8.h,
         ),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
+        decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(10.r)),
         child: Row(
           mainAxisSize: isMobile ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: isMobile
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
+          mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
             if (isLoading)
               SizedBox(
                 width: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
                 height: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(textColor),
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(textColor)),
               )
             else
-              SvgIconWidget(
+              DigifyAsset(
                 assetPath: icon,
-                size: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
+                width: isMobile ? 14 : (isTablet ? 15 : 16),
+                height: isMobile ? 14 : (isTablet ? 15 : 16),
                 color: textColor,
               ),
             SizedBox(width: 8.w),
@@ -102,9 +95,7 @@ class ActionButtonWidget extends StatelessWidget {
                       ? 13.sp
                       : (isActivate || isView
                             ? (isTablet ? 14.sp : 15.1.sp)
-                            : (isDelete
-                                  ? (isTablet ? 14.5.sp : 15.3.sp)
-                                  : (isTablet ? 14.5.sp : 15.4.sp))),
+                            : (isDelete ? (isTablet ? 14.5.sp : 15.3.sp) : (isTablet ? 14.5.sp : 15.4.sp))),
                   fontWeight: FontWeight.w400,
                   color: textColor,
                   height: 24 / 15.1,
@@ -119,13 +110,3 @@ class ActionButtonWidget extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-

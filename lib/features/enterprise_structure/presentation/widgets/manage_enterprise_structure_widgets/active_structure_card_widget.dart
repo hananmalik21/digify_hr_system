@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,11 +11,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const ActiveStructureCardWidget({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-  });
+  const ActiveStructureCardWidget({super.key, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +27,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: isDark ? AppColors.successBgDark : const Color(0xFFF0FDF4),
-        border: Border.all(
-          color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF), width: 1),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: isMobile
@@ -42,12 +36,11 @@ class ActiveStructureCardWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    SvgIconWidget(
-                      assetPath: 'assets/icons/info_icon_green.svg',
-                      size: 20.sp,
-                      color: isDark
-                          ? AppColors.successTextDark
-                          : const Color(0xFF0D542B),
+                    DigifyAsset(
+                      assetPath: Assets.icons.infoIconGreen.path,
+                      width: 20,
+                      height: 20,
+                      color: isDark ? AppColors.successTextDark : const Color(0xFF0D542B),
                     ),
                     SizedBox(width: 8.w),
                     Expanded(
@@ -56,19 +49,14 @@ class ActiveStructureCardWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark
-                              ? AppColors.successTextDark
-                              : const Color(0xFF0D542B),
+                          color: isDark ? AppColors.successTextDark : const Color(0xFF0D542B),
                           height: 24 / 15.6,
                           letterSpacing: 0,
                         ),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 10.w,
-                        vertical: 4.h,
-                      ),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                       decoration: BoxDecoration(
                         color: const Color(0xFF00A63E),
                         borderRadius: BorderRadius.circular(9999.r),
@@ -93,22 +81,17 @@ class ActiveStructureCardWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark
-                          ? AppColors.successTextDark
-                          : const Color(0xFF016630),
+                      color: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                       height: 24 / 15.4,
                       letterSpacing: 0,
                     ),
                     children: [
                       TextSpan(
-                        text:
-                            ' - ${localizations.traditionalHierarchicalStructure}',
+                        text: ' - ${localizations.traditionalHierarchicalStructure}',
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.successTextDark
-                              : const Color(0xFF016630),
+                          color: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                         ),
                       ),
                     ],
@@ -124,9 +107,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 13.5,
                         letterSpacing: 0,
                       ),
@@ -136,9 +117,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 14,
                         letterSpacing: 0,
                       ),
@@ -148,9 +127,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 13.7,
                         letterSpacing: 0,
                       ),
@@ -160,9 +137,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 14,
                         letterSpacing: 0,
                       ),
@@ -172,9 +147,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 13.7,
                         letterSpacing: 0,
                       ),
@@ -188,12 +161,11 @@ class ActiveStructureCardWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsetsDirectional.only(top: 2.h),
-                  child: SvgIconWidget(
-                    assetPath: 'assets/icons/info_icon_green.svg',
-                    size: isTablet ? 22.sp : 24.sp,
-                    color: isDark
-                        ? AppColors.successTextDark
-                        : const Color(0xFF0D542B),
+                  child: DigifyAsset(
+                    assetPath: Assets.icons.infoIconGreen.path,
+                    width: isTablet ? 22 : 24,
+                    height: isTablet ? 22 : 24,
+                    color: isDark ? AppColors.successTextDark : const Color(0xFF0D542B),
                   ),
                 ),
                 SizedBox(width: isTablet ? 10.w : 12.w),
@@ -208,19 +180,14 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 14.5.sp : 15.6.sp,
                               fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF0D542B),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF0D542B),
                               height: 24 / 15.6,
                               letterSpacing: 0,
                             ),
                           ),
                           SizedBox(width: isTablet ? 10.w : 12.w),
                           Container(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              horizontal: isTablet ? 10.w : 12.w,
-                              vertical: 4.h,
-                            ),
+                            padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 10.w : 12.w, vertical: 4.h),
                             decoration: BoxDecoration(
                               color: const Color(0xFF00A63E),
                               borderRadius: BorderRadius.circular(9999.r),
@@ -245,22 +212,17 @@ class ActiveStructureCardWidget extends StatelessWidget {
                           style: TextStyle(
                             fontSize: isTablet ? 14.5.sp : 15.4.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark
-                                ? AppColors.successTextDark
-                                : const Color(0xFF016630),
+                            color: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                             height: 24 / 15.4,
                             letterSpacing: 0,
                           ),
                           children: [
                             TextSpan(
-                              text:
-                                  ' - ${localizations.traditionalHierarchicalStructure}',
+                              text: ' - ${localizations.traditionalHierarchicalStructure}',
                               style: TextStyle(
                                 fontSize: isTablet ? 14.5.sp : 15.4.sp,
                                 fontWeight: FontWeight.w400,
-                                color: isDark
-                                    ? AppColors.successTextDark
-                                    : const Color(0xFF016630),
+                                color: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                               ),
                             ),
                           ],
@@ -276,9 +238,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 13.5.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF008236),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                               height: 20 / 13.5,
                               letterSpacing: 0,
                             ),
@@ -288,9 +248,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 14.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF008236),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                               height: 20 / 14,
                               letterSpacing: 0,
                             ),
@@ -300,9 +258,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 13.7.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF008236),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                               height: 20 / 13.7,
                               letterSpacing: 0,
                             ),
@@ -312,9 +268,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 14.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF008236),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                               height: 20 / 14,
                               letterSpacing: 0,
                             ),
@@ -324,9 +278,7 @@ class ActiveStructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 13.7.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.successTextDark
-                                  : const Color(0xFF008236),
+                              color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                               height: 20 / 13.7,
                               letterSpacing: 0,
                             ),
@@ -341,4 +293,3 @@ class ActiveStructureCardWidget extends StatelessWidget {
     );
   }
 }
-

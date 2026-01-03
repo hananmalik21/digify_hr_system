@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -85,7 +86,7 @@ class CompanyDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/company_stat_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(assetPath: Assets.icons.companyStatIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.companyDetails,
@@ -107,7 +108,12 @@ class CompanyDetailsDialog extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
-                child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+                child: DigifyAsset(
+                  assetPath: Assets.icons.closeDialogIcon.path,
+                  width: 20,
+                  height: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -237,9 +243,10 @@ class CompanyDetailsDialog extends StatelessWidget {
   Widget _buildSectionHeader(String title, String iconPath, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
+        DigifyAsset(
           assetPath: iconPath,
-          size: 20.sp,
+          width: 20,
+          height: 20,
           color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
         ),
         SizedBox(width: 8.w),
@@ -325,9 +332,10 @@ class CompanyDetailsDialog extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 2.h),
-          child: SvgIconWidget(
+          child: DigifyAsset(
             assetPath: iconPath,
-            size: 16.sp,
+            width: 16,
+            height: 16,
             color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
           ),
         ),
@@ -358,9 +366,10 @@ class CompanyDetailsDialog extends StatelessWidget {
   Widget _buildContactIconRow(String iconPath, String value, bool isDark) {
     return Row(
       children: [
-        SvgIconWidget(
+        DigifyAsset(
           assetPath: iconPath,
-          size: 16.sp,
+          width: 16,
+          height: 16,
           color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
         ),
         SizedBox(width: 8.w),

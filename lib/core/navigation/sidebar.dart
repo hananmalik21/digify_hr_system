@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,13 +21,9 @@ class _SidebarState extends ConsumerState<Sidebar> {
   final Map<String, bool> _expandedItems = {};
   String? _lastAutoExpandedRoute;
 
-  Widget _buildIcon({
-    required SidebarItem item,
-    required double size,
-    required Color color,
-  }) {
+  Widget _buildIcon({required SidebarItem item, required double size, required Color color}) {
     if (item.svgPath != null) {
-      return SvgIconWidget(assetPath: item.svgPath!, size: size, color: color);
+      return DigifyAsset(assetPath: item.svgPath!, width: size, height: size, color: color);
     } else if (item.icon != null) {
       return Icon(item.icon, size: size, color: color);
     }
@@ -42,9 +38,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
       if (!isCurrentlyExpanded) {
         // Close all other parent items
         for (final item in allItems) {
-          if (item.id != id &&
-              item.children != null &&
-              item.children!.isNotEmpty) {
+          if (item.id != id && item.children != null && item.children!.isNotEmpty) {
             _expandedItems[item.id] = false;
           }
         }
@@ -71,9 +65,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
         String? itemToExpand;
         for (final item in menuItems) {
           if (item.children != null) {
-            final hasActiveChild = item.children!.any(
-              (child) => child.route == currentRoute,
-            );
+            final hasActiveChild = item.children!.any((child) => child.route == currentRoute);
             if (hasActiveChild) {
               itemToExpand = item.id;
               break; // Only expand the first matching item
@@ -103,29 +95,19 @@ class _SidebarState extends ConsumerState<Sidebar> {
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 3),
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 15, offset: const Offset(0, 3)),
           ],
         ),
         child: Column(
           children: [
             _buildHeader(context, isExpanded, localizations),
-            Expanded(
-              child: _buildMenu(context, menuItems, isExpanded, localizations),
-            ),
+            Expanded(child: _buildMenu(context, menuItems, isExpanded, localizations)),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return FadeTransition(
                   opacity: animation,
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    axisAlignment: -1.0,
-                    child: child,
-                  ),
+                  child: SizeTransition(sizeFactor: animation, axisAlignment: -1.0, child: child),
                 );
               },
               child: isExpanded
@@ -138,22 +120,11 @@ class _SidebarState extends ConsumerState<Sidebar> {
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    bool isExpanded,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildHeader(BuildContext context, bool isExpanded, AppLocalizations localizations) {
     return Container(
-      padding: EdgeInsetsDirectional.only(
-        start: 16.w,
-        end: 16.w,
-        top: 16.h,
-        bottom: 17.h,
-      ),
+      padding: EdgeInsetsDirectional.only(start: 16.w, end: 16.w, top: 16.h, bottom: 17.h),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.cardBorder, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
       ),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -169,14 +140,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
                     onTap: () => ref.read(sidebarProvider.notifier).collapse(),
                     child: Container(
                       padding: EdgeInsets.all(8.r),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Icon(
-                        Icons.close,
-                        size: 20.sp,
-                        color: const Color(0xFF101828),
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
+                      child: Icon(Icons.close, size: 20.sp, color: const Color(0xFF101828)),
                     ),
                   ),
                 ],
@@ -186,19 +151,11 @@ class _SidebarState extends ConsumerState<Sidebar> {
     );
   }
 
-  Widget _buildMenu(
-    BuildContext context,
-    List<SidebarItem> items,
-    bool isExpanded,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildMenu(BuildContext context, List<SidebarItem> items, bool isExpanded, AppLocalizations localizations) {
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: SingleChildScrollView(
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: isExpanded ? 16.w : 0,
-          vertical: 16.h,
-        ),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: isExpanded ? 16.w : 0, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: items.asMap().entries.map((entry) {
@@ -206,16 +163,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
             final item = entry.value;
             return Padding(
               key: ValueKey('menu-item-${item.id}'),
-              padding: EdgeInsetsDirectional.only(
-                bottom: index < items.length - 1 ? 4.h : 0,
-              ),
-              child: _buildMenuItem(
-                context,
-                item,
-                isExpanded,
-                localizations,
-                items,
-              ),
+              padding: EdgeInsetsDirectional.only(bottom: index < items.length - 1 ? 4.h : 0),
+              child: _buildMenuItem(context, item, isExpanded, localizations, items),
             );
           }).toList(),
         ),
@@ -234,9 +183,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
     final isExpandedItem = _expandedItems[item.id] ?? false;
     final currentRoute = GoRouterState.of(context).uri.path;
     final isActive =
-        item.route == currentRoute ||
-        (hasChildren &&
-            item.children!.any((child) => child.route == currentRoute));
+        item.route == currentRoute || (hasChildren && item.children!.any((child) => child.route == currentRoute));
 
     if (!isExpanded) {
       return Padding(
@@ -267,21 +214,12 @@ class _SidebarState extends ConsumerState<Sidebar> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.r),
               color: isActive ? const Color(0xFFEFF6FF) : Colors.transparent,
-              border: isActive
-                  ? BorderDirectional(
-                      start: BorderSide(
-                        color: const Color(0xFF155DFC),
-                        width: 2,
-                      ),
-                    )
-                  : null,
+              border: isActive ? BorderDirectional(start: BorderSide(color: const Color(0xFF155DFC), width: 2)) : null,
             ),
             child: _buildIcon(
               item: item,
               size: 20.sp,
-              color: isActive
-                  ? const Color(0xFF155DFC)
-                  : const Color(0xFF364153),
+              color: isActive ? const Color(0xFF155DFC) : const Color(0xFF364153),
             ),
           ),
         ),
@@ -302,10 +240,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
-            padding: EdgeInsetsDirectional.symmetric(
-              horizontal: 12.w,
-              vertical: 10.h,
-            ),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 10.h),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.r),
               color: isActive ? const Color(0xFFEFF6FF) : Colors.transparent,
@@ -313,27 +248,18 @@ class _SidebarState extends ConsumerState<Sidebar> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _buildIcon(
-                  item: item,
-                  size: 20.sp,
-                  color: isActive ? AppColors.primary : const Color(0xFF364153),
-                ),
+                _buildIcon(item: item, size: 20.sp, color: isActive ? AppColors.primary : const Color(0xFF364153)),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: AnimatedOpacity(
                     opacity: isExpanded ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 200),
                     child: Text(
-                      SidebarConfig.getLocalizedLabel(
-                        item.labelKey,
-                        localizations,
-                      ),
+                      SidebarConfig.getLocalizedLabel(item.labelKey, localizations),
                       style: TextStyle(
                         fontSize: 15.4.sp,
                         fontWeight: FontWeight.w400,
-                        color: isActive
-                            ? AppColors.primary
-                            : const Color(0xFF364153),
+                        color: isActive ? AppColors.primary : const Color(0xFF364153),
                         height: 24 / 15.4,
                         letterSpacing: 0,
                       ),
@@ -345,9 +271,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
                     opacity: isExpanded ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
-                      isExpandedItem
-                          ? Icons.keyboard_arrow_down
-                          : Icons.keyboard_arrow_right,
+                      isExpandedItem ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
                       size: 16.sp,
                       color: context.themeTextSecondary,
                     ),
@@ -370,39 +294,24 @@ class _SidebarState extends ConsumerState<Sidebar> {
                         final child = entry.value;
                         final currentRoute = GoRouterState.of(context).uri.path;
                         final isChildActive = child.route == currentRoute;
-                        final labelText = SidebarConfig.getLocalizedLabel(
-                          child.labelKey,
-                          localizations,
-                        );
-                        final fontSize = SidebarConfig.getChildItemFontSize(
-                          child.labelKey,
-                        );
+                        final labelText = SidebarConfig.getLocalizedLabel(child.labelKey, localizations);
+                        final fontSize = SidebarConfig.getChildItemFontSize(child.labelKey);
                         final isMultiLine = labelText.contains('\n');
                         final childHeight = isMultiLine ? 64.h : 40.h;
 
                         return TweenAnimationBuilder<double>(
                           key: ValueKey('child-item-${child.id}'),
-                          tween: Tween(
-                            begin: 0.0,
-                            end: isExpandedItem ? 1.0 : 0.0,
-                          ),
+                          tween: Tween(begin: 0.0, end: isExpandedItem ? 1.0 : 0.0),
                           duration: Duration(milliseconds: 200 + (index * 20)),
                           curve: Curves.easeOut,
                           builder: (context, value, child) {
                             return Opacity(
                               opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(0, -20 * (1 - value)),
-                                child: child,
-                              ),
+                              child: Transform.translate(offset: Offset(0, -20 * (1 - value)), child: child),
                             );
                           },
                           child: Padding(
-                            padding: EdgeInsetsDirectional.only(
-                              bottom: index < item.children!.length - 1
-                                  ? 4.h
-                                  : 0,
-                            ),
+                            padding: EdgeInsetsDirectional.only(bottom: index < item.children!.length - 1 ? 4.h : 0),
                             child: GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
@@ -422,47 +331,32 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.r),
-                                  color: isChildActive
-                                      ? const Color(0xFFEFF6FF)
-                                      : Colors.transparent,
+                                  color: isChildActive ? const Color(0xFFEFF6FF) : Colors.transparent,
                                   border: isChildActive
-                                      ? BorderDirectional(
-                                          start: BorderSide(
-                                            color: const Color(0xFF155DFC),
-                                            width: 2,
-                                          ),
-                                        )
+                                      ? BorderDirectional(start: BorderSide(color: const Color(0xFF155DFC), width: 2))
                                       : null,
                                 ),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsetsDirectional.only(
-                                        top: isMultiLine ? 8.h : 0,
-                                      ),
+                                      padding: EdgeInsetsDirectional.only(top: isMultiLine ? 8.h : 0),
                                       child: _buildIcon(
                                         item: child,
                                         size: 16.sp,
-                                        color: isChildActive
-                                            ? AppColors.primary
-                                            : const Color(0xFF4A5565),
+                                        color: isChildActive ? AppColors.primary : const Color(0xFF4A5565),
                                       ),
                                     ),
                                     SizedBox(width: 12.w),
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.only(
-                                          top: isMultiLine ? 0 : 0,
-                                        ),
+                                        padding: EdgeInsetsDirectional.only(top: isMultiLine ? 0 : 0),
                                         child: Text(
                                           labelText,
                                           style: TextStyle(
                                             fontSize: fontSize.sp,
                                             fontWeight: FontWeight.w400,
-                                            color: isChildActive
-                                                ? AppColors.primary
-                                                : const Color(0xFF4A5565),
+                                            color: isChildActive ? AppColors.primary : const Color(0xFF4A5565),
                                             height: 24 / fontSize,
                                             letterSpacing: 0,
                                           ),
@@ -487,21 +381,13 @@ class _SidebarState extends ConsumerState<Sidebar> {
   Widget _buildFooter(BuildContext context, AppLocalizations localizations) {
     return Container(
       key: const ValueKey('footer'),
-      padding: EdgeInsetsDirectional.only(
-        start: 16.w,
-        end: 16.w,
-        top: 17.h,
-        bottom: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.only(start: 16.w, end: 16.w, top: 17.h, bottom: 16.h),
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: AppColors.cardBorder, width: 1)),
       ),
       child: Container(
         padding: EdgeInsetsDirectional.all(12.w),
-        decoration: BoxDecoration(
-          color: AppColors.sidebarFooterBg,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
+        decoration: BoxDecoration(color: AppColors.sidebarFooterBg, borderRadius: BorderRadius.circular(10.r)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

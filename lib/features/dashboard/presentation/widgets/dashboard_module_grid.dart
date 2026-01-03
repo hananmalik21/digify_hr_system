@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,14 +10,10 @@ import 'dashboard_module_button.dart';
 class DashboardModuleGrid extends ConsumerStatefulWidget {
   final List<DashboardButton> buttons;
 
-  const DashboardModuleGrid({
-    super.key,
-    required this.buttons,
-  });
+  const DashboardModuleGrid({super.key, required this.buttons});
 
   @override
-  ConsumerState<DashboardModuleGrid> createState() =>
-      _DashboardModuleGridState();
+  ConsumerState<DashboardModuleGrid> createState() => _DashboardModuleGridState();
 }
 
 class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
@@ -52,13 +47,7 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
       final double tileW = (usable / columns).clamp(130.0, 155.0).toDouble();
       final double tileH = (tileW * 0.95).clamp(155.0, 180.0).toDouble();
 
-      return GridSpec(
-        columns: columns,
-        spacing: spacing,
-        tileW: tileW,
-        tileH: tileH,
-        needsLongPress: true,
-      );
+      return GridSpec(columns: columns, spacing: spacing, tileW: tileW, tileH: tileH, needsLongPress: true);
     }
 
     final double minTileW = isTablet ? 170.0 : 170.0;
@@ -73,20 +62,13 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
     }
 
     final double usable = maxW - (spacing * (columns - 1));
-    final double tileW =
-        (usable / columns).clamp(minTileW, maxTileW).toDouble();
+    final double tileW = (usable / columns).clamp(minTileW, maxTileW).toDouble();
 
     final double tileH = isTablet
         ? (tileW * 0.78).clamp(140.0, 160.0).toDouble()
         : (tileW * 0.70).clamp(120.0, 140.0).toDouble();
 
-    return GridSpec(
-      columns: columns,
-      spacing: spacing,
-      tileW: tileW,
-      tileH: tileH,
-      needsLongPress: false,
-    );
+    return GridSpec(columns: columns, spacing: spacing, tileW: tileW, tileH: tileH, needsLongPress: false);
   }
 
   @override
@@ -110,10 +92,7 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
               type: MaterialType.transparency,
               color: Colors.transparent,
               shadowColor: Colors.transparent,
-              child: ConstrainedBox(
-                constraints: boxConstraints,
-                child: child,
-              ),
+              child: ConstrainedBox(constraints: boxConstraints, child: child),
             );
           },
 
@@ -135,11 +114,7 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
               key: ValueKey('dash-${btn.id}'),
               width: spec.tileW,
               height: spec.tileH,
-              child: DashboardModuleButton(
-                button: btn,
-                isDragging: _isDragging,
-                onTap: () => context.go(btn.route),
-              ),
+              child: DashboardModuleButton(button: btn, isDragging: _isDragging, onTap: () => context.go(btn.route)),
             );
           }),
         );
@@ -147,4 +122,3 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
     );
   }
 }
-
