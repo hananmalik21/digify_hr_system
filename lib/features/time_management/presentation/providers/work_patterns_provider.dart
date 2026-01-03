@@ -4,8 +4,11 @@ import 'package:digify_hr_system/features/time_management/data/datasources/work_
 import 'package:digify_hr_system/features/time_management/data/repositories/work_pattern_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/work_pattern_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/create_work_pattern_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/delete_work_pattern_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_work_patterns_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_pattern_create_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final workPatternRemoteDataSourceProvider = Provider<WorkPatternRemoteDataSource>((ref) {
@@ -21,6 +24,16 @@ final workPatternRepositoryProvider = Provider.family<WorkPatternRepository, int
 final getWorkPatternsUseCaseProvider = Provider.family<GetWorkPatternsUseCase, int>((ref, enterpriseId) {
   final repository = ref.watch(workPatternRepositoryProvider(enterpriseId));
   return GetWorkPatternsUseCase(repository: repository);
+});
+
+final createWorkPatternUseCaseProvider = Provider.family<CreateWorkPatternUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workPatternRepositoryProvider(enterpriseId));
+  return CreateWorkPatternUseCase(repository: repository);
+});
+
+final deleteWorkPatternUseCaseProvider = Provider.family<DeleteWorkPatternUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workPatternRepositoryProvider(enterpriseId));
+  return DeleteWorkPatternUseCase(repository: repository);
 });
 
 class WorkPatternState extends PaginationState<WorkPattern> {
@@ -76,16 +89,23 @@ final workPatternsNotifierProvider = StateNotifierProvider.family<WorkPatternsNo
   ref,
   enterpriseId,
 ) {
-  return WorkPatternsNotifier(ref.read(getWorkPatternsUseCaseProvider(enterpriseId)));
+  return WorkPatternsNotifier(
+    ref.read(getWorkPatternsUseCaseProvider(enterpriseId)),
+    ref.read(createWorkPatternUseCaseProvider(enterpriseId)),
+    ref.read(deleteWorkPatternUseCaseProvider(enterpriseId)),
+  );
 });
 
 class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
     with PaginationMixin<WorkPattern>
     implements PaginationController<WorkPattern> {
   final GetWorkPatternsUseCase _getWorkPatternsUseCase;
+  final CreateWorkPatternUseCase _createWorkPatternUseCase;
+  final DeleteWorkPatternUseCase _deleteWorkPatternUseCase;
   int? _currentEnterpriseId;
 
-  WorkPatternsNotifier(this._getWorkPatternsUseCase) : super(const WorkPatternState());
+  WorkPatternsNotifier(this._getWorkPatternsUseCase, this._createWorkPatternUseCase, this._deleteWorkPatternUseCase)
+    : super(const WorkPatternState());
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
@@ -234,5 +254,58 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
   @override
   void reset() {
     state = const WorkPatternState();
+  }
+
+  /// Create a work pattern with optimistic update
+  Future<WorkPattern> createWorkPattern(
+    WidgetRef ref, {
+    required String patternCode,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  }) async {
+    ref.read(workPatternCreateStateProvider.notifier).state = const WorkPatternCreateState(isCreating: true);
+
+    try {
+      final createdPattern = await _createWorkPatternUseCase.execute(
+        patternCode: patternCode,
+        patternNameEn: patternNameEn,
+        patternNameAr: patternNameAr,
+        patternType: patternType,
+        totalHoursPerWeek: totalHoursPerWeek,
+        status: status,
+        days: days,
+      );
+
+      ref.read(workPatternCreateStateProvider.notifier).state = const WorkPatternCreateState(isCreating: false);
+
+      // Optimistically update the list - add to the beginning
+      state = state.copyWith(items: [createdPattern, ...state.items], totalItems: state.totalItems + 1);
+
+      return createdPattern;
+    } catch (e) {
+      ref.read(workPatternCreateStateProvider.notifier).state = WorkPatternCreateState(
+        isCreating: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
+
+  /// Delete a work pattern - wait for API response before updating list
+  Future<void> deleteWorkPattern({required int workPatternId, required bool hard}) async {
+    try {
+      await _deleteWorkPatternUseCase.execute(workPatternId: workPatternId, hard: hard);
+
+      state = state.copyWith(
+        items: state.items.where((p) => p.workPatternId != workPatternId).toList(),
+        totalItems: state.totalItems - 1,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }

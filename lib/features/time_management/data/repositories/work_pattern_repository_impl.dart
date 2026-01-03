@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/work_pattern_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -25,6 +26,45 @@ class WorkPatternRepositoryImpl implements WorkPatternRepository {
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to get work patterns: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<WorkPattern> createWorkPattern({
+    required String patternCode,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  }) async {
+    try {
+      return await remoteDataSource.createWorkPattern(
+        tenantId: tenantId,
+        patternCode: patternCode,
+        patternNameEn: patternNameEn,
+        patternNameAr: patternNameAr,
+        patternType: patternType,
+        totalHoursPerWeek: totalHoursPerWeek,
+        status: status,
+        days: days,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create work pattern: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteWorkPattern({required int workPatternId, required bool hard}) async {
+    try {
+      return await remoteDataSource.deleteWorkPattern(workPatternId: workPatternId, tenantId: tenantId, hard: hard);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete work pattern: ${e.toString()}', originalError: e);
     }
   }
 }

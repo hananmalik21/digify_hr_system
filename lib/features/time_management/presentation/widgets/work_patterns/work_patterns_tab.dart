@@ -5,6 +5,8 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/create_work_pattern_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/delete_work_pattern_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -84,7 +86,15 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
             if (_selectedEnterpriseId != null && !enterprisesState.hasError)
               SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
             if (_selectedEnterpriseId != null) ...[
-              WorkPatternActionBar(onCreatePattern: () {}, onUpload: () {}, onExport: () {}),
+              WorkPatternActionBar(
+                onCreatePattern: () {
+                  if (_selectedEnterpriseId != null) {
+                    CreateWorkPatternDialog.show(context, _selectedEnterpriseId!);
+                  }
+                },
+                onUpload: () {},
+                onExport: () {},
+              ),
               SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
               ConstrainedBox(
                 constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
@@ -98,6 +108,11 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
                   onRetry: () {
                     if (_selectedEnterpriseId != null) {
                       ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!).notifier).refresh();
+                    }
+                  },
+                  onDelete: (pattern) {
+                    if (_selectedEnterpriseId != null) {
+                      DeleteWorkPatternDialog.show(context, pattern, _selectedEnterpriseId!);
                     }
                   },
                 ),
