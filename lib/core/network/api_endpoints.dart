@@ -9,24 +9,18 @@ class ApiEndpoints {
   // Enterprise Structure endpoints
   static const String structureLevels = '$api/structure-levels';
   static const String hrOrgStructures = '$api/hr-org-structures';
-  static const String hrOrgStructuresActiveLevels =
-      '$hrOrgStructures/active/levels';
-  static String hrOrgStructuresUnitsByLevel(String levelCode) =>
-      '$hrOrgStructuresActiveLevels/$levelCode/units';
-  static String hrOrgStructuresUnitsByStructureAndLevel(
-    int structureId,
-    String levelCode,
-  ) => '$hrOrgStructures/$structureId/org-units';
+  static const String hrOrgStructuresActiveLevels = '$hrOrgStructures/active/levels';
+  static String hrOrgStructuresUnitsByLevel(String levelCode) => '$hrOrgStructuresActiveLevels/$levelCode/units';
+  static String hrOrgStructuresUnitsByStructureAndLevel(int structureId, String levelCode) =>
+      '$hrOrgStructures/$structureId/org-units';
   static String hrOrgStructuresParentUnits(int structureId, String levelCode) =>
       '$hrOrgStructures/$structureId/org-units/parents';
-  static String hrOrgStructuresCreateUnit(int structureId) =>
-      '$hrOrgStructures/$structureId/org-units';
+  static String hrOrgStructuresCreateUnit(int structureId) => '$hrOrgStructures/$structureId/org-units';
   static String hrOrgStructuresUpdateUnit(int structureId, int orgUnitId) =>
       '$hrOrgStructures/$structureId/org-units/$orgUnitId';
   static String hrOrgStructuresDeleteUnit(int structureId, int orgUnitId) =>
       '$hrOrgStructures/$structureId/org-units/$orgUnitId';
-  static const String hrOrgStructuresActiveUnits =
-      '$hrOrgStructures/active/units';
+  static const String hrOrgStructuresActiveUnits = '$hrOrgStructures/active/units';
   static const String enterprises = '$api/enterprises';
   static const String companies = '$api/companies';
   static const String divisions = '$api/divisions';
@@ -45,4 +39,5 @@ class ApiEndpoints {
   // Time Management (TM) endpoints
   static const String tmShifts = '$api/tm/shifts';
   static String tmShiftById(int shiftId) => '$tmShifts/$shiftId';
+  static const String tmWorkPatterns = '$api/tm/work-patterns';
 }

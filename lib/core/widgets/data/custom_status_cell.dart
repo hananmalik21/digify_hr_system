@@ -35,7 +35,7 @@ class CustomStatusCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(100.r), // Pill shape
       ),
       child: Text(
-        label.toLowerCase(),
+        label,
         style: TextStyle(
           fontSize: 12.sp,
           fontWeight: FontWeight.w500,

@@ -234,4 +234,20 @@ class AppColors {
   static const Color dialogCloseIcon = Color(0xFF99A1AF);
   static const Color dialogTitle = Color(0xFF101828);
   static const Color colorBorder = Color(0xFF777777);
+
+  // Table Colors
+  static const Color tableHeaderBackground = Color(0xFFF9FAFB);
+  static const Color tableHeaderText = Color(0xFF6A7282);
+
+  // Shadow Colors
+  static const Color shadowColor = Color(0x1A000000);
+
+  // Work Pattern Type Badge Colors
+  static const Color workPatternBadgeBgLight = Color(0xFFF3E8FF);
+  static const Color workPatternBadgeBgDark = Color(0xFF2D1A3D);
+  static const Color workPatternBadgeTextLight = Color(0xFF6E11B0);
+  static const Color workPatternBadgeTextDark = Color(0xFFB794D4);
+
+  // Button Text Colors
+  static const Color buttonTextLight = Color(0xFFFFFFFF);
 }
