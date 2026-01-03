@@ -38,12 +38,7 @@ class ResponsiveHelper {
   }
 
   // Get responsive width based on device type
-  static double getResponsiveWidth(
-    BuildContext context, {
-    double? mobile,
-    double? tablet,
-    double? web,
-  }) {
+  static double getResponsiveWidth(BuildContext context, {double? mobile, double? tablet, double? web}) {
     final deviceType = getDeviceType(context);
     switch (deviceType) {
       case DeviceType.mobile:
@@ -56,12 +51,7 @@ class ResponsiveHelper {
   }
 
   // Get responsive height based on device type
-  static double getResponsiveHeight(
-    BuildContext context, {
-    double? mobile,
-    double? tablet,
-    double? web,
-  }) {
+  static double getResponsiveHeight(BuildContext context, {double? mobile, double? tablet, double? web}) {
     final deviceType = getDeviceType(context);
     switch (deviceType) {
       case DeviceType.mobile:
@@ -74,12 +64,7 @@ class ResponsiveHelper {
   }
 
   // Get responsive font size based on device type
-  static double getResponsiveFontSize(
-    BuildContext context, {
-    double? mobile,
-    double? tablet,
-    double? web,
-  }) {
+  static double getResponsiveFontSize(BuildContext context, {double? mobile, double? tablet, double? web}) {
     final deviceType = getDeviceType(context);
     switch (deviceType) {
       case DeviceType.mobile:
@@ -101,27 +86,16 @@ class ResponsiveHelper {
     final deviceType = getDeviceType(context);
     switch (deviceType) {
       case DeviceType.mobile:
-        return mobile ??
-            const EdgeInsetsDirectional.symmetric(horizontal: 16, vertical: 12);
+        return mobile ?? const EdgeInsetsDirectional.symmetric(horizontal: 16, vertical: 12);
       case DeviceType.tablet:
-        return tablet ??
-            mobile ??
-            const EdgeInsetsDirectional.symmetric(horizontal: 24, vertical: 16);
+        return tablet ?? mobile ?? const EdgeInsetsDirectional.symmetric(horizontal: 24, vertical: 16);
       case DeviceType.web:
-        return web ??
-            tablet ??
-            mobile ??
-            const EdgeInsetsDirectional.symmetric(horizontal: 32, vertical: 20);
+        return web ?? tablet ?? mobile ?? const EdgeInsetsDirectional.symmetric(horizontal: 32, vertical: 20);
     }
   }
 
   // Get number of columns for grid based on device type
-  static int getResponsiveColumns(
-    BuildContext context, {
-    int mobile = 1,
-    int tablet = 2,
-    int web = 3,
-  }) {
+  static int getResponsiveColumns(BuildContext context, {int mobile = 1, int tablet = 2, int web = 3}) {
     final deviceType = getDeviceType(context);
     switch (deviceType) {
       case DeviceType.mobile:
@@ -133,7 +107,35 @@ class ResponsiveHelper {
     }
   }
 
-  // Get max width for content containers
+  static int getGridColumns(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width > 1400) return 4;
+    if (width > 1024) return 3;
+    if (width > 640) return 2;
+    return 1;
+  }
+
+  static double getShiftCardExtent(BuildContext context) {
+    return isWeb(context) ? 360.0 : 360.h;
+  }
+
+  static double getCardPadding(BuildContext context) {
+    return getResponsiveWidth(context, mobile: 16, tablet: 20, web: 24);
+  }
+
+  static double getCardContentSpacing(BuildContext context) {
+    return getResponsiveHeight(context, mobile: 12, tablet: 14, web: 16);
+  }
+
+  static double getActionButtonSpacing(BuildContext context) {
+    return getResponsiveWidth(context, mobile: 6, tablet: 8, web: 8);
+  }
+
+  static bool shouldShowActionLabels(BuildContext context, double maxWidth) {
+    // If available width for actions is too small, hide labels
+    return maxWidth > 200;
+  }
+
   static double getMaxContentWidth(BuildContext context) {
     final deviceType = getDeviceType(context);
     switch (deviceType) {

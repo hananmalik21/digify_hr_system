@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/mixins/datetime_conversion_mixin.dart';
+import 'package:digify_hr_system/core/utils/duration_formatter.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
@@ -80,8 +81,11 @@ class ShiftDetailsDialog extends StatelessWidget with DateTimeConversionMixin {
               _buildDetailItem('Status', '', widget: ShiftStatusBadge(isActive: shift.isActive)),
               _buildDetailItem('Start Time', shift.startTime),
               _buildDetailItem('End Time', shift.endTime),
-              _buildDetailItem('Duration', '${shift.totalHours.toStringAsFixed(1)} hours'),
-              _buildDetailItem('Break Duration', '${shift.breakHours} hour(s)'),
+              _buildDetailItem('Duration', '${DurationFormatter.formatHours(shift.totalHours)} hours'),
+              _buildDetailItem(
+                'Break Duration',
+                '${DurationFormatter.formatHours(shift.breakHours.toDouble())} hour(s)',
+              ),
               _buildDetailItem('Created Date', formatDate(shift.createdDate)),
               _buildDetailItem('Updated By', shift.updatedBy ?? '-'),
             ],

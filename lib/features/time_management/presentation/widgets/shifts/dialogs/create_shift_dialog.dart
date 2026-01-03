@@ -11,10 +11,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CreateShiftDialog extends ConsumerStatefulWidget {
-  const CreateShiftDialog({super.key});
+  final int enterpriseId;
 
-  static Future<void> show(BuildContext context) {
-    return showDialog(context: context, barrierDismissible: false, builder: (context) => const CreateShiftDialog());
+  const CreateShiftDialog({super.key, required this.enterpriseId});
+
+  static Future<void> show(BuildContext context, {required int enterpriseId}) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CreateShiftDialog(enterpriseId: enterpriseId),
+    );
   }
 
   @override
@@ -30,6 +36,12 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
   final _breakDurationController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _breakDurationController.text = '1';
+  }
+
+  @override
   void dispose() {
     _codeController.dispose();
     _nameEnController.dispose();
@@ -40,8 +52,8 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
   }
 
   Future<void> _handleCreate() async {
-    final formNotifier = ref.read(shiftFormProvider.notifier);
-    final shiftsNotifier = ref.read(shiftsNotifierProvider.notifier);
+    final formNotifier = ref.read(shiftFormProvider(widget.enterpriseId).notifier);
+    final shiftsNotifier = ref.read(shiftsNotifierProvider(widget.enterpriseId).notifier);
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -52,23 +64,16 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
       return;
     }
 
-    // Create shift
     final createdShift = await formNotifier.createShift();
 
     if (!mounted) return;
 
     if (createdShift != null) {
-      // Optimistically add to list
       shiftsNotifier.addShiftOptimistically(createdShift);
-
-      // Show success message
       ToastService.success(context, 'Shift created successfully', title: 'Success');
-
-      // Close dialog
       Navigator.of(context).pop();
     } else {
-      // Error is already handled in the provider
-      final errorMessage = ref.read(shiftFormProvider).errorMessage;
+      final errorMessage = ref.read(shiftFormProvider(widget.enterpriseId)).errorMessage;
       if (errorMessage != null) {
         ToastService.error(context, errorMessage, title: 'Error');
       }
@@ -77,7 +82,23 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final formState = ref.watch(shiftFormProvider);
+    final formState = ref.watch(shiftFormProvider(widget.enterpriseId));
+
+    if (formState.duration.isNotEmpty && _durationController.text != formState.duration) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _durationController.text = formState.duration;
+        }
+      });
+    }
+
+    if (formState.breakDuration.isNotEmpty && _breakDurationController.text != formState.breakDuration) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _breakDurationController.text = formState.breakDuration;
+        }
+      });
+    }
 
     return AppDialog(
       title: 'Create New Shift',
@@ -89,6 +110,7 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
         nameArController: _nameArController,
         durationController: _durationController,
         breakDurationController: _breakDurationController,
+        enterpriseId: widget.enterpriseId,
       ),
       actions: [
         AppButton(
@@ -98,7 +120,7 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
           onPressed: formState.isLoading
               ? null
               : () {
-                  ref.read(shiftFormProvider.notifier).reset();
+                  ref.read(shiftFormProvider(widget.enterpriseId).notifier).reset();
                   Navigator.of(context).pop();
                 },
         ),

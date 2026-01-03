@@ -1,18 +1,17 @@
-import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_action_bar.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid_skeleton.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_content_widget.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_empty_state_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShiftsTab extends ConsumerStatefulWidget {
   const ShiftsTab({super.key});
@@ -22,45 +21,32 @@ class ShiftsTab extends ConsumerStatefulWidget {
 }
 
 class _ShiftsTabState extends ConsumerState<ShiftsTab> {
-  final TextEditingController _searchController = TextEditingController();
-  String _selectedStatus = 'All Status';
+  int? _selectedEnterpriseId;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(shiftsNotifierProvider.notifier).loadFirstPage();
-    });
-
-    _searchController.addListener(_onSearchChanged);
-  }
-
-  @override
-  void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  void _onSearchChanged() {
-    final search = _searchController.text;
-    ref.read(shiftsNotifierProvider.notifier).search(search);
+  void _onSearchChanged(String searchText) {
+    if (_selectedEnterpriseId == null) return;
+    ref.read(shiftsNotifierProvider(_selectedEnterpriseId!).notifier).search(searchText);
   }
 
   void _onStatusChanged(String? status) {
-    if (status != null) {
-      setState(() => _selectedStatus = status);
-      final isActive = status == 'All Status'
-          ? null
-          : status == 'Active'
-          ? true
-          : false;
+    if (status == null || _selectedEnterpriseId == null) return;
+    ref.read(shiftsNotifierProvider(_selectedEnterpriseId!).notifier).setStatusFilterFromString(status);
+  }
 
-      ref.read(shiftsNotifierProvider.notifier).setStatusFilter(isActive);
+  void _onEnterpriseChanged(int? enterpriseId) {
+    if (enterpriseId == null) return;
+
+    if (enterpriseId != _selectedEnterpriseId) {
+      setState(() {
+        _selectedEnterpriseId = enterpriseId;
+      });
+      ref.read(shiftsNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
     }
   }
 
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
+    if (_selectedEnterpriseId == null) return;
+
     final confirmed = await AppConfirmationDialog.show(
       context,
       title: 'Delete Shift',
@@ -75,7 +61,9 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
     if (confirmed != true) return;
 
     try {
-      final success = await ref.read(shiftsNotifierProvider.notifier).deleteShift(shiftId: shift.id, hard: true);
+      final success = await ref
+          .read(shiftsNotifierProvider(_selectedEnterpriseId!).notifier)
+          .deleteShift(shiftId: shift.id, hard: true);
 
       if (success && context.mounted) {
         ToastService.success(context, 'Shift deleted successfully', title: 'Success');
@@ -93,38 +81,38 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final shiftsState = ref.watch(shiftsNotifierProvider);
+    final enterprisesState = ref.watch(enterprisesProvider);
+    final shiftsState = _selectedEnterpriseId != null
+        ? ref.watch(shiftsNotifierProvider(_selectedEnterpriseId!))
+        : const ShiftState();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ShiftActionBar(
-          searchController: _searchController,
-          selectedStatus: _selectedStatus,
-          onStatusChanged: _onStatusChanged,
-          onCreateShift: () => CreateShiftDialog.show(context),
-          onUpload: () {},
-          onExport: () {},
+        // Enterprise Selection Section
+        EnterpriseSelectorWidget(
+          selectedEnterpriseId: _selectedEnterpriseId,
+          onEnterpriseChanged: _onEnterpriseChanged,
         ),
-        SizedBox(height: 24.h),
-        if (shiftsState.isLoading)
-          const ShiftsGridSkeleton()
-        else if (shiftsState.hasError)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(shiftsState.errorMessage ?? 'An error occurred', style: const TextStyle(color: Colors.red)),
-            ),
+
+        // Enterprise Error Display
+        if (enterprisesState.hasError) EnterpriseErrorWidget(enterprisesState: enterprisesState),
+
+        // Divider
+        if (_selectedEnterpriseId != null && !enterprisesState.hasError)
+          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+
+        // Shifts Content Section
+        if (_selectedEnterpriseId != null)
+          ShiftsContentWidget(
+            onSearchChanged: _onSearchChanged,
+            onStatusChanged: _onStatusChanged,
+            shiftsState: shiftsState,
+            enterpriseId: _selectedEnterpriseId!,
+            onDelete: (shift) => _handleDelete(context, shift),
           )
         else
-          ShiftsGrid(
-            shifts: shiftsState.items,
-            onView: (shift) => ShiftDetailsDialog.show(context, shift),
-            onEdit: (shift) => UpdateShiftDialog.show(context, shift),
-            onCopy: (shift) {},
-            onDelete: (shift) => _handleDelete(context, shift),
-            deletingShiftId: shiftsState.deletingShiftId,
-          ),
+          const ShiftsEmptyStateWidget(),
       ],
     );
   }

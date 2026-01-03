@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/utils/duration_formatter.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart' hide TimeOfDay;
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_shift_usecase.dart';
@@ -31,7 +32,7 @@ class ShiftFormState {
     this.startTime,
     this.endTime,
     this.duration = '',
-    this.breakDuration = '',
+    this.breakDuration = '1',
     Color? selectedColor,
     String? status,
     this.errors = const {},
@@ -126,18 +127,42 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
     state = state.copyWith(shiftType: value, errors: errors);
   }
 
+  /// Calculate duration in hours from start and end time
+  String _calculateDuration(TimeOfDay? startTime, TimeOfDay? endTime) {
+    if (startTime == null || endTime == null) return '';
+
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+
+    int diffMinutes;
+    if (endMinutes >= startMinutes) {
+      diffMinutes = endMinutes - startMinutes;
+    } else {
+      diffMinutes = (24 * 60 - startMinutes) + endMinutes;
+    }
+
+    final totalHours = diffMinutes / 60.0;
+    return DurationFormatter.formatHours(totalHours);
+  }
+
   /// Update start time
   void updateStartTime(TimeOfDay? value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('startTime');
-    state = state.copyWith(startTime: value, errors: errors);
+    errors.remove('duration');
+
+    final newDuration = _calculateDuration(value, state.endTime);
+    state = state.copyWith(startTime: value, duration: newDuration, errors: errors);
   }
 
   /// Update end time
   void updateEndTime(TimeOfDay? value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('endTime');
-    state = state.copyWith(endTime: value, errors: errors);
+    errors.remove('duration');
+
+    final newDuration = _calculateDuration(state.startTime, value);
+    state = state.copyWith(endTime: value, duration: newDuration, errors: errors);
   }
 
   /// Update duration
@@ -194,13 +219,17 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
       errors['duration'] = 'Required';
     }
 
+    if (state.breakDuration.isEmpty) {
+      errors['breakDuration'] = 'Required';
+    }
+
     state = state.copyWith(errors: errors);
     return errors.isEmpty;
   }
 
   /// Reset form
   void reset() {
-    state = ShiftFormState();
+    state = ShiftFormState(breakDuration: '1');
   }
 
   /// Convert Flutter TimeOfDay to minutes since midnight
@@ -241,8 +270,8 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
         'shift_type': state.shiftType ?? 'REGULAR',
         'start_minutes': _timeOfDayToMinutes(state.startTime!),
         'end_minutes': _timeOfDayToMinutes(state.endTime!),
-        'duration_hours': int.tryParse(state.duration) ?? 0,
-        'break_hours': int.tryParse(state.breakDuration.isEmpty ? '0' : state.breakDuration) ?? 0,
+        'duration_hours': double.tryParse(state.duration) ?? 0.0,
+        'break_hours': double.tryParse(state.breakDuration.isEmpty ? '0' : state.breakDuration) ?? 0.0,
         'color_hex': _colorToHex(state.selectedColor),
         'status': state.status.toUpperCase(),
       };
@@ -266,12 +295,12 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
   }
 }
 
-/// Provider for create shift use case
-final createShiftUseCaseProvider = Provider<CreateShiftUseCase>((ref) {
-  return CreateShiftUseCase(repository: ref.read(shiftRepositoryProvider));
+/// Family provider for create shift use case that accepts enterprise ID
+final createShiftUseCaseProvider = Provider.family<CreateShiftUseCase, int>((ref, enterpriseId) {
+  return CreateShiftUseCase(repository: ref.read(shiftRepositoryProvider(enterpriseId)));
 });
 
-/// Provider for shift form
-final shiftFormProvider = StateNotifierProvider.autoDispose<ShiftFormNotifier, ShiftFormState>(
-  (ref) => ShiftFormNotifier(createShiftUseCase: ref.read(createShiftUseCaseProvider)),
+/// Family provider for shift form that accepts enterprise ID
+final shiftFormProvider = StateNotifierProvider.autoDispose.family<ShiftFormNotifier, ShiftFormState, int>(
+  (ref, enterpriseId) => ShiftFormNotifier(createShiftUseCase: ref.read(createShiftUseCaseProvider(enterpriseId))),
 );

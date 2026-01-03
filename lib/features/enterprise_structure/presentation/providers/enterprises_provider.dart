@@ -18,12 +18,7 @@ class EnterprisesState {
     this.hasError = false,
   });
 
-  EnterprisesState copyWith({
-    List<Enterprise>? enterprises,
-    bool? isLoading,
-    String? errorMessage,
-    bool? hasError,
-  }) {
+  EnterprisesState copyWith({List<Enterprise>? enterprises, bool? isLoading, String? errorMessage, bool? hasError}) {
     return EnterprisesState(
       enterprises: enterprises ?? this.enterprises,
       isLoading: isLoading ?? this.isLoading,
@@ -31,34 +26,33 @@ class EnterprisesState {
       hasError: hasError ?? this.hasError,
     );
   }
+
+  Enterprise? findEnterpriseById(int? id) {
+    if (id == null || enterprises.isEmpty) return null;
+    try {
+      return enterprises.firstWhere((e) => e.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
 /// Notifier for enterprises list
 class EnterprisesNotifier extends StateNotifier<EnterprisesState> {
   final GetEnterprisesUseCase getEnterprisesUseCase;
 
-  EnterprisesNotifier({required this.getEnterprisesUseCase})
-      : super(const EnterprisesState()) {
+  EnterprisesNotifier({required this.getEnterprisesUseCase}) : super(const EnterprisesState()) {
     _loadEnterprises();
   }
-
 
   Future<void> _loadEnterprises() async {
     state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
 
     try {
       final enterprises = await getEnterprisesUseCase();
-      state = state.copyWith(
-        enterprises: enterprises,
-        isLoading: false,
-        hasError: false,
-      );
+      state = state.copyWith(enterprises: enterprises, isLoading: false, hasError: false);
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -74,10 +68,7 @@ class EnterprisesNotifier extends StateNotifier<EnterprisesState> {
 }
 
 /// Provider for enterprises list
-final enterprisesProvider =
-    StateNotifierProvider.autoDispose<EnterprisesNotifier, EnterprisesState>(
-        (ref) {
+final enterprisesProvider = StateNotifierProvider.autoDispose<EnterprisesNotifier, EnterprisesState>((ref) {
   final getEnterprisesUseCase = ref.watch(getEnterprisesUseCaseProvider);
   return EnterprisesNotifier(getEnterprisesUseCase: getEnterprisesUseCase);
 });
-

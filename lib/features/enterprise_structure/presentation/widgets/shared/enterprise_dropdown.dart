@@ -40,9 +40,7 @@ class EnterpriseDropdown extends StatelessWidget {
             style: TextStyle(
               fontSize: labelFontSize,
               fontWeight: FontWeight.w400,
-              color: isDark
-                  ? AppColors.textPrimaryDark
-                  : const Color(0xFF364153),
+              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
               height: 24 / 15.1,
               letterSpacing: 0,
             ),
@@ -50,11 +48,7 @@ class EnterpriseDropdown extends StatelessWidget {
                 ? [
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(
-                        color: isDark
-                            ? AppColors.errorTextDark
-                            : const Color(0xFFFB2C36),
-                      ),
+                      style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
                     ),
                   ]
                 : null,
@@ -70,19 +64,14 @@ class EnterpriseDropdown extends StatelessWidget {
             border: Border.all(
               color: errorText != null
                   ? (isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36))
-                  : (isDark
-                      ? AppColors.inputBorderDark
-                      : const Color(0xFFD1D5DC)),
+                  : (isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC)),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: isLoading
               ? Padding(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 17.w,
-                    vertical: 9.h,
-                  ),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 17.w, vertical: 9.h),
                   child: Row(
                     children: [
                       SizedBox(
@@ -91,9 +80,7 @@ class EnterpriseDropdown extends StatelessWidget {
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF0A0A0A),
+                            isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                           ),
                         ),
                       ),
@@ -114,26 +101,20 @@ class EnterpriseDropdown extends StatelessWidget {
                   ),
                 )
               : Padding(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: 17.w,
-                  ),
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 17.w),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<int>(
                       value: selectedEnterpriseId,
                       isExpanded: true,
                       icon: Icon(
                         Icons.arrow_drop_down,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF0A0A0A),
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                         size: 24.sp,
                       ),
                       style: TextStyle(
                         fontSize: 15.6.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF0A0A0A),
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                         height: 24 / 15.6,
                         letterSpacing: 0,
                       ),
@@ -159,9 +140,7 @@ class EnterpriseDropdown extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 15.6.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF0A0A0A),
+                                  color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
                                   height: 24 / 15.6,
                                   letterSpacing: 0,
                                 ),
@@ -178,16 +157,10 @@ class EnterpriseDropdown extends StatelessWidget {
           SizedBox(height: 4.h),
           Text(
             errorText!,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: isDark
-                  ? AppColors.errorTextDark
-                  : const Color(0xFFFB2C36),
-            ),
+            style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
           ),
         ],
       ],
     );
   }
 }
-
