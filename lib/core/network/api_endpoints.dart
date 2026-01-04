@@ -40,4 +40,5 @@ class ApiEndpoints {
   static const String tmShifts = '$api/tm/shifts';
   static String tmShiftById(int shiftId) => '$tmShifts/$shiftId';
   static const String tmWorkPatterns = '$api/tm/work-patterns';
+  static const String tmWorkSchedules = '$api/tm/work-schedules';
 }
