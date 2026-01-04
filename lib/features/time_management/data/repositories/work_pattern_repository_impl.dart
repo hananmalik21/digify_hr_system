@@ -58,6 +58,34 @@ class WorkPatternRepositoryImpl implements WorkPatternRepository {
   }
 
   @override
+  Future<WorkPattern> updateWorkPattern({
+    required int workPatternId,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  }) async {
+    try {
+      return await remoteDataSource.updateWorkPattern(
+        workPatternId: workPatternId,
+        tenantId: tenantId,
+        patternNameEn: patternNameEn,
+        patternNameAr: patternNameAr,
+        patternType: patternType,
+        totalHoursPerWeek: totalHoursPerWeek,
+        status: status,
+        days: days,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update work pattern: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
   Future<void> deleteWorkPattern({required int workPatternId, required bool hard}) async {
     try {
       return await remoteDataSource.deleteWorkPattern(workPatternId: workPatternId, tenantId: tenantId, hard: hard);

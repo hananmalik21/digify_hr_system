@@ -8,7 +8,7 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_content_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_empty_state_widget.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -112,7 +112,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
             onDelete: (shift) => _handleDelete(context, shift),
           )
         else
-          const ShiftsEmptyStateWidget(),
+          const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view shifts'),
       ],
     );
   }
