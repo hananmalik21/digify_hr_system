@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_detail_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_form_dialog.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -182,7 +182,7 @@ class JobLevelRow extends ConsumerWidget {
   Widget _buildActionIcon(String assetPath, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
+      child: DigifyAsset(assetPath: assetPath, width: 16, height: 16),
     );
   }
 }

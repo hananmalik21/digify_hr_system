@@ -19,6 +19,7 @@ class ShiftFormContent extends ConsumerWidget {
   final TextEditingController nameArController;
   final TextEditingController durationController;
   final TextEditingController breakDurationController;
+  final int enterpriseId;
 
   const ShiftFormContent({
     super.key,
@@ -28,11 +29,14 @@ class ShiftFormContent extends ConsumerWidget {
     required this.nameArController,
     required this.durationController,
     required this.breakDurationController,
+    required this.enterpriseId,
   });
 
   Future<void> _selectTime(BuildContext context, WidgetRef ref, bool isStartTime) async {
-    final formNotifier = ref.read(shiftFormProvider.notifier);
-    final currentTime = isStartTime ? ref.read(shiftFormProvider).startTime : ref.read(shiftFormProvider).endTime;
+    final formNotifier = ref.read(shiftFormProvider(enterpriseId).notifier);
+    final currentTime = isStartTime
+        ? ref.read(shiftFormProvider(enterpriseId)).startTime
+        : ref.read(shiftFormProvider(enterpriseId)).endTime;
 
     final TimeOfDay? picked = await DigifyTimePickerDialog.show(
       context,
@@ -52,8 +56,8 @@ class ShiftFormContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(shiftFormProvider);
-    final formNotifier = ref.read(shiftFormProvider.notifier);
+    final formState = ref.watch(shiftFormProvider(enterpriseId));
+    final formNotifier = ref.read(shiftFormProvider(enterpriseId).notifier);
     final isDark = context.isDark;
 
     return Form(
@@ -61,7 +65,6 @@ class ShiftFormContent extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Basic Information
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -90,7 +93,6 @@ class ShiftFormContent extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Name and Type
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -121,7 +123,6 @@ class ShiftFormContent extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Time Selection
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -150,7 +151,6 @@ class ShiftFormContent extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Duration
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -160,6 +160,7 @@ class ShiftFormContent extends ConsumerWidget {
                   hintText: '8',
                   controller: durationController,
                   isRequired: true,
+                  enabled: false,
                   keyboardType: TextInputType.number,
                   inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
                   validator: (value) {
@@ -178,8 +179,11 @@ class ShiftFormContent extends ConsumerWidget {
                   labelText: 'Break Duration (Hours)',
                   hintText: '1',
                   controller: breakDurationController,
+                  isRequired: true,
+                  enabled: false,
                   keyboardType: TextInputType.number,
                   inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
+                  validator: (value) => FormValidators.requiredWithStateError(value, formState.errors, 'breakDuration'),
                   onChanged: (value) => formNotifier.updateBreakDuration(value),
                 ),
               ),
@@ -187,7 +191,6 @@ class ShiftFormContent extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Appearance and Status
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

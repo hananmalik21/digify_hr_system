@@ -2,7 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -149,10 +150,11 @@ class ComponentDetailDialog extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/close_icon.svg',
+            child: DigifyAsset(
+              assetPath: Assets.icons.closeIcon.path,
               // Pixel perfect: size-[24px]
-              size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+              width: isMobile ? 20 : (isTablet ? 22 : 24),
+              height: isMobile ? 20 : (isTablet ? 22 : 24),
               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
@@ -174,12 +176,13 @@ class ComponentDetailDialog extends StatelessWidget {
         // Section header - gap-[8px] between icon and text
         Row(
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: component.type == ComponentType.department
-                  ? 'assets/icons/basic_info_icon_department.svg'
-                  : 'assets/icons/basic_info_icon.svg',
+                  ? Assets.icons.basicInfoIconDepartment.path
+                  : Assets.icons.basicInfoIcon.path,
               // Pixel perfect: size-[20px]
-              size: isMobile ? 18.sp : (isTablet ? 19.sp : 20.sp),
+              width: isMobile ? 18 : (isTablet ? 19 : 20),
+              height: isMobile ? 18 : (isTablet ? 19 : 20),
               // Pixel perfect: Blue color #155DFC from Figma
               color: const Color(0xFF155DFC),
             ),
@@ -372,11 +375,12 @@ class ComponentDetailDialog extends StatelessWidget {
         // Section header
         Row(
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: component.type == ComponentType.department
-                  ? 'assets/icons/hierarchy_icon_department.svg'
-                  : 'assets/icons/hierarchy_icon.svg',
-              size: isMobile ? 18.sp : (isTablet ? 19.sp : 20.sp),
+                  ? Assets.icons.hierarchyIconDepartment.path
+                  : Assets.icons.hierarchyIcon.path,
+              width: isMobile ? 18 : (isTablet ? 19 : 20),
+              height: isMobile ? 18 : (isTablet ? 19 : 20),
               // Pixel perfect: Purple color #9810FA from Figma
               color: const Color(0xFF9810FA),
             ),
@@ -543,11 +547,12 @@ class ComponentDetailDialog extends StatelessWidget {
         // Section header
         Row(
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: component.type == ComponentType.department
-                  ? 'assets/icons/management_icon_department.svg'
-                  : 'assets/icons/management_icon.svg',
-              size: isMobile ? 18.sp : (isTablet ? 19.sp : 20.sp),
+                  ? Assets.icons.managementIconDepartment.path
+                  : Assets.icons.managementIcon.path,
+              width: isMobile ? 18 : (isTablet ? 19 : 20),
+              height: isMobile ? 18 : (isTablet ? 19 : 20),
               // Pixel perfect: Green color #00A63E from Figma
               color: const Color(0xFF00A63E),
             ),
@@ -618,11 +623,12 @@ class ComponentDetailDialog extends StatelessWidget {
         // Section header
         Row(
           children: [
-            SvgIconWidget(
+            DigifyAsset(
               assetPath: component.type == ComponentType.department
-                  ? 'assets/icons/audit_trail_icon_department.svg'
-                  : 'assets/icons/audit_trail_icon.svg',
-              size: isMobile ? 18.sp : (isTablet ? 19.sp : 20.sp),
+                  ? Assets.icons.auditTrailIconDepartment.path
+                  : Assets.icons.auditTrailIcon.path,
+              width: isMobile ? 18 : (isTablet ? 19 : 20),
+              height: isMobile ? 18 : (isTablet ? 19 : 20),
               // Pixel perfect: Orange color #F54900 from Figma
               color: const Color(0xFFF54900),
             ),

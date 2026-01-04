@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/models/stat_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class StatsCardsWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
 
   const StatsCardsWidget({
     super.key,
@@ -63,13 +61,8 @@ class StatsCardsWidget extends ConsumerWidget {
       return Column(
         children: cards.map((card) {
           return Padding(
-            padding: EdgeInsetsDirectional.only(
-              bottom: card != cards.last ? 12.h : 0,
-            ),
-            child: StatCardWidget(
-              card: card,
-              isDark: isDark,
-            ),
+            padding: EdgeInsetsDirectional.only(bottom: card != cards.last ? 12.h : 0),
+            child: StatCardWidget(card: card, isDark: isDark),
           );
         }).toList(),
       );
@@ -80,10 +73,7 @@ class StatsCardsWidget extends ConsumerWidget {
         children: cards.map((card) {
           return SizedBox(
             width: (MediaQuery.of(context).size.width - 48.w - 12.w) / 2,
-            child: StatCardWidget(
-              card: card,
-              isDark: isDark,
-            ),
+            child: StatCardWidget(card: card, isDark: isDark),
           );
         }).toList(),
       );
@@ -92,13 +82,8 @@ class StatsCardsWidget extends ConsumerWidget {
         children: cards.map((card) {
           return Expanded(
             child: Padding(
-              padding: EdgeInsetsDirectional.only(
-                end: card != cards.last ? 16.w : 0,
-              ),
-              child: StatCardWidget(
-                card: card,
-                isDark: isDark,
-              ),
+              padding: EdgeInsetsDirectional.only(end: card != cards.last ? 16.w : 0),
+              child: StatCardWidget(card: card, isDark: isDark),
             ),
           );
         }).toList(),
@@ -112,11 +97,7 @@ class StatCardWidget extends StatelessWidget {
   final StatCard card;
   final bool isDark;
 
-  const StatCardWidget({
-    super.key,
-    required this.card,
-    required this.isDark,
-  });
+  const StatCardWidget({super.key, required this.card, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -134,16 +115,8 @@ class StatCardWidget extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: Row(
@@ -158,9 +131,7 @@ class StatCardWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : const Color(0xFF4A5565),
+                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                     height: 20 / 13.7,
                     letterSpacing: 0,
                   ),
@@ -179,9 +150,10 @@ class StatCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          SvgIconWidget(
+          DigifyAsset(
             assetPath: card.icon,
-            size: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+            width: isMobile ? 20 : (isTablet ? 22 : 24),
+            height: isMobile ? 20 : (isTablet ? 22 : 24),
             color: card.color,
           ),
         ],
@@ -189,4 +161,3 @@ class StatCardWidget extends StatelessWidget {
     );
   }
 }
-

@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/utils/duration_formatter.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart' show AppButton, AppButtonType;
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
@@ -12,14 +13,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UpdateShiftDialog extends ConsumerStatefulWidget {
   final ShiftOverview shift;
+  final int enterpriseId;
 
-  const UpdateShiftDialog({super.key, required this.shift});
+  const UpdateShiftDialog({super.key, required this.shift, required this.enterpriseId});
 
-  static Future<void> show(BuildContext context, ShiftOverview shift) {
+  static Future<void> show(BuildContext context, ShiftOverview shift, {required int enterpriseId}) {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => UpdateShiftDialog(shift: shift),
+      builder: (context) => UpdateShiftDialog(shift: shift, enterpriseId: enterpriseId),
     );
   }
 
@@ -41,8 +43,10 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
     _codeController = TextEditingController(text: widget.shift.code);
     _nameEnController = TextEditingController(text: widget.shift.name);
     _nameArController = TextEditingController(text: widget.shift.nameAr);
-    _durationController = TextEditingController(text: widget.shift.totalHours.toStringAsFixed(1));
-    _breakDurationController = TextEditingController(text: widget.shift.breakHours.toString());
+    _durationController = TextEditingController(text: DurationFormatter.formatHours(widget.shift.totalHours));
+    _breakDurationController = TextEditingController(
+      text: DurationFormatter.formatHours(widget.shift.breakHours.toDouble()),
+    );
   }
 
   @override
@@ -56,7 +60,8 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
   }
 
   Future<void> _handleUpdate() async {
-    final formNotifier = ref.read(updateShiftFormProvider(widget.shift).notifier);
+    final params = (shift: widget.shift, enterpriseId: widget.enterpriseId);
+    final formNotifier = ref.read(updateShiftFormProvider(params).notifier);
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -76,7 +81,7 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
       ToastService.success(context, 'Shift updated successfully', title: 'Success');
       Navigator.of(context).pop();
     } else {
-      final errorMessage = ref.read(updateShiftFormProvider(widget.shift)).errorMessage;
+      final errorMessage = ref.read(updateShiftFormProvider(params)).errorMessage;
       if (errorMessage != null) {
         ToastService.error(context, errorMessage, title: 'Error');
       }
@@ -85,7 +90,8 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final formState = ref.watch(updateShiftFormProvider(widget.shift));
+    final params = (shift: widget.shift, enterpriseId: widget.enterpriseId);
+    final formState = ref.watch(updateShiftFormProvider(params));
 
     return AppDialog(
       title: 'Update Shift',
@@ -98,6 +104,7 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
         nameArController: _nameArController,
         durationController: _durationController,
         breakDurationController: _breakDurationController,
+        enterpriseId: widget.enterpriseId,
       ),
       actions: [
         AppButton(

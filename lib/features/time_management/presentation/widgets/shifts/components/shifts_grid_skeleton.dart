@@ -10,22 +10,15 @@ class ShiftsGridSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final columns = ResponsiveHelper.getResponsiveColumns(
-      context,
-      mobile: 1,
-      tablet: 2,
-      web: 3,
-    );
-
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columns,
-        mainAxisSpacing: 24.h,
-        crossAxisSpacing: 24.w,
-        mainAxisExtent: 320.h,
+        crossAxisCount: ResponsiveHelper.getGridColumns(context),
+        mainAxisSpacing: 20.h,
+        crossAxisSpacing: 20.w,
+        mainAxisExtent: ResponsiveHelper.getShiftCardExtent(context),
       ),
       itemBuilder: (context, index) {
         return const ShiftCardSkeleton();

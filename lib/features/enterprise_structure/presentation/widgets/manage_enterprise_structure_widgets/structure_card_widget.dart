@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
@@ -30,12 +31,9 @@ class StructureCardWidget extends StatelessWidget {
   final List<StructureLevelItem>? structureLevels;
   final int? enterpriseId;
   final int? structureId;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
-  final AutoDisposeStateNotifierProvider<
-      SaveEnterpriseStructureNotifier,
-      SaveEnterpriseStructureState> saveEnterpriseStructureProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>
+  saveEnterpriseStructureProvider;
 
   const StructureCardWidget({
     super.key,
@@ -65,9 +63,7 @@ class StructureCardWidget extends StatelessWidget {
         ? const Color(0xFF00C950)
         : (isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB));
     final borderWidth = isActive ? 2.0 : 2.0;
-    final shadowColor = isActive
-        ? const Color(0xFFDCFCE7)
-        : Colors.black.withValues(alpha: 0.1);
+    final shadowColor = isActive ? const Color(0xFFDCFCE7) : Colors.black.withValues(alpha: 0.1);
 
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
@@ -84,16 +80,8 @@ class StructureCardWidget extends StatelessWidget {
         border: Border.all(color: borderColor, width: borderWidth),
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: shadowColor,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: shadowColor,
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: shadowColor, blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: shadowColor, blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: Column(
@@ -111,51 +99,40 @@ class StructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828),
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                               height: 28 / 17.4,
                               letterSpacing: 0,
                             ),
                           ),
                         ),
                         Container(
-                          padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: 10.w,
-                            vertical: 4.h,
-                          ),
+                          padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
                           decoration: BoxDecoration(
                             color: isActive
                                 ? const Color(0xFF00A63E)
-                                : (isDark
-                                      ? AppColors.cardBackgroundGreyDark
-                                      : const Color(0xFFF3F4F6)),
+                                : (isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6)),
                             borderRadius: BorderRadius.circular(9999.r),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               if (isActive) ...[
-                                SvgIconWidget(
-                                  assetPath:
-                                      'assets/icons/active_check_icon.svg',
-                                  size: 10.sp,
+                                DigifyAsset(
+                                  assetPath: Assets.icons.activeCheckIcon.path,
+                                  width: 10,
+                                  height: 10,
                                   color: Colors.white,
                                 ),
                                 SizedBox(width: 4.w),
                               ],
                               Text(
-                                isActive
-                                    ? localizations.active
-                                    : localizations.notUsed,
+                                isActive ? localizations.active : localizations.notUsed,
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.w400,
                                   color: isActive
                                       ? Colors.white
-                                      : (isDark
-                                            ? AppColors.textSecondaryDark
-                                            : const Color(0xFF4A5565)),
+                                      : (isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565)),
                                   height: 16 / 12,
                                   letterSpacing: 0,
                                 ),
@@ -171,9 +148,7 @@ class StructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : const Color(0xFF4A5565),
+                        color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                         height: 24 / 15.3,
                         letterSpacing: 0,
                       ),
@@ -230,9 +205,7 @@ class StructureCardWidget extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: isTablet ? 16.sp : 17.4.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF101828),
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                                     height: 28 / 17.4,
                                     letterSpacing: 0,
                                   ),
@@ -248,35 +221,29 @@ class StructureCardWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: isActive
                                       ? const Color(0xFF00A63E)
-                                      : (isDark
-                                            ? AppColors.cardBackgroundGreyDark
-                                            : const Color(0xFFF3F4F6)),
+                                      : (isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6)),
                                   borderRadius: BorderRadius.circular(9999.r),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (isActive) ...[
-                                      SvgIconWidget(
-                                        assetPath:
-                                            'assets/icons/active_check_icon.svg',
-                                        size: isTablet ? 11.sp : 12.sp,
+                                      DigifyAsset(
+                                        assetPath: Assets.icons.activeCheckIcon.path,
+                                        width: isTablet ? 11 : 12,
+                                        height: isTablet ? 11 : 12,
                                         color: Colors.white,
                                       ),
                                       SizedBox(width: 4.w),
                                     ],
                                     Text(
-                                      isActive
-                                          ? localizations.active
-                                          : localizations.notUsed,
+                                      isActive ? localizations.active : localizations.notUsed,
                                       style: TextStyle(
                                         fontSize: isTablet ? 11.sp : 12.sp,
                                         fontWeight: FontWeight.w400,
                                         color: isActive
                                             ? Colors.white
-                                            : (isDark
-                                                  ? AppColors.textSecondaryDark
-                                                  : const Color(0xFF4A5565)),
+                                            : (isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565)),
                                         height: 16 / 12,
                                         letterSpacing: 0,
                                       ),
@@ -292,9 +259,7 @@ class StructureCardWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 14.sp : 15.3.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : const Color(0xFF4A5565),
+                              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                               height: 24 / 15.3,
                               letterSpacing: 0,
                             ),
@@ -306,7 +271,6 @@ class StructureCardWidget extends StatelessWidget {
                               isDark: isDark,
                               levels: levels,
                               levelCount: levelCount,
-
                             ),
                           ),
                           Padding(
@@ -346,12 +310,7 @@ class StructureCardWidget extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(top: 17.h),
               decoration: BoxDecoration(
                 border: Border(
-                  top: BorderSide(
-                    color: isDark
-                        ? AppColors.successBorderDark
-                        : const Color(0xFFB9F8CF),
-                    width: 1,
-                  ),
+                  top: BorderSide(color: isDark ? AppColors.successBorderDark : const Color(0xFFB9F8CF), width: 1),
                 ),
               ),
               child: Row(
@@ -359,12 +318,11 @@ class StructureCardWidget extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsetsDirectional.only(top: 2.h),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/info_icon_green.svg',
-                      size: 16.sp,
-                      color: isDark
-                          ? AppColors.successTextDark
-                          : const Color(0xFF008236),
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.infoIconGreen.path,
+                      width: 16,
+                      height: 16,
+                      color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                     ),
                   ),
                   SizedBox(width: 8.w),
@@ -374,9 +332,7 @@ class StructureCardWidget extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.6.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.successTextDark
-                            : const Color(0xFF008236),
+                        color: isDark ? AppColors.successTextDark : const Color(0xFF008236),
                         height: 20 / 13.6,
                         letterSpacing: 0,
                       ),
@@ -391,4 +347,3 @@ class StructureCardWidget extends StatelessWidget {
     );
   }
 }
-

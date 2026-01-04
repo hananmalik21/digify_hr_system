@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 
-/// Universal CustomButton Widget
-/// This is the ONLY button widget that should be used across the entire app.
-/// It supports all button variants: primary, secondary, text, outlined, icon buttons, etc.
-///
-/// Usage Examples:
-/// - Primary: CustomButton(label: 'Save', onPressed: () {})
-/// - Secondary: CustomButton(label: 'Cancel', variant: ButtonVariant.secondary, onPressed: () {})
-/// - With Icon: CustomButton(label: 'Add', icon: Icons.add, onPressed: () {})
-/// - Icon Only: CustomButton(icon: Icons.edit, variant: ButtonVariant.icon, onPressed: () {})
-/// - Loading: CustomButton(label: 'Submit', isLoading: true, onPressed: () {})
-/// - Disabled: CustomButton(label: 'Submit', onPressed: null)
-/// - With SVG: CustomButton(label: 'Import', svgIcon: 'assets/icons/upload.svg', onPressed: () {})
 class CustomButton extends StatelessWidget {
   final String? label;
   final VoidCallback? onPressed;
@@ -223,21 +211,15 @@ class CustomButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: isLoading || isDisabled ? null : onPressed,
-        borderRadius: BorderRadius.circular(
-          borderRadius ?? dimensions.borderRadius,
-        ),
+        borderRadius: BorderRadius.circular(borderRadius ?? dimensions.borderRadius),
         child: Container(
           height: height ?? dimensions.height,
           width: width ?? (isExpanded ? double.infinity : null),
           padding: padding ?? dimensions.padding,
           decoration: BoxDecoration(
             color: colors.backgroundColor,
-            borderRadius: BorderRadius.circular(
-              borderRadius ?? dimensions.borderRadius,
-            ),
-            border: colors.borderColor != null
-                ? Border.all(color: colors.borderColor!)
-                : null,
+            borderRadius: BorderRadius.circular(borderRadius ?? dimensions.borderRadius),
+            border: colors.borderColor != null ? Border.all(color: colors.borderColor!) : null,
             boxShadow: showShadow && !isDisabled
                 ? [
                     BoxShadow(
@@ -256,10 +238,7 @@ class CustomButton extends StatelessWidget {
     return button;
   }
 
-  Widget _buildButtonContent(
-    _ButtonColors colors,
-    _ButtonDimensions dimensions,
-  ) {
+  Widget _buildButtonContent(_ButtonColors colors, _ButtonDimensions dimensions) {
     // Show loading indicator
     if (isLoading) {
       return Center(
@@ -280,8 +259,7 @@ class CustomButton extends StatelessWidget {
     List<Widget> children = [];
 
     // Add icon before label
-    if (iconPosition == IconPosition.left &&
-        (icon != null || svgIcon != null)) {
+    if (iconPosition == IconPosition.left && (icon != null || svgIcon != null)) {
       children.add(_buildIcon(colors, dimensions));
       if (label != null) children.add(SizedBox(width: 8.w));
     }
@@ -308,8 +286,7 @@ class CustomButton extends StatelessWidget {
     }
 
     // Add icon after label
-    if (iconPosition == IconPosition.right &&
-        (icon != null || svgIcon != null)) {
+    if (iconPosition == IconPosition.right && (icon != null || svgIcon != null)) {
       if (label != null) children.add(SizedBox(width: 8.w));
       children.add(_buildIcon(colors, dimensions));
     }
@@ -325,9 +302,10 @@ class CustomButton extends StatelessWidget {
     final effectiveIconSize = iconSize ?? dimensions.iconSize;
 
     if (svgIcon != null) {
-      return SvgIconWidget(
+      return DigifyAsset(
         assetPath: svgIcon!,
-        size: effectiveIconSize,
+        width: effectiveIconSize,
+        height: effectiveIconSize,
         color: colors.foregroundColor,
       );
     }
@@ -342,9 +320,7 @@ class CustomButton extends StatelessWidget {
   _ButtonColors _getButtonColors(bool isDark, bool isDisabled) {
     if (isDisabled) {
       return _ButtonColors(
-        backgroundColor: isDark
-            ? AppColors.grayBgDark.withValues(alpha: 0.3)
-            : AppColors.grayBg.withValues(alpha: 0.5),
+        backgroundColor: isDark ? AppColors.grayBgDark.withValues(alpha: 0.3) : AppColors.grayBg.withValues(alpha: 0.5),
         foregroundColor: isDark ? AppColors.textMutedDark : AppColors.textMuted,
         borderColor: variant == ButtonVariant.outlined
             ? (isDark ? AppColors.borderGreyDark : AppColors.borderGrey)
@@ -361,78 +337,50 @@ class CustomButton extends StatelessWidget {
                 ? Colors.transparent
                 : AppColors.primary),
         foregroundColor: foregroundColor ?? Colors.white,
-        borderColor:
-            borderColor ??
-            (variant == ButtonVariant.outlined
-                ? (foregroundColor ?? AppColors.primary)
-                : null),
+        borderColor: borderColor ?? (variant == ButtonVariant.outlined ? (foregroundColor ?? AppColors.primary) : null),
       );
     }
 
     // Variant-specific colors
     switch (variant) {
       case ButtonVariant.primary:
-        return _ButtonColors(
-          backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
-        );
+        return _ButtonColors(backgroundColor: AppColors.primary, foregroundColor: Colors.white);
 
       case ButtonVariant.secondary:
         return _ButtonColors(
-          backgroundColor: isDark
-              ? AppColors.cardBackgroundDark
-              : AppColors.cardBackgroundGrey,
-          foregroundColor: isDark
-              ? AppColors.textPrimaryDark
-              : AppColors.textSecondary,
+          backgroundColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackgroundGrey,
+          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textSecondary,
         );
 
       case ButtonVariant.outlined:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark
-              ? AppColors.textPrimaryDark
-              : AppColors.primary,
+          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.primary,
           borderColor: isDark ? AppColors.borderGreyDark : AppColors.primary,
         );
 
       case ButtonVariant.text:
         return _ButtonColors(
           backgroundColor: Colors.transparent,
-          foregroundColor: isDark
-              ? AppColors.textPrimaryDark
-              : AppColors.primary,
+          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.primary,
         );
 
       case ButtonVariant.danger:
-        return _ButtonColors(
-          backgroundColor: AppColors.redButton,
-          foregroundColor: Colors.white,
-        );
+        return _ButtonColors(backgroundColor: AppColors.redButton, foregroundColor: Colors.white);
 
       case ButtonVariant.success:
-        return _ButtonColors(
-          backgroundColor: AppColors.greenButton,
-          foregroundColor: Colors.white,
-        );
+        return _ButtonColors(backgroundColor: AppColors.greenButton, foregroundColor: Colors.white);
 
       case ButtonVariant.icon:
         return _ButtonColors(
-          backgroundColor: isDark
-              ? AppColors.cardBackgroundDark
-              : AppColors.cardBackground,
-          foregroundColor: isDark
-              ? AppColors.textPrimaryDark
-              : AppColors.textPrimary,
+          backgroundColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           borderColor: isDark ? AppColors.borderGreyDark : AppColors.borderGrey,
         );
 
       case ButtonVariant.gradient:
         // For gradient buttons, backgroundColor will be the gradient color
-        return _ButtonColors(
-          backgroundColor: backgroundColor ?? AppColors.primary,
-          foregroundColor: Colors.white,
-        );
+        return _ButtonColors(backgroundColor: backgroundColor ?? AppColors.primary, foregroundColor: Colors.white);
     }
   }
 
@@ -441,10 +389,7 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.small:
         return _ButtonDimensions(
           height: 32.h,
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 12.w,
-            vertical: 6.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 6.h),
           fontSize: 13.sp,
           iconSize: 16.sp,
           borderRadius: 8.r,
@@ -453,10 +398,7 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.medium:
         return _ButtonDimensions(
           height: 40.h,
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 16.w,
-            vertical: 8.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
           fontSize: 15.sp,
           iconSize: 20.sp,
           borderRadius: 10.r,
@@ -465,10 +407,7 @@ class CustomButton extends StatelessWidget {
       case ButtonSize.large:
         return _ButtonDimensions(
           height: 48.h,
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 20.w,
-            vertical: 12.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 12.h),
           fontSize: 16.sp,
           iconSize: 24.sp,
           borderRadius: 12.r,
@@ -478,16 +417,7 @@ class CustomButton extends StatelessWidget {
 }
 
 // Button variant types
-enum ButtonVariant {
-  primary,
-  secondary,
-  outlined,
-  text,
-  danger,
-  success,
-  icon,
-  gradient,
-}
+enum ButtonVariant { primary, secondary, outlined, text, danger, success, icon, gradient }
 
 // Button size types
 enum ButtonSize { small, medium, large }
@@ -501,11 +431,7 @@ class _ButtonColors {
   final Color foregroundColor;
   final Color? borderColor;
 
-  _ButtonColors({
-    required this.backgroundColor,
-    required this.foregroundColor,
-    this.borderColor,
-  });
+  _ButtonColors({required this.backgroundColor, required this.foregroundColor, this.borderColor});
 }
 
 class _ButtonDimensions {

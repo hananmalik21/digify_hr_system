@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/reporting_position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,11 +33,7 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildHeader(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,9 +47,7 @@ class ReportingStructureTab extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 15.8.sp,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : AppColors.textPrimary,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                   height: 24 / 15.8,
                 ),
               ),
@@ -89,27 +84,15 @@ class ReportingStructureTab extends ConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-
-        },
+        onTap: () {},
         borderRadius: BorderRadius.circular(10.r),
         child: Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 16.w,
-            vertical: 8.h,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
+          decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10.r)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/download_icon.svg',
-                size: 20.sp,
-                color: Colors.white,
-              ),
+              DigifyAsset(assetPath: Assets.icons.downloadIcon.path, width: 20, height: 20, color: Colors.white),
               SizedBox(width: 8.w),
               Text(
                 localizations.exportTable,
@@ -127,12 +110,7 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsCards(
-    BuildContext context,
-    AppLocalizations localizations,
-    ReportingStats stats,
-    bool isDark,
-  ) {
+  Widget _buildStatsCards(BuildContext context, AppLocalizations localizations, ReportingStats stats, bool isDark) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final cardWidth = (constraints.maxWidth - 48.w) / 4;
@@ -143,7 +121,7 @@ class ReportingStructureTab extends ConsumerWidget {
           _buildStatCard(
             label: localizations.totalPositions,
             value: '${stats.totalPositions}',
-            iconPath: 'assets/icons/business_unit_icon.svg',
+            iconPath: Assets.icons.businessUnitIcon.path,
             backgroundColor: const Color(0xFFEFF6FF),
             valueColor: AppColors.primary,
             isDark: isDark,
@@ -151,7 +129,7 @@ class ReportingStructureTab extends ConsumerWidget {
           _buildStatCard(
             label: localizations.topLevel,
             value: '${stats.topLevelCount}',
-            iconPath: 'assets/icons/hierarchy_icon_department.svg',
+            iconPath: Assets.icons.hierarchyIconDepartment.path,
             backgroundColor: const Color(0xFFFFF7ED),
             valueColor: const Color(0xFFF97316),
             isDark: isDark,
@@ -159,7 +137,7 @@ class ReportingStructureTab extends ConsumerWidget {
           _buildStatCard(
             label: localizations.withReports,
             value: '${stats.withReportsCount}',
-            iconPath: 'assets/icons/users_icon.svg',
+            iconPath: Assets.icons.usersIcon.path,
             backgroundColor: const Color(0xFFECFDF5),
             valueColor: const Color(0xFF10B981),
             isDark: isDark,
@@ -167,7 +145,7 @@ class ReportingStructureTab extends ConsumerWidget {
           _buildStatCard(
             label: localizations.departments,
             value: '${stats.departmentsCount}',
-            iconPath: 'assets/icons/departments_icon.svg',
+            iconPath: Assets.icons.departmentsIcon.path,
             backgroundColor: const Color(0xFFF3E8FF),
             valueColor: const Color(0xFF9333EA),
             isDark: isDark,
@@ -178,14 +156,7 @@ class ReportingStructureTab extends ConsumerWidget {
           return Wrap(
             spacing: 16.w,
             runSpacing: 16.h,
-            children: cards
-                .map(
-                  (card) => SizedBox(
-                    width: (constraints.maxWidth - 16.w) / 2,
-                    child: card,
-                  ),
-                )
-                .toList(),
+            children: cards.map((card) => SizedBox(width: (constraints.maxWidth - 16.w) / 2, child: card)).toList(),
           );
         }
 
@@ -221,11 +192,7 @@ class ReportingStructureTab extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -252,18 +219,14 @@ class ReportingStructureTab extends ConsumerWidget {
               SizedBox(height: 4.h),
               Text(
                 value,
-                style: TextStyle(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  height: 36 / 28,
-                ),
+                style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.w700, color: Colors.white, height: 36 / 28),
               ),
             ],
           ),
-          SvgIconWidget(
+          DigifyAsset(
             assetPath: iconPath,
-            size: 32.sp,
+            width: 32,
+            height: 32,
             color: Colors.white, // optional but recommended
           ),
         ],
@@ -282,11 +245,7 @@ class ReportingStructureTab extends ConsumerWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -303,9 +262,7 @@ class ReportingStructureTab extends ConsumerWidget {
           child: Column(
             children: [
               _buildTableHeader(localizations, isDark),
-              ...positions.map(
-                (position) => _buildTableRow(position, localizations, isDark),
-              ),
+              ...positions.map((position) => _buildTableRow(position, localizations, isDark)),
             ],
           ),
         ),
@@ -326,20 +283,12 @@ class ReportingStructureTab extends ConsumerWidget {
       child: Row(
         children: [
           _buildHeaderCell(localizations.positionCode, 180.w, isGradient: true),
-          _buildHeaderCell(
-            localizations.positionTitle,
-            200.w,
-            isGradient: true,
-          ),
+          _buildHeaderCell(localizations.positionTitle, 200.w, isGradient: true),
           _buildHeaderCell(localizations.department, 200.w, isGradient: true),
           _buildHeaderCell(localizations.jobLevel, 150.w, isGradient: true),
           _buildHeaderCell(localizations.gradeStep, 150.w, isGradient: true),
           _buildHeaderCell(localizations.reportsTo, 175.w, isGradient: true),
-          _buildHeaderCell(
-            localizations.directReports,
-            160.w,
-            isGradient: true,
-          ),
+          _buildHeaderCell(localizations.directReports, 160.w, isGradient: true),
           _buildHeaderCell(localizations.status, 100.w, isGradient: true),
           _buildHeaderCell(localizations.actions, 105.w, isGradient: true),
         ],
@@ -347,11 +296,7 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderCell(
-    String text,
-    double width, {
-    bool isGradient = false,
-  }) {
+  Widget _buildHeaderCell(String text, double width, {bool isGradient = false}) {
     return SizedBox(
       width: width,
       child: Padding(
@@ -368,16 +313,10 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildTableRow(
-    ReportingPosition position,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildTableRow(ReportingPosition position, AppLocalizations localizations, bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.cardBorder, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
       ),
       padding: EdgeInsets.symmetric(vertical: 16.h),
       child: Row(
@@ -385,35 +324,17 @@ class ReportingStructureTab extends ConsumerWidget {
           // Position Code
           _buildPositionCodeCell(position.positionCode, 180.w),
           // Position Title
-          _buildPositionTitleCell(
-            position.titleEnglish,
-            position.titleArabic,
-            200.w,
-          ),
+          _buildPositionTitleCell(position.titleEnglish, position.titleArabic, 200.w),
           // Department
-          _buildTagCell(
-            position.department,
-            const Color(0xFFEFF6FF),
-            const Color(0xFF2563EB),
-            200.w,
-          ),
+          _buildTagCell(position.department, const Color(0xFFEFF6FF), const Color(0xFF2563EB), 200.w),
           // Level
-          _buildTagCell(
-            position.level,
-            const Color(0xFFF3E8FF),
-            const Color(0xFF9333EA),
-            150.w,
-          ),
+          _buildTagCell(position.level, const Color(0xFFF3E8FF), const Color(0xFF9333EA), 150.w),
           // Grade/Step
           _buildGradeStepCell(position.gradeStep, 150.w),
           // Reports To
           _buildReportsToCell(position, 175.w),
           // Direct Reports
-          _buildDirectReportsCell(
-            position.directReportsCount,
-            localizations,
-            160.w,
-          ),
+          _buildDirectReportsCell(position.directReportsCount, localizations, 160.w),
           // Status
           _buildStatusCell(position.status, 100.w),
           // Actions
@@ -433,14 +354,12 @@ class ReportingStructureTab extends ConsumerWidget {
             Container(
               width: 32.w,
               height: 32.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3E8FF),
-                borderRadius: BorderRadius.circular(4.r),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFFF3E8FF), borderRadius: BorderRadius.circular(4.r)),
               child: Center(
-                child: SvgIconWidget(
-                  assetPath: 'assets/icons/financial_icon.svg',
-                  size: 16.sp,
+                child: DigifyAsset(
+                  assetPath: Assets.icons.financialIcon.path,
+                  width: 16,
+                  height: 16,
                   color: Color(0xff9810FA),
                 ),
               ),
@@ -496,12 +415,7 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildTagCell(
-    String text,
-    Color bgColor,
-    Color textColor,
-    double width,
-  ) {
+  Widget _buildTagCell(String text, Color bgColor, Color textColor, double width) {
     return SizedBox(
       width: width,
       child: Padding(
@@ -514,17 +428,15 @@ class ReportingStructureTab extends ConsumerWidget {
                 maxWidth: width - 32.w, // 👈 important for wrapping
               ),
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: const Color(0xffF3E8FF),
-                borderRadius: BorderRadius.circular(4.r),
-              ),
+              decoration: BoxDecoration(color: const Color(0xffF3E8FF), borderRadius: BorderRadius.circular(4.r)),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SvgIconWidget(
-                    size: 12,
-                    assetPath: "assets/icons/departments_icon.svg",
+                  DigifyAsset(
+                    width: 12,
+                    height: 12,
+                    assetPath: Assets.icons.departmentsIcon.path,
                     color: const Color(0xff6E11B0),
                   ),
                   SizedBox(width: 6.w),
@@ -551,7 +463,6 @@ class ReportingStructureTab extends ConsumerWidget {
         ),
       ),
     );
-
   }
 
   Widget _buildGradeStepCell(String gradeStep, double width) {
@@ -564,16 +475,14 @@ class ReportingStructureTab extends ConsumerWidget {
             maxWidth: width - 32.w, // 👈 critical
           ),
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFEF3C7),
-            borderRadius: BorderRadius.circular(4.r),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFFEF3C7), borderRadius: BorderRadius.circular(4.r)),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/levels_icon.svg',
-                size: 12.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.levelsIcon.path,
+                width: 12,
+                height: 12,
                 color: const Color(0xFFD97706),
               ),
               SizedBox(width: 6.w),
@@ -598,7 +507,6 @@ class ReportingStructureTab extends ConsumerWidget {
         ),
       ),
     );
-
   }
 
   Widget _buildReportsToCell(ReportingPosition position, double width) {
@@ -609,16 +517,16 @@ class ReportingStructureTab extends ConsumerWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3E8FF),
-              borderRadius: BorderRadius.circular(4.r),
-            ),
+            decoration: BoxDecoration(color: const Color(0xFFF3E8FF), borderRadius: BorderRadius.circular(4.r)),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-         SvgIconWidget(assetPath: "assets/icons/hierarchy_icon_department.svg",
-           size:12,color: const Color(0xFF6E11B0),
-         ),
+                DigifyAsset(
+                  assetPath: Assets.icons.hierarchyIconDepartment.path,
+                  width: 12,
+                  height: 12,
+                  color: const Color(0xFF6E11B0),
+                ),
                 SizedBox(width: 6.w),
                 Text(
                   'Top Level',
@@ -642,7 +550,7 @@ class ReportingStructureTab extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
           children: [
-            Icon(Icons.arrow_forward,size: 14,color: Color(0xff99A1AF),),
+            Icon(Icons.arrow_forward, size: 14, color: Color(0xff99A1AF)),
             // SvgIconWidget(
             //   assetPath: 'assets/icons/reports_to_arrow.svg',
             //   size: 14.sp,
@@ -680,11 +588,7 @@ class ReportingStructureTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildDirectReportsCell(
-    int count,
-    AppLocalizations localizations,
-    double width,
-  ) {
+  Widget _buildDirectReportsCell(int count, AppLocalizations localizations, double width) {
     if (count == 0) {
       return SizedBox(
         width: width,
@@ -695,18 +599,11 @@ class ReportingStructureTab extends ConsumerWidget {
               Container(
                 width: 24.w,
                 height: 24.h,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
+                decoration: BoxDecoration(color: const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(4.r)),
                 child: Center(
                   child: Text(
                     '0',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
-                    ),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
                   ),
                 ),
               ),
@@ -734,10 +631,7 @@ class ReportingStructureTab extends ConsumerWidget {
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFFDBEAFE),
-                borderRadius: BorderRadius.circular(4.r),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFFDBEAFE), borderRadius: BorderRadius.circular(4.r)),
               child: Text(
                 '$count',
                 style: TextStyle(
@@ -751,12 +645,7 @@ class ReportingStructureTab extends ConsumerWidget {
             SizedBox(width: 8.w),
             Text(
               localizations.viewReports,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.primary,
-                height: 16 / 12,
-              ),
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.primary, height: 16 / 12),
             ),
           ],
         ),
@@ -782,9 +671,7 @@ class ReportingStructureTab extends ConsumerWidget {
               Icon(
                 Icons.check_circle,
                 size: 12.sp,
-                color: isActive
-                    ? const Color(0xFF22C55E)
-                    : const Color(0xFFEF4444),
+                color: isActive ? const Color(0xFF22C55E) : const Color(0xFFEF4444),
               ),
               SizedBox(width: 4.w),
               Text(
@@ -792,9 +679,7 @@ class ReportingStructureTab extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: isActive
-                      ? const Color(0xFF22C55E)
-                      : const Color(0xFFEF4444),
+                  color: isActive ? const Color(0xFF22C55E) : const Color(0xFFEF4444),
                   height: 16 / 12,
                 ),
               ),
@@ -813,9 +698,9 @@ class ReportingStructureTab extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildActionIcon('assets/icons/blue_eye_icon.svg'),
+            _buildActionIcon(Assets.icons.blueEyeIcon.path),
             SizedBox(width: 8.w),
-            _buildActionIcon('assets/icons/edit_icon.svg'),
+            _buildActionIcon(Assets.icons.editIcon.path),
           ],
         ),
       ),
@@ -830,32 +715,20 @@ class ReportingStructureTab extends ConsumerWidget {
         borderRadius: BorderRadius.circular(4.r),
         child: Padding(
           padding: EdgeInsets.all(8.w),
-          child: SvgIconWidget(assetPath: assetPath, size: 16.sp),
+          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16),
         ),
       ),
     );
   }
 
-  Widget _buildPositionTypesLegend(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildPositionTypesLegend(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-          ),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 1), blurRadius: 2)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -878,7 +751,7 @@ class ReportingStructureTab extends ConsumerWidget {
 
               final cards = [
                 _buildPositionTypeCard(
-                  icon: 'assets/icons/total_units_icon.svg',
+                  icon: Assets.icons.totalUnitsIcon.path,
                   title: localizations.topLevelPositions,
                   subtitle: localizations.noReportingManager,
                   bgColor: const Color(0xFFFAF5FF),
@@ -886,22 +759,20 @@ class ReportingStructureTab extends ConsumerWidget {
                   iconColor: const Color(0xFF9810FA),
                 ),
                 _buildPositionTypeCard(
-                  icon: 'assets/icons/total_units_icon.svg',
+                  icon: Assets.icons.totalUnitsIcon.path,
                   title: localizations.managementPositions,
                   subtitle: localizations.hasDirectReports,
                   bgColor: const Color(0xFFEFF6FF),
                   iconBgColor: const Color(0xFFDBEAFE),
                   iconColor: const Color(0xFF155DFC),
-
                 ),
                 _buildPositionTypeCard(
-                  icon: 'assets/icons/total_units_icon.svg',
+                  icon: Assets.icons.totalUnitsIcon.path,
                   title: localizations.individualContributors,
                   subtitle: localizations.noDirectReports,
                   bgColor: const Color(0xFFF9FAFB),
                   iconBgColor: const Color(0xFFF3F4F6),
                   iconColor: const Color(0xFF4A5565),
-
                 ),
               ];
 
@@ -945,12 +816,9 @@ class ReportingStructureTab extends ConsumerWidget {
           Container(
             width: 40.w,
             height: 40.h,
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
+            decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(8.r)),
             child: Center(
-              child: SvgIconWidget(assetPath: icon, size: 20.sp,color: iconColor,),
+              child: DigifyAsset(assetPath: icon, width: 20, height: 20, color: iconColor),
             ),
           ),
           SizedBox(width: 12.w),

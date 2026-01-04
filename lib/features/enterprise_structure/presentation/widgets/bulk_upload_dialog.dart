@@ -7,7 +7,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class BulkUploadDialog extends StatelessWidget {
   const BulkUploadDialog({super.key});
@@ -93,9 +94,10 @@ class BulkUploadDialog extends StatelessWidget {
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
             padding: EdgeInsets.zero,
-            icon: SvgIconWidget(
-              assetPath: 'assets/icons/close_dialog_icon.svg',
-              size: 24.sp,
+            icon: DigifyAsset(
+              assetPath: Assets.icons.closeDialogIcon.path,
+              width: 24,
+              height: 24,
               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
             ),
           ),
@@ -191,7 +193,7 @@ class BulkUploadDialog extends StatelessWidget {
         SizedBox(height: 8.h),
         ElevatedButton.icon(
           onPressed: () {},
-          icon: SvgIconWidget(assetPath: 'assets/icons/download_icon.svg', size: 20.sp, color: Colors.white),
+          icon: DigifyAsset(assetPath: Assets.icons.downloadIcon.path, width: 20, height: 20, color: Colors.white),
           label: Text(
             localizations.bulkUploadDownloadTemplate,
             style: TextStyle(
@@ -242,10 +244,10 @@ class BulkUploadDialog extends StatelessWidget {
                 // mainAxisAlignment: MainAxisAlignment.start,
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/bulk_upload_icon_figma.svg',
-
-                    size: 48.sp,
+                  DigifyAsset(
+                    assetPath: Assets.icons.bulkUploadIconFigma.path,
+                    width: 48,
+                    height: 48,
                     color: const Color(0xFF6A7282),
                   ),
                   SizedBox(height: 20.h),
@@ -421,7 +423,7 @@ class BulkUploadDialog extends StatelessWidget {
 
     final uploadButton = ElevatedButton.icon(
       onPressed: () {},
-      icon: SvgIconWidget(assetPath: 'assets/icons/bulk_upload_icon_figma.svg', size: 20.sp, color: Colors.white),
+      icon: DigifyAsset(assetPath: Assets.icons.bulkUploadIconFigma.path, width: 20, height: 20, color: Colors.white),
       label: Text(
         localizations.bulkUploadUploadButton,
         style: TextStyle(

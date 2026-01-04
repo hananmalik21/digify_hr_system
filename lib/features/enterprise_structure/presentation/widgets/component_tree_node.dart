@@ -3,7 +3,8 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/action_button_group.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,51 +18,35 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
   final Function(ComponentValue component)? onEdit;
   final Function(ComponentValue component)? onDelete;
 
-  const ComponentTreeNodeWidget({
-    super.key,
-    required this.node,
-    this.onView,
-    this.onEdit,
-    this.onDelete,
-  });
+  const ComponentTreeNodeWidget({super.key, required this.node, this.onView, this.onEdit, this.onDelete});
 
   String _getComponentTypeIcon(ComponentType type) {
     switch (type) {
       case ComponentType.company:
-        return 'assets/icons/company_tree_icon.svg';
+        return Assets.icons.companyTreeIcon.path;
       case ComponentType.division:
-        return 'assets/icons/division_tree_icon.svg';
+        return Assets.icons.divisionTreeIcon.path;
       case ComponentType.businessUnit:
-        return 'assets/icons/business_unit_tree_icon.svg';
+        return Assets.icons.businessUnitTreeIcon.path;
       case ComponentType.department:
-        return 'assets/icons/department_tree_icon.svg';
+        return Assets.icons.departmentTreeIcon.path;
       case ComponentType.section:
-        return 'assets/icons/section_tree_icon.svg';
+        return Assets.icons.sectionTreeIcon.path;
     }
   }
 
   Color _getComponentTypeIconBg(ComponentType type, bool isDark) {
     switch (type) {
       case ComponentType.company:
-        return isDark
-            ? AppColors.purpleBgDark
-            : const Color(0xFFF3E8FF); // #f3e8ff
+        return isDark ? AppColors.purpleBgDark : const Color(0xFFF3E8FF); // #f3e8ff
       case ComponentType.division:
-        return isDark
-            ? AppColors.infoBgDark
-            : const Color(0xFFDBEAFE); // #dbeafe
+        return isDark ? AppColors.infoBgDark : const Color(0xFFDBEAFE); // #dbeafe
       case ComponentType.businessUnit:
-        return isDark
-            ? AppColors.successBgDark
-            : const Color(0xFFDCFCE7); // #dcfce7
+        return isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7); // #dcfce7
       case ComponentType.department:
-        return isDark
-            ? AppColors.warningBgDark
-            : const Color(0xFFFFEDD4); // #ffedd4
+        return isDark ? AppColors.warningBgDark : const Color(0xFFFFEDD4); // #ffedd4
       case ComponentType.section:
-        return isDark
-            ? AppColors.grayBgDark
-            : const Color(0xFFF3F4F6); // #f3f4f6
+        return isDark ? AppColors.grayBgDark : const Color(0xFFF3F4F6); // #f3f4f6
     }
   }
 
@@ -97,18 +82,12 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                           child: hasChildren
                               ? GestureDetector(
                                   onTap: () {
-                                    ref
-                                        .read(componentValuesProvider.notifier)
-                                        .toggleNodeExpansion(node.component.id);
+                                    ref.read(componentValuesProvider.notifier).toggleNodeExpansion(node.component.id);
                                   },
                                   child: Icon(
-                                    isExpanded
-                                        ? Icons.keyboard_arrow_down
-                                        : Icons.keyboard_arrow_right,
+                                    isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
                                     size: 18.sp,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : AppColors.textSecondary,
+                                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                                   ),
                                 )
                               : SizedBox(width: 20.w),
@@ -123,12 +102,11 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Center(
-                            child: SvgIconWidget(
+                            child: DigifyAsset(
                               assetPath: _getComponentTypeIcon(node.component.type),
-                              size: 14.sp,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828),
+                              width: 14,
+                              height: 14,
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                             ),
                           ),
                         ),
@@ -140,9 +118,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF101828),
+                              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                               height: 24 / 15.4,
                               letterSpacing: 0,
                             ),
@@ -166,9 +142,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: isDark
-                                      ? AppColors.textSecondaryDark
-                                      : const Color(0xFF6A7282),
+                                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
                                   height: 20 / 14,
                                   letterSpacing: 0,
                                 ),
@@ -176,14 +150,9 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                               ),
                               // Code badge
                               Container(
-                                padding: EdgeInsetsDirectional.symmetric(
-                                  horizontal: 6.w,
-                                  vertical: 2.h,
-                                ),
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? AppColors.cardBackgroundGreyDark
-                                      : const Color(0xFFF3F4F6),
+                                  color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
@@ -191,9 +160,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : const Color(0xFF4A5565),
+                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                                     height: 16 / 12,
                                     letterSpacing: 0,
                                   ),
@@ -201,34 +168,21 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                               ),
                               // Status badge
                               Container(
-                                padding: EdgeInsetsDirectional.symmetric(
-                                  horizontal: 6.w,
-                                  vertical: 2.h,
-                                ),
+                                padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
                                 decoration: BoxDecoration(
                                   color: node.component.status
-                                      ? (isDark
-                                          ? AppColors.successBgDark
-                                          : const Color(0xFFDCFCE7))
-                                      : (isDark
-                                          ? AppColors.grayBgDark
-                                          : AppColors.grayBg),
+                                      ? (isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7))
+                                      : (isDark ? AppColors.grayBgDark : AppColors.grayBg),
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
-                                  node.component.status
-                                      ? localizations.active
-                                      : localizations.inactive,
+                                  node.component.status ? localizations.active : localizations.inactive,
                                   style: TextStyle(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w400,
                                     color: node.component.status
-                                        ? (isDark
-                                            ? AppColors.successTextDark
-                                            : const Color(0xFF008236))
-                                        : (isDark
-                                            ? AppColors.grayTextDark
-                                            : AppColors.grayText),
+                                        ? (isDark ? AppColors.successTextDark : const Color(0xFF008236))
+                                        : (isDark ? AppColors.grayTextDark : AppColors.grayText),
                                     height: 16 / 11.8,
                                     letterSpacing: 0,
                                   ),
@@ -248,9 +202,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : const Color(0xFF4A5565),
+                          color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                           height: 20 / 13.5,
                           letterSpacing: 0,
                         ),
@@ -263,15 +215,9 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                     Padding(
                       padding: EdgeInsetsDirectional.only(start: 26.w),
                       child: ActionButtonGroup(
-                        onView: onView != null
-                            ? () => onView!(node.component)
-                            : null,
-                        onEdit: onEdit != null
-                            ? () => onEdit!(node.component)
-                            : null,
-                        onDelete: onDelete != null
-                            ? () => onDelete!(node.component)
-                            : null,
+                        onView: onView != null ? () => onView!(node.component) : null,
+                        onEdit: onEdit != null ? () => onEdit!(node.component) : null,
+                        onDelete: onDelete != null ? () => onDelete!(node.component) : null,
                         viewTooltip: localizations.view,
                         editTooltip: localizations.edit,
                         deleteTooltip: localizations.delete,
@@ -288,18 +234,12 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                       child: hasChildren
                           ? GestureDetector(
                               onTap: () {
-                                ref
-                                    .read(componentValuesProvider.notifier)
-                                    .toggleNodeExpansion(node.component.id);
+                                ref.read(componentValuesProvider.notifier).toggleNodeExpansion(node.component.id);
                               },
                               child: Icon(
-                                isExpanded
-                                    ? Icons.keyboard_arrow_down
-                                    : Icons.keyboard_arrow_right,
+                                isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
                                 size: isTablet ? 18.sp : 16.sp,
-                                color: isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondary,
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                               ),
                             )
                           : SizedBox(width: isTablet ? 22.w : 24.w),
@@ -314,12 +254,11 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Center(
-                        child: SvgIconWidget(
+                        child: DigifyAsset(
                           assetPath: _getComponentTypeIcon(node.component.type),
-                          size: isTablet ? 15.sp : 16.sp,
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : const Color(0xFF101828),
+                          width: isTablet ? 15 : 16,
+                          height: isTablet ? 15 : 16,
+                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                         ),
                       ),
                     ),
@@ -338,9 +277,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: isTablet ? 14.5.sp : 15.4.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF101828),
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                                     height: 24 / 15.4,
                                     letterSpacing: 0,
                                   ),
@@ -355,9 +292,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: isTablet ? 13.sp : 14.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : const Color(0xFF6A7282),
+                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
                                     height: 20 / 14,
                                     letterSpacing: 0,
                                   ),
@@ -373,9 +308,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                   vertical: 2.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? AppColors.cardBackgroundGreyDark
-                                      : const Color(0xFFF3F4F6),
+                                  color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6),
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
@@ -383,9 +316,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: isTablet ? 11.sp : 12.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : const Color(0xFF4A5565),
+                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                                     height: 16 / 12,
                                     letterSpacing: 0,
                                   ),
@@ -400,28 +331,18 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   color: node.component.status
-                                      ? (isDark
-                                          ? AppColors.successBgDark
-                                          : const Color(0xFFDCFCE7))
-                                      : (isDark
-                                          ? AppColors.grayBgDark
-                                          : AppColors.grayBg),
+                                      ? (isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7))
+                                      : (isDark ? AppColors.grayBgDark : AppColors.grayBg),
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
-                                  node.component.status
-                                      ? localizations.active
-                                      : localizations.inactive,
+                                  node.component.status ? localizations.active : localizations.inactive,
                                   style: TextStyle(
                                     fontSize: isTablet ? 11.sp : 11.8.sp,
                                     fontWeight: FontWeight.w400,
                                     color: node.component.status
-                                        ? (isDark
-                                            ? AppColors.successTextDark
-                                            : const Color(0xFF008236))
-                                        : (isDark
-                                            ? AppColors.grayTextDark
-                                            : AppColors.grayText),
+                                        ? (isDark ? AppColors.successTextDark : const Color(0xFF008236))
+                                        : (isDark ? AppColors.grayTextDark : AppColors.grayText),
                                     height: 16 / 11.8,
                                     letterSpacing: 0,
                                   ),
@@ -436,9 +357,7 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: isTablet ? 12.5.sp : 13.5.sp,
                               fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : const Color(0xFF4A5565),
+                              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                               height: 20 / 13.5,
                               letterSpacing: 0,
                             ),
@@ -450,15 +369,9 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
                     SizedBox(width: isTablet ? 6.w : 8.w),
                     // Action buttons
                     ActionButtonGroup(
-                      onView: onView != null
-                          ? () => onView!(node.component)
-                          : null,
-                      onEdit: onEdit != null
-                          ? () => onEdit!(node.component)
-                          : null,
-                      onDelete: onDelete != null
-                          ? () => onDelete!(node.component)
-                          : null,
+                      onView: onView != null ? () => onView!(node.component) : null,
+                      onEdit: onEdit != null ? () => onEdit!(node.component) : null,
+                      onDelete: onDelete != null ? () => onDelete!(node.component) : null,
                       viewTooltip: localizations.view,
                       editTooltip: localizations.edit,
                       deleteTooltip: localizations.delete,
@@ -469,18 +382,11 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
         // Children nodes
         if (hasChildren && isExpanded)
           Padding(
-            padding: EdgeInsetsDirectional.only(
-              start: isMobile ? 20.w : (isTablet ? 22.w : 24.w),
-            ),
+            padding: EdgeInsetsDirectional.only(start: isMobile ? 20.w : (isTablet ? 22.w : 24.w)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: node.children.map((child) {
-                return ComponentTreeNodeWidget(
-                  node: child,
-                  onView: onView,
-                  onEdit: onEdit,
-                  onDelete: onDelete,
-                );
+                return ComponentTreeNodeWidget(node: child, onView: onView, onEdit: onEdit, onDelete: onDelete);
               }).toList(),
             ),
           ),
@@ -488,4 +394,3 @@ class ComponentTreeNodeWidget extends ConsumerWidget {
     );
   }
 }
-

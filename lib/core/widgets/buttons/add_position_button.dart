@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,21 +38,15 @@ class AddButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(10.r),
         child: Container(
-          padding: padding ??
-              EdgeInsetsDirectional.symmetric(
-                horizontal: 16.w,
-                vertical: 8.h,
-              ),
-          decoration: BoxDecoration(
-            color: effectiveBackgroundColor,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
+          padding: padding ?? EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
+          decoration: BoxDecoration(color: effectiveBackgroundColor, borderRadius: BorderRadius.circular(10.r)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIconWidget(
-                assetPath: 'assets/icons/add_division_icon.svg',
-                size: iconSize ?? 20.sp,
+              DigifyAsset(
+                assetPath: Assets.icons.addDivisionIcon.path,
+                width: iconSize ?? 20,
+                height: iconSize ?? 20,
                 color: effectiveTextColor,
               ),
               SizedBox(width: 8.w),
@@ -72,6 +67,3 @@ class AddButton extends StatelessWidget {
     );
   }
 }
-
-
-

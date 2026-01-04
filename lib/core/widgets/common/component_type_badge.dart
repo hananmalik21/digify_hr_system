@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,12 +11,7 @@ class ComponentTypeBadge extends StatelessWidget {
   final String? customLabel;
   final String? iconPath;
 
-  const ComponentTypeBadge({
-    super.key,
-    required this.type,
-    this.customLabel,
-    this.iconPath,
-  });
+  const ComponentTypeBadge({super.key, required this.type, this.customLabel, this.iconPath});
 
   String _getLabel() {
     if (customLabel != null) return customLabel!;
@@ -84,27 +79,17 @@ class ComponentTypeBadge extends StatelessWidget {
     final isDark = context.isDark;
 
     return Container(
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 10.w,
-        vertical: 4.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: _getBackgroundColor(isDark),
-        border: Border.all(
-          color: _getBorderColor(isDark),
-          width: 1,
-        ),
+        border: Border.all(color: _getBorderColor(isDark), width: 1),
         borderRadius: BorderRadius.circular(6.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (iconPath != null) ...[
-            SvgIconWidget(
-              assetPath: iconPath!,
-              size: 14.sp,
-              color: _getTextColor(isDark),
-            ),
+            DigifyAsset(assetPath: iconPath!, width: 14, height: 14, color: _getTextColor(isDark)),
             SizedBox(width: 6.w),
           ],
           Text(
@@ -122,4 +107,3 @@ class ComponentTypeBadge extends StatelessWidget {
     );
   }
 }
-

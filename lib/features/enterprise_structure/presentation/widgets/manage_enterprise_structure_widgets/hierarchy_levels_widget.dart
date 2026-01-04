@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,12 +22,12 @@ class HierarchyLevelsWidget extends StatelessWidget {
   });
 
   /// Use these 5 icons cyclically for any number of levels.
-  static const List<String> _iconPool = [
-    'assets/icons/company_icon_purple.svg',
-    'assets/icons/division_icon_purple.svg',
-    'assets/icons/business_unit_icon.svg',
-    'assets/icons/department_icon.svg',
-    'assets/icons/section_icon_purple.svg',
+  static List<String> get _iconPool => [
+    Assets.icons.companyIconPurple.path,
+    Assets.icons.divisionIconPurple.path,
+    Assets.icons.businessUnitIcon.path,
+    Assets.icons.departmentIcon.path,
+    Assets.icons.sectionIconPurple.path,
   ];
 
   String _resolveIconByIndex(int index) {
@@ -48,9 +49,7 @@ class HierarchyLevelsWidget extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
             fontWeight: FontWeight.w400,
-            color: isDark
-                ? AppColors.textTertiaryDark
-                : const Color(0xFF6A7282),
+            color: isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
             height: 20 / 13.7,
             letterSpacing: 0,
           ),
@@ -68,35 +67,26 @@ class HierarchyLevelsWidget extends StatelessWidget {
                   vertical: isMobile ? 4.h : 5.h,
                 ),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.purpleBgDark
-                      : const Color(0xFFFAF5FF),
-                  border: Border.all(
-                    color: isDark
-                        ? AppColors.purpleBorderDark
-                        : const Color(0xFFE9D4FF),
-                    width: 1,
-                  ),
+                  color: isDark ? AppColors.purpleBgDark : const Color(0xFFFAF5FF),
+                  border: Border.all(color: isDark ? AppColors.purpleBorderDark : const Color(0xFFE9D4FF), width: 1),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SvgIconWidget(
+                    DigifyAsset(
                       assetPath: _resolveIconByIndex(index),
-                      size: isMobile ? 12.sp : (isTablet ? 13.sp : 14.sp),
+                      width: isMobile ? 12 : (isTablet ? 13 : 14),
+                      height: isMobile ? 12 : (isTablet ? 13 : 14),
                       color: Color(0xff9810FA),
                     ),
                     SizedBox(width: isMobile ? 3.w : 4.w),
                     Text(
                       level,
                       style: TextStyle(
-                        fontSize:
-                        isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
+                        fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                         fontWeight: FontWeight.w500,
-                        color: isDark
-                            ? AppColors.purpleTextDark
-                            : const Color(0xFF59168B),
+                        color: isDark ? AppColors.purpleTextDark : const Color(0xFF59168B),
                         height: 16 / 12,
                         letterSpacing: 0,
                       ),
@@ -111,9 +101,7 @@ class HierarchyLevelsWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPlaceholderDark
-                        : const Color(0xFF99A1AF),
+                    color: isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF),
                     height: 24 / 16,
                     letterSpacing: 0,
                   ),
@@ -129,9 +117,7 @@ class HierarchyLevelsWidget extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
             fontWeight: FontWeight.w400,
-            color: isDark
-                ? AppColors.textTertiaryDark
-                : const Color(0xFF6A7282),
+            color: isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
             height: 16 / 12,
             letterSpacing: 0,
           ),

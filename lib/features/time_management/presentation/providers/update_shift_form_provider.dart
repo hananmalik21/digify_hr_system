@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/utils/duration_formatter.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart' hide TimeOfDay;
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
@@ -138,14 +139,6 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
       return type.displayName;
     }
 
-    String formatDuration(double value) {
-      if (value.truncateToDouble() == value) {
-        return value.truncate().toString();
-      } else {
-        return value.toStringAsFixed(1);
-      }
-    }
-
     return UpdateShiftFormState(
       shiftId: shift.id,
       code: shift.code,
@@ -154,8 +147,8 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
       shiftType: getShiftTypeDisplayName(shift.shiftType),
       startTime: parseTime(shift.startTime),
       endTime: parseTime(shift.endTime),
-      duration: formatDuration(shift.totalHours),
-      breakDuration: shift.breakHours.toString(),
+      duration: DurationFormatter.formatHours(shift.totalHours),
+      breakDuration: DurationFormatter.formatHours(shift.breakHours.toDouble()),
       selectedColor: parseColor(shift.colorHex),
       status: getStatusDisplayName(shift.status),
     );
@@ -293,7 +286,7 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
         'shift_type': state.shiftType ?? 'REGULAR',
         'start_minutes': _timeOfDayToMinutes(state.startTime!),
         'end_minutes': _timeOfDayToMinutes(state.endTime!),
-        'duration_hours': durationValue.round(),
+        'duration_hours': durationValue,
         'break_hours': breakDurationValue.round(),
         'color_hex': _colorToHex(state.selectedColor),
         'status': state.status.toUpperCase(),
@@ -318,11 +311,11 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
   }
 }
 
-/// Provider for update shift form
+/// Family provider for update shift form that accepts shift and enterprise ID
 final updateShiftFormProvider = StateNotifierProvider.autoDispose
-    .family<UpdateShiftFormNotifier, UpdateShiftFormState, ShiftOverview>((ref, initialShift) {
+    .family<UpdateShiftFormNotifier, UpdateShiftFormState, ({ShiftOverview shift, int enterpriseId})>((ref, params) {
       return UpdateShiftFormNotifier(
-        shiftsNotifier: ref.read(shiftsNotifierProvider.notifier),
-        initialShift: initialShift,
+        shiftsNotifier: ref.read(shiftsNotifierProvider(params.enterpriseId).notifier),
+        initialShift: params.shift,
       );
     });

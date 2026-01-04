@@ -21,6 +21,7 @@ class UpdateShiftFormContent extends ConsumerWidget {
   final TextEditingController nameArController;
   final TextEditingController durationController;
   final TextEditingController breakDurationController;
+  final int enterpriseId;
 
   const UpdateShiftFormContent({
     super.key,
@@ -31,11 +32,13 @@ class UpdateShiftFormContent extends ConsumerWidget {
     required this.nameArController,
     required this.durationController,
     required this.breakDurationController,
+    required this.enterpriseId,
   });
 
   Future<void> _selectTime(BuildContext context, WidgetRef ref, bool isStartTime) async {
-    final formNotifier = ref.read(updateShiftFormProvider(shift).notifier);
-    final formState = ref.read(updateShiftFormProvider(shift));
+    final params = (shift: shift, enterpriseId: enterpriseId);
+    final formNotifier = ref.read(updateShiftFormProvider(params).notifier);
+    final formState = ref.read(updateShiftFormProvider(params));
     final currentTime = isStartTime ? formState.startTime : formState.endTime;
 
     final TimeOfDay? picked = await DigifyTimePickerDialog.show(
@@ -56,8 +59,9 @@ class UpdateShiftFormContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(updateShiftFormProvider(shift));
-    final formNotifier = ref.read(updateShiftFormProvider(shift).notifier);
+    final params = (shift: shift, enterpriseId: enterpriseId);
+    final formState = ref.watch(updateShiftFormProvider(params));
+    final formNotifier = ref.read(updateShiftFormProvider(params).notifier);
     final isDark = context.isDark;
 
     return Form(

@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,45 +50,40 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSection(
-                        context,
-                        localizations.basicInformation,
-                        'assets/icons/business_unit_basic_icon.svg',
-                        [
-                          _buildInfoRow(localizations.unitCode, businessUnit.code),
-                          _buildStatusRow(localizations.status, businessUnit.isActive, isDark),
-                          _buildInfoRow(localizations.division, businessUnit.divisionName),
-                          _buildInfoRow(localizations.company, businessUnit.companyName),
-                          _buildInfoRow(localizations.establishedDate, businessUnit.establishedDate ?? 'N/A'),
-                          _buildInfoRow(localizations.businessFocus, businessUnit.focusArea),
-                        ],
-                      ),
+                      _buildSection(context, localizations.basicInformation, Assets.icons.businessUnitBasicIcon.path, [
+                        _buildInfoRow(localizations.unitCode, businessUnit.code),
+                        _buildStatusRow(localizations.status, businessUnit.isActive, isDark),
+                        _buildInfoRow(localizations.division, businessUnit.divisionName),
+                        _buildInfoRow(localizations.company, businessUnit.companyName),
+                        _buildInfoRow(localizations.establishedDate, businessUnit.establishedDate ?? 'N/A'),
+                        _buildInfoRow(localizations.businessFocus, businessUnit.focusArea),
+                      ]),
                       SizedBox(height: 24.h),
-                      _buildSection(context, localizations.leadership, 'assets/icons/leadership_icon.svg', [
+                      _buildSection(context, localizations.leadership, Assets.icons.leadershipIcon.path, [
                         _buildInfoRow('${localizations.headOfUnit}:', businessUnit.headName),
                         SizedBox(height: 8.h),
                         _buildIconRow(
                           context,
                           localizations.headEmail,
                           businessUnit.headEmail ?? localizations.notSpecified,
-                          'assets/icons/head_email_icon.svg',
+                          Assets.icons.headEmailIcon.path,
                         ),
                         SizedBox(height: 8.h),
                         _buildIconRow(
                           context,
                           localizations.headPhone,
                           businessUnit.headPhone ?? localizations.notSpecified,
-                          'assets/icons/head_phone_icon.svg',
+                          Assets.icons.headPhoneIcon.path,
                         ),
                       ]),
                       SizedBox(height: 24.h),
-                      _buildSection(context, localizations.organizationalMetrics, 'assets/icons/metrics_icon.svg', [
+                      _buildSection(context, localizations.organizationalMetrics, Assets.icons.metricsIcon.path, [
                         _buildInfoRow(localizations.totalEmployees, '${businessUnit.employees}'),
                         _buildInfoRow(localizations.totalDepartments, '${businessUnit.departments}'),
                         _buildInfoRow(localizations.annualBudget, '${businessUnit.budget} KWD'.replaceAll('M M', 'M')),
                       ]),
                       SizedBox(height: 24.h),
-                      _buildSection(context, localizations.description, 'assets/icons/description_icon.svg', [
+                      _buildSection(context, localizations.description, Assets.icons.descriptionIcon.path, [
                         _buildLongText(businessUnit.description ?? localizations.hintBusinessUnitDescription),
                       ]),
                     ],
@@ -118,7 +114,12 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              SvgIconWidget(assetPath: 'assets/icons/business_unit_details_icon.svg', size: 20.sp, color: Colors.white),
+              DigifyAsset(
+                assetPath: Assets.icons.businessUnitDetailsIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
               SizedBox(width: 8.w),
               Text(
                 localizations.businessUnitDetails,
@@ -139,7 +140,12 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(4.r),
               ),
-              child: SvgIconWidget(assetPath: 'assets/icons/close_dialog_icon.svg', size: 20.sp, color: Colors.white),
+              child: DigifyAsset(
+                assetPath: Assets.icons.closeDialogIcon.path,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -154,7 +160,7 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
       children: [
         Row(
           children: [
-            SvgIconWidget(assetPath: iconPath, size: 20.sp, color: context.themeTextPrimary),
+            DigifyAsset(assetPath: iconPath, width: 20, height: 20, color: context.themeTextPrimary),
             SizedBox(width: 8.w),
             Text(
               title,
@@ -253,7 +259,7 @@ class BusinessUnitDetailsDialog extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgIconWidget(assetPath: iconPath, size: 16.sp, color: context.themeTextSecondary),
+        DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: context.themeTextSecondary),
         SizedBox(width: 8.w),
         Expanded(
           child: Column(

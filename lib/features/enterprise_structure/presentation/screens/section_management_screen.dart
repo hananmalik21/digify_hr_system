@@ -6,7 +6,8 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
-import 'package:digify_hr_system/core/widgets/assets/svg_icon_widget.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/section.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/section_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_section_dialog.dart';
@@ -23,27 +24,17 @@ class SectionManagementScreen extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final sections = ref.watch(filteredSectionsProvider);
     final allSections = ref.watch(sectionListProvider);
-    final totalEmployees = allSections.fold<int>(
-      0,
-      (prev, section) => prev + section.employees,
-    );
-    final activeSections =
-        allSections.where((section) => section.isActive).length;
-    final totalBudget = allSections.fold<double>(
-      0,
-      (prev, section) {
-        final sanitized = section.budget
-            .replaceAll('M', '')
-            .replaceAll('K', '')
-            .replaceAll(' ', '');
-        final parsed = double.tryParse(sanitized) ?? 0;
-        // Convert K to M for calculation (divide by 1000)
-        if (section.budget.contains('K')) {
-          return prev + (parsed / 1000);
-        }
-        return prev + parsed;
-      },
-    );
+    final totalEmployees = allSections.fold<int>(0, (prev, section) => prev + section.employees);
+    final activeSections = allSections.where((section) => section.isActive).length;
+    final totalBudget = allSections.fold<double>(0, (prev, section) {
+      final sanitized = section.budget.replaceAll('M', '').replaceAll('K', '').replaceAll(' ', '');
+      final parsed = double.tryParse(sanitized) ?? 0;
+      // Convert K to M for calculation (divide by 1000)
+      if (section.budget.contains('K')) {
+        return prev + (parsed / 1000);
+      }
+      return prev + parsed;
+    });
     final isDark = context.isDark;
 
     final stats = [
@@ -83,24 +74,9 @@ class SectionManagementScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           padding: ResponsiveHelper.getResponsivePadding(
             context,
-            mobile: EdgeInsetsDirectional.only(
-              top: 16.h,
-              start: 16.w,
-              end: 16.w,
-              bottom: 24.h,
-            ),
-            tablet: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
-            web: EdgeInsetsDirectional.only(
-              top: 24.h,
-              start: 24.w,
-              end: 24.w,
-              bottom: 24.h,
-            ),
+            mobile: EdgeInsetsDirectional.only(top: 16.h, start: 16.w, end: 16.w, bottom: 24.h),
+            tablet: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
+            web: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,12 +87,7 @@ class SectionManagementScreen extends ConsumerWidget {
               SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
               _buildSearchBar(context, ref, localizations),
               SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-              _buildSectionList(
-                context,
-                sections,
-                localizations,
-                isDark: isDark,
-              ),
+              _buildSectionList(context, sections, localizations, isDark: isDark),
             ],
           ),
         ),
@@ -132,16 +103,9 @@ class SectionManagementScreen extends ConsumerWidget {
         Container(
           width: 48.r,
           height: 48.r,
-          decoration: BoxDecoration(
-            color: const Color(0xFF00BBA7),
-            borderRadius: BorderRadius.circular(14.r),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFF00BBA7), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
-            child: SvgIconWidget(
-              assetPath: 'assets/icons/section_icon.svg',
-              size: 24.sp,
-              color: Colors.white,
-            ),
+            child: DigifyAsset(assetPath: Assets.icons.sectionIcon.path, width: 24, height: 24, color: Colors.white),
           ),
         ),
         SizedBox(width: 12.w),
@@ -154,8 +118,7 @@ class SectionManagementScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.titleLarge?.color ??
-                      context.themeTextPrimary,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? context.themeTextPrimary,
                   height: 36 / 22.1,
                 ),
               ),
@@ -183,23 +146,13 @@ class SectionManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsSection(
-    BuildContext context,
-    List<StatsCardData> stats,
-  ) {
+  Widget _buildStatsSection(BuildContext context, List<StatsCardData> stats) {
     final gap = 16.w;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 4,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 4);
         final totalSpacing = gap * (columns - 1);
-        final width = constraints.maxWidth.isFinite
-            ? (constraints.maxWidth - totalSpacing) / columns
-            : double.infinity;
+        final width = constraints.maxWidth.isFinite ? (constraints.maxWidth - totalSpacing) / columns : double.infinity;
 
         return Wrap(
           spacing: gap,
@@ -215,26 +168,16 @@ class SectionManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchBar(
-    BuildContext context,
-    WidgetRef ref,
-    AppLocalizations localizations,
-  ) {
+  Widget _buildSearchBar(BuildContext context, WidgetRef ref, AppLocalizations localizations) {
     final isDark = context.isDark;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB),
-        ),
+        border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB)),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -249,39 +192,27 @@ class SectionManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
-                onChanged: (value) =>
-                    ref.read(sectionSearchQueryProvider.notifier).state = value,
+                onChanged: (value) => ref.read(sectionSearchQueryProvider.notifier).state = value,
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
                   fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
                   border: InputBorder.none,
                   hintText: localizations.searchSectionsPlaceholder,
-                  hintStyle: TextStyle(
-                    color: const Color(0xFF364153).withValues(alpha: 0.5),
-                    fontSize: 15.3.sp,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 14.h,
-                  ),
+                  hintStyle: TextStyle(color: const Color(0xFF364153).withValues(alpha: 0.5), fontSize: 15.3.sp),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-                    child: SvgIconWidget(
-                      assetPath: 'assets/icons/search_department_icon.svg',
-                      size: 20.sp,
+                    child: DigifyAsset(
+                      assetPath: Assets.icons.searchDepartmentIcon.path,
+                      width: 20,
+                      height: 20,
                       color: context.themeTextSecondary,
                     ),
                   ),
-                  prefixIconConstraints: const BoxConstraints(
-                    minHeight: 0,
-                    minWidth: 0,
-                  ),
+                  prefixIconConstraints: const BoxConstraints(minHeight: 0, minWidth: 0),
                 ),
-                style: TextStyle(
-                  color: context.themeTextPrimary,
-                  fontSize: 15.3.sp,
-                ),
+                style: TextStyle(color: context.themeTextPrimary, fontSize: 15.3.sp),
               ),
             ),
           ),
@@ -307,12 +238,7 @@ class SectionManagementScreen extends ConsumerWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = ResponsiveHelper.getResponsiveColumns(
-          context,
-          mobile: 1,
-          tablet: 2,
-          web: 3,
-        );
+        final columns = ResponsiveHelper.getResponsiveColumns(context, mobile: 1, tablet: 2, web: 3);
         const gap = 24.0;
         final totalSpacing = gap * (columns - 1);
         final cardWidth = constraints.maxWidth.isFinite
@@ -325,11 +251,7 @@ class SectionManagementScreen extends ConsumerWidget {
           children: sections.map((section) {
             return SizedBox(
               width: columns == 1 ? double.infinity : cardWidth,
-              child: _SectionCard(
-                section: section,
-                localizations: localizations,
-                isDark: isDark,
-              ),
+              child: _SectionCard(section: section, localizations: localizations, isDark: isDark),
             );
           }).toList(),
         );
@@ -343,11 +265,7 @@ class _SectionCard extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const _SectionCard({
-    required this.section,
-    required this.localizations,
-    required this.isDark,
-  });
+  const _SectionCard({required this.section, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -360,11 +278,7 @@ class _SectionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: context.themeCardBorder),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.10),
-              offset: const Offset(0, 1),
-              blurRadius: 3,
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.10),
               offset: const Offset(0, 1),
@@ -393,9 +307,10 @@ class _SectionCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
-                              child: SvgIconWidget(
-                                assetPath: 'assets/icons/section_icon.svg',
-                                size: 20.sp,
+                              child: DigifyAsset(
+                                assetPath: Assets.icons.sectionIcon.path,
+                                width: 20,
+                                height: 20,
                                 color: const Color(0xFF00BBA7),
                               ),
                             ),
@@ -439,28 +354,16 @@ class _SectionCard extends StatelessWidget {
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: section.isActive
-                                ? localizations.active
-                                : localizations.inactive,
-                            backgroundColor: isDark
-                                ? AppColors.successBgDark
-                                : const Color(0xFFDCFCE7),
-                            textColor: isDark
-                                ? AppColors.successTextDark
-                                : const Color(0xFF016630),
+                            label: section.isActive ? localizations.active : localizations.inactive,
+                            backgroundColor: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
+                            textColor: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                           ),
                         ],
                       ),
                       SizedBox(height: 8.h),
-                      _detailRow(
-                        'assets/icons/department_small_icon.svg',
-                        section.departmentName,
-                      ),
+                      _detailRow('assets/icons/department_small_icon.svg', section.departmentName),
                       SizedBox(height: 4.h),
-                      _detailRow(
-                        'assets/icons/business_unit_small_icon.svg',
-                        section.businessUnitName,
-                      ),
+                      _detailRow('assets/icons/business_unit_small_icon.svg', section.businessUnitName),
                     ],
                   ),
                 ),
@@ -492,9 +395,10 @@ class _SectionCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  SvgIconWidget(
-                    assetPath: 'assets/icons/head_icon.svg',
-                    size: 16.sp,
+                  DigifyAsset(
+                    assetPath: Assets.icons.headIcon.path,
+                    width: 16,
+                    height: 16,
                     color: context.themeTextSecondary,
                   ),
                   SizedBox(width: 8.w),
@@ -520,19 +424,16 @@ class _SectionCard extends StatelessWidget {
                   '${section.employees} ${localizations.emp}',
                   context,
                 ),
-                _iconStat(
-                  'assets/icons/department_metric3_icon.svg',
-                  '\$ ${section.budget}',
-                  context,
-                ),
+                _iconStat('assets/icons/department_metric3_icon.svg', '\$ ${section.budget}', context),
               ],
             ),
             SizedBox(height: 12.h),
             Row(
               children: [
-                SvgIconWidget(
-                  assetPath: 'assets/icons/focus_area_icon.svg',
-                  size: 16.sp,
+                DigifyAsset(
+                  assetPath: Assets.icons.focusAreaIcon.path,
+                  width: 16,
+                  height: 16,
                   color: context.themeTextSecondary,
                 ),
                 SizedBox(width: 8.w),
@@ -556,11 +457,7 @@ class _SectionCard extends StatelessWidget {
   Widget _detailRow(String iconPath, String text) {
     return Row(
       children: [
-        SvgIconWidget(
-          assetPath: iconPath,
-          size: 12.sp,
-          color: const Color(0xFF6A7282),
-        ),
+        DigifyAsset(assetPath: iconPath, width: 12, height: 12, color: const Color(0xFF6A7282)),
         SizedBox(width: 4.w),
         Expanded(
           child: Text(
@@ -582,11 +479,7 @@ class _SectionCard extends StatelessWidget {
       width: 140.w,
       child: Row(
         children: [
-          SvgIconWidget(
-            assetPath: iconPath,
-            size: 16.sp,
-            color: const Color(0xFF6A7282),
-          ),
+          DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: const Color(0xFF6A7282)),
           SizedBox(width: 4.w),
           Expanded(
             child: Text(
@@ -610,28 +503,16 @@ class _Badge extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
 
-  const _Badge({
-    required this.label,
-    required this.backgroundColor,
-    required this.textColor,
-  });
+  const _Badge({required this.label, required this.backgroundColor, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(4.r)),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13.5.sp,
-          fontWeight: FontWeight.w400,
-          color: textColor,
-          height: 20 / 13.5,
-        ),
+        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w400, color: textColor, height: 20 / 13.5),
       ),
     );
   }
@@ -642,11 +523,7 @@ class _ActionIcon extends StatelessWidget {
   final VoidCallback onTap;
   final Color? iconColor;
 
-  const _ActionIcon({
-    required this.assetPath,
-    required this.onTap,
-    this.iconColor,
-  });
+  const _ActionIcon({required this.assetPath, required this.onTap, this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -655,14 +532,12 @@ class _ActionIcon extends StatelessWidget {
       child: Container(
         width: 32.r,
         height: 32.r,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-          color: context.themeCardBackground,
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
         child: Center(
-          child: SvgIconWidget(
+          child: DigifyAsset(
             assetPath: assetPath,
-            size: 16.sp,
+            width: 16,
+            height: 16,
             color: iconColor ?? context.themeTextSecondary,
           ),
         ),
@@ -670,4 +545,3 @@ class _ActionIcon extends StatelessWidget {
     );
   }
 }
-
