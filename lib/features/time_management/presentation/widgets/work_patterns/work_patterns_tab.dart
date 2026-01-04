@@ -3,10 +3,12 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/create_work_pattern_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/delete_work_pattern_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -110,6 +112,11 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
                       ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!).notifier).refresh();
                     }
                   },
+                  onEdit: (pattern) {
+                    if (_selectedEnterpriseId != null) {
+                      EditWorkPatternDialog.show(context, _selectedEnterpriseId!, pattern);
+                    }
+                  },
                   onDelete: (pattern) {
                     if (_selectedEnterpriseId != null) {
                       DeleteWorkPatternDialog.show(context, pattern, _selectedEnterpriseId!);
@@ -118,15 +125,7 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
                 ),
               ),
             ] else
-              SizedBox(
-                height: 200.h,
-                child: Center(
-                  child: Text(
-                    'Please select an enterprise to view work patterns',
-                    style: TextStyle(fontSize: 16.sp, color: Theme.of(context).textTheme.bodyMedium?.color),
-                  ),
-                ),
-              ),
+              const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work patterns'),
           ],
         );
       },

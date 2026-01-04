@@ -17,6 +17,16 @@ abstract class WorkPatternRemoteDataSource {
     required PositionStatus status,
     required List<WorkPatternDay> days,
   });
+  Future<WorkPattern> updateWorkPattern({
+    required int workPatternId,
+    required int tenantId,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  });
   Future<void> deleteWorkPattern({required int workPatternId, required int tenantId, required bool hard});
 }
 
@@ -162,6 +172,59 @@ class WorkPatternRemoteDataSourceImpl implements WorkPatternRemoteDataSource {
       throw ValidationException('Invalid data format: ${e.message}', originalError: e);
     } catch (e) {
       throw UnknownException('Failed to create work pattern: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<WorkPattern> updateWorkPattern({
+    required int workPatternId,
+    required int tenantId,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  }) async {
+    try {
+      if (workPatternId <= 0) {
+        throw ValidationException('work_pattern_id must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
+      final body = {
+        'pattern_name_en': patternNameEn,
+        'pattern_name_ar': patternNameAr,
+        'pattern_type': patternType,
+        'total_hours_per_week': totalHoursPerWeek,
+        'status': status == PositionStatus.active ? 'ACTIVE' : 'INACTIVE',
+        'days': days.map((day) => day.toJson()).toList(),
+      };
+
+      final endpoint = '${ApiEndpoints.tmWorkPatterns}/$workPatternId';
+      final queryParameters = <String, String>{'tenant_id': tenantId.toString()};
+
+      final response = await apiClient.put(endpoint, body: body, queryParameters: queryParameters);
+
+      if (response.isEmpty) {
+        throw UnknownException('Empty response from server');
+      }
+
+      final dataJson = response['data'] as Map<String, dynamic>?;
+      if (dataJson == null) {
+        throw ValidationException('Invalid response format: missing data field');
+      }
+
+      return WorkPattern.fromJson(dataJson);
+    } on AppException {
+      rethrow;
+    } on FormatException catch (e) {
+      throw ValidationException('Invalid data format: ${e.message}', originalError: e);
+    } catch (e) {
+      throw UnknownException('Failed to update work pattern: ${e.toString()}', originalError: e);
     }
   }
 

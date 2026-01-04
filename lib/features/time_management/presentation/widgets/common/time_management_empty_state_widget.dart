@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Widget for displaying empty state when no enterprise is selected
-class ShiftsEmptyStateWidget extends StatelessWidget {
-  const ShiftsEmptyStateWidget({super.key});
+/// Reusable widget for displaying empty state when no enterprise is selected
+class TimeManagementEmptyStateWidget extends StatelessWidget {
+  final String message;
+
+  const TimeManagementEmptyStateWidget({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(48.0),
+        padding: EdgeInsets.all(48.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.business_outlined,
-              size: 64,
+              size: 64.sp,
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Text(
-              'Please select an enterprise to view shifts',
+              message,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),

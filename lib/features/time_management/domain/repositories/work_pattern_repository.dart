@@ -12,5 +12,14 @@ abstract class WorkPatternRepository {
     required PositionStatus status,
     required List<WorkPatternDay> days,
   });
+  Future<WorkPattern> updateWorkPattern({
+    required int workPatternId,
+    required String patternNameEn,
+    required String patternNameAr,
+    required String patternType,
+    required int totalHoursPerWeek,
+    required PositionStatus status,
+    required List<WorkPatternDay> days,
+  });
   Future<void> deleteWorkPattern({required int workPatternId, required bool hard});
 }
