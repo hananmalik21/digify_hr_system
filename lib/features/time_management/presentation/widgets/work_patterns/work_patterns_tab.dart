@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
@@ -20,39 +21,36 @@ class WorkPatternsTab extends ConsumerStatefulWidget {
   ConsumerState<WorkPatternsTab> createState() => _WorkPatternsTabState();
 }
 
-class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
+class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPaginationMixin {
   int? _selectedEnterpriseId;
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
+  ScrollController? get scrollController => _scrollController;
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void _onScroll() {
+  @override
+  void onLoadMore() {
     if (_selectedEnterpriseId == null) return;
 
     final state = ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!));
-    if (!_scrollController.hasClients) return;
-
-    final position = _scrollController.position;
-    final distanceFromBottom = position.maxScrollExtent - position.pixels;
-
-    if (distanceFromBottom < 200 && state.hasNextPage && !state.isLoadingMore) {
+    if (state.hasNextPage && !state.isLoadingMore) {
       ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!).notifier).loadNextPage();
     }
   }
 
   void _onEnterpriseChanged(int? enterpriseId) {
-    if (enterpriseId == null) return;
+    if (enterpriseId == null) {
+      setState(() {
+        _selectedEnterpriseId = null;
+      });
+      return;
+    }
 
     if (enterpriseId != _selectedEnterpriseId) {
       setState(() {
