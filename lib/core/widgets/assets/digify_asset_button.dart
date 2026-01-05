@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,9 +40,6 @@ class DigifyAssetButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: defaultBorderRadius,
-        splashColor: splashColor ?? AppColors.primary.withValues(alpha: 0.2),
-        hoverColor: hoverColor ?? AppColors.primary.withValues(alpha: 0.1),
-        highlightColor: highlightColor ?? AppColors.primary.withValues(alpha: 0.15),
         child: Padding(
           padding: EdgeInsets.all(defaultPadding),
           child: DigifyAsset(assetPath: assetPath, width: width, height: height, color: color, fit: fit),
