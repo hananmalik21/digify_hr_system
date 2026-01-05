@@ -10,7 +10,10 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list_skeleton.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/create_work_schedule_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/update_work_schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -74,9 +77,43 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   void _handleViewDetails(WorkSchedule schedule) {}
 
-  void _handleEdit(WorkSchedule schedule) {}
+  void _handleEdit(WorkSchedule schedule) {
+    if (_selectedEnterpriseId == null) {
+      return;
+    }
+    UpdateWorkScheduleDialog.show(context, _selectedEnterpriseId!, schedule);
+  }
 
-  void _handleDuplicate(WorkSchedule schedule) {}
+  Future<void> _handleDelete(WorkSchedule schedule) async {
+    if (_selectedEnterpriseId == null) {
+      return;
+    }
+
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: 'Delete Work Schedule',
+      message: 'Are you sure you want to delete this work schedule?',
+      itemName: schedule.scheduleNameEn,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      type: ConfirmationType.danger,
+    );
+
+    if (confirmed == true && mounted) {
+      try {
+        await ref
+            .read(workSchedulesNotifierProvider(_selectedEnterpriseId!).notifier)
+            .deleteWorkSchedule(schedule.workScheduleId, hard: true);
+        if (mounted) {
+          ToastService.success(context, 'Work schedule deleted successfully', title: 'Success');
+        }
+      } catch (e) {
+        if (mounted) {
+          ToastService.error(context, 'Failed to delete work schedule: ${e.toString()}', title: 'Error');
+        }
+      }
+    }
+  }
 
   WorkScheduleItem _convertToItem(WorkSchedule schedule) {
     return WorkScheduleItem(
@@ -90,6 +127,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
       effectiveStartDate: schedule.formattedStartDate,
       effectiveEndDate: schedule.formattedEndDate,
       weeklySchedule: schedule.weeklySchedule,
+      workScheduleId: schedule.workScheduleId,
     );
   }
 
@@ -165,6 +203,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
         children: [
           WorkSchedulesList(
             schedules: workSchedulesState.items.map(_convertToItem).toList(),
+            deletingScheduleIds: workSchedulesState.deletingScheduleIds,
             onViewDetails: (item) {
               final schedule = workSchedulesState.items.firstWhere((s) => s.scheduleCode == item.code);
               _handleViewDetails(schedule);
@@ -173,9 +212,9 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
               final schedule = workSchedulesState.items.firstWhere((s) => s.scheduleCode == item.code);
               _handleEdit(schedule);
             },
-            onDuplicate: (item) {
-              final schedule = workSchedulesState.items.firstWhere((s) => s.scheduleCode == item.code);
-              _handleDuplicate(schedule);
+            onDelete: (item) {
+              final schedule = workSchedulesState.items.firstWhere((s) => s.workScheduleId == item.workScheduleId);
+              _handleDelete(schedule);
             },
           ),
           if (workSchedulesState.isLoadingMore)

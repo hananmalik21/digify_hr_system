@@ -20,6 +20,7 @@ class WorkScheduleFormFields extends StatefulWidget {
   final WorkPattern? selectedWorkPattern;
   final int enterpriseId;
   final PositionStatus selectedStatus;
+  final bool isScheduleCodeDisabled;
   final ValueChanged<String>? onScheduleCodeChanged;
   final ValueChanged<String>? onScheduleNameEnChanged;
   final ValueChanged<String>? onScheduleNameArChanged;
@@ -38,6 +39,7 @@ class WorkScheduleFormFields extends StatefulWidget {
     this.selectedWorkPattern,
     required this.enterpriseId,
     required this.selectedStatus,
+    this.isScheduleCodeDisabled = false,
     this.onScheduleCodeChanged,
     this.onScheduleNameEnChanged,
     this.onScheduleNameArChanged,
@@ -105,6 +107,8 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 labelText: 'Schedule Code',
                 hintText: 'e.g., SCH-ADMIN-2024',
                 isRequired: true,
+                readOnly: widget.isScheduleCodeDisabled,
+                enabled: !widget.isScheduleCodeDisabled,
                 onChanged: widget.onScheduleCodeChanged,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
