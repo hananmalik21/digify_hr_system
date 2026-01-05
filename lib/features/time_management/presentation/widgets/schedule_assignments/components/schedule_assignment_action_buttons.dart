@@ -17,7 +17,7 @@ class ScheduleAssignmentActionButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (onView != null)
-          DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () {}, width: 15, height: 15),
+          DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: onView, width: 15, height: 15),
         if (onView != null && (onEdit != null || onDelete != null)) SizedBox(width: 4.w),
         if (onEdit != null)
           DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit, width: 15, height: 15),

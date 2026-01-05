@@ -7,6 +7,8 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/c
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table_skeleton.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
@@ -67,7 +69,15 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
         if (enterprisesState.hasError) EnterpriseErrorWidget(enterprisesState: enterprisesState),
         if (_selectedEnterpriseId != null && !enterprisesState.hasError) ...[
           SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          ScheduleAssignmentActionBar(onAssignSchedule: () {}, onBulkUpload: () {}, onExport: () {}),
+          ScheduleAssignmentActionBar(
+            onAssignSchedule: () {
+              if (_selectedEnterpriseId != null) {
+                CreateScheduleAssignmentDialog.show(context, _selectedEnterpriseId!);
+              }
+            },
+            onBulkUpload: () {},
+            onExport: () {},
+          ),
           SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
           _buildContent(scheduleAssignmentsState),
         ] else
@@ -117,6 +127,14 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
         children: [
           ScheduleAssignmentsTable(
             assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
+            onView: (item) {
+              final assignment = scheduleAssignmentsState.items.firstWhere(
+                (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
+              );
+              ViewScheduleAssignmentDialog.show(context, assignment);
+            },
+            onEdit: (item) {},
+            onDelete: (item) {},
           ),
           if (scheduleAssignmentsState.isLoadingMore)
             Padding(
