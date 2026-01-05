@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/schedule
 
 abstract class ScheduleAssignmentRemoteDataSource {
   Future<PaginatedScheduleAssignments> getScheduleAssignments({required int tenantId, int page = 1, int pageSize = 10});
+  Future<void> deleteScheduleAssignment({required int scheduleAssignmentId, required int tenantId, bool hard = true});
 }
 
 class ScheduleAssignmentRemoteDataSourceImpl implements ScheduleAssignmentRemoteDataSource {
@@ -102,6 +103,34 @@ class ScheduleAssignmentRemoteDataSourceImpl implements ScheduleAssignmentRemote
       throw ValidationException('Invalid data format: ${e.message}', originalError: e);
     } catch (e) {
       throw UnknownException('Failed to fetch schedule assignments: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteScheduleAssignment({
+    required int scheduleAssignmentId,
+    required int tenantId,
+    bool hard = true,
+  }) async {
+    try {
+      if (scheduleAssignmentId <= 0) {
+        throw ValidationException('schedule_assignment_id must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
+      final queryParameters = <String, String>{'tenant_id': tenantId.toString(), 'hard': hard.toString()};
+
+      await apiClient.delete(
+        ApiEndpoints.tmScheduleAssignmentById(scheduleAssignmentId),
+        queryParameters: queryParameters,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete schedule assignment: ${e.toString()}', originalError: e);
     }
   }
 }

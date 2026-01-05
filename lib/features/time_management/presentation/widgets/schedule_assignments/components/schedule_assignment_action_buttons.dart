@@ -7,8 +7,9 @@ class ScheduleAssignmentActionButtons extends StatelessWidget {
   final VoidCallback? onView;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final bool isDeleting;
 
-  const ScheduleAssignmentActionButtons({super.key, this.onView, this.onEdit, this.onDelete});
+  const ScheduleAssignmentActionButtons({super.key, this.onView, this.onEdit, this.onDelete, this.isDeleting = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,13 @@ class ScheduleAssignmentActionButtons extends StatelessWidget {
           DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit, width: 15, height: 15),
         if (onEdit != null && onDelete != null) SizedBox(width: 4.w),
         if (onDelete != null)
-          DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: onDelete, width: 15, height: 15),
+          DigifyAssetButton(
+            assetPath: Assets.icons.redDeleteIcon.path,
+            onTap: onDelete,
+            width: 15,
+            height: 15,
+            isLoading: isDeleting,
+          ),
       ],
     );
   }

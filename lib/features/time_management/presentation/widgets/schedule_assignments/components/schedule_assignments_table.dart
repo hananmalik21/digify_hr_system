@@ -10,8 +10,16 @@ class ScheduleAssignmentsTable extends StatelessWidget {
   final Function(ScheduleAssignmentTableRowData)? onView;
   final Function(ScheduleAssignmentTableRowData)? onEdit;
   final Function(ScheduleAssignmentTableRowData)? onDelete;
+  final int? deletingAssignmentId;
 
-  const ScheduleAssignmentsTable({super.key, required this.assignments, this.onView, this.onEdit, this.onDelete});
+  const ScheduleAssignmentsTable({
+    super.key,
+    required this.assignments,
+    this.onView,
+    this.onEdit,
+    this.onDelete,
+    this.deletingAssignmentId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +65,7 @@ class ScheduleAssignmentsTable extends StatelessWidget {
                   onView: onView != null ? () => onView!(assignment) : null,
                   onEdit: onEdit != null ? () => onEdit!(assignment) : null,
                   onDelete: onDelete != null ? () => onDelete!(assignment) : null,
+                  isDeleting: deletingAssignmentId == assignment.scheduleAssignmentId,
                 ),
               ),
           ],

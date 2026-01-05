@@ -31,8 +31,16 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
   final VoidCallback? onView;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final bool isDeleting;
 
-  const ScheduleAssignmentTableRow({super.key, required this.data, this.onView, this.onEdit, this.onDelete});
+  const ScheduleAssignmentTableRow({
+    super.key,
+    required this.data,
+    this.onView,
+    this.onEdit,
+    this.onDelete,
+    this.isDeleting = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +131,10 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
             ),
             197.22.w,
           ),
-          _buildActionCell(ScheduleAssignmentActionButtons(onView: onView, onEdit: onEdit, onDelete: onDelete), 135.w),
+          _buildActionCell(
+            ScheduleAssignmentActionButtons(onView: onView, onEdit: onEdit, onDelete: onDelete, isDeleting: isDeleting),
+            135.w,
+          ),
         ],
       ),
     );
