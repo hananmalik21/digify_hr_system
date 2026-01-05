@@ -7,11 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScheduleAssignmentsTable extends StatelessWidget {
   final List<ScheduleAssignmentTableRowData> assignments;
-  final Function(ScheduleAssignmentTableRowData)? onView;
-  final Function(ScheduleAssignmentTableRowData)? onEdit;
-  final Function(ScheduleAssignmentTableRowData)? onDelete;
 
-  const ScheduleAssignmentsTable({super.key, required this.assignments, this.onView, this.onEdit, this.onDelete});
+  const ScheduleAssignmentsTable({super.key, required this.assignments});
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +48,7 @@ class ScheduleAssignmentsTable extends StatelessWidget {
                 ),
               )
             else
-              ...assignments.map(
-                (assignment) => ScheduleAssignmentTableRow(
-                  data: assignment,
-                  onView: onView != null ? () => onView!(assignment) : null,
-                  onEdit: onEdit != null ? () => onEdit!(assignment) : null,
-                  onDelete: onDelete != null ? () => onDelete!(assignment) : null,
-                ),
-              ),
+              ...assignments.map((assignment) => ScheduleAssignmentTableRow(data: assignment)),
           ],
         ),
       ),

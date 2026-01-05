@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScheduleAssignmentTableRowData {
+  final int scheduleAssignmentId;
   final String assignedToName;
   final String assignedToCode;
   final String scheduleName;
@@ -14,6 +15,7 @@ class ScheduleAssignmentTableRowData {
   final String assignedByName;
 
   const ScheduleAssignmentTableRowData({
+    required this.scheduleAssignmentId,
     required this.assignedToName,
     required this.assignedToCode,
     required this.scheduleName,
