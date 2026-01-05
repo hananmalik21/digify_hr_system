@@ -1,19 +1,21 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_action_button.dart';
-// import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_icon_button.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_icon_button.dart';
 import 'package:flutter/material.dart';
 
 class WorkScheduleCardActions extends StatelessWidget {
   final VoidCallback onViewDetails;
   final VoidCallback onEdit;
-  final VoidCallback onDuplicate;
+  final VoidCallback onDelete;
+  final bool isDeleting;
 
   const WorkScheduleCardActions({
     super.key,
     required this.onViewDetails,
     required this.onEdit,
-    required this.onDuplicate,
+    required this.onDelete,
+    this.isDeleting = false,
   });
 
   @override
@@ -47,13 +49,14 @@ class WorkScheduleCardActions extends StatelessWidget {
                 onPressed: onEdit,
               ),
             ),
-            // SizedBox(width: spacing),
-            // ShiftCardIconButton(
-            //   icon: Icons.copy_rounded,
-            //   bgColor: AppColors.shiftCopyButtonBg,
-            //   iconColor: AppColors.shiftCopyButtonText,
-            //   onPressed: onDuplicate,
-            // ),
+            SizedBox(width: spacing),
+            ShiftCardIconButton(
+              icon: Icons.delete_outline,
+              bgColor: AppColors.deleteIconRed.withValues(alpha: 0.1),
+              iconColor: AppColors.deleteIconRed,
+              onPressed: isDeleting ? null : onDelete,
+              isLoading: isDeleting,
+            ),
           ],
         );
       },

@@ -6,14 +6,16 @@ class WorkSchedulesList extends StatelessWidget {
   final List<WorkScheduleItem> schedules;
   final Function(WorkScheduleItem) onViewDetails;
   final Function(WorkScheduleItem) onEdit;
-  final Function(WorkScheduleItem) onDuplicate;
+  final Function(WorkScheduleItem) onDelete;
+  final Set<int> deletingScheduleIds;
 
   const WorkSchedulesList({
     super.key,
     required this.schedules,
     required this.onViewDetails,
     required this.onEdit,
-    required this.onDuplicate,
+    required this.onDelete,
+    this.deletingScheduleIds = const {},
   });
 
   @override
@@ -41,7 +43,8 @@ class WorkSchedulesList extends StatelessWidget {
               weeklySchedule: schedule.weeklySchedule,
               onViewDetails: () => onViewDetails(schedule),
               onEdit: () => onEdit(schedule),
-              onDuplicate: () => onDuplicate(schedule),
+              onDelete: () => onDelete(schedule),
+              isDeleting: deletingScheduleIds.contains(schedule.workScheduleId),
             ),
             if (index < schedules.length - 1) SizedBox(height: 20.h),
           ],
@@ -62,6 +65,7 @@ class WorkScheduleItem {
   final String effectiveStartDate;
   final String effectiveEndDate;
   final Map<String, String> weeklySchedule;
+  final int workScheduleId;
 
   const WorkScheduleItem({
     required this.title,
@@ -74,5 +78,6 @@ class WorkScheduleItem {
     required this.effectiveStartDate,
     required this.effectiveEndDate,
     required this.weeklySchedule,
+    required this.workScheduleId,
   });
 }

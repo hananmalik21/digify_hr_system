@@ -27,4 +27,37 @@ class WorkScheduleRepositoryImpl implements WorkScheduleRepository {
       throw UnknownException('Failed to get work schedules: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<WorkSchedule> createWorkSchedule({required Map<String, dynamic> data}) async {
+    try {
+      return await remoteDataSource.createWorkSchedule(data: data);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create work schedule: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<WorkSchedule> updateWorkSchedule({required int scheduleId, required Map<String, dynamic> data}) async {
+    try {
+      return await remoteDataSource.updateWorkSchedule(scheduleId: scheduleId, data: data);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update work schedule: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteWorkSchedule({required int scheduleId, bool hard = true}) async {
+    try {
+      return await remoteDataSource.deleteWorkSchedule(scheduleId: scheduleId, tenantId: tenantId, hard: hard);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete work schedule: ${e.toString()}', originalError: e);
+    }
+  }
 }

@@ -6,7 +6,10 @@ import 'package:digify_hr_system/features/time_management/data/datasources/work_
 import 'package:digify_hr_system/features/time_management/data/repositories/work_schedule_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/work_schedule_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/create_work_schedule_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/delete_work_schedule_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_work_schedules_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/update_work_schedule_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final workScheduleApiClientProvider = Provider<ApiClient>((ref) {
@@ -28,7 +31,24 @@ final getWorkSchedulesUseCaseProvider = Provider.family<GetWorkSchedulesUseCase,
   return GetWorkSchedulesUseCase(repository: repository);
 });
 
+final createWorkScheduleUseCaseProvider = Provider.family<CreateWorkScheduleUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workScheduleRepositoryProvider(enterpriseId));
+  return CreateWorkScheduleUseCase(repository: repository);
+});
+
+final updateWorkScheduleUseCaseProvider = Provider.family<UpdateWorkScheduleUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workScheduleRepositoryProvider(enterpriseId));
+  return UpdateWorkScheduleUseCase(repository: repository);
+});
+
+final deleteWorkScheduleUseCaseProvider = Provider.family<DeleteWorkScheduleUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workScheduleRepositoryProvider(enterpriseId));
+  return DeleteWorkScheduleUseCase(repository: repository);
+});
+
 class WorkScheduleState extends PaginationState<WorkSchedule> {
+  final Set<int> deletingScheduleIds;
+
   const WorkScheduleState({
     super.items = const [],
     super.isLoading = false,
@@ -43,6 +63,7 @@ class WorkScheduleState extends PaginationState<WorkSchedule> {
     super.hasPreviousPage = false,
     super.searchQuery,
     super.status,
+    this.deletingScheduleIds = const {},
   });
 
   @override
@@ -62,6 +83,7 @@ class WorkScheduleState extends PaginationState<WorkSchedule> {
     PositionStatus? status,
     bool clearStatus = false,
     bool clearItems = false,
+    Set<int>? deletingScheduleIds,
   }) {
     return WorkScheduleState(
       items: clearItems ? const [] : (items ?? this.items),
@@ -77,6 +99,7 @@ class WorkScheduleState extends PaginationState<WorkSchedule> {
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       searchQuery: searchQuery ?? this.searchQuery,
       status: clearStatus ? null : (status ?? this.status),
+      deletingScheduleIds: deletingScheduleIds ?? this.deletingScheduleIds,
     );
   }
 }
@@ -85,16 +108,23 @@ final workSchedulesNotifierProvider = StateNotifierProvider.family<WorkSchedules
   ref,
   enterpriseId,
 ) {
-  return WorkSchedulesNotifier(ref.read(getWorkSchedulesUseCaseProvider(enterpriseId)));
+  return WorkSchedulesNotifier(
+    ref.read(getWorkSchedulesUseCaseProvider(enterpriseId)),
+    ref.read(updateWorkScheduleUseCaseProvider(enterpriseId)),
+    ref.read(deleteWorkScheduleUseCaseProvider(enterpriseId)),
+  );
 });
 
 class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
     with PaginationMixin<WorkSchedule>
     implements PaginationController<WorkSchedule> {
   final GetWorkSchedulesUseCase _getWorkSchedulesUseCase;
+  final UpdateWorkScheduleUseCase _updateWorkScheduleUseCase;
+  final DeleteWorkScheduleUseCase _deleteWorkScheduleUseCase;
   int? _currentEnterpriseId;
 
-  WorkSchedulesNotifier(this._getWorkSchedulesUseCase) : super(const WorkScheduleState());
+  WorkSchedulesNotifier(this._getWorkSchedulesUseCase, this._updateWorkScheduleUseCase, this._deleteWorkScheduleUseCase)
+    : super(const WorkScheduleState());
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
@@ -243,5 +273,59 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
   @override
   void reset() {
     state = const WorkScheduleState();
+  }
+
+  Future<WorkSchedule> updateWorkSchedule({required int scheduleId, required Map<String, dynamic> data}) async {
+    try {
+      final updatedSchedule = await _updateWorkScheduleUseCase.call(scheduleId: scheduleId, data: data);
+
+      final updatedItems = state.items.map((schedule) {
+        return schedule.workScheduleId == scheduleId ? updatedSchedule : schedule;
+      }).toList();
+
+      state = WorkScheduleState(
+        items: updatedItems,
+        isLoading: state.isLoading,
+        isLoadingMore: state.isLoadingMore,
+        hasError: state.hasError,
+        errorMessage: state.errorMessage,
+        currentPage: state.currentPage,
+        pageSize: state.pageSize,
+        totalItems: state.totalItems,
+        totalPages: state.totalPages,
+        hasNextPage: state.hasNextPage,
+        hasPreviousPage: state.hasPreviousPage,
+      );
+
+      return updatedSchedule;
+    } catch (e) {
+      throw Exception('Failed to update work schedule: ${e.toString()}');
+    }
+  }
+
+  Future<void> deleteWorkSchedule(int scheduleId, {bool hard = true}) async {
+    final deletingIds = Set<int>.from(state.deletingScheduleIds)..add(scheduleId);
+    state = state.copyWith(deletingScheduleIds: deletingIds);
+
+    try {
+      await _deleteWorkScheduleUseCase.call(scheduleId: scheduleId, hard: hard);
+
+      final updatedItems = state.items.where((item) => item.workScheduleId != scheduleId).toList();
+      final updatedDeletingIds = Set<int>.from(state.deletingScheduleIds)..remove(scheduleId);
+
+      state = state.copyWith(
+        items: updatedItems,
+        deletingScheduleIds: updatedDeletingIds,
+        totalItems: state.totalItems > 0 ? state.totalItems - 1 : 0,
+      );
+    } catch (e) {
+      final updatedDeletingIds = Set<int>.from(state.deletingScheduleIds)..remove(scheduleId);
+      state = state.copyWith(
+        deletingScheduleIds: updatedDeletingIds,
+        hasError: true,
+        errorMessage: 'Failed to delete work schedule: ${e.toString()}',
+      );
+      rethrow;
+    }
   }
 }
