@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/time_management/data/datasources/work_
 import 'package:digify_hr_system/features/time_management/data/repositories/work_schedule_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/work_schedule_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/create_work_schedule_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_work_schedules_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +27,11 @@ final workScheduleRepositoryProvider = Provider.family<WorkScheduleRepository, i
 final getWorkSchedulesUseCaseProvider = Provider.family<GetWorkSchedulesUseCase, int>((ref, enterpriseId) {
   final repository = ref.watch(workScheduleRepositoryProvider(enterpriseId));
   return GetWorkSchedulesUseCase(repository: repository);
+});
+
+final createWorkScheduleUseCaseProvider = Provider.family<CreateWorkScheduleUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(workScheduleRepositoryProvider(enterpriseId));
+  return CreateWorkScheduleUseCase(repository: repository);
 });
 
 class WorkScheduleState extends PaginationState<WorkSchedule> {

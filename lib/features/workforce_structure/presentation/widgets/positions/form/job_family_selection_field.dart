@@ -11,11 +11,7 @@ class JobFamilySelectionField extends ConsumerWidget {
   final String label;
   final bool isRequired;
 
-  const JobFamilySelectionField({
-    super.key,
-    required this.label,
-    this.isRequired = true,
-  });
+  const JobFamilySelectionField({super.key, required this.label, this.isRequired = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,15 +31,10 @@ class JobFamilySelectionField extends ConsumerWidget {
             ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
           }
 
-          final selected = await JobFamilySelectionDialog.show(
-            context: context,
-            selectedJobFamily: selectedJobFamily,
-          );
+          final selected = await JobFamilySelectionDialog.show(context: context, selectedJobFamily: selectedJobFamily);
 
           if (selected != null) {
-            ref
-                .read(positionFormNotifierProvider.notifier)
-                .setJobFamily(selected);
+            ref.read(positionFormNotifierProvider.notifier).setJobFamily(selected);
           }
         },
         child: Container(
@@ -52,9 +43,7 @@ class JobFamilySelectionField extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: error != null ? AppColors.error : AppColors.borderGrey,
-            ),
+            border: Border.all(color: error != null ? AppColors.error : AppColors.borderGrey),
           ),
           child: Row(
             children: [
