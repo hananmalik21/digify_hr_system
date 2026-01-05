@@ -34,10 +34,6 @@ class WeeklyScheduleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (selectedWorkPattern == null) {
-      return const SizedBox.shrink();
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -60,9 +56,10 @@ class WeeklyScheduleSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
-        _AssignmentModeSelector(isDark: isDark, assignmentMode: assignmentMode, onChanged: onAssignmentModeChanged),
-        SizedBox(height: 16.h),
-        if (assignmentMode == 'SAME_SHIFT_ALL_DAYS')
+        if (selectedWorkPattern != null)
+          _AssignmentModeSelector(isDark: isDark, assignmentMode: assignmentMode, onChanged: onAssignmentModeChanged),
+        if (selectedWorkPattern != null) SizedBox(height: 16.h),
+        if (assignmentMode == 'SAME_SHIFT_ALL_DAYS' && selectedWorkPattern != null)
           _SameShiftForAllDaysSelector(
             isDark: isDark,
             enterpriseId: enterpriseId,
@@ -73,7 +70,7 @@ class WeeklyScheduleSection extends StatelessWidget {
           _IndividualShiftsPerDaySelector(
             isDark: isDark,
             enterpriseId: enterpriseId,
-            selectedWorkPattern: selectedWorkPattern!,
+            selectedWorkPattern: selectedWorkPattern,
             dayShifts: dayShifts,
             onDayShiftChanged: onDayShiftChanged,
           ),
@@ -280,14 +277,14 @@ class _SameShiftForAllDaysSelectorState extends State<_SameShiftForAllDaysSelect
 class _IndividualShiftsPerDaySelector extends StatefulWidget {
   final bool isDark;
   final int enterpriseId;
-  final WorkPattern selectedWorkPattern;
+  final WorkPattern? selectedWorkPattern;
   final Map<int, ShiftOverview?> dayShifts;
   final void Function(int dayOfWeek, ShiftOverview? shift) onDayShiftChanged;
 
   const _IndividualShiftsPerDaySelector({
     required this.isDark,
     required this.enterpriseId,
-    required this.selectedWorkPattern,
+    this.selectedWorkPattern,
     required this.dayShifts,
     required this.onDayShiftChanged,
   });
@@ -350,7 +347,10 @@ class _IndividualShiftsPerDaySelectorState extends State<_IndividualShiftsPerDay
   }
 
   bool _isWorkingDay(int dayOfWeek) {
-    return widget.selectedWorkPattern.days.any((day) => day.dayOfWeek == dayOfWeek && day.dayType == 'WORK');
+    if (widget.selectedWorkPattern == null) {
+      return widget.dayShifts.containsKey(dayOfWeek) && widget.dayShifts[dayOfWeek] != null;
+    }
+    return widget.selectedWorkPattern!.days.any((day) => day.dayOfWeek == dayOfWeek && day.dayType == 'WORK');
   }
 
   @override

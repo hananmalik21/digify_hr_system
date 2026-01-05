@@ -20,7 +20,8 @@ class WorkScheduleCard extends StatelessWidget {
   final Map<String, String> weeklySchedule;
   final VoidCallback onViewDetails;
   final VoidCallback onEdit;
-  final VoidCallback onDuplicate;
+  final VoidCallback onDelete;
+  final bool isDeleting;
 
   const WorkScheduleCard({
     super.key,
@@ -36,7 +37,8 @@ class WorkScheduleCard extends StatelessWidget {
     required this.weeklySchedule,
     required this.onViewDetails,
     required this.onEdit,
-    required this.onDuplicate,
+    required this.onDelete,
+    this.isDeleting = false,
   });
 
   @override
@@ -80,7 +82,12 @@ class WorkScheduleCard extends StatelessWidget {
                 border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
               ),
               padding: EdgeInsets.only(top: 17.h),
-              child: WorkScheduleCardActions(onViewDetails: onViewDetails, onEdit: onEdit, onDuplicate: onDuplicate),
+              child: WorkScheduleCardActions(
+                onViewDetails: onViewDetails,
+                onEdit: onEdit,
+                onDelete: onDelete,
+                isDeleting: isDeleting,
+              ),
             ),
           ],
         ),
