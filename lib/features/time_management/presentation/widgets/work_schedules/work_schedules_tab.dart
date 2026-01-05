@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list_skeleton.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/create_work_schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,7 +61,12 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
     }
   }
 
-  void _handleCreateSchedule() {}
+  void _handleCreateSchedule() {
+    if (_selectedEnterpriseId == null) {
+      return;
+    }
+    CreateWorkScheduleDialog.show(context, _selectedEnterpriseId!);
+  }
 
   void _handleUpload() {}
 
