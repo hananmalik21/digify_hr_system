@@ -31,4 +31,31 @@ class ScheduleAssignmentRepositoryImpl implements ScheduleAssignmentRepository {
       throw UnknownException('Failed to get schedule assignments: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<void> deleteScheduleAssignment({
+    required int scheduleAssignmentId,
+    required int tenantId,
+    bool hard = true,
+  }) async {
+    try {
+      if (scheduleAssignmentId <= 0) {
+        throw ValidationException('scheduleAssignmentId must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenantId must be greater than 0');
+      }
+
+      return await remoteDataSource.deleteScheduleAssignment(
+        scheduleAssignmentId: scheduleAssignmentId,
+        tenantId: tenantId,
+        hard: hard,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete schedule assignment: ${e.toString()}', originalError: e);
+    }
+  }
 }

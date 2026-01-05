@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/time_management/data/datasources/sched
 import 'package:digify_hr_system/features/time_management/data/repositories/schedule_assignment_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/schedule_assignment_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/delete_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_schedule_assignments_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +29,17 @@ final getScheduleAssignmentsUseCaseProvider = Provider.family<GetScheduleAssignm
   return GetScheduleAssignmentsUseCase(repository: repository);
 });
 
+final deleteScheduleAssignmentUseCaseProvider = Provider.family<DeleteScheduleAssignmentUseCase, int>((
+  ref,
+  enterpriseId,
+) {
+  final repository = ref.watch(scheduleAssignmentRepositoryProvider(enterpriseId));
+  return DeleteScheduleAssignmentUseCase(repository: repository);
+});
+
 class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
+  final int? deletingAssignmentId;
+
   const ScheduleAssignmentState({
     super.items = const [],
     super.isLoading = false,
@@ -43,6 +54,7 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
     super.hasPreviousPage = false,
     super.searchQuery,
     super.status,
+    this.deletingAssignmentId,
   });
 
   @override
@@ -61,6 +73,8 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
     String? searchQuery,
     PositionStatus? status,
     bool clearStatus = false,
+    int? deletingAssignmentId,
+    bool clearDeletingAssignmentId = false,
   }) {
     return ScheduleAssignmentState(
       items: items ?? this.items,
@@ -76,22 +90,28 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       searchQuery: searchQuery ?? this.searchQuery,
       status: clearStatus ? null : (status ?? this.status),
+      deletingAssignmentId: clearDeletingAssignmentId ? null : (deletingAssignmentId ?? this.deletingAssignmentId),
     );
   }
 }
 
 final scheduleAssignmentsNotifierProvider =
     StateNotifierProvider.family<ScheduleAssignmentsNotifier, ScheduleAssignmentState, int>((ref, enterpriseId) {
-      return ScheduleAssignmentsNotifier(ref.read(getScheduleAssignmentsUseCaseProvider(enterpriseId)));
+      return ScheduleAssignmentsNotifier(
+        ref.read(getScheduleAssignmentsUseCaseProvider(enterpriseId)),
+        ref.read(deleteScheduleAssignmentUseCaseProvider(enterpriseId)),
+      );
     });
 
 class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     with PaginationMixin<ScheduleAssignment>
     implements PaginationController<ScheduleAssignment> {
   final GetScheduleAssignmentsUseCase _getScheduleAssignmentsUseCase;
+  final DeleteScheduleAssignmentUseCase _deleteScheduleAssignmentUseCase;
   int? _currentEnterpriseId;
 
-  ScheduleAssignmentsNotifier(this._getScheduleAssignmentsUseCase) : super(const ScheduleAssignmentState());
+  ScheduleAssignmentsNotifier(this._getScheduleAssignmentsUseCase, this._deleteScheduleAssignmentUseCase)
+    : super(const ScheduleAssignmentState());
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
@@ -247,5 +267,28 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
   @override
   void reset() {
     state = const ScheduleAssignmentState();
+  }
+
+  Future<void> deleteScheduleAssignment(int scheduleAssignmentId, {bool hard = true}) async {
+    if (_currentEnterpriseId == null) return;
+
+    state = state.copyWith(deletingAssignmentId: scheduleAssignmentId);
+
+    try {
+      await _deleteScheduleAssignmentUseCase.call(
+        scheduleAssignmentId: scheduleAssignmentId,
+        tenantId: _currentEnterpriseId!,
+        hard: hard,
+      );
+
+      state = state.copyWith(
+        items: state.items.where((a) => a.scheduleAssignmentId != scheduleAssignmentId).toList(),
+        totalItems: state.totalItems - 1,
+        clearDeletingAssignmentId: true,
+      );
+    } catch (e) {
+      state = state.copyWith(clearDeletingAssignmentId: true);
+      rethrow;
+    }
   }
 }

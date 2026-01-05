@@ -1,10 +1,13 @@
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_bar.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table_skeleton.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
@@ -51,12 +54,59 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
     }
   }
 
+  Future<void> _handleDelete(
+    BuildContext context,
+    ScheduleAssignmentTableRowData item,
+    ScheduleAssignmentState state,
+  ) async {
+    if (_selectedEnterpriseId == null) return;
+
+    final assignment = state.items.firstWhere((a) => a.scheduleAssignmentId == item.scheduleAssignmentId);
+
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: 'Delete Schedule Assignment',
+      message: 'Are you sure you want to delete this schedule assignment?',
+      itemName: '${assignment.assignedToName} - ${assignment.workSchedule.scheduleNameEn}',
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      type: ConfirmationType.danger,
+    );
+
+    if (confirmed == true && mounted) {
+      await ref
+          .read(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!).notifier)
+          .deleteScheduleAssignment(assignment.scheduleAssignmentId, hard: true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final enterprisesState = ref.watch(enterprisesProvider);
     final scheduleAssignmentsState = _selectedEnterpriseId != null
         ? ref.watch(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!))
         : const ScheduleAssignmentState();
+
+    if (_selectedEnterpriseId != null) {
+      ref.listen<ScheduleAssignmentState>(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!), (
+        previous,
+        next,
+      ) {
+        final wasDeleting = previous?.deletingAssignmentId != null;
+        final isDeleting = next.deletingAssignmentId != null;
+
+        if (wasDeleting && !isDeleting) {
+          final deletedId = previous!.deletingAssignmentId!;
+          final itemWasRemoved = !next.items.any((a) => a.scheduleAssignmentId == deletedId);
+
+          if (itemWasRemoved && context.mounted) {
+            ToastService.success(context, 'Schedule assignment deleted successfully', title: 'Success');
+          } else if (!itemWasRemoved && context.mounted) {
+            ToastService.error(context, 'Failed to delete schedule assignment', title: 'Error');
+          }
+        }
+      });
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,6 +177,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
         children: [
           ScheduleAssignmentsTable(
             assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
+            deletingAssignmentId: scheduleAssignmentsState.deletingAssignmentId,
             onView: (item) {
               final assignment = scheduleAssignmentsState.items.firstWhere(
                 (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
@@ -134,7 +185,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
               ViewScheduleAssignmentDialog.show(context, assignment);
             },
             onEdit: (item) {},
-            onDelete: (item) {},
+            onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),
           ),
           if (scheduleAssignmentsState.isLoadingMore)
             Padding(
