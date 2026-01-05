@@ -1,0 +1,34 @@
+import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/time_management/data/datasources/schedule_assignment_remote_datasource.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
+import 'package:digify_hr_system/features/time_management/domain/repositories/schedule_assignment_repository.dart';
+
+class ScheduleAssignmentRepositoryImpl implements ScheduleAssignmentRepository {
+  final ScheduleAssignmentRemoteDataSource remoteDataSource;
+  final int tenantId;
+
+  const ScheduleAssignmentRepositoryImpl({required this.remoteDataSource, required this.tenantId});
+
+  @override
+  Future<PaginatedScheduleAssignments> getScheduleAssignments({
+    required int tenantId,
+    int page = 1,
+    int pageSize = 10,
+  }) async {
+    try {
+      if (page < 1) {
+        throw ValidationException('page must be greater than or equal to 1');
+      }
+
+      if (pageSize < 1 || pageSize > 100) {
+        throw ValidationException('pageSize must be between 1 and 100');
+      }
+
+      return await remoteDataSource.getScheduleAssignments(tenantId: tenantId, page: page, pageSize: pageSize);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to get schedule assignments: ${e.toString()}', originalError: e);
+    }
+  }
+}

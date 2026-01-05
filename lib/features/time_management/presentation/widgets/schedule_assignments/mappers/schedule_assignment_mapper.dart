@@ -1,0 +1,21 @@
+import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
+
+class ScheduleAssignmentMapper {
+  static ScheduleAssignmentTableRowData toTableRowData(ScheduleAssignment assignment) {
+    return ScheduleAssignmentTableRowData(
+      scheduleAssignmentId: assignment.scheduleAssignmentId,
+      assignedToName: assignment.assignedToName,
+      assignedToCode: assignment.assignedToCode,
+      scheduleName: assignment.workSchedule.scheduleNameEn,
+      startDate: assignment.formattedStartDate,
+      endDate: assignment.formattedEndDate,
+      isActive: assignment.isActive,
+      assignedByName: assignment.assignedByName,
+    );
+  }
+
+  static List<ScheduleAssignmentTableRowData> toTableRowDataList(List<ScheduleAssignment> assignments) {
+    return assignments.map(toTableRowData).toList();
+  }
+}
