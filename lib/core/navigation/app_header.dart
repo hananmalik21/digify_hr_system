@@ -240,6 +240,215 @@ class AppHeader extends ConsumerWidget {
                           ),
                         ],
                       ],
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    popupMenuTheme: PopupMenuThemeData(
+                      color: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      textStyle: TextStyle(
+                        color: const Color(0xFF364153),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        side: BorderSide(
+                          color: const Color(0xFFE2E8F0),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: PopupMenuButton<String>(
+                    offset: const Offset(0, 50),
+                    elevation: 10,
+                    shadowColor: Colors.black.withValues(alpha: 0.1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    tooltip: '', // Disable default tooltip
+                    itemBuilder: (context) => [
+                      // Header Section (User Info)
+                      PopupMenuItem<String>(
+                        enabled: false,
+                        padding: EdgeInsets.zero,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 16.h,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF1F5F9), // Light blue/gray background
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color(0xFFE2E8F0),
+                                width: 1,
+                              ),
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 48.w,
+                                height: 48.h,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF3B82F6), // Blue avatar bg
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: SvgIconWidget(
+                                    assetPath: 'assets/icons/user_icon.svg',
+                                    size: 24.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'System Administrator',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: const Color(0xFF1E2939),
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      'admin@digifyhr.com',
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xFF64748B),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Menu Items
+                      _buildMenuItem(
+                        context,
+                        value: 'profile',
+                        iconPath: 'assets/icons/user_icon.svg',
+                        label: 'My Profile',
+                        isSvg: true,
+                      ),
+                      _buildMenuItem(
+                        context,
+                        value: 'desktop_tabs',
+                        iconData: Icons.folder_open_outlined,
+                        label: 'Manage Desktop Tabs',
+                      ),
+                      _buildMenuItem(
+                        context,
+                        value: 'system_settings',
+                        iconData: Icons.dns_outlined,
+                        label: 'System Settings',
+                      ),
+                      _buildMenuItem(
+                        context,
+                        value: 'settings',
+                        iconPath: 'assets/icons/settings_icon.svg',
+                        label: 'Settings',
+                        isSvg: true,
+                      ),
+                      _buildMenuItem(
+                        context,
+                        value: 'change_password',
+                        iconPath: 'assets/icons/lock_icon.svg',
+                        label: 'Change Password',
+                        isSvg: true,
+                      ),
+                      const PopupMenuDivider(height: 1),
+                      // Logout
+                      PopupMenuItem<String>(
+                        value: 'logout',
+                        height: 48.h,
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 24.w,
+                              child: Icon(
+                                Icons.logout_rounded,
+                                size: 20.sp,
+                                color: const Color(0xFFEF4444), // Red color
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Text(
+                              localizations.logout,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFFEF4444), // Red color
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    // Child of the button (The visible trigger)
+                    child: Container(
+                      padding: EdgeInsets.all(isMobile ? 4.r : 8.r),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: isMobile ? 28.w : 32.w,
+                            height: isMobile ? 28.h : 32.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: SvgIconWidget(
+                                assetPath: 'assets/icons/user_icon.svg',
+                                size: isMobile ? 16.sp : 20.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if (!isMobile) ...[
+                            SizedBox(width: 8.w),
+                            Text(
+                              localizations.adminUser,
+                              style: TextStyle(
+                                fontSize: 15.3.sp,
+                                fontWeight: FontWeight.w400,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : const Color(0xFF364153),
+                                height: 24 / 15.3,
+                                letterSpacing: 0,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            SvgIconWidget(
+                              assetPath: 'assets/icons/dropdown_arrow_icon.svg',
+                              size: 16.sp,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : const Color(0xFF364153),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -247,6 +456,48 @@ class AppHeader extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  PopupMenuItem<String> _buildMenuItem(
+    BuildContext context, {
+    required String value,
+    required String label,
+    String? iconPath,
+    IconData? iconData,
+    bool isSvg = false,
+  }) {
+    return PopupMenuItem<String>(
+      value: value,
+      height: 48.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 24.w,
+            child: isSvg && iconPath != null
+                ? SvgIconWidget(
+                    assetPath: iconPath,
+                    size: 20.sp,
+                    color: const Color(0xFF64748B),
+                  )
+                : Icon(
+                    iconData,
+                    size: 20.sp,
+                    color: const Color(0xFF64748B),
+                  ),
+          ),
+          SizedBox(width: 12.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF364153),
+            ),
+          ),
+        ],
       ),
     );
   }
