@@ -9,8 +9,13 @@ import 'dashboard_module_button.dart';
 
 class DashboardModuleGrid extends ConsumerStatefulWidget {
   final List<DashboardButton> buttons;
+  final Function(DashboardButton) onButtonTap;
 
-  const DashboardModuleGrid({super.key, required this.buttons});
+  const DashboardModuleGrid({
+    super.key,
+    required this.buttons,
+    required this.onButtonTap,
+  });
 
   @override
   ConsumerState<DashboardModuleGrid> createState() => _DashboardModuleGridState();
@@ -114,7 +119,11 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
               key: ValueKey('dash-${btn.id}'),
               width: spec.tileW,
               height: spec.tileH,
-              child: DashboardModuleButton(button: btn, isDragging: _isDragging, onTap: () => context.go(btn.route)),
+              child: DashboardModuleButton(
+                button: btn,
+                isDragging: _isDragging,
+                onTap: () => widget.onButtonTap(btn),
+              ),
             );
           }),
         );
