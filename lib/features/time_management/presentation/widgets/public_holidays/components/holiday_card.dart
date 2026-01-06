@@ -41,6 +41,7 @@ class HolidayCard extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final bool showBorder;
+  final bool isDeleting;
 
   const HolidayCard({
     super.key,
@@ -49,6 +50,7 @@ class HolidayCard extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.showBorder = true,
+    this.isDeleting = false,
   });
 
   @override
@@ -236,6 +238,7 @@ class HolidayCard extends StatelessWidget {
           width: 18,
           height: 18,
           color: isDark ? null : AppColors.deleteIconRed,
+          isLoading: isDeleting,
         ),
       ],
     );

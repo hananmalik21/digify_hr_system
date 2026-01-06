@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/time_management/data/repositories/publ
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/public_holiday_repository.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_public_holiday_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/delete_public_holiday_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_public_holidays_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,6 +34,11 @@ final createPublicHolidayUseCaseProvider = Provider<CreatePublicHolidayUseCase>(
   return CreatePublicHolidayUseCase(repository: repository);
 });
 
+final deletePublicHolidayUseCaseProvider = Provider<DeletePublicHolidayUseCase>((ref) {
+  final repository = ref.watch(publicHolidayRepositoryProvider);
+  return DeletePublicHolidayUseCase(repository: repository);
+});
+
 /// State for public holidays
 class PublicHolidaysState {
   final List<PublicHoliday> holidays;
@@ -47,6 +53,11 @@ class PublicHolidaysState {
   final String? searchQuery;
   final String? selectedYear;
   final String? selectedType;
+  final String? deleteSuccessMessage;
+  final String? deleteErrorMessage;
+  final String? createSuccessMessage;
+  final String? createErrorMessage;
+  final int? deletingHolidayId;
 
   const PublicHolidaysState({
     this.holidays = const [],
@@ -61,6 +72,11 @@ class PublicHolidaysState {
     this.searchQuery,
     this.selectedYear,
     this.selectedType,
+    this.deleteSuccessMessage,
+    this.deleteErrorMessage,
+    this.createSuccessMessage,
+    this.createErrorMessage,
+    this.deletingHolidayId,
   });
 
   PublicHolidaysState copyWith({
@@ -76,8 +92,15 @@ class PublicHolidaysState {
     String? searchQuery,
     String? selectedYear,
     String? selectedType,
+    String? deleteSuccessMessage,
+    String? deleteErrorMessage,
+    String? createSuccessMessage,
+    String? createErrorMessage,
+    int? deletingHolidayId,
     bool clearError = false,
     bool clearSearch = false,
+    bool clearSideEffects = false,
+    bool clearDeletingHolidayId = false,
   }) {
     return PublicHolidaysState(
       holidays: holidays ?? this.holidays,
@@ -92,6 +115,11 @@ class PublicHolidaysState {
       searchQuery: clearSearch ? null : (searchQuery ?? this.searchQuery),
       selectedYear: selectedYear ?? this.selectedYear,
       selectedType: selectedType ?? this.selectedType,
+      deleteSuccessMessage: clearSideEffects ? null : (deleteSuccessMessage ?? this.deleteSuccessMessage),
+      deleteErrorMessage: clearSideEffects ? null : (deleteErrorMessage ?? this.deleteErrorMessage),
+      createSuccessMessage: clearSideEffects ? null : (createSuccessMessage ?? this.createSuccessMessage),
+      createErrorMessage: clearSideEffects ? null : (createErrorMessage ?? this.createErrorMessage),
+      deletingHolidayId: clearDeletingHolidayId ? null : (deletingHolidayId ?? this.deletingHolidayId),
     );
   }
 }
@@ -99,8 +127,10 @@ class PublicHolidaysState {
 /// Notifier for public holidays
 class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   final GetPublicHolidaysUseCase getHolidaysUseCase;
+  final DeletePublicHolidayUseCase deleteHolidayUseCase;
 
-  PublicHolidaysNotifier({required this.getHolidaysUseCase}) : super(const PublicHolidaysState());
+  PublicHolidaysNotifier({required this.getHolidaysUseCase, required this.deleteHolidayUseCase})
+    : super(const PublicHolidaysState());
 
   /// Load holidays
   Future<void> loadHolidays({bool refresh = false}) async {
@@ -200,10 +230,41 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   void addHolidayOptimistically(PublicHoliday holiday) {
     state = state.copyWith(holidays: [holiday, ...state.holidays], totalHolidays: state.totalHolidays + 1);
   }
+
+  /// Remove holiday optimistically
+  void removeHolidayOptimistically(int holidayId) {
+    state = state.copyWith(
+      holidays: state.holidays.where((h) => h.id != holidayId).toList(),
+      totalHolidays: state.totalHolidays > 0 ? state.totalHolidays - 1 : 0,
+    );
+  }
+
+  /// Delete holiday
+  Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
+    state = state.copyWith(deletingHolidayId: holidayId);
+
+    try {
+      await deleteHolidayUseCase.execute(holidayId, hard: hard);
+      state = state.copyWith(
+        deletingHolidayId: null,
+        deleteSuccessMessage: 'Holiday deleted successfully',
+        holidays: state.holidays.where((h) => h.id != holidayId).toList(),
+        totalHolidays: state.totalHolidays > 0 ? state.totalHolidays - 1 : 0,
+      );
+    } catch (e) {
+      state = state.copyWith(deletingHolidayId: null, deleteErrorMessage: 'Failed to delete holiday: ${e.toString()}');
+    }
+  }
+
+  /// Clear side effects
+  void clearSideEffects() {
+    state = state.copyWith(clearSideEffects: true);
+  }
 }
 
 /// Provider for public holidays notifier
 final publicHolidaysNotifierProvider = StateNotifierProvider<PublicHolidaysNotifier, PublicHolidaysState>((ref) {
-  final useCase = ref.watch(getPublicHolidaysUseCaseProvider);
-  return PublicHolidaysNotifier(getHolidaysUseCase: useCase);
+  final getHolidaysUseCase = ref.watch(getPublicHolidaysUseCaseProvider);
+  final deleteHolidayUseCase = ref.watch(deletePublicHolidayUseCaseProvider);
+  return PublicHolidaysNotifier(getHolidaysUseCase: getHolidaysUseCase, deleteHolidayUseCase: deleteHolidayUseCase);
 });

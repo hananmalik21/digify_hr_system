@@ -65,4 +65,9 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
 
     throw Exception('Invalid response format from server');
   }
+
+  @override
+  Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
+    await remoteDataSource.deleteHoliday(holidayId, hard: hard);
+  }
 }

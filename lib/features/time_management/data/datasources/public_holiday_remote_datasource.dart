@@ -14,6 +14,8 @@ abstract class PublicHolidayRemoteDataSource {
   });
 
   Future<Map<String, dynamic>> createHoliday(Map<String, dynamic> requestBody);
+
+  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {bool hard = true});
 }
 
 class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource {
@@ -82,6 +84,25 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to create holiday: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {bool hard = true}) async {
+    try {
+      final queryParameters = <String, String>{'hard': hard.toString()};
+      final endpoint = ApiEndpoints.tmPublicHolidayById(holidayId);
+      final response = await apiClient.delete(endpoint, queryParameters: queryParameters);
+
+      if (response.isEmpty) {
+        throw UnknownException('Empty response from server');
+      }
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete holiday: ${e.toString()}', originalError: e);
     }
   }
 }

@@ -17,4 +17,6 @@ abstract class PublicHolidayRepository {
     required String appliesTo,
     required bool isPaid,
   });
+
+  Future<void> deleteHoliday(int holidayId, {bool hard = true});
 }

@@ -27,18 +27,21 @@ class DeleteConfirmationDialog extends StatelessWidget {
     String? itemName,
     String? confirmText,
     String? cancelText,
+    bool isLoading = false,
   }) {
     final localizations = AppLocalizations.of(context);
 
     return showDialog<bool>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.45),
+      barrierDismissible: !isLoading,
       builder: (context) => AppConfirmationDialog.delete(
         title: title,
         message: message,
         itemName: itemName,
         confirmLabel: confirmText ?? localizations?.delete ?? 'Delete',
         cancelLabel: cancelText ?? localizations?.cancel ?? 'Cancel',
+        isLoading: isLoading,
         onConfirm: () => Navigator.of(context).pop(true),
         onCancel: () => Navigator.of(context).pop(false),
       ),

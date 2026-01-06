@@ -1,7 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'holiday_card.dart';
 
 class MonthlyHolidayGroupData {
@@ -11,7 +13,7 @@ class MonthlyHolidayGroupData {
   const MonthlyHolidayGroupData({required this.monthYear, required this.holidays});
 }
 
-class MonthlyHolidayGroup extends StatelessWidget {
+class MonthlyHolidayGroup extends ConsumerWidget {
   final MonthlyHolidayGroupData data;
   final void Function(String holidayId)? onViewHoliday;
   final void Function(String holidayId)? onEditHoliday;
@@ -26,8 +28,10 @@ class MonthlyHolidayGroup extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
+    final state = ref.watch(publicHolidaysNotifierProvider);
+    final deletingHolidayId = state.deletingHolidayId;
 
     return Container(
       decoration: BoxDecoration(
@@ -55,6 +59,7 @@ class MonthlyHolidayGroup extends StatelessWidget {
                         onEdit: onEditHoliday != null ? () => onEditHoliday!(holiday.id) : null,
                         onDelete: onDeleteHoliday != null ? () => onDeleteHoliday!(holiday.id) : null,
                         showBorder: true,
+                        isDeleting: deletingHolidayId != null && deletingHolidayId == int.tryParse(holiday.id),
                       ),
                       if (index < data.holidays.length - 1) SizedBox(height: 16.h),
                     ],

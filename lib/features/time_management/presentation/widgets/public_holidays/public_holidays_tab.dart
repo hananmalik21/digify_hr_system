@@ -1,6 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
@@ -42,6 +45,34 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
     super.dispose();
   }
 
+  Future<void> _handleDeleteHoliday(
+    BuildContext context,
+    String holidayId,
+    PublicHolidaysNotifier notifier,
+    PublicHolidaysState state,
+  ) async {
+    final holidayIdInt = int.tryParse(holidayId);
+    if (holidayIdInt == null) return;
+
+    final holiday = state.holidays.firstWhere((h) => h.id == holidayIdInt, orElse: () => state.holidays.first);
+    final holidayName = holiday.nameEn;
+
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: 'Delete Holiday',
+      message: 'Are you sure you want to permanently delete this holiday?',
+      itemName: holidayName,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      type: ConfirmationType.danger,
+      svgPath: Assets.icons.deleteIconRed.path,
+    );
+
+    if (confirmed == true && mounted) {
+      notifier.deleteHoliday(holidayIdInt, hard: true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -49,6 +80,20 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
     final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
     final holidayGroups = PublicHolidayMapper.groupByMonth(state.holidays);
     final stats = PublicHolidayMapper.calculateStats(state.holidays);
+
+    ref.listen<PublicHolidaysState>(publicHolidaysNotifierProvider, (previous, next) {
+      if (previous == null) return;
+
+      if (next.deleteSuccessMessage != null && previous.deleteSuccessMessage != next.deleteSuccessMessage) {
+        ToastService.success(context, next.deleteSuccessMessage!);
+        notifier.clearSideEffects();
+      }
+
+      if (next.deleteErrorMessage != null && previous.deleteErrorMessage != next.deleteErrorMessage) {
+        ToastService.error(context, next.deleteErrorMessage!);
+        notifier.clearSideEffects();
+      }
+    });
 
     return SingleChildScrollView(
       controller: _scrollController,
@@ -127,7 +172,7 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
                     data: group,
                     onViewHoliday: (id) {},
                     onEditHoliday: (id) {},
-                    onDeleteHoliday: (id) {},
+                    onDeleteHoliday: (id) => _handleDeleteHoliday(context, id, notifier, state),
                   ),
                   SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
                 ],
