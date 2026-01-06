@@ -337,29 +337,29 @@ class _EnterpriseStructureDialogState extends ConsumerState<EnterpriseStructureD
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (widget.mode == EnterpriseStructureDialogMode.create)
-                        WarningStatusCard(
-                          title: localizations.noConfigurationFound,
-                          message: localizations.pleaseConfigureEnterpriseStructure,
-                        )
-                      else
-                        ActiveStatusCard(
-                          title: localizations.structureConfigurationActive,
-                          message: localizations.enterpriseStructureActiveMessage,
-                        ),
-                      SizedBox(height: isMobile ? 16.h : 24.h),
-                      ConfigurationInstructionsCard(
-                        title: localizations.configurationInstructions,
-                        instructions: [
-                          localizations.companyMandatoryInstruction,
-                          localizations.enableDisableLevelsInstruction,
-                          localizations.useArrowsInstruction,
-                          localizations.orderDeterminesRelationshipsInstruction,
-                          localizations.changesAffectComponentsInstruction,
-                        ],
-                        boldText: localizations.company,
-                      ),
-                      SizedBox(height: isMobile ? 16.h : 24.h),
+                      // if (widget.mode == EnterpriseStructureDialogMode.create)
+                      //   WarningStatusCard(
+                      //     title: localizations.noConfigurationFound,
+                      //     message: localizations.pleaseConfigureEnterpriseStructure,
+                      //   )
+                      // else
+                      //   ActiveStatusCard(
+                      //     title: localizations.structureConfigurationActive,
+                      //     message: localizations.enterpriseStructureActiveMessage,
+                      //   ),
+                      // SizedBox(height: isMobile ? 16.h : 24.h),
+                      // ConfigurationInstructionsCard(
+                      //   title: localizations.configurationInstructions,
+                      //   instructions: [
+                      //     localizations.companyMandatoryInstruction,
+                      //     localizations.enableDisableLevelsInstruction,
+                      //     localizations.useArrowsInstruction,
+                      //     localizations.orderDeterminesRelationshipsInstruction,
+                      //     localizations.changesAffectComponentsInstruction,
+                      //   ],
+                      //   boldText: localizations.company,
+                      // ),
+                      // SizedBox(height: isMobile ? 16.h : 24.h),
                       // Enterprise dropdown (only for create/edit modes)
                       if (widget.mode != EnterpriseStructureDialogMode.view) ...[
                         Consumer(

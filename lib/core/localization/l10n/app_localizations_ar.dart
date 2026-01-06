@@ -2915,4 +2915,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get publicHolidays => 'العطلات الرسمية';
+
+  @override
+  String get deletePermanently => 'حذف نهائي';
+
+  @override
+  String get deleteStructureTitle => 'حذف هيكل المؤسسة';
+
+  @override
+  String get cascadeDeleteWarning =>
+      'سيؤدي هذا الإجراء إلى حذف هيكل المؤسسة وجميع الوحدات التنظيمية المرتبطة به بشكل دائم.';
+
+  @override
+  String cascadeDeleteDetails(String structureName, int orgUnitsCount) {
+    return 'يحتوي الهيكل \"$structureName\" على $orgUnitsCount وحدة تنظيمية سيتم حذفها. لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get deleteStructureMessage => 'هل أنت متأكد أنك تريد المتابعة؟';
+
+  @override
+  String get structureReferencedError =>
+      'لا يمكن حذف هيكل المؤسسة: هذا الهيكل مستخدم في سجلات أخرى في قاعدة البيانات.';
+
+  @override
+  String get structureDeletedSuccess => 'تم حذف هيكل المؤسسة بنجاح.';
+
+  @override
+  String get confirmDeleteStructure => 'هل أنت متأكد أنك تريد حذف هذا الهيكل؟';
+
+  @override
+  String structureHasOrgUnits(int count) {
+    return 'يحتوي هذا الهيكل على $count وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.';
+  }
 }

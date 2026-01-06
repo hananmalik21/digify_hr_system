@@ -11,6 +11,7 @@ class StructureListItem {
   final DateTime createdDate;
   final DateTime? lastUpdatedDate;
   final List<StructureLevelItem> levels;
+  final int orgUnitCount;
 
   const StructureListItem({
     required this.structureId,
@@ -24,6 +25,7 @@ class StructureListItem {
     required this.createdDate,
     this.lastUpdatedDate,
     required this.levels,
+    this.orgUnitCount = 0,
   });
 }
 

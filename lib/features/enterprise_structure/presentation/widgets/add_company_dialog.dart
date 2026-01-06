@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -608,9 +609,10 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
                 ? SizedBox(
                     width: 16.sp,
                     height: 16.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    child: const AppLoadingIndicator(
+                      type: LoadingType.fadingCircle,
+                      size: 16,
+                      color: Colors.white,
                     ),
                   )
                 : Text(

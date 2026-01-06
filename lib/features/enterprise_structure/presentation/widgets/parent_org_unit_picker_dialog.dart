@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -116,7 +117,10 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                   loading: () => Center(
                     child: Padding(
                       padding: EdgeInsets.all(40.w),
-                      child: CircularProgressIndicator(color: AppColors.primary),
+                      child: const AppLoadingIndicator(
+                        type: LoadingType.fadingCircle,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   error: (error, stack) => Center(

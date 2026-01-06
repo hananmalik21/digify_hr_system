@@ -203,6 +203,14 @@ class ApiClient {
         return ForbiddenException(message ?? 'Access forbidden', statusCode: statusCode, originalError: originalError);
       case 404:
         return NotFoundException(message ?? 'Resource not found', statusCode: statusCode, originalError: originalError);
+      case 409:
+        final details = _extractErrorDetails(responseData);
+        return ConflictException(
+          message ?? 'Conflict occurred',
+          statusCode: statusCode,
+          originalError: originalError,
+          details: details,
+        );
       case 422:
         return ValidationException(
           message ?? 'Validation error',
@@ -271,6 +279,47 @@ class ApiClient {
     }
 
     return responseData.toString();
+  }
+
+  /// Extracts error details from response data (for ConflictException)
+  Map<String, dynamic>? _extractErrorDetails(dynamic responseData) {
+    if (responseData == null) return null;
+
+    if (responseData is Map<String, dynamic>) {
+      // Check for error object first (new format)
+      final error = responseData['error'];
+      if (error is Map<String, dynamic>) {
+        return error;
+      }
+      // Also check for details directly (old format)
+      final details = responseData['details'];
+      if (details is Map<String, dynamic>) {
+        return details;
+      }
+      // Return the whole response if it's already a map
+      return responseData;
+    }
+
+    if (responseData is String) {
+      try {
+        final decoded = jsonDecode(responseData);
+        if (decoded is Map<String, dynamic>) {
+          final error = decoded['error'];
+          if (error is Map<String, dynamic>) {
+            return error;
+          }
+          final details = decoded['details'];
+          if (details is Map<String, dynamic>) {
+            return details;
+          }
+          return decoded;
+        }
+      } catch (_) {
+        // Ignore
+      }
+    }
+
+    return null;
   }
 
   /// Extracts validation errors from response data

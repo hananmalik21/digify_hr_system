@@ -291,4 +291,44 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   Future<void> refresh() async {
     await loadStructures(refresh: true);
   }
+
+  /// Go to a specific page
+  Future<void> goToPage(int page) async {
+    if (page < 1 || (state.pagination != null && page > state.pagination!.totalPages)) {
+      return;
+    }
+
+    if (page == state.currentPage) {
+      return; // Already on this page
+    }
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final result = await getStructureListUseCase(
+        page: page,
+        pageSize: state.pageSize,
+      );
+
+      state = state.copyWith(
+        structures: result.structures,
+        pagination: result.pagination,
+        total: result.total,
+        isLoading: false,
+        currentPage: page,
+      );
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: e.message,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        errorMessage: 'Failed to load structures: ${e.toString()}',
+      );
+    }
+  }
 }

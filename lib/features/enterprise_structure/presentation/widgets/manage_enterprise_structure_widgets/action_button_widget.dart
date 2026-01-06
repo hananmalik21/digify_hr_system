@@ -13,6 +13,7 @@ class ActionButtonWidget extends StatelessWidget {
   final String icon;
   final Color backgroundColor;
   final Color textColor;
+  final Color? iconColor;
   final VoidCallback onTap;
   final bool isLoading;
 
@@ -23,6 +24,7 @@ class ActionButtonWidget extends StatelessWidget {
     required this.isDark,
     required this.label,
     required this.icon,
+     this.iconColor,
     required this.backgroundColor,
     required this.textColor,
     required this.onTap,
@@ -84,7 +86,7 @@ class ActionButtonWidget extends StatelessWidget {
                 assetPath: icon,
                 width: isMobile ? 14 : (isTablet ? 15 : 16),
                 height: isMobile ? 14 : (isTablet ? 15 : 16),
-                color: textColor,
+                color: iconColor ?? textColor,
               ),
             SizedBox(width: 8.w),
             Flexible(

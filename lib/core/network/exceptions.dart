@@ -57,6 +57,18 @@ class ConnectionException extends NetworkException {
   const ConnectionException(super.message, {super.statusCode, super.originalError});
 }
 
+/// Conflict exception (409)
+class ConflictException extends ClientException {
+  final Map<String, dynamic>? details;
+
+  const ConflictException(
+    super.message, {
+    super.statusCode,
+    super.originalError,
+    this.details,
+  });
+}
+
 /// Unknown exception
 class UnknownException extends AppException {
   const UnknownException(super.message, {super.statusCode, super.originalError});

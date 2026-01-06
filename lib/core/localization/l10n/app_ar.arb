@@ -929,5 +929,31 @@
   "workSchedules": "جداول العمل",
   "scheduleAssignments": "تعيينات الجدول",
   "viewCalendar": "عرض التقويم",
-  "publicHolidays": "العطلات الرسمية"
+  "publicHolidays": "العطلات الرسمية",
+  "deletePermanently": "حذف نهائي",
+  "deleteStructureTitle": "حذف هيكل المؤسسة",
+  "cascadeDeleteWarning": "سيؤدي هذا الإجراء إلى حذف هيكل المؤسسة وجميع الوحدات التنظيمية المرتبطة به بشكل دائم.",
+  "cascadeDeleteDetails": "يحتوي الهيكل \"{structureName}\" على {orgUnitsCount} وحدة تنظيمية سيتم حذفها. لا يمكن التراجع عن هذا الإجراء.",
+  "@cascadeDeleteDetails": {
+    "placeholders": {
+      "structureName": {
+        "type": "String"
+      },
+      "orgUnitsCount": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteStructureMessage": "هل أنت متأكد أنك تريد المتابعة؟",
+  "structureReferencedError": "لا يمكن حذف هيكل المؤسسة: هذا الهيكل مستخدم في سجلات أخرى في قاعدة البيانات.",
+  "structureDeletedSuccess": "تم حذف هيكل المؤسسة بنجاح.",
+  "confirmDeleteStructure": "هل أنت متأكد أنك تريد حذف هذا الهيكل؟",
+  "structureHasOrgUnits": "يحتوي هذا الهيكل على {count} وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.",
+  "@structureHasOrgUnits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

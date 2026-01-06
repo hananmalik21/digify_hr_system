@@ -73,7 +73,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: isTablet ? 12.5.sp : 10.6.sp,
                     fontWeight: FontWeight.w400,
-                    color: const Color(0xFF9810FA),
+                    color: Color(0xFF155DFC),
                     height: 20 / 13.6,
                     letterSpacing: 0,
                   ),
@@ -87,7 +87,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                     width: double.infinity,
                     padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 10.h),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF9810FA),
+                      color: Color(0xFF155DFC),
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Row(
@@ -150,7 +150,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: isTablet ? 12.5.sp : 10.6.sp,
                           fontWeight: FontWeight.w400,
-                          color: const Color(0xFF9810FA),
+                          color: Color(0xFF155DFC),
                           height: 20 / 13.6,
                           letterSpacing: 0,
                         ),
@@ -166,7 +166,7 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                   child: Container(
                     padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 20.w : 24.w, vertical: 12.h),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF9810FA),
+                      color: Color(0xFF155DFC),
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Row(

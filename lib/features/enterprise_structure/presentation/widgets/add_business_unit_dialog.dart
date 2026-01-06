@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
@@ -525,9 +526,10 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
                 ? SizedBox(
                     width: 20.w,
                     height: 20.h,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    child: const AppLoadingIndicator(
+                      type: LoadingType.fadingCircle,
+                      size: 20,
+                      color: Colors.white,
                     ),
                   )
                 : Row(
@@ -582,7 +584,12 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
               border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC)),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Center(child: CircularProgressIndicator()),
+            child: Center(
+              child: const AppLoadingIndicator(
+                type: LoadingType.fadingCircle,
+                color: AppColors.primary,
+              ),
+            ),
           ),
         ],
       );

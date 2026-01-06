@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
@@ -9,11 +10,13 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/header_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/stats_cards_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/structures_list_widget.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart' show Assets;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../widgets/manage_enterprise_structure_widgets/structure_configurations_header_widget.dart' show StructureConfigurationsHeaderWidget;
+import '../widgets/manage_enterprise_structure_widgets/structure_configurations_header_widget.dart'
+    show StructureConfigurationsHeaderWidget;
 
 class ManageEnterpriseStructureScreen extends ConsumerStatefulWidget {
   const ManageEnterpriseStructureScreen({super.key});
@@ -79,7 +82,7 @@ class _ManageEnterpriseStructureScreenState
                   bottom: 24.h,
                 ),
                 web: EdgeInsetsDirectional.only(
-                  top: 88.h,
+                  top: 24.h,
                   start: 24.w,
                   end: 24.w,
                   bottom: 24.h,
@@ -88,15 +91,18 @@ class _ManageEnterpriseStructureScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HeaderWidget(localizations: localizations),
-                  SizedBox(height: isMobile ? 16.h : 24.h),
-
-                  ActiveStructureCardWidget(
+                  HeaderWidget(
+                    title: localizations.manageEnterpriseStructure,
+                    icon: Assets.icons.manageEnterpriseIcon.path,
                     localizations: localizations,
-                    isDark: isDark,
                   ),
-                  SizedBox(height: isMobile ? 16.h : 24.h),
+                  // SizedBox(height: isMobile ? 16.h : 24.h),
 
+                  // ActiveStructureCardWidget(
+                  //   localizations: localizations,
+                  //   isDark: isDark,
+                  // ),
+                  SizedBox(height: isMobile ? 16.h : 24.h),
 
                   StatsCardsWidget(
                     localizations: localizations,
@@ -131,7 +137,8 @@ class _ManageEnterpriseStructureScreenState
                   child: Container(
                     color: isDark ? Colors.black : Colors.white,
                     child: Center(
-                      child: CircularProgressIndicator(
+                      child: const AppLoadingIndicator(
+                        type: LoadingType.fadingCircle,
                         color: AppColors.primary,
                       ),
                     ),

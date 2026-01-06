@@ -2932,4 +2932,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publicHolidays => 'Public Holidays';
+
+  @override
+  String get deletePermanently => 'Delete Permanently';
+
+  @override
+  String get deleteStructureTitle => 'Delete Organization Structure';
+
+  @override
+  String get cascadeDeleteWarning =>
+      'This action will permanently delete the organization structure and all associated organizational units.';
+
+  @override
+  String cascadeDeleteDetails(String structureName, int orgUnitsCount) {
+    return 'The structure \"$structureName\" has $orgUnitsCount organizational unit(s) that will be deleted. This action cannot be undone.';
+  }
+
+  @override
+  String get deleteStructureMessage => 'Are you sure you want to proceed?';
+
+  @override
+  String get structureReferencedError =>
+      'Cannot delete organization structure: This structure is referenced by other records in the database.';
+
+  @override
+  String get structureDeletedSuccess =>
+      'Organization structure deleted successfully.';
+
+  @override
+  String get confirmDeleteStructure =>
+      'Are you sure you want to delete this structure?';
+
+  @override
+  String structureHasOrgUnits(int count) {
+    return 'This structure has $count organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.';
+  }
 }

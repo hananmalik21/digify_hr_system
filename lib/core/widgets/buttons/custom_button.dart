@@ -11,7 +11,10 @@ class CustomButton extends StatelessWidget {
   final ButtonSize size;
   final IconData? icon;
   final String? svgIcon;
+
   final bool isLoading;
+  final double? loadingSize; // ✅ NEW
+
   final bool isExpanded;
   final Color? backgroundColor;
   final Color? foregroundColor;
@@ -36,6 +39,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.svgIcon,
     this.isLoading = false,
+    this.loadingSize, // ✅ NEW
     this.isExpanded = false,
     this.backgroundColor,
     this.foregroundColor,
@@ -51,9 +55,9 @@ class CustomButton extends StatelessWidget {
     this.showShadow = false,
     this.iconPosition = IconPosition.left,
   }) : assert(
-         label != null || icon != null || svgIcon != null,
-         'CustomButton must have either label, icon, or svgIcon',
-       );
+  label != null || icon != null || svgIcon != null,
+  'CustomButton must have either label, icon, or svgIcon',
+  );
 
   /// Factory for primary action buttons
   factory CustomButton.primary({
@@ -62,6 +66,7 @@ class CustomButton extends StatelessWidget {
     IconData? icon,
     String? svgIcon,
     bool isLoading = false,
+    double? loadingSize, // ✅ NEW
     ButtonSize size = ButtonSize.medium,
   }) {
     return CustomButton(
@@ -72,6 +77,7 @@ class CustomButton extends StatelessWidget {
       icon: icon,
       svgIcon: svgIcon,
       isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -82,6 +88,7 @@ class CustomButton extends StatelessWidget {
     IconData? icon,
     String? svgIcon,
     bool isLoading = false,
+    double? loadingSize, // ✅ NEW
     ButtonSize size = ButtonSize.medium,
   }) {
     return CustomButton(
@@ -92,6 +99,7 @@ class CustomButton extends StatelessWidget {
       icon: icon,
       svgIcon: svgIcon,
       isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -102,6 +110,7 @@ class CustomButton extends StatelessWidget {
     IconData? icon,
     String? svgIcon,
     bool isLoading = false,
+    double? loadingSize, // ✅ NEW
     ButtonSize size = ButtonSize.medium,
   }) {
     return CustomButton(
@@ -112,6 +121,7 @@ class CustomButton extends StatelessWidget {
       icon: icon,
       svgIcon: svgIcon,
       isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -133,22 +143,28 @@ class CustomButton extends StatelessWidget {
     );
   }
 
-  /// Factory for icon-only buttons
+  /// Factory for icon (or icon + text) buttons ✅ (text + isLoading + loadingSize)
   factory CustomButton.icon({
-    required IconData? icon,
+    IconData? icon,
     String? svgIcon,
+    String? text,
     required VoidCallback? onPressed,
     ButtonVariant variant = ButtonVariant.primary,
     ButtonSize size = ButtonSize.medium,
     double? iconSize,
+    bool isLoading = false,
+    double? loadingSize, // ✅ NEW
   }) {
     return CustomButton(
+      label: text,
       onPressed: onPressed,
       variant: variant,
       size: size,
       icon: icon,
       svgIcon: svgIcon,
       iconSize: iconSize,
+      isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -159,6 +175,7 @@ class CustomButton extends StatelessWidget {
     IconData? icon,
     String? svgIcon,
     bool isLoading = false,
+    double? loadingSize, // ✅ NEW
     ButtonSize size = ButtonSize.medium,
   }) {
     return CustomButton(
@@ -169,6 +186,7 @@ class CustomButton extends StatelessWidget {
       icon: icon,
       svgIcon: svgIcon,
       isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -179,6 +197,7 @@ class CustomButton extends StatelessWidget {
     IconData? icon,
     String? svgIcon,
     bool isLoading = false,
+    double? loadingSize, // ✅ NEW
     ButtonSize size = ButtonSize.medium,
   }) {
     return CustomButton(
@@ -189,6 +208,7 @@ class CustomButton extends StatelessWidget {
       icon: icon,
       svgIcon: svgIcon,
       isLoading: isLoading,
+      loadingSize: loadingSize,
     );
   }
 
@@ -197,17 +217,12 @@ class CustomButton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isDisabled = onPressed == null && !isLoading;
 
-    // Get variant-specific colors
     final colors = _getButtonColors(isDark, isDisabled);
-
-    // Get size-specific dimensions
     final dimensions = _getButtonDimensions();
 
-    // Build the button content
-    Widget content = _buildButtonContent(colors, dimensions);
+    final content = _buildButtonContent(colors, dimensions);
 
-    // Wrap with Material for ink effects
-    Widget button = Material(
+    return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: isLoading || isDisabled ? null : onPressed,
@@ -222,79 +237,100 @@ class CustomButton extends StatelessWidget {
             border: colors.borderColor != null ? Border.all(color: colors.borderColor!) : null,
             boxShadow: showShadow && !isDisabled
                 ? [
-                    BoxShadow(
-                      color: colors.backgroundColor.withValues(alpha: 0.35),
-                      blurRadius: 12.r,
-                      offset: Offset(0, 6.h),
-                    ),
-                  ]
+              BoxShadow(
+                color: colors.backgroundColor.withValues(alpha: 0.35),
+                blurRadius: 12.r,
+                offset: Offset(0, 6.h),
+              ),
+            ]
                 : null,
           ),
           child: content,
         ),
       ),
     );
-
-    return button;
   }
 
   Widget _buildButtonContent(_ButtonColors colors, _ButtonDimensions dimensions) {
-    // Show loading indicator
+    // ✅ Loading indicator (circle)
     if (isLoading) {
       return Center(
         child: AppLoadingIndicator(
-          type: LoadingType.threeBounce,
+          type: LoadingType.circle,
           color: colors.foregroundColor,
-          size: dimensions.iconSize,
+          size: loadingSize ?? dimensions.iconSize,
         ),
       );
     }
 
-    // Icon-only button
-    if (label == null && (icon != null || svgIcon != null)) {
+    final hasIcon = icon != null || svgIcon != null;
+
+    // ✅ Icon-only button
+    if (label == null && hasIcon) {
       return Center(child: _buildIcon(colors, dimensions));
     }
 
-    // Button with label (and optional icon)
-    List<Widget> children = [];
-
-    // Add icon before label
-    if (iconPosition == IconPosition.left && (icon != null || svgIcon != null)) {
-      children.add(_buildIcon(colors, dimensions));
-      if (label != null) children.add(SizedBox(width: 8.w));
-    }
-
-    // Add label
-    if (label != null) {
-      children.add(
-        Flexible(
-          child: Text(
-            label!,
-            style: TextStyle(
-              fontSize: fontSize ?? dimensions.fontSize,
-              fontWeight: fontWeight ?? FontWeight.w400,
-              color: colors.foregroundColor,
-              height: 24 / (fontSize ?? dimensions.fontSize),
-              letterSpacing: 0,
-            ),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+    // ✅ Text-only button
+    if (label != null && !hasIcon) {
+      return Center(
+        child: Text(
+          label!,
+          style: TextStyle(
+            fontSize: fontSize ?? dimensions.fontSize,
+            fontWeight: fontWeight ?? FontWeight.w400,
+            color: colors.foregroundColor,
+            height: 24 / (fontSize ?? dimensions.fontSize),
+            letterSpacing: 0,
           ),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       );
     }
 
-    // Add icon after label
-    if (iconPosition == IconPosition.right && (icon != null || svgIcon != null)) {
-      if (label != null) children.add(SizedBox(width: 8.w));
-      children.add(_buildIcon(colors, dimensions));
-    }
+    // ✅ Icon + Text => text ALWAYS centered, icon pinned left/right
+    final gap = 8.w;
+    final reservedSide =
+        (iconSize ?? dimensions.iconSize) + gap; // reserve space so text stays truly centered
 
-    return Row(
-      mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
+    return SizedBox(
+      width: isExpanded ? double.infinity : null,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Centered label
+          Padding(
+            padding: EdgeInsetsDirectional.only(
+              start: iconPosition == IconPosition.left ? reservedSide : 0,
+              end: iconPosition == IconPosition.right ? reservedSide : 0,
+            ),
+            child: Transform.translate(
+              offset: const Offset(0, -0.5), // 👈 perfect for buttons
+              child: Text(
+                label!,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: fontSize ?? dimensions.fontSize,
+                  fontWeight: fontWeight ?? FontWeight.w400,
+                  color: colors.foregroundColor,
+                  letterSpacing: 0,
+                ),
+              ),
+            ),
+
+          ),
+
+          // Pinned icon
+          PositionedDirectional(
+            start: iconPosition == IconPosition.left ? 0 : null,
+            end: iconPosition == IconPosition.right ? 0 : null,
+            child: _buildIcon(colors, dimensions),
+          ),
+        ],
+      ),
     );
   }
 
@@ -320,7 +356,9 @@ class CustomButton extends StatelessWidget {
   _ButtonColors _getButtonColors(bool isDark, bool isDisabled) {
     if (isDisabled) {
       return _ButtonColors(
-        backgroundColor: isDark ? AppColors.grayBgDark.withValues(alpha: 0.3) : AppColors.grayBg.withValues(alpha: 0.5),
+        backgroundColor: isDark
+            ? AppColors.grayBgDark.withValues(alpha: 0.3)
+            : AppColors.grayBg.withValues(alpha: 0.5),
         foregroundColor: isDark ? AppColors.textMutedDark : AppColors.textMuted,
         borderColor: variant == ButtonVariant.outlined
             ? (isDark ? AppColors.borderGreyDark : AppColors.borderGrey)
@@ -331,13 +369,13 @@ class CustomButton extends StatelessWidget {
     // Custom colors override
     if (backgroundColor != null || foregroundColor != null) {
       return _ButtonColors(
-        backgroundColor:
-            backgroundColor ??
+        backgroundColor: backgroundColor ??
             (variant == ButtonVariant.text || variant == ButtonVariant.outlined
                 ? Colors.transparent
                 : AppColors.primary),
         foregroundColor: foregroundColor ?? Colors.white,
-        borderColor: borderColor ?? (variant == ButtonVariant.outlined ? (foregroundColor ?? AppColors.primary) : null),
+        borderColor: borderColor ??
+            (variant == ButtonVariant.outlined ? (foregroundColor ?? AppColors.primary) : null),
       );
     }
 
@@ -379,7 +417,6 @@ class CustomButton extends StatelessWidget {
         );
 
       case ButtonVariant.gradient:
-        // For gradient buttons, backgroundColor will be the gradient color
         return _ButtonColors(backgroundColor: backgroundColor ?? AppColors.primary, foregroundColor: Colors.white);
     }
   }
@@ -431,7 +468,11 @@ class _ButtonColors {
   final Color foregroundColor;
   final Color? borderColor;
 
-  _ButtonColors({required this.backgroundColor, required this.foregroundColor, this.borderColor});
+  _ButtonColors({
+    required this.backgroundColor,
+    required this.foregroundColor,
+    this.borderColor,
+  });
 }
 
 class _ButtonDimensions {

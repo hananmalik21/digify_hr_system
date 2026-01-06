@@ -13,6 +13,7 @@ class StructureListItemDto {
   final DateTime createdDate;
   final DateTime? lastUpdatedDate;
   final List<StructureLevelItemDto> levels;
+  final int orgUnitCount;
 
   const StructureListItemDto({
     required this.structureId,
@@ -26,6 +27,7 @@ class StructureListItemDto {
     required this.createdDate,
     this.lastUpdatedDate,
     required this.levels,
+    this.orgUnitCount = 0,
   });
 
   factory StructureListItemDto.fromJson(Map<String, dynamic> json) {
@@ -78,6 +80,9 @@ class StructureListItemDto {
       createdDate: createdDate,
       lastUpdatedDate: lastUpdatedDate,
       levels: levels,
+      orgUnitCount: (json['org_unit_count'] as num?)?.toInt() ??
+          (json['orgUnitCount'] as num?)?.toInt() ??
+          0,
     );
   }
 
@@ -94,6 +99,7 @@ class StructureListItemDto {
       createdDate: createdDate,
       lastUpdatedDate: lastUpdatedDate,
       levels: levels.map((level) => level.toDomain()).toList(),
+      orgUnitCount: orgUnitCount,
     );
   }
 }

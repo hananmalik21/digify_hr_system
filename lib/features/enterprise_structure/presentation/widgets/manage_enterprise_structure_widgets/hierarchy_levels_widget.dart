@@ -67,8 +67,8 @@ class HierarchyLevelsWidget extends StatelessWidget {
                   vertical: isMobile ? 4.h : 5.h,
                 ),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.purpleBgDark : const Color(0xFFFAF5FF),
-                  border: Border.all(color: isDark ? AppColors.purpleBorderDark : const Color(0xFFE9D4FF), width: 1),
+                  color: Color(0xffEFF6FF),
+                  // border: Border.all(color: isDark ? AppColors.purpleBorderDark : const Color(0xFFE9D4FF), width: 1),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
                 child: Row(
@@ -78,15 +78,14 @@ class HierarchyLevelsWidget extends StatelessWidget {
                       assetPath: _resolveIconByIndex(index),
                       width: isMobile ? 12 : (isTablet ? 13 : 14),
                       height: isMobile ? 12 : (isTablet ? 13 : 14),
-                      color: Color(0xff9810FA),
-                    ),
+                      color: Color(0xFF155DFC),                    ),
                     SizedBox(width: isMobile ? 3.w : 4.w),
                     Text(
                       level,
                       style: TextStyle(
                         fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppColors.purpleTextDark : const Color(0xFF59168B),
+                        color:     Color(0xFF155DFC),
                         height: 16 / 12,
                         letterSpacing: 0,
                       ),

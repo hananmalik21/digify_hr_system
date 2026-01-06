@@ -5743,6 +5743,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Public Holidays'**
   String get publicHolidays;
+
+  /// No description provided for @deletePermanently.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deletePermanently;
+
+  /// No description provided for @deleteStructureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Organization Structure'**
+  String get deleteStructureTitle;
+
+  /// No description provided for @cascadeDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This action will permanently delete the organization structure and all associated organizational units.'**
+  String get cascadeDeleteWarning;
+
+  /// No description provided for @cascadeDeleteDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'The structure \"{structureName}\" has {orgUnitsCount} organizational unit(s) that will be deleted. This action cannot be undone.'**
+  String cascadeDeleteDetails(String structureName, int orgUnitsCount);
+
+  /// No description provided for @deleteStructureMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to proceed?'**
+  String get deleteStructureMessage;
+
+  /// No description provided for @structureReferencedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete organization structure: This structure is referenced by other records in the database.'**
+  String get structureReferencedError;
+
+  /// No description provided for @structureDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization structure deleted successfully.'**
+  String get structureDeletedSuccess;
+
+  /// No description provided for @confirmDeleteStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this structure?'**
+  String get confirmDeleteStructure;
+
+  /// No description provided for @structureHasOrgUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'This structure has {count} organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.'**
+  String structureHasOrgUnits(int count);
 }
 
 class _AppLocalizationsDelegate

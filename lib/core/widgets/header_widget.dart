@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Header widget for manage enterprise structure screen
-class HeaderWidget extends StatelessWidget {
+class PageHeaderWidget extends StatelessWidget {
   final AppLocalizations localizations;
 
-  const HeaderWidget({
+  const PageHeaderWidget({
     super.key,
     required this.localizations,
     required this.title,

@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/enterprise_structure/data/datasources/
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/org_unit_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/structure_level_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/structure_list_remote_data_source.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/datasources/structure_delete_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/business_unit_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/company_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/department_repository_impl.dart';
@@ -20,6 +21,7 @@ import 'package:digify_hr_system/features/enterprise_structure/data/repositories
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/org_unit_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/structure_level_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/repositories/structure_list_repository_impl.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/repositories/structure_delete_repository_impl.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_business_unit_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_company_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_division_usecase.dart';
@@ -47,6 +49,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/d
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_levels_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart' show StructureListNotifier, StructureListState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -398,5 +401,26 @@ final deleteOrgUnitUseCaseProvider =
     Provider<DeleteOrgUnitUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return DeleteOrgUnitUseCase(repository: repository);
+});
+
+/// Provider for StructureDeleteRemoteDataSource
+final structureDeleteRemoteDataSourceProvider =
+    Provider<StructureDeleteRemoteDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return StructureDeleteRemoteDataSourceImpl(apiClient: apiClient);
+});
+
+/// Provider for StructureDeleteRepository
+final structureDeleteRepositoryProvider =
+    Provider<StructureDeleteRepositoryImpl>((ref) {
+  final remoteDataSource = ref.watch(structureDeleteRemoteDataSourceProvider);
+  return StructureDeleteRepositoryImpl(remoteDataSource: remoteDataSource);
+});
+
+/// Provider for DeleteStructureUseCase
+final deleteStructureUseCaseProvider =
+    Provider<DeleteStructureUseCase>((ref) {
+  final repository = ref.watch(structureDeleteRepositoryProvider);
+  return DeleteStructureUseCase(repository: repository);
 });
 

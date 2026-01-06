@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -123,7 +124,7 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const CircularProgressIndicator(),
+                          const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
                           SizedBox(height: 16.h),
                           Text(
                             localizations.pleaseWait,
@@ -320,7 +321,10 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
   }) {
     if (listState.isLoading && businessUnits.isEmpty) {
       return Center(
-        child: Padding(padding: EdgeInsets.all(24.h), child: CircularProgressIndicator()),
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
+        ),
       );
     }
 
