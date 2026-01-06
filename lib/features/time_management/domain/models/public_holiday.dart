@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
-/// Domain model for Public Holiday
 class PublicHoliday {
   final int id;
   final int tenantId;
@@ -40,7 +39,7 @@ class PublicHoliday {
   });
 }
 
-/// Domain model for paginated holidays response
+/// Domain entity for paginated holidays response
 class PaginatedHolidays {
   final List<PublicHoliday> holidays;
   final PaginationInfo pagination;

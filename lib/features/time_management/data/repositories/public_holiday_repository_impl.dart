@@ -24,6 +24,6 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
       type: type,
     );
 
-    return response.toDomain();
+    return response.toEntity();
   }
 }

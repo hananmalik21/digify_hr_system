@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 
-/// Data model for Public Holiday (from API)
 class PublicHolidayModel {
   final int holidayId;
   final int tenantId;
@@ -75,9 +74,8 @@ class PublicHolidayModel {
     );
   }
 
-  /// Convert to domain model
-  PublicHoliday toDomain() {
-    // Parse date from ISO string
+  /// Convert to domain entity (handles all parsing and transformations)
+  PublicHoliday toEntity() {
     DateTime parseDate(String dateString) {
       try {
         return DateTime.parse(dateString).toLocal();
@@ -86,20 +84,14 @@ class PublicHolidayModel {
       }
     }
 
-    // Map holiday_type to HolidayType enum
-    // API returns "PUBLIC" but we need to determine if it's FIXED or ISLAMIC
-    // For now, we'll use a simple mapping - this might need adjustment based on actual API behavior
     HolidayType mapHolidayType(String type) {
       final upperType = type.toUpperCase();
-      // If the API provides more specific types, map them here
-      // For now, assuming PUBLIC means FIXED, and we might need additional logic
       if (upperType.contains('ISLAMIC') || upperType.contains('EID') || upperType.contains('RAMADAN')) {
         return HolidayType.islamic;
       }
       return HolidayType.fixed;
     }
 
-    // Determine payment status - assuming all holidays are paid unless specified otherwise
     HolidayPaymentStatus paymentStatus = HolidayPaymentStatus.paid;
 
     return PublicHoliday(
@@ -113,12 +105,49 @@ class PublicHolidayModel {
       paymentStatus: paymentStatus,
       descriptionEn: descriptionEn,
       descriptionAr: descriptionAr,
-      appliesTo: appliesTo.toLowerCase(),
+      appliesTo: appliesTo,
       isActive: status.toUpperCase() == 'ACTIVE',
       createdAt: creationDate.isNotEmpty ? parseDate(creationDate) : null,
       createdBy: createdBy.isNotEmpty ? createdBy : null,
       updatedAt: lastUpdateDate.isNotEmpty ? parseDate(lastUpdateDate) : null,
       updatedBy: lastUpdatedBy.isNotEmpty ? lastUpdatedBy : null,
+    );
+  }
+
+  /// Create data model from domain entity
+  factory PublicHolidayModel.fromEntity(PublicHoliday entity) {
+    String formatDate(DateTime? date) {
+      if (date == null) return '';
+      return date.toUtc().toIso8601String();
+    }
+
+    String mapHolidayTypeToApi(HolidayType type) {
+      switch (type) {
+        case HolidayType.fixed:
+          return 'FIXED';
+        case HolidayType.islamic:
+          return 'ISLAMIC';
+        case HolidayType.variable:
+          return 'VARIABLE';
+      }
+    }
+
+    return PublicHolidayModel(
+      holidayId: entity.id,
+      tenantId: entity.tenantId,
+      holidayNameEn: entity.nameEn,
+      holidayNameAr: entity.nameAr,
+      holidayDate: formatDate(entity.date),
+      holidayYear: entity.year,
+      holidayType: mapHolidayTypeToApi(entity.type),
+      descriptionEn: entity.descriptionEn,
+      descriptionAr: entity.descriptionAr,
+      appliesTo: entity.appliesTo,
+      status: entity.isActive ? 'ACTIVE' : 'INACTIVE',
+      creationDate: formatDate(entity.createdAt),
+      createdBy: entity.createdBy ?? 'SYSTEM',
+      lastUpdateDate: formatDate(entity.updatedAt),
+      lastUpdatedBy: entity.updatedBy ?? 'SYSTEM',
     );
   }
 }
@@ -155,11 +184,11 @@ class PaginatedHolidaysModel {
     return PaginatedHolidaysModel(status: status, message: message, data: holidays, meta: meta);
   }
 
-  /// Convert to domain model
-  PaginatedHolidays toDomain() {
+  /// Convert to domain entity
+  PaginatedHolidays toEntity() {
     return PaginatedHolidays(
-      holidays: data.map((model) => model.toDomain()).toList(),
-      pagination: meta.pagination.toDomain(),
+      holidays: data.map((model) => model.toEntity()).toList(),
+      pagination: meta.pagination.toEntity(),
     );
   }
 }
@@ -218,8 +247,8 @@ class PaginationInfoModel {
     );
   }
 
-  /// Convert to domain model
-  PaginationInfo toDomain() {
+  /// Convert to domain entity
+  PaginationInfo toEntity() {
     return PaginationInfo(
       currentPage: page,
       pageSize: limit,
