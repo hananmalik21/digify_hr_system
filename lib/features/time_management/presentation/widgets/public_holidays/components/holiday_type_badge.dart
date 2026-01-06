@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
@@ -11,35 +12,45 @@ class HolidayTypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDark;
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildTypeBadge(context, isDark),
+        _buildTypeBadge(context),
         SizedBox(width: 8.w),
-        _buildPaymentBadge(context, isDark),
+        _buildPaymentBadge(context),
       ],
     );
   }
 
-  Widget _buildTypeBadge(BuildContext context, bool isDark) {
+  Widget _buildTypeBadge(BuildContext context) {
+    final isDark = context.isDark;
+    final isIslamicPaid = type == HolidayType.islamic && paymentStatus == HolidayPaymentStatus.paid;
+
     final (label, bgColor, textColor) = switch (type) {
       HolidayType.fixed => (
         'FIXED',
-        isDark ? const Color(0xFF1E3A5F) : const Color(0xFFE0E7FF),
-        isDark ? const Color(0xFF93C5FD) : const Color(0xFF3730A3),
+        isDark ? AppColors.holidayFixedBgDark : AppColors.holidayFixedBg,
+        isDark ? AppColors.holidayFixedTextDark : AppColors.holidayFixedText,
       ),
       HolidayType.islamic => (
         'ISLAMIC',
-        isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
-        isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
+        isIslamicPaid
+            ? (isDark ? AppColors.holidayIslamicPaidBgDark : AppColors.holidayIslamicPaidBg)
+            : (isDark ? AppColors.holidayIslamicBgDark : AppColors.holidayIslamicBg),
+        isIslamicPaid
+            ? (isDark ? AppColors.holidayIslamicPaidTextDark : AppColors.holidayIslamicPaidText)
+            : (isDark ? AppColors.holidayIslamicTextDark : AppColors.holidayIslamicText),
+      ),
+      HolidayType.variable => (
+        'VARIABLE',
+        isDark ? AppColors.primaryDark : AppColors.primary.withValues(alpha: 0.1),
+        isDark ? AppColors.primaryLight : AppColors.primary,
       ),
     };
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(6.r)),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(4.r)),
       child: Text(
         label,
         style: TextStyle(fontSize: 12.6.sp, fontWeight: FontWeight.w500, color: textColor, fontFamily: 'Inter'),
@@ -47,23 +58,30 @@ class HolidayTypeBadge extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentBadge(BuildContext context, bool isDark) {
+  Widget _buildPaymentBadge(BuildContext context) {
+    final isDark = context.isDark;
+    final isIslamicPaid = type == HolidayType.islamic && paymentStatus == HolidayPaymentStatus.paid;
+
     final (label, bgColor, textColor) = switch (paymentStatus) {
       HolidayPaymentStatus.paid => (
         'PAID',
-        isDark ? const Color(0xFF064E3B) : const Color(0xFFD1FAE5),
-        isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46),
+        isIslamicPaid
+            ? (isDark ? AppColors.holidayIslamicPaidBgDark : AppColors.holidayIslamicPaidBg)
+            : (isDark ? AppColors.holidayPaidBgDark : AppColors.holidayPaidBg),
+        isIslamicPaid
+            ? (isDark ? AppColors.holidayIslamicPaidTextDark : AppColors.holidayIslamicPaidText)
+            : (isDark ? AppColors.holidayPaidTextDark : AppColors.holidayPaidText),
       ),
       HolidayPaymentStatus.unpaid => (
         'UNPAID',
-        isDark ? const Color(0xFF7F1D1D) : const Color(0xFFFEE2E2),
-        isDark ? const Color(0xFFFCA5A5) : const Color(0xFF991B1B),
+        isDark ? AppColors.holidayUnpaidBgDark : AppColors.holidayUnpaidBg,
+        isDark ? AppColors.holidayUnpaidTextDark : AppColors.holidayUnpaidText,
       ),
     };
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(6.r)),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(4.r)),
       child: Text(
         label,
         style: TextStyle(fontSize: 12.6.sp, fontWeight: FontWeight.w500, color: textColor, fontFamily: 'Inter'),

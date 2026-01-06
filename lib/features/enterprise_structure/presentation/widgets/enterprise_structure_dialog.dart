@@ -10,13 +10,10 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_dropdown.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/active_status_card.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_instructions_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_summary_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_dialog_header.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_area.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/warning_status_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog_widgets/dialog_footer.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog_widgets/hierarchy_preview_section.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/enterprise_structure_dialog_widgets/organizational_hierarchy_levels_section.dart';

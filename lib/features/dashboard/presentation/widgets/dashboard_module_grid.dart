@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:reorderables/reorderables.dart';
 
 import 'dashboard_button_model.dart';
@@ -11,11 +10,7 @@ class DashboardModuleGrid extends ConsumerStatefulWidget {
   final List<DashboardButton> buttons;
   final Function(DashboardButton) onButtonTap;
 
-  const DashboardModuleGrid({
-    super.key,
-    required this.buttons,
-    required this.onButtonTap,
-  });
+  const DashboardModuleGrid({super.key, required this.buttons, required this.onButtonTap});
 
   @override
   ConsumerState<DashboardModuleGrid> createState() => _DashboardModuleGridState();
@@ -119,11 +114,7 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
               key: ValueKey('dash-${btn.id}'),
               width: spec.tileW,
               height: spec.tileH,
-              child: DashboardModuleButton(
-                button: btn,
-                isDragging: _isDragging,
-                onTap: () => widget.onButtonTap(btn),
-              ),
+              child: DashboardModuleButton(button: btn, isDragging: _isDragging, onTap: () => widget.onButtonTap(btn)),
             );
           }),
         );

@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/core/widgets/forms/filter_pill_dropdown.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/compact_digify_dropdown.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,13 +97,27 @@ class PublicHolidaysActionBar extends StatelessWidget {
   }
 
   Widget _buildYearDropdown(BuildContext context) {
-    final isDark = context.isDark;
-    return FilterPillDropdown(value: selectedYear, items: availableYears, onChanged: onYearChanged, isDark: isDark);
+    return CompactDigifyDropdown<String>(
+      value: selectedYear,
+      items: availableYears,
+      itemLabelBuilder: (year) => year,
+      hint: 'Year',
+      onChanged: onYearChanged,
+      height: 40.h,
+      width: 120.w,
+    );
   }
 
   Widget _buildTypeDropdown(BuildContext context) {
-    final isDark = context.isDark;
-    return FilterPillDropdown(value: selectedType, items: availableTypes, onChanged: onTypeChanged, isDark: isDark);
+    return CompactDigifyDropdown<String>(
+      value: selectedType,
+      items: availableTypes,
+      itemLabelBuilder: (type) => type,
+      hint: 'Type',
+      onChanged: onTypeChanged,
+      height: 40.h,
+      width: 120.w,
+    );
   }
 
   Widget _buildAddButton(BuildContext context) {

@@ -147,6 +147,32 @@ class AppColors {
   static const Color activeStatusBorder = Color(0xFF86EFAC);
   static const Color activeStatusText = Color(0xFF166534);
 
+  // Holiday Badge Colors
+  static const Color holidayFixedBg = Color(0xFFF3E8FF);
+  static const Color holidayFixedText = Color(0xFF6E11B0);
+  static const Color holidayFixedBgDark = Color(0xFF1E3A5F);
+  static const Color holidayFixedTextDark = Color(0xFF93C5FD);
+
+  static const Color holidayIslamicBg = Color(0xFFF3F4F6);
+  static const Color holidayIslamicText = Color(0xFF374151);
+  static const Color holidayIslamicBgDark = Color(0xFF1F2937);
+  static const Color holidayIslamicTextDark = Color(0xFFD1D5DB);
+
+  static const Color holidayIslamicPaidBg = Color(0xFFDCFCE7);
+  static const Color holidayIslamicPaidText = Color(0xFF016630);
+  static const Color holidayIslamicPaidBgDark = Color(0xFF064E3B);
+  static const Color holidayIslamicPaidTextDark = Color(0xFF6EE7B7);
+
+  static const Color holidayPaidBg = Color(0xFFD1FAE5);
+  static const Color holidayPaidText = Color(0xFF065F46);
+  static const Color holidayPaidBgDark = Color(0xFF064E3B);
+  static const Color holidayPaidTextDark = Color(0xFF6EE7B7);
+
+  static const Color holidayUnpaidBg = Color(0xFFFEE2E2);
+  static const Color holidayUnpaidText = Color(0xFF991B1B);
+  static const Color holidayUnpaidBgDark = Color(0xFF7F1D1D);
+  static const Color holidayUnpaidTextDark = Color(0xFFFCA5A5);
+
   static const Color inactiveStatusBg = Color(0xFFF3F4F6);
   static const Color inactiveStatusBorder = Color(0xFFD1D5DB);
   static const Color inactiveStatusText = Color(0xFF6B7280);

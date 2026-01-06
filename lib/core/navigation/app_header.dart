@@ -30,30 +30,14 @@ class AppHeader extends ConsumerWidget {
         height: isMobile ? 56.h : 72.h,
         decoration: BoxDecoration(
           color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-          border: Border(
-            bottom: BorderSide(
-              color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-              width: 1,
-            ),
-          ),
+          border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.10),
-              blurRadius: 3,
-              offset: const Offset(0, 1),
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 2,
-              offset: const Offset(0, -1),
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 3, offset: const Offset(0, 1)),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
           ],
         ),
         child: Padding(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: isMobile ? 12.w : 16.w,
-            vertical: isMobile ? 8.h : 4.h,
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: isMobile ? 12.w : 16.w, vertical: isMobile ? 8.h : 4.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -71,27 +55,20 @@ class AppHeader extends ConsumerWidget {
                     },
                     child: Container(
                       padding: EdgeInsets.all(6.r),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                       child: DigifyAsset(
                         assetPath: Assets.icons.menuToggleIcon.path,
                         width: isMobile ? 18 : 20,
                         height: isMobile ? 18 : 20,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF1E2939),
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                       ),
                     ),
                   ),
-                 Container(
-                      height: isMobile ? 40.h : 100.h,
-                      width: isMobile ? 80.w : 120.w,
-                      child: Image.asset(
-                        'assets/icons/digify_hr_logo.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  SizedBox(
+                    height: isMobile ? 40.h : 100.h,
+                    width: isMobile ? 80.w : 120.w,
+                    child: Image.asset('assets/icons/digify_hr_logo.png', fit: BoxFit.cover),
+                  ),
 
                   SizedBox(width: isMobile ? 8.w : 4.w),
                 ],
@@ -107,9 +84,7 @@ class AppHeader extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: isTablet ? 16.sp : 18.8.sp,
                           fontWeight: FontWeight.w500,
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : const Color(0xFF1E2939),
+                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                           height: 30 / 18.8,
                         ),
                         children: [
@@ -142,17 +117,11 @@ class AppHeader extends ConsumerWidget {
                     },
                     child: Container(
                       padding: EdgeInsets.all(6.r),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                       child: Icon(
-                        themeMode == ThemeMode.dark
-                            ? Icons.light_mode
-                            : Icons.dark_mode,
+                        themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
                         size: isMobile ? 18.sp : 20.sp,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : const Color(0xFF1E2939),
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                       ),
                     ),
                   ),
@@ -167,21 +136,14 @@ class AppHeader extends ConsumerWidget {
                         ref.read(localeProvider.notifier).toggleLocale();
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 6.h,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                         child: Text(
                           locale.languageCode.toUpperCase(),
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF1E2939),
+                            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                           ),
                         ),
                       ),
@@ -196,16 +158,12 @@ class AppHeader extends ConsumerWidget {
                       onTap: () => context.go('/dashboard'),
                       child: Container(
                         padding: EdgeInsets.all(6.r),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                         child: DigifyAsset(
                           assetPath: Assets.icons.homeIcon.path,
                           width: 20,
                           height: 20,
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : const Color(0xFF1E2939),
+                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                         ),
                       ),
                     ),
@@ -226,17 +184,12 @@ class AppHeader extends ConsumerWidget {
                             onTap: () {},
                             child: Container(
                               padding: EdgeInsets.all(6.r),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                               child: DigifyAsset(
-                                assetPath:
-                                Assets.icons.notificationsIcon.path,
+                                assetPath: Assets.icons.notificationsIcon.path,
                                 width: isMobile ? 18 : 20,
                                 height: isMobile ? 18 : 20,
-                                color: isDark
-                                    ? AppColors.textPrimaryDark
-                                    : const Color(0xFF1E2939),
+                                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
                               ),
                             ),
                           ),
@@ -247,10 +200,7 @@ class AppHeader extends ConsumerWidget {
                           child: Container(
                             width: 16.w,
                             height: 16.h,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFFB2C36),
-                              shape: BoxShape.circle,
-                            ),
+                            decoration: const BoxDecoration(color: Color(0xFFFB2C36), shape: BoxShape.circle),
                             child: Center(
                               child: Text(
                                 '2',
@@ -283,10 +233,7 @@ class AppHeader extends ConsumerWidget {
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          side: const BorderSide(
-                            color: Color(0xFFE2E8F0),
-                            width: 1,
-                          ),
+                          side: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
                         ),
                       ),
                     ),
@@ -294,10 +241,8 @@ class AppHeader extends ConsumerWidget {
                       tooltip: '',
                       offset: const Offset(0, 50),
                       elevation: 10,
-                      shadowColor: Colors.black.withOpacity(0.10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
+                      shadowColor: Colors.black.withValues(alpha: 0.10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                       onOpened: () => debugPrint('✅ Popup opened'),
                       onCanceled: () => debugPrint('⚠️ Popup canceled'),
                       onSelected: (value) {
@@ -310,18 +255,10 @@ class AppHeader extends ConsumerWidget {
                           enabled: false,
                           padding: EdgeInsets.zero,
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                              vertical: 16.h,
-                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                             decoration: const BoxDecoration(
                               color: Color(0xFFF1F5F9),
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Color(0xFFE2E8F0),
-                                  width: 1,
-                                ),
-                              ),
+                              border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1)),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(12),
@@ -332,10 +269,7 @@ class AppHeader extends ConsumerWidget {
                                 Container(
                                   width: 48.w,
                                   height: 48.h,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF3B82F6),
-                                    shape: BoxShape.circle,
-                                  ),
+                                  decoration: const BoxDecoration(color: Color(0xFF3B82F6), shape: BoxShape.circle),
                                   child: Center(
                                     child: DigifyAsset(
                                       assetPath: 'assets/icons/user_icon.svg',
@@ -348,8 +282,7 @@ class AppHeader extends ConsumerWidget {
                                 SizedBox(width: 12.w),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
@@ -416,11 +349,7 @@ class AppHeader extends ConsumerWidget {
                             children: [
                               SizedBox(
                                 width: 24.w,
-                                child: Icon(
-                                  Icons.logout_rounded,
-                                  size: 20.sp,
-                                  color: const Color(0xFFEF4444),
-                                ),
+                                child: Icon(Icons.logout_rounded, size: 20.sp, color: const Color(0xFFEF4444)),
                               ),
                               SizedBox(width: 12.w),
                               Text(
@@ -440,19 +369,14 @@ class AppHeader extends ConsumerWidget {
                         padding: EdgeInsets.all(2.r),
                         child: Container(
                           padding: EdgeInsets.all(isMobile ? 4.r : 8.r),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
                                 width: isMobile ? 28.w : 32.w,
                                 height: isMobile ? 28.h : 32.h,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.primary,
-                                  shape: BoxShape.circle,
-                                ),
+                                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                                 child: Center(
                                   child: DigifyAsset(
                                     assetPath: 'assets/icons/user_icon.svg',
@@ -469,21 +393,16 @@ class AppHeader extends ConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 15.3.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : const Color(0xFF364153),
+                                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
                                     height: 24 / 15.3,
                                   ),
                                 ),
                                 SizedBox(width: 8.w),
                                 DigifyAsset(
-                                  assetPath:
-                                  'assets/icons/dropdown_arrow_icon.svg',
+                                  assetPath: 'assets/icons/dropdown_arrow_icon.svg',
                                   height: 16.sp,
                                   width: 16.sp,
-                                  color: isDark
-                                      ? AppColors.textSecondaryDark
-                                      : const Color(0xFF364153),
+                                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
                                 ),
                               ],
                             ],
@@ -517,26 +436,13 @@ class AppHeader extends ConsumerWidget {
           SizedBox(
             width: 24.w,
             child: isSvg && iconPath != null
-                ? DigifyAsset(
-              assetPath: iconPath,
-              width: 20.sp,
-              height: 20.sp,
-              color: const Color(0xFF64748B),
-            )
-                : Icon(
-              iconData,
-              size: 20.sp,
-              color: const Color(0xFF64748B),
-            ),
+                ? DigifyAsset(assetPath: iconPath, width: 20.sp, height: 20.sp, color: const Color(0xFF64748B))
+                : Icon(iconData, size: 20.sp, color: const Color(0xFF64748B)),
           ),
           SizedBox(width: 12.w),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF364153),
-            ),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: const Color(0xFF364153)),
           ),
         ],
       ),
