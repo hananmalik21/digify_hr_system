@@ -13,6 +13,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/p
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_skeleton.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/dialogs/create_holiday_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/dialogs/view_holiday_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/mappers/public_holiday_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,6 +94,16 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
         ToastService.error(context, next.deleteErrorMessage!);
         notifier.clearSideEffects();
       }
+
+      if (next.createSuccessMessage != null && previous.createSuccessMessage != next.createSuccessMessage) {
+        ToastService.success(context, next.createSuccessMessage!);
+        notifier.clearSideEffects();
+      }
+
+      if (next.createErrorMessage != null && previous.createErrorMessage != next.createErrorMessage) {
+        ToastService.error(context, next.createErrorMessage!);
+        notifier.clearSideEffects();
+      }
     });
 
     return SingleChildScrollView(
@@ -170,8 +181,22 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
                 children: [
                   MonthlyHolidayGroup(
                     data: group,
-                    onViewHoliday: (id) {},
-                    onEditHoliday: (id) {},
+                    onViewHoliday: (id) {
+                      final holidayIdInt = int.tryParse(id);
+                      if (holidayIdInt == null) return;
+                      final holiday = notifier.getHolidayById(holidayIdInt);
+                      if (holiday != null) {
+                        ViewHolidayDialog.show(context, holiday: holiday);
+                      }
+                    },
+                    onEditHoliday: (id) {
+                      final holidayIdInt = int.tryParse(id);
+                      if (holidayIdInt == null) return;
+                      final holiday = notifier.getHolidayById(holidayIdInt);
+                      if (holiday != null) {
+                        CreateHolidayDialog.show(context, holiday: holiday);
+                      }
+                    },
                     onDeleteHoliday: (id) => _handleDeleteHoliday(context, id, notifier, state),
                   ),
                   SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),

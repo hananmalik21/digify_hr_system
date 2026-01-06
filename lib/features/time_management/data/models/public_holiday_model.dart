@@ -89,6 +89,9 @@ class PublicHolidayModel {
       if (upperType.contains('ISLAMIC') || upperType.contains('EID') || upperType.contains('RAMADAN')) {
         return HolidayType.islamic;
       }
+      if (upperType.contains('VARIABLE')) {
+        return HolidayType.variable;
+      }
       return HolidayType.fixed;
     }
 
