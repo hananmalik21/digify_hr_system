@@ -46,4 +46,5 @@ class ApiEndpoints {
   static const String tmScheduleAssignments = '$api/tm/schedule-assignments';
   static String tmScheduleAssignmentById(int scheduleAssignmentId) => '$tmScheduleAssignments/$scheduleAssignmentId';
   static const String tmPublicHolidays = '$api/holidays';
+  static String tmPublicHolidayById(int holidayId) => '$tmPublicHolidays/$holidayId';
 }
