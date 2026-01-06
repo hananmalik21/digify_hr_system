@@ -4,6 +4,8 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/public_holiday_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/public_holiday_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
+import 'package:digify_hr_system/features/time_management/domain/repositories/public_holiday_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/create_public_holiday_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_public_holidays_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +18,7 @@ final publicHolidayRemoteDataSourceProvider = Provider<PublicHolidayRemoteDataSo
   return PublicHolidayRemoteDataSourceImpl(apiClient: apiClient);
 });
 
-final publicHolidayRepositoryProvider = Provider<PublicHolidayRepositoryImpl>((ref) {
+final publicHolidayRepositoryProvider = Provider<PublicHolidayRepository>((ref) {
   final remoteDataSource = ref.watch(publicHolidayRemoteDataSourceProvider);
   return PublicHolidayRepositoryImpl(remoteDataSource: remoteDataSource);
 });
@@ -24,6 +26,11 @@ final publicHolidayRepositoryProvider = Provider<PublicHolidayRepositoryImpl>((r
 final getPublicHolidaysUseCaseProvider = Provider<GetPublicHolidaysUseCase>((ref) {
   final repository = ref.watch(publicHolidayRepositoryProvider);
   return GetPublicHolidaysUseCase(repository: repository);
+});
+
+final createPublicHolidayUseCaseProvider = Provider<CreatePublicHolidayUseCase>((ref) {
+  final repository = ref.watch(publicHolidayRepositoryProvider);
+  return CreatePublicHolidayUseCase(repository: repository);
 });
 
 /// State for public holidays
@@ -187,6 +194,11 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   /// Refresh holidays
   Future<void> refresh() async {
     await loadHolidays(refresh: true);
+  }
+
+  /// Add holiday optimistically
+  void addHolidayOptimistically(PublicHoliday holiday) {
+    state = state.copyWith(holidays: [holiday, ...state.holidays], totalHolidays: state.totalHolidays + 1);
   }
 }
 

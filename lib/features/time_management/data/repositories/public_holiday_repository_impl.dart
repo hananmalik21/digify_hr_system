@@ -1,6 +1,9 @@
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/public_holiday_remote_datasource.dart';
+import 'package:digify_hr_system/features/time_management/data/models/public_holiday_model.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/public_holiday_repository.dart';
+import 'package:intl/intl.dart';
 
 /// Repository implementation for public holiday operations
 class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
@@ -25,5 +28,41 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
     );
 
     return response.toEntity();
+  }
+
+  @override
+  Future<PublicHoliday> createHoliday({
+    required int tenantId,
+    required String nameEn,
+    required String nameAr,
+    required DateTime date,
+    required int year,
+    required HolidayType type,
+    required String descriptionEn,
+    required String descriptionAr,
+    required String appliesTo,
+    required bool isPaid,
+  }) async {
+    final requestBody = {
+      'TENANT_ID': tenantId,
+      'HOLIDAY_NAME_EN': nameEn,
+      'HOLIDAY_NAME_AR': nameAr,
+      'HOLIDAY_DATE': DateFormat('yyyy-MM-dd').format(date),
+      'HOLIDAY_YEAR': year,
+      'HOLIDAY_TYPE': type.apiValue.toUpperCase(),
+      'DESCRIPTION_EN': descriptionEn,
+      'DESCRIPTION_AR': descriptionAr,
+      'APPLIES_TO': appliesTo.toUpperCase(),
+      'STATUS': 'ACTIVE',
+    };
+
+    final response = await remoteDataSource.createHoliday(requestBody);
+
+    if (response['data'] != null && response['data'] is Map<String, dynamic>) {
+      final holidayModel = PublicHolidayModel.fromJson(response['data'] as Map<String, dynamic>);
+      return holidayModel.toEntity();
+    }
+
+    throw Exception('Invalid response format from server');
   }
 }

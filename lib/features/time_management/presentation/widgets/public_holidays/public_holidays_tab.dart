@@ -9,6 +9,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/p
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_compliance_banner.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_skeleton.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_stats_cards.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/dialogs/create_holiday_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/mappers/public_holiday_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,7 +86,7 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
             onSearchChanged: (query) {
               notifier.setSearchQuery(query.isEmpty ? null : query);
             },
-            onAddHoliday: () {},
+            onAddHoliday: () => CreateHolidayDialog.show(context),
             onImport: () {},
             onExport: () {},
           ),

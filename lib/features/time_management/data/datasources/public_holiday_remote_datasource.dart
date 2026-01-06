@@ -12,6 +12,8 @@ abstract class PublicHolidayRemoteDataSource {
     String? year,
     String? type,
   });
+
+  Future<Map<String, dynamic>> createHoliday(Map<String, dynamic> requestBody);
 }
 
 class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource {
@@ -63,6 +65,23 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
       throw ValidationException('Invalid data format: ${e.message}', originalError: e);
     } catch (e) {
       throw UnknownException('Failed to fetch holidays: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> createHoliday(Map<String, dynamic> requestBody) async {
+    try {
+      final response = await apiClient.post(ApiEndpoints.tmPublicHolidays, body: requestBody);
+
+      if (response.isEmpty) {
+        throw UnknownException('Empty response from server');
+      }
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create holiday: ${e.toString()}', originalError: e);
     }
   }
 }
