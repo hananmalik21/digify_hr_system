@@ -7,6 +7,8 @@ class DashboardButton {
   final Color color;
   final String route;
   final bool isMultiLine;
+  final int? badgeCount;
+  final String? subtitle;
 
   DashboardButton({
     required this.id,
@@ -15,9 +17,11 @@ class DashboardButton {
     required this.color,
     required this.route,
     this.isMultiLine = false,
+    this.badgeCount,
+    this.subtitle,
   });
 
-  DashboardButton copyWith({String? label}) {
+  DashboardButton copyWith({String? label, int? badgeCount, String? subtitle}) {
     return DashboardButton(
       id: id,
       icon: icon,
@@ -25,6 +29,8 @@ class DashboardButton {
       color: color,
       route: route,
       isMultiLine: isMultiLine,
+      badgeCount: badgeCount ?? this.badgeCount,
+      subtitle: subtitle ?? this.subtitle,
     );
   }
 }
