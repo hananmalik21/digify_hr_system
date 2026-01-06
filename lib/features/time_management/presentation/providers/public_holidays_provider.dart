@@ -8,6 +8,8 @@ import 'package:digify_hr_system/features/time_management/domain/repositories/pu
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_public_holiday_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_public_holiday_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_public_holidays_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/update_public_holiday_usecase.dart';
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final publicHolidayApiClientProvider = Provider<ApiClient>((ref) {
@@ -32,6 +34,11 @@ final getPublicHolidaysUseCaseProvider = Provider<GetPublicHolidaysUseCase>((ref
 final createPublicHolidayUseCaseProvider = Provider<CreatePublicHolidayUseCase>((ref) {
   final repository = ref.watch(publicHolidayRepositoryProvider);
   return CreatePublicHolidayUseCase(repository: repository);
+});
+
+final updatePublicHolidayUseCaseProvider = Provider<UpdatePublicHolidayUseCase>((ref) {
+  final repository = ref.watch(publicHolidayRepositoryProvider);
+  return UpdatePublicHolidayUseCase(repository);
 });
 
 final deletePublicHolidayUseCaseProvider = Provider<DeletePublicHolidayUseCase>((ref) {
@@ -128,9 +135,15 @@ class PublicHolidaysState {
 class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   final GetPublicHolidaysUseCase getHolidaysUseCase;
   final DeletePublicHolidayUseCase deleteHolidayUseCase;
+  final CreatePublicHolidayUseCase createHolidayUseCase;
+  final UpdatePublicHolidayUseCase updateHolidayUseCase;
 
-  PublicHolidaysNotifier({required this.getHolidaysUseCase, required this.deleteHolidayUseCase})
-    : super(const PublicHolidaysState());
+  PublicHolidaysNotifier({
+    required this.getHolidaysUseCase,
+    required this.deleteHolidayUseCase,
+    required this.createHolidayUseCase,
+    required this.updateHolidayUseCase,
+  }) : super(const PublicHolidaysState());
 
   /// Load holidays
   Future<void> loadHolidays({bool refresh = false}) async {
@@ -260,11 +273,101 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   void clearSideEffects() {
     state = state.copyWith(clearSideEffects: true);
   }
+
+  /// Get holiday by ID
+  PublicHoliday? getHolidayById(int holidayId) {
+    try {
+      return state.holidays.firstWhere((h) => h.id == holidayId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Create holiday
+  Future<void> createHoliday({
+    required int tenantId,
+    required String nameEn,
+    required String nameAr,
+    required DateTime date,
+    required int year,
+    required HolidayType type,
+    required String descriptionEn,
+    required String descriptionAr,
+    required String appliesTo,
+    required bool isPaid,
+  }) async {
+    try {
+      final createdHoliday = await createHolidayUseCase.execute(
+        tenantId: tenantId,
+        nameEn: nameEn,
+        nameAr: nameAr,
+        date: date,
+        year: year,
+        type: type,
+        descriptionEn: descriptionEn,
+        descriptionAr: descriptionAr,
+        appliesTo: appliesTo,
+        isPaid: isPaid,
+      );
+
+      state = state.copyWith(
+        holidays: [createdHoliday, ...state.holidays],
+        totalHolidays: state.totalHolidays + 1,
+        createSuccessMessage: 'Holiday created successfully',
+      );
+    } catch (e) {
+      state = state.copyWith(createErrorMessage: 'Failed to create holiday: ${e.toString()}');
+    }
+  }
+
+  /// Update holiday
+  Future<void> updateHoliday({
+    required int holidayId,
+    required int tenantId,
+    required String nameEn,
+    required String nameAr,
+    required DateTime date,
+    required int year,
+    required HolidayType type,
+    required String descriptionEn,
+    required String descriptionAr,
+    required String appliesTo,
+    required bool isPaid,
+  }) async {
+    try {
+      final updateUseCase = updateHolidayUseCase;
+      await updateUseCase.execute(
+        holidayId: holidayId,
+        tenantId: tenantId,
+        nameEn: nameEn,
+        nameAr: nameAr,
+        date: date,
+        year: year,
+        type: type,
+        descriptionEn: descriptionEn,
+        descriptionAr: descriptionAr,
+        appliesTo: appliesTo,
+        isPaid: isPaid,
+      );
+
+      await refresh();
+      state = state.copyWith(createSuccessMessage: 'Holiday updated successfully');
+    } catch (e) {
+      state = state.copyWith(createErrorMessage: 'Failed to update holiday: ${e.toString()}');
+    }
+  }
 }
 
 /// Provider for public holidays notifier
 final publicHolidaysNotifierProvider = StateNotifierProvider<PublicHolidaysNotifier, PublicHolidaysState>((ref) {
   final getHolidaysUseCase = ref.watch(getPublicHolidaysUseCaseProvider);
   final deleteHolidayUseCase = ref.watch(deletePublicHolidayUseCaseProvider);
-  return PublicHolidaysNotifier(getHolidaysUseCase: getHolidaysUseCase, deleteHolidayUseCase: deleteHolidayUseCase);
+  final createHolidayUseCase = ref.watch(createPublicHolidayUseCaseProvider);
+  final updateHolidayUseCase = ref.watch(updatePublicHolidayUseCaseProvider);
+  return PublicHolidaysNotifier(
+    getHolidaysUseCase: getHolidaysUseCase,
+    deleteHolidayUseCase: deleteHolidayUseCase,
+    createHolidayUseCase: createHolidayUseCase,
+    updateHolidayUseCase: updateHolidayUseCase,
+  );
 });

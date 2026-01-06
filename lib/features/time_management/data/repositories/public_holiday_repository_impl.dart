@@ -67,6 +67,43 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
   }
 
   @override
+  Future<PublicHoliday> updateHoliday({
+    required int holidayId,
+    required int tenantId,
+    required String nameEn,
+    required String nameAr,
+    required DateTime date,
+    required int year,
+    required HolidayType type,
+    required String descriptionEn,
+    required String descriptionAr,
+    required String appliesTo,
+    required bool isPaid,
+  }) async {
+    final requestBody = {
+      'TENANT_ID': tenantId,
+      'HOLIDAY_NAME_EN': nameEn,
+      'HOLIDAY_NAME_AR': nameAr,
+      'HOLIDAY_DATE': DateFormat('yyyy-MM-dd').format(date),
+      'HOLIDAY_YEAR': year,
+      'HOLIDAY_TYPE': type.apiValue.toUpperCase(),
+      'DESCRIPTION_EN': descriptionEn,
+      'DESCRIPTION_AR': descriptionAr,
+      'APPLIES_TO': appliesTo.toUpperCase(),
+      'STATUS': 'ACTIVE',
+    };
+
+    final response = await remoteDataSource.updateHoliday(holidayId, requestBody);
+
+    if (response['data'] != null && response['data'] is Map<String, dynamic>) {
+      final holidayModel = PublicHolidayModel.fromJson(response['data'] as Map<String, dynamic>);
+      return holidayModel.toEntity();
+    }
+
+    throw Exception('Invalid response format from server');
+  }
+
+  @override
   Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
     await remoteDataSource.deleteHoliday(holidayId, hard: hard);
   }

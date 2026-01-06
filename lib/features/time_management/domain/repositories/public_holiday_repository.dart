@@ -18,5 +18,19 @@ abstract class PublicHolidayRepository {
     required bool isPaid,
   });
 
+  Future<PublicHoliday> updateHoliday({
+    required int holidayId,
+    required int tenantId,
+    required String nameEn,
+    required String nameAr,
+    required DateTime date,
+    required int year,
+    required HolidayType type,
+    required String descriptionEn,
+    required String descriptionAr,
+    required String appliesTo,
+    required bool isPaid,
+  });
+
   Future<void> deleteHoliday(int holidayId, {bool hard = true});
 }

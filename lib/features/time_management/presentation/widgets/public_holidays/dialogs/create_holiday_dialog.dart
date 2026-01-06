@@ -9,6 +9,7 @@ import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,18 +17,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-class CreateHolidayDialog extends ConsumerStatefulWidget {
-  const CreateHolidayDialog({super.key});
-
-  static Future<void> show(BuildContext context) {
-    return showDialog(context: context, barrierDismissible: false, builder: (context) => const CreateHolidayDialog());
+class CreateHolidayDialog {
+  static Future<void> show(BuildContext context, {PublicHoliday? holiday}) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Consumer(builder: (context, ref, _) => _CreateHolidayDialogContent(holiday: holiday)),
+    );
   }
-
-  @override
-  ConsumerState<CreateHolidayDialog> createState() => _CreateHolidayDialogState();
 }
 
-class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
+class _CreateHolidayDialogContent extends ConsumerStatefulWidget {
+  final PublicHoliday? holiday;
+
+  const _CreateHolidayDialogContent({required this.holiday});
+
+  @override
+  ConsumerState<_CreateHolidayDialogContent> createState() => _CreateHolidayDialogState();
+}
+
+class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogContent> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameEnController;
   late final TextEditingController _nameArController;
@@ -39,20 +48,25 @@ class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
   HolidayType? _selectedType;
   String? _selectedAppliesTo;
   final bool _isPaidHoliday = true;
-  bool _isSubmitting = false;
+  bool _isSubmittingState = false;
   DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _nameEnController = TextEditingController();
-    _nameArController = TextEditingController();
-    _dateController = TextEditingController();
-    _descriptionEnController = TextEditingController();
-    _descriptionArController = TextEditingController();
-    _yearController = TextEditingController(text: DateTime.now().year.toString());
-    _selectedType = HolidayType.fixed;
-    _selectedAppliesTo = PublicHolidaysConfig.availableAppliesTo.first;
+    final holiday = widget.holiday;
+    _nameEnController = TextEditingController(text: holiday?.nameEn ?? '');
+    _nameArController = TextEditingController(text: holiday?.nameAr ?? '');
+    _dateController = TextEditingController(text: holiday != null ? DateFormat('dd/MM/yyyy').format(holiday.date) : '');
+    _descriptionEnController = TextEditingController(text: holiday?.descriptionEn ?? '');
+    _descriptionArController = TextEditingController(text: holiday?.descriptionAr ?? '');
+    _yearController = TextEditingController(text: (holiday?.year ?? DateTime.now().year).toString());
+    _selectedDate = holiday?.date;
+    _selectedType = holiday?.type ?? HolidayType.fixed;
+    _selectedAppliesTo = holiday != null
+        ? PublicHolidaysConfig.getAppliesToDisplayName(holiday.appliesTo) ??
+              PublicHolidaysConfig.availableAppliesTo.first
+        : PublicHolidaysConfig.availableAppliesTo.first;
   }
 
   @override
@@ -101,7 +115,7 @@ class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
     }
   }
 
-  Future<void> _handleSubmit() async {
+  Future<void> _handleSubmitInternal() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -122,15 +136,28 @@ class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
     }
 
     setState(() {
-      _isSubmitting = true;
+      _isSubmittingState = true;
     });
 
-    try {
-      final useCase = ref.read(createPublicHolidayUseCaseProvider);
-      final appliesToApiValue = PublicHolidaysConfig.getAppliesToApiValue(_selectedAppliesTo!);
-      final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
+    final appliesToApiValue = PublicHolidaysConfig.getAppliesToApiValue(_selectedAppliesTo!);
+    final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
 
-      final createdHoliday = await useCase.execute(
+    if (widget.holiday != null) {
+      await notifier.updateHoliday(
+        holidayId: widget.holiday!.id,
+        tenantId: widget.holiday!.tenantId,
+        nameEn: _nameEnController.text.trim(),
+        nameAr: _nameArController.text.trim(),
+        date: _selectedDate!,
+        year: int.parse(_yearController.text.trim()),
+        type: _selectedType!,
+        descriptionEn: _descriptionEnController.text.trim(),
+        descriptionAr: _descriptionArController.text.trim(),
+        appliesTo: appliesToApiValue ?? 'ALL',
+        isPaid: _isPaidHoliday,
+      );
+    } else {
+      await notifier.createHoliday(
         tenantId: 1,
         nameEn: _nameEnController.text.trim(),
         nameAr: _nameArController.text.trim(),
@@ -142,32 +169,48 @@ class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
         appliesTo: appliesToApiValue ?? 'ALL',
         isPaid: _isPaidHoliday,
       );
-
-      if (mounted) {
-        notifier.addHolidayOptimistically(createdHoliday);
-        ToastService.success(context, 'Holiday created successfully');
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ToastService.error(context, 'Failed to create holiday: ${e.toString()}');
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
+
+    ref.listen<PublicHolidaysState>(publicHolidaysNotifierProvider, (previous, next) {
+      if (previous == null) return;
+
+      if (next.createSuccessMessage != null && previous.createSuccessMessage != next.createSuccessMessage) {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+        notifier.clearSideEffects();
+      }
+
+      if (next.createErrorMessage != null && previous.createErrorMessage != next.createErrorMessage) {
+        if (mounted) {
+          setState(() {
+            _isSubmittingState = false;
+          });
+        }
+        notifier.clearSideEffects();
+      }
+    });
 
     return AppDialog(
-      title: 'Add New Holiday',
+      title: widget.holiday != null ? 'Edit Holiday' : 'Add New Holiday',
       width: 768.w,
+      onClose: () => Navigator.of(context).pop(),
+      actions: [
+        AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: () => Navigator.of(context).pop()),
+        SizedBox(width: 12.w),
+        AppButton(
+          label: widget.holiday != null ? 'Update' : 'Create',
+          type: AppButtonType.primary,
+          isLoading: _isSubmittingState,
+          onPressed: _handleSubmitInternal,
+        ),
+      ],
       content: Form(
         key: _formKey,
         child: Column(
@@ -378,31 +421,6 @@ class _CreateHolidayDialogState extends ConsumerState<CreateHolidayDialog> {
           ],
         ),
       ),
-      actions: [
-        AppButton(
-          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
-          label: 'Cancel',
-          backgroundColor: AppColors.textSecondary,
-          foregroundColor: AppColors.buttonTextLight,
-          height: 42.h,
-          width: 100.w,
-          borderRadius: BorderRadius.circular(10.r),
-          fontSize: 15.1.sp,
-        ),
-        SizedBox(width: 12.w),
-        AppButton(
-          onPressed: _isSubmitting ? null : _handleSubmit,
-          label: 'Add Holiday',
-          icon: Icons.add,
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.buttonTextLight,
-          height: 40.h,
-          width: 163.w,
-          borderRadius: BorderRadius.circular(10.r),
-          fontSize: 15.1.sp,
-          isLoading: _isSubmitting,
-        ),
-      ],
     );
   }
 }
