@@ -76,3 +76,75 @@ enum ShiftStatus {
 
   bool get isActive => this == ShiftStatus.active;
 }
+
+enum HolidayType {
+  fixed,
+  islamic;
+
+  static HolidayType fromString(String value) {
+    final normalized = value.toUpperCase().trim();
+    switch (normalized) {
+      case 'FIXED':
+        return HolidayType.fixed;
+      case 'ISLAMIC':
+        return HolidayType.islamic;
+      default:
+        return HolidayType.fixed;
+    }
+  }
+
+  String get displayName {
+    switch (this) {
+      case HolidayType.fixed:
+        return 'FIXED';
+      case HolidayType.islamic:
+        return 'ISLAMIC';
+    }
+  }
+
+  String get apiValue {
+    switch (this) {
+      case HolidayType.fixed:
+        return 'FIXED';
+      case HolidayType.islamic:
+        return 'ISLAMIC';
+    }
+  }
+}
+
+enum HolidayPaymentStatus {
+  paid,
+  unpaid;
+
+  static HolidayPaymentStatus fromString(String value) {
+    final normalized = value.toUpperCase().trim();
+    switch (normalized) {
+      case 'PAID':
+        return HolidayPaymentStatus.paid;
+      case 'UNPAID':
+        return HolidayPaymentStatus.unpaid;
+      default:
+        return HolidayPaymentStatus.paid;
+    }
+  }
+
+  String get displayName {
+    switch (this) {
+      case HolidayPaymentStatus.paid:
+        return 'PAID';
+      case HolidayPaymentStatus.unpaid:
+        return 'UNPAID';
+    }
+  }
+
+  String get apiValue {
+    switch (this) {
+      case HolidayPaymentStatus.paid:
+        return 'PAID';
+      case HolidayPaymentStatus.unpaid:
+        return 'UNPAID';
+    }
+  }
+
+  bool get isPaid => this == HolidayPaymentStatus.paid;
+}
