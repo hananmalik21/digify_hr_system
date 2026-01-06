@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,12 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class PageHeaderWidget extends StatelessWidget {
   final AppLocalizations localizations;
 
-  const PageHeaderWidget({
-    super.key,
-    required this.localizations,
-    required this.title,
-    required this.icon,
-  });
+  const PageHeaderWidget({super.key, required this.localizations, required this.title, required this.icon});
 
   final String title;
   final String icon;
@@ -79,12 +73,7 @@ class PageHeaderWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    DigifyAsset(
-                      assetPath: icon,
-                      width: 24,
-                      height: 24,
-                      color: Colors.white,
-                    ),
+                    DigifyAsset(assetPath: icon, width: 24, height: 24, color: Colors.white),
                   ],
                 ),
                 // SizedBox(height: 8.h),
@@ -108,7 +97,7 @@ class PageHeaderWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        localizations.manageEnterpriseStructure,
+                        title,
                         style: TextStyle(
                           fontSize: isTablet ? 20.sp : 22.7.sp,
                           fontWeight: FontWeight.w700,
@@ -144,7 +133,7 @@ class PageHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(width: isTablet ? 12.w : 16.w),
                 DigifyAsset(
-                  assetPath: Assets.icons.manageEnterpriseIcon.path,
+                  assetPath: icon,
                   width: isTablet ? 28 : 32,
                   height: isTablet ? 28 : 32,
                   color: Colors.white,

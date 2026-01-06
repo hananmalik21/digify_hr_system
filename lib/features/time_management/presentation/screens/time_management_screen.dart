@@ -2,11 +2,12 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/utils/time_management_tab_manager.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/shifts_tab.dart';
@@ -26,8 +27,7 @@ class TimeManagementScreen extends ConsumerStatefulWidget {
   const TimeManagementScreen({super.key, this.initialTab});
 
   @override
-  ConsumerState<TimeManagementScreen> createState() =>
-      _TimeManagementScreenState();
+  ConsumerState<TimeManagementScreen> createState() => _TimeManagementScreenState();
 }
 
 class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
@@ -43,17 +43,13 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
   Widget build(BuildContext context) {
     if (widget.initialTab != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref
-            .read(timeManagementTabStateProvider.notifier)
-            .setTabFromRoute(widget.initialTab);
+        ref.read(timeManagementTabStateProvider.notifier).setTabFromRoute(widget.initialTab);
       });
     }
 
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final selectedTab = ref.watch(
-      timeManagementTabStateProvider.select((s) => s.currentTab),
-    );
+    final selectedTab = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTab));
     final stats = ref.watch(timeManagementStatsProvider);
 
     // Get tab label for tab bar
@@ -69,31 +65,24 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
           child: SingleChildScrollView(
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsetsDirectional.only(
-              top: 88.h,
-              start: 32.w,
-              end: 32.w,
-              bottom: 24.h,
-            ),
+            padding: EdgeInsetsDirectional.only(top: 88.h, start: 32.w, end: 32.w, bottom: 24.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TimeManagementHeader(localizations: localizations),
-                SizedBox(height: 24.h),
-                TimeManagementStatsCards(
+                PageHeaderWidget(
                   localizations: localizations,
-                  stats: stats,
-                  isDark: isDark,
+                  title: localizations.timeManagement,
+                  icon: Assets.icons.timeManagementMainIcon.path,
                 ),
+                SizedBox(height: 24.h),
+                TimeManagementStatsCards(localizations: localizations, stats: stats, isDark: isDark),
                 SizedBox(height: 24.h),
                 TimeManagementTabBar(
                   localizations: localizations,
                   selectedTab: tabLabel,
                   onTabSelected: (label) {
                     final tab = _getTabFromLabel(label);
-                    ref
-                        .read(timeManagementTabStateProvider.notifier)
-                        .setTab(tab);
+                    ref.read(timeManagementTabStateProvider.notifier).setTab(tab);
                     final route = TimeManagementTabManager.getRouteFromTab(tab);
                     context.go('${AppRoutes.timeManagement}/$route');
                   },

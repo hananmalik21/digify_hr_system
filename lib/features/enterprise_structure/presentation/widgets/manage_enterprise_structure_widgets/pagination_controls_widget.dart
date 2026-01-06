@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +10,7 @@ class PaginationControlsWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
   final StructureListState state;
-  final AutoDisposeStateNotifierProvider<
-      StructureListNotifier,
-      StructureListState> structureListProvider;
+  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
 
   const PaginationControlsWidget({
     super.key,
@@ -276,4 +273,3 @@ class PaginationControlsWidget extends ConsumerWidget {
     );
   }
 }
-

@@ -6,7 +6,6 @@ import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart'
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/active_structure_card_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/header_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/stats_cards_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/structures_list_widget.dart';
@@ -22,30 +21,17 @@ class ManageEnterpriseStructureScreen extends ConsumerStatefulWidget {
   const ManageEnterpriseStructureScreen({super.key});
 
   @override
-  ConsumerState<ManageEnterpriseStructureScreen> createState() =>
-      _ManageEnterpriseStructureScreenState();
+  ConsumerState<ManageEnterpriseStructureScreen> createState() => _ManageEnterpriseStructureScreenState();
 }
 
-class _ManageEnterpriseStructureScreenState
-    extends ConsumerState<ManageEnterpriseStructureScreen> {
+class _ManageEnterpriseStructureScreenState extends ConsumerState<ManageEnterpriseStructureScreen> {
   /// Provider for structure list
-  final structureListProvider =
-      StateNotifierProvider.autoDispose<
-        StructureListNotifier,
-        StructureListState
-      >((ref) {
-        final getStructureListUseCase = ref.watch(
-          getStructureListUseCaseProvider,
-        );
-        return StructureListNotifier(
-          getStructureListUseCase: getStructureListUseCase,
-        );
-      });
+  final structureListProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
+    final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
+    return StructureListNotifier(getStructureListUseCase: getStructureListUseCase);
+  });
   final saveEnterpriseStructureProvider =
-      StateNotifierProvider.autoDispose<
-        SaveEnterpriseStructureNotifier,
-        SaveEnterpriseStructureState
-      >((ref) {
+      StateNotifierProvider.autoDispose<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>((ref) {
         final saveUseCase = ref.watch(saveEnterpriseStructureUseCaseProvider);
         return SaveEnterpriseStructureNotifier(saveUseCase: saveUseCase);
       });
@@ -69,24 +55,9 @@ class _ManageEnterpriseStructureScreenState
             SingleChildScrollView(
               padding: ResponsiveHelper.getResponsivePadding(
                 context,
-                mobile: EdgeInsetsDirectional.only(
-                  top: 16.h,
-                  start: 16.w,
-                  end: 16.w,
-                  bottom: 16.h,
-                ),
-                tablet: EdgeInsetsDirectional.only(
-                  top: 24.h,
-                  start: 24.w,
-                  end: 24.w,
-                  bottom: 24.h,
-                ),
-                web: EdgeInsetsDirectional.only(
-                  top: 24.h,
-                  start: 24.w,
-                  end: 24.w,
-                  bottom: 24.h,
-                ),
+                mobile: EdgeInsetsDirectional.only(top: 16.h, start: 16.w, end: 16.w, bottom: 16.h),
+                tablet: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
+                web: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,8 +93,7 @@ class _ManageEnterpriseStructureScreenState
                     localizations: localizations,
                     isDark: isDark,
                     structureListProvider: structureListProvider,
-                    saveEnterpriseStructureProvider:
-                        saveEnterpriseStructureProvider,
+                    saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
                   ),
                 ],
               ),
@@ -137,10 +107,7 @@ class _ManageEnterpriseStructureScreenState
                   child: Container(
                     color: isDark ? Colors.black : Colors.white,
                     child: Center(
-                      child: const AppLoadingIndicator(
-                        type: LoadingType.fadingCircle,
-                        color: AppColors.primary,
-                      ),
+                      child: const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
                     ),
                   ),
                 ),

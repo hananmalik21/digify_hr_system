@@ -77,8 +77,7 @@ class DigifySelectField<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        labelWidget,
-        SizedBox(height: 8.h),
+        if (label.isNotEmpty) ...[labelWidget, SizedBox(height: 8.h)],
         SizedBox(
           height: effectiveHeight,
           child: DropdownButtonHideUnderline(

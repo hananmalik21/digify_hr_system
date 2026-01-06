@@ -32,15 +32,12 @@ class ManageComponentValuesScreen extends ConsumerStatefulWidget {
   const ManageComponentValuesScreen({super.key});
 
   @override
-  ConsumerState<ManageComponentValuesScreen> createState() =>
-      _ManageComponentValuesScreenState();
+  ConsumerState<ManageComponentValuesScreen> createState() => _ManageComponentValuesScreenState();
 }
 
-class _ManageComponentValuesScreenState
-    extends ConsumerState<ManageComponentValuesScreen> {
+class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentValuesScreen> {
   String? selectedLevelCode; // State to manage selected level tab
-  final TextEditingController _orgUnitsSearchController =
-      TextEditingController();
+  final TextEditingController _orgUnitsSearchController = TextEditingController();
 
   @override
   void initState() {
@@ -61,12 +58,9 @@ class _ManageComponentValuesScreenState
     final state = ref.watch(componentValuesProvider);
 
     // Check if org units are being refreshed
-    final orgUnitsStateForRefresh = selectedLevelCode != null
-        ? ref.watch(orgUnitsProvider(selectedLevelCode!))
-        : null;
+    final orgUnitsStateForRefresh = selectedLevelCode != null ? ref.watch(orgUnitsProvider(selectedLevelCode!)) : null;
     final isRefreshingOrgUnits = orgUnitsStateForRefresh != null
-        ? orgUnitsStateForRefresh.isLoading &&
-              orgUnitsStateForRefresh.units.isNotEmpty
+        ? orgUnitsStateForRefresh.isLoading && orgUnitsStateForRefresh.units.isNotEmpty
         : false;
 
     return Container(
@@ -77,24 +71,9 @@ class _ManageComponentValuesScreenState
             SingleChildScrollView(
               padding: ResponsiveHelper.getResponsivePadding(
                 context,
-                mobile: EdgeInsetsDirectional.only(
-                  top: 16.h,
-                  start: 16.w,
-                  end: 16.w,
-                  bottom: 16.h,
-                ),
-                tablet: EdgeInsetsDirectional.only(
-                  top: 24.h,
-                  start: 24.w,
-                  end: 24.w,
-                  bottom: 24.h,
-                ),
-                web: EdgeInsetsDirectional.only(
-                  top: 24.h,
-                  start: 24.w,
-                  end: 24.w,
-                  bottom: 24.h,
-                ),
+                mobile: EdgeInsetsDirectional.only(top: 16.h, start: 16.w, end: 16.w, bottom: 16.h),
+                tablet: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
+                web: EdgeInsetsDirectional.only(top: 24.h, start: 24.w, end: 24.w, bottom: 24.h),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,38 +96,24 @@ class _ManageComponentValuesScreenState
                   // Always show buttons when not in tree view OR when a level tab is selected
                   if (!state.isTreeView || selectedLevelCode != null) ...[
                     SizedBox(height: 24.h),
-                    _buildSearchAndActions(
-                      context,
-                      localizations,
-                      isDark,
-                      state,
-                      ref,
-                      selectedLevelCode,
-                    ),
+                    _buildSearchAndActions(context, localizations, isDark, state, ref, selectedLevelCode),
                   ],
                   SizedBox(height: 24.h),
                   // Show loader when loading instead of dummy data
-                  if (state.isLoading &&
-                      state.components.isEmpty &&
-                      selectedLevelCode == null)
+                  if (state.isLoading && state.components.isEmpty && selectedLevelCode == null)
                     Center(
                       child: Padding(
                         padding: EdgeInsets.all(40.w),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const AppLoadingIndicator(
-                              type: LoadingType.fadingCircle,
-                              color: AppColors.primary,
-                            ),
+                            const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
                             SizedBox(height: 16.h),
                             Text(
                               localizations.pleaseWait,
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondary,
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -157,13 +122,7 @@ class _ManageComponentValuesScreenState
                     )
                   else
                     // Tree view, Org Units table, or Component table view based on state
-                    _buildContentView(
-                      context,
-                      localizations,
-                      isDark,
-                      state,
-                      ref,
-                    ),
+                    _buildContentView(context, localizations, isDark, state, ref),
                 ],
               ),
             ),
@@ -175,9 +134,7 @@ class _ManageComponentValuesScreenState
                     child: Container(
                       padding: EdgeInsets.all(20.w),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? AppColors.cardBackgroundDark
-                            : Colors.white,
+                        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
                         borderRadius: BorderRadius.circular(10.r),
                         boxShadow: [
                           BoxShadow(
@@ -190,18 +147,13 @@ class _ManageComponentValuesScreenState
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const AppLoadingIndicator(
-                            type: LoadingType.fadingCircle,
-                            color: AppColors.primary,
-                          ),
+                          const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
                           SizedBox(height: 16.h),
                           Text(
                             localizations.pleaseWait,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : AppColors.textSecondary,
+                              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -213,117 +165,6 @@ class _ManageComponentValuesScreenState
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
-
-    return Container(
-      padding: ResponsiveHelper.getResponsivePadding(
-        context,
-        mobile: EdgeInsetsDirectional.all(16.w),
-        tablet: EdgeInsetsDirectional.all(20.w),
-        web: EdgeInsetsDirectional.all(24.w),
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF9810FA), Color(0xFF155DFC)],
-          begin: AlignmentDirectional.centerStart,
-          end: AlignmentDirectional.centerEnd,
-        ),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: isMobile
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  localizations.enterpriseStructure,
-                  style: TextStyle(
-                    fontSize: isTablet ? 20.sp : 18.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    height: 32 / 22.7,
-                    letterSpacing: 0,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  localizations.manageOrganizationalHierarchy,
-                  style: TextStyle(
-                    fontSize: isTablet ? 14.sp : 13.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFFF3E8FF),
-                    height: 24 / 15.3,
-                    letterSpacing: 0,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  localizations.manageOrganizationalHierarchyAr,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFFF3E8FF),
-                    height: 20 / 14,
-                    letterSpacing: 0,
-                  ),
-                  textDirection: TextDirection.rtl,
-                ),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        localizations.enterpriseStructure,
-                        style: TextStyle(
-                          fontSize: isTablet ? 20.sp : 22.7.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          height: 32 / 22.7,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        localizations.manageOrganizationalHierarchy,
-                        style: TextStyle(
-                          fontSize: isTablet ? 14.sp : 15.3.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFFF3E8FF),
-                          height: 24 / 15.3,
-                          letterSpacing: 0,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        localizations.manageOrganizationalHierarchyAr,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFFF3E8FF),
-                          height: 20 / 14,
-                          letterSpacing: 0,
-                        ),
-                        textDirection: TextDirection.rtl,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
     );
   }
 
@@ -376,9 +217,7 @@ class _ManageComponentValuesScreenState
       return Column(
         children: statCards.map((card) {
           return Padding(
-            padding: EdgeInsetsDirectional.only(
-              bottom: card != statCards.last ? 12.h : 0,
-            ),
+            padding: EdgeInsetsDirectional.only(bottom: card != statCards.last ? 12.h : 0),
             child: _buildStatCard(context, card, isDark),
           );
         }).toList(),
@@ -401,9 +240,7 @@ class _ManageComponentValuesScreenState
         children: statCards.map((card) {
           return Expanded(
             child: Padding(
-              padding: EdgeInsetsDirectional.only(
-                end: card != statCards.last ? 16.w : 0,
-              ),
+              padding: EdgeInsetsDirectional.only(end: card != statCards.last ? 16.w : 0),
               child: _buildStatCard(context, card, isDark),
             ),
           );
@@ -419,16 +256,8 @@ class _ManageComponentValuesScreenState
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: Row(
@@ -442,9 +271,7 @@ class _ManageComponentValuesScreenState
                 style: TextStyle(
                   fontSize: 13.7.sp,
                   fontWeight: FontWeight.w400,
-                  color: isDark
-                      ? AppColors.textSecondaryDark
-                      : const Color(0xFF4A5565),
+                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
                   height: 20 / 13.7,
                   letterSpacing: 0,
                 ),
@@ -462,12 +289,7 @@ class _ManageComponentValuesScreenState
               ),
             ],
           ),
-          DigifyAsset(
-            assetPath: card.icon,
-            width: 24,
-            height: 24,
-            color: card.color,
-          ),
+          DigifyAsset(assetPath: card.icon, width: 24, height: 24, color: card.color),
         ],
       ),
     );
@@ -521,9 +343,7 @@ class _ManageComponentValuesScreenState
             _buildLevelTab(
               context,
               localizations.treeView,
-              state.isTreeView
-                  ? 'assets/icons/tree_view_icon_active.svg'
-                  : 'assets/icons/tree_view_icon.svg',
+              state.isTreeView ? 'assets/icons/tree_view_icon_active.svg' : 'assets/icons/tree_view_icon.svg',
               isActive: state.isTreeView,
               isDark: isDark,
               onTap: () {
@@ -559,14 +379,10 @@ class _ManageComponentValuesScreenState
                   onTap: () {
                     // Disable tree view if it's active - do this first
                     if (state.isTreeView) {
-                      ref
-                          .read(componentValuesProvider.notifier)
-                          .toggleTreeView();
+                      ref.read(componentValuesProvider.notifier).toggleTreeView();
                     }
                     // Clear filter type when showing org units table
-                    ref
-                        .read(componentValuesProvider.notifier)
-                        .filterByType(null);
+                    ref.read(componentValuesProvider.notifier).filterByType(null);
 
                     // Always select the tapped tab (don't toggle, just select)
                     final newSelected = level.levelCode;
@@ -578,24 +394,17 @@ class _ManageComponentValuesScreenState
                       _orgUnitsSearchController.clear();
                     });
 
-                    debugPrint(
-                      'After setState - selectedLevelCode: $selectedLevelCode',
-                    );
+                    debugPrint('After setState - selectedLevelCode: $selectedLevelCode');
 
                     // Load org units for the selected level
-                    debugPrint(
-                      'Loading org units for structure ${level.structureId} and level: $newSelected',
-                    );
+                    debugPrint('Loading org units for structure ${level.structureId} and level: $newSelected');
                     // Defer loading until after the widget rebuilds
                     // This ensures ref.watch in _buildContentView happens first, keeping the provider alive
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (mounted && selectedLevelCode == newSelected) {
                         ref
                             .read(orgUnitsProvider(newSelected).notifier)
-                            .loadOrgUnits(
-                              newSelected,
-                              structureId: level.structureId,
-                            );
+                            .loadOrgUnits(newSelected, structureId: level.structureId);
                       } else {
                         debugPrint(
                           'PostFrameCallback: Skipping load - mounted=$mounted, selectedLevelCode=$selectedLevelCode, newSelected=$newSelected',
@@ -619,20 +428,14 @@ class _ManageComponentValuesScreenState
     ComponentValuesState state,
     WidgetRef ref,
   ) {
-    debugPrint(
-      '_buildContentView called: isTreeView=${state.isTreeView}, selectedLevelCode=$selectedLevelCode',
-    );
+    debugPrint('_buildContentView called: isTreeView=${state.isTreeView}, selectedLevelCode=$selectedLevelCode');
 
     // Show tree view if tree view is active AND no level tab is selected
     if (state.isTreeView && selectedLevelCode == null) {
       debugPrint('_buildContentView: Showing tree view');
       return ComponentTreeView(
         onView: (component) {
-          ComponentDetailDialog.show(
-            context,
-            component: component,
-            allComponents: state.components,
-          );
+          ComponentDetailDialog.show(context, component: component, allComponents: state.components);
         },
         onEdit: (component) {
           CreateComponentDialog.show(context, initialValue: component);
@@ -645,9 +448,7 @@ class _ManageComponentValuesScreenState
 
     // Show org units table if a level tab is selected
     if (selectedLevelCode != null && selectedLevelCode!.isNotEmpty) {
-      debugPrint(
-        '_buildContentView: Showing org units table for level: $selectedLevelCode',
-      );
+      debugPrint('_buildContentView: Showing org units table for level: $selectedLevelCode');
       // Watch the provider to keep it alive and get state updates
       // This watch ensures the provider stays alive during async operations
       final orgUnitsState = ref.watch(orgUnitsProvider(selectedLevelCode!));
@@ -668,12 +469,7 @@ class _ManageComponentValuesScreenState
             );
             ref
                 .read(orgUnitsProvider(selectedLevelCode!).notifier)
-                .loadOrgUnits(
-                  selectedLevelCode!,
-                  structureId: level.structureId,
-                  page: 1,
-                  pageSize: 10,
-                );
+                .loadOrgUnits(selectedLevelCode!, structureId: level.structureId, page: 1, pageSize: 10);
           }
         });
       }
@@ -695,9 +491,7 @@ class _ManageComponentValuesScreenState
                 ),
                 SizedBox(height: 16.h),
                 ElevatedButton(
-                  onPressed: () => ref
-                      .read(orgUnitsProvider(selectedLevelCode!).notifier)
-                      .refresh(),
+                  onPressed: () => ref.read(orgUnitsProvider(selectedLevelCode!).notifier).refresh(),
                   child: const Text('Retry'),
                 ),
               ],
@@ -760,37 +554,21 @@ class _ManageComponentValuesScreenState
                         });
 
                         try {
-                          final deleteUseCase = ref.read(
-                            deleteOrgUnitUseCaseProvider,
-                          );
-                          await deleteUseCase.call(
-                            level.structureId,
-                            unit.orgUnitId,
-                            hard: true,
-                          );
+                          final deleteUseCase = ref.read(deleteOrgUnitUseCaseProvider);
+                          await deleteUseCase.call(level.structureId, unit.orgUnitId, hard: true);
 
                           if (context.mounted) {
                             Navigator.of(context).pop(true);
-                            ToastService.success(
-                              context,
-                              '${unit.orgUnitNameEn} deleted successfully',
-                            );
+                            ToastService.success(context, '${unit.orgUnitNameEn} deleted successfully');
                             // Refresh the org units list
-                            ref
-                                .read(
-                                  orgUnitsProvider(selectedLevelCode!).notifier,
-                                )
-                                .refresh();
+                            ref.read(orgUnitsProvider(selectedLevelCode!).notifier).refresh();
                           }
                         } catch (e) {
                           setState(() {
                             isLoading = false;
                           });
                           if (context.mounted) {
-                            ToastService.error(
-                              context,
-                              'Failed to delete: ${e.toString()}',
-                            );
+                            ToastService.error(context, 'Failed to delete: ${e.toString()}');
                           }
                         }
                       },
@@ -808,14 +586,7 @@ class _ManageComponentValuesScreenState
           // Pagination controls - Always show when there are items
           if (orgUnitsState.totalItems > 0) ...[
             SizedBox(height: 24.h),
-            _buildPaginationControls(
-              context,
-              localizations,
-              isDark,
-              orgUnitsState,
-              selectedLevelCode!,
-              ref,
-            ),
+            _buildPaginationControls(context, localizations, isDark, orgUnitsState, selectedLevelCode!, ref),
           ],
         ],
       );
@@ -832,11 +603,7 @@ class _ManageComponentValuesScreenState
           filterType: state.filterType,
           orgStructures: orgStructuresState.structures,
           onView: (component) {
-            ComponentDetailDialog.show(
-              context,
-              component: component,
-              allComponents: state.components,
-            );
+            ComponentDetailDialog.show(context, component: component, allComponents: state.components);
           },
           onEdit: (component) {
             CreateComponentDialog.show(context, initialValue: component);
@@ -870,24 +637,13 @@ class _ManageComponentValuesScreenState
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 16.w,
-          vertical: 10.h,
-        ),
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(
-          color: isActive
-              ? AppColors.primary
-              : (isDark ? AppColors.cardBackgroundGreyDark : Colors.white),
+          color: isActive ? AppColors.primary : (isDark ? AppColors.cardBackgroundGreyDark : Colors.white),
           borderRadius: BorderRadius.circular(8.r),
           boxShadow: isActive
               ? null
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 1),
-                    blurRadius: 2,
-                  ),
-                ],
+              : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 1), blurRadius: 2)],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -896,11 +652,7 @@ class _ManageComponentValuesScreenState
               assetPath: iconPath,
               width: 16,
               height: 16,
-              color: isActive
-                  ? Colors.white
-                  : (isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary),
+              color: isActive ? Colors.white : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
             ),
             SizedBox(width: 8.w),
             Text(
@@ -908,11 +660,7 @@ class _ManageComponentValuesScreenState
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
-                color: isActive
-                    ? Colors.white
-                    : (isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary),
+                color: isActive ? Colors.white : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
               ),
             ),
           ],
@@ -936,23 +684,9 @@ class _ManageComponentValuesScreenState
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildSearchField(
-            context,
-            localizations,
-            isDark,
-            state,
-            ref,
-            selectedLevelCode,
-          ),
+          _buildSearchField(context, localizations, isDark, state, ref, selectedLevelCode),
           SizedBox(height: 12.h),
-          _buildActionButtons(
-            context,
-            localizations,
-            isDark,
-            state,
-            selectedLevelCode,
-            isMobile: true,
-          ),
+          _buildActionButtons(context, localizations, isDark, state, selectedLevelCode, isMobile: true),
         ],
       );
     } else {
@@ -962,26 +696,10 @@ class _ManageComponentValuesScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Search field - show for both component table and org units table
-          Expanded(
-            child: _buildSearchField(
-              context,
-              localizations,
-              isDark,
-              state,
-              ref,
-              selectedLevelCode,
-            ),
-          ),
+          Expanded(child: _buildSearchField(context, localizations, isDark, state, ref, selectedLevelCode)),
           SizedBox(width: 16.w),
           // Action buttons - always show
-          _buildActionButtons(
-            context,
-            localizations,
-            isDark,
-            state,
-            selectedLevelCode,
-            isMobile: false,
-          ),
+          _buildActionButtons(context, localizations, isDark, state, selectedLevelCode, isMobile: false),
         ],
       );
     }
@@ -1006,30 +724,17 @@ class _ManageComponentValuesScreenState
     // Use different controller and hint text based on view type
     final isOrgUnitsView = selectedLevelCode != null;
     final controller = isOrgUnitsView ? _orgUnitsSearchController : null;
-    final hintText = isOrgUnitsView
-        ? 'Search org units...'
-        : localizations.searchComponents;
+    final hintText = isOrgUnitsView ? 'Search org units...' : localizations.searchComponents;
 
     return Container(
       height: fieldHeight,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: TextField(
@@ -1043,9 +748,7 @@ class _ManageComponentValuesScreenState
             final levelCodeForSearch = selectedLevelCode!;
             Future.delayed(const Duration(milliseconds: 500), () {
               if (mounted && _orgUnitsSearchController.text == value) {
-                ref
-                    .read(orgUnitsProvider(levelCodeForSearch).notifier)
-                    .search(value);
+                ref.read(orgUnitsProvider(levelCodeForSearch).notifier).search(value);
               }
             });
           } else {
@@ -1062,9 +765,7 @@ class _ManageComponentValuesScreenState
           hintStyle: TextStyle(
             fontSize: fontSize,
             fontWeight: FontWeight.w400,
-            color: isDark
-                ? AppColors.textPlaceholderDark
-                : AppColors.textPlaceholder,
+            color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
           ),
           prefixIcon: Padding(
             padding: EdgeInsetsDirectional.all(iconPadding),
@@ -1072,9 +773,7 @@ class _ManageComponentValuesScreenState
               assetPath: Assets.icons.searchIcon.path,
               width: iconSize,
               height: iconSize,
-              color: isDark
-                  ? AppColors.textPlaceholderDark
-                  : AppColors.textPlaceholder,
+              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
             ),
           ),
           border: InputBorder.none,
@@ -1109,9 +808,7 @@ class _ManageComponentValuesScreenState
             backgroundColor: AppColors.primary,
             textColor: Colors.white,
             onTap: () {
-              debugPrint(
-                'Add New button tapped. selectedLevelCode: $selectedLevelCode',
-              );
+              debugPrint('Add New button tapped. selectedLevelCode: $selectedLevelCode');
               if (selectedLevelCode != null) {
                 try {
                   // Get structureId from active levels
@@ -1135,24 +832,14 @@ class _ManageComponentValuesScreenState
                   debugPrint(
                     'Opening AddOrgUnitDialog with structureId=${level.structureId}, levelCode=$currentLevelCode',
                   );
-                  AddOrgUnitDialog.show(
-                    context,
-                    structureId: level.structureId,
-                    levelCode: currentLevelCode,
-                  );
+                  AddOrgUnitDialog.show(context, structureId: level.structureId, levelCode: currentLevelCode);
                 } catch (e, stackTrace) {
                   debugPrint('Error opening AddOrgUnitDialog: $e');
                   debugPrint('Stack trace: $stackTrace');
-                  ToastService.error(
-                    context,
-                    'Error opening dialog: ${e.toString()}',
-                  );
+                  ToastService.error(context, 'Error opening dialog: ${e.toString()}');
                 }
               } else {
-                CreateComponentDialog.show(
-                  context,
-                  defaultType: state.filterType,
-                );
+                CreateComponentDialog.show(context, defaultType: state.filterType);
               }
             },
           ),
@@ -1168,9 +855,7 @@ class _ManageComponentValuesScreenState
             onTap: () {
               if (selectedLevelCode != null) {
                 // TODO: Open bulk upload dialog for org units
-                debugPrint(
-                  'Bulk upload org units for level: $selectedLevelCode',
-                );
+                debugPrint('Bulk upload org units for level: $selectedLevelCode');
               } else {
                 BulkUploadDialog.show(context);
               }
@@ -1183,9 +868,7 @@ class _ManageComponentValuesScreenState
             isDark,
             label: localizations.export,
             icon: 'assets/icons/download_icon.svg',
-            backgroundColor: isDark
-                ? AppColors.cardBackgroundGreyDark
-                : const Color(0xFF4A5565),
+            backgroundColor: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFF4A5565),
             textColor: Colors.white,
             onTap: () {
               if (selectedLevelCode != null) {
@@ -1213,9 +896,7 @@ class _ManageComponentValuesScreenState
           backgroundColor: AppColors.primary,
           textColor: Colors.white,
           onTap: () {
-            debugPrint(
-              'Add New button tapped (desktop). selectedLevelCode: $selectedLevelCode',
-            );
+            debugPrint('Add New button tapped (desktop). selectedLevelCode: $selectedLevelCode');
             if (selectedLevelCode != null) {
               try {
                 // Get structureId from active levels
@@ -1239,24 +920,14 @@ class _ManageComponentValuesScreenState
                 debugPrint(
                   'Opening AddOrgUnitDialog with structureId=${level.structureId}, levelCode=$currentLevelCode',
                 );
-                AddOrgUnitDialog.show(
-                  context,
-                  structureId: level.structureId,
-                  levelCode: currentLevelCode,
-                );
+                AddOrgUnitDialog.show(context, structureId: level.structureId, levelCode: currentLevelCode);
               } catch (e, stackTrace) {
                 debugPrint('Error opening AddOrgUnitDialog: $e');
                 debugPrint('Stack trace: $stackTrace');
-                ToastService.error(
-                  context,
-                  'Error opening dialog: ${e.toString()}',
-                );
+                ToastService.error(context, 'Error opening dialog: ${e.toString()}');
               }
             } else {
-              CreateComponentDialog.show(
-                context,
-                defaultType: state.filterType,
-              );
+              CreateComponentDialog.show(context, defaultType: state.filterType);
             }
           },
         ),
@@ -1287,9 +958,7 @@ class _ManageComponentValuesScreenState
           isDark,
           label: localizations.export,
           icon: 'assets/icons/download_icon.svg',
-          backgroundColor: isDark
-              ? AppColors.cardBackgroundGreyDark
-              : const Color(0xFF4A5565),
+          backgroundColor: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFF4A5565),
           textColor: Colors.white,
           onTap: () {
             if (selectedLevelCode != null) {
@@ -1321,23 +990,12 @@ class _ManageComponentValuesScreenState
         onTap: onTap,
         borderRadius: BorderRadius.circular(10.r),
         child: Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 16.w,
-            vertical: 10.h,
-          ),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 10.h),
+          decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(10.r)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DigifyAsset(
-                assetPath: icon,
-                width: 20,
-                height: 20,
-                color: textColor,
-              ),
+              DigifyAsset(assetPath: icon, width: 20, height: 20, color: textColor),
               SizedBox(width: 8.w),
               Text(
                 label,
@@ -1386,22 +1044,10 @@ class _ManageComponentValuesScreenState
           pages = [1, 2, 3, 4, 5];
         } else if (currentPage >= totalPages - 2) {
           // Show last 5 pages
-          pages = [
-            totalPages - 4,
-            totalPages - 3,
-            totalPages - 2,
-            totalPages - 1,
-            totalPages,
-          ];
+          pages = [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
         } else {
           // Show current page with 2 pages on each side
-          pages = [
-            currentPage - 2,
-            currentPage - 1,
-            currentPage,
-            currentPage + 1,
-            currentPage + 2,
-          ];
+          pages = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
         }
         return pages;
       }
@@ -1416,29 +1062,15 @@ class _ManageComponentValuesScreenState
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
         children: [
           // Page info
           Text(
             'Showing ${((currentPage - 1) * orgUnitsState.pageSize) + 1} - ${currentPage * orgUnitsState.pageSize > orgUnitsState.totalItems ? orgUnitsState.totalItems : currentPage * orgUnitsState.pageSize} of ${orgUnitsState.totalItems} items',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
           ),
           SizedBox(height: 12.h),
           // Pagination buttons
@@ -1465,9 +1097,7 @@ class _ManageComponentValuesScreenState
                     '...',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                     ),
                   ),
                 ),
@@ -1477,8 +1107,7 @@ class _ManageComponentValuesScreenState
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap:
-                      orgUnitsState.hasPreviousPage && !orgUnitsState.isLoading
+                  onTap: orgUnitsState.hasPreviousPage && !orgUnitsState.isLoading
                       ? () async {
                           debugPrint(
                             'Previous page button tapped - currentPage=${orgUnitsState.currentPage}, totalPages=${orgUnitsState.totalPages}, hasPreviousPage=${orgUnitsState.hasPreviousPage}',
@@ -1496,43 +1125,27 @@ class _ManageComponentValuesScreenState
                     width: 36.w,
                     height: 36.h,
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.cardBackgroundGreyDark
-                          : AppColors.grayBg,
+                      color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg,
                       borderRadius: BorderRadius.circular(6.r),
-                      border: Border.all(
-                        color: isDark
-                            ? AppColors.cardBorderDark
-                            : AppColors.cardBorder,
-                        width: 1,
-                      ),
+                      border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
                     ),
                     alignment: Alignment.center,
-                    child:
-                        orgUnitsState.isLoading && orgUnitsState.currentPage > 1
+                    child: orgUnitsState.isLoading && orgUnitsState.currentPage > 1
                         ? SizedBox(
                             width: 16.w,
                             height: 16.h,
                             child: AppLoadingIndicator(
                               type: LoadingType.fadingCircle,
                               size: 16.r,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : AppColors.textPrimary,
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                             ),
                           )
                         : Icon(
                             Icons.chevron_left,
                             size: 18.sp,
-                            color:
-                                orgUnitsState.hasPreviousPage &&
-                                    !orgUnitsState.isLoading
-                                ? (isDark
-                                      ? AppColors.textPrimaryDark
-                                      : AppColors.textPrimary)
-                                : (isDark
-                                      ? AppColors.textPlaceholderDark
-                                      : AppColors.textPlaceholder),
+                            color: orgUnitsState.hasPreviousPage && !orgUnitsState.isLoading
+                                ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary)
+                                : (isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder),
                           ),
                   ),
                 ),
@@ -1572,9 +1185,7 @@ class _ManageComponentValuesScreenState
                           );
                           try {
                             await notifier.nextPage();
-                            debugPrint(
-                              'Next page navigation completed successfully',
-                            );
+                            debugPrint('Next page navigation completed successfully');
                           } catch (e, stackTrace) {
                             debugPrint('Error navigating to next page: $e');
                             debugPrint('Stack trace: $stackTrace');
@@ -1582,9 +1193,7 @@ class _ManageComponentValuesScreenState
                         }
                       : () {
                           debugPrint('=== NEXT PAGE BUTTON DISABLED ===');
-                          debugPrint(
-                            'hasNextPage=${orgUnitsState.hasNextPage}, isLoading=${orgUnitsState.isLoading}',
-                          );
+                          debugPrint('hasNextPage=${orgUnitsState.hasNextPage}, isLoading=${orgUnitsState.isLoading}');
                           debugPrint(
                             'currentPage=${orgUnitsState.currentPage}, totalPages=${orgUnitsState.totalPages}',
                           );
@@ -1594,44 +1203,27 @@ class _ManageComponentValuesScreenState
                     width: 36.w,
                     height: 36.h,
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.cardBackgroundGreyDark
-                          : AppColors.grayBg,
+                      color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg,
                       borderRadius: BorderRadius.circular(6.r),
-                      border: Border.all(
-                        color: isDark
-                            ? AppColors.cardBorderDark
-                            : AppColors.cardBorder,
-                        width: 1,
-                      ),
+                      border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
                     ),
                     alignment: Alignment.center,
-                    child:
-                        orgUnitsState.isLoading &&
-                            orgUnitsState.currentPage < orgUnitsState.totalPages
+                    child: orgUnitsState.isLoading && orgUnitsState.currentPage < orgUnitsState.totalPages
                         ? SizedBox(
                             width: 16.w,
                             height: 16.h,
                             child: AppLoadingIndicator(
                               type: LoadingType.fadingCircle,
                               size: 16.r,
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : AppColors.textPrimary,
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                             ),
                           )
                         : Icon(
                             Icons.chevron_right,
                             size: 18.sp,
-                            color:
-                                orgUnitsState.hasNextPage &&
-                                    !orgUnitsState.isLoading
-                                ? (isDark
-                                      ? AppColors.textPrimaryDark
-                                      : AppColors.textPrimary)
-                                : (isDark
-                                      ? AppColors.textPlaceholderDark
-                                      : AppColors.textPlaceholder),
+                            color: orgUnitsState.hasNextPage && !orgUnitsState.isLoading
+                                ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary)
+                                : (isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder),
                           ),
                   ),
                 ),
@@ -1645,16 +1237,13 @@ class _ManageComponentValuesScreenState
                     '...',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary,
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                     ),
                   ),
                 ),
               if (showLastEllipsis) SizedBox(width: 4.w),
               // Last page button
-              if (totalPages > 7 && currentPage < totalPages - 3)
-                SizedBox(width: 4.w),
+              if (totalPages > 7 && currentPage < totalPages - 3) SizedBox(width: 4.w),
               if (totalPages > 7 && currentPage < totalPages - 3)
                 _buildPageButton(
                   context,
@@ -1694,20 +1283,11 @@ class _ManageComponentValuesScreenState
           width: 36.w,
           height: 36.h,
           decoration: BoxDecoration(
-            color: isActive
-                ? AppColors.primary
-                : (isDark
-                      ? AppColors.cardBackgroundGreyDark
-                      : AppColors.grayBg),
+            color: isActive ? AppColors.primary : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
             borderRadius: BorderRadius.circular(6.r),
             border: isActive
                 ? null
-                : Border.all(
-                    color: isDark
-                        ? AppColors.cardBorderDark
-                        : AppColors.cardBorder,
-                    width: 1,
-                  ),
+                : Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
           ),
           alignment: Alignment.center,
           child: Text(
@@ -1715,11 +1295,7 @@ class _ManageComponentValuesScreenState
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-              color: isActive
-                  ? Colors.white
-                  : (isDark
-                        ? AppColors.textPrimaryDark
-                        : AppColors.textPrimary),
+              color: isActive ? Colors.white : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
             ),
           ),
         ),
@@ -1764,10 +1340,7 @@ class _ManageComponentValuesScreenState
     final iconSize = 18.sp;
 
     // how much space is left for the label block inside the pill
-    final textWidth = (width.w - (16.w * 2) - iconSize - 8.w).clamp(
-      50.w,
-      220.w,
-    );
+    final textWidth = (width.w - (16.w * 2) - iconSize - 8.w).clamp(50.w, 220.w);
 
     return ShimmerWidget(
       child: Container(
@@ -1778,22 +1351,14 @@ class _ManageComponentValuesScreenState
           borderRadius: BorderRadius.circular(10.r),
           // keep it subtle like your inactive tabs
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              offset: const Offset(0, 1),
-              blurRadius: 2,
-            ),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.04), offset: const Offset(0, 1), blurRadius: 2),
           ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             // icon skeleton
-            ShimmerContainer(
-              width: iconSize,
-              height: iconSize,
-              borderRadius: 4,
-            ),
+            ShimmerContainer(width: iconSize, height: iconSize, borderRadius: 4),
             SizedBox(width: 8.w),
 
             // label skeleton
@@ -1811,10 +1376,5 @@ class _StatCardData {
   final String icon;
   final Color color;
 
-  _StatCardData({
-    required this.label,
-    required this.count,
-    required this.icon,
-    required this.color,
-  });
+  _StatCardData({required this.label, required this.count, required this.icon, required this.color});
 }

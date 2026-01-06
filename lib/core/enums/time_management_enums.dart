@@ -79,7 +79,8 @@ enum ShiftStatus {
 
 enum HolidayType {
   fixed,
-  islamic;
+  islamic,
+  variable;
 
   static HolidayType fromString(String value) {
     final normalized = value.toUpperCase().trim();
@@ -88,6 +89,8 @@ enum HolidayType {
         return HolidayType.fixed;
       case 'ISLAMIC':
         return HolidayType.islamic;
+      case 'VARIABLE':
+        return HolidayType.variable;
       default:
         return HolidayType.fixed;
     }
@@ -99,6 +102,8 @@ enum HolidayType {
         return 'FIXED';
       case HolidayType.islamic:
         return 'ISLAMIC';
+      case HolidayType.variable:
+        return 'VARIABLE';
     }
   }
 
@@ -108,6 +113,8 @@ enum HolidayType {
         return 'FIXED';
       case HolidayType.islamic:
         return 'ISLAMIC';
+      case HolidayType.variable:
+        return 'VARIABLE';
     }
   }
 }
