@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_tree.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/paginated_org_units_response.dart';
 
 /// Repository interface for organization unit operations
@@ -44,5 +45,10 @@ abstract class OrgUnitRepository {
   ///
   /// Throws [AppException] if the operation fails
   Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true});
+
+  /// Gets the org units tree for active structure
+  ///
+  /// Throws [AppException] if the operation fails
+  Future<OrgUnitTree> getOrgUnitsTree();
 }
 

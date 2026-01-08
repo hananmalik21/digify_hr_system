@@ -79,6 +79,7 @@ class DialogFooter extends ConsumerWidget {
           // Save button
           CustomButton.icon(
             svgIcon: Assets.icons.saveConfigIcon.path,
+            isLoading: saveState.isSaving,
             onPressed: saveState.isSaving
                 ? null
                 : () async {

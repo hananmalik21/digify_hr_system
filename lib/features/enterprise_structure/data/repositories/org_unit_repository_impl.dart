@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/org_unit_remote_data_source.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_unit_tree_dto.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_tree.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/paginated_org_units_response.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/org_unit_repository.dart';
 
@@ -155,6 +157,40 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
   }) async {
     try {
       await remoteDataSource.deleteOrgUnit(structureId, orgUnitId, hard: hard);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Repository error: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
+
+  @override
+  Future<OrgUnitTree> getOrgUnitsTree() async {
+    try {
+      final dto = await remoteDataSource.getOrgUnitsTree();
+      
+      // Convert DTO tree nodes to domain tree nodes recursively
+      OrgUnitTreeNode _convertTreeNode(OrgUnitTreeNodeDto nodeDto) {
+        return OrgUnitTreeNode(
+          orgUnitId: nodeDto.orgUnitId,
+          orgUnitCode: nodeDto.orgUnitCode,
+          orgUnitNameEn: nodeDto.orgUnitNameEn,
+          orgUnitNameAr: nodeDto.orgUnitNameAr,
+          levelCode: nodeDto.levelCode,
+          parentOrgUnitId: nodeDto.parentOrgUnitId,
+          isActive: nodeDto.isActive.toUpperCase() == 'Y',
+          children: nodeDto.children.map((child) => _convertTreeNode(child)).toList(),
+        );
+      }
+
+      return OrgUnitTree(
+        structureId: dto.structureId,
+        structureName: dto.structureName,
+        tree: dto.tree.map((node) => _convertTreeNode(node)).toList(),
+      );
     } on AppException {
       rethrow;
     } catch (e) {

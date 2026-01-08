@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -79,7 +80,11 @@ class ActionButtonWidget extends StatelessWidget {
               SizedBox(
                 width: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
                 height: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
-                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(textColor)),
+                child: AppLoadingIndicator(
+                  type: LoadingType.circle,
+                  color: textColor,
+                  size: isMobile ? 14.r : (isTablet ? 15.r : 16.r),
+                ),
               )
             else
               DigifyAsset(

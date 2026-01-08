@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_structure_level_dto.dart';
+import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_unit_tree_dto.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/dto/paginated_org_units_response_dto.dart';
 import 'package:flutter/foundation.dart';
 
@@ -20,6 +21,7 @@ abstract class OrgUnitRemoteDataSource {
   Future<OrgStructureLevelDto> createOrgUnit(String structureId, Map<String, dynamic> data);
   Future<OrgStructureLevelDto> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data);
   Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true});
+  Future<OrgUnitTreeResponseDto> getOrgUnitsTree();
 }
 
 class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
@@ -320,6 +322,24 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     } catch (e) {
       throw UnknownException(
         'Failed to delete org unit $orgUnitId for structure $structureId: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
+
+  @override
+  Future<OrgUnitTreeResponseDto> getOrgUnitsTree() async {
+    try {
+      final response = await apiClient.get(ApiEndpoints.orgUnitsTreeActive);
+
+      debugPrint('OrgUnitRemoteDataSource: Tree API Response keys: ${response.keys}');
+
+      return OrgUnitTreeResponseDto.fromJson(response);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to fetch org units tree: ${e.toString()}',
         originalError: e,
       );
     }

@@ -22,6 +22,7 @@ class ApiEndpoints {
       '$hrOrgStructures/$structureId/org-units/$orgUnitId';
   static String hrOrgStructuresDelete(String structureId) => '$hrOrgStructures/$structureId';
   static const String hrOrgStructuresActiveUnits = '$hrOrgStructures/active/units';
+  static const String orgUnitsTreeActive = '$api/org-units/tree/active';
   static const String enterprises = '$api/enterprises';
   static const String companies = '$api/companies';
   static const String divisions = '$api/divisions';

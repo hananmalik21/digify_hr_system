@@ -18,8 +18,8 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/widg
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_units_table_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_org_unit_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/org_unit_details_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_tree_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_table_view.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_units_tree_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_detail_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/create_component_dialog.dart';
@@ -432,17 +432,10 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
 
     // Show tree view if tree view is active AND no level tab is selected
     if (state.isTreeView && selectedLevelCode == null) {
-      debugPrint('_buildContentView: Showing tree view');
-      return ComponentTreeView(
-        onView: (component) {
-          ComponentDetailDialog.show(context, component: component, allComponents: state.components);
-        },
-        onEdit: (component) {
-          CreateComponentDialog.show(context, initialValue: component);
-        },
-        onDelete: (component) {
-          // TODO: Open delete confirmation
-        },
+      debugPrint('_buildContentView: Showing org units tree view');
+      return OrgUnitsTreeWidget(
+        localizations: localizations,
+        isDark: isDark,
       );
     }
 
