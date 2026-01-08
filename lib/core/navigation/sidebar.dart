@@ -3,8 +3,11 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +23,72 @@ class Sidebar extends ConsumerStatefulWidget {
 class _SidebarState extends ConsumerState<Sidebar> {
   final Map<String, bool> _expandedItems = {};
   String? _lastAutoExpandedRoute;
+
+  /// Maps time management sidebar item IDs to their corresponding tab indexes
+  int? _getTimeManagementTabIndex(String itemId) {
+    switch (itemId) {
+      case 'shifts':
+        return 0;
+      case 'workPatterns':
+        return 1;
+      case 'workSchedules':
+        return 2;
+      case 'scheduleAssignments':
+        return 3;
+      case 'viewCalendar':
+        return 4;
+      case 'publicHolidays':
+        return 5;
+      default:
+        return null;
+    }
+  }
+
+  /// Maps workforce structure sidebar item IDs to their corresponding tab indexes
+  int? _getWorkforceStructureTabIndex(String itemId) {
+    switch (itemId) {
+      case 'positions':
+        return 0;
+      case 'jobFamilies':
+        return 1;
+      case 'jobLevels':
+        return 2;
+      case 'gradeStructure':
+        return 3;
+      case 'reportingStructure':
+        return 4;
+      case 'positionTree':
+        return 5;
+      default:
+        return null;
+    }
+  }
+
+  void _handleNavigation(SidebarItem item) {
+    if (item.route != null && mounted) {
+      context.go(item.route!);
+
+      if (item.route == AppRoutes.timeManagement) {
+        final tabIndex = _getTimeManagementTabIndex(item.id);
+        if (tabIndex != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              ref.read(timeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+            }
+          });
+        }
+      } else if (item.route == AppRoutes.workforceStructure) {
+        final tabIndex = _getWorkforceStructureTabIndex(item.id);
+        if (tabIndex != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              ref.read(workforceTabStateProvider.notifier).setTabIndex(tabIndex);
+            }
+          });
+        }
+      }
+    }
+  }
 
   Widget _buildIcon({required SidebarItem item, required double size, required Color color}) {
     if (item.svgPath != null) {
@@ -233,8 +302,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
           onTap: () {
             if (hasChildren) {
               _toggleExpanded(item.id, allItems);
-            } else if (item.route != null) {
-              context.go(item.route!);
+            } else {
+              _handleNavigation(item);
             }
           },
           child: AnimatedContainer(
@@ -293,7 +362,16 @@ class _SidebarState extends ConsumerState<Sidebar> {
                         final index = entry.key;
                         final child = entry.value;
                         final currentRoute = GoRouterState.of(context).uri.path;
-                        final isChildActive = child.route == currentRoute;
+                        // For time management and workforce structure, check both route and tab index
+                        final isChildActive =
+                            child.route == currentRoute &&
+                            (item.id != 'timeManagement' && item.id != 'workforceStructure' ||
+                                (item.id == 'timeManagement' &&
+                                    _getTimeManagementTabIndex(child.id) ==
+                                        ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex))) ||
+                                (item.id == 'workforceStructure' &&
+                                    _getWorkforceStructureTabIndex(child.id) ==
+                                        ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))));
                         final labelText = SidebarConfig.getLocalizedLabel(child.labelKey, localizations);
                         final fontSize = SidebarConfig.getChildItemFontSize(child.labelKey);
                         final isMultiLine = labelText.contains('\n');
@@ -315,8 +393,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
                             child: GestureDetector(
                               behavior: HitTestBehavior.opaque,
                               onTap: () {
-                                if (child.route != null && mounted) {
-                                  context.go(child.route!);
+                                if (mounted) {
+                                  _handleNavigation(child);
                                 }
                               },
                               child: AnimatedContainer(

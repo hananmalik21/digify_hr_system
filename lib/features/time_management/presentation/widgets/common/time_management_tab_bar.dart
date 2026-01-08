@@ -7,14 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TimeManagementTabBar extends StatelessWidget {
   final AppLocalizations localizations;
-  final String selectedTab;
-  final ValueChanged<String> onTabSelected;
+  final int selectedTabIndex;
+  final ValueChanged<int> onTabSelected;
   final bool isDark;
 
   const TimeManagementTabBar({
     super.key,
     required this.localizations,
-    required this.selectedTab,
+    required this.selectedTabIndex,
     required this.onTabSelected,
     required this.isDark,
   });
@@ -42,12 +42,19 @@ class TimeManagementTabBar extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: tabs.map((tab) {
+          children: tabs.asMap().entries.map((entry) {
+            final index = entry.key;
+            final tab = entry.value;
             final label = TimeManagementTabsConfig.getLocalizedLabel(tab.labelKey, localizations);
-            final isSelected = selectedTab == label;
+            final isSelected = selectedTabIndex == index;
             return Padding(
               padding: EdgeInsetsDirectional.only(end: 8.w),
-              child: _buildTabButton(label: label, icon: tab.iconPath, isSelected: isSelected),
+              child: _buildTabButton(
+                label: label,
+                icon: tab.iconPath,
+                isSelected: isSelected,
+                onTap: () => onTabSelected(index),
+              ),
             );
           }).toList(),
         ),
@@ -55,11 +62,16 @@ class TimeManagementTabBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton({required String label, required String icon, required bool isSelected}) {
+  Widget _buildTabButton({
+    required String label,
+    required String icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => onTabSelected(label),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(6.r),
         child: Container(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 8.h),
