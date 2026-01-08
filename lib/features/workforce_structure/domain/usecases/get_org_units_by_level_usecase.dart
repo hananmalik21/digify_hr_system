@@ -7,9 +7,9 @@ class GetOrgUnitsByLevelUseCase {
   const GetOrgUnitsByLevelUseCase({required this.repository});
 
   Future<OrgUnitsResponse> call({
-    required int structureId,
+    required String structureId,
     required String levelCode,
-    int? parentOrgUnitId,
+    String? parentOrgUnitId,
     String? search,
     int page = 1,
     int pageSize = 100,

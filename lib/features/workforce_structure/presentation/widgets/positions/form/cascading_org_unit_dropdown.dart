@@ -16,7 +16,7 @@ class CascadingOrgUnitDropdown extends ConsumerWidget {
   selectionProvider;
   final List<OrgStructureLevel> activeLevels;
   final int levelIndex;
-  final Function(String levelCode, int? unitId) onSelectionChanged;
+  final Function(String levelCode, String? unitId) onSelectionChanged;
 
   const CascadingOrgUnitDropdown({
     super.key,

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 @immutable
 class ActiveStructureLevel {
   final int levelId;
-  final int structureId;
+  final String structureId;
   final int levelNumber;
   final String levelCode;
   final String levelName;

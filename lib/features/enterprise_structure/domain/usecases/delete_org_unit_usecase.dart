@@ -10,7 +10,7 @@ class DeleteOrgUnitUseCase {
   /// Executes the use case to delete an org unit
   ///
   /// Throws [AppException] if the operation fails
-  Future<void> call(int structureId, int orgUnitId, {bool hard = true}) async {
+  Future<void> call(String structureId, String orgUnitId, {bool hard = true}) async {
     try {
       return await repository.deleteOrgUnit(structureId, orgUnitId, hard: hard);
     } on AppException {

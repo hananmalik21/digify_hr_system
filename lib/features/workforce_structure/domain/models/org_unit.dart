@@ -1,12 +1,12 @@
 class OrgUnit {
-  final int orgUnitId;
-  final int orgStructureId;
+  final String orgUnitId;
+  final String orgStructureId;
   final int enterpriseId;
   final String levelCode;
   final String orgUnitCode;
   final String orgUnitNameEn;
   final String orgUnitNameAr;
-  final int? parentOrgUnitId;
+  final String? parentOrgUnitId;
   final bool isActive;
   final String? managerName;
   final String? managerEmail;

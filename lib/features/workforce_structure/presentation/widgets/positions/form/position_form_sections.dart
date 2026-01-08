@@ -60,9 +60,9 @@ class BasicInfoSection extends StatelessWidget {
 
 class OrganizationalSection extends ConsumerWidget {
   final AppLocalizations localizations;
-  final Map<String, int?> selectedUnitIds;
+  final Map<String, String?> selectedUnitIds;
   final Map<String, OrgUnit>? initialSelections;
-  final Function(String levelCode, int? unitId) onEnterpriseSelectionChanged;
+  final Function(String levelCode, String? unitId) onEnterpriseSelectionChanged;
   final TextEditingController costCenterController;
   final TextEditingController locationController;
 

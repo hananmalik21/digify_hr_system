@@ -1,6 +1,6 @@
 class OrgStructureLevel {
   final int levelId;
-  final int structureId;
+  final String structureId;
   final int levelNumber;
   final String levelCode;
   final String levelName;
@@ -30,7 +30,7 @@ class OrgStructureLevel {
 }
 
 class OrgStructure {
-  final int structureId;
+  final String structureId;
   final int enterpriseId;
   final String enterpriseName;
   final String structureCode;

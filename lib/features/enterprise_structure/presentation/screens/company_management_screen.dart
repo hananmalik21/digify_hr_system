@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
@@ -500,20 +501,13 @@ class _CompanyCard extends ConsumerWidget {
                         await deleteUseCase(int.parse(company.id), hard: true);
 
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Company deleted successfully'), backgroundColor: Colors.green),
-                          );
+                          ToastService.success(context, 'Company deleted successfully');
                           // Refresh the companies list
                           ref.read(companiesProvider.notifier).refresh();
                         }
                       } catch (e) {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to delete company: ${e.toString()}'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                          ToastService.error(context, 'Failed to delete company: ${e.toString()}');
                         }
                       }
                     }

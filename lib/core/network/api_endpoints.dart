@@ -11,16 +11,16 @@ class ApiEndpoints {
   static const String hrOrgStructures = '$api/hr-org-structures';
   static const String hrOrgStructuresActiveLevels = '$hrOrgStructures/active/levels';
   static String hrOrgStructuresUnitsByLevel(String levelCode) => '$hrOrgStructuresActiveLevels/$levelCode/units';
-  static String hrOrgStructuresUnitsByStructureAndLevel(int structureId, String levelCode) =>
+  static String hrOrgStructuresUnitsByStructureAndLevel(String structureId, String levelCode) =>
       '$hrOrgStructures/$structureId/org-units';
-  static String hrOrgStructuresParentUnits(int structureId, String levelCode) =>
+  static String hrOrgStructuresParentUnits(String structureId, String levelCode) =>
       '$hrOrgStructures/$structureId/org-units/parents';
-  static String hrOrgStructuresCreateUnit(int structureId) => '$hrOrgStructures/$structureId/org-units';
-  static String hrOrgStructuresUpdateUnit(int structureId, int orgUnitId) =>
+  static String hrOrgStructuresCreateUnit(String structureId) => '$hrOrgStructures/$structureId/org-units';
+  static String hrOrgStructuresUpdateUnit(String structureId, String orgUnitId) =>
       '$hrOrgStructures/$structureId/org-units/$orgUnitId';
-  static String hrOrgStructuresDeleteUnit(int structureId, int orgUnitId) =>
+  static String hrOrgStructuresDeleteUnit(String structureId, String orgUnitId) =>
       '$hrOrgStructures/$structureId/org-units/$orgUnitId';
-  static String hrOrgStructuresDelete(int structureId) => '$hrOrgStructures/$structureId';
+  static String hrOrgStructuresDelete(String structureId) => '$hrOrgStructures/$structureId';
   static const String hrOrgStructuresActiveUnits = '$hrOrgStructures/active/units';
   static const String enterprises = '$api/enterprises';
   static const String companies = '$api/companies';

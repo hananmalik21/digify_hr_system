@@ -5,7 +5,7 @@ class DeletePositionUseCase {
 
   DeletePositionUseCase({required this.repository});
 
-  Future<void> execute(int id, {bool hard = true}) async {
+  Future<void> execute(String id, {bool hard = true}) async {
     return await repository.deletePosition(id, hard: hard);
   }
 }

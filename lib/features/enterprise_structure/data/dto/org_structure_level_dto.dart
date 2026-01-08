@@ -4,7 +4,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/org
 
 /// Simple parent unit model for dropdown/tree display
 class ParentUnitDto {
-  final int id;
+  final String id;
   final String name;
 
   /// ✅ Parent LEVEL_CODE (e.g. COMPANY, BUSINESS_UNIT, DEPARTMENT)
@@ -14,8 +14,16 @@ class ParentUnitDto {
 
   factory ParentUnitDto.fromJson(Map<String, dynamic> json) {
     log("parent is $json");
+    // Helper to convert id to String (handles both num and String)
+    final idValue = json['id'];
+    final idString = idValue is String
+        ? idValue
+        : idValue is num
+            ? idValue.toString()
+            : idValue?.toString() ?? '';
+    
     return ParentUnitDto(
-      id: (json['id'] as num?)?.toInt() ?? 0,
+      id: idString,
       name: json['name'] as String? ?? '',
       level: json['level'] as String? ?? "",
     );
@@ -26,8 +34,9 @@ class ParentUnitDto {
 
 /// DTO for Organization Structure Level
 class OrgStructureLevelDto {
-  final int orgUnitId;
-  final int orgStructureId;
+  final String orgUnitId;
+  final String orgStructureId;
+  final String? orgStructureName;
   final int enterpriseId;
   final String levelCode;
   final String orgUnitCode;
@@ -35,7 +44,7 @@ class OrgStructureLevelDto {
   final String orgUnitNameAr;
 
   /// Raw FK (still useful internally)
-  final int? parentOrgUnitId;
+  final String? parentOrgUnitId;
 
   /// ✅ New: parent object for UI (id + name)
   final ParentUnitDto? parentUnit;
@@ -57,6 +66,7 @@ class OrgStructureLevelDto {
   const OrgStructureLevelDto({
     required this.orgUnitId,
     required this.orgStructureId,
+    this.orgStructureName,
     required this.enterpriseId,
     required this.levelCode,
     required this.orgUnitCode,
@@ -79,30 +89,55 @@ class OrgStructureLevelDto {
     this.lastUpdateLogin,
   });
 
+  /// Helper method to safely parse ID from JSON (handles both num and String)
+  // static int _parseId(dynamic value) {
+  //   if (value == null) return 0;
+  //   if (value is num) return value.toInt();
+  //   if (value is String) {
+  //     // Try to parse as int if it's a numeric string
+  //     final parsed = int.tryParse(value);
+  //     if (parsed != null) return parsed;
+  //     // If it's a UUID or non-numeric string, use a deterministic hash
+  //     // This ensures the same UUID always maps to the same int value
+  //     // Note: This is a workaround - ideally the model should support String IDs
+  //     log('Warning: Received non-numeric ID string: $value. Using hash as fallback.');
+  //     // Use absolute value to ensure positive int, and take modulo to keep it reasonable
+  //     return value.hashCode.abs() % 2147483647; // Max int32 value
+  //   }
+  //   return 0;
+  // }
+
+  /// Helper to safely convert ID to String (handles both num and String)
+  static String _parseIdToString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is num) return value.toString();
+    return value.toString();
+  }
+
   /// Creates DTO from JSON
   factory OrgStructureLevelDto.fromJson(Map<String, dynamic> json) {
     // parent_org_unit_id (FK)
-
-    final parentId = (json['parent_org_unit_id'] as num?)?.toInt() ?? (json['parentOrgUnitId'] as num?)?.toInt();
+    final parentId = _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId']);
 
     // ✅ parent_unit object (preferred)
     ParentUnitDto? parentUnit;
     final parentUnitJson = json['parent_unit'];
     if (parentUnitJson is Map<String, dynamic>) {
       parentUnit = ParentUnitDto.fromJson(parentUnitJson);
-      log("parent is ${parentUnit.name}");
     } else {
       // backward compatibility if API sends parent_id / parent_name
-      final fallbackParentId = (json['parent_org_unit_id'] as num?)?.toInt();
+      final fallbackParentId = _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId']);
       final fallbackParentName = json['parent_name'] as String?;
-      if (fallbackParentId != null) {
+      if (fallbackParentId.isNotEmpty) {
         parentUnit = ParentUnitDto(id: fallbackParentId, name: fallbackParentName ?? '');
       }
     }
 
     return OrgStructureLevelDto(
-      orgUnitId: (json['org_unit_id'] as num?)?.toInt() ?? (json['orgUnitId'] as num?)?.toInt() ?? json["id"] ?? 0,
-      orgStructureId: (json['org_structure_id'] as num?)?.toInt() ?? (json['orgStructureId'] as num?)?.toInt() ?? 0,
+      orgUnitId: _parseIdToString(json['org_unit_id'] ?? json['orgUnitId'] ?? json["id"]),
+      orgStructureId: _parseIdToString(json['org_structure_id'] ?? json['orgStructureId'] ?? ''),
+      orgStructureName: json['org_structure_name'] as String? ?? json['orgStructureName'] as String?,
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? (json['enterpriseId'] as num?)?.toInt() ?? 0,
       levelCode: json['level_code'] as String? ?? json['levelCode'] as String? ?? json["level"] ?? '',
       orgUnitCode: json['org_unit_code'] as String? ?? json['orgUnitCode'] as String? ?? '',
@@ -131,6 +166,7 @@ class OrgStructureLevelDto {
     return OrgStructureLevel(
       orgUnitId: orgUnitId,
       orgStructureId: orgStructureId,
+      orgStructureName: orgStructureName,
       enterpriseId: enterpriseId,
       levelCode: levelCode,
       orgUnitCode: orgUnitCode,

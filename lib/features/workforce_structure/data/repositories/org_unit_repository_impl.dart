@@ -9,9 +9,9 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
 
   @override
   Future<OrgUnitsResponse> getOrgUnitsByLevel({
-    required int structureId,
+    required String structureId,
     required String levelCode,
-    int? parentOrgUnitId,
+    String? parentOrgUnitId,
     String? search,
     int page = 1,
     int pageSize = 100,

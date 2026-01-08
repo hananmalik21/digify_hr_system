@@ -13,9 +13,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EnterpriseStructureFields extends ConsumerStatefulWidget {
   final AppLocalizations localizations;
-  final Map<String, int?> selectedUnitIds;
+  final Map<String, String?> selectedUnitIds;
   final Map<String, OrgUnit>? initialSelections;
-  final Function(String levelCode, int? unitId) onSelectionChanged;
+  final Function(String levelCode, String? unitId) onSelectionChanged;
 
   const EnterpriseStructureFields({
     super.key,
@@ -34,7 +34,7 @@ class _EnterpriseStructureFieldsState
     extends ConsumerState<EnterpriseStructureFields> {
   StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState>?
   _cachedSelectionProvider;
-  int? _cachedStructureId;
+  String? _cachedStructureId;
 
   @override
   void initState() {

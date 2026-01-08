@@ -27,7 +27,7 @@ class ActionButtonsWidget extends ConsumerWidget {
   final String description;
   final List<StructureLevelItem>? structureLevels;
   final int? enterpriseId;
-  final int? structureId;
+  final String? structureId;
   final bool? structureIsActive;
   final AutoDisposeStateNotifierProvider<
     StructureListNotifier,

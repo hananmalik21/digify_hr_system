@@ -25,7 +25,7 @@ class CompanyOverview {
   final String? website;
   final String? currencyCode;
   final String? fiscalYearStart;
-  final int? orgStructureId;
+  final String? orgStructureId;
 
   const CompanyOverview({
     required this.id,

@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
@@ -423,9 +424,7 @@ class DepartmentManagementScreen extends ConsumerWidget {
 
                 if (context.mounted) {
                   Navigator.of(context).pop(true);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Department deleted successfully'), backgroundColor: Colors.green),
-                  );
+                  ToastService.success(context, 'Department deleted successfully');
                   ref.read(departmentListNotifierProvider.notifier).refresh();
                 }
               } on AppException catch (e) {
@@ -433,21 +432,14 @@ class DepartmentManagementScreen extends ConsumerWidget {
                   isLoading = false;
                 });
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to delete department: ${e.message}'), backgroundColor: Colors.red),
-                  );
+                  ToastService.error(context, 'Failed to delete department: ${e.message}');
                 }
               } catch (e) {
                 setState(() {
                   isLoading = false;
                 });
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to delete department: ${e.toString()}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  ToastService.error(context, 'Failed to delete department: ${e.toString()}');
                 }
               }
             },

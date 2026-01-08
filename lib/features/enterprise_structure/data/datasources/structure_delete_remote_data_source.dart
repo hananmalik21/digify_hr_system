@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 /// Remote data source for structure delete operations
 abstract class StructureDeleteRemoteDataSource {
   Future<Map<String, dynamic>> deleteStructure({
-    required int structureId,
+    required String structureId,
     bool? hard,
     bool? autoFallback,
   });
@@ -19,7 +19,7 @@ class StructureDeleteRemoteDataSourceImpl
 
   @override
   Future<Map<String, dynamic>> deleteStructure({
-    required int structureId,
+    required String structureId,
     bool? hard,
     bool? autoFallback,
   }) async {

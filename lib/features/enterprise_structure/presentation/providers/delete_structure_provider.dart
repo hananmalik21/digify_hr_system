@@ -36,7 +36,7 @@ class DeleteStructureNotifier extends StateNotifier<DeleteStructureState> {
 
   /// Delete structure with optional cascade
   Future<Map<String, dynamic>?> deleteStructure({
-    required int structureId,
+    required String structureId,
     bool hard = true,
     bool force = false,
     bool autoFallback = false,

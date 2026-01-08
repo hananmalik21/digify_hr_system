@@ -1,14 +1,14 @@
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 
 class OrgUnitDto {
-  final int orgUnitId;
-  final int orgStructureId;
+  final String orgUnitId;
+  final String orgStructureId;
   final int enterpriseId;
   final String levelCode;
   final String orgUnitCode;
   final String orgUnitNameEn;
   final String orgUnitNameAr;
-  final int? parentOrgUnitId;
+  final String? parentOrgUnitId;
   final String isActive;
   final String? managerName;
   final String? managerEmail;
@@ -39,14 +39,17 @@ class OrgUnitDto {
 
   factory OrgUnitDto.fromJson(Map<String, dynamic> json) {
     return OrgUnitDto(
-      orgUnitId: json['org_unit_id'] as int,
-      orgStructureId: json['org_structure_id'] as int,
+      orgUnitId: json['org_unit_id'] as String,
+      orgStructureId: (json['org_structure_id'] as String?) ??
+          (json['org_structure_id'] as num?)?.toString() ??
+          '',
       enterpriseId: json['enterprise_id'] as int,
       levelCode: json['level_code'] as String,
       orgUnitCode: json['org_unit_code'] as String,
       orgUnitNameEn: json['org_unit_name_en'] as String,
       orgUnitNameAr: json['org_unit_name_ar'] as String,
-      parentOrgUnitId: json['parent_org_unit_id'] as int?,
+      parentOrgUnitId: (json['parent_org_unit_id'] as String?) ??
+          (json['parent_org_unit_id'] as num?)?.toString(),
       isActive: json['is_active'] as String,
       managerName: json['manager_name'] as String?,
       managerEmail: json['manager_email'] as String?,

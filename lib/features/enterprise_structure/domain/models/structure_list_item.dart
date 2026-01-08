@@ -1,6 +1,6 @@
 /// Domain model for a structure list item
 class StructureListItem {
-  final int structureId;
+  final String structureId;
   final int enterpriseId;
   final String? enterpriseName;
   final String structureCode;

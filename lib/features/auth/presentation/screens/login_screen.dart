@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_layout_handler.dart';
 import 'package:flutter/foundation.dart';
@@ -55,12 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (authState.isAuthenticated) {
       context.go('/dashboard');
     } else if (authState.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(localizations.invalidCredentials),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      ToastService.error(context, localizations.invalidCredentials);
     }
   }
 

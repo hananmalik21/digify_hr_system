@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
@@ -409,14 +410,12 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
         final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
         await deleteUseCase(int.parse(businessUnit.id), hard: true);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Business unit deleted successfully')));
+          ToastService.success(context, 'Business unit deleted successfully');
           ref.read(businessUnitListNotifierProvider.notifier).refresh();
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error deleting business unit: ${e.toString()}'), backgroundColor: Colors.red),
-          );
+          ToastService.error(context, 'Error deleting business unit: ${e.toString()}');
         }
       }
     }

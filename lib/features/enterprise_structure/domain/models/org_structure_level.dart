@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class OrgStructureLevel {
-  final int orgUnitId;
-  final int orgStructureId;
+  final String orgUnitId;
+  final String orgStructureId;
+  final String? orgStructureName;
   final int enterpriseId;
   final String levelCode;
   final String orgUnitCode;
@@ -12,7 +13,7 @@ class OrgStructureLevel {
   final String orgUnitNameAr;
 
   /// FK (used for save/update)
-  final int? parentOrgUnitId;
+  final String? parentOrgUnitId;
 
   /// ✅ Rich parent object (used for UI)
   final ParentUnitDto? parentUnit;
@@ -34,6 +35,7 @@ class OrgStructureLevel {
   const OrgStructureLevel({
     required this.orgUnitId,
     required this.orgStructureId,
+    this.orgStructureName,
     required this.enterpriseId,
     required this.levelCode,
     required this.orgUnitCode,

@@ -50,7 +50,7 @@ class EnterpriseStructureRepositoryImpl
 
   @override
   Future<EnterpriseStructure> updateEnterpriseStructure(
-    int structureId,
+    String structureId,
     EnterpriseStructure structure,
   ) async {
     try {

@@ -33,7 +33,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
   final _formKey = GlobalKey<FormState>();
 
   late final Map<String, TextEditingController> _formControllers;
-  late final Map<String, int?> _selectedUnitIds;
+  late final Map<String, String?> _selectedUnitIds;
   bool _isSaving = false;
 
   @override
@@ -41,7 +41,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     super.initState();
     final position = widget.initialPosition;
 
-    _selectedUnitIds = Map<String, int?>.from(position.orgPathIds ?? {});
+    _selectedUnitIds = Map<String, String?>.from(position.orgPathIds ?? {});
     _formControllers = {
       'code': TextEditingController(text: position.code),
       'titleEnglish': TextEditingController(text: position.titleEnglish),
@@ -79,7 +79,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     super.dispose();
   }
 
-  void _handleEnterpriseSelection(String levelCode, int? unitId) {
+  void _handleEnterpriseSelection(String levelCode, String? unitId) {
     setState(() {
       _selectedUnitIds[levelCode] = unitId;
     });
@@ -97,7 +97,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     }
 
     // Get the deepest selected org unit
-    int? lastUnitId;
+    String? lastUnitId;
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
     for (final level in levels) {
       final id = _selectedUnitIds[level.levelCode];

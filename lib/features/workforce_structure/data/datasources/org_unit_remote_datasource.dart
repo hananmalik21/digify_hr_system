@@ -4,9 +4,9 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 
 abstract class OrgUnitRemoteDataSource {
   Future<OrgUnitsResponse> getOrgUnitsByLevel({
-    required int structureId,
+    required String structureId,
     required String levelCode,
-    int? parentOrgUnitId,
+    String? parentOrgUnitId,
     String? search,
     int page = 1,
     int pageSize = 100,
@@ -20,9 +20,9 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
 
   @override
   Future<OrgUnitsResponse> getOrgUnitsByLevel({
-    required int structureId,
+    required String structureId,
     required String levelCode,
-    int? parentOrgUnitId,
+    String? parentOrgUnitId,
     String? search,
     int page = 1,
     int pageSize = 100,

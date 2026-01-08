@@ -41,7 +41,7 @@ class SaveEnterpriseStructureUseCase {
   /// Returns the updated [EnterpriseStructure]
   /// Throws [AppException] if the operation fails
   Future<EnterpriseStructure> updateStructure(
-    int structureId,
+    String structureId,
     EnterpriseStructure structure,
   ) async {
     try {

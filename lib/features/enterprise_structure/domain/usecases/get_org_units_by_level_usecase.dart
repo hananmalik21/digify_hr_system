@@ -29,7 +29,7 @@ class GetOrgUnitsByLevelUseCase {
   ///
   /// Returns a list of [OrgStructureLevel]
   /// Throws [AppException] if the operation fails
-  Future<List<OrgStructureLevel>> callWithStructureId(int structureId, String levelCode) async {
+  Future<List<OrgStructureLevel>> callWithStructureId(String structureId, String levelCode) async {
     try {
       return await repository.getOrgUnitsByStructureAndLevel(structureId, levelCode);
     } on AppException {

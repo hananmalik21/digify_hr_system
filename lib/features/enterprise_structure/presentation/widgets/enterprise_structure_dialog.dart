@@ -31,7 +31,7 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
   final String? description;
   final List<HierarchyLevel>? initialLevels;
   final int? enterpriseId;
-  final int? structureId; // For update operations
+  final String? structureId; // For update operations
   final bool? isActive; // Current active status
   final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider;
 
@@ -75,7 +75,7 @@ class EnterpriseStructureDialog extends ConsumerStatefulWidget {
     required String description,
     required List<HierarchyLevel> initialLevels,
     int? enterpriseId,
-    int? structureId,
+    String? structureId,
     bool? isActive,
     required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {

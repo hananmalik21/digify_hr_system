@@ -3,7 +3,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/paginati
 /// Organization unit information for schedule assignment
 class ScheduleAssignmentOrgUnit {
   final int orgUnitId;
-  final int orgStructureId;
+  final String orgStructureId;
   final int enterpriseId;
   final String levelCode;
   final String orgUnitCode;
@@ -45,7 +45,7 @@ class ScheduleAssignmentOrgUnit {
 
     return ScheduleAssignmentOrgUnit(
       orgUnitId: parseInt(json['org_unit_id'], defaultValue: 0),
-      orgStructureId: parseInt(json['org_structure_id'], defaultValue: 0),
+      orgStructureId: parseString(json['org_structure_id']),
       enterpriseId: parseInt(json['enterprise_id'], defaultValue: 0),
       levelCode: parseString(json['level_code']),
       orgUnitCode: parseString(json['org_unit_code']),

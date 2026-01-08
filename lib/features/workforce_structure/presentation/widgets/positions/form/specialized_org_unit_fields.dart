@@ -12,7 +12,7 @@ class CompanySelectionField extends ConsumerWidget {
     EnterpriseSelectionState
   >
   selectionProvider;
-  final Function(String levelCode, int? unitId) onSelectionChanged;
+  final Function(String levelCode, String? unitId) onSelectionChanged;
 
   const CompanySelectionField({
     super.key,
@@ -41,7 +41,7 @@ class BusinessUnitSelectionField extends ConsumerWidget {
   >
   selectionProvider;
   final bool isEnabled;
-  final Function(String levelCode, int? unitId) onSelectionChanged;
+  final Function(String levelCode, String? unitId) onSelectionChanged;
 
   const BusinessUnitSelectionField({
     super.key,

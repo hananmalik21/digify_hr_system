@@ -13,7 +13,7 @@ class GetOrgUnitsPaginatedUseCase {
   /// Returns [PaginatedOrgUnitsResponse]
   /// Throws [AppException] if the operation fails
   Future<PaginatedOrgUnitsResponse> call(
-    int structureId,
+    String structureId,
     String levelCode, {
     String? search,
     int page = 1,
