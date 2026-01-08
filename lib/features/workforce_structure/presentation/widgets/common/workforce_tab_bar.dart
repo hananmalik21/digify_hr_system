@@ -6,14 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WorkforceTabBar extends StatelessWidget {
   final AppLocalizations localizations;
-  final String selectedTab;
-  final ValueChanged<String> onTabSelected;
+  final int selectedTabIndex;
+  final ValueChanged<int> onTabSelected;
   final bool isDark;
 
   const WorkforceTabBar({
     super.key,
     required this.localizations,
-    required this.selectedTab,
+    required this.selectedTabIndex,
     required this.onTabSelected,
     required this.isDark,
   });
@@ -48,11 +48,18 @@ class WorkforceTabBar extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: tabs.map((tab) {
-            final isSelected = selectedTab == tab['label'];
+          children: tabs.asMap().entries.map((entry) {
+            final index = entry.key;
+            final tab = entry.value;
+            final isSelected = selectedTabIndex == index;
             return Padding(
               padding: EdgeInsetsDirectional.only(end: 8.w),
-              child: _buildTabButton(label: tab['label']!, icon: tab['icon']!, isSelected: isSelected),
+              child: _buildTabButton(
+                label: tab['label']!,
+                icon: tab['icon']!,
+                isSelected: isSelected,
+                onTap: () => onTabSelected(index),
+              ),
             );
           }).toList(),
         ),
@@ -60,11 +67,16 @@ class WorkforceTabBar extends StatelessWidget {
     );
   }
 
-  Widget _buildTabButton({required String label, required String icon, required bool isSelected}) {
+  Widget _buildTabButton({
+    required String label,
+    required String icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => onTabSelected(label),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(6.r),
         child: Container(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 8.h),

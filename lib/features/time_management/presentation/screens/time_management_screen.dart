@@ -1,13 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
-import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/utils/time_management_tab_manager.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/shifts_tab.dart';
@@ -19,12 +16,9 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/p
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class TimeManagementScreen extends ConsumerStatefulWidget {
-  final String? initialTab;
-
-  const TimeManagementScreen({super.key, this.initialTab});
+  const TimeManagementScreen({super.key});
 
   @override
   ConsumerState<TimeManagementScreen> createState() => _TimeManagementScreenState();
@@ -41,19 +35,10 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.initialTab != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(timeManagementTabStateProvider.notifier).setTabFromRoute(widget.initialTab);
-      });
-    }
-
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final selectedTab = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTab));
+    final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
     final stats = ref.watch(timeManagementStatsProvider);
-
-    // Get tab label for tab bar
-    final tabLabel = _getTabLabel(selectedTab);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
@@ -79,17 +64,14 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
                 SizedBox(height: 24.h),
                 TimeManagementTabBar(
                   localizations: localizations,
-                  selectedTab: tabLabel,
-                  onTabSelected: (label) {
-                    final tab = _getTabFromLabel(label);
-                    ref.read(timeManagementTabStateProvider.notifier).setTab(tab);
-                    final route = TimeManagementTabManager.getRouteFromTab(tab);
-                    context.go('${AppRoutes.timeManagement}/$route');
+                  selectedTabIndex: currentTabIndex,
+                  onTabSelected: (index) {
+                    ref.read(timeManagementTabStateProvider.notifier).setTabIndex(index);
                   },
                   isDark: isDark,
                 ),
                 SizedBox(height: 24.h),
-                _buildTabContent(selectedTab),
+                _buildTabContent(currentTabIndex),
               ],
             ),
           ),
@@ -98,56 +80,22 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     );
   }
 
-  Widget _buildTabContent(TimeManagementTab selectedTab) {
-    switch (selectedTab) {
-      case TimeManagementTab.shifts:
+  Widget _buildTabContent(int tabIndex) {
+    switch (tabIndex) {
+      case 0:
         return const ShiftsTab();
-      case TimeManagementTab.workPatterns:
+      case 1:
         return const WorkPatternsTab();
-      case TimeManagementTab.workSchedules:
+      case 2:
         return const WorkSchedulesTab();
-      case TimeManagementTab.scheduleAssignments:
+      case 3:
         return const ScheduleAssignmentsTab();
-      case TimeManagementTab.viewCalendar:
+      case 4:
         return const ViewCalendarTab();
-      case TimeManagementTab.publicHolidays:
+      case 5:
         return const PublicHolidaysTab();
-    }
-  }
-
-  String _getTabLabel(TimeManagementTab tab) {
-    switch (tab) {
-      case TimeManagementTab.shifts:
-        return 'Shifts';
-      case TimeManagementTab.workPatterns:
-        return 'Work Patterns';
-      case TimeManagementTab.workSchedules:
-        return 'Work Schedules';
-      case TimeManagementTab.scheduleAssignments:
-        return 'Schedule Assignments';
-      case TimeManagementTab.viewCalendar:
-        return 'View Calendar';
-      case TimeManagementTab.publicHolidays:
-        return 'Public Holidays';
-    }
-  }
-
-  TimeManagementTab _getTabFromLabel(String label) {
-    switch (label) {
-      case 'Shifts':
-        return TimeManagementTab.shifts;
-      case 'Work Patterns':
-        return TimeManagementTab.workPatterns;
-      case 'Work Schedules':
-        return TimeManagementTab.workSchedules;
-      case 'Schedule Assignments':
-        return TimeManagementTab.scheduleAssignments;
-      case 'View Calendar':
-        return TimeManagementTab.viewCalendar;
-      case 'Public Holidays':
-        return TimeManagementTab.publicHolidays;
       default:
-        return TimeManagementTab.shifts;
+        return const ShiftsTab();
     }
   }
 }
