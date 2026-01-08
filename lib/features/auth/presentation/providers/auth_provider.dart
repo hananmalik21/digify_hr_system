@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthState {
@@ -31,14 +33,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await Future.delayed(const Duration(milliseconds: 800));
 
       // Demo credentials check
-      if (email.trim().toLowerCase() == email.toLowerCase() &&
-          password == password) {
-        state = state.copyWith(isAuthenticated: true, isLoading: false);
+      final trimmedEmail = email.trim().toLowerCase();
+      if (trimmedEmail == 'admin' && password == "Digify@@2025") {
+        state = state.copyWith(
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        );
       } else {
-        state = state.copyWith(isLoading: false, error: 'Invalid credentials');
+        state = state.copyWith(
+          isAuthenticated: false,
+          isLoading: false,
+          error: 'Invalid credentials',
+        );
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isAuthenticated: false,
+        isLoading: false,
+        error: e.toString(),
+      );
     }
   }
 

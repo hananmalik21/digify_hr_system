@@ -14,26 +14,59 @@ class ToastService {
     Duration duration = const Duration(seconds: 3),
     String? title,
   }) {
-    // Remove existing toast if any
-    _currentToast?.remove();
-    _currentToast = null;
+    try {
+      // Remove existing toast if any
+      _currentToast?.remove();
+      _currentToast = null;
 
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => _ToastWidget(
-        message: message,
-        type: type,
-        title: title,
-        duration: duration,
-        onDismiss: () {
-          _currentToast?.remove();
-          _currentToast = null;
-        },
-      ),
-    );
+      // Try to get overlay, prefer rootOverlay
+      OverlayState? overlay;
+      try {
+        overlay = Overlay.maybeOf(context, rootOverlay: true);
+      } catch (e) {
+        // Ignore and try regular overlay
+      }
+      
+      overlay ??= Overlay.of(context, rootOverlay: false);
+      
+      final overlayEntry = OverlayEntry(
+        builder: (context) => Stack(
+          children: [
+            _ToastWidget(
+              message: message,
+              type: type,
+              title: title,
+              duration: duration,
+              onDismiss: () {
+                _currentToast?.remove();
+                _currentToast = null;
+              },
+            ),
+          ],
+        ),
+      );
 
-    _currentToast = overlayEntry;
-    overlay.insert(overlayEntry);
+      _currentToast = overlayEntry;
+      overlay.insert(overlayEntry);
+    } catch (e) {
+      debugPrint('ToastService error: $e');
+      // Fallback: try to show using ScaffoldMessenger if available
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: type == ToastType.error 
+                ? Colors.red 
+                : type == ToastType.success 
+                    ? Colors.green 
+                    : Colors.blue,
+          ),
+        );
+      } catch (_) {
+        // If all else fails, just print
+        debugPrint('Toast message: $message');
+      }
+    }
   }
 
   static void success(

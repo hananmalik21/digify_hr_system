@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
@@ -5,6 +7,7 @@ import 'package:digify_hr_system/features/auth/presentation/providers/auth_provi
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_layout_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void initState() {
     super.initState();
     if (kDebugMode) {
-      _usernameController.text = 'admin@digify.com';
+      _usernameController.text = 'admin';
       _passwordController.text = 'Digify@@2025';
     }
   }
@@ -41,27 +44,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    final localizations = AppLocalizations.of(context)!;
-
-    await ref
-        .read(authProvider.notifier)
-        .login(_usernameController.text.trim(), _passwordController.text);
-
-    if (!mounted) return;
-
-    final authState = ref.read(authProvider);
-    if (authState.isAuthenticated) {
-      context.go('/dashboard');
-    } else if (authState.error != null) {
-      ToastService.error(context, localizations.invalidCredentials);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Listen to auth state changes for navigation and error handling
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (!mounted) return;
+
+      final localizations = AppLocalizations.of(context)!;
+
+      // Handle authentication success
+      if (next.isAuthenticated && !next.isLoading) {
+        context.go('/dashboard');
+        return;
+      }
+
+      // Handle errors - show when error exists, not loading, and not authenticated
+      // Only show if this is a new error (previous had no error or different error)
+      if (!next.isAuthenticated &&
+          !next.isLoading &&
+          next.error != null &&
+          next.error!.isNotEmpty) {
+        // Check if this is a new error (wasn't present before)
+        final isNewError =
+            previous == null ||
+            previous.error == null ||
+            previous.error != next.error;
+
+        if (isNewError) {
+          log("Showing error toast: ${next.error}");
+          // Show toast directly - ToastService will handle overlay access
+          if (mounted) {
+            ToastService.success(context, next.error!);
+            log("ToastService.error called with context: ${context.runtimeType}");
+          }
+        }
+      }
+    });
+
     return Scaffold(
       body: Container(
         height: ScreenUtil().screenHeight,
@@ -90,5 +109,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    log("Starting login...");
+    try {
+      await ref
+          .read(authProvider.notifier)
+          .login(_usernameController.text.trim(), _passwordController.text);
+      log("Login completed");
+    } catch (e) {
+      log("Login error: $e");
+      if (mounted) {
+        final localizations = AppLocalizations.of(context)!;
+        ToastService.error(context, localizations.invalidCredentials);
+      }
+    }
   }
 }
