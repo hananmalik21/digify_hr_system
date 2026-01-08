@@ -36,6 +36,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
     }
 
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
@@ -49,29 +50,37 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTableHeader(context),
-            if (units.isEmpty)
-              Container(
-                padding: EdgeInsets.all(40.h),
-                child: Center(
-                  child: Text(
-                    localizations.noResultsFound,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                    ),
-                  ),
-                ),
-              )
-            else
-              ...units.map((unit) => _buildTableRow(unit)),
-          ],
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final tableWidth = constraints.maxWidth;
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: tableWidth),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTableHeader(context),
+                  if (units.isEmpty)
+                    Container(
+                      padding: EdgeInsets.all(40.h),
+                      child: Center(
+                        child: Text(
+                          localizations.noResultsFound,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    ...units.asMap().entries.map((entry) => _buildTableRow(entry.value, entry.key + 1)),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -87,8 +96,8 @@ class OrgUnitsTableWidget extends StatelessWidget {
       color: headerColor,
       child: Row(
         children: [
-          _buildHeaderCell('Org Unit Id', 120.w),
-          _buildHeaderCell('Org Structure Id', 140.w),
+          _buildHeaderCell('#', 80.w),
+          _buildHeaderCell('Org Structure', 140.w),
           _buildHeaderCell('Enterprise Id', 120.w),
           _buildHeaderCell('Level Code', 120.w),
           _buildHeaderCell('Org Unit Code', 140.w),
@@ -120,7 +129,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTableRow(OrgStructureLevel unit) {
+  Widget _buildTableRow(OrgStructureLevel unit, int index) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -131,7 +140,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         children: [
           _buildDataCell(
             Text(
-              unit.orgUnitId,
+              index.toString(),
               style: TextStyle(
                 fontSize: 13.9.sp,
                 fontWeight: FontWeight.w500,
@@ -139,11 +148,11 @@ class OrgUnitsTableWidget extends StatelessWidget {
                 height: 20 / 13.9,
               ),
             ),
-            120.w,
+            80.w,
           ),
           _buildDataCell(
             Text(
-              unit.orgStructureName ?? unit.orgStructureId.toString(),
+              unit.orgStructureName ?? '-',
               style: TextStyle(
                 fontSize: 13.6.sp,
                 fontWeight: FontWeight.w400,
@@ -307,6 +316,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
     final isDarkTheme = context.isDark;
 
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
@@ -320,12 +330,20 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [_buildHeaderShimmer(isDarkTheme), ...List.generate(6, (_) => _buildRowShimmer())],
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final tableWidth = constraints.maxWidth;
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: tableWidth),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [_buildHeaderShimmer(isDarkTheme), ...List.generate(6, (_) => _buildRowShimmer())],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -335,7 +353,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       color: isDarkTheme ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB),
       child: Row(
         children: [
-          _headerCellShimmer(120),
+          _headerCellShimmer(80),
           _headerCellShimmer(140),
           _headerCellShimmer(120),
           _headerCellShimmer(120),
@@ -367,7 +385,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _cellShimmer(120),
+          _cellShimmer(80),
           _cellShimmer(140),
           _cellShimmer(120),
           _cellShimmer(120),
