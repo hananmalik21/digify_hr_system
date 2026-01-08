@@ -30,7 +30,7 @@ class StructureCardWidget extends StatelessWidget {
   final bool showInfoMessage;
   final List<StructureLevelItem>? structureLevels;
   final int? enterpriseId;
-  final int? structureId;
+  final String? structureId;
   final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
   final AutoDisposeStateNotifierProvider<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>
   saveEnterpriseStructureProvider;

@@ -32,7 +32,7 @@ final enterpriseSelectionNotifierProvider =
     StateNotifierProvider.family<
       EnterpriseSelectionNotifier,
       EnterpriseSelectionState,
-      ({List<OrgStructureLevel> levels, int structureId})
+      ({List<OrgStructureLevel> levels, String structureId})
     >((ref, params) {
       return EnterpriseSelectionNotifier(
         getOrgUnitsByLevelUseCase: ref.read(getOrgUnitsByLevelUseCaseProvider),

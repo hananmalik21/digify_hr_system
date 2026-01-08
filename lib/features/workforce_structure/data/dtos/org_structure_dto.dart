@@ -3,7 +3,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 /// DTO for Organization Structure Level from API
 class OrgStructureLevelDto {
   final int levelId;
-  final int structureId;
+  final String structureId;
   final int levelNumber;
   final String levelCode;
   final String levelName;
@@ -35,7 +35,9 @@ class OrgStructureLevelDto {
   factory OrgStructureLevelDto.fromJson(Map<String, dynamic> json) {
     return OrgStructureLevelDto(
       levelId: json['level_id'] as int,
-      structureId: json['structure_id'] as int,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          '',
       levelNumber: json['level_number'] as int,
       levelCode: json['level_code'] as String,
       levelName: json['level_name'] as String,
@@ -66,7 +68,7 @@ class OrgStructureLevelDto {
 
 /// DTO for Organization Structure from API
 class OrgStructureDto {
-  final int structureId;
+  final String structureId;
   final int enterpriseId;
   final String enterpriseName;
   final String structureCode;
@@ -100,7 +102,9 @@ class OrgStructureDto {
 
   factory OrgStructureDto.fromJson(Map<String, dynamic> json) {
     return OrgStructureDto(
-      structureId: json['structure_id'] as int,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          '',
       enterpriseId: json['enterprise_id'] as int,
       enterpriseName: json['enterprise_name'] as String,
       structureCode: json['structure_code'] as String,

@@ -39,7 +39,7 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
   late final Map<String, TextEditingController> _controllers;
   String? _selectedStatus;
   String? _selectedCurrency;
-  int? _selectedOrgStructureId;
+  String? _selectedOrgStructureId;
   bool _isSubmitting = false;
 
   final List<String> _statusOptions = ['Active', 'Inactive'];
@@ -50,7 +50,8 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
     super.initState();
     _selectedStatus = widget.initialData?['status'] ?? 'Active';
     _selectedCurrency = widget.initialData?['currency'] ?? 'KWD - Kuwaiti Dinar';
-    _selectedOrgStructureId = widget.initialData?['orgStructureId'] as int?;
+    _selectedOrgStructureId = widget.initialData?['orgStructureId'] as String? ??
+        (widget.initialData?['orgStructureId'] as int?)?.toString();
 
     _controllers = {
       'companyCode': TextEditingController(text: widget.initialData?['companyCode'] ?? ''),
@@ -468,31 +469,14 @@ class _AddCompanyDialogState extends ConsumerState<AddCompanyDialog> {
 
     // Find and set selected value based on orgStructureId
     String? selectedValue;
-    // Only try to set selection if we have a valid orgStructureId (not null and not 0)
-    if (_selectedOrgStructureId != null && _selectedOrgStructureId! > 0 && structures.isNotEmpty) {
+    // Only try to set selection if we have a valid orgStructureId (not null and not empty)
+    if (_selectedOrgStructureId != null && _selectedOrgStructureId!.isNotEmpty && structures.isNotEmpty) {
       // Try to find the structure by ID
       try {
         final matchingStructure = structures.firstWhere((s) => s.structureId == _selectedOrgStructureId);
         selectedValue = '${matchingStructure.structureName} (${matchingStructure.structureCode})';
       } catch (e) {
-        // If exact match not found, try string comparison as fallback
-        try {
-          final matchingByString = structures.firstWhere(
-            (s) => s.structureId.toString() == _selectedOrgStructureId.toString(),
-          );
-          selectedValue = '${matchingByString.structureName} (${matchingByString.structureCode})';
-          // Update the state to use the correct ID format
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {
-                _selectedOrgStructureId = matchingByString.structureId;
-              });
-            }
-          });
-        } catch (e2) {
-          // Structure not found - selectedValue remains null
-          selectedValue = null;
-        }
+        // If not found, just leave it unselected
       }
     }
 

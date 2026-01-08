@@ -54,14 +54,14 @@ class ActiveLevelsTableWidget extends StatelessWidget {
 
     final tableData = levels.map((level) {
       return {
-        'org_unit_id': level.orgUnitId.toString(),
-        'org_structure_id': level.orgStructureId.toString(),
+        'org_unit_id': level.orgUnitId,
+        'org_structure_id': level.orgStructureName ?? level.orgStructureId.toString(),
         'enterprise_id': level.enterpriseId.toString(),
         'level_code': level.levelCode,
         'org_unit_code': level.orgUnitCode,
         'org_unit_name_en': level.orgUnitNameEn,
         'org_unit_name_ar': level.orgUnitNameAr,
-        'parent_org_unit_id': level.parentOrgUnitId?.toString() ?? '',
+        'parent_org_unit_id': level.parentOrgUnitId ?? '',
         'is_active': level.isActive ? 'Y' : 'N',
         'manager_name': level.managerName,
         'manager_email': level.managerEmail,
@@ -77,7 +77,7 @@ class ActiveLevelsTableWidget extends StatelessWidget {
       TableColumn(key: 'org_unit_id', label: 'Org Unit ID', width: 120.w),
       TableColumn(
         key: 'org_structure_id',
-        label: 'Org Structure ID',
+        label: 'Org Structure',
         width: 140.w,
       ),
       TableColumn(key: 'enterprise_id', label: 'Enterprise ID', width: 120.w),

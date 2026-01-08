@@ -12,7 +12,7 @@ class CreateOrgUnitUseCase {
   ///
   /// Returns the created [OrgStructureLevel]
   /// Throws [AppException] if the operation fails
-  Future<OrgStructureLevel> call(int structureId, Map<String, dynamic> data) async {
+  Future<OrgStructureLevel> call(String structureId, Map<String, dynamic> data) async {
     try {
       return await repository.createOrgUnit(structureId, data);
     } on AppException {

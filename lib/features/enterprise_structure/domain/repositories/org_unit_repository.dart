@@ -12,13 +12,13 @@ abstract class OrgUnitRepository {
   /// Gets list of org units by structure ID and level code
   ///
   /// Throws [AppException] if the operation fails
-  Future<List<OrgStructureLevel>> getOrgUnitsByStructureAndLevel(int structureId, String levelCode);
+  Future<List<OrgStructureLevel>> getOrgUnitsByStructureAndLevel(String structureId, String levelCode);
 
   /// Gets paginated list of org units by structure ID and level code with search
   ///
   /// Throws [AppException] if the operation fails
   Future<PaginatedOrgUnitsResponse> getOrgUnitsByStructureAndLevelPaginated(
-    int structureId,
+    String structureId,
     String levelCode, {
     String? search,
     int page = 1,
@@ -28,21 +28,21 @@ abstract class OrgUnitRepository {
   /// Gets list of parent org units for a given structure and level
   ///
   /// Throws [AppException] if the operation fails
-  Future<List<OrgStructureLevel>> getParentOrgUnits(int structureId, String levelCode);
+  Future<List<OrgStructureLevel>> getParentOrgUnits(String structureId, String levelCode);
 
   /// Creates a new org unit
   ///
   /// Throws [AppException] if the operation fails
-  Future<OrgStructureLevel> createOrgUnit(int structureId, Map<String, dynamic> data);
+  Future<OrgStructureLevel> createOrgUnit(String structureId, Map<String, dynamic> data);
 
   /// Updates an existing org unit
   ///
   /// Throws [AppException] if the operation fails
-  Future<OrgStructureLevel> updateOrgUnit(int structureId, int orgUnitId, Map<String, dynamic> data);
+  Future<OrgStructureLevel> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data);
 
   /// Deletes an org unit
   ///
   /// Throws [AppException] if the operation fails
-  Future<void> deleteOrgUnit(int structureId, int orgUnitId, {bool hard = true});
+  Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true});
 }
 

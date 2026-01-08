@@ -131,7 +131,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
         children: [
           _buildDataCell(
             Text(
-              unit.orgUnitId.toString(),
+              unit.orgUnitId,
               style: TextStyle(
                 fontSize: 13.9.sp,
                 fontWeight: FontWeight.w500,
@@ -143,7 +143,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
           ),
           _buildDataCell(
             Text(
-              unit.orgStructureId.toString(),
+              unit.orgStructureName ?? unit.orgStructureId.toString(),
               style: TextStyle(
                 fontSize: 13.6.sp,
                 fontWeight: FontWeight.w400,

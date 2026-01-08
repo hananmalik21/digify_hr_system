@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/date_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
@@ -21,7 +23,7 @@ import 'dart:ui';
 
 /// Dialog for adding or editing an org unit
 class AddOrgUnitDialog extends ConsumerStatefulWidget {
-  final int structureId;
+  final String structureId;
   final String levelCode;
   final OrgStructureLevel? initialValue;
 
@@ -34,7 +36,7 @@ class AddOrgUnitDialog extends ConsumerStatefulWidget {
 
   static Future<void> show(
     BuildContext context, {
-    required int structureId,
+    required String structureId,
     required String levelCode,
     OrgStructureLevel? initialValue,
   }) {
@@ -64,7 +66,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
   late final Map<String, TextEditingController> _controllers;
   String? _selectedStatus;
 
-  int? _selectedParentId;
+  String? _selectedParentId;
   String? _selectedParentName;
   bool _isLoading = false;
 
@@ -103,9 +105,20 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       'description': TextEditingController(text: initial?.description ?? ''),
     };
 
+    // Set parent ID and name from initial value (for editing)
     _selectedParentId = initial?.parentOrgUnitId;
+    // Use parentUnit.name if available (from API response), otherwise use parentName getter
+    if (initial != null) {
+      _selectedParentName = initial.parentUnit?.name;
+      // Fallback to parentName getter if parentUnit.name is not available
+      if (_selectedParentName == null || _selectedParentName!.isEmpty) {
+        final parentName = initial.parentName;
+        _selectedParentName = parentName.isNotEmpty ? parentName : null;
+      }
+    }
 
     // Pre-fetch parent org units when dialog opens (only if not COMPANY level)
+    // This ensures the parent units list is available if user wants to change the parent
     if (widget.levelCode.toUpperCase() != 'COMPANY') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -119,12 +132,12 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
           );
           ref.invalidate(parentOrgUnitsProvider(params));
 
-          // Watch the provider to get the parent name when data is loaded
-          if (_selectedParentId != null) {
+          // If we don't have parent name yet, try to get it from the loaded list
+          if (_selectedParentId != null && _selectedParentName == null) {
             ref.listen<
               AsyncValue<List<OrgStructureLevel>>
             >(parentOrgUnitsProvider(params), (previous, next) {
-              if (mounted && next.hasValue && _selectedParentId != null) {
+              if (mounted && next.hasValue && _selectedParentId != null && _selectedParentName == null) {
                 try {
                   final parentUnit = next.value!.firstWhere(
                     (unit) => unit.orgUnitId == _selectedParentId,
@@ -167,6 +180,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     );
     if (selected != null && mounted) {
       setState(() {
+        log("selected is ${selected.orgUnitId}");
         _selectedParentId = selected.orgUnitId;
         _selectedParentName = selected.orgUnitNameEn;
       });

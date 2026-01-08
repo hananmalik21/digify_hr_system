@@ -7,13 +7,13 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/posi
 /// Position data model (DTO)
 /// Maps API response to domain model
 class PositionModel {
-  final int positionId;
+  final String positionId;
   final String positionCode;
   final String status;
   final String positionTitleEn;
   final String positionTitleAr;
-  final int orgStructureId;
-  final int orgUnitId;
+  final String orgStructureId;
+  final String orgUnitId;
   final String? costCenter;
   final String? location;
   final int? jobFamilyId;
@@ -26,7 +26,7 @@ class PositionModel {
   final double? budgetedMinKd;
   final double? budgetedMaxKd;
   final double? actualAvgKd;
-  final int? reportsToPositionId;
+  final String? reportsToPositionId;
   final String createdBy;
   final String createdDate;
   final String lastUpdatedBy;
@@ -103,13 +103,13 @@ class PositionModel {
 
   factory PositionModel.fromJson(Map<String, dynamic> json) {
     return PositionModel(
-      positionId: _asInt(json['position_id']),
+      positionId: _asString(json['position_id']),
       positionCode: _asString(json['position_code']),
       status: _asString(json['status'], fallback: 'ACTIVE'),
       positionTitleEn: _asString(json['position_title_en']),
       positionTitleAr: _asString(json['position_title_ar']),
-      orgStructureId: _asInt(json['org_structure_id']),
-      orgUnitId: _asInt(json['org_unit_id']),
+      orgStructureId: _asString(json['org_structure_id']),
+      orgUnitId: json['org_unit_id'] as String,
       costCenter: json['cost_center'] as String?,
       location: json['location'] as String?,
       jobFamilyId: json['job_family_id'] as int?,
@@ -122,7 +122,7 @@ class PositionModel {
       budgetedMinKd: json['budgeted_min_kd'] != null ? _asDouble(json['budgeted_min_kd']) : null,
       budgetedMaxKd: json['budgeted_max_kd'] != null ? _asDouble(json['budgeted_max_kd']) : null,
       actualAvgKd: json['actual_avg_kd'] != null ? _asDouble(json['actual_avg_kd']) : null,
-      reportsToPositionId: json['reports_to_position_id'] as int?,
+      reportsToPositionId: _asString(json['reports_to_position_id']),
       createdBy: _asString(json['created_by'], fallback: 'SYSTEM'),
       createdDate: _asString(json['created_date']),
       lastUpdatedBy: _asString(json['last_updated_by'], fallback: 'SYSTEM'),
@@ -145,7 +145,7 @@ class PositionModel {
                 .map(
                   (e) => OrgPathModel.fromJson(
                     e as Map<String, dynamic>,
-                    orgStructureId: _asInt(json['org_structure_id']),
+                    orgStructureId: _asString(json['org_structure_id']),
                   ),
                 )
                 .toList()
@@ -246,7 +246,7 @@ class PositionModel {
 
 /// Nested model classes
 class OrgStructureModel {
-  final int structureId;
+  final String structureId;
   final String structureCode;
   final String structureName;
 
@@ -254,7 +254,9 @@ class OrgStructureModel {
 
   factory OrgStructureModel.fromJson(Map<String, dynamic> json) {
     return OrgStructureModel(
-      structureId: json['structure_id'] as int? ?? 0,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          '',
       structureCode: json['structure_code'] as String? ?? '',
       structureName: json['structure_name'] as String? ?? '',
     );
@@ -262,7 +264,7 @@ class OrgStructureModel {
 }
 
 class OrgUnitModel {
-  final int orgUnitId;
+  final String orgUnitId;
   final String nameEn;
   final String nameAr;
   final String levelCode;
@@ -271,7 +273,9 @@ class OrgUnitModel {
 
   factory OrgUnitModel.fromJson(Map<String, dynamic> json) {
     return OrgUnitModel(
-      orgUnitId: json['org_unit_id'] as int? ?? 0,
+      orgUnitId: (json['org_unit_id'] as String?) ??
+          (json['org_unit_id'] as num?)?.toString() ??
+          '',
       nameEn: json['name_en'] as String? ?? '',
       nameAr: json['name_ar'] as String? ?? '',
       levelCode: json['level_code'] as String? ?? '',
@@ -387,7 +391,7 @@ class GradeModel {
 }
 
 class ReportsToModel {
-  final int positionId;
+  final String positionId;
   final String positionCode;
   final String positionTitleEn;
 
@@ -395,7 +399,9 @@ class ReportsToModel {
 
   factory ReportsToModel.fromJson(Map<String, dynamic> json) {
     return ReportsToModel(
-      positionId: json['position_id'] as int? ?? 0,
+      positionId: (json['position_id'] as String?) ??
+          (json['position_id'] as num?)?.toString() ??
+          '',
       positionCode: json['position_code'] as String? ?? '',
       positionTitleEn: json['position_title_en'] as String? ?? '',
     );
@@ -404,10 +410,10 @@ class ReportsToModel {
 
 class OrgPathModel {
   final String levelCode;
-  final int orgUnitId;
+  final String orgUnitId;
   final String nameEn;
   final String nameAr;
-  final int orgStructureId;
+  final String orgStructureId;
 
   const OrgPathModel({
     required this.levelCode,
@@ -417,10 +423,10 @@ class OrgPathModel {
     required this.orgStructureId,
   });
 
-  factory OrgPathModel.fromJson(Map<String, dynamic> json, {int orgStructureId = 0}) {
+  factory OrgPathModel.fromJson(Map<String, dynamic> json, {String orgStructureId = ''}) {
     return OrgPathModel(
       levelCode: json['level_code'] as String? ?? '',
-      orgUnitId: json['org_unit_id'] as int? ?? 0,
+      orgUnitId: json['org_unit_id'] as String? ?? "",
       nameEn: json['name_en'] as String? ?? '',
       nameAr: json['name_ar'] as String? ?? '',
       orgStructureId: orgStructureId,

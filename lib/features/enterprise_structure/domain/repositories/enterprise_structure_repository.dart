@@ -14,7 +14,7 @@ abstract class EnterpriseStructureRepository {
   /// 
   /// Throws [AppException] if the operation fails
   Future<EnterpriseStructure> updateEnterpriseStructure(
-    int structureId,
+    String structureId,
     EnterpriseStructure structure,
   );
 }

@@ -2,7 +2,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/str
 
 /// DTO for structure list item
 class StructureListItemDto {
-  final int structureId;
+  final String structureId;
   final int enterpriseId;
   final String? enterpriseName;
   final String structureCode;
@@ -58,9 +58,11 @@ class StructureListItemDto {
         .toList();
 
     return StructureListItemDto(
-      structureId: (json['structure_id'] as num?)?.toInt() ??
-          (json['id'] as num?)?.toInt() ??
-          0,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          (json['id'] as String?) ??
+          (json['id'] as num?)?.toString() ??
+          '',
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ??
           (json['enterpriseId'] as num?)?.toInt() ??
           0,

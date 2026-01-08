@@ -67,17 +67,17 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                     letterSpacing: 0,
                   ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  "💡 Create multiple structures for different business units or use cases",
-                  style: TextStyle(
-                    fontSize: isTablet ? 12.5.sp : 10.6.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF155DFC),
-                    height: 20 / 13.6,
-                    letterSpacing: 0,
-                  ),
-                ),
+                // SizedBox(height: 4.h),
+                // Text(
+                //   "💡 Create multiple structures for different business units or use cases",
+                //   style: TextStyle(
+                //     fontSize: isTablet ? 12.5.sp : 10.6.sp,
+                //     fontWeight: FontWeight.w400,
+                //     color: Color(0xFF155DFC),
+                //     height: 20 / 13.6,
+                //     letterSpacing: 0,
+                //   ),
+                // ),
                 SizedBox(height: 12.h),
                 GestureDetector(
                   onTap: () {
@@ -144,17 +144,17 @@ class StructureConfigurationsHeaderWidget extends ConsumerWidget {
                           letterSpacing: 0,
                         ),
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        "💡 Create multiple structures for different business units or use cases",
-                        style: TextStyle(
-                          fontSize: isTablet ? 12.5.sp : 10.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF155DFC),
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                      ),
+                      // SizedBox(height: 4.h),
+                      // Text(
+                      //   "💡 Create multiple structures for different business units or use cases",
+                      //   style: TextStyle(
+                      //     fontSize: isTablet ? 12.5.sp : 10.6.sp,
+                      //     fontWeight: FontWeight.w400,
+                      //     color: Color(0xFF155DFC),
+                      //     height: 20 / 13.6,
+                      //     letterSpacing: 0,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

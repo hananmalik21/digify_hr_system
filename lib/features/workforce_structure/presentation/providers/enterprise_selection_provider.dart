@@ -13,7 +13,7 @@ class EnterpriseSelectionState {
   final Map<String, int> pages;
   final Map<String, bool> hasNextStates;
   final Map<String, String> searchQueries;
-  final int? structureId;
+  final String? structureId;
 
   const EnterpriseSelectionState({
     this.selections = const {},
@@ -36,7 +36,7 @@ class EnterpriseSelectionState {
     Map<String, int>? pages,
     Map<String, bool>? hasNextStates,
     Map<String, String>? searchQueries,
-    int? structureId,
+    String? structureId,
   }) {
     return EnterpriseSelectionState(
       selections: selections ?? this.selections,
@@ -79,7 +79,7 @@ class EnterpriseSelectionNotifier
   EnterpriseSelectionNotifier({
     required this.getOrgUnitsByLevelUseCase,
     required this.levels,
-    required int structureId,
+    required String structureId,
   }) : super(EnterpriseSelectionState(structureId: structureId));
 
   Future<void> loadOptionsForLevel(String levelCode) async {
@@ -94,7 +94,7 @@ class EnterpriseSelectionNotifier
 
     try {
       final levelIndex = levels.indexWhere((l) => l.levelCode == levelCode);
-      int? parentOrgUnitId;
+      String? parentOrgUnitId;
 
       if (levelIndex > 0) {
         final parentLevel = levels[levelIndex - 1];
@@ -141,7 +141,7 @@ class EnterpriseSelectionNotifier
 
     try {
       final levelIndex = levels.indexWhere((l) => l.levelCode == levelCode);
-      int? parentOrgUnitId;
+      String? parentOrgUnitId;
 
       if (levelIndex > 0) {
         final parentLevel = levels[levelIndex - 1];

@@ -16,7 +16,7 @@ class OrgUnitsState {
   final String? errorMessage;
   final bool hasError;
   final String? levelCode;
-  final int? structureId;
+  final String? structureId;
   final String? searchQuery;
   final int currentPage;
   final int pageSize;
@@ -43,7 +43,7 @@ class OrgUnitsState {
     String? errorMessage,
     bool? hasError,
     String? levelCode,
-    int? structureId,
+    String? structureId,
     String? searchQuery,
     int? currentPage,
     int? pageSize,
@@ -81,7 +81,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
 
   Future<void> loadOrgUnits(
     String levelCode, {
-    int? structureId,
+    String? structureId,
     String? search,
     int page = 1,
     int pageSize = 10,

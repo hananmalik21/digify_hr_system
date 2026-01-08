@@ -10,7 +10,7 @@ class StructureDeleteRepositoryImpl implements StructureDeleteRepository {
 
   @override
   Future<Map<String, dynamic>> deleteStructure({
-    required int structureId,
+    required String structureId,
     bool? hard,
     bool? autoFallback,
   }) async {

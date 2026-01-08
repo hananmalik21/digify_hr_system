@@ -3,7 +3,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/act
 /// DTO for Active Structure Level Definition
 class ActiveStructureLevelDto {
   final int levelId;
-  final int structureId;
+  final String structureId;
   final int levelNumber;
   final String levelCode;
   final String levelName;
@@ -28,9 +28,11 @@ class ActiveStructureLevelDto {
       levelId: (json['level_id'] as num?)?.toInt() ??
           (json['levelId'] as num?)?.toInt() ??
           0,
-      structureId: (json['structure_id'] as num?)?.toInt() ??
-          (json['structureId'] as num?)?.toInt() ??
-          0,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          (json['structureId'] as String?) ??
+          (json['structureId'] as num?)?.toString() ??
+          '',
       levelNumber: (json['level_number'] as num?)?.toInt() ??
           (json['levelNumber'] as num?)?.toInt() ??
           0,
@@ -83,7 +85,7 @@ class ActiveStructureLevelDto {
 
 /// DTO for Active Structure Response
 class ActiveStructureResponseDto {
-  final int structureId;
+  final String structureId;
   final int enterpriseId;
   final String enterpriseName;
   final String structureCode;
@@ -114,9 +116,11 @@ class ActiveStructureResponseDto {
         .toList();
 
     return ActiveStructureResponseDto(
-      structureId: (json['structure_id'] as num?)?.toInt() ??
-          (json['structureId'] as num?)?.toInt() ??
-          0,
+      structureId: (json['structure_id'] as String?) ??
+          (json['structure_id'] as num?)?.toString() ??
+          (json['structureId'] as String?) ??
+          (json['structureId'] as num?)?.toString() ??
+          '',
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ??
           (json['enterpriseId'] as num?)?.toInt() ??
           0,

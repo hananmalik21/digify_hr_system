@@ -25,7 +25,7 @@ class CompanyDto {
   final String? website;
   final String? currencyCode;
   final String? fiscalYearStart;
-  final int? orgStructureId;
+  final String? orgStructureId;
 
   const CompanyDto({
     required this.id,
@@ -176,9 +176,12 @@ class CompanyDto {
         json['fiscalYearStart'] as String? ??
         json['FISCAL_YEAR_START'] as String?;
     
-    final orgStructureId = (json['org_structure_id'] as num?)?.toInt() ??
-        (json['orgStructureId'] as num?)?.toInt() ??
-        (json['ORG_STRUCTURE_ID'] as num?)?.toInt();
+    final orgStructureId = (json['org_structure_id'] as String?) ??
+        (json['org_structure_id'] as num?)?.toString() ??
+        (json['orgStructureId'] as String?) ??
+        (json['orgStructureId'] as num?)?.toString() ??
+        (json['ORG_STRUCTURE_ID'] as String?) ??
+        (json['ORG_STRUCTURE_ID'] as num?)?.toString();
 
     return CompanyDto(
       id: companyId,

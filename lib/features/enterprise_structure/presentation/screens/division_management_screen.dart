@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
@@ -551,12 +552,7 @@ class _DivisionCard extends ConsumerWidget {
 
                         final divisionId = int.tryParse(division.id);
                         if (divisionId == null || divisionId <= 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Invalid division ID. Cannot edit this division.'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                          ToastService.error(context, 'Invalid division ID. Cannot edit this division.');
                           return;
                         }
 
@@ -607,19 +603,11 @@ class _DivisionCard extends ConsumerWidget {
 
                             if (!context.mounted) return;
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Division deleted successfully'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-
+                            ToastService.success(context, 'Division deleted successfully');
                             ref.read(divisionsProvider.notifier).refresh();
                           } catch (e) {
                             if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Failed to delete division: $e'), backgroundColor: Colors.red),
-                            );
+                            ToastService.error(context, 'Failed to delete division: $e');
                           }
                         }
                       },

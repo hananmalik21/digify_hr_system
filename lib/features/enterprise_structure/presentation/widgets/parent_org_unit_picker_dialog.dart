@@ -23,7 +23,7 @@ final parentOrgUnitsProvider = FutureProvider.autoDispose.family<List<OrgStructu
 });
 
 class ParentOrgUnitsParams {
-  final int structureId;
+  final String structureId;
   final String levelCode;
 
   ParentOrgUnitsParams({required this.structureId, required this.levelCode});
@@ -42,12 +42,12 @@ class ParentOrgUnitsParams {
 
 /// Dialog for selecting a parent org unit
 class ParentOrgUnitPickerDialog extends ConsumerWidget {
-  final int structureId;
+  final String structureId;
   final String levelCode;
 
   const ParentOrgUnitPickerDialog({super.key, required this.structureId, required this.levelCode});
 
-  static Future<OrgStructureLevel?> show(BuildContext context, {required int structureId, required String levelCode}) {
+  static Future<OrgStructureLevel?> show(BuildContext context, {required String structureId, required String levelCode}) {
     return showDialog<OrgStructureLevel>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -231,6 +231,14 @@ class ParentOrgUnitPickerDialog extends ConsumerWidget {
                       color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                     ),
                   ),
+                  // Text(
+                  //   unit.orgUnitId,
+                  //   style: TextStyle(
+                  //     fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
+                  //     fontWeight: FontWeight.w500,
+                  //     color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+                  //   ),
+                  // ),
                   // if (unit.orgUnitNameAr.isNotEmpty) ...[
                   //   SizedBox(height: 4.h),
                   //   Text(

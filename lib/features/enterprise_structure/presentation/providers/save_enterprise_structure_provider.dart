@@ -10,7 +10,7 @@ class SaveEnterpriseStructureState {
   final String? errorMessage;
   final bool hasError;
   final bool isSuccess;
-  final int? loadingStructureId; // Track which structure is being activated
+  final String? loadingStructureId; // Track which structure is being activated
 
   const SaveEnterpriseStructureState({
     this.isSaving = false,
@@ -25,7 +25,7 @@ class SaveEnterpriseStructureState {
     String? errorMessage,
     bool? hasError,
     bool? isSuccess,
-    int? loadingStructureId,
+    String? loadingStructureId,
   }) {
     return SaveEnterpriseStructureState(
       isSaving: isSaving ?? this.isSaving,
@@ -54,7 +54,7 @@ class SaveEnterpriseStructureNotifier
     int? enterpriseId,
     String? structureCode,
     bool isActive = true,
-    int?
+    String?
     structureId, // If provided, performs update (PUT), otherwise create (POST)
   }) async {
     // Try to update loading state, but don't fail if provider is disposed

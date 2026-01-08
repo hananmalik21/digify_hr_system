@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
@@ -17,14 +18,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DialogFooter extends ConsumerWidget {
   final EnterpriseStructureDialogMode mode;
   final EditEnterpriseStructureState? editState;
-  final int? structureId;
+  final String? structureId;
   final AutoDisposeStateNotifierProvider<
-    StructureListNotifier,
+      StructureListNotifier,
     StructureListState
   >
   provider;
   final AutoDisposeStateNotifierProvider<
-    SaveEnterpriseStructureNotifier,
+      SaveEnterpriseStructureNotifier,
     SaveEnterpriseStructureState
   >
   saveEnterpriseStructureProvider;
@@ -102,126 +103,69 @@ class DialogFooter extends ConsumerWidget {
 
           // Save button
           CustomButton.icon(
+            isLoading: saveState.isSaving ,
             svgIcon: Assets.icons.saveConfigIcon.path,
             onPressed: saveState.isSaving
                 ? null
                 : () async {
-              final currentEditState = editState;
-              if (currentEditState == null) return;
+                    final currentEditState = editState;
+                    if (currentEditState == null) return;
 
-              // Validate
-              if (currentEditState.selectedEnterpriseId == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please select an enterprise'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-                return;
-              }
+                    // Validate
+                    if (currentEditState.selectedEnterpriseId == null) {
+                ToastService.error(context, 'Please select an enterprise');
+                      return;
+                    }
 
-              if (currentEditState.structureName.trim().isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Structure name is required'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-                return;
-              }
+                    if (currentEditState.structureName.trim().isEmpty) {
+                ToastService.error(context, 'Structure name is required');
+                      return;
+                    }
 
-              if (currentEditState.levels.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('At least one level is required'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-                return;
-              }
+                    if (currentEditState.levels.isEmpty) {
+                ToastService.error(context, 'At least one level is required');
+                      return;
+                    }
 
-              // Save or Update
-              // PUT for edit mode (when structureId is provided), POST for create mode
-              final saveNotifier = ref.read(
-                saveEnterpriseStructureProvider.notifier,
-              );
+                    // Save or Update
+                    // PUT for edit mode (when structureId is provided), POST for create mode
+                    final saveNotifier = ref.read(
+                      saveEnterpriseStructureProvider.notifier,
+                    );
 
-              try {
-                final success = await saveNotifier.saveStructure(
-                  structureName: currentEditState.structureName.trim(),
-                  description: currentEditState.description.trim(),
-                  levels: currentEditState.levels,
-                  // Will be empty list for PUT (edit mode)
-                  enterpriseId: currentEditState.selectedEnterpriseId,
-                  isActive: currentEditState.isActive,
-                  structureId: structureId, // For PUT (update) operations
-                );
+                    try {
+                      final success = await saveNotifier.saveStructure(
+                        structureName: currentEditState.structureName.trim(),
+                        description: currentEditState.description.trim(),
+                        levels: currentEditState.levels,
+                        // Will be empty list for PUT (edit mode)
+                        enterpriseId: currentEditState.selectedEnterpriseId,
+                        isActive: currentEditState.isActive,
+                        structureId: structureId, // For PUT (update) operations
+                      );
 
-                // Check result
-                if (!context.mounted) return;
+                      // Check result
+                      if (!context.mounted) return;
 
-                if (success) {
-                  // Refresh the list after successful save
-                  ref.read(provider.notifier).refresh();
+                      if (success) {
+                        // Refresh the list after successful save
+                        ref.read(provider.notifier).refresh();
 
-                  Navigator.of(
-                    context,
-                  ).pop(true); // Return true to indicate success
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Structure saved successfully'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
+                        Navigator.of(
+                          context,
+                        ).pop(true); // Return true to indicate success
+                  ToastService.success(context, 'Structure saved successfully');
+                      }
               } on AppException catch (e) {
                 // Handle error - use exception message directly
                 if (!context.mounted) return;
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      e.message,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 4),
-                    action: SnackBarAction(
-                      label: 'Dismiss',
-                      textColor: Colors.white,
-                      onPressed: () {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).hideCurrentSnackBar();
-                      },
-                    ),
-                  ),
-                );
+                ToastService.error(context, e.message);
               } catch (e) {
                 // Handle unexpected errors
                 if (!context.mounted) return;
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Failed to save structure: ${e.toString()}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 4),
-                    action: SnackBarAction(
-                      label: 'Dismiss',
-                      textColor: Colors.white,
-                      onPressed: () {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).hideCurrentSnackBar();
-                      },
-                    ),
-                  ),
-                );
+                ToastService.error(context, 'Failed to save structure: ${e.toString()}');
               }
-            },
+                  },
             text: "Save Configuration",
 
             icon: null,

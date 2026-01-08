@@ -154,7 +154,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
 
   /// Update a position
   Future<Position> updatePosition(
-    int id,
+    String id,
     Map<String, dynamic> positionData,
   ) async {
     try {
@@ -177,7 +177,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
   }
 
   /// Delete a position
-  Future<void> deletePosition(int id, {bool hard = true}) async {
+  Future<void> deletePosition(String id, {bool hard = true}) async {
     final previousItems = state.items;
     final previousTotal = state.totalItems;
 

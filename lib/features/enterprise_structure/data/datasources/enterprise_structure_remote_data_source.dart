@@ -10,7 +10,7 @@ abstract class EnterpriseStructureRemoteDataSource {
   );
   
   Future<Map<String, dynamic>> updateEnterpriseStructure(
-    int structureId,
+    String structureId,
     SaveEnterpriseStructureRequestDto request,
   );
 }
@@ -44,7 +44,7 @@ class EnterpriseStructureRemoteDataSourceImpl
 
   @override
   Future<Map<String, dynamic>> updateEnterpriseStructure(
-    int structureId,
+    String structureId,
     SaveEnterpriseStructureRequestDto request,
   ) async {
     try {

@@ -8,18 +8,18 @@ import 'package:flutter/foundation.dart';
 /// Remote data source for organization unit operations
 abstract class OrgUnitRemoteDataSource {
   Future<List<OrgStructureLevelDto>> getOrgUnitsByLevel(String levelCode);
-  Future<List<OrgStructureLevelDto>> getOrgUnitsByStructureAndLevel(int structureId, String levelCode);
+  Future<List<OrgStructureLevelDto>> getOrgUnitsByStructureAndLevel(String structureId, String levelCode);
   Future<PaginatedOrgUnitsResponseDto> getOrgUnitsByStructureAndLevelPaginated(
-    int structureId,
+    String structureId,
     String levelCode, {
     String? search,
     int page = 1,
     int pageSize = 10,
   });
-  Future<List<OrgStructureLevelDto>> getParentOrgUnits(int structureId, String levelCode);
-  Future<OrgStructureLevelDto> createOrgUnit(int structureId, Map<String, dynamic> data);
-  Future<OrgStructureLevelDto> updateOrgUnit(int structureId, int orgUnitId, Map<String, dynamic> data);
-  Future<void> deleteOrgUnit(int structureId, int orgUnitId, {bool hard = true});
+  Future<List<OrgStructureLevelDto>> getParentOrgUnits(String structureId, String levelCode);
+  Future<OrgStructureLevelDto> createOrgUnit(String structureId, Map<String, dynamic> data);
+  Future<OrgStructureLevelDto> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data);
+  Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true});
 }
 
 class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
@@ -62,7 +62,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<List<OrgStructureLevelDto>> getOrgUnitsByStructureAndLevel(int structureId, String levelCode) async {
+  Future<List<OrgStructureLevelDto>> getOrgUnitsByStructureAndLevel(String structureId, String levelCode) async {
     try {
       // Use endpoint: /api/hr-org-structures/{structureId}/org-units?level={levelCode}
       final response = await apiClient.get(
@@ -130,7 +130,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
 
   @override
   Future<PaginatedOrgUnitsResponseDto> getOrgUnitsByStructureAndLevelPaginated(
-    int structureId,
+    String structureId,
     String levelCode, {
     String? search,
     int page = 1,
@@ -185,7 +185,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<List<OrgStructureLevelDto>> getParentOrgUnits(int structureId, String levelCode) async {
+  Future<List<OrgStructureLevelDto>> getParentOrgUnits(String structureId, String levelCode) async {
     try {
       // Use endpoint: /api/hr-org-structures/{structureId}/org-units/parents?level={levelCode}
       final response = await apiClient.get(
@@ -242,7 +242,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<OrgStructureLevelDto> createOrgUnit(int structureId, Map<String, dynamic> data) async {
+  Future<OrgStructureLevelDto> createOrgUnit(String structureId, Map<String, dynamic> data) async {
     try {
       // Use endpoint: POST /api/hr-org-structures/{structureId}/org-units
       final response = await apiClient.post(
@@ -274,7 +274,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<OrgStructureLevelDto> updateOrgUnit(int structureId, int orgUnitId, Map<String, dynamic> data) async {
+  Future<OrgStructureLevelDto> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data) async {
     try {
       // Use endpoint: PUT /api/hr-org-structures/{structureId}/org-units/{orgUnitId}
       final response = await apiClient.put(
@@ -306,7 +306,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<void> deleteOrgUnit(int structureId, int orgUnitId, {bool hard = true}) async {
+  Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true}) async {
     try {
       // Use endpoint: DELETE /api/hr-org-structures/{structureId}/org-units/{orgUnitId}?hard=true
       await apiClient.delete(

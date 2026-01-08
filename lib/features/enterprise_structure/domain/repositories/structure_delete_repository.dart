@@ -13,7 +13,7 @@ abstract class StructureDeleteRepository {
   /// Throws [ConflictException] if structure is referenced by org units (when using hard delete)
   /// Throws [AppException] if the operation fails
   Future<Map<String, dynamic>> deleteStructure({
-    required int structureId,
+    required String structureId,
     bool? hard,
     bool? autoFallback,
   });

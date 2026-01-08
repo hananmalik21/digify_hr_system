@@ -12,6 +12,6 @@ abstract class PositionRepository {
     PositionStatus? status,
   });
   Future<Position> createPosition(Map<String, dynamic> positionData);
-  Future<Position> updatePosition(int id, Map<String, dynamic> positionData);
-  Future<void> deletePosition(int id, {bool hard = true});
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData);
+  Future<void> deletePosition(String id, {bool hard = true});
 }

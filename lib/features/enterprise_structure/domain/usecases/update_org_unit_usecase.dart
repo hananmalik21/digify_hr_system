@@ -12,7 +12,7 @@ class UpdateOrgUnitUseCase {
   ///
   /// Returns the updated [OrgStructureLevel]
   /// Throws [AppException] if the operation fails
-  Future<OrgStructureLevel> call(int structureId, int orgUnitId, Map<String, dynamic> data) async {
+  Future<OrgStructureLevel> call(String structureId, String orgUnitId, Map<String, dynamic> data) async {
     try {
       return await repository.updateOrgUnit(structureId, orgUnitId, data);
     } on AppException {

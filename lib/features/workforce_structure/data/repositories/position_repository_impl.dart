@@ -33,14 +33,14 @@ class PositionRepositoryImpl implements PositionRepository {
 
   @override
   Future<Position> updatePosition(
-    int id,
+    String id,
     Map<String, dynamic> positionData,
   ) async {
     return await remoteDataSource.updatePosition(id, positionData);
   }
 
   @override
-  Future<void> deletePosition(int id, {bool hard = true}) async {
+  Future<void> deletePosition(String id, {bool hard = true}) async {
     await remoteDataSource.deletePosition(id, hard: hard);
   }
 }

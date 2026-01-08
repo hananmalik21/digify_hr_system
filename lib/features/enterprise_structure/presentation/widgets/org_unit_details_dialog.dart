@@ -157,10 +157,10 @@ class OrgUnitDetailsDialog extends StatelessWidget {
               _buildInfoRow('Level Code:', unit.levelCode, isDark),
               if (unit.parentOrgUnitId != null) ...[
                 SizedBox(height: 8.h),
-                _buildInfoRow('Parent Unit ID:', unit.parentOrgUnitId.toString(), isDark),
+                _buildInfoRow('Parent Unit ID:', unit.parentOrgUnitId!, isDark),
               ],
               SizedBox(height: 8.h),
-              _buildInfoRow('Structure ID:', unit.orgStructureId.toString(), isDark),
+              _buildInfoRow('Structure:', unit.orgStructureName ?? unit.orgStructureId.toString(), isDark),
               SizedBox(height: 8.h),
               _buildInfoRow('Enterprise ID:', unit.enterpriseId.toString(), isDark),
             ],

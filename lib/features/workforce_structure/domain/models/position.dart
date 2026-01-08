@@ -6,7 +6,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 /// Position domain model
 /// Represents a job position within the workforce structure
 class Position {
-  final int id;
+  final String id;
   final String code;
   final String titleEnglish;
   final String titleArabic;
@@ -33,8 +33,8 @@ class Position {
   final JobFamily? jobFamilyRef;
   final JobLevel? jobLevelRef;
   final Grade? gradeRef;
-  final int? orgUnitId;
-  final Map<String, int>? orgPathIds;
+  final String? orgUnitId;
+  final Map<String, String>? orgPathIds;
   final Map<String, OrgUnit>? orgPathRefs;
 
   const Position({
@@ -69,7 +69,7 @@ class Position {
   });
 
   factory Position.empty() => const Position(
-    id: 0,
+    id: '',
     code: '',
     titleEnglish: '',
     titleArabic: '',
@@ -101,7 +101,7 @@ class Position {
   double get fillPercentage => headcount > 0 ? (filled / headcount) * 100 : 0;
 
   Position copyWith({
-    int? id,
+    String? id,
     String? code,
     String? titleEnglish,
     String? titleArabic,
@@ -126,8 +126,8 @@ class Position {
     JobFamily? jobFamilyRef,
     JobLevel? jobLevelRef,
     Grade? gradeRef,
-    int? orgUnitId,
-    Map<String, int>? orgPathIds,
+    String? orgUnitId,
+    Map<String, String>? orgPathIds,
     Map<String, OrgUnit>? orgPathRefs,
   }) {
     return Position(

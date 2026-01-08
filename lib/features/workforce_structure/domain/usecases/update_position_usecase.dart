@@ -6,7 +6,7 @@ class UpdatePositionUseCase {
 
   UpdatePositionUseCase({required this.repository});
 
-  Future<Position> execute(int id, Map<String, dynamic> positionData) async {
+  Future<Position> execute(String id, Map<String, dynamic> positionData) async {
     return await repository.updatePosition(id, positionData);
   }
 }

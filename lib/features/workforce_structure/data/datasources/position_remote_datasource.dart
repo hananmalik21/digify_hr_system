@@ -15,8 +15,8 @@ abstract class PositionRemoteDataSource {
     PositionStatus? status,
   });
   Future<Position> createPosition(Map<String, dynamic> positionData);
-  Future<Position> updatePosition(int id, Map<String, dynamic> positionData);
-  Future<void> deletePosition(int id, {bool hard = true});
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData);
+  Future<void> deletePosition(String id, {bool hard = true});
 }
 
 /// Position remote data source implementation
@@ -66,7 +66,7 @@ class PositionRemoteDataSourceImpl implements PositionRemoteDataSource {
 
   @override
   Future<Position> updatePosition(
-    int id,
+    String id,
     Map<String, dynamic> positionData,
   ) async {
     final response = await apiClient.put(
@@ -79,7 +79,7 @@ class PositionRemoteDataSourceImpl implements PositionRemoteDataSource {
   }
 
   @override
-  Future<void> deletePosition(int id, {bool hard = true}) async {
+  Future<void> deletePosition(String id, {bool hard = true}) async {
     await apiClient.delete(
       '${ApiEndpoints.positions}/$id',
       queryParameters: {'hard': hard.toString()},
