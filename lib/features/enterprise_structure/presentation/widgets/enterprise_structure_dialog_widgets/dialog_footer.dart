@@ -16,7 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DialogFooter extends ConsumerWidget {
   final EnterpriseStructureDialogMode mode;
   final EditEnterpriseStructureState? editState;
-  final int? structureId;
+  final String? structureId;
   final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider;
   final AutoDisposeStateNotifierProvider<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>
   saveEnterpriseStructureProvider;
