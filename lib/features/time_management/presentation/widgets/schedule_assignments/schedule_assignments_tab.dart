@@ -184,7 +184,14 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
               );
               ViewScheduleAssignmentDialog.show(context, assignment);
             },
-            onEdit: (item) {},
+            onEdit: (item) {
+              final assignment = scheduleAssignmentsState.items.firstWhere(
+                (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
+              );
+              if (_selectedEnterpriseId != null) {
+                CreateScheduleAssignmentDialog.show(context, _selectedEnterpriseId!, initialAssignment: assignment);
+              }
+            },
             onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),
           ),
           if (scheduleAssignmentsState.isLoadingMore)

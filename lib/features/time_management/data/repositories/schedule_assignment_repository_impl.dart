@@ -33,6 +33,51 @@ class ScheduleAssignmentRepositoryImpl implements ScheduleAssignmentRepository {
   }
 
   @override
+  Future<ScheduleAssignment> createScheduleAssignment({
+    required int tenantId,
+    required Map<String, dynamic> assignmentData,
+  }) async {
+    try {
+      if (tenantId <= 0) {
+        throw ValidationException('tenantId must be greater than 0');
+      }
+
+      return await remoteDataSource.createScheduleAssignment(tenantId: tenantId, assignmentData: assignmentData);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create schedule assignment: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<ScheduleAssignment> updateScheduleAssignment({
+    required int scheduleAssignmentId,
+    required int tenantId,
+    required Map<String, dynamic> assignmentData,
+  }) async {
+    try {
+      if (scheduleAssignmentId <= 0) {
+        throw ValidationException('scheduleAssignmentId must be greater than 0');
+      }
+
+      if (tenantId <= 0) {
+        throw ValidationException('tenantId must be greater than 0');
+      }
+
+      return await remoteDataSource.updateScheduleAssignment(
+        scheduleAssignmentId: scheduleAssignmentId,
+        tenantId: tenantId,
+        assignmentData: assignmentData,
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update schedule assignment: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
   Future<void> deleteScheduleAssignment({
     required int scheduleAssignmentId,
     required int tenantId,
