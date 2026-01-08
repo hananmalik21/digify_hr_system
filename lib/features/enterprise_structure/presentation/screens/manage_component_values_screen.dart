@@ -433,10 +433,7 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
     // Show tree view if tree view is active AND no level tab is selected
     if (state.isTreeView && selectedLevelCode == null) {
       debugPrint('_buildContentView: Showing org units tree view');
-      return OrgUnitsTreeWidget(
-        localizations: localizations,
-        isDark: isDark,
-      );
+      return OrgUnitsTreeWidget(localizations: localizations, isDark: isDark);
     }
 
     // Show org units table if a level tab is selected
@@ -865,10 +862,8 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
             textColor: Colors.white,
             onTap: () {
               if (selectedLevelCode != null) {
-                // TODO: Export org units
                 debugPrint('Export org units for level: $selectedLevelCode');
               } else {
-                // TODO: Export components
                 debugPrint('Export components');
               }
             },

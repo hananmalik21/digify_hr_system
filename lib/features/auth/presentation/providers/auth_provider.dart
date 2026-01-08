@@ -5,11 +5,7 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  AuthState({
-    required this.isAuthenticated,
-    this.isLoading = false,
-    this.error,
-  });
+  AuthState({required this.isAuthenticated, this.isLoading = false, this.error});
 
   AuthState copyWith({bool? isAuthenticated, bool? isLoading, String? error}) {
     return AuthState(
@@ -30,9 +26,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // Simulate API call
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // Demo credentials check
-      if (email.trim().toLowerCase() == email.toLowerCase() &&
-          password == password) {
+      // Only allow specific credentials
+      const allowedEmail = 'admin@digify.com';
+      const allowedPassword = 'Digify@@2025';
+
+      if (email.trim().toLowerCase() == allowedEmail.toLowerCase() && password == allowedPassword) {
         state = state.copyWith(isAuthenticated: true, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false, error: 'Invalid credentials');
@@ -42,12 +40,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> signup(
-    String fullName,
-    String email,
-    String phone,
-    String password,
-  ) async {
+  Future<void> signup(String fullName, String email, String phone, String password) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {

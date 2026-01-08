@@ -46,9 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     final localizations = AppLocalizations.of(context)!;
 
-    await ref
-        .read(authProvider.notifier)
-        .login(_usernameController.text.trim(), _passwordController.text);
+    await ref.read(authProvider.notifier).login(_usernameController.text.trim(), _passwordController.text);
 
     if (!mounted) return;
 

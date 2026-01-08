@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/foundation.dart';
 
 /// Domain model for a single node in the org unit tree
@@ -35,9 +34,5 @@ class OrgUnitTree {
   final String structureName;
   final List<OrgUnitTreeNode> tree;
 
-  const OrgUnitTree({
-    required this.structureId,
-    required this.structureName,
-    required this.tree,
-  });
+  const OrgUnitTree({required this.structureId, required this.structureName, required this.tree});
 }

@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_structure_level_dto.dart';
 
 /// DTO for a single node in the org unit tree
@@ -87,11 +86,7 @@ class OrgUnitTreeResponseDto {
   final String structureName;
   final List<OrgUnitTreeNodeDto> tree;
 
-  const OrgUnitTreeResponseDto({
-    required this.structureId,
-    required this.structureName,
-    required this.tree,
-  });
+  const OrgUnitTreeResponseDto({required this.structureId, required this.structureName, required this.tree});
 
   factory OrgUnitTreeResponseDto.fromJson(Map<String, dynamic> json) {
     // Helper to convert id to String
