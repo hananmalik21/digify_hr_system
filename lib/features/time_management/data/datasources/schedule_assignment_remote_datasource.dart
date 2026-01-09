@@ -157,7 +157,7 @@ class ScheduleAssignmentRemoteDataSourceImpl implements ScheduleAssignmentRemote
         throw ValidationException('tenant_id must be greater than 0');
       }
 
-      final response = await apiClient.put(
+      final response = await apiClient.patch(
         ApiEndpoints.tmScheduleAssignmentById(scheduleAssignmentId),
         body: assignmentData,
       );

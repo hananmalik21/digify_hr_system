@@ -24,7 +24,7 @@ class OrgUnitTreeNodeDto {
 
   factory OrgUnitTreeNodeDto.fromJson(Map<String, dynamic> json) {
     // Helper to convert id to String
-    String _parseIdToString(dynamic value) {
+    String parseIdToString(dynamic value) {
       if (value == null) return '';
       if (value is String) return value;
       if (value is num) return value.toString();
@@ -38,13 +38,13 @@ class OrgUnitTreeNodeDto {
         .toList();
 
     return OrgUnitTreeNodeDto(
-      orgUnitId: _parseIdToString(json['org_unit_id'] ?? json['orgUnitId']),
+      orgUnitId: parseIdToString(json['org_unit_id'] ?? json['orgUnitId']),
       orgUnitCode: json['org_unit_code'] as String? ?? json['orgUnitCode'] as String? ?? '',
       orgUnitNameEn: json['org_unit_name_en'] as String? ?? json['orgUnitNameEn'] as String? ?? '',
       orgUnitNameAr: json['org_unit_name_ar'] as String? ?? json['orgUnitNameAr'] as String? ?? '',
       levelCode: json['level_code'] as String? ?? json['levelCode'] as String? ?? '',
       parentOrgUnitId: json['parent_org_unit_id'] != null
-          ? _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId'])
+          ? parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId'])
           : null,
       isActive: json['is_active'] as String? ?? json['isActive'] as String? ?? 'N',
       children: children,
@@ -90,7 +90,7 @@ class OrgUnitTreeResponseDto {
 
   factory OrgUnitTreeResponseDto.fromJson(Map<String, dynamic> json) {
     // Helper to convert id to String
-    String _parseIdToString(dynamic value) {
+    String parseIdToString(dynamic value) {
       if (value == null) return '';
       if (value is String) return value;
       if (value is num) return value.toString();
@@ -101,7 +101,7 @@ class OrgUnitTreeResponseDto {
     final treeJson = data['tree'] as List<dynamic>? ?? [];
 
     return OrgUnitTreeResponseDto(
-      structureId: _parseIdToString(data['structure_id'] ?? data['structureId']),
+      structureId: parseIdToString(data['structure_id'] ?? data['structureId']),
       structureName: data['structure_name'] as String? ?? data['structureName'] as String? ?? '',
       tree: treeJson
           .whereType<Map<String, dynamic>>()

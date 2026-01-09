@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table_skeleton.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
@@ -189,7 +190,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
                 (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
               );
               if (_selectedEnterpriseId != null) {
-                CreateScheduleAssignmentDialog.show(context, _selectedEnterpriseId!, initialAssignment: assignment);
+                EditScheduleAssignmentDialog.show(context, _selectedEnterpriseId!, assignment);
               }
             },
             onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),

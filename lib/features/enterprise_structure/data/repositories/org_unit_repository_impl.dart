@@ -22,31 +22,19 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
   @override
-  Future<List<OrgStructureLevel>> getOrgUnitsByStructureAndLevel(
-    String structureId,
-    String levelCode,
-  ) async {
+  Future<List<OrgStructureLevel>> getOrgUnitsByStructureAndLevel(String structureId, String levelCode) async {
     try {
-      final dtos = await remoteDataSource.getOrgUnitsByStructureAndLevel(
-        structureId,
-        levelCode,
-      );
+      final dtos = await remoteDataSource.getOrgUnitsByStructureAndLevel(structureId, levelCode);
       return dtos.map((dto) => dto.toDomain()).toList();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -59,14 +47,13 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     int pageSize = 10,
   }) async {
     try {
-      final dto = await remoteDataSource
-          .getOrgUnitsByStructureAndLevelPaginated(
-            structureId,
-            levelCode,
-            search: search,
-            page: page,
-            pageSize: pageSize,
-          );
+      final dto = await remoteDataSource.getOrgUnitsByStructureAndLevelPaginated(
+        structureId,
+        levelCode,
+        search: search,
+        page: page,
+        pageSize: pageSize,
+      );
       return PaginatedOrgUnitsResponse(
         units: dto.units.map((unitDto) => unitDto.toDomain()).toList(),
         currentPage: dto.currentPage,
@@ -77,23 +64,14 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
   @override
-  Future<List<OrgStructureLevel>> getParentOrgUnits(
-    String structureId,
-    String levelCode,
-  ) async {
+  Future<List<OrgStructureLevel>> getParentOrgUnits(String structureId, String levelCode) async {
     try {
-      final dtos = await remoteDataSource.getParentOrgUnits(
-        structureId,
-        levelCode,
-      );
+      final dtos = await remoteDataSource.getParentOrgUnits(structureId, levelCode);
       return dtos.map((dto) {
         log("dto is ${dto.orgUnitId}");
         return dto.toDomain();
@@ -101,69 +79,42 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
   @override
-  Future<OrgStructureLevel> createOrgUnit(
-    String structureId,
-    Map<String, dynamic> data,
-  ) async {
+  Future<OrgStructureLevel> createOrgUnit(String structureId, Map<String, dynamic> data) async {
     try {
       final dto = await remoteDataSource.createOrgUnit(structureId, data);
       return dto.toDomain();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
   @override
-  Future<OrgStructureLevel> updateOrgUnit(
-    String structureId,
-      String orgUnitId,
-    Map<String, dynamic> data,
-  ) async {
+  Future<OrgStructureLevel> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data) async {
     try {
-      final dto = await remoteDataSource.updateOrgUnit(
-        structureId,
-        orgUnitId,
-        data,
-      );
+      final dto = await remoteDataSource.updateOrgUnit(structureId, orgUnitId, data);
       return dto.toDomain();
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
   @override
-  Future<void> deleteOrgUnit(
-    String structureId,
-      String orgUnitId, {
-    bool hard = true,
-  }) async {
+  Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true}) async {
     try {
       await remoteDataSource.deleteOrgUnit(structureId, orgUnitId, hard: hard);
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -171,9 +122,9 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
   Future<OrgUnitTree> getOrgUnitsTree() async {
     try {
       final dto = await remoteDataSource.getOrgUnitsTree();
-      
+
       // Convert DTO tree nodes to domain tree nodes recursively
-      OrgUnitTreeNode _convertTreeNode(OrgUnitTreeNodeDto nodeDto) {
+      OrgUnitTreeNode convertTreeNode(OrgUnitTreeNodeDto nodeDto) {
         return OrgUnitTreeNode(
           orgUnitId: nodeDto.orgUnitId,
           orgUnitCode: nodeDto.orgUnitCode,
@@ -182,22 +133,19 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
           levelCode: nodeDto.levelCode,
           parentOrgUnitId: nodeDto.parentOrgUnitId,
           isActive: nodeDto.isActive.toUpperCase() == 'Y',
-          children: nodeDto.children.map((child) => _convertTreeNode(child)).toList(),
+          children: nodeDto.children.map((child) => convertTreeNode(child)).toList(),
         );
       }
 
       return OrgUnitTree(
         structureId: dto.structureId,
         structureName: dto.structureName,
-        tree: dto.tree.map((node) => _convertTreeNode(node)).toList(),
+        tree: dto.tree.map((node) => convertTreeNode(node)).toList(),
       );
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 }

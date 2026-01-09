@@ -2,7 +2,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/paginati
 
 /// Organization unit information for schedule assignment
 class ScheduleAssignmentOrgUnit {
-  final int orgUnitId;
+  final String orgUnitId;
   final String orgStructureId;
   final int enterpriseId;
   final String levelCode;
@@ -44,7 +44,7 @@ class ScheduleAssignmentOrgUnit {
     final parentUnit = parentUnitJson != null ? ScheduleAssignmentParentUnit.fromJson(parentUnitJson) : null;
 
     return ScheduleAssignmentOrgUnit(
-      orgUnitId: parseInt(json['org_unit_id'], defaultValue: 0),
+      orgUnitId: parseString(json['org_unit_id']),
       orgStructureId: parseString(json['org_structure_id']),
       enterpriseId: parseInt(json['enterprise_id'], defaultValue: 0),
       levelCode: parseString(json['level_code']),
@@ -58,32 +58,27 @@ class ScheduleAssignmentOrgUnit {
 
 /// Parent unit information
 class ScheduleAssignmentParentUnit {
-  final int id;
+  final String id;
   final String name;
   final String level;
 
   const ScheduleAssignmentParentUnit({required this.id, required this.name, required this.level});
 
   factory ScheduleAssignmentParentUnit.fromJson(Map<String, dynamic> json) {
-    int parseInt(dynamic value, {int defaultValue = 0}) {
-      if (value == null) return defaultValue;
-      if (value is int) return value;
-      if (value is String) {
-        final parsed = int.tryParse(value);
-        return parsed ?? defaultValue;
-      }
-      if (value is num) return value.toInt();
-      return defaultValue;
-    }
-
     String parseString(dynamic value, {String defaultValue = ''}) {
       if (value == null) return defaultValue;
-      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
+      if (value is String) {
+        final trimmed = value.trim();
+        return trimmed.isEmpty ? defaultValue : trimmed;
+      }
+      if (value is int || value is num) {
+        return value.toString();
+      }
       return value.toString().trim();
     }
 
     return ScheduleAssignmentParentUnit(
-      id: parseInt(json['id'], defaultValue: 0),
+      id: parseString(json['id']),
       name: parseString(json['name']),
       level: parseString(json['level']),
     );
@@ -134,6 +129,42 @@ class ScheduleAssignmentWorkSchedule {
   }
 }
 
+/// Organization path item
+class ScheduleAssignmentOrgPathItem {
+  final String levelCode;
+  final String orgUnitId;
+  final String nameEn;
+  final String nameAr;
+
+  const ScheduleAssignmentOrgPathItem({
+    required this.levelCode,
+    required this.orgUnitId,
+    required this.nameEn,
+    required this.nameAr,
+  });
+
+  factory ScheduleAssignmentOrgPathItem.fromJson(Map<String, dynamic> json) {
+    String parseString(dynamic value, {String defaultValue = ''}) {
+      if (value == null) return defaultValue;
+      if (value is String) {
+        final trimmed = value.trim();
+        return trimmed.isEmpty ? defaultValue : trimmed;
+      }
+      if (value is int || value is num) {
+        return value.toString();
+      }
+      return value.toString().trim();
+    }
+
+    return ScheduleAssignmentOrgPathItem(
+      levelCode: parseString(json['level_code']),
+      orgUnitId: parseString(json['org_unit_id']),
+      nameEn: parseString(json['name_en']),
+      nameAr: parseString(json['name_ar']),
+    );
+  }
+}
+
 /// Schedule assignment domain model
 class ScheduleAssignment {
   final int scheduleAssignmentId;
@@ -152,7 +183,8 @@ class ScheduleAssignment {
   final String lastUpdatedBy;
   final ScheduleAssignmentWorkSchedule workSchedule;
   final ScheduleAssignmentOrgUnit? orgUnit;
-  final int? orgUnitId;
+  final String? orgUnitId;
+  final List<ScheduleAssignmentOrgPathItem>? orgPath;
 
   const ScheduleAssignment({
     required this.scheduleAssignmentId,
@@ -172,6 +204,7 @@ class ScheduleAssignment {
     required this.workSchedule,
     this.orgUnit,
     this.orgUnitId,
+    this.orgPath,
   });
 
   factory ScheduleAssignment.fromJson(Map<String, dynamic> json) {
@@ -214,6 +247,11 @@ class ScheduleAssignment {
     final orgUnitJson = json['org_unit'] as Map<String, dynamic>?;
     final orgUnit = orgUnitJson != null ? ScheduleAssignmentOrgUnit.fromJson(orgUnitJson) : null;
 
+    final orgPathJson = json['org_path'] as List<dynamic>?;
+    final orgPath = orgPathJson
+        ?.map((item) => ScheduleAssignmentOrgPathItem.fromJson(item as Map<String, dynamic>))
+        .toList();
+
     final effectiveStartDate = parseDateTime(json['effective_start_date']);
     if (effectiveStartDate == null) {
       throw FormatException('effective_start_date is required');
@@ -236,7 +274,8 @@ class ScheduleAssignment {
       lastUpdatedBy: parseString(json['last_updated_by']),
       workSchedule: workSchedule,
       orgUnit: orgUnit,
-      orgUnitId: json['org_unit_id'] != null ? parseInt(json['org_unit_id']) : null,
+      orgUnitId: json['org_unit_id'] != null ? parseString(json['org_unit_id']) : null,
+      orgPath: orgPath,
     );
   }
 
