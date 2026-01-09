@@ -23,14 +23,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      // Simulate API call
+      // Simulate API call delay
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // Only allow specific credentials
-      const allowedEmail = 'admin@digify.com';
-      const allowedPassword = 'Digify@@2025';
+      // Dummy test credentials for development/testing
+      final trimmedEmail = email.trim().toLowerCase();
+      final trimmedPassword = password.trim();
 
-      if (email.trim().toLowerCase() == allowedEmail.toLowerCase() && password == allowedPassword) {
+      // Allowed test credentials
+      const allowedCredentials = [
+        {'email': 'admin@digify.com', 'password': 'Digify@@2025'},
+        {'email': 'test@digify.com', 'password': 'test123'},
+        {'email': 'admin@digify.com', 'password': 'admin123'},
+      ];
+
+      // Check against allowed credentials
+      final isValid = allowedCredentials.any((cred) =>
+          cred['email']!.toLowerCase() == trimmedEmail &&
+          cred['password'] == trimmedPassword);
+
+      if (isValid) {
         state = state.copyWith(isAuthenticated: true, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false, error: 'Invalid credentials');
