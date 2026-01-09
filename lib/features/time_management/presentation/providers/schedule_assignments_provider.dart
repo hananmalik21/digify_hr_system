@@ -6,8 +6,10 @@ import 'package:digify_hr_system/features/time_management/data/datasources/sched
 import 'package:digify_hr_system/features/time_management/data/repositories/schedule_assignment_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/schedule_assignment_repository.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/create_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_schedule_assignments_usecase.dart';
+import 'package:digify_hr_system/features/time_management/domain/usecases/update_schedule_assignment_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final scheduleAssignmentApiClientProvider = Provider<ApiClient>((ref) {
@@ -29,6 +31,22 @@ final getScheduleAssignmentsUseCaseProvider = Provider.family<GetScheduleAssignm
   return GetScheduleAssignmentsUseCase(repository: repository);
 });
 
+final createScheduleAssignmentUseCaseProvider = Provider.family<CreateScheduleAssignmentUseCase, int>((
+  ref,
+  enterpriseId,
+) {
+  final repository = ref.watch(scheduleAssignmentRepositoryProvider(enterpriseId));
+  return CreateScheduleAssignmentUseCase(repository: repository);
+});
+
+final updateScheduleAssignmentUseCaseProvider = Provider.family<UpdateScheduleAssignmentUseCase, int>((
+  ref,
+  enterpriseId,
+) {
+  final repository = ref.watch(scheduleAssignmentRepositoryProvider(enterpriseId));
+  return UpdateScheduleAssignmentUseCase(repository: repository);
+});
+
 final deleteScheduleAssignmentUseCaseProvider = Provider.family<DeleteScheduleAssignmentUseCase, int>((
   ref,
   enterpriseId,
@@ -39,6 +57,7 @@ final deleteScheduleAssignmentUseCaseProvider = Provider.family<DeleteScheduleAs
 
 class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
   final int? deletingAssignmentId;
+  final bool isCreating;
 
   const ScheduleAssignmentState({
     super.items = const [],
@@ -55,6 +74,7 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
     super.searchQuery,
     super.status,
     this.deletingAssignmentId,
+    this.isCreating = false,
   });
 
   @override
@@ -75,6 +95,7 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
     bool clearStatus = false,
     int? deletingAssignmentId,
     bool clearDeletingAssignmentId = false,
+    bool? isCreating,
   }) {
     return ScheduleAssignmentState(
       items: items ?? this.items,
@@ -91,6 +112,7 @@ class ScheduleAssignmentState extends PaginationState<ScheduleAssignment> {
       searchQuery: searchQuery ?? this.searchQuery,
       status: clearStatus ? null : (status ?? this.status),
       deletingAssignmentId: clearDeletingAssignmentId ? null : (deletingAssignmentId ?? this.deletingAssignmentId),
+      isCreating: isCreating ?? this.isCreating,
     );
   }
 }
@@ -99,6 +121,8 @@ final scheduleAssignmentsNotifierProvider =
     StateNotifierProvider.family<ScheduleAssignmentsNotifier, ScheduleAssignmentState, int>((ref, enterpriseId) {
       return ScheduleAssignmentsNotifier(
         ref.read(getScheduleAssignmentsUseCaseProvider(enterpriseId)),
+        ref.read(createScheduleAssignmentUseCaseProvider(enterpriseId)),
+        ref.read(updateScheduleAssignmentUseCaseProvider(enterpriseId)),
         ref.read(deleteScheduleAssignmentUseCaseProvider(enterpriseId)),
       );
     });
@@ -107,11 +131,17 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     with PaginationMixin<ScheduleAssignment>
     implements PaginationController<ScheduleAssignment> {
   final GetScheduleAssignmentsUseCase _getScheduleAssignmentsUseCase;
+  final CreateScheduleAssignmentUseCase _createScheduleAssignmentUseCase;
+  final UpdateScheduleAssignmentUseCase _updateScheduleAssignmentUseCase;
   final DeleteScheduleAssignmentUseCase _deleteScheduleAssignmentUseCase;
   int? _currentEnterpriseId;
 
-  ScheduleAssignmentsNotifier(this._getScheduleAssignmentsUseCase, this._deleteScheduleAssignmentUseCase)
-    : super(const ScheduleAssignmentState());
+  ScheduleAssignmentsNotifier(
+    this._getScheduleAssignmentsUseCase,
+    this._createScheduleAssignmentUseCase,
+    this._updateScheduleAssignmentUseCase,
+    this._deleteScheduleAssignmentUseCase,
+  ) : super(const ScheduleAssignmentState());
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
@@ -138,6 +168,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
       totalPages: loadingState.totalPages,
       hasNextPage: loadingState.hasNextPage,
       hasPreviousPage: loadingState.hasPreviousPage,
+      deletingAssignmentId: state.deletingAssignmentId,
+      isCreating: state.isCreating,
     );
 
     try {
@@ -170,6 +202,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
         totalPages: newState.totalPages,
         hasNextPage: newState.hasNextPage,
         hasPreviousPage: newState.hasPreviousPage,
+        deletingAssignmentId: state.deletingAssignmentId,
+        isCreating: state.isCreating,
       );
     } catch (e) {
       final errorState = handleErrorState(state, e.toString());
@@ -185,6 +219,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
         totalPages: errorState.totalPages,
         hasNextPage: errorState.hasNextPage,
         hasPreviousPage: errorState.hasPreviousPage,
+        deletingAssignmentId: state.deletingAssignmentId,
+        isCreating: state.isCreating,
       );
     }
   }
@@ -207,6 +243,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
       totalPages: loadingState.totalPages,
       hasNextPage: loadingState.hasNextPage,
       hasPreviousPage: loadingState.hasPreviousPage,
+      deletingAssignmentId: state.deletingAssignmentId,
+      isCreating: state.isCreating,
     );
 
     try {
@@ -240,6 +278,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
         totalPages: newState.totalPages,
         hasNextPage: newState.hasNextPage,
         hasPreviousPage: newState.hasPreviousPage,
+        deletingAssignmentId: state.deletingAssignmentId,
+        isCreating: state.isCreating,
       );
     } catch (e) {
       final errorState = handleErrorState(state, e.toString());
@@ -255,6 +295,8 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
         totalPages: errorState.totalPages,
         hasNextPage: errorState.hasNextPage,
         hasPreviousPage: errorState.hasPreviousPage,
+        deletingAssignmentId: state.deletingAssignmentId,
+        isCreating: state.isCreating,
       );
     }
   }
@@ -267,6 +309,56 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
   @override
   void reset() {
     state = const ScheduleAssignmentState();
+  }
+
+  Future<ScheduleAssignment> createScheduleAssignment(Map<String, dynamic> assignmentData) async {
+    if (_currentEnterpriseId == null) {
+      throw Exception('Enterprise ID is not set. Please ensure the provider is initialized.');
+    }
+
+    state = state.copyWith(isCreating: true, hasError: false, errorMessage: null);
+
+    try {
+      final createdAssignment = await _createScheduleAssignmentUseCase.call(
+        tenantId: _currentEnterpriseId!,
+        assignmentData: assignmentData,
+      );
+
+      await refresh();
+
+      state = state.copyWith(isCreating: false, hasError: false, errorMessage: null);
+      return createdAssignment;
+    } catch (e) {
+      state = state.copyWith(isCreating: false, hasError: true, errorMessage: e.toString());
+      rethrow;
+    }
+  }
+
+  Future<ScheduleAssignment> updateScheduleAssignment(
+    int scheduleAssignmentId,
+    Map<String, dynamic> assignmentData,
+  ) async {
+    if (_currentEnterpriseId == null) {
+      throw Exception('Enterprise ID is not set. Please ensure the provider is initialized.');
+    }
+
+    state = state.copyWith(isCreating: true, hasError: false, errorMessage: null);
+
+    try {
+      final updatedAssignment = await _updateScheduleAssignmentUseCase.call(
+        scheduleAssignmentId: scheduleAssignmentId,
+        tenantId: _currentEnterpriseId!,
+        assignmentData: assignmentData,
+      );
+
+      await refresh();
+
+      state = state.copyWith(isCreating: false, hasError: false, errorMessage: null);
+      return updatedAssignment;
+    } catch (e) {
+      state = state.copyWith(isCreating: false, hasError: true, errorMessage: e.toString());
+      rethrow;
+    }
   }
 
   Future<void> deleteScheduleAssignment(int scheduleAssignmentId, {bool hard = true}) async {

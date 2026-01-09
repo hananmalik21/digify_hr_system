@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_tree.dart';
@@ -15,11 +14,7 @@ class OrgUnitsTreeWidget extends ConsumerStatefulWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const OrgUnitsTreeWidget({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-  });
+  const OrgUnitsTreeWidget({super.key, required this.localizations, required this.isDark});
 
   @override
   ConsumerState<OrgUnitsTreeWidget> createState() => _OrgUnitsTreeWidgetState();
@@ -70,16 +65,8 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: treeAsync.when(
@@ -96,10 +83,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
               ),
               decoration: BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(
-                    color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-                    width: 1,
-                  ),
+                  bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
                 ),
               ),
               child: isMobile
@@ -111,9 +95,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF101828),
+                            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                             height: 24 / 15.4,
                             letterSpacing: 0,
                           ),
@@ -125,14 +107,9 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                               child: GestureDetector(
                                 onTap: () => _expandAll(tree),
                                 child: Container(
-                                  padding: EdgeInsetsDirectional.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 8.h,
-                                  ),
+                                  padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppColors.cardBackgroundGreyDark
-                                        : AppColors.cardBackgroundGrey,
+                                    color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey,
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Center(
@@ -141,9 +118,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                       style: TextStyle(
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: isDark
-                                            ? AppColors.textPrimaryDark
-                                            : const Color(0xFF364153),
+                                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                                         height: 24 / 15.1,
                                         letterSpacing: 0,
                                       ),
@@ -157,14 +132,9 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                               child: GestureDetector(
                                 onTap: _collapseAll,
                                 child: Container(
-                                  padding: EdgeInsetsDirectional.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 8.h,
-                                  ),
+                                  padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? AppColors.cardBackgroundGreyDark
-                                        : AppColors.cardBackgroundGrey,
+                                    color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey,
                                     borderRadius: BorderRadius.circular(4.r),
                                   ),
                                   child: Center(
@@ -173,9 +143,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                       style: TextStyle(
                                         fontSize: 13.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: isDark
-                                            ? AppColors.textPrimaryDark
-                                            : const Color(0xFF364153),
+                                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                                         height: 24 / 15.1,
                                         letterSpacing: 0,
                                       ),
@@ -196,9 +164,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                           style: TextStyle(
                             fontSize: isTablet ? 14.5.sp : 15.4.sp,
                             fontWeight: FontWeight.w500,
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : const Color(0xFF101828),
+                            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
                             height: 24 / 15.4,
                             letterSpacing: 0,
                           ),
@@ -213,9 +179,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                   vertical: 8.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? AppColors.cardBackgroundGreyDark
-                                      : AppColors.cardBackgroundGrey,
+                                  color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey,
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
@@ -223,9 +187,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                   style: TextStyle(
                                     fontSize: isTablet ? 14.sp : 15.1.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF364153),
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                                     height: 24 / 15.1,
                                     letterSpacing: 0,
                                   ),
@@ -241,9 +203,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                   vertical: 8.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? AppColors.cardBackgroundGreyDark
-                                      : AppColors.cardBackgroundGrey,
+                                  color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey,
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
@@ -251,9 +211,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                                   style: TextStyle(
                                     fontSize: isTablet ? 14.sp : 15.1.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: isDark
-                                        ? AppColors.textPrimaryDark
-                                        : const Color(0xFF364153),
+                                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
                                     height: 24 / 15.1,
                                     letterSpacing: 0,
                                   ),
@@ -273,9 +231,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                 tablet: EdgeInsetsDirectional.all(14.w),
                 web: EdgeInsetsDirectional.all(17.w),
               ),
-              constraints: BoxConstraints(
-                minHeight: isMobile ? 300.h : (isTablet ? 350.h : 400.h),
-              ),
+              constraints: BoxConstraints(minHeight: isMobile ? 300.h : (isTablet ? 350.h : 400.h)),
               child: tree.tree.isEmpty
                   ? Center(
                       child: Padding(
@@ -285,9 +241,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary,
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                           ),
                         ),
                       ),
@@ -333,11 +287,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48.sp,
-                  color: AppColors.error,
-                ),
+                Icon(Icons.error_outline, size: 48.sp, color: AppColors.error),
                 SizedBox(height: 16.h),
                 Text(
                   'Failed to load tree',
@@ -359,10 +309,7 @@ class _OrgUnitsTreeWidgetState extends ConsumerState<OrgUnitsTreeWidget> {
                 SizedBox(height: 16.h),
                 ElevatedButton(
                   onPressed: () => ref.invalidate(orgUnitsTreeProvider),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                   child: Text('Retry', style: TextStyle(fontSize: 14.sp)),
                 ),
               ],

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthState {
@@ -7,11 +5,7 @@ class AuthState {
   final bool isLoading;
   final String? error;
 
-  AuthState({
-    required this.isAuthenticated,
-    this.isLoading = false,
-    this.error,
-  });
+  AuthState({required this.isAuthenticated, this.isLoading = false, this.error});
 
   AuthState copyWith({bool? isAuthenticated, bool? isLoading, String? error}) {
     return AuthState(
@@ -32,36 +26,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // Simulate API call
       await Future.delayed(const Duration(milliseconds: 800));
 
-      // Demo credentials check
-      final trimmedEmail = email.trim().toLowerCase();
-      if (trimmedEmail == 'admin' && password == "Digify@@2025") {
-        state = state.copyWith(
-          isAuthenticated: true,
-          isLoading: false,
-          error: null,
-        );
+      // Only allow specific credentials
+      const allowedEmail = 'admin@digify.com';
+      const allowedPassword = 'Digify@@2025';
+
+      if (email.trim().toLowerCase() == allowedEmail.toLowerCase() && password == allowedPassword) {
+        state = state.copyWith(isAuthenticated: true, isLoading: false);
       } else {
-        state = state.copyWith(
-          isAuthenticated: false,
-          isLoading: false,
-          error: 'Invalid credentials',
-        );
+        state = state.copyWith(isLoading: false, error: 'Invalid credentials');
       }
     } catch (e) {
-      state = state.copyWith(
-        isAuthenticated: false,
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  Future<void> signup(
-    String fullName,
-    String email,
-    String phone,
-    String password,
-  ) async {
+  Future<void> signup(String fullName, String email, String phone, String password) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {

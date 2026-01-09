@@ -26,21 +26,21 @@ class EnterpriseStructureFields extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<EnterpriseStructureFields> createState() =>
-      _EnterpriseStructureFieldsState();
+  ConsumerState<EnterpriseStructureFields> createState() => _EnterpriseStructureFieldsState();
 }
 
-class _EnterpriseStructureFieldsState
-    extends ConsumerState<EnterpriseStructureFields> {
-  StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState>?
-  _cachedSelectionProvider;
+class _EnterpriseStructureFieldsState extends ConsumerState<EnterpriseStructureFields> {
+  StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState>? _cachedSelectionProvider;
   String? _cachedStructureId;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(orgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
+      final currentState = ref.read(orgStructureNotifierProvider);
+      if (currentState.orgStructure == null && !currentState.isLoading) {
+        ref.read(orgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
+      }
     });
   }
 
@@ -65,17 +65,11 @@ class _EnterpriseStructureFieldsState
 
     if (_cachedSelectionProvider == null || _cachedStructureId != structureId) {
       _cachedStructureId = structureId;
-      _cachedSelectionProvider = enterpriseSelectionNotifierProvider((
-        levels: activeLevels,
-        structureId: structureId,
-      ));
+      _cachedSelectionProvider = enterpriseSelectionNotifierProvider((levels: activeLevels, structureId: structureId));
 
-      if (widget.initialSelections != null &&
-          _cachedSelectionProvider != null) {
+      if (widget.initialSelections != null && _cachedSelectionProvider != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ref
-              .read(_cachedSelectionProvider!.notifier)
-              .initialize(widget.initialSelections!);
+          ref.read(_cachedSelectionProvider!.notifier).initialize(widget.initialSelections!);
         });
       }
     }
@@ -112,9 +106,7 @@ class _EnterpriseStructureFieldsState
             BusinessUnitSelectionField(
               level: activeLevels[1],
               selectionProvider: selectionProvider,
-              isEnabled:
-                  selectionState.getSelection(activeLevels[0].levelCode) !=
-                  null,
+              isEnabled: selectionState.getSelection(activeLevels[0].levelCode) != null,
               onSelectionChanged: widget.onSelectionChanged,
             ),
             if (activeLevels.length > 2) SizedBox(height: 16.h),
@@ -126,8 +118,7 @@ class _EnterpriseStructureFieldsState
               final index = entry.key;
               final level = entry.value;
               final parentLevel = activeLevels[index - 1];
-              final isEnabled =
-                  selectionState.getSelection(parentLevel.levelCode) != null;
+              final isEnabled = selectionState.getSelection(parentLevel.levelCode) != null;
 
               return Column(
                 children: [
@@ -149,11 +140,7 @@ class _EnterpriseStructureFieldsState
   Widget _buildTitle() {
     return Text(
       'Enterprise Structure',
-      style: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w600,
-        color: AppColors.primary,
-      ),
+      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.primary),
     );
   }
 
@@ -171,11 +158,7 @@ class _EnterpriseStructureFieldsState
         children: [
           Text(
             'Enterprise Structure',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.error,
-            ),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: AppColors.error),
           ),
           SizedBox(height: 8.h),
           Text(

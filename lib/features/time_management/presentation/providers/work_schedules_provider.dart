@@ -275,6 +275,13 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
     state = const WorkScheduleState();
   }
 
+  void search(String query) {
+    final normalizedQuery = query.trim();
+    if (state.searchQuery == normalizedQuery) return;
+    state = state.copyWith(searchQuery: normalizedQuery);
+    refresh();
+  }
+
   Future<WorkSchedule> updateWorkSchedule({required int scheduleId, required Map<String, dynamic> data}) async {
     try {
       final updatedSchedule = await _updateWorkScheduleUseCase.call(scheduleId: scheduleId, data: data);
