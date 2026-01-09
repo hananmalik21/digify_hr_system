@@ -82,6 +82,28 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> patch(
+    String endpoint, {
+    Map<String, dynamic>? body,
+    Map<String, String>? queryParameters,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final response = await _dio.patch(
+        endpoint,
+        data: body,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+
+      return _handleResponse(response);
+    } on DioException catch (e) {
+      throw _mapDioException(e);
+    } catch (e) {
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
+    }
+  }
+
   Future<Map<String, dynamic>> delete(
     String endpoint, {
     Map<String, dynamic>? body,
