@@ -4979,7 +4979,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyCode.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Code *'**
+  /// **'Job Family Code'**
   String get jobFamilyCode;
 
   /// No description provided for @jobFamilyCodeHint.
@@ -5003,7 +5003,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyNameEnglish.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Name (English) *'**
+  /// **'Job Family Name (English)'**
   String get jobFamilyNameEnglish;
 
   /// No description provided for @jobFamilyNameEnglishHint.
@@ -5015,7 +5015,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyNameArabic.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Name (Arabic) *'**
+  /// **'Job Family Name (Arabic)'**
   String get jobFamilyNameArabic;
 
   /// No description provided for @jobFamilyNameArabicHint.

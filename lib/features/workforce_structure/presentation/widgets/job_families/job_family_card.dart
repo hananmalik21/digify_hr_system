@@ -1,15 +1,27 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/badges/info_badge.dart';
+import 'package:digify_hr_system/core/widgets/buttons/action_button.dart';
+import 'package:digify_hr_system/core/widgets/buttons/icon_action_button.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_family_detail_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_family_form_dialog.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-class JobFamilyCard extends StatelessWidget {
+class JobFamilyCard extends ConsumerWidget {
   final JobFamily jobFamily;
   final List<JobLevel> jobLevels;
   final AppLocalizations localizations;
@@ -24,23 +36,15 @@ class JobFamilyCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final gap = 16.h;
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deleteState = ref.watch(jobFamilyDeleteStateProvider);
+    final isDeleting = deleteState.deletingId == jobFamily.id;
     final cardContent = Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-            spreadRadius: -1,
-          ),
-        ],
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,146 +59,68 @@ class JobFamilyCard extends StatelessWidget {
                   children: [
                     Text(
                       jobFamily.nameEnglish,
-                      style: TextStyle(
-                        fontSize: 15.6.sp,
+                      style: context.textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
-                        height: 24 / 15.6,
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    Gap(4.h),
                     Text(
                       jobFamily.nameArabic,
                       textDirection: TextDirection.rtl,
                       textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textSecondary,
-                        height: 20 / 14,
-                      ),
+                      style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
                     ),
-                    SizedBox(height: 8.h),
-                    Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFDBEAFE),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Text(
-                        jobFamily.code,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF193CB8),
-                          height: 16 / 12,
-                        ),
-                      ),
-                    ),
+                    Gap(8.h),
+                    InfoBadge(text: jobFamily.code),
                   ],
                 ),
               ),
               DigifyAsset(
                 assetPath: Assets.icons.businessUnitDetailsIcon.path,
-                color: const Color(0xFF2B7FFF),
-                width: 24,
-                height: 24,
+                color: AppColors.primaryLight,
+                width: 24.sp,
+                height: 24.sp,
               ),
             ],
           ),
-          SizedBox(height: gap),
+          Gap(16.h),
           Text(
             jobFamily.description,
-            style: TextStyle(
-              fontSize: 13.6.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textSecondary,
-              height: 20 / 13.6,
-            ),
-            maxLines: 2,
+            style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: gap),
-          Divider(color: AppColors.cardBorder, thickness: 1.w, height: 1),
-          SizedBox(height: gap),
+          DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 16.0)),
           Row(
+            spacing: 8.w,
             children: [
               Expanded(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => JobFamilyDetailDialog.show(context, jobFamily: jobFamily, jobLevels: jobLevels),
-                    borderRadius: BorderRadius.circular(4.r),
-                    child: Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEFF6FF),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          DigifyAsset(
-                            assetPath: Assets.icons.viewIconBlue.path,
-                            width: 16,
-                            height: 16,
-                            color: AppColors.primary,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            localizations.view,
-                            style: TextStyle(
-                              fontSize: 15.1.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primary,
-                              height: 24 / 15.1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                child: ActionButton(
+                  label: localizations.view,
+                  onTap: () => JobFamilyDetailDialog.show(context, jobFamily: jobFamily, jobLevels: jobLevels),
+                  iconPath: Assets.icons.viewIconBlue.path,
+                  backgroundColor: AppColors.infoBg,
+                  foregroundColor: AppColors.primary,
                 ),
               ),
-              SizedBox(width: 8.w),
               Expanded(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      JobFamilyFormDialog.show(context, jobFamily: jobFamily, isEdit: true, onSave: (updated) {});
-                    },
-                    borderRadius: BorderRadius.circular(4.r),
-                    child: Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0FDF4),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          DigifyAsset(
-                            assetPath: Assets.icons.editIconGreen.path,
-                            width: 16,
-                            height: 16,
-                            color: AppColors.greenButton,
-                          ),
-                          SizedBox(width: 8.w),
-                          Text(
-                            localizations.edit,
-                            style: TextStyle(
-                              fontSize: 15.4.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.greenButton,
-                              height: 24 / 15.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                child: ActionButton(
+                  label: localizations.edit,
+                  onTap: () =>
+                      JobFamilyFormDialog.show(context, jobFamily: jobFamily, isEdit: true, onSave: (updated) {}),
+                  iconPath: Assets.icons.editIconGreen.path,
+                  backgroundColor: AppColors.greenBg,
+                  foregroundColor: AppColors.greenButton,
                 ),
+              ),
+              IconActionButton(
+                iconPath: Assets.icons.deleteIconRed.path,
+                bgColor: AppColors.errorBg,
+                iconColor: AppColors.error,
+                height: 40.h,
+                onPressed: isDeleting ? null : () => _handleDelete(context, ref),
+                isLoading: isDeleting,
               ),
             ],
           ),
@@ -203,5 +129,33 @@ class JobFamilyCard extends StatelessWidget {
     );
 
     return Material(color: Colors.transparent, borderRadius: BorderRadius.circular(10.r), child: cardContent);
+  }
+
+  Future<void> _handleDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: 'Delete Job Family',
+      message: 'Are you sure you want to delete this job family? This action cannot be undone.',
+      itemName: jobFamily.nameEnglish,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      type: ConfirmationType.danger,
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await ref
+          .read(jobFamilyNotifierProvider.notifier)
+          .deleteJobFamily(ref, ref.read(deleteJobFamilyUseCaseProvider), id: jobFamily.id);
+
+      if (context.mounted) {
+        ToastService.success(context, 'Job family deleted successfully', title: 'Deleted');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ToastService.error(context, 'Failed to delete job family', title: 'Error');
+      }
+    }
   }
 }

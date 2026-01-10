@@ -28,8 +28,8 @@ class JobFamilyList extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final maxW = constraints.maxWidth;
-            final spacing = 16.w;
-            final runSpacing = 20.h;
+            final spacing = 24.w;
+            final runSpacing = 24.h;
             final targetCardWidth = 466.0;
 
             final columns = maxW < 600
@@ -38,16 +38,12 @@ class JobFamilyList extends StatelessWidget {
                 ? 2
                 : 3;
             final computed = (maxW - (spacing * (columns - 1))) / columns;
-            final cardWidth = computed > targetCardWidth
-                ? targetCardWidth
-                : computed;
+            final cardWidth = computed > targetCardWidth ? targetCardWidth : computed;
 
             return Wrap(
               spacing: spacing,
               runSpacing: runSpacing,
-              children: paginationState.items.asMap().entries.map<Widget>((
-                entry,
-              ) {
+              children: paginationState.items.asMap().entries.map<Widget>((entry) {
                 final jobFamily = entry.value;
 
                 return SizedBox(
@@ -68,10 +64,7 @@ class JobFamilyList extends StatelessWidget {
         if (paginationState.isLoadingMore)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 24.h),
-            child: const AppLoadingIndicator(
-              type: LoadingType.threeBounce,
-              size: 20,
-            ),
+            child: const AppLoadingIndicator(type: LoadingType.threeBounce, size: 20),
           ),
       ],
     );

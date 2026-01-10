@@ -254,3 +254,112 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
     );
   }
 }
+
+class DigifyTextArea extends StatelessWidget {
+  final TextEditingController? controller;
+  final String? labelText;
+  final String? hintText;
+  final bool isRequired;
+  final int maxLines;
+  final int? minLines;
+  final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
+  final bool readOnly;
+  final bool enabled;
+  final TextAlign textAlign;
+  final TextDirection? textDirection;
+
+  const DigifyTextArea({
+    super.key,
+    this.controller,
+    this.labelText,
+    this.hintText,
+    this.isRequired = false,
+    this.maxLines = 3,
+    this.minLines,
+    this.validator,
+    this.onChanged,
+    this.readOnly = false,
+    this.enabled = true,
+    this.textAlign = TextAlign.start,
+    this.textDirection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDark;
+    final effectiveMinLines = minLines ?? maxLines;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (labelText != null)
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: labelText,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                if (isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.deleteIconRed,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        if (labelText != null) SizedBox(height: 8.h),
+        TextFormField(
+          controller: controller,
+          maxLines: maxLines,
+          minLines: effectiveMinLines,
+          readOnly: readOnly,
+          enabled: enabled,
+          onChanged: onChanged,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          style: TextStyle(fontSize: 15.sp, color: isDark ? context.themeTextPrimary : AppColors.textPrimary),
+          decoration: InputDecoration(
+            hintText: hintText,
+            filled: true,
+            fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
+            isDense: true,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            hintStyle: TextStyle(
+              fontSize: 15.sp,
+              height: 1.0,
+              color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+            ),
+            border: _buildBorder(isDark, AppColors.inputBorder),
+            enabledBorder: _buildBorder(isDark, isDark ? AppColors.inputBorderDark : AppColors.inputBorder),
+            focusedBorder: _buildBorder(isDark, AppColors.primary, width: 1.5),
+            errorBorder: _buildBorder(isDark, AppColors.error),
+            focusedErrorBorder: _buildBorder(isDark, AppColors.error, width: 1.5),
+          ),
+          validator: validator,
+        ),
+      ],
+    );
+  }
+
+  OutlineInputBorder _buildBorder(bool isDark, Color color, {double width = 1.0}) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.r),
+      borderSide: BorderSide(
+        color: isDark && color == AppColors.inputBorder ? AppColors.inputBorderDark : color,
+        width: width.w,
+      ),
+    );
+  }
+}
