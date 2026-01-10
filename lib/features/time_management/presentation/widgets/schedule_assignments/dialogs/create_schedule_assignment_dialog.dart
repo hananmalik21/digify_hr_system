@@ -5,14 +5,13 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_info_box.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/date_field.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/work_schedule_field.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_fields.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/schedule_assignment_enterprise_structure_fields.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,16 +20,14 @@ import 'package:intl/intl.dart';
 
 class CreateScheduleAssignmentDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
-  final ScheduleAssignment? initialAssignment;
 
-  const CreateScheduleAssignmentDialog({super.key, required this.enterpriseId, this.initialAssignment});
+  const CreateScheduleAssignmentDialog({super.key, required this.enterpriseId});
 
-  static Future<void> show(BuildContext context, int enterpriseId, {ScheduleAssignment? initialAssignment}) {
+  static Future<void> show(BuildContext context, int enterpriseId) {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          CreateScheduleAssignmentDialog(enterpriseId: enterpriseId, initialAssignment: initialAssignment),
+      builder: (context) => CreateScheduleAssignmentDialog(enterpriseId: enterpriseId),
     );
   }
 
@@ -56,65 +53,10 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       final notifier = ref.read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier);
       notifier.setEnterpriseId(widget.enterpriseId);
 
-      if (widget.initialAssignment != null) {
-        _initializeFields(widget.initialAssignment!);
-      }
+      final enterpriseNotifier = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId).notifier);
+      enterpriseNotifier.reset();
+      enterpriseNotifier.fetchOrgStructureByEnterpriseId(widget.enterpriseId);
     });
-  }
-
-  String _convertStatusToDropdownFormat(String status) {
-    final upperStatus = status.toUpperCase();
-    switch (upperStatus) {
-      case 'ACTIVE':
-        return 'Active';
-      case 'PENDING':
-        return 'Pending';
-      case 'INACTIVE':
-        return 'Inactive';
-      default:
-        return status;
-    }
-  }
-
-  void _initializeFields(ScheduleAssignment assignment) {
-    _selectedLevel = assignment.assignmentLevel.toUpperCase() == 'DEPARTMENT'
-        ? AssignmentLevel.department
-        : AssignmentLevel.employee;
-
-    if (assignment.orgPath != null && assignment.orgPath!.isNotEmpty) {
-      for (final pathItem in assignment.orgPath!) {
-        _selectedUnitIds[pathItem.levelCode] = pathItem.orgUnitId;
-      }
-    } else if (assignment.orgUnit != null) {
-      final orgUnit = assignment.orgUnit!;
-      _selectedUnitIds[orgUnit.levelCode] = orgUnit.orgUnitId;
-
-      if (orgUnit.parentUnit != null) {
-        final parentUnit = orgUnit.parentUnit!;
-        _selectedUnitIds[parentUnit.level] = parentUnit.id;
-      }
-    } else if (assignment.orgUnitId != null) {
-      final orgStructureState = ref.read(orgStructureNotifierProvider);
-      final levels = orgStructureState.orgStructure?.activeLevels ?? [];
-
-      for (final level in levels) {
-        _selectedUnitIds[level.levelCode] = assignment.orgUnitId;
-      }
-    }
-
-    _selectedWorkScheduleId = assignment.workScheduleId;
-    _selectedWorkScheduleName = assignment.workSchedule.scheduleNameEn;
-
-    _effectiveStartDateController.text = DateFormat('yyyy-MM-dd').format(assignment.effectiveStartDate);
-    if (assignment.effectiveEndDate != null) {
-      _effectiveEndDateController.text = DateFormat('yyyy-MM-dd').format(assignment.effectiveEndDate!);
-    }
-
-    _selectedStatus = _convertStatusToDropdownFormat(assignment.status);
-
-    if (assignment.notes != null && assignment.notes!.isNotEmpty) {
-      _notesController.text = assignment.notes!;
-    }
   }
 
   @override
@@ -159,7 +101,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
   }
 
   String? _getLastSelectedOrgUnitId() {
-    final orgStructureState = ref.read(orgStructureNotifierProvider);
+    final orgStructureState = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId));
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
 
     String? lastUnitId;
@@ -220,35 +162,20 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
     };
 
     try {
-      if (widget.initialAssignment != null) {
-        await ref
-            .read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier)
-            .updateScheduleAssignment(widget.initialAssignment!.scheduleAssignmentId, assignmentData);
+      await ref
+          .read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier)
+          .createScheduleAssignment(assignmentData);
 
+      if (mounted) {
+        ToastService.success(context, 'Schedule assignment created successfully', title: 'Success');
+        await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
-          ToastService.success(context, 'Schedule assignment updated successfully', title: 'Success');
-          await Future.delayed(const Duration(milliseconds: 300));
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        }
-      } else {
-        await ref
-            .read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier)
-            .createScheduleAssignment(assignmentData);
-
-        if (mounted) {
-          ToastService.success(context, 'Schedule assignment created successfully', title: 'Success');
-          await Future.delayed(const Duration(milliseconds: 300));
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
+          Navigator.of(context).pop();
         }
       }
     } catch (e) {
       if (mounted) {
-        final action = widget.initialAssignment != null ? 'update' : 'create';
-        ToastService.error(context, 'Failed to $action schedule assignment: ${e.toString()}', title: 'Error');
+        ToastService.error(context, 'Failed to create schedule assignment: ${e.toString()}', title: 'Error');
       }
     }
   }
@@ -259,10 +186,8 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
     final scheduleAssignmentsState = ref.watch(scheduleAssignmentsNotifierProvider(widget.enterpriseId));
     final isCreating = scheduleAssignmentsState.isCreating;
 
-    final isEdit = widget.initialAssignment != null;
-
     return AppDialog(
-      title: isEdit ? 'Edit Schedule Assignment' : 'Assign Schedule',
+      title: 'Assign Schedule',
       width: 768.w,
       content: Form(
         key: _formKey,
@@ -279,8 +204,9 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
               },
             ),
             SizedBox(height: 24.h),
-            EnterpriseStructureFields(
+            ScheduleAssignmentEnterpriseStructureFields(
               localizations: localizations,
+              enterpriseId: widget.enterpriseId,
               selectedUnitIds: _selectedUnitIds,
               onSelectionChanged: _handleEnterpriseSelection,
             ),
@@ -326,7 +252,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
         ),
         SizedBox(width: 12.w),
         AppButton(
-          label: isEdit ? 'Update Schedule' : 'Assign Schedule',
+          label: 'Assign Schedule',
           type: AppButtonType.primary,
           onPressed: isCreating ? null : _handleAssign,
           width: null,

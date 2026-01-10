@@ -7,25 +7,17 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final orgUnitRemoteDataSourceProvider = Provider<OrgUnitRemoteDataSource>((
-  ref,
-) {
+final orgUnitRemoteDataSourceProvider = Provider<OrgUnitRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return OrgUnitRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 final orgUnitRepositoryProvider = Provider<OrgUnitRepository>((ref) {
-  return OrgUnitRepositoryImpl(
-    remoteDataSource: ref.read(orgUnitRemoteDataSourceProvider),
-  );
+  return OrgUnitRepositoryImpl(remoteDataSource: ref.read(orgUnitRemoteDataSourceProvider));
 });
 
-final getOrgUnitsByLevelUseCaseProvider = Provider<GetOrgUnitsByLevelUseCase>((
-  ref,
-) {
-  return GetOrgUnitsByLevelUseCase(
-    repository: ref.read(orgUnitRepositoryProvider),
-  );
+final getOrgUnitsByLevelUseCaseProvider = Provider<GetOrgUnitsByLevelUseCase>((ref) {
+  return GetOrgUnitsByLevelUseCase(repository: ref.read(orgUnitRepositoryProvider));
 });
 
 final enterpriseSelectionNotifierProvider =

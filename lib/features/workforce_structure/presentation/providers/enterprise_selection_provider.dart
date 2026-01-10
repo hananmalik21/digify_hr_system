@@ -53,13 +53,11 @@ class EnterpriseSelectionState {
 
   OrgUnit? getSelection(String levelCode) => selections[levelCode];
 
-  List<OrgUnit> getOptions(String levelCode) =>
-      availableOptions[levelCode] ?? [];
+  List<OrgUnit> getOptions(String levelCode) => availableOptions[levelCode] ?? [];
 
   bool isLoading(String levelCode) => loadingStates[levelCode] ?? false;
 
-  bool isFetchingMore(String levelCode) =>
-      fetchingMoreStates[levelCode] ?? false;
+  bool isFetchingMore(String levelCode) => fetchingMoreStates[levelCode] ?? false;
 
   String? getError(String levelCode) => errors[levelCode];
 
@@ -70,8 +68,7 @@ class EnterpriseSelectionState {
   String getSearchQuery(String levelCode) => searchQueries[levelCode] ?? '';
 }
 
-class EnterpriseSelectionNotifier
-    extends StateNotifier<EnterpriseSelectionState> {
+class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState> {
   final GetOrgUnitsByLevelUseCase getOrgUnitsByLevelUseCase;
   final List<OrgStructureLevel> levels;
   final _debouncer = Debouncer();
@@ -133,9 +130,7 @@ class EnterpriseSelectionNotifier
 
     final nextPage = state.getPage(levelCode) + 1;
 
-    final newFetchingMoreStates = Map<String, bool>.from(
-      state.fetchingMoreStates,
-    );
+    final newFetchingMoreStates = Map<String, bool>.from(state.fetchingMoreStates);
     newFetchingMoreStates[levelCode] = true;
     state = state.copyWith(fetchingMoreStates: newFetchingMoreStates);
 
@@ -168,14 +163,10 @@ class EnterpriseSelectionNotifier
       final newHasNextStates = Map<String, bool>.from(state.hasNextStates);
       newHasNextStates[levelCode] = response.hasNext;
 
-      final newOptions = Map<String, List<OrgUnit>>.from(
-        state.availableOptions,
-      );
+      final newOptions = Map<String, List<OrgUnit>>.from(state.availableOptions);
       newOptions[levelCode] = allOptions;
 
-      final newFetchingMoreStates = Map<String, bool>.from(
-        state.fetchingMoreStates,
-      );
+      final newFetchingMoreStates = Map<String, bool>.from(state.fetchingMoreStates);
       newFetchingMoreStates[levelCode] = false;
 
       state = state.copyWith(
@@ -185,19 +176,13 @@ class EnterpriseSelectionNotifier
         fetchingMoreStates: newFetchingMoreStates,
       );
     } catch (e) {
-      final newFetchingMoreStates = Map<String, bool>.from(
-        state.fetchingMoreStates,
-      );
+      final newFetchingMoreStates = Map<String, bool>.from(state.fetchingMoreStates);
       newFetchingMoreStates[levelCode] = false;
       state = state.copyWith(fetchingMoreStates: newFetchingMoreStates);
     }
   }
 
-  void _updateStateAfterSuccess(
-    String levelCode,
-    List<OrgUnit> options,
-    bool hasNext,
-  ) {
+  void _updateStateAfterSuccess(String levelCode, List<OrgUnit> options, bool hasNext) {
     final newOptions = Map<String, List<OrgUnit>>.from(state.availableOptions);
     newOptions[levelCode] = options;
 
