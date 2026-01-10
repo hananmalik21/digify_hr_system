@@ -11,9 +11,10 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/date_field.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/work_schedule_field.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/schedule_assignment_enterprise_structure_fields_edit.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_fields.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,74 +54,21 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
   @override
   void initState() {
     super.initState();
-    _initializeFields();
+    _initializeFormFields();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final notifier = ref.read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier);
       notifier.setEnterpriseId(widget.enterpriseId);
+
+      _initializeEnterpriseStructure();
     });
   }
 
-  void _initializeFields() {
+  void _initializeFormFields() {
     final assignment = widget.assignment;
 
     _selectedLevel = assignment.assignmentLevel.toUpperCase() == 'DEPARTMENT'
         ? AssignmentLevel.department
         : AssignmentLevel.employee;
-
-    if (assignment.orgPath != null && assignment.orgPath!.isNotEmpty) {
-      final initialSelections = <String, OrgUnit>{};
-      final orgStructureState = ref.read(orgStructureNotifierProvider);
-      final structureId = orgStructureState.orgStructure?.structureId ?? assignment.orgUnit?.orgStructureId ?? '';
-
-      for (int i = 0; i < assignment.orgPath!.length; i++) {
-        final pathItem = assignment.orgPath![i];
-        _selectedUnitIds[pathItem.levelCode] = pathItem.orgUnitId;
-
-        final parentId = i > 0 ? assignment.orgPath![i - 1].orgUnitId : null;
-
-        final orgUnit = OrgUnit(
-          orgUnitId: pathItem.orgUnitId,
-          orgStructureId: structureId,
-          enterpriseId: widget.enterpriseId,
-          levelCode: pathItem.levelCode,
-          orgUnitCode: pathItem.orgUnitId,
-          orgUnitNameEn: pathItem.nameEn,
-          orgUnitNameAr: pathItem.nameAr,
-          parentOrgUnitId: parentId,
-          isActive: true,
-        );
-        initialSelections[pathItem.levelCode] = orgUnit;
-      }
-      _initialSelections = initialSelections;
-    } else if (assignment.orgUnit != null) {
-      final orgUnit = assignment.orgUnit!;
-      _selectedUnitIds[orgUnit.levelCode] = orgUnit.orgUnitId;
-
-      final orgUnitObj = OrgUnit(
-        orgUnitId: orgUnit.orgUnitId,
-        orgStructureId: orgUnit.orgStructureId,
-        enterpriseId: orgUnit.enterpriseId,
-        levelCode: orgUnit.levelCode,
-        orgUnitCode: orgUnit.orgUnitCode,
-        orgUnitNameEn: orgUnit.orgUnitNameEn,
-        orgUnitNameAr: orgUnit.orgUnitNameAr,
-        parentOrgUnitId: orgUnit.parentUnit?.id,
-        isActive: true,
-      );
-      _initialSelections = {orgUnit.levelCode: orgUnitObj};
-
-      if (orgUnit.parentUnit != null) {
-        final parentUnit = orgUnit.parentUnit!;
-        _selectedUnitIds[parentUnit.level] = parentUnit.id;
-      }
-    } else if (assignment.orgUnitId != null) {
-      final orgStructureState = ref.read(orgStructureNotifierProvider);
-      final levels = orgStructureState.orgStructure?.activeLevels ?? [];
-
-      for (final level in levels) {
-        _selectedUnitIds[level.levelCode] = assignment.orgUnitId;
-      }
-    }
 
     _selectedWorkScheduleId = assignment.workScheduleId;
     _selectedWorkScheduleName = assignment.workSchedule.scheduleNameEn;
@@ -135,6 +83,76 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
     _selectedStatus = _convertStatusToDropdownFormat(assignment.status);
 
     _notesController = TextEditingController(text: assignment.notes ?? '');
+  }
+
+  void _initializeEnterpriseStructure() {
+    final assignment = widget.assignment;
+    if (assignment.orgPath == null || assignment.orgPath!.isEmpty || assignment.orgUnit == null) {
+      final enterpriseNotifier = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId).notifier);
+      enterpriseNotifier.reset();
+      enterpriseNotifier.fetchOrgStructureByEnterpriseId(widget.enterpriseId);
+      return;
+    }
+
+    final structureId = assignment.orgUnit!.orgStructureId;
+    final enterpriseNotifier = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId).notifier);
+    enterpriseNotifier.reset();
+
+    final levels = assignment.orgPath!.asMap().entries.map((entry) {
+      final index = entry.key;
+      final pathItem = entry.value;
+      return OrgStructureLevel(
+        levelId: index,
+        structureId: structureId,
+        levelNumber: index + 1,
+        levelCode: pathItem.levelCode,
+        levelName: pathItem.levelCode,
+        isMandatory: false,
+        isActive: true,
+        displayOrder: index + 1,
+      );
+    }).toList();
+
+    final enterpriseName = assignment.enterprise?.name ?? '';
+    final orgStructure = OrgStructure(
+      structureId: structureId,
+      enterpriseId: widget.enterpriseId,
+      enterpriseName: enterpriseName,
+      structureCode: structureId,
+      structureName: enterpriseName.isNotEmpty ? enterpriseName : 'Organization Structure',
+      structureType: 'ENTERPRISE',
+      description: null,
+      isActive: true,
+      levels: levels,
+    );
+
+    enterpriseNotifier.setStructureDirectly(orgStructure);
+
+    final initialSelections = <String, OrgUnit>{};
+    for (int i = 0; i < assignment.orgPath!.length; i++) {
+      final pathItem = assignment.orgPath![i];
+      _selectedUnitIds[pathItem.levelCode] = pathItem.orgUnitId;
+
+      final parentId = i > 0 ? assignment.orgPath![i - 1].orgUnitId : null;
+
+      final orgUnit = OrgUnit(
+        orgUnitId: pathItem.orgUnitId,
+        orgStructureId: structureId,
+        enterpriseId: widget.enterpriseId,
+        levelCode: pathItem.levelCode,
+        orgUnitCode: pathItem.orgUnitId,
+        orgUnitNameEn: pathItem.nameEn,
+        orgUnitNameAr: pathItem.nameAr,
+        parentOrgUnitId: parentId,
+        isActive: true,
+      );
+      initialSelections[pathItem.levelCode] = orgUnit;
+    }
+
+    if (initialSelections.isNotEmpty) {
+      _initialSelections = initialSelections;
+      if (mounted) setState(() {});
+    }
   }
 
   String _convertStatusToDropdownFormat(String status) {
@@ -193,7 +211,7 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
   }
 
   String? _getLastSelectedOrgUnitId() {
-    final orgStructureState = ref.read(orgStructureNotifierProvider);
+    final orgStructureState = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId));
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
 
     String? lastUnitId;
@@ -286,11 +304,14 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
               },
             ),
             SizedBox(height: 24.h),
-            EnterpriseStructureFields(
+            ScheduleAssignmentEnterpriseStructureFieldsEdit(
               localizations: localizations,
+              enterpriseId: widget.enterpriseId,
               selectedUnitIds: _selectedUnitIds,
               initialSelections: _initialSelections,
               onSelectionChanged: _handleEnterpriseSelection,
+              initialStructureName: widget.assignment.enterprise?.name,
+              initialStructureId: widget.assignment.orgUnit?.orgStructureId,
             ),
             SizedBox(height: 24.h),
             WorkScheduleField(

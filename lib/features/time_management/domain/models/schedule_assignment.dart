@@ -129,6 +129,40 @@ class ScheduleAssignmentWorkSchedule {
   }
 }
 
+/// Enterprise information for schedule assignment
+class ScheduleAssignmentEnterprise {
+  final int id;
+  final String name;
+  final String code;
+
+  const ScheduleAssignmentEnterprise({required this.id, required this.name, required this.code});
+
+  factory ScheduleAssignmentEnterprise.fromJson(Map<String, dynamic> json) {
+    int parseInt(dynamic value, {int defaultValue = 0}) {
+      if (value == null) return defaultValue;
+      if (value is int) return value;
+      if (value is String) {
+        final parsed = int.tryParse(value);
+        return parsed ?? defaultValue;
+      }
+      if (value is num) return value.toInt();
+      return defaultValue;
+    }
+
+    String parseString(dynamic value, {String defaultValue = ''}) {
+      if (value == null) return defaultValue;
+      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
+      return value.toString().trim();
+    }
+
+    return ScheduleAssignmentEnterprise(
+      id: parseInt(json['id'], defaultValue: 0),
+      name: parseString(json['name']),
+      code: parseString(json['code']),
+    );
+  }
+}
+
 /// Organization path item
 class ScheduleAssignmentOrgPathItem {
   final String levelCode;
@@ -185,6 +219,7 @@ class ScheduleAssignment {
   final ScheduleAssignmentOrgUnit? orgUnit;
   final String? orgUnitId;
   final List<ScheduleAssignmentOrgPathItem>? orgPath;
+  final ScheduleAssignmentEnterprise? enterprise;
 
   const ScheduleAssignment({
     required this.scheduleAssignmentId,
@@ -205,6 +240,7 @@ class ScheduleAssignment {
     this.orgUnit,
     this.orgUnitId,
     this.orgPath,
+    this.enterprise,
   });
 
   factory ScheduleAssignment.fromJson(Map<String, dynamic> json) {
@@ -252,6 +288,9 @@ class ScheduleAssignment {
         ?.map((item) => ScheduleAssignmentOrgPathItem.fromJson(item as Map<String, dynamic>))
         .toList();
 
+    final enterpriseJson = json['enterprise'] as Map<String, dynamic>?;
+    final enterprise = enterpriseJson != null ? ScheduleAssignmentEnterprise.fromJson(enterpriseJson) : null;
+
     final effectiveStartDate = parseDateTime(json['effective_start_date']);
     if (effectiveStartDate == null) {
       throw FormatException('effective_start_date is required');
@@ -276,6 +315,7 @@ class ScheduleAssignment {
       orgUnit: orgUnit,
       orgUnitId: json['org_unit_id'] != null ? parseString(json['org_unit_id']) : null,
       orgPath: orgPath,
+      enterprise: enterprise,
     );
   }
 

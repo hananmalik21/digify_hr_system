@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 
 abstract class OrgStructureRemoteDataSource {
   Future<OrgStructure> getActiveOrgStructureLevels();
+  Future<List<OrgStructure>> getOrgStructuresByEnterpriseId(int enterpriseId);
 }
 
 class OrgStructureRemoteDataSourceImpl implements OrgStructureRemoteDataSource {
@@ -16,8 +17,17 @@ class OrgStructureRemoteDataSourceImpl implements OrgStructureRemoteDataSource {
   Future<OrgStructure> getActiveOrgStructureLevels() async {
     final response = await apiClient.get(ApiEndpoints.orgStructureLevels);
 
-    return OrgStructureDto.fromJson(
-      response['data'] as Map<String, dynamic>,
-    ).toDomain();
+    return OrgStructureDto.fromJson(response['data'] as Map<String, dynamic>).toDomain();
+  }
+
+  @override
+  Future<List<OrgStructure>> getOrgStructuresByEnterpriseId(int enterpriseId) async {
+    final response = await apiClient.get(
+      ApiEndpoints.hrOrgStructures,
+      queryParameters: {'enterprise_id': enterpriseId.toString()},
+    );
+
+    final dataList = response['data'] as List<dynamic>? ?? [];
+    return dataList.map((item) => OrgStructureDto.fromJson(item as Map<String, dynamic>).toDomain()).toList();
   }
 }
