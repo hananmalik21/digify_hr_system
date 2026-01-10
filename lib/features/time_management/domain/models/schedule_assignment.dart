@@ -169,12 +169,14 @@ class ScheduleAssignmentOrgPathItem {
   final String orgUnitId;
   final String nameEn;
   final String nameAr;
+  final int? hierarchyLevel;
 
   const ScheduleAssignmentOrgPathItem({
     required this.levelCode,
     required this.orgUnitId,
     required this.nameEn,
     required this.nameAr,
+    this.hierarchyLevel,
   });
 
   factory ScheduleAssignmentOrgPathItem.fromJson(Map<String, dynamic> json) {
@@ -190,11 +192,46 @@ class ScheduleAssignmentOrgPathItem {
       return value.toString().trim();
     }
 
+    int? parseInt(dynamic value) {
+      if (value == null) return null;
+      if (value is int) return value;
+      if (value is String) {
+        final parsed = int.tryParse(value);
+        return parsed;
+      }
+      if (value is num) return value.toInt();
+      return null;
+    }
+
     return ScheduleAssignmentOrgPathItem(
       levelCode: parseString(json['level_code']),
       orgUnitId: parseString(json['org_unit_id']),
       nameEn: parseString(json['name_en']),
       nameAr: parseString(json['name_ar']),
+      hierarchyLevel: parseInt(json['hierarchy_level']),
+    );
+  }
+}
+
+/// Organization structure information for schedule assignment
+class ScheduleAssignmentOrgStructure {
+  final String id;
+  final String name;
+  final String code;
+
+  const ScheduleAssignmentOrgStructure({required this.id, required this.name, required this.code});
+
+  factory ScheduleAssignmentOrgStructure.fromJson(Map<String, dynamic> json) {
+    String parseString(dynamic value, {String defaultValue = ''}) {
+      if (value == null) return defaultValue;
+      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
+      return value.toString().trim();
+    }
+
+    return ScheduleAssignmentOrgStructure(
+      id: parseString(json['id']),
+      name: parseString(json['name']),
+      code: parseString(json['code']),
     );
   }
 }
@@ -215,11 +252,12 @@ class ScheduleAssignment {
   final String createdBy;
   final DateTime lastUpdateDate;
   final String lastUpdatedBy;
-  final ScheduleAssignmentWorkSchedule workSchedule;
+  final ScheduleAssignmentWorkSchedule? workSchedule;
   final ScheduleAssignmentOrgUnit? orgUnit;
   final String? orgUnitId;
   final List<ScheduleAssignmentOrgPathItem>? orgPath;
   final ScheduleAssignmentEnterprise? enterprise;
+  final ScheduleAssignmentOrgStructure? orgStructure;
 
   const ScheduleAssignment({
     required this.scheduleAssignmentId,
@@ -236,11 +274,12 @@ class ScheduleAssignment {
     required this.createdBy,
     required this.lastUpdateDate,
     required this.lastUpdatedBy,
-    required this.workSchedule,
+    this.workSchedule,
     this.orgUnit,
     this.orgUnitId,
     this.orgPath,
     this.enterprise,
+    this.orgStructure,
   });
 
   factory ScheduleAssignment.fromJson(Map<String, dynamic> json) {
@@ -275,10 +314,7 @@ class ScheduleAssignment {
     }
 
     final workScheduleJson = json['work_schedule'] as Map<String, dynamic>?;
-    if (workScheduleJson == null) {
-      throw FormatException('work_schedule is required');
-    }
-    final workSchedule = ScheduleAssignmentWorkSchedule.fromJson(workScheduleJson);
+    final workSchedule = workScheduleJson != null ? ScheduleAssignmentWorkSchedule.fromJson(workScheduleJson) : null;
 
     final orgUnitJson = json['org_unit'] as Map<String, dynamic>?;
     final orgUnit = orgUnitJson != null ? ScheduleAssignmentOrgUnit.fromJson(orgUnitJson) : null;
@@ -290,6 +326,9 @@ class ScheduleAssignment {
 
     final enterpriseJson = json['enterprise'] as Map<String, dynamic>?;
     final enterprise = enterpriseJson != null ? ScheduleAssignmentEnterprise.fromJson(enterpriseJson) : null;
+
+    final orgStructureJson = json['org_structure'] as Map<String, dynamic>?;
+    final orgStructure = orgStructureJson != null ? ScheduleAssignmentOrgStructure.fromJson(orgStructureJson) : null;
 
     final effectiveStartDate = parseDateTime(json['effective_start_date']);
     if (effectiveStartDate == null) {
@@ -316,6 +355,7 @@ class ScheduleAssignment {
       orgUnitId: json['org_unit_id'] != null ? parseString(json['org_unit_id']) : null,
       orgPath: orgPath,
       enterprise: enterprise,
+      orgStructure: orgStructure,
     );
   }
 

@@ -32,8 +32,7 @@ class _SearchFieldState extends State<SearchField> {
   @override
   void didUpdateWidget(SearchField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialValue != _controller.text &&
-        widget.initialValue.isEmpty) {
+    if (widget.initialValue != _controller.text && widget.initialValue.isEmpty) {
       _controller.text = widget.initialValue;
     }
   }
@@ -49,9 +48,6 @@ class _SearchFieldState extends State<SearchField> {
     return DigifyTextField(
       controller: _controller,
       hintText: widget.hintText,
-      height: 40.h,
-      borderRadius: 8.r,
-      fontSize: 15.sp,
       prefixIcon: Icon(Icons.search, size: 16.sp),
       textInputAction: TextInputAction.search,
       onChanged: (value) {

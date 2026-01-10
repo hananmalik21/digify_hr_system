@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
@@ -12,6 +13,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class PositionsTab extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -22,8 +24,7 @@ class PositionsTab extends ConsumerStatefulWidget {
   ConsumerState<PositionsTab> createState() => _PositionsTabState();
 }
 
-class _PositionsTabState extends ConsumerState<PositionsTab>
-    with ScrollPaginationMixin {
+class _PositionsTabState extends ConsumerState<PositionsTab> with ScrollPaginationMixin {
   @override
   ScrollController? get scrollController => widget.scrollController;
 
@@ -55,37 +56,14 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
         WorkforceSearchAndActions(
           localizations: localizations,
           isDark: isDark,
-          onAddPosition: () =>
-              _showPositionFormDialog(context, Position.empty(), false),
+          onAddPosition: () => _showPositionFormDialog(context, Position.empty(), false),
         ),
-        SizedBox(height: 24.h),
-
-        if (positionState.hasError &&
-            positionState.items.isEmpty &&
-            !positionState.isLoading)
-          Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 100.h),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Error: ${positionState.errorMessage}',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 16.h),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(positionNotifierProvider.notifier).refresh();
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
+        Gap(24.h),
+        if (positionState.hasError && positionState.items.isEmpty && !positionState.isLoading)
+          DigifyErrorState(
+            message: positionState.errorMessage ?? localizations.somethingWentWrong,
+            retryLabel: localizations.retry,
+            onRetry: () => ref.read(positionNotifierProvider.notifier).refresh(),
           )
         else
           WorkforcePositionsTable(
@@ -94,21 +72,14 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
             isDark: isDark,
             isLoading: positionState.isLoading,
             onView: (position) => _showPositionDetailsDialog(context, position),
-            onEdit: (position) =>
-                _showPositionFormDialog(context, position, true),
-            onDelete: (position) =>
-                DeletePositionDialog.show(context, position: position),
+            onEdit: (position) => _showPositionFormDialog(context, position, true),
+            onDelete: (position) => DeletePositionDialog.show(context, position: position),
           ),
 
         if (positionState.isLoadingMore)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 24.h),
-            child: const Center(
-              child: AppLoadingIndicator(
-                type: LoadingType.threeBounce,
-                size: 20,
-              ),
-            ),
+            child: const Center(child: AppLoadingIndicator(type: LoadingType.threeBounce, size: 20)),
           ),
       ],
     );
@@ -121,11 +92,7 @@ class _PositionsTabState extends ConsumerState<PositionsTab>
     );
   }
 
-  void _showPositionFormDialog(
-    BuildContext context,
-    Position position,
-    bool isEdit,
-  ) {
+  void _showPositionFormDialog(BuildContext context, Position position, bool isEdit) {
     PositionFormDialog.show(context, position: position, isEdit: isEdit);
   }
 }

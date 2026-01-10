@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 
-/// Universal DigifyTextField Widget
-/// This is the ONLY text field widget that should be used across the entire app.
 class DigifyTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
+  final bool isRequired;
   final bool obscureText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -17,9 +18,6 @@ class DigifyTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final int? maxLines;
   final int? minLines;
-  final double? height;
-  final double? borderRadius;
-  final double? fontSize;
   final Color? fillColor;
   final Color? borderColor;
   final Color? focusedBorderColor;
@@ -28,32 +26,23 @@ class DigifyTextField extends StatefulWidget {
   final bool showBorder;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
-  final bool isRequired;
-  final bool hasInfoIcon;
-  final String? helperText;
-  final String? errorText;
-  final TextStyle? labelStyle;
-  final TextStyle? helperTextStyle;
-  final TextStyle? hintStyle;
-  final TextStyle? textStyle;
-  final bool expands;
-  final String? initialValue;
   final bool readOnly;
   final VoidCallback? onTap;
   final bool enabled;
-  final EdgeInsetsGeometry? contentPadding;
-  final int? maxLength;
-  final List<TextInputFormatter>? inputFormatters;
-  final FocusNode? focusNode;
-  final AutovalidateMode? autovalidateMode;
   final TextAlign textAlign;
   final TextDirection? textDirection;
+  final List<TextInputFormatter>? inputFormatters;
+  final AutovalidateMode? autovalidateMode;
+  final FocusNode? focusNode;
+  final String? initialValue;
+  final double? fontSize;
 
   const DigifyTextField({
     super.key,
     this.controller,
     this.hintText,
     this.labelText,
+    this.isRequired = false,
     this.obscureText = false,
     this.prefixIcon,
     this.suffixIcon,
@@ -61,64 +50,80 @@ class DigifyTextField extends StatefulWidget {
     this.validator,
     this.maxLines = 1,
     this.minLines,
-    this.height,
-    this.borderRadius,
-    this.fontSize,
     this.fillColor,
     this.borderColor,
     this.focusedBorderColor,
-    this.filled = true,
+    this.filled = false,
     this.textInputAction,
     this.showBorder = true,
     this.onChanged,
     this.onSubmitted,
-    this.isRequired = false,
-    this.hasInfoIcon = false,
-    this.helperText,
-    this.errorText,
-    this.labelStyle,
-    this.helperTextStyle,
-    this.hintStyle,
-    this.textStyle,
-    this.expands = false,
-    this.initialValue,
     this.readOnly = false,
     this.onTap,
     this.enabled = true,
-    this.contentPadding,
-    this.maxLength,
-    this.inputFormatters,
-    this.focusNode,
-    this.autovalidateMode,
     this.textAlign = TextAlign.start,
     this.textDirection,
+    this.inputFormatters,
+    this.autovalidateMode,
+    this.focusNode,
+    this.initialValue,
+    this.fontSize,
   });
 
-  /// Factory for search fields with consistent styling
   factory DigifyTextField.search({
     required TextEditingController controller,
     String? hintText,
-    double? height,
-    bool filled = true,
+    bool filled = false,
     Color? fillColor,
     Color? borderColor,
     ValueChanged<String>? onChanged,
     ValueChanged<String>? onSubmitted,
-    double? borderRadius,
   }) {
     return DigifyTextField(
       controller: controller,
       hintText: hintText,
-      height: height ?? 40.h,
-      borderRadius: borderRadius ?? 10.r,
-      fontSize: 15.sp,
       filled: filled,
-      fillColor: fillColor,
+      fillColor: fillColor ?? Colors.transparent,
       borderColor: borderColor,
-      prefixIcon: Icon(Icons.search, size: 16.sp),
+      prefixIcon: Padding(
+        padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
+        child: DigifyAsset(assetPath: Assets.icons.searchIcon.path, width: 20, height: 20, color: AppColors.textMuted),
+      ),
       textInputAction: TextInputAction.search,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
+    );
+  }
+
+  factory DigifyTextField.normal({
+    TextEditingController? controller,
+    String? hintText,
+    String? labelText,
+    bool isRequired = false,
+    bool enabled = true,
+    ValueChanged<String>? onChanged,
+    String? Function(String?)? validator,
+    int? maxLines = 1,
+    bool readOnly = false,
+    TextDirection? textDirection,
+    TextAlign textAlign = TextAlign.start,
+    FocusNode? focusNode,
+  }) {
+    return DigifyTextField(
+      controller: controller,
+      hintText: hintText,
+      labelText: labelText,
+      isRequired: isRequired,
+      enabled: enabled,
+      onChanged: onChanged,
+      validator: validator,
+      maxLines: maxLines,
+      readOnly: readOnly,
+      textDirection: textDirection,
+      textAlign: textAlign,
+      focusNode: focusNode,
+      filled: true,
+      fillColor: Colors.transparent,
     );
   }
 
@@ -127,292 +132,234 @@ class DigifyTextField extends StatefulWidget {
 }
 
 class _DigifyTextFieldState extends State<DigifyTextField> {
-  late TextEditingController _controller;
-  bool _obscureText = true;
-  bool _isUserTyping = false;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
-    if (widget.controller != null && widget.initialValue != null) {
-      widget.controller!.text = widget.initialValue!;
-    }
     _obscureText = widget.obscureText;
-
-    final controller = widget.controller ?? _controller;
-    controller.addListener(() {
-      _isUserTyping = true;
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (mounted) {
-          _isUserTyping = false;
-        }
-      });
-    });
-  }
-
-  @override
-  void didUpdateWidget(DigifyTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.initialValue != oldWidget.initialValue && !_isUserTyping) {
-      final currentController = widget.controller ?? _controller;
-      final currentText = currentController.text;
-      if (widget.initialValue != null && widget.initialValue != currentText) {
-        currentController.text = widget.initialValue!;
-      } else if (widget.initialValue == null && currentText.isNotEmpty) {
-        currentController.text = '';
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      _controller.dispose();
-    }
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    Theme.of(context);
-
+    final isDark = context.isDark;
+    final effectiveFillColor = widget.fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent);
     final effectiveBorderColor = widget.borderColor ?? (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
-    final effectiveFocusedBorderColor = widget.focusedBorderColor ?? AppColors.primary;
-    final effectiveFillColor = widget.fillColor ?? (isDark ? AppColors.inputBgDark : AppColors.inputBg);
-    final effectiveTextColor = isDark ? context.themeTextPrimary : AppColors.textPrimary;
+    final effectiveFocusedColor = widget.focusedBorderColor ?? AppColors.primary;
 
-    // Custom hint color for light mode as requested: #0A0A0A with 0.5 alpha
-    final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
-
-    // Provide defaults for height and radius
-    final double effectiveHeight = widget.height ?? 40.h;
-    final double effectiveRadius = widget.borderRadius ?? 10.r;
-
-    Widget? labelWidget;
-    if (widget.labelText != null) {
-      labelWidget = Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            widget.labelText!,
-            style:
-                widget.labelStyle ??
-                TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 13.8.sp,
-                  fontWeight: FontWeight.w500,
-                  height: 20 / 13.8,
-                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                ),
-          ),
-          if (widget.isRequired) ...[
-            SizedBox(width: 4.w),
-            Text(
-              '*',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                height: 20 / 13.8,
-                color: AppColors.deleteIconRed,
-              ),
-            ),
-          ],
-          if (widget.hasInfoIcon) ...[
-            SizedBox(width: 6.w),
-            Icon(
-              Icons.info_outline,
-              size: 12.sp,
-              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-            ),
-          ],
-        ],
-      );
-    }
-
-    Widget? effectiveSuffixIcon = widget.suffixIcon;
-    if (widget.obscureText && widget.suffixIcon == null) {
-      effectiveSuffixIcon = InkWell(
-        onTap: () {
-          setState(() {
-            _obscureText = !_obscureText;
-          });
-        },
-        child: Icon(
-          _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-          size: 16.sp,
-          color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-        ),
-      );
-    }
-
-    Widget textField = TextFormField(
-      controller: _controller,
-      textAlign: widget.textAlign,
-      textDirection: widget.textDirection,
+    Widget field = TextFormField(
+      controller: widget.controller,
+      initialValue: widget.controller == null ? widget.initialValue : null,
       obscureText: widget.obscureText ? _obscureText : false,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
-      maxLines: widget.expands ? null : (widget.obscureText ? 1 : widget.maxLines),
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
       minLines: widget.minLines,
-      expands: widget.expands,
-      textInputAction: widget.textInputAction,
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmitted,
       readOnly: widget.readOnly,
       enabled: widget.enabled,
-      focusNode: widget.focusNode,
-      maxLength: widget.maxLength,
       inputFormatters: widget.inputFormatters,
+      textAlign: widget.textAlign,
+      textDirection: widget.textDirection,
       autovalidateMode: widget.autovalidateMode,
-      style:
-          widget.textStyle ??
-          TextStyle(
-            fontFamily: 'Inter',
-            fontSize: widget.fontSize ?? 13.7.sp,
-            fontWeight: FontWeight.w400,
-            color: effectiveTextColor,
-          ),
+      focusNode: widget.focusNode,
+      style: TextStyle(
+        fontSize: widget.fontSize ?? 15.sp,
+        color: isDark ? context.themeTextPrimary : AppColors.textPrimary,
+      ),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        errorText: widget.errorText,
-        labelText: widget.labelText == null || labelWidget != null ? null : widget.labelText,
         prefixIcon: widget.prefixIcon,
-        suffixIcon: effectiveSuffixIcon,
+        suffixIcon: widget.obscureText && widget.suffixIcon == null
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  size: 20.sp,
+                  color: AppColors.textPlaceholder,
+                ),
+                onPressed: () => setState(() => _obscureText = !_obscureText),
+              )
+            : widget.suffixIcon,
         filled: widget.filled,
         fillColor: effectiveFillColor,
-        hintStyle:
-            widget.hintStyle ??
-            TextStyle(
-              fontFamily: 'Inter',
-              // Font size 15.3 as requested for hint
-              fontSize: 15.3.sp,
-              fontWeight: FontWeight.w400,
-              fontStyle: FontStyle.normal,
-              color: effectiveHintColor,
-            ),
-        prefixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
-        suffixIconConstraints: BoxConstraints(minWidth: 40.w, minHeight: 16.h),
         isDense: true,
-        errorStyle: TextStyle(fontSize: 12.sp, color: AppColors.error, height: 1),
-        border: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: BorderSide(color: effectiveBorderColor),
-              )
-            : InputBorder.none,
-        enabledBorder: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: BorderSide(color: effectiveBorderColor),
-              )
-            : InputBorder.none,
-        disabledBorder: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: BorderSide(
-                  color: isDark
-                      ? AppColors.borderGreyDark.withValues(alpha: 0.5)
-                      : AppColors.borderGrey.withValues(alpha: 0.5),
-                ),
-              )
-            : InputBorder.none,
-        focusedBorder: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: BorderSide(color: effectiveFocusedBorderColor, width: 1.5.w),
-              )
-            : InputBorder.none,
-        errorBorder: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: const BorderSide(color: AppColors.error),
-              )
-            : InputBorder.none,
-        focusedErrorBorder: widget.showBorder
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(effectiveRadius),
-                borderSide: BorderSide(color: AppColors.error, width: 1.5.w),
-              )
-            : InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        hintStyle: TextStyle(
+          fontSize: widget.fontSize ?? 15.sp,
+          height: 1.0,
+          color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+        ),
+        border: _buildBorder(10.r, effectiveBorderColor),
+        enabledBorder: _buildBorder(10.r, effectiveBorderColor),
+        focusedBorder: _buildBorder(10.r, effectiveFocusedColor, width: 1.5),
+        errorBorder: _buildBorder(10.r, AppColors.error),
+        focusedErrorBorder: _buildBorder(10.r, AppColors.error, width: 1.5),
       ),
     );
 
-    final isDateField = widget.onTap != null && widget.readOnly;
-
-    Widget field = ConstrainedBox(
-      constraints: BoxConstraints(minHeight: effectiveHeight),
-      child: textField,
-    );
-
-    if (labelWidget != null || widget.helperText != null) {
-      Widget content = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (labelWidget != null) ...[labelWidget, SizedBox(height: 8.h)],
-          field,
-          if (widget.helperText != null) ...[
-            SizedBox(height: 12.h),
-            Text(
-              widget.helperText!,
-              style:
-                  widget.helperTextStyle ??
-                  TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 11.8.sp,
-                    fontWeight: FontWeight.w400,
-                    height: 16 / 11.8,
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                  ),
-            ),
-          ],
-        ],
-      );
-
-      if (isDateField) {
-        return GestureDetector(
-          onTap: widget.onTap,
-          behavior: HitTestBehavior.opaque,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (labelWidget != null) ...[labelWidget, SizedBox(height: 8.h)],
-              AbsorbPointer(child: field),
-              if (widget.helperText != null) ...[
-                SizedBox(height: 12.h),
-                Text(
-                  widget.helperText!,
-                  style:
-                      widget.helperTextStyle ??
-                      TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11.8.sp,
-                        fontWeight: FontWeight.w400,
-                        height: 16 / 11.8,
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      ),
-                ),
-              ],
-            ],
-          ),
-        );
-      }
-      return content;
-    }
-
-    if (isDateField) {
-      return GestureDetector(
+    if (widget.onTap != null && widget.readOnly) {
+      field = GestureDetector(
         onTap: widget.onTap,
-        behavior: HitTestBehavior.opaque,
         child: AbsorbPointer(child: field),
       );
     }
 
-    return field;
+    // If there's a label, wrap in Column with label above
+    if (widget.labelText != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: widget.labelText,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                if (widget.isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.deleteIconRed,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(height: 40.h, child: field),
+        ],
+      );
+    }
+
+    // No label - return just the field in a SizedBox
+    return SizedBox(height: 40.h, child: field);
+  }
+
+  InputBorder _buildBorder(double radius, Color color, {double width = 1.0}) {
+    if (!widget.showBorder) return InputBorder.none;
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(radius),
+      borderSide: BorderSide(color: color, width: width.w),
+    );
+  }
+}
+
+class DigifyTextArea extends StatelessWidget {
+  final TextEditingController? controller;
+  final String? labelText;
+  final String? hintText;
+  final bool isRequired;
+  final int maxLines;
+  final int? minLines;
+  final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
+  final bool readOnly;
+  final bool enabled;
+  final TextAlign textAlign;
+  final TextDirection? textDirection;
+
+  const DigifyTextArea({
+    super.key,
+    this.controller,
+    this.labelText,
+    this.hintText,
+    this.isRequired = false,
+    this.maxLines = 3,
+    this.minLines,
+    this.validator,
+    this.onChanged,
+    this.readOnly = false,
+    this.enabled = true,
+    this.textAlign = TextAlign.start,
+    this.textDirection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDark;
+    final effectiveMinLines = minLines ?? maxLines;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (labelText != null)
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: labelText,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                if (isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.deleteIconRed,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        if (labelText != null) SizedBox(height: 8.h),
+        TextFormField(
+          controller: controller,
+          maxLines: maxLines,
+          minLines: effectiveMinLines,
+          readOnly: readOnly,
+          enabled: enabled,
+          onChanged: onChanged,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          style: TextStyle(fontSize: 15.sp, color: isDark ? context.themeTextPrimary : AppColors.textPrimary),
+          decoration: InputDecoration(
+            hintText: hintText,
+            filled: true,
+            fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
+            isDense: true,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            hintStyle: TextStyle(
+              fontSize: 15.sp,
+              height: 1.0,
+              color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+            ),
+            border: _buildBorder(isDark, AppColors.inputBorder),
+            enabledBorder: _buildBorder(isDark, isDark ? AppColors.inputBorderDark : AppColors.inputBorder),
+            focusedBorder: _buildBorder(isDark, AppColors.primary, width: 1.5),
+            errorBorder: _buildBorder(isDark, AppColors.error),
+            focusedErrorBorder: _buildBorder(isDark, AppColors.error, width: 1.5),
+          ),
+          validator: validator,
+        ),
+      ],
+    );
+  }
+
+  OutlineInputBorder _buildBorder(bool isDark, Color color, {double width = 1.0}) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.r),
+      borderSide: BorderSide(
+        color: isDark && color == AppColors.inputBorder ? AppColors.inputBorderDark : color,
+        width: width.w,
+      ),
+    );
   }
 }

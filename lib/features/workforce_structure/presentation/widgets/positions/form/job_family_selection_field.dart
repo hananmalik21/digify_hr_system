@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/job_family_selection_dialog.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +28,6 @@ class JobFamilySelectionField extends ConsumerWidget {
       isRequired: isRequired,
       child: InkWell(
         onTap: () async {
-          // Trigger initial loading if needed
           if (jobFamiliesState.items.isEmpty && !isLoading && error == null) {
             ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
           }
@@ -38,7 +39,7 @@ class JobFamilySelectionField extends ConsumerWidget {
           }
         },
         child: Container(
-          height: 48.h,
+          height: 40.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -59,7 +60,11 @@ class JobFamilySelectionField extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.arrow_drop_down, color: AppColors.textSecondary),
+              DigifyAsset(
+                assetPath: Assets.icons.workforce.chevronRight.path,
+                color: AppColors.textSecondary,
+                height: 15,
+              ),
             ],
           ),
         ),

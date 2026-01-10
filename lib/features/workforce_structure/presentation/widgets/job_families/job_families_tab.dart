@@ -12,6 +12,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class JobFamiliesTab extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -54,7 +55,7 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPagi
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         JobFamilyHeader(localizations: localizations),
-        SizedBox(height: 24.h),
+        Gap(24.h),
         _buildContent(context, localizations, paginationState, jobLevels, isDark),
       ],
     );

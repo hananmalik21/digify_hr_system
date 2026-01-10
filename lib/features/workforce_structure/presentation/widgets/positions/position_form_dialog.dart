@@ -1,16 +1,18 @@
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_actions.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
 
 class PositionFormDialog extends ConsumerStatefulWidget {
   final Position initialPosition;
@@ -143,7 +145,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         ToastService.success(
           context,
           widget.isEdit ? 'Position updated successfully' : 'Position created successfully',
@@ -170,96 +172,74 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     final localizations = AppLocalizations.of(context)!;
     final formState = ref.watch(positionFormNotifierProvider);
 
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 1050.w),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                PositionDialogHeader(
-                  title: widget.isEdit ? localizations.editPosition : 'Add New Position',
-                  onClose: () => Navigator.of(context).pop(),
-                ),
-                const Divider(height: 1, color: Color(0xffD1D5DC)),
-                Padding(
-                  padding: EdgeInsets.all(24.w),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BasicInfoSection(
-                          localizations: localizations,
-                          codeController: _formControllers['code']!,
-                          titleEnglishController: _formControllers['titleEnglish']!,
-                          titleArabicController: _formControllers['titleArabic']!,
-                          isEdit: widget.isEdit,
-                        ),
-                        SizedBox(height: 24.h),
-                        OrganizationalSection(
-                          localizations: localizations,
-                          selectedUnitIds: _selectedUnitIds,
-                          onEnterpriseSelectionChanged: _handleEnterpriseSelection,
-                          costCenterController: _formControllers['costCenter']!,
-                          locationController: _formControllers['location']!,
-                          initialSelections: widget.initialPosition.orgPathRefs,
-                        ),
-                        SizedBox(height: 24.h),
-                        JobClassificationSection(
-                          localizations: localizations,
-                          selectedStep: formState.step,
-                          onStepChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setStep(val),
-                        ),
-                        SizedBox(height: 24.h),
-                        HeadcountSection(
-                          localizations: localizations,
-                          positionsController: _formControllers['positions']!,
-                          filledController: _formControllers['filled']!,
-                          selectedEmploymentType: formState.employmentType,
-                          onEmploymentTypeChanged: (val) =>
-                              ref.read(positionFormNotifierProvider.notifier).setEmploymentType(val),
-                        ),
-                        SizedBox(height: 24.h),
-                        SalarySection(
-                          localizations: localizations,
-                          budgetedMinController: _formControllers['budgetedMin']!,
-                          budgetedMaxController: _formControllers['budgetedMax']!,
-                          actualAverageController: _formControllers['actualAverage']!,
-                        ),
-                        SizedBox(height: 24.h),
-                        ReportingSection(
-                          localizations: localizations,
-                          reportsTitleController: _formControllers['reportsTitle']!,
-                          reportsCodeController: _formControllers['reportsCode']!,
-                        ),
-                        SizedBox(height: 24.h),
-                        StatusSection(
-                          localizations: localizations,
-                          isActive: formState.isActive,
-                          onStatusChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setIsActive(val),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Divider(height: 1, color: Color(0xffD1D5DC)),
-                PositionFormActions(
-                  localizations: localizations,
-                  isEdit: widget.isEdit,
-                  isLoading: _isSaving,
-                  onCancel: () => Navigator.of(context).pop(),
-                  onSave: _handleSave,
-                ),
-              ],
+    return AppDialog(
+      title: widget.isEdit ? localizations.editPosition : 'Add New Position',
+      width: 1050.w,
+      onClose: () => context.pop(),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BasicInfoSection(
+              localizations: localizations,
+              codeController: _formControllers['code']!,
+              titleEnglishController: _formControllers['titleEnglish']!,
+              titleArabicController: _formControllers['titleArabic']!,
+              isEdit: widget.isEdit,
+              isActive: formState.isActive,
+              onStatusChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setIsActive(val ?? true),
             ),
-          ),
+            Gap(24.h),
+            OrganizationalSection(
+              localizations: localizations,
+              selectedUnitIds: _selectedUnitIds,
+              onEnterpriseSelectionChanged: _handleEnterpriseSelection,
+              costCenterController: _formControllers['costCenter']!,
+              locationController: _formControllers['location']!,
+              initialSelections: widget.initialPosition.orgPathRefs,
+            ),
+            Gap(24.h),
+            JobClassificationSection(
+              localizations: localizations,
+              selectedStep: formState.step,
+              onStepChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setStep(val),
+            ),
+            Gap(24.h),
+            HeadcountSection(
+              localizations: localizations,
+              positionsController: _formControllers['positions']!,
+              filledController: _formControllers['filled']!,
+              selectedEmploymentType: formState.employmentType,
+              onEmploymentTypeChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setEmploymentType(val),
+            ),
+            Gap(24.h),
+            SalarySection(
+              localizations: localizations,
+              budgetedMinController: _formControllers['budgetedMin']!,
+              budgetedMaxController: _formControllers['budgetedMax']!,
+              actualAverageController: _formControllers['actualAverage']!,
+            ),
+            Gap(24.h),
+            ReportingSection(
+              localizations: localizations,
+              reportsTitleController: _formControllers['reportsTitle']!,
+              reportsCodeController: _formControllers['reportsCode']!,
+            ),
+          ],
         ),
       ),
+      actions: [
+        AppButton.outline(label: localizations.cancel, onPressed: _isSaving ? null : () => context.pop(), width: 100.w),
+        Gap(12.w),
+        AppButton.primary(
+          label: widget.isEdit ? localizations.saveUpdates : localizations.saveChanges,
+          svgPath: _isSaving ? null : Assets.icons.saveIcon.path,
+          isLoading: _isSaving,
+          onPressed: _isSaving ? null : _handleSave,
+          width: 180.w,
+        ),
+      ],
     );
   }
 }

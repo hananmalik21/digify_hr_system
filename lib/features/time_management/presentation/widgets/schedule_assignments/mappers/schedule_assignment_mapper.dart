@@ -7,7 +7,7 @@ class ScheduleAssignmentMapper {
       scheduleAssignmentId: assignment.scheduleAssignmentId,
       assignedToName: assignment.assignedToName,
       assignedToCode: assignment.assignedToCode,
-      scheduleName: assignment.workSchedule.scheduleNameEn,
+      scheduleName: assignment.workSchedule?.scheduleNameEn ?? 'N/A',
       startDate: assignment.formattedStartDate,
       endDate: assignment.formattedEndDate,
       isActive: assignment.isActive,
