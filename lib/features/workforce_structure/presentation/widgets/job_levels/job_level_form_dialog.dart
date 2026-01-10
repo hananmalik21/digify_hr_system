@@ -1,13 +1,16 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
 
 class JobLevelFormDialog extends ConsumerStatefulWidget {
   final JobLevel? jobLevel;
@@ -106,160 +109,85 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
     final isEdit = widget.isEdit;
     final isCreating = ref.watch(jobLevelCreatingProvider);
 
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 896.w, maxWidth: 896.w),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          isEdit ? localizations.editJobLevel : localizations.addNewJobLevel,
-                          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                        ),
-                      ),
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-                        icon: Icon(Icons.close_rounded, size: 20.sp, color: AppColors.textSecondary),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      localizations.basicInformation,
-                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  _buildField(
-                    label: localizations.levelName,
-                    hint: localizations.levelNameHint,
-                    controller: nameController,
-                    readOnly: isEdit,
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildField(
-                    label: localizations.jobLevelCode,
-                    hint: localizations.jobLevelCodeHint,
-                    controller: codeController,
-                    readOnly: isEdit,
-                  ),
-                  SizedBox(height: 12.h),
-                  _buildField(
-                    label: localizations.description,
-                    hint: localizations.jobLevelDescriptionHint,
-                    controller: descriptionController,
-                    maxLines: 3,
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildField(
-                          label: localizations.minimumGrade,
-                          hint: localizations.gradeRangeHint,
-                          controller: minGradeIdController,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: _buildField(
-                          label: localizations.maximumGrade,
-                          hint: localizations.gradeRangeHint,
-                          controller: maxGradeIdController,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 24.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppButton.outline(
-                          label: localizations.cancel,
-                          onPressed: isCreating ? null : () => Navigator.of(context).pop(),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: AppButton.primary(
-                          label: isEdit ? localizations.saveChanges : localizations.createJobLevel,
-                          onPressed: isCreating ? null : _handleSave,
-                          isLoading: isCreating,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return AppDialog(
+      title: isEdit ? localizations.editJobLevel : localizations.addNewJobLevel,
+      width: 896.w,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              localizations.basicInformation,
+              style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
             ),
-          ),
+            Gap(20.h),
+            DigifyTextField(
+              labelText: localizations.levelName,
+              hintText: localizations.levelNameHint,
+              controller: nameController,
+              readOnly: isEdit,
+              isRequired: true,
+              validator: (value) => (value ?? '').isEmpty ? '' : null,
+            ),
+            Gap(12.h),
+            DigifyTextField(
+              labelText: localizations.jobLevelCode,
+              hintText: localizations.jobLevelCodeHint,
+              controller: codeController,
+              readOnly: isEdit,
+              isRequired: true,
+              validator: (value) => (value ?? '').isEmpty ? '' : null,
+            ),
+            Gap(12.h),
+            DigifyTextArea(
+              labelText: localizations.description,
+              hintText: localizations.jobLevelDescriptionHint,
+              controller: descriptionController,
+              maxLines: 3,
+              isRequired: true,
+              validator: (value) => (value ?? '').isEmpty ? '' : null,
+            ),
+            Gap(12.h),
+            Row(
+              children: [
+                Expanded(
+                  child: DigifyTextField(
+                    labelText: localizations.minimumGrade,
+                    hintText: localizations.gradeRangeHint,
+                    controller: minGradeIdController,
+                    keyboardType: TextInputType.number,
+                    isRequired: true,
+                    validator: (value) => (value ?? '').isEmpty ? '' : null,
+                  ),
+                ),
+                Gap(12.w),
+                Expanded(
+                  child: DigifyTextField(
+                    labelText: localizations.maximumGrade,
+                    hintText: localizations.gradeRangeHint,
+                    controller: maxGradeIdController,
+                    keyboardType: TextInputType.number,
+                    isRequired: true,
+                    validator: (value) => (value ?? '').isEmpty ? '' : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildField({
-    required String label,
-    required String hint,
-    required TextEditingController controller,
-    bool isRtl = false,
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    bool readOnly = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
+      actions: [
+        AppButton.outline(
+          label: localizations.cancel,
+          onPressed: isCreating ? null : () => Navigator.of(context).pop(),
         ),
-        SizedBox(height: 4.h),
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-          maxLines: maxLines,
-          readOnly: readOnly,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: readOnly ? AppColors.inputBg : AppColors.inputBg,
-            filled: true,
-            enabled: !readOnly,
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-          validator: (value) {
-            if ((value ?? '').isEmpty) {
-              return '';
-            }
-            return null;
-          },
+        Gap(12.w),
+        AppButton.primary(
+          label: isEdit ? localizations.saveChanges : localizations.createJobLevel,
+          onPressed: isCreating ? null : _handleSave,
+          isLoading: isCreating,
         ),
       ],
     );
