@@ -72,8 +72,6 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
                 DigifyTextField.search(
                   controller: _searchController,
                   hintText: 'Search shifts...',
-                  height: 44.h,
-                  borderRadius: 10.r,
                   fillColor: isDark ? AppColors.inputBgDark : Colors.white,
                   borderColor: isDark ? AppColors.inputBorderDark : const Color(0xFFD0D5DD),
                   onChanged: widget.onSearchChanged,
@@ -119,8 +117,6 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
                   child: DigifyTextField.search(
                     controller: _searchController,
                     hintText: 'Search shifts...',
-                    height: 40.h,
-                    borderRadius: 10.r,
                     fillColor: isDark ? AppColors.inputBgDark : Colors.white,
                     borderColor: isDark ? AppColors.inputBorderDark : const Color(0xFFD0D5DD),
                     onChanged: widget.onSearchChanged,

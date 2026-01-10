@@ -2948,4 +2948,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String structureHasOrgUnits(int count) {
     return 'يحتوي هذا الهيكل على $count وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.';
   }
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get retry => 'إعادة المحاولة';
 }

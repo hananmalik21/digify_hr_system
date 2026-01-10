@@ -71,7 +71,7 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
         : AssignmentLevel.employee;
 
     _selectedWorkScheduleId = assignment.workScheduleId;
-    _selectedWorkScheduleName = assignment.workSchedule.scheduleNameEn;
+    _selectedWorkScheduleName = assignment.workSchedule?.scheduleNameEn ?? '';
 
     _effectiveStartDateController = TextEditingController(
       text: DateFormat('yyyy-MM-dd').format(assignment.effectiveStartDate),
@@ -94,7 +94,10 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
       return;
     }
 
-    final structureId = assignment.orgUnit!.orgStructureId;
+    final structureId = assignment.orgStructure?.id ?? assignment.orgUnit!.orgStructureId;
+    final structureName = assignment.orgStructure?.name ?? assignment.enterprise?.name ?? '';
+    final structureCode = assignment.orgStructure?.code ?? structureId;
+
     final enterpriseNotifier = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId).notifier);
     enterpriseNotifier.reset();
 
@@ -118,8 +121,8 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
       structureId: structureId,
       enterpriseId: widget.enterpriseId,
       enterpriseName: enterpriseName,
-      structureCode: structureId,
-      structureName: enterpriseName.isNotEmpty ? enterpriseName : 'Organization Structure',
+      structureCode: structureCode,
+      structureName: structureName.isNotEmpty ? structureName : 'Organization Structure',
       structureType: 'ENTERPRISE',
       description: null,
       isActive: true,
@@ -310,8 +313,8 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
               selectedUnitIds: _selectedUnitIds,
               initialSelections: _initialSelections,
               onSelectionChanged: _handleEnterpriseSelection,
-              initialStructureName: widget.assignment.enterprise?.name,
-              initialStructureId: widget.assignment.orgUnit?.orgStructureId,
+              initialStructureName: widget.assignment.orgStructure?.name ?? widget.assignment.enterprise?.name,
+              initialStructureId: widget.assignment.orgStructure?.id ?? widget.assignment.orgUnit?.orgStructureId,
             ),
             SizedBox(height: 24.h),
             WorkScheduleField(

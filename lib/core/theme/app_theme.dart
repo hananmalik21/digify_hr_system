@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
+import 'app_text_theme.dart';
 
 class AppTheme {
   AppTheme._();
@@ -18,113 +19,7 @@ class AppTheme {
         surface: AppColors.cardBackground,
         error: AppColors.error,
       ),
-      textTheme: TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        headlineLarge: TextStyle(
-          fontSize: 19,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.58,
-          letterSpacing: 0,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        headlineSmall: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 15.5,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
-          height: 1.56,
-          letterSpacing: 0,
-        ),
-        titleSmall: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 15.5,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
-          height: 1.55,
-          letterSpacing: 0,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimary,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textSecondary,
-          height: 1.54,
-          letterSpacing: 0,
-        ),
-        labelLarge: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        labelMedium: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimary,
-          height: 1.54,
-          letterSpacing: 0,
-        ),
-        labelSmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textSecondary,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-      ),
+      textTheme: AppTextTheme.lightTextTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.cardBackground,
         elevation: 0,
@@ -171,13 +66,8 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -196,113 +86,7 @@ class AppTheme {
         surface: AppColors.cardBackgroundDark,
         error: AppColors.error,
       ),
-      textTheme: TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        headlineLarge: TextStyle(
-          fontSize: 19,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.58,
-          letterSpacing: 0,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        headlineSmall: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 15.5,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimaryDark,
-          height: 1.56,
-          letterSpacing: 0,
-        ),
-        titleSmall: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimaryDark,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 15.5,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimaryDark,
-          height: 1.55,
-          letterSpacing: 0,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textPrimaryDark,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textSecondaryDark,
-          height: 1.54,
-          letterSpacing: 0,
-        ),
-        labelLarge: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.6,
-          letterSpacing: 0,
-        ),
-        labelMedium: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textPrimaryDark,
-          height: 1.54,
-          letterSpacing: 0,
-        ),
-        labelSmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textSecondaryDark,
-          height: 1.5,
-          letterSpacing: 0,
-        ),
-      ),
+      textTheme: AppTextTheme.darkTextTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.cardBackgroundDark,
         elevation: 0,
@@ -349,16 +133,10 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ),
     );
   }
 }
-

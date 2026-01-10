@@ -1122,6 +1122,12 @@ class $AssetsIconsTimeManagementGen {
 class $AssetsIconsWorkforceGen {
   const $AssetsIconsWorkforceGen();
 
+  /// File path: assets/icons/workforce/chevron-down.svg
+  SvgGenImage get chevronDown => const SvgGenImage('assets/icons/workforce/chevron-down.svg');
+
+  /// File path: assets/icons/workforce/chevron-right.svg
+  SvgGenImage get chevronRight => const SvgGenImage('assets/icons/workforce/chevron-right.svg');
+
   /// File path: assets/icons/workforce/fill_rate.svg
   SvgGenImage get fillRate => const SvgGenImage('assets/icons/workforce/fill_rate.svg');
 
@@ -1138,7 +1144,15 @@ class $AssetsIconsWorkforceGen {
   SvgGenImage get workforceTab => const SvgGenImage('assets/icons/workforce/workforce-tab.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [fillRate, filledPosition, totalPosition, warning, workforceTab];
+  List<SvgGenImage> get values => [
+    chevronDown,
+    chevronRight,
+    fillRate,
+    filledPosition,
+    totalPosition,
+    warning,
+    workforceTab,
+  ];
 }
 
 class Assets {

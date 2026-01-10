@@ -8,11 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
-  runApp(
-    const ProviderScope(
-      child: DigifyHrSystemApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: DigifyHrSystemApp()));
 }
 
 class DigifyHrSystemApp extends ConsumerWidget {
@@ -42,7 +38,6 @@ class DigifyHrSystemApp extends ConsumerWidget {
         final designSize = _getDesignSize(constraints.maxWidth);
 
         return ScreenUtilInit(
-          // ✅ Dynamic baseline per screen type
           designSize: designSize,
           minTextAdapt: true,
           splitScreenMode: true,
@@ -54,8 +49,7 @@ class DigifyHrSystemApp extends ConsumerWidget {
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
-              localizationsDelegates:
-              AppLocalizations.localizationsDelegates,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               routerConfig: router,
             );

@@ -84,7 +84,6 @@ class _ComponentSearchBarState extends ConsumerState<ComponentSearchBar> {
             child: DigifyTextField(
               controller: _searchController,
               hintText: localizations.searchComponents,
-              height: 39.h,
               fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
               prefixIcon: const Icon(Icons.search, size: 16),
               onChanged: (value) {

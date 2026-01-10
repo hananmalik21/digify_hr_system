@@ -5797,6 +5797,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This structure has {count} organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.'**
   String structureHasOrgUnits(int count);
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get somethingWentWrong;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

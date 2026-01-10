@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
   final String? svgIcon;
 
   final bool isLoading;
-  final double? loadingSize; // ✅ NEW
+  final double? loadingSize;
 
   final bool isExpanded;
   final Color? backgroundColor;
@@ -55,9 +55,9 @@ class CustomButton extends StatelessWidget {
     this.showShadow = false,
     this.iconPosition = IconPosition.left,
   }) : assert(
-  label != null || icon != null || svgIcon != null,
-  'CustomButton must have either label, icon, or svgIcon',
-  );
+         label != null || icon != null || svgIcon != null,
+         'CustomButton must have either label, icon, or svgIcon',
+       );
 
   /// Factory for primary action buttons
   factory CustomButton.primary({
@@ -237,12 +237,12 @@ class CustomButton extends StatelessWidget {
             border: colors.borderColor != null ? Border.all(color: colors.borderColor!) : null,
             boxShadow: showShadow && !isDisabled
                 ? [
-              BoxShadow(
-                color: colors.backgroundColor.withValues(alpha: 0.35),
-                blurRadius: 12.r,
-                offset: Offset(0, 6.h),
-              ),
-            ]
+                    BoxShadow(
+                      color: colors.backgroundColor.withValues(alpha: 0.35),
+                      blurRadius: 12.r,
+                      offset: Offset(0, 6.h),
+                    ),
+                  ]
                 : null,
           ),
           child: content,
@@ -252,7 +252,6 @@ class CustomButton extends StatelessWidget {
   }
 
   Widget _buildButtonContent(_ButtonColors colors, _ButtonDimensions dimensions) {
-    // ✅ Loading indicator (circle)
     if (isLoading) {
       return Center(
         child: AppLoadingIndicator(
@@ -291,8 +290,7 @@ class CustomButton extends StatelessWidget {
 
     // ✅ Icon + Text => text ALWAYS centered, icon pinned left/right
     final gap = 8.w;
-    final reservedSide =
-        (iconSize ?? dimensions.iconSize) + gap; // reserve space so text stays truly centered
+    final reservedSide = (iconSize ?? dimensions.iconSize) + gap; // reserve space so text stays truly centered
 
     return SizedBox(
       width: isExpanded ? double.infinity : null,
@@ -320,7 +318,6 @@ class CustomButton extends StatelessWidget {
                 ),
               ),
             ),
-
           ),
 
           // Pinned icon
@@ -356,9 +353,7 @@ class CustomButton extends StatelessWidget {
   _ButtonColors _getButtonColors(bool isDark, bool isDisabled) {
     if (isDisabled) {
       return _ButtonColors(
-        backgroundColor: isDark
-            ? AppColors.grayBgDark.withValues(alpha: 0.3)
-            : AppColors.grayBg.withValues(alpha: 0.5),
+        backgroundColor: isDark ? AppColors.grayBgDark.withValues(alpha: 0.3) : AppColors.grayBg.withValues(alpha: 0.5),
         foregroundColor: isDark ? AppColors.textMutedDark : AppColors.textMuted,
         borderColor: variant == ButtonVariant.outlined
             ? (isDark ? AppColors.borderGreyDark : AppColors.borderGrey)
@@ -369,13 +364,13 @@ class CustomButton extends StatelessWidget {
     // Custom colors override
     if (backgroundColor != null || foregroundColor != null) {
       return _ButtonColors(
-        backgroundColor: backgroundColor ??
+        backgroundColor:
+            backgroundColor ??
             (variant == ButtonVariant.text || variant == ButtonVariant.outlined
                 ? Colors.transparent
                 : AppColors.primary),
         foregroundColor: foregroundColor ?? Colors.white,
-        borderColor: borderColor ??
-            (variant == ButtonVariant.outlined ? (foregroundColor ?? AppColors.primary) : null),
+        borderColor: borderColor ?? (variant == ButtonVariant.outlined ? (foregroundColor ?? AppColors.primary) : null),
       );
     }
 
@@ -468,11 +463,7 @@ class _ButtonColors {
   final Color foregroundColor;
   final Color? borderColor;
 
-  _ButtonColors({
-    required this.backgroundColor,
-    required this.foregroundColor,
-    this.borderColor,
-  });
+  _ButtonColors({required this.backgroundColor, required this.foregroundColor, this.borderColor});
 }
 
 class _ButtonDimensions {

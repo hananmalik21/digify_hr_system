@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
@@ -32,13 +33,13 @@ class _DeletePositionDialogState extends ConsumerState<DeletePositionDialog> {
       await ref.read(positionNotifierProvider.notifier).deletePosition(widget.position.id);
 
       if (mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         ToastService.success(context, 'Position deleted successfully', title: 'Deleted');
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isDeleting = false);
-        Navigator.of(context).pop();
+        context.pop();
         ToastService.error(context, 'Failed to delete position: ${e.toString()}', title: 'Error');
       }
     }
@@ -56,7 +57,7 @@ class _DeletePositionDialogState extends ConsumerState<DeletePositionDialog> {
       cancelLabel: localizations?.cancel ?? 'Cancel',
       isLoading: _isDeleting,
       onConfirm: _handleDelete,
-      onCancel: () => Navigator.of(context).pop(),
+      onCancel: () => context.pop(),
     );
   }
 }

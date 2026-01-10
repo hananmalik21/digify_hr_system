@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
@@ -16,6 +15,8 @@ class BasicInfoSection extends StatelessWidget {
   final TextEditingController titleEnglishController;
   final TextEditingController titleArabicController;
   final bool isEdit;
+  final bool isActive;
+  final ValueChanged<bool?> onStatusChanged;
 
   const BasicInfoSection({
     super.key,
@@ -23,6 +24,8 @@ class BasicInfoSection extends StatelessWidget {
     required this.codeController,
     required this.titleEnglishController,
     required this.titleArabicController,
+    required this.isActive,
+    required this.onStatusChanged,
     this.isEdit = false,
   });
 
@@ -31,25 +34,47 @@ class BasicInfoSection extends StatelessWidget {
     return PositionDialogSection(
       title: localizations.basicInformation,
       children: [
-        PositionFormHelpers.buildFormField(
-          label: localizations.positionCode,
-          controller: codeController,
-          hint: 'e.g, FIN-MGR-001',
-          enabled: !isEdit,
-        ),
-
         PositionFormRow(
           children: [
-            PositionFormHelpers.buildFormField(
-              label: '${localizations.positionTitle} (English)',
-              controller: titleEnglishController,
-              hint: 'e.g. Finance Manager',
+            PositionLabeledField(
+              label: localizations.positionCode,
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(
+                controller: codeController,
+                hint: 'e.g, FIN-MGR-001',
+                enabled: !isEdit,
+              ),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
+              label: localizations.status,
+              isRequired: true,
+              child: PositionFormHelpers.buildDropdownField<bool>(
+                value: isActive,
+                items: const [true, false],
+                onChanged: onStatusChanged,
+                itemLabelProvider: (val) => val == true ? localizations.active : localizations.inactive,
+              ),
+            ),
+          ],
+        ),
+        PositionFormRow(
+          children: [
+            PositionLabeledField(
+              label: '${localizations.positionTitle} (English)',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(
+                controller: titleEnglishController,
+                hint: 'e.g. Finance Manager',
+              ),
+            ),
+            PositionLabeledField(
               label: '${localizations.positionTitle} (Arabic)',
-              controller: titleArabicController,
-              hint: 'مثال: مدير مالي',
-              textDirection: TextDirection.rtl,
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(
+                controller: titleArabicController,
+                hint: 'مثال: مدير مالي',
+                textDirection: TextDirection.rtl,
+              ),
             ),
           ],
         ),
@@ -89,15 +114,15 @@ class OrganizationalSection extends ConsumerWidget {
         ),
         PositionFormRow(
           children: [
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: localizations.costCenter,
-              controller: costCenterController,
-              hint: 'e.g., CC-1000',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: costCenterController, hint: 'e.g., CC-1000'),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: localizations.location,
-              controller: locationController,
-              hint: 'e.g., Kuwait City HQ',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: locationController, hint: 'e.g., Kuwait City HQ'),
             ),
           ],
         ),
@@ -132,12 +157,15 @@ class JobClassificationSection extends StatelessWidget {
         PositionFormRow(
           children: [
             GradeSelectionField(label: localizations.gradeStep),
-            PositionFormHelpers.buildDropdownField<String>(
+            PositionLabeledField(
               label: localizations.step,
-              value: selectedStep,
-              items: const ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'],
-              onChanged: onStepChanged,
-              hint: 'Select Step',
+              isRequired: true,
+              child: PositionFormHelpers.buildDropdownField<String>(
+                value: selectedStep,
+                items: const ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'],
+                onChanged: onStepChanged,
+                hint: 'Select Step',
+              ),
             ),
           ],
         ),
@@ -169,23 +197,26 @@ class HeadcountSection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: "Number of Positions",
-              controller: positionsController,
-              hint: 'e.g, 5',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: positionsController, hint: 'e.g, 5'),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: "Filled Positions",
-              controller: filledController,
-              hint: 'e.g, 3',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: filledController, hint: 'e.g, 3'),
             ),
-            PositionFormHelpers.buildDropdownField<String>(
+            PositionLabeledField(
               label: "Employment Type",
-              value: selectedEmploymentType,
-              items: const ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'TEMP'],
-              onChanged: onEmploymentTypeChanged,
-              itemLabelProvider: (val) => val.replaceAll('_', ' '),
-              hint: 'Select Type',
+              isRequired: true,
+              child: PositionFormHelpers.buildDropdownField<String>(
+                value: selectedEmploymentType,
+                items: const ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'TEMP'],
+                onChanged: onEmploymentTypeChanged,
+                itemLabelProvider: (val) => val.replaceAll('_', ' '),
+                hint: 'Select Type',
+              ),
             ),
           ],
         ),
@@ -215,20 +246,20 @@ class SalarySection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: "${localizations.budgetedMin} (KD)",
-              controller: budgetedMinController,
-              hint: '1000',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: budgetedMinController, hint: '1000'),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: "${localizations.budgetedMax} (KD)",
-              controller: budgetedMaxController,
-              hint: '1500',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: budgetedMaxController, hint: '1500'),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: "${localizations.actualAverage} (KD)",
-              controller: actualAverageController,
-              hint: '1250',
+              isRequired: true,
+              child: PositionFormHelpers.buildFormField(controller: actualAverageController, hint: '1250'),
             ),
           ],
         ),
@@ -256,49 +287,15 @@ class ReportingSection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: '${localizations.reportsTo} (Position Title)',
-              controller: reportsTitleController,
-              hint: 'e.g, CFO',
               isRequired: false,
+              child: PositionFormHelpers.buildFormField(controller: reportsTitleController, hint: 'e.g, CFO'),
             ),
-            PositionFormHelpers.buildFormField(
+            PositionLabeledField(
               label: '${localizations.reportsTo} (Position Code)',
-              controller: reportsCodeController,
-              hint: 'e.g, POS-CFO-001',
               isRequired: false,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class StatusSection extends StatelessWidget {
-  final AppLocalizations localizations;
-  final bool isActive;
-  final ValueChanged<bool> onStatusChanged;
-
-  const StatusSection({
-    super.key,
-    required this.localizations,
-    required this.isActive,
-    required this.onStatusChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PositionDialogSection(
-      title: localizations.status,
-      children: [
-        Row(
-          children: [
-            Switch(
-              value: isActive,
-              onChanged: onStatusChanged,
-              activeThumbColor: AppColors.background,
-              activeTrackColor: AppColors.success,
+              child: PositionFormHelpers.buildFormField(controller: reportsCodeController, hint: 'e.g, POS-CFO-001'),
             ),
           ],
         ),

@@ -2967,4 +2967,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String structureHasOrgUnits(int count) {
     return 'This structure has $count organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.';
   }
+
+  @override
+  String get somethingWentWrong => 'Something went wrong. Please try again.';
+
+  @override
+  String get retry => 'Retry';
 }

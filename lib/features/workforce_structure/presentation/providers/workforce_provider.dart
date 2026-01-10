@@ -1,5 +1,3 @@
-import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_structure.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_step.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/reporting_position.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -212,8 +210,7 @@ final filteredPositionsProvider = Provider<List<Position>>((ref) {
         position.code.toLowerCase().contains(searchQuery);
 
     // Department filter
-    final matchesDepartment =
-        departmentFilter == null || position.department == departmentFilter;
+    final matchesDepartment = departmentFilter == null || position.department == departmentFilter;
 
     // Status filter
     final matchesStatus =
@@ -232,24 +229,13 @@ final selectedPositionProvider = StateProvider<Position?>((ref) => null);
 final workforceStatsProvider = Provider<WorkforceStats>((ref) {
   final positions = ref.watch(positionListProvider);
 
-  final totalPositions = positions.fold<int>(
-    0,
-    (sum, position) => sum + position.headcount,
-  );
+  final totalPositions = positions.fold<int>(0, (sum, position) => sum + position.headcount);
 
-  final filledPositions = positions.fold<int>(
-    0,
-    (sum, position) => sum + position.filled,
-  );
+  final filledPositions = positions.fold<int>(0, (sum, position) => sum + position.filled);
 
-  final vacantPositions = positions.fold<int>(
-    0,
-    (sum, position) => sum + position.vacant,
-  );
+  final vacantPositions = positions.fold<int>(0, (sum, position) => sum + position.vacant);
 
-  final fillRate = totalPositions > 0
-      ? (filledPositions / totalPositions) * 100
-      : 0.0;
+  final fillRate = totalPositions > 0 ? (filledPositions / totalPositions) * 100 : 0.0;
 
   return WorkforceStats(
     totalPositions: totalPositions,
@@ -274,160 +260,8 @@ class WorkforceStats {
   });
 }
 
-/// Provider for grade structure data
-final gradeStructureListProvider = StateProvider<List<GradeStructure>>((ref) {
-  return const [
-    GradeStructure(
-      gradeLabel: 'Grade 12',
-      gradeCategory: 'Executive',
-      description: 'Executive leadership grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '2450 KD'),
-        GradeStep(label: 'Step 2', amount: '2500 KD'),
-        GradeStep(label: 'Step 3', amount: '2550 KD'),
-        GradeStep(label: 'Step 4', amount: '2600 KD'),
-        GradeStep(label: 'Step 5', amount: '2650 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 11',
-      gradeCategory: 'Executive',
-      description: 'Senior executive grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '2250 KD'),
-        GradeStep(label: 'Step 2', amount: '2300 KD'),
-        GradeStep(label: 'Step 3', amount: '2350 KD'),
-        GradeStep(label: 'Step 4', amount: '2400 KD'),
-        GradeStep(label: 'Step 5', amount: '2450 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 10',
-      gradeCategory: 'Executive',
-      description: 'Executive grade track',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '2050 KD'),
-        GradeStep(label: 'Step 2', amount: '2100 KD'),
-        GradeStep(label: 'Step 3', amount: '2150 KD'),
-        GradeStep(label: 'Step 4', amount: '2200 KD'),
-        GradeStep(label: 'Step 5', amount: '2250 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 9',
-      gradeCategory: 'Management',
-      description: 'Management leadership grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '1850 KD'),
-        GradeStep(label: 'Step 2', amount: '1900 KD'),
-        GradeStep(label: 'Step 3', amount: '1950 KD'),
-        GradeStep(label: 'Step 4', amount: '2000 KD'),
-        GradeStep(label: 'Step 5', amount: '2050 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 8',
-      gradeCategory: 'Management',
-      description: 'Mid-level management grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '1650 KD'),
-        GradeStep(label: 'Step 2', amount: '1700 KD'),
-        GradeStep(label: 'Step 3', amount: '1750 KD'),
-        GradeStep(label: 'Step 4', amount: '1800 KD'),
-        GradeStep(label: 'Step 5', amount: '1850 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 7',
-      gradeCategory: 'Management',
-      description: 'Management support grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '1450 KD'),
-        GradeStep(label: 'Step 2', amount: '1500 KD'),
-        GradeStep(label: 'Step 3', amount: '1550 KD'),
-        GradeStep(label: 'Step 4', amount: '1600 KD'),
-        GradeStep(label: 'Step 5', amount: '1650 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 6',
-      gradeCategory: 'Professional',
-      description: 'Professional specialist grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '1250 KD'),
-        GradeStep(label: 'Step 2', amount: '1300 KD'),
-        GradeStep(label: 'Step 3', amount: '1350 KD'),
-        GradeStep(label: 'Step 4', amount: '1400 KD'),
-        GradeStep(label: 'Step 5', amount: '1450 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 5',
-      gradeCategory: 'Professional',
-      description: 'Experienced professional grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '1050 KD'),
-        GradeStep(label: 'Step 2', amount: '1100 KD'),
-        GradeStep(label: 'Step 3', amount: '1150 KD'),
-        GradeStep(label: 'Step 4', amount: '1200 KD'),
-        GradeStep(label: 'Step 5', amount: '1250 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 4',
-      gradeCategory: 'Professional',
-      description: 'Professional associate grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '850 KD'),
-        GradeStep(label: 'Step 2', amount: '900 KD'),
-        GradeStep(label: 'Step 3', amount: '950 KD'),
-        GradeStep(label: 'Step 4', amount: '1000 KD'),
-        GradeStep(label: 'Step 5', amount: '1050 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 3',
-      gradeCategory: 'Entry Level',
-      description: 'Entry-level professional grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '650 KD'),
-        GradeStep(label: 'Step 2', amount: '700 KD'),
-        GradeStep(label: 'Step 3', amount: '750 KD'),
-        GradeStep(label: 'Step 4', amount: '800 KD'),
-        GradeStep(label: 'Step 5', amount: '850 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 2',
-      gradeCategory: 'Entry Level',
-      description: 'Junior entry-level grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '450 KD'),
-        GradeStep(label: 'Step 2', amount: '500 KD'),
-        GradeStep(label: 'Step 3', amount: '550 KD'),
-        GradeStep(label: 'Step 4', amount: '600 KD'),
-        GradeStep(label: 'Step 5', amount: '650 KD'),
-      ],
-    ),
-    GradeStructure(
-      gradeLabel: 'Grade 1',
-      gradeCategory: 'Entry Level',
-      description: 'Foundation entry grade',
-      steps: [
-        GradeStep(label: 'Step 1', amount: '250 KD'),
-        GradeStep(label: 'Step 2', amount: '300 KD'),
-        GradeStep(label: 'Step 3', amount: '350 KD'),
-        GradeStep(label: 'Step 4', amount: '400 KD'),
-        GradeStep(label: 'Step 5', amount: '450 KD'),
-      ],
-    ),
-  ];
-});
-
 /// Provider for reporting structure positions
-final reportingPositionListProvider = StateProvider<List<ReportingPosition>>((
-  ref,
-) {
+final reportingPositionListProvider = StateProvider<List<ReportingPosition>>((ref) {
   return const [
     ReportingPosition(
       positionCode: 'FIN-MGR-001',

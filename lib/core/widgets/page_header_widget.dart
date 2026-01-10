@@ -19,24 +19,8 @@ class PageHeaderWidget extends StatelessWidget {
     final isTablet = ResponsiveHelper.isTablet(context);
 
     return Container(
-      padding: ResponsiveHelper.getResponsivePadding(
-        context,
-        mobile: EdgeInsetsDirectional.all(16.w),
-        tablet: EdgeInsetsDirectional.all(20.w),
-        web: EdgeInsetsDirectional.all(24.w),
-      ),
-      decoration: BoxDecoration(
-        color: Color(0xFF155DFC),
-        // gradient: const LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors: [
-        //     Color(0xFF9810FA),
-        //     Color(0xFF155DFC)
-        //   ],
-        // ),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
+      padding: EdgeInsets.all(24.0),
+      decoration: BoxDecoration(color: Color(0xFF155DFC), borderRadius: BorderRadius.circular(10.r)),
       child: isMobile
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,17 +42,6 @@ class PageHeaderWidget extends StatelessWidget {
                               letterSpacing: 0,
                             ),
                           ),
-                          // SizedBox(height: 4.h),
-                          // Text(
-                          //   localizations.configureManageHierarchy,
-                          //   style: TextStyle(
-                          //     fontSize: 13.sp,
-                          //     fontWeight: FontWeight.w400,
-                          //     color: const Color(0xFFF3E8FF),
-                          //     height: 24 / 15.3,
-                          //     letterSpacing: 0,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -76,17 +49,6 @@ class PageHeaderWidget extends StatelessWidget {
                     DigifyAsset(assetPath: icon, width: 24, height: 24, color: Colors.white),
                   ],
                 ),
-                // SizedBox(height: 8.h),
-                // Text(
-                //   localizations.configureManageHierarchyAr,
-                //   style: TextStyle(
-                //     fontSize: 12.sp,
-                //     fontWeight: FontWeight.w400,
-                //     color: const Color(0xFFF3E8FF),
-                //     height: 20 / 14,
-                //     letterSpacing: 0,
-                //   ),
-                // ),
               ],
             )
           : Row(
@@ -106,28 +68,6 @@ class PageHeaderWidget extends StatelessWidget {
                           letterSpacing: 0,
                         ),
                       ),
-                      // SizedBox(height: 4.h),
-                      // Text(
-                      //   localizations.configureManageHierarchy,
-                      //   style: TextStyle(
-                      //     fontSize: isTablet ? 14.sp : 15.3.sp,
-                      //     fontWeight: FontWeight.w400,
-                      //     color: const Color(0xFFF3E8FF),
-                      //     height: 24 / 15.3,
-                      //     letterSpacing: 0,
-                      //   ),
-                      // ),
-                      // SizedBox(height: 4.h),
-                      // Text(
-                      //   localizations.configureManageHierarchyAr,
-                      //   style: TextStyle(
-                      //     fontSize: 13.sp,
-                      //     fontWeight: FontWeight.w400,
-                      //     color: const Color(0xFFF3E8FF),
-                      //     height: 20 / 14,
-                      //     letterSpacing: 0,
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

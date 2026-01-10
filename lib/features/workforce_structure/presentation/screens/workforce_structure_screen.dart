@@ -3,8 +3,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_stats_cards.dart';
@@ -17,6 +15,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkforceStructureScreen extends ConsumerStatefulWidget {
   const WorkforceStructureScreen({super.key});
@@ -43,43 +42,32 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
 
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
-      child: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            if (currentTabIndex == 1) {
-              await ref.read(jobFamilyNotifierProvider.notifier).refresh();
-            } else if (currentTabIndex == 2) {
-              await ref.read(jobLevelNotifierProvider.notifier).refresh();
-            }
-          },
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsetsDirectional.only(top: 88.h, start: 32.w, end: 32.w, bottom: 24.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PageHeaderWidget(
-                  localizations: localizations,
-                  title: localizations.workforceStructure,
-                  icon: Assets.icons.workforceStructureMainIcon.path,
-                ),
-                SizedBox(height: 24.h),
-                WorkforceStatsCards(localizations: localizations, stats: stats, isDark: isDark),
-                SizedBox(height: 24.h),
-                WorkforceTabBar(
-                  localizations: localizations,
-                  selectedTabIndex: currentTabIndex,
-                  onTabSelected: (index) {
-                    ref.read(workforceTabStateProvider.notifier).setTabIndex(index);
-                  },
-                  isDark: isDark,
-                ),
-                SizedBox(height: 24.h),
-                _buildTabContent(currentTabIndex),
-              ],
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsetsDirectional.only(top: 15.h, start: 32.w, end: 32.w, bottom: 24.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PageHeaderWidget(
+              localizations: localizations,
+              title: localizations.workforceStructure,
+              icon: Assets.icons.workforceStructureMainIcon.path,
             ),
-          ),
+            Gap(24.h),
+            WorkforceStatsCards(localizations: localizations, stats: stats, isDark: isDark),
+            Gap(24.h),
+            WorkforceTabBar(
+              localizations: localizations,
+              selectedTabIndex: currentTabIndex,
+              onTabSelected: (index) {
+                ref.read(workforceTabStateProvider.notifier).setTabIndex(index);
+              },
+              isDark: isDark,
+            ),
+            Gap(24.h),
+            _buildTabContent(currentTabIndex),
+          ],
         ),
       ),
     );
