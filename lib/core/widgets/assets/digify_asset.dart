@@ -139,12 +139,10 @@ class DigifyAsset extends StatelessWidget {
     if (_isNetworkAsset(assetPath)) {
       return SvgPicture.network(
         assetPath,
-        width: width?.w,
-        height: height?.h,
+        width: width,
+        height: height,
         fit: fit,
-        colorFilter: color != null
-            ? ColorFilter.mode(color!, colorBlendMode)
-            : null,
+        colorFilter: color != null ? ColorFilter.mode(color!, colorBlendMode) : null,
         placeholderBuilder: (context) => _buildPlaceholder(),
         semanticsLabel: semanticLabel,
       );
@@ -152,12 +150,10 @@ class DigifyAsset extends StatelessWidget {
 
     return SvgPicture.asset(
       assetPath,
-      width: width?.w,
-      height: height?.h,
+      width: width?.sp,
+      height: height?.sp,
       fit: fit,
-      colorFilter: color != null
-          ? ColorFilter.mode(color!, colorBlendMode)
-          : null,
+      colorFilter: color != null ? ColorFilter.mode(color!, colorBlendMode) : null,
       placeholderBuilder: (context) => _buildPlaceholder(),
       semanticsLabel: semanticLabel,
     );
@@ -205,11 +201,10 @@ class DigifyAsset extends StatelessWidget {
           color: Colors.grey.shade200,
           borderRadius: borderRadius ?? BorderRadius.circular(4.r),
         ),
-        child:
-            (width != null && height != null && (width! > 24 || height! > 24))
+        child: (width != null && height != null && (width! > 24 || height! > 24))
             ? Icon(
                 Icons.image_outlined,
-                size: (width! < height! ? width! * 0.4 : height! * 0.4).w,
+                size: (width! < height! ? width! * 0.4 : height! * 0.4).sp,
                 color: Colors.grey.shade400,
               )
             : const SizedBox.shrink(),
@@ -230,9 +225,7 @@ class DigifyAsset extends StatelessWidget {
       ),
       child: Icon(
         Icons.broken_image_outlined,
-        size: (width != null && height != null)
-            ? (width! < height! ? width! * 0.4 : height! * 0.4).w
-            : 24.w,
+        size: (width != null && height != null) ? (width! < height! ? width! * 0.4 : height! * 0.4).sp : 24.sp,
         color: Colors.red.shade400,
       ),
     );

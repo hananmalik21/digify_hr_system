@@ -4979,7 +4979,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyCode.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Code *'**
+  /// **'Job Family Code'**
   String get jobFamilyCode;
 
   /// No description provided for @jobFamilyCodeHint.
@@ -5003,7 +5003,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyNameEnglish.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Name (English) *'**
+  /// **'Job Family Name (English)'**
   String get jobFamilyNameEnglish;
 
   /// No description provided for @jobFamilyNameEnglishHint.
@@ -5015,7 +5015,7 @@ abstract class AppLocalizations {
   /// No description provided for @jobFamilyNameArabic.
   ///
   /// In en, this message translates to:
-  /// **'Job Family Name (Arabic) *'**
+  /// **'Job Family Name (Arabic)'**
   String get jobFamilyNameArabic;
 
   /// No description provided for @jobFamilyNameArabicHint.
@@ -5797,6 +5797,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This structure has {count} organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.'**
   String structureHasOrgUnits(int count);
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get somethingWentWrong;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +26,7 @@ class AppButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
 
-  const AppButton({
+  AppButton({
     super.key,
     required this.label,
     this.onPressed,
@@ -33,14 +34,14 @@ class AppButton extends StatelessWidget {
     this.type = AppButtonType.primary,
     this.icon,
     this.svgPath,
-    this.width = 144,
-    this.height = 40,
+    this.width,
+    double? height,
     this.fontSize,
     this.padding,
     this.borderRadius,
     this.backgroundColor,
     this.foregroundColor,
-  });
+  }) : height = height ?? 40.h;
 
   factory AppButton.primary({
     required String label,
@@ -48,8 +49,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double? width = 144,
-    double? height = 40,
+    double? width,
+    double? height,
   }) {
     return AppButton(
       label: label,
@@ -69,8 +70,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double? width = 144,
-    double? height = 40,
+    double? width,
+    double? height,
   }) {
     return AppButton(
       label: label,
@@ -90,8 +91,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double? width = 144,
-    double? height = 40,
+    double? width,
+    double? height,
   }) {
     return AppButton(
       label: label,
@@ -111,8 +112,8 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
-    double? width = 144,
-    double? height = 40,
+    double? width,
+    double? height,
   }) {
     return AppButton(
       label: label,
@@ -128,7 +129,14 @@ class AppButton extends StatelessWidget {
 
   Color _getBackgroundColor() {
     if (isLoading || onPressed == null) {
-      return _getBaseBackgroundColor().withValues(alpha: 0.6);
+      switch (type) {
+        case AppButtonType.outline:
+          return Colors.transparent;
+        case AppButtonType.primary:
+        case AppButtonType.secondary:
+        case AppButtonType.danger:
+          return _getBaseBackgroundColor().withValues(alpha: 0.5);
+      }
     }
     return _getBaseBackgroundColor();
   }
@@ -139,7 +147,7 @@ class AppButton extends StatelessWidget {
       case AppButtonType.primary:
         return AppColors.primary;
       case AppButtonType.secondary:
-        return AppColors.textSecondary;
+        return AppColors.cardBackgroundGrey;
       case AppButtonType.outline:
         return Colors.transparent;
       case AppButtonType.danger:
@@ -155,82 +163,116 @@ class AppButton extends StatelessWidget {
       case AppButtonType.danger:
         return Colors.white;
       case AppButtonType.outline:
-        return AppColors.primary;
+        return AppColors.blackTextColor;
     }
   }
 
   BorderSide? _getBorder() {
     if (type == AppButtonType.outline) {
-      return BorderSide(color: isLoading || onPressed == null ? AppColors.borderGrey : AppColors.primary, width: 1.5);
+      final color = isLoading || onPressed == null ? AppColors.borderGrey : AppColors.borderGrey;
+      return BorderSide(color: color, width: 1);
     }
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final effectiveHeight = height?.h ?? 40.h;
+    final effectiveHeight = height?.h;
     final effectiveWidth = width?.w;
 
-    final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w);
+    final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h);
     final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(10.r);
-    final effectiveFontSize = fontSize ?? 14.sp;
+    final effectiveFontSize = fontSize ?? 15.sp;
 
     final isDisabled = isLoading || onPressed == null;
     final backgroundColor = _getBackgroundColor();
-    final contentColor = _getTextColor();
+    final contentColor = isDisabled
+        ? (type == AppButtonType.outline ? AppColors.textMuted : Colors.white70)
+        : _getTextColor();
     final borderProp = _getBorder();
 
-    Widget buttonContent;
+    List<Widget> children = [];
 
-    if (isLoading) {
-      buttonContent = AppLoadingIndicator(type: LoadingType.threeBounce, color: contentColor, size: 20.sp);
-    } else {
-      List<Widget> children = [];
-
-      if (icon != null) {
-        children.add(Icon(icon, size: 18.sp, color: contentColor));
-        children.add(SizedBox(width: 8.w));
-      } else if (svgPath != null) {
-        children.add(DigifyAsset(assetPath: svgPath!, width: 18, height: 18, color: contentColor));
-        children.add(SizedBox(width: 8.w));
-      }
-
-      children.add(
-        Text(
-          label,
-          style: TextStyle(fontSize: effectiveFontSize, fontWeight: FontWeight.w600, color: contentColor, height: 1.0),
-        ),
-      );
-
-      buttonContent = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: children,
-      );
+    if (icon != null) {
+      children.add(Icon(icon, size: 20.sp, color: contentColor));
+      children.add(SizedBox(width: 8.w));
+    } else if (svgPath != null) {
+      children.add(DigifyAsset(assetPath: svgPath!, width: 20, height: 20, color: contentColor));
+      children.add(SizedBox(width: 8.w));
     }
+
+    children.add(
+      Text(
+        label,
+        style: context.textTheme.bodyMedium?.copyWith(
+          fontSize: effectiveFontSize,
+          fontWeight: FontWeight.w400,
+          color: contentColor,
+          height: 1.0,
+        ),
+      ),
+    );
 
     return Material(
       color: Colors.transparent,
-      child: Ink(
-        width: effectiveWidth,
-        height: effectiveHeight,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: effectiveBorderRadius,
-          border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
-        ),
-        child: InkWell(
-          onTap: isDisabled ? null : onPressed,
-          borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
-          child: Container(
-            padding: effectivePadding,
-            alignment: Alignment.center,
-            constraints: BoxConstraints(minWidth: effectiveWidth ?? 0, minHeight: effectiveHeight),
-            child: buttonContent,
-          ),
-        ),
-      ),
+      child: effectiveWidth != null
+          ? SizedBox(
+              width: effectiveWidth,
+              height: effectiveHeight,
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: effectiveBorderRadius,
+                  border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
+                ),
+                child: InkWell(
+                  onTap: isDisabled ? null : onPressed,
+                  borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
+                  child: Container(
+                    padding: effectivePadding,
+                    alignment: Alignment.center,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Opacity(
+                          opacity: isLoading ? 0.0 : 1.0,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: children,
+                          ),
+                        ),
+                        if (isLoading) AppLoadingIndicator(type: LoadingType.circle, color: contentColor, size: 20.sp),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : Ink(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: effectiveBorderRadius,
+                border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
+              ),
+              child: InkWell(
+                onTap: isDisabled ? null : onPressed,
+                borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
+                child: Container(
+                  padding: effectivePadding,
+                  constraints: BoxConstraints(minHeight: effectiveHeight ?? 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: isLoading
+                        ? [AppLoadingIndicator(type: LoadingType.circle, color: contentColor, size: 20.sp)]
+                        : children,
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }

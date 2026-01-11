@@ -11,4 +11,9 @@ class OrgStructureRepositoryImpl implements OrgStructureRepository {
   Future<OrgStructure> getActiveOrgStructureLevels() async {
     return await remoteDataSource.getActiveOrgStructureLevels();
   }
+
+  @override
+  Future<List<OrgStructure>> getOrgStructuresByEnterpriseId(int enterpriseId) async {
+    return await remoteDataSource.getOrgStructuresByEnterpriseId(enterpriseId);
+  }
 }

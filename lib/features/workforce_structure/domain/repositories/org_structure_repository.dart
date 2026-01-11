@@ -2,4 +2,5 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 
 abstract class OrgStructureRepository {
   Future<OrgStructure> getActiveOrgStructureLevels();
+  Future<List<OrgStructure>> getOrgStructuresByEnterpriseId(int enterpriseId);
 }

@@ -68,7 +68,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       context,
       title: 'Delete Schedule Assignment',
       message: 'Are you sure you want to delete this schedule assignment?',
-      itemName: '${assignment.assignedToName} - ${assignment.workSchedule.scheduleNameEn}',
+      itemName: '${assignment.assignedToName} - ${assignment.workSchedule?.scheduleNameEn ?? 'N/A'}',
       confirmLabel: 'Delete',
       cancelLabel: 'Cancel',
       type: ConfirmationType.danger,

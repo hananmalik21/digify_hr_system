@@ -7,11 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Specialized widget for Company Level selection
 class CompanySelectionField extends ConsumerWidget {
   final OrgStructureLevel level;
-  final StateNotifierProvider<
-    EnterpriseSelectionNotifier,
-    EnterpriseSelectionState
-  >
-  selectionProvider;
+  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
   final Function(String levelCode, String? unitId) onSelectionChanged;
 
   const CompanySelectionField({
@@ -35,11 +31,7 @@ class CompanySelectionField extends ConsumerWidget {
 /// Specialized widget for Business Unit Level selection
 class BusinessUnitSelectionField extends ConsumerWidget {
   final OrgStructureLevel level;
-  final StateNotifierProvider<
-    EnterpriseSelectionNotifier,
-    EnterpriseSelectionState
-  >
-  selectionProvider;
+  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
   final bool isEnabled;
   final Function(String levelCode, String? unitId) onSelectionChanged;
 

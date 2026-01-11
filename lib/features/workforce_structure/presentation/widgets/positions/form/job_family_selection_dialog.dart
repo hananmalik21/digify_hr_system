@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/job_family_list_item.dart';
@@ -9,6 +10,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'dart:ui';
 
 class JobFamilySelectionDialog extends ConsumerStatefulWidget {
@@ -124,7 +126,7 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
                 ),
               ),
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.close_rounded, size: 24.sp),
                 padding: EdgeInsets.all(8.w),
                 constraints: const BoxConstraints(),
@@ -135,7 +137,7 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SearchField(
             hintText: 'Search job families...',
             onChanged: (value) {
@@ -171,7 +173,7 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: items.length + (isLoadingMore ? 1 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index == items.length) {
           return Center(
@@ -189,11 +191,7 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
         final jobFamily = items[index];
         final isSelected = widget.selectedJobFamily?.id == jobFamily.id;
 
-        return JobFamilyListItem(
-          jobFamily: jobFamily,
-          isSelected: isSelected,
-          onTap: () => Navigator.of(context).pop(jobFamily),
-        );
+        return JobFamilyListItem(jobFamily: jobFamily, isSelected: isSelected, onTap: () => context.pop(jobFamily));
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_list_item.dart';
@@ -10,6 +11,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'dart:ui';
 
 class OrgUnitSelectionDialog extends ConsumerStatefulWidget {
@@ -80,7 +82,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
             children: [
               OrgUnitSelectionHeader(
                 levelName: widget.level.levelName,
-                onClose: () => Navigator.of(context).pop(false),
+                onClose: () => context.pop(false),
                 onSearchChanged: (value) {
                   ref.read(widget.selectionProvider.notifier).setSearchQuery(widget.level.levelCode, value);
                 },
@@ -130,7 +132,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: options.length + (isFetchingMore ? 3 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index >= options.length) {
           return const OrgUnitLoadMoreSkeleton();
@@ -143,7 +145,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
           isSelected: isSelected,
           onTap: () {
             ref.read(widget.selectionProvider.notifier).selectUnit(widget.level.levelCode, unit);
-            Navigator.of(context).pop(true);
+            context.pop(true);
           },
         );
       },

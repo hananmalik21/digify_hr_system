@@ -15,6 +15,7 @@ class AppColors {
   static const Color background = Color(0xFFF8F8F8);
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color cardBackgroundGrey = Color(0xFFF3F4F6);
+  static const Color blackTextColor = Color(0xFF0A0A0A);
 
   // Dark Mode Background Colors
   static const Color backgroundDark = Color(0xFF0F172A);
@@ -226,8 +227,8 @@ class AppColors {
 
   // Stat Card Icon Colors
   static const Color statIconBlue = Color(0xFF155DFC);
-  static const Color statIconGreen = Color(0xFF00A63E);
-  static const Color statIconOrange = Color(0xFFF54900);
+  static const Color statIconGreen = Color(0xFF00C950);
+  static const Color statIconOrange = Color(0xFFFF6900);
   static const Color statIconPurple = Color(0xFF9810FA);
 
   // Delete Icon Color
@@ -276,4 +277,8 @@ class AppColors {
 
   // Button Text Colors
   static const Color buttonTextLight = Color(0xFFFFFFFF);
+
+  // Vacancy Badge Colors
+  static const Color vacancyBg = Color(0xFFFFEDD4);
+  static const Color vacancyText = Color(0xFF9F2D00);
 }

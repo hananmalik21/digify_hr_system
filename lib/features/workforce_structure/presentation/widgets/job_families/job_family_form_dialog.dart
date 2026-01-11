@@ -1,14 +1,18 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class JobFamilyFormDialog extends ConsumerStatefulWidget {
@@ -100,108 +104,67 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isEdit = widget.isEdit;
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        child: Container(
-          width: 540.w,
-          padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        isEdit ? localizations.editJobFamily : localizations.addNewJobFamily,
-                        style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                      ),
-                    ),
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-                      icon: Icon(Icons.close_rounded, size: 20.sp, color: AppColors.textSecondary),
-                      onPressed: () => context.pop(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.h),
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    localizations.basicInformation,
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                  ),
-                ),
-                SizedBox(height: 22.h),
-                _buildField(
-                  label: localizations.jobFamilyCode,
-                  hint: localizations.jobFamilyCodeHint,
-                  controller: codeController,
-                  readOnly: isEdit,
-                ),
-                SizedBox(height: 12.h),
-                _buildField(
-                  label: localizations.jobFamilyNameEnglish,
-                  hint: localizations.jobFamilyNameEnglishHint,
-                  controller: englishController,
-                ),
-                SizedBox(height: 12.h),
-                _buildField(
-                  label: localizations.jobFamilyNameArabic,
-                  hint: localizations.jobFamilyNameArabicHint,
-                  controller: arabicController,
-                  isRtl: true,
-                ),
-                SizedBox(height: 12.h),
-                _buildField(
-                  label: localizations.description,
-                  hint: localizations.positionFamilyDescription,
-                  controller: descriptionController,
-                  maxLines: 3,
-                ),
-                SizedBox(height: 24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => context.pop(),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: AppColors.cardBorder),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                          padding: EdgeInsets.symmetric(vertical: 14.h),
-                        ),
-                        child: Text(
-                          localizations.cancel,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: AppButton.primary(
-                        label: isEdit ? localizations.saveChanges : localizations.createJobFamily,
-                        onPressed: _handleSubmit,
-                        isLoading: isEdit
-                            ? ref.watch(jobFamilyUpdateStateProvider).isUpdating
-                            : ref.watch(jobFamilyCreatingProvider),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+
+    return AppDialog(
+      title: isEdit ? localizations.editJobFamily : localizations.addNewJobFamily,
+      width: 540.w,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              localizations.basicInformation,
+              style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
             ),
-          ),
+            SizedBox(height: 22.h),
+            _buildField(
+              label: localizations.jobFamilyCode,
+              hint: localizations.jobFamilyCodeHint,
+              controller: codeController,
+              readOnly: isEdit,
+            ),
+            SizedBox(height: 12.h),
+            _buildField(
+              label: localizations.jobFamilyNameEnglish,
+              hint: localizations.jobFamilyNameEnglishHint,
+              controller: englishController,
+            ),
+            SizedBox(height: 12.h),
+            _buildField(
+              label: localizations.jobFamilyNameArabic,
+              hint: localizations.jobFamilyNameArabicHint,
+              controller: arabicController,
+              isRtl: true,
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF\s]'))],
+            ),
+            SizedBox(height: 12.h),
+            DigifyTextArea(
+              labelText: localizations.description,
+              hintText: localizations.positionFamilyDescription,
+              controller: descriptionController,
+              maxLines: 3,
+              isRequired: true,
+              validator: (value) {
+                if ((value ?? '').isEmpty) {
+                  return '';
+                }
+                return null;
+              },
+            ),
+          ],
         ),
       ),
+      actions: [
+        AppButton.outline(label: localizations.cancel, onPressed: () => context.pop()),
+        Gap(12.w),
+        AppButton.primary(
+          label: isEdit ? localizations.saveChanges : localizations.createJobFamily,
+          onPressed: _handleSubmit,
+          isLoading: isEdit ? ref.watch(jobFamilyUpdateStateProvider).isUpdating : ref.watch(jobFamilyCreatingProvider),
+        ),
+      ],
     );
   }
 
@@ -213,44 +176,25 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
     bool readOnly = false,
+    List<TextInputFormatter>? inputFormatters,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
-        ),
-        SizedBox(height: 4.h),
-        TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-          maxLines: maxLines,
-          readOnly: readOnly,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: AppColors.inputBg,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-          validator: (value) {
-            if ((value ?? '').isEmpty) {
-              return '';
-            }
-            return null;
-          },
-        ),
-      ],
+    return DigifyTextField(
+      labelText: label,
+      hintText: hint,
+      controller: controller,
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      textAlign: isRtl ? TextAlign.right : TextAlign.start,
+      maxLines: maxLines,
+      isRequired: true,
+      readOnly: readOnly,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      validator: (value) {
+        if ((value ?? '').isEmpty) {
+          return '';
+        }
+        return null;
+      },
     );
   }
 }

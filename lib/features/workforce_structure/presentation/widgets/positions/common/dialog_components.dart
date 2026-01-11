@@ -1,73 +1,22 @@
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-
-class PositionDialogHeader extends StatelessWidget {
-  final String title;
-  final VoidCallback onClose;
-
-  const PositionDialogHeader({
-    super.key,
-    required this.title,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-            icon: Icon(
-              Icons.close,
-              size: 20.sp,
-              color: AppColors.textSecondary,
-            ),
-            onPressed: onClose,
-          ),
-        ],
-      ),
-    );
-  }
-}
+import 'package:gap/gap.dart';
 
 class PositionDialogSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const PositionDialogSection({
-    super.key,
-    required this.title,
-    required this.children,
-  });
+  const PositionDialogSection({super.key, required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        SizedBox(height: 16.h),
+        Text(title, style: context.textTheme.headlineSmall?.copyWith(color: AppColors.dialogTitle)),
+        Gap(16.h),
         Wrap(spacing: 16.w, runSpacing: 16.h, children: children),
       ],
     );
@@ -112,6 +61,7 @@ class PositionLabeledField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -121,9 +71,9 @@ class PositionLabeledField extends StatelessWidget {
               TextSpan(
                 text: label,
                 style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: fontWeight ?? FontWeight.w400,
-                  color: AppColors.textSecondary,
+                  fontSize: 14.sp,
+                  fontWeight: fontWeight ?? FontWeight.w500,
+                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -131,16 +81,16 @@ class PositionLabeledField extends StatelessWidget {
                 TextSpan(
                   text: ' *',
                   style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: fontWeight ?? FontWeight.w400,
-                    color: AppColors.textSecondary,
+                    fontSize: 14.sp,
+                    fontWeight: fontWeight ?? FontWeight.w500,
+                    color: AppColors.deleteIconRed,
                     fontFamily: 'Inter',
                   ),
                 ),
             ],
           ),
         ),
-        SizedBox(height: 6.h),
+        Gap(6.h),
         child,
       ],
     );
