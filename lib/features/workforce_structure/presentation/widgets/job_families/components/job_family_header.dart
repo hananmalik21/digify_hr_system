@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
@@ -16,10 +15,7 @@ class JobFamilyHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          localizations.jobFamilies,
-          style: context.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-        ),
+        Text(localizations.jobFamilies, style: context.textTheme.titleMedium),
         AppButton.primary(
           svgPath: Assets.icons.addNewIconFigma.path,
           label: localizations.addJobFamily,

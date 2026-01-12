@@ -851,7 +851,7 @@
   "code": "الرمز",
   "minimumGrade": "الحد الأدنى للدرجة",
   "maximumGrade": "الحد الأعلى للدرجة",
-  "gradeStructure": "هيكل الدرجات",
+  "gradeStructure": "هيكل الدرجات والخطوات",
   "reportingStructure": "هيكل التقارير",
   "positionTree": "شجرة الوظائف",
   "addPosition": "إضافة وظيفة",

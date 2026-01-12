@@ -1,14 +1,32 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/utils/form_validators.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
+
+import '../../../../../gen/assets.gen.dart';
+
+class GradeConfig {
+  static List<String> get gradeNumbers => List.generate(12, (index) => (index + 1).toString());
+
+  static Map<String, String> get gradeCategories => {
+    'ENTRY_LEVEL': 'Entry Level',
+    'PROFESSIONAL': 'Professional',
+    'EXECUTIVE': 'Executive',
+    'MANAGEMENT': 'Management',
+  };
+}
 
 class CreateGradeDialog extends ConsumerStatefulWidget {
   const CreateGradeDialog({super.key});
@@ -32,17 +50,6 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
 
   String? selectedGradeNumber;
   String? selectedGradeCategory;
-
-  // Grade numbers from 1 to 12
-  final List<String> gradeNumbers = List.generate(12, (index) => (index + 1).toString());
-
-  // Grade categories
-  final Map<String, String> gradeCategories = {
-    'ENTRY_LEVEL': 'Entry Level',
-    'PROFESSIONAL': 'Professional',
-    'EXECUTIVE': 'Executive',
-    'MANAGEMENT': 'Management',
-  };
 
   @override
   void dispose() {
@@ -94,56 +101,33 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isCreating = ref.watch(gradeCreatingProvider);
 
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 896.w, maxWidth: 896.w),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 26.h),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(localizations),
-                    SizedBox(height: 16.h),
-                    _buildGradeFields(localizations),
-                    SizedBox(height: 16.h),
-                    _buildStepSalaries(localizations),
-                    SizedBox(height: 18.h),
-                    _buildDescription(localizations),
-                    SizedBox(height: 24.h),
-                    _buildActions(localizations),
-                  ],
-                ),
-              ),
-            ),
-          ),
+    return AppDialog(
+      title: localizations.addGrade,
+      width: 896.w,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGradeFields(localizations),
+            SizedBox(height: 16.h),
+            _buildStepSalaries(localizations),
+            SizedBox(height: 18.h),
+            _buildDescription(localizations),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(AppLocalizations localizations) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            localizations.addGrade,
-            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-          ),
-        ),
-        IconButton(
-          padding: EdgeInsets.zero,
-          constraints: BoxConstraints.tight(Size(32.w, 32.h)),
-          icon: Icon(Icons.close_rounded, size: 20.sp, color: AppColors.textSecondary),
-          onPressed: () => Navigator.of(context).pop(),
+      actions: [
+        AppButton.outline(label: localizations.cancel, onPressed: isCreating ? null : () => context.pop()),
+        Gap(12.w),
+        AppButton.primary(
+          label: localizations.createGrade,
+          svgPath: Assets.icons.saveIcon.path,
+          onPressed: _handleSave,
+          isLoading: isCreating,
         ),
       ],
     );
@@ -163,41 +147,44 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          localizations.gradeNumber,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
-        ),
+        Text(localizations.gradeNumber, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500)),
         SizedBox(height: 4.h),
-        DropdownButtonFormField<String>(
+        FormField<String>(
           initialValue: selectedGradeNumber,
-          decoration: InputDecoration(
-            hintText: localizations.selectGrade,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: AppColors.inputBg,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-          items: gradeNumbers.map((number) {
-            return DropdownMenuItem(value: number, child: Text('Grade $number'));
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedGradeNumber = value;
-            });
-          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return localizations.fieldRequired;
             }
             return null;
+          },
+          builder: (field) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DigifySelectField<String>(
+                  label: '',
+                  hint: localizations.selectGrade,
+                  value: selectedGradeNumber,
+                  items: GradeConfig.gradeNumbers,
+                  itemLabelBuilder: (number) => 'Grade $number',
+                  isRequired: true,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGradeNumber = value;
+                    });
+                    field.didChange(value);
+                  },
+                ),
+                if (field.hasError)
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Text(
+                      field.errorText!,
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.error),
+                    ),
+                  ),
+              ],
+            );
           },
         ),
       ],
@@ -208,41 +195,44 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          localizations.gradeCategory,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
-        ),
+        Text(localizations.gradeCategory, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500)),
         SizedBox(height: 4.h),
-        DropdownButtonFormField<String>(
+        FormField<String>(
           initialValue: selectedGradeCategory,
-          decoration: InputDecoration(
-            hintText: localizations.selectCategory,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: AppColors.inputBg,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-          items: gradeCategories.entries.map((entry) {
-            return DropdownMenuItem(value: entry.key, child: Text(entry.value));
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedGradeCategory = value;
-            });
-          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return localizations.fieldRequired;
             }
             return null;
+          },
+          builder: (field) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DigifySelectField<String>(
+                  label: '',
+                  hint: localizations.selectCategory,
+                  value: selectedGradeCategory,
+                  items: GradeConfig.gradeCategories.keys.toList(),
+                  itemLabelBuilder: (key) => GradeConfig.gradeCategories[key]!,
+                  isRequired: true,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGradeCategory = value;
+                    });
+                    field.didChange(value);
+                  },
+                ),
+                if (field.hasError)
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Text(
+                      field.errorText!,
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.error),
+                    ),
+                  ),
+              ],
+            );
           },
         ),
       ],
@@ -255,10 +245,7 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          localizations.stepSalaryStructureTitle,
-          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-        ),
+        Text(localizations.stepSalaryStructureTitle, style: context.textTheme.titleMedium),
         SizedBox(height: 12.h),
         Row(
           children: controllers.asMap().entries.map((entry) {
@@ -275,98 +262,43 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
   }
 
   Widget _buildStepInput(AppLocalizations localizations, String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.textSecondary),
+    return DigifyTextField(
+      labelText: label,
+      controller: controller,
+      hintText: '0.00',
+      isRequired: true,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [AppInputFormatters.decimalWithTwoPlaces()],
+      suffixIcon: Center(
+        widthFactor: 1.0,
+        child: Text(
+          localizations.kdSymbol,
+          style: context.textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
         ),
-        SizedBox(height: 6.h),
-        TextFormField(
-          controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
-          decoration: InputDecoration(
-            hintText: '0.00',
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            suffixText: localizations.kdSymbol,
-            suffixStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: AppColors.inputBg,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return '';
-            }
-            final number = double.tryParse(value);
-            if (number == null || number < 0) {
-              return '';
-            }
-            return null;
-          },
-        ),
-      ],
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return '';
+        }
+        final numberError = FormValidators.number(value);
+        if (numberError != null) {
+          return '';
+        }
+        final numValue = num.parse(value);
+        if (numValue < 0) {
+          return '';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildDescription(AppLocalizations localizations) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.descriptionOptional,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-        ),
-        SizedBox(height: 8.h),
-        TextFormField(
-          controller: descriptionController,
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText: localizations.gradeDescriptionHint,
-            hintStyle: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
-            fillColor: AppColors.inputBg,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(color: AppColors.cardBorder),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActions(AppLocalizations localizations) {
-    final isCreating = ref.watch(gradeCreatingProvider);
-
-    return Row(
-      children: [
-        Expanded(
-          child: AppButton.outline(
-            label: localizations.cancel,
-            onPressed: isCreating ? null : () => Navigator.of(context).pop(),
-          ),
-        ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: AppButton.primary(label: localizations.createGrade, onPressed: _handleSave, isLoading: isCreating),
-        ),
-      ],
+    return DigifyTextArea(
+      labelText: localizations.descriptionOptional,
+      controller: descriptionController,
+      hintText: localizations.gradeDescriptionHint,
+      maxLines: 3,
     );
   }
 }
