@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -8,28 +9,22 @@ class ShiftCardIcon extends StatelessWidget {
   final ShiftType shiftType;
   final String colorHex;
 
-  const ShiftCardIcon({
-    super.key,
-    required this.shiftType,
-    required this.colorHex,
-  });
+  const ShiftCardIcon({super.key, required this.shiftType, required this.colorHex});
 
   @override
   Widget build(BuildContext context) {
     final bgColor = _parseColor(colorHex);
     final iconPath = _getIconPath(shiftType);
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final containerSize = isMobile ? 40.w : 48.w;
+    final iconSize = isMobile ? 20.0 : 24.0;
 
     return Container(
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        color: bgColor.withValues(alpha: 0.125),
-        shape: BoxShape.circle,
-      ),
-      child: DigifyAsset(
-        assetPath: iconPath,
-        width: 20.sp,
-        height: 20.sp,
-        color: bgColor,
+      width: containerSize,
+      height: containerSize,
+      decoration: BoxDecoration(color: bgColor.withValues(alpha: 0.125), shape: BoxShape.circle),
+      child: Center(
+        child: DigifyAsset(assetPath: iconPath, width: iconSize, height: iconSize, color: bgColor),
       ),
     );
   }

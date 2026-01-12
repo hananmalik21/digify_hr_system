@@ -16,6 +16,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/p
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class TimeManagementScreen extends ConsumerStatefulWidget {
   const TimeManagementScreen({super.key});
@@ -41,40 +42,33 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final stats = ref.watch(timeManagementStatsProvider);
 
     return Container(
-      color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
-      child: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            // Refresh logic can be added here when providers are implemented
-          },
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsetsDirectional.only(top: 88.h, start: 32.w, end: 32.w, bottom: 24.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PageHeaderWidget(
-                  localizations: localizations,
-                  title: localizations.timeManagement,
-                  icon: Assets.icons.timeManagementMainIcon.path,
-                ),
-                SizedBox(height: 24.h),
-                TimeManagementStatsCards(localizations: localizations, stats: stats, isDark: isDark),
-                SizedBox(height: 24.h),
-                TimeManagementTabBar(
-                  localizations: localizations,
-                  selectedTabIndex: currentTabIndex,
-                  onTabSelected: (index) {
-                    ref.read(timeManagementTabStateProvider.notifier).setTabIndex(index);
-                  },
-                  isDark: isDark,
-                ),
-                SizedBox(height: 24.h),
-                _buildTabContent(currentTabIndex),
-              ],
+      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsetsDirectional.only(top: 15.h, start: 32.w, end: 32.w, bottom: 24.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PageHeaderWidget(
+              localizations: localizations,
+              title: localizations.timeManagement,
+              icon: Assets.icons.timeManagementMainIcon.path,
             ),
-          ),
+            Gap(24.h),
+            TimeManagementStatsCards(localizations: localizations, stats: stats, isDark: isDark),
+            Gap(24.h),
+            TimeManagementTabBar(
+              localizations: localizations,
+              selectedTabIndex: currentTabIndex,
+              onTabSelected: (index) {
+                ref.read(timeManagementTabStateProvider.notifier).setTabIndex(index);
+              },
+              isDark: isDark,
+            ),
+            Gap(24.h),
+            _buildTabContent(currentTabIndex),
+          ],
         ),
       ),
     );

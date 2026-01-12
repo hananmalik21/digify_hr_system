@@ -3,6 +3,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/shift.da
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class ShiftsGrid extends StatelessWidget {
   final List<ShiftOverview> shifts;
@@ -24,27 +25,32 @@ class ShiftsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: shifts.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: ResponsiveHelper.getGridColumns(context),
-        mainAxisSpacing: 20.h,
-        crossAxisSpacing: 20.w,
-        mainAxisExtent: ResponsiveHelper.getShiftCardExtent(context),
-      ),
-      itemBuilder: (context, index) {
-        final shift = shifts[index];
-        return ShiftCard(
-          shift: shift,
-          onView: () => onView(shift),
-          onEdit: () => onEdit(shift),
-          onCopy: () => onCopy(shift),
-          onDelete: onDelete != null ? () => onDelete!(shift) : null,
-          isDeleting: deletingShiftId == shift.id,
-        );
-      },
+    return Column(
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: shifts.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ResponsiveHelper.getGridColumns(context),
+            mainAxisSpacing: 24.h,
+            crossAxisSpacing: 24.w,
+            mainAxisExtent: ResponsiveHelper.getShiftCardExtent(context),
+          ),
+          itemBuilder: (context, index) {
+            final shift = shifts[index];
+            return ShiftCard(
+              shift: shift,
+              onView: () => onView(shift),
+              onEdit: () => onEdit(shift),
+              onCopy: () => onCopy(shift),
+              onDelete: onDelete != null ? () => onDelete!(shift) : null,
+              isDeleting: deletingShiftId == shift.id,
+            );
+          },
+        ),
+        Gap(24.h),
+      ],
     );
   }
 }
