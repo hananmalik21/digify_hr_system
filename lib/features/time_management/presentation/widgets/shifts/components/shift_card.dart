@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
@@ -33,10 +34,10 @@ class ShiftCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +46,7 @@ class ShiftCard extends StatelessWidget {
           const Spacer(),
           DigifyDivider(
             height: 1,
-            color: const Color(0xFFE5E7EB),
+            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
             margin: EdgeInsets.symmetric(horizontal: padding),
           ),
           Padding(

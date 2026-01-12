@@ -120,11 +120,11 @@ class ResponsiveHelper {
   }
 
   static double getCardPadding(BuildContext context) {
-    return getResponsiveWidth(context, mobile: 16, tablet: 20, web: 24);
+    return getResponsiveWidth(context, mobile: 12, tablet: 16, web: 24);
   }
 
   static double getCardContentSpacing(BuildContext context) {
-    return getResponsiveHeight(context, mobile: 12, tablet: 14, web: 16);
+    return getResponsiveHeight(context, mobile: 10, tablet: 12, web: 16);
   }
 
   static double getActionButtonSpacing(BuildContext context) {

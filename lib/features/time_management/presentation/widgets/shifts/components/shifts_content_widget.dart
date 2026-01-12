@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_action_bar.dart';
@@ -9,6 +9,8 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 /// Widget for the main shifts content section
 class ShiftsContentWidget extends StatelessWidget {
@@ -43,7 +45,7 @@ class ShiftsContentWidget extends StatelessWidget {
         ),
 
         // Spacing
-        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+        Gap(24.h),
 
         // Shifts Grid
         _buildShiftsGrid(context),
@@ -58,6 +60,16 @@ class ShiftsContentWidget extends StatelessWidget {
 
     if (shiftsState.hasError) {
       return ShiftsErrorWidget(shiftsState: shiftsState);
+    }
+
+    if (shiftsState.items.isEmpty) {
+      return EmptyStateWidget(
+        icon: Icons.schedule_outlined,
+        title: 'No Shifts Found',
+        message: 'There are no shifts available for this enterprise. Create a new shift to get started.',
+        actionLabel: 'Create Shift',
+        onAction: () => CreateShiftDialog.show(context, enterpriseId: enterpriseId),
+      );
     }
 
     return ShiftsGrid(

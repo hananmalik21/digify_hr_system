@@ -10,6 +10,7 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class UpdateShiftDialog extends ConsumerStatefulWidget {
   final ShiftOverview shift;
@@ -113,7 +114,7 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
           width: null,
           onPressed: formState.isLoading ? null : () => Navigator.of(context).pop(),
         ),
-        SizedBox(width: 12.w),
+        Gap(12.w),
         AppButton(
           label: 'Update Shift',
           svgPath: Assets.icons.saveIcon.path,

@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';

@@ -6,7 +6,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/work_sch
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list_skeleton.dart';
