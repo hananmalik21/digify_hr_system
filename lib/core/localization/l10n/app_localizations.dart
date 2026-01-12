@@ -5123,7 +5123,7 @@ abstract class AppLocalizations {
   /// No description provided for @gradeStructure.
   ///
   /// In en, this message translates to:
-  /// **'Grade Structure'**
+  /// **'Grade & Step Structure'**
   String get gradeStructure;
 
   /// No description provided for @reportingStructure.

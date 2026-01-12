@@ -2599,7 +2599,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get maximumGrade => 'الحد الأعلى للدرجة';
 
   @override
-  String get gradeStructure => 'هيكل الدرجات';
+  String get gradeStructure => 'هيكل الدرجات والخطوات';
 
   @override
   String get reportingStructure => 'هيكل التقارير';

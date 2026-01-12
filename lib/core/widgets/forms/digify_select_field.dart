@@ -45,7 +45,7 @@ class DigifySelectField<T> extends StatelessWidget {
           isExpanded: true,
           hint: Text(
             hint ?? 'Select an option',
-            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400, color: effectiveHintColor),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveHintColor),
           ),
           items: items
               .map(
@@ -53,7 +53,7 @@ class DigifySelectField<T> extends StatelessWidget {
                   value: item,
                   child: Text(
                     itemLabelBuilder(item),
-                    style: TextStyle(fontFamily: 'Inter', fontSize: 15.sp, color: effectiveTextColor),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveTextColor),
                   ),
                 ),
               )

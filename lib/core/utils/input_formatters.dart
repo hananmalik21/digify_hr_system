@@ -27,6 +27,8 @@ class AppInputFormatters {
   static TextInputFormatter maxLen(int n) => LengthLimitingTextInputFormatter(n);
 
   static TextInputFormatter decimalWithOnePlace() => _DecimalInputFormatter(1);
+
+  static TextInputFormatter decimalWithTwoPlaces() => _DecimalInputFormatter(2);
 }
 
 class _DecimalInputFormatter extends TextInputFormatter {

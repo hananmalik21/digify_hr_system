@@ -15,11 +15,7 @@ class JobFamilyEmptyState extends StatelessWidget {
           SizedBox(height: 16.h),
           Text(
             'No job families found',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
           SizedBox(height: 8.h),
           Text(

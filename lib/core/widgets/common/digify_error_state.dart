@@ -30,6 +30,7 @@ class DigifyErrorState extends StatelessWidget {
               assetPath: assetPath ?? Assets.icons.errorCircleRed.path,
               width: iconSize ?? 64.sp,
               height: iconSize ?? 64.sp,
+              color: AppColors.brandRed,
             ),
             Gap(24.h),
             Text(

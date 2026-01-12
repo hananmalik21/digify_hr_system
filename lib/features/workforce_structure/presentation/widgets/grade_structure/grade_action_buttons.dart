@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/update_grade_dialog.dart';
@@ -9,6 +9,7 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class GradeActionButtons extends ConsumerWidget {
   final Grade grade;
@@ -39,40 +40,34 @@ class GradeActionButtons extends ConsumerWidget {
 
     return Row(
       children: [
-        GestureDetector(
+        DigifyAssetButton(
+          assetPath: Assets.icons.editIcon.path,
+          width: 16,
+          height: 16,
           onTap: isDeleting ? null : () => _handleEdit(context),
-          child: DigifyAsset(assetPath: Assets.icons.editIcon.path, width: 20, height: 20),
         ),
-        SizedBox(width: 12.w),
-        if (isDeleting)
-          SizedBox(
-            width: 20.sp,
-            height: 20.sp,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.error),
-            ),
-          )
-        else
-          GestureDetector(
-            onTap: () async {
-              final confirmed = await DeleteConfirmationDialog.show(
-                context,
-                title: 'Delete Grade',
-                message: 'Are you sure you want to delete this grade? This action cannot be undone.',
-                itemName: grade.gradeLabel,
-              );
-              if (confirmed == true && context.mounted) {
-                await _handleDelete(context, ref);
-              }
-            },
-            child: DigifyAsset(
-              assetPath: Assets.icons.redDeleteIcon.path,
-              width: 20,
-              height: 20,
-              color: AppColors.error,
-            ),
-          ),
+        Gap(4.w),
+        DigifyAssetButton(
+          assetPath: Assets.icons.redDeleteIcon.path,
+          width: 16,
+          height: 16,
+          color: AppColors.error,
+          isLoading: isDeleting,
+          onTap: () async {
+            final confirmed = await AppConfirmationDialog.show(
+              context,
+              title: 'Delete Grade',
+              message: 'Are you sure you want to delete this grade? This action cannot be undone.',
+              itemName: grade.gradeLabel,
+              confirmLabel: 'Delete',
+              cancelLabel: 'Cancel',
+              type: ConfirmationType.danger,
+            );
+            if (confirmed == true && context.mounted) {
+              await _handleDelete(context, ref);
+            }
+          },
+        ),
       ],
     );
   }

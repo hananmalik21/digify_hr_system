@@ -57,13 +57,7 @@ class JobFamilyCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      jobFamily.nameEnglish,
-                      style: context.textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
+                    Text(jobFamily.nameEnglish, style: context.textTheme.titleMedium),
                     Gap(4.h),
                     Text(
                       jobFamily.nameArabic,

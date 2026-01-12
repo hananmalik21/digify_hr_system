@@ -1,11 +1,11 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_empty_state.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_list.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_skeleton.dart';
@@ -75,8 +75,8 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPagi
 
     // Show error if no items and has error
     if (paginationState.hasError && paginationState.items.isEmpty) {
-      return JobFamilyErrorState(
-        errorMessage: paginationState.errorMessage,
+      return DigifyErrorState(
+        message: paginationState.errorMessage ?? 'Failed to load job families',
         onRetry: () => ref.read(jobFamilyNotifierProvider.notifier).refresh(),
       );
     }

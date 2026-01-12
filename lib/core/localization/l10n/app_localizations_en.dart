@@ -2614,7 +2614,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get maximumGrade => 'Maximum Grade';
 
   @override
-  String get gradeStructure => 'Grade Structure';
+  String get gradeStructure => 'Grade & Step Structure';
 
   @override
   String get reportingStructure => 'Reporting Structure';
