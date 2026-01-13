@@ -52,7 +52,14 @@ class DigifyHrSystemApp extends ConsumerWidget {
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               routerConfig: router,
+
+              builder: (context, child) {
+                if (child == null) return const SizedBox.shrink();
+                return child;
+              },
             );
+
+
           },
         );
       },

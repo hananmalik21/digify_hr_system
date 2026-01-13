@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SidebarNotifier extends StateNotifier<bool> {
-  SidebarNotifier() : super(true);
+  SidebarNotifier() : super(false);
 
   void toggle() {
     state = !state;

@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/navigation/app_header.dart';
 import 'package:digify_hr_system/core/navigation/sidebar.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/common/keyboard_scroll_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +37,7 @@ class AppLayout extends ConsumerWidget {
                         : const SizedBox.shrink(),
                   ),
                 Expanded(
-                  child: child,
+                  child: AppKeyboardScroller(child: child),
                 ),
               ],
             ),
