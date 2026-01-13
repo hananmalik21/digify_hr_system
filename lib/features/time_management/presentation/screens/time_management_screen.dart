@@ -1,8 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
@@ -13,6 +14,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/w
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/schedule_assignments_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/view_calendar/view_calendar_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/public_holidays_tab.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,6 +42,7 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
     final stats = ref.watch(timeManagementStatsProvider);
+    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
@@ -57,6 +60,16 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
             ),
             Gap(24.h),
             TimeManagementStatsCards(localizations: localizations, stats: stats, isDark: isDark),
+            Gap(24.h),
+            EnterpriseSelectorWidget(
+              selectedEnterpriseId: selectedEnterpriseId,
+              onEnterpriseChanged: (enterpriseId) {
+                ref.read(timeManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              },
+              subtitle: selectedEnterpriseId != null
+                  ? 'Viewing data for selected enterprise'
+                  : 'Select an enterprise to view data',
+            ),
             Gap(24.h),
             TimeManagementTabBar(
               localizations: localizations,

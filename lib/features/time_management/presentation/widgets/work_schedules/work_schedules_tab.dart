@@ -1,12 +1,10 @@
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list_skeleton.dart';
@@ -26,7 +24,6 @@ class WorkSchedulesTab extends ConsumerStatefulWidget {
 }
 
 class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with ScrollPaginationMixin {
-  int? _selectedEnterpriseId;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -40,35 +37,19 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   @override
   void onLoadMore() {
-    if (_selectedEnterpriseId == null) return;
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
 
-    final state = ref.read(workSchedulesNotifierProvider(_selectedEnterpriseId!));
+    final state = ref.read(workSchedulesNotifierProvider(enterpriseId));
     if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(workSchedulesNotifierProvider(_selectedEnterpriseId!).notifier).loadNextPage();
-    }
-  }
-
-  void _onEnterpriseChanged(int? enterpriseId) {
-    if (enterpriseId == null) {
-      setState(() {
-        _selectedEnterpriseId = null;
-      });
-      return;
-    }
-
-    if (enterpriseId != _selectedEnterpriseId) {
-      setState(() {
-        _selectedEnterpriseId = enterpriseId;
-      });
-      ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
+      ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).loadNextPage();
     }
   }
 
   void _handleCreateSchedule() {
-    if (_selectedEnterpriseId == null) {
-      return;
-    }
-    CreateWorkScheduleDialog.show(context, _selectedEnterpriseId!);
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
+    CreateWorkScheduleDialog.show(context, enterpriseId);
   }
 
   void _handleUpload() {}
@@ -78,16 +59,14 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
   void _handleViewDetails(WorkSchedule schedule) {}
 
   void _handleEdit(WorkSchedule schedule) {
-    if (_selectedEnterpriseId == null) {
-      return;
-    }
-    UpdateWorkScheduleDialog.show(context, _selectedEnterpriseId!, schedule);
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
+    UpdateWorkScheduleDialog.show(context, enterpriseId, schedule);
   }
 
   Future<void> _handleDelete(WorkSchedule schedule) async {
-    if (_selectedEnterpriseId == null) {
-      return;
-    }
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
 
     final confirmed = await AppConfirmationDialog.show(
       context,
@@ -102,7 +81,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
     if (confirmed == true && mounted) {
       try {
         await ref
-            .read(workSchedulesNotifierProvider(_selectedEnterpriseId!).notifier)
+            .read(workSchedulesNotifierProvider(enterpriseId).notifier)
             .deleteWorkSchedule(schedule.workScheduleId, hard: true);
         if (mounted) {
           ToastService.success(context, 'Work schedule deleted successfully', title: 'Success');
@@ -133,33 +112,28 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   @override
   Widget build(BuildContext context) {
-    final enterprisesState = ref.watch(enterprisesProvider);
-    final workSchedulesState = _selectedEnterpriseId != null
-        ? ref.watch(workSchedulesNotifierProvider(_selectedEnterpriseId!))
+    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
+    final workSchedulesState = selectedEnterpriseId != null
+        ? ref.watch(workSchedulesNotifierProvider(selectedEnterpriseId))
         : const WorkScheduleState();
+
+    if (selectedEnterpriseId == null) {
+      return const Center(
+        child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work schedules'),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        EnterpriseSelectorWidget(
-          selectedEnterpriseId: _selectedEnterpriseId,
-          onEnterpriseChanged: _onEnterpriseChanged,
+        WorkScheduleActionBar(
+          onCreateSchedule: _handleCreateSchedule,
+          onUpload: _handleUpload,
+          onExport: _handleExport,
         ),
-        if (enterprisesState.hasError) EnterpriseErrorWidget(enterprisesState: enterprisesState),
-        if (_selectedEnterpriseId != null && !enterprisesState.hasError) ...[
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          WorkScheduleActionBar(
-            onCreateSchedule: _handleCreateSchedule,
-            onUpload: _handleUpload,
-            onExport: _handleExport,
-          ),
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          _buildContent(workSchedulesState),
-        ] else
-          const Center(
-            child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work schedules'),
-          ),
+        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+        _buildContent(workSchedulesState),
       ],
     );
   }
@@ -178,8 +152,9 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                if (_selectedEnterpriseId != null) {
-                  ref.read(workSchedulesNotifierProvider(_selectedEnterpriseId!).notifier).refresh();
+                final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+                if (enterpriseId != null) {
+                  ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
                 }
               },
               child: const Text('Retry'),

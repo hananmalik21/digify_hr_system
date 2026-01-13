@@ -1,9 +1,7 @@
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
@@ -22,7 +20,6 @@ class WorkPatternsTab extends ConsumerStatefulWidget {
 }
 
 class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPaginationMixin {
-  int? _selectedEnterpriseId;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -36,36 +33,25 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
 
   @override
   void onLoadMore() {
-    if (_selectedEnterpriseId == null) return;
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
 
-    final state = ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!));
+    final state = ref.read(workPatternsNotifierProvider(enterpriseId));
     if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!).notifier).loadNextPage();
-    }
-  }
-
-  void _onEnterpriseChanged(int? enterpriseId) {
-    if (enterpriseId == null) {
-      setState(() {
-        _selectedEnterpriseId = null;
-      });
-      return;
-    }
-
-    if (enterpriseId != _selectedEnterpriseId) {
-      setState(() {
-        _selectedEnterpriseId = enterpriseId;
-      });
-      ref.read(workPatternsNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
+      ref.read(workPatternsNotifierProvider(enterpriseId).notifier).loadNextPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final enterprisesState = ref.watch(enterprisesProvider);
-    final workPatternsState = _selectedEnterpriseId != null
-        ? ref.watch(workPatternsNotifierProvider(_selectedEnterpriseId!))
+    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
+    final workPatternsState = selectedEnterpriseId != null
+        ? ref.watch(workPatternsNotifierProvider(selectedEnterpriseId))
         : const WorkPatternState();
+
+    if (selectedEnterpriseId == null) {
+      return const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work patterns');
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -78,52 +64,34 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            EnterpriseSelectorWidget(
-              selectedEnterpriseId: _selectedEnterpriseId,
-              onEnterpriseChanged: _onEnterpriseChanged,
+            WorkPatternActionBar(
+              onCreatePattern: () {
+                CreateWorkPatternDialog.show(context, selectedEnterpriseId);
+              },
+              onUpload: () {},
+              onExport: () {},
             ),
-            if (enterprisesState.hasError) EnterpriseErrorWidget(enterprisesState: enterprisesState),
-            if (_selectedEnterpriseId != null && !enterprisesState.hasError)
-              SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-            if (_selectedEnterpriseId != null) ...[
-              WorkPatternActionBar(
-                onCreatePattern: () {
-                  if (_selectedEnterpriseId != null) {
-                    CreateWorkPatternDialog.show(context, _selectedEnterpriseId!);
-                  }
+            SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
+              child: WorkPatternsTable(
+                workPatterns: workPatternsState.items,
+                isLoading: workPatternsState.isLoading,
+                isLoadingMore: workPatternsState.isLoadingMore,
+                hasError: workPatternsState.hasError,
+                errorMessage: workPatternsState.errorMessage,
+                scrollController: _scrollController,
+                onRetry: () {
+                  ref.read(workPatternsNotifierProvider(selectedEnterpriseId).notifier).refresh();
                 },
-                onUpload: () {},
-                onExport: () {},
+                onEdit: (pattern) {
+                  EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern);
+                },
+                onDelete: (pattern) {
+                  DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId);
+                },
               ),
-              SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
-                child: WorkPatternsTable(
-                  workPatterns: workPatternsState.items,
-                  isLoading: workPatternsState.isLoading,
-                  isLoadingMore: workPatternsState.isLoadingMore,
-                  hasError: workPatternsState.hasError,
-                  errorMessage: workPatternsState.errorMessage,
-                  scrollController: _scrollController,
-                  onRetry: () {
-                    if (_selectedEnterpriseId != null) {
-                      ref.read(workPatternsNotifierProvider(_selectedEnterpriseId!).notifier).refresh();
-                    }
-                  },
-                  onEdit: (pattern) {
-                    if (_selectedEnterpriseId != null) {
-                      EditWorkPatternDialog.show(context, _selectedEnterpriseId!, pattern);
-                    }
-                  },
-                  onDelete: (pattern) {
-                    if (_selectedEnterpriseId != null) {
-                      DeleteWorkPatternDialog.show(context, pattern, _selectedEnterpriseId!);
-                    }
-                  },
-                ),
-              ),
-            ] else
-              const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work patterns'),
+            ),
           ],
         );
       },

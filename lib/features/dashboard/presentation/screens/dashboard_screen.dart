@@ -1,7 +1,9 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/attendance_leaves_card.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_background.dart';
@@ -26,6 +28,19 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final initService = ref.read(appInitializationServiceProvider);
+      initService.initializeAfterAuth().catchError((e) {
+        if (kDebugMode) {
+          debugPrint('Initialization error: $e');
+        }
+      });
+    });
+  }
+
   void _handleModuleTap(DashboardButton btn) {
     // Navigate immediately for Dashboard overview
     if (btn.id == 'dashboard') {
@@ -48,9 +63,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       } catch (_) {
         // 3. Manual mapping fallbacks if needed
         if (btn.id == 'settings') {
-           try {
-             match = sidebarItems.firstWhere((item) => item.id == 'settingsConfig');
-           } catch (_) {}
+          try {
+            match = sidebarItems.firstWhere((item) => item.id == 'settingsConfig');
+          } catch (_) {}
         }
       }
     }
@@ -59,10 +74,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       // Open Dialog with sub-items
       showDialog(
         context: context,
-        builder: (context) => ModuleSelectionDialog(
-          module: match!,
-          parentColor: btn.color,
-        ),
+        builder: (context) => ModuleSelectionDialog(module: match!, parentColor: btn.color),
       );
     } else {
       // Navigate directly
@@ -125,123 +137,74 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         constraints: const BoxConstraints(maxWidth: 1800),
                         child: isWeb
                             ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // grid
-                                Expanded(
-                                  child: DashboardModuleGrid(
-                                    buttons: buttons,
-                                    onButtonTap: _handleModuleTap,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // grid
+                                  Expanded(
+                                    child: DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
                                   ),
-                                ),
-                                SizedBox(width: 14.w),
+                                  SizedBox(width: 14.w),
 
-                                // cards
-                                if (showCards)
-                                  SizedBox(
-                                    width: sideWidth,
-                                    child: Column(
+                                  // cards
+                                  if (showCards)
+                                    SizedBox(
+                                      width: sideWidth,
+                                      child: Column(
+                                        children: [
+                                          TasksEventsCard(
+                                            localizations: localizations,
+                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                          ),
+                                          SizedBox(height: 14.h),
+                                          AttendanceLeavesCard(
+                                            localizations: localizations,
+                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
+                                  SizedBox(height: 14.h),
+
+                                  // tablet: show two cards side-by-side
+                                  if (isTablet && showCards)
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        TasksEventsCard(
-                                          localizations: localizations,
-                                          onEyeIconTap:
-                                              () =>
-                                                  ref
-                                                      .read(
-                                                        cardsVisibilityProvider
-                                                            .notifier,
-                                                      )
-                                                      .toggle(),
+                                        Expanded(
+                                          child: TasksEventsCard(
+                                            localizations: localizations,
+                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                          ),
                                         ),
-                                        SizedBox(height: 14.h),
-                                        AttendanceLeavesCard(
-                                          localizations: localizations,
-                                          onEyeIconTap:
-                                              () =>
-                                                  ref
-                                                      .read(
-                                                        cardsVisibilityProvider
-                                                            .notifier,
-                                                      )
-                                                      .toggle(),
+                                        SizedBox(width: 14.w),
+                                        Expanded(
+                                          child: AttendanceLeavesCard(
+                                            localizations: localizations,
+                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                          ),
                                         ),
                                       ],
+                                    )
+                                  else if (showCards) ...[
+                                    // mobile: stack cards
+                                    TasksEventsCard(
+                                      localizations: localizations,
+                                      onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
                                     ),
-                                  ),
-                              ],
-                            )
-                            : Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                DashboardModuleGrid(
-                                  buttons: buttons,
-                                  onButtonTap: _handleModuleTap,
-                                ),
-                                SizedBox(height: 14.h),
-
-                                // tablet: show two cards side-by-side
-                                if (isTablet && showCards)
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: TasksEventsCard(
-                                          localizations: localizations,
-                                          onEyeIconTap:
-                                              () =>
-                                                  ref
-                                                      .read(
-                                                        cardsVisibilityProvider
-                                                            .notifier,
-                                                      )
-                                                      .toggle(),
-                                        ),
-                                      ),
-                                      SizedBox(width: 14.w),
-                                      Expanded(
-                                        child: AttendanceLeavesCard(
-                                          localizations: localizations,
-                                          onEyeIconTap:
-                                              () =>
-                                                  ref
-                                                      .read(
-                                                        cardsVisibilityProvider
-                                                            .notifier,
-                                                      )
-                                                      .toggle(),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                else if (showCards) ...[
-                                  // mobile: stack cards
-                                  TasksEventsCard(
-                                    localizations: localizations,
-                                    onEyeIconTap:
-                                        () =>
-                                            ref
-                                                .read(
-                                                  cardsVisibilityProvider
-                                                      .notifier,
-                                                )
-                                                .toggle(),
-                                  ),
-                                  SizedBox(height: 14.h),
-                                  AttendanceLeavesCard(
-                                    localizations: localizations,
-                                    onEyeIconTap:
-                                        () =>
-                                            ref
-                                                .read(
-                                                  cardsVisibilityProvider
-                                                      .notifier,
-                                                )
-                                                .toggle(),
-                                  ),
+                                    SizedBox(height: 14.h),
+                                    AttendanceLeavesCard(
+                                      localizations: localizations,
+                                      onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                    ),
+                                  ],
                                 ],
-                              ],
-                            ),
+                              ),
                       ),
                     ),
                   ),
@@ -250,12 +213,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             ),
 
             // Floating eye icon (shown when cards are hidden) - placed last so it's on top
-            if (!showCards)
-              Positioned(
-                top: 12.h,
-                right: 12.w,
-                child: const FloatingEyeIcon(),
-              ),
+            if (!showCards) Positioned(top: 12.h, right: 12.w, child: const FloatingEyeIcon()),
           ],
         ),
       ),

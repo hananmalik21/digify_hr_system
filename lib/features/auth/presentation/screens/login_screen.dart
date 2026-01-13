@@ -53,7 +53,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     final authState = ref.read(authProvider);
     if (authState.isAuthenticated) {
-      // Collapse sidebar by default after login
       ref.read(sidebarProvider.notifier).collapse();
       context.go('/dashboard');
     } else if (authState.error != null) {
