@@ -5738,6 +5738,12 @@ abstract class AppLocalizations {
   /// **'Work Schedules'**
   String get workSchedules;
 
+  /// No description provided for @createWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Schedule'**
+  String get createWorkSchedule;
+
   /// No description provided for @scheduleAssignments.
   ///
   /// In en, this message translates to:

@@ -1,11 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_card_actions.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_card_content.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_card_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkScheduleCard extends StatelessWidget {
   final String title;
@@ -48,18 +51,10 @@ class WorkScheduleCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-        boxShadow: [
-          BoxShadow(color: const Color(0xFF000000).withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
-          BoxShadow(
-            color: const Color(0xFF000000).withValues(alpha: 0.1),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-            spreadRadius: -1,
-          ),
-        ],
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Padding(
         padding: EdgeInsets.all(padding),
@@ -68,7 +63,7 @@ class WorkScheduleCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             WorkScheduleCardHeader(title: title, titleArabic: titleArabic, year: year, code: code, isActive: isActive),
-            SizedBox(height: 16.h),
+            Gap(16.h),
             WorkScheduleCardContent(
               workPatternName: workPatternName,
               assignmentMode: assignmentMode,
@@ -76,18 +71,12 @@ class WorkScheduleCard extends StatelessWidget {
               effectiveEndDate: effectiveEndDate,
               weeklySchedule: weeklySchedule,
             ),
-            SizedBox(height: 16.h),
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
-              ),
-              padding: EdgeInsets.only(top: 17.h),
-              child: WorkScheduleCardActions(
-                onViewDetails: onViewDetails,
-                onEdit: onEdit,
-                onDelete: onDelete,
-                isDeleting: isDeleting,
-              ),
+            DigifyDivider(margin: EdgeInsets.symmetric(vertical: 16.h)),
+            WorkScheduleCardActions(
+              onViewDetails: onViewDetails,
+              onEdit: onEdit,
+              onDelete: onDelete,
+              isDeleting: isDeleting,
             ),
           ],
         ),

@@ -2931,6 +2931,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workSchedules => 'Work Schedules';
 
   @override
+  String get createWorkSchedule => 'Create Schedule';
+
+  @override
   String get scheduleAssignments => 'Schedule Assignments';
 
   @override

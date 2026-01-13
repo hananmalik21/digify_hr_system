@@ -2,13 +2,14 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/work_pattern_selection_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/work_pattern_selection_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'dart:ui' as ui;
 
 class WorkScheduleFormFields extends StatefulWidget {
@@ -54,43 +55,6 @@ class WorkScheduleFormFields extends StatefulWidget {
 }
 
 class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
-  late TextEditingController _workPatternController;
-
-  @override
-  void initState() {
-    super.initState();
-    _workPatternController = TextEditingController(text: widget.selectedWorkPattern?.patternNameEn ?? '');
-  }
-
-  @override
-  void didUpdateWidget(WorkScheduleFormFields oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedWorkPattern != oldWidget.selectedWorkPattern) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _workPatternController.text = widget.selectedWorkPattern?.patternNameEn ?? '';
-        }
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _workPatternController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _selectWorkPattern(BuildContext context) async {
-    final selected = await WorkPatternSelectionDialog.show(
-      context: context,
-      enterpriseId: widget.enterpriseId,
-      selectedWorkPattern: widget.selectedWorkPattern,
-    );
-    if (selected != null) {
-      widget.onWorkPatternChanged(selected);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
@@ -119,7 +83,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9\-_]'))],
               ),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
               child: DigifyTextField(
                 controller: widget.scheduleNameEnController,
@@ -137,7 +101,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
             ),
           ],
         ),
-        SizedBox(height: 24.h),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
@@ -158,31 +122,19 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 inputFormatters: [AppInputFormatters.nameAr],
               ),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
-              child: DigifyTextField(
-                controller: _workPatternController,
-                labelText: 'Work Pattern',
-                hintText: 'Select work pattern',
+              child: WorkPatternSelectionField(
+                label: 'Work Pattern',
                 isRequired: true,
-                readOnly: true,
-                onTap: () => _selectWorkPattern(context),
-                suffixIcon: Icon(
-                  Icons.arrow_drop_down,
-                  size: 24.sp,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                ),
-                validator: (value) {
-                  if (widget.selectedWorkPattern == null) {
-                    return 'Work pattern is required';
-                  }
-                  return null;
-                },
+                enterpriseId: widget.enterpriseId,
+                selectedWorkPattern: widget.selectedWorkPattern,
+                onChanged: widget.onWorkPatternChanged,
               ),
             ),
           ],
         ),
-        SizedBox(height: 24.h),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
@@ -206,7 +158,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 },
               ),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
               child: DigifyTextField(
                 controller: widget.effectiveEndDateController,
@@ -223,11 +175,11 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
             ),
           ],
         ),
-        SizedBox(height: 24.h),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
-              child: DigifySelectField<PositionStatus>(
+              child: DigifySelectFieldWithLabel<PositionStatus>(
                 label: 'Status',
                 value: widget.selectedStatus,
                 items: [PositionStatus.active, PositionStatus.inactive],
@@ -240,8 +192,8 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 isRequired: true,
               ),
             ),
-            SizedBox(width: 24.w),
-            const Expanded(child: SizedBox()),
+            Gap(24.w),
+            const Expanded(child: Gap(0)),
           ],
         ),
       ],

@@ -2914,6 +2914,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workSchedules => 'جداول العمل';
 
   @override
+  String get createWorkSchedule => 'إنشاء جدول';
+
+  @override
   String get scheduleAssignments => 'تعيينات الجدول';
 
   @override

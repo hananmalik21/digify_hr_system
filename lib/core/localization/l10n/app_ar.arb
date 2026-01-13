@@ -929,6 +929,7 @@
   "addWorkPattern": "إضافة نمط عمل",
   "createWorkPattern": "إنشاء نمط عمل",
   "workSchedules": "جداول العمل",
+  "createWorkSchedule": "إنشاء جدول",
   "scheduleAssignments": "تعيينات الجدول",
   "viewCalendar": "عرض التقويم",
   "publicHolidays": "العطلات الرسمية",
