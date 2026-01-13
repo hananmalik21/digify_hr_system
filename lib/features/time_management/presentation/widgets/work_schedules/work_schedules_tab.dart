@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
@@ -132,7 +132,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
           onUpload: _handleUpload,
           onExport: _handleExport,
         ),
-        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+        Gap(24.h),
         _buildContent(workSchedulesState),
       ],
     );
@@ -149,7 +149,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Error: ${workSchedulesState.errorMessage ?? 'Unknown error'}'),
-            const SizedBox(height: 16),
+            Gap(16.h),
             ElevatedButton(
               onPressed: () {
                 final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);

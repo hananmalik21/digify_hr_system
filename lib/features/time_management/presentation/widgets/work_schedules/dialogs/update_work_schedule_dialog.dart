@@ -12,6 +12,8 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class UpdateWorkScheduleDialog extends ConsumerStatefulWidget {
@@ -84,9 +86,9 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
+              onPrimary: AppColors.cardBackground,
+              surface: AppColors.cardBackground,
+              onSurface: AppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -131,7 +133,7 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
 
     if (mounted) {
       if (success) {
-        Navigator.of(context).pop();
+        context.pop();
         ToastService.success(context, 'Work schedule updated successfully', title: 'Success');
       } else {
         final error = ref
@@ -206,7 +208,7 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
                 onEndDateTap: () =>
                     _selectDate(_effectiveEndDateController, initialDate: widget.schedule.effectiveEndDate),
               ),
-              SizedBox(height: 24.h),
+              Gap(24.h),
               WeeklyScheduleSection(
                 isDark: isDark,
                 enterpriseId: widget.enterpriseId,
@@ -233,9 +235,9 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
         AppButton.outline(
           label: 'Cancel',
           width: 100.w,
-          onPressed: updateState.isUpdating ? null : () => Navigator.of(context).pop(),
+          onPressed: updateState.isUpdating ? null : () => context.pop(),
         ),
-        SizedBox(width: 12.w),
+        Gap(12.w),
         AppButton(
           label: 'Save Changes',
           width: 179.w,

@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkScheduleCardContent extends StatelessWidget {
   final String workPatternName;
@@ -38,9 +39,9 @@ class WorkScheduleCardContent extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildInfoRow(context, label: 'Assignment Mode', value: assignmentMode, isDark: isDark),
-                  SizedBox(height: spacing),
+                  Gap(spacing),
                   _buildInfoRow(context, label: 'Effective Start', value: effectiveStartDate, isDark: isDark),
-                  SizedBox(height: spacing),
+                  Gap(spacing),
                   _buildInfoRow(context, label: 'Effective End', value: effectiveEndDate, isDark: isDark),
                 ],
               );
@@ -50,11 +51,11 @@ class WorkScheduleCardContent extends StatelessWidget {
                 Expanded(
                   child: _buildInfoRow(context, label: 'Assignment Mode', value: assignmentMode, isDark: isDark),
                 ),
-                SizedBox(width: 16.w),
+                Gap(16.w),
                 Expanded(
                   child: _buildInfoRow(context, label: 'Effective Start', value: effectiveStartDate, isDark: isDark),
                 ),
-                SizedBox(width: 16.w),
+                Gap(16.w),
                 Expanded(
                   child: _buildInfoRow(context, label: 'Effective End', value: effectiveEndDate, isDark: isDark),
                 ),
@@ -62,7 +63,7 @@ class WorkScheduleCardContent extends StatelessWidget {
             );
           },
         ),
-        SizedBox(height: 16.h),
+        Gap(16.h),
         _buildWeeklySchedule(context, isDark),
       ],
     );
@@ -86,17 +87,13 @@ class WorkScheduleCardContent extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: context.textTheme.labelSmall?.copyWith(
               color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               fontSize: 12.sp,
-              fontFamily: 'Inter',
             ),
           ),
-          SizedBox(height: 4.h),
-          Text(
-            displayValue,
-            style: TextStyle(color: textColor, fontSize: 13.8.sp, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
-          ),
+          Gap(4.h),
+          Text(displayValue, style: context.textTheme.titleSmall?.copyWith(color: textColor)),
         ],
       ),
     );
@@ -112,14 +109,11 @@ class WorkScheduleCardContent extends StatelessWidget {
       children: [
         Text(
           'Weekly Schedule',
-          style: TextStyle(
+          style: context.textTheme.titleSmall?.copyWith(
             color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-            fontSize: 13.8.sp,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Inter',
           ),
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         isMobile
             ? SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -130,7 +124,7 @@ class WorkScheduleCardContent extends StatelessWidget {
                     return Row(
                       children: [
                         _buildDayChip(context, entry.value, shiftType, isDark, isMobile: true),
-                        if (day < daysOfWeek.length - 1) SizedBox(width: 8.w),
+                        if (day < daysOfWeek.length - 1) Gap(8.w),
                       ],
                     );
                   }).toList(),
@@ -144,7 +138,7 @@ class WorkScheduleCardContent extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(child: _buildDayChip(context, entry.value, shiftType, isDark)),
-                        if (day < daysOfWeek.length - 1) SizedBox(width: 8.w),
+                        if (day < daysOfWeek.length - 1) Gap(8.w),
                       ],
                     ),
                   );
@@ -174,17 +168,13 @@ class WorkScheduleCardContent extends StatelessWidget {
         children: [
           Text(
             day,
-            style: TextStyle(
+            style: context.textTheme.labelSmall?.copyWith(
               color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               fontSize: 12.sp,
-              fontFamily: 'Inter',
             ),
           ),
-          SizedBox(height: 4.h),
-          Text(
-            shiftType,
-            style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
-          ),
+          Gap(4.h),
+          Text(shiftType, style: context.textTheme.labelMedium?.copyWith(color: textColor)),
         ],
       ),
     );

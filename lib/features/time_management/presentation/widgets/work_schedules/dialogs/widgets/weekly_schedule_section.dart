@@ -1,10 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/shift_selection_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/shift_selection_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WeeklyScheduleSection extends StatelessWidget {
   final bool isDark;
@@ -55,10 +55,10 @@ class WeeklyScheduleSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         if (selectedWorkPattern != null)
           _AssignmentModeSelector(isDark: isDark, assignmentMode: assignmentMode, onChanged: onAssignmentModeChanged),
-        if (selectedWorkPattern != null) SizedBox(height: 16.h),
+        if (selectedWorkPattern != null) Gap(16.h),
         if (assignmentMode == 'SAME_SHIFT_ALL_DAYS' && selectedWorkPattern != null)
           _SameShiftForAllDaysSelector(
             isDark: isDark,
@@ -107,7 +107,7 @@ class _AssignmentModeSelector extends StatelessWidget {
               color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 12.h),
+          Gap(12.h),
           Row(
             children: [
               _RadioOption(
@@ -117,7 +117,7 @@ class _AssignmentModeSelector extends StatelessWidget {
                 groupValue: assignmentMode,
                 onChanged: onChanged,
               ),
-              SizedBox(width: 24.w),
+              Gap(24.w),
               _RadioOption(
                 isDark: isDark,
                 label: 'Individual shifts per day',
@@ -166,11 +166,19 @@ class _RadioOption extends StatelessWidget {
                     : (isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder),
                 width: 2.w,
               ),
-              color: groupValue == value ? AppColors.primary : Colors.transparent,
+              color: Colors.transparent,
             ),
-            child: groupValue == value ? Icon(Icons.check, size: 12.sp, color: Colors.white) : null,
+            child: groupValue == value
+                ? Center(
+                    child: Container(
+                      width: 8.w,
+                      height: 8.h,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.primary),
+                    ),
+                  )
+                : null,
           ),
-          SizedBox(width: 8.w),
+          Gap(8.w),
           Text(
             label,
             style: TextStyle(fontSize: 13.8.sp, color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
@@ -181,7 +189,7 @@ class _RadioOption extends StatelessWidget {
   }
 }
 
-class _SameShiftForAllDaysSelector extends StatefulWidget {
+class _SameShiftForAllDaysSelector extends StatelessWidget {
   final bool isDark;
   final int enterpriseId;
   final ShiftOverview? selectedShift;
@@ -195,86 +203,26 @@ class _SameShiftForAllDaysSelector extends StatefulWidget {
   });
 
   @override
-  State<_SameShiftForAllDaysSelector> createState() => _SameShiftForAllDaysSelectorState();
-}
-
-class _SameShiftForAllDaysSelectorState extends State<_SameShiftForAllDaysSelector> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(
-      text: widget.selectedShift != null
-          ? '${widget.selectedShift!.name} (${widget.selectedShift!.startTime} - ${widget.selectedShift!.endTime})'
-          : '',
-    );
-  }
-
-  @override
-  void didUpdateWidget(_SameShiftForAllDaysSelector oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedShift != oldWidget.selectedShift) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _controller.text = widget.selectedShift != null
-              ? '${widget.selectedShift!.name} (${widget.selectedShift!.startTime} - ${widget.selectedShift!.endTime})'
-              : '';
-        }
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _selectShift(BuildContext context) async {
-    final selected = await ShiftSelectionDialog.show(
-      context: context,
-      enterpriseId: widget.enterpriseId,
-      selectedShift: widget.selectedShift,
-    );
-    if (selected != null) {
-      widget.onChanged(selected);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+        color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
         borderRadius: BorderRadius.circular(4.r),
-        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
       ),
-      child: DigifyTextField(
-        controller: _controller,
-        labelText: 'Select Shift',
-        hintText: 'Select shift',
+      child: ShiftSelectionField(
+        label: 'Select Shift',
         isRequired: true,
-        readOnly: true,
-        onTap: () => _selectShift(context),
-        suffixIcon: Icon(
-          Icons.arrow_drop_down,
-          size: 24.sp,
-          color: widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-        ),
-        validator: (value) {
-          if (widget.selectedShift == null) {
-            return 'Please select a shift';
-          }
-          return null;
-        },
+        enterpriseId: enterpriseId,
+        selectedShift: selectedShift,
+        onChanged: onChanged,
       ),
     );
   }
 }
 
-class _IndividualShiftsPerDaySelector extends StatefulWidget {
+class _IndividualShiftsPerDaySelector extends StatelessWidget {
   final bool isDark;
   final int enterpriseId;
   final WorkPattern? selectedWorkPattern;
@@ -289,68 +237,11 @@ class _IndividualShiftsPerDaySelector extends StatefulWidget {
     required this.onDayShiftChanged,
   });
 
-  @override
-  State<_IndividualShiftsPerDaySelector> createState() => _IndividualShiftsPerDaySelectorState();
-}
-
-class _IndividualShiftsPerDaySelectorState extends State<_IndividualShiftsPerDaySelector> {
-  final Map<int, TextEditingController> _controllers = {};
-
-  @override
-  void initState() {
-    super.initState();
-    for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-      final selectedShift = widget.dayShifts[dayOfWeek];
-      _controllers[dayOfWeek] = TextEditingController(
-        text: selectedShift != null
-            ? '${selectedShift.name} (${selectedShift.startTime} - ${selectedShift.endTime})'
-            : '',
-      );
-    }
-  }
-
-  @override
-  void didUpdateWidget(_IndividualShiftsPerDaySelector oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-          final newShift = widget.dayShifts[dayOfWeek];
-          final oldShift = oldWidget.dayShifts[dayOfWeek];
-          if (newShift != oldShift) {
-            _controllers[dayOfWeek]?.text = newShift != null
-                ? '${newShift.name} (${newShift.startTime} - ${newShift.endTime})'
-                : '';
-          }
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    for (final controller in _controllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  Future<void> _selectShift(BuildContext context, int dayOfWeek, ShiftOverview? currentShift) async {
-    final selected = await ShiftSelectionDialog.show(
-      context: context,
-      enterpriseId: widget.enterpriseId,
-      selectedShift: currentShift,
-    );
-    if (selected != null) {
-      widget.onDayShiftChanged(dayOfWeek, selected);
-    }
-  }
-
   bool _isWorkingDay(int dayOfWeek) {
-    if (widget.selectedWorkPattern == null) {
-      return widget.dayShifts.containsKey(dayOfWeek) && widget.dayShifts[dayOfWeek] != null;
+    if (selectedWorkPattern == null) {
+      return dayShifts.containsKey(dayOfWeek) && dayShifts[dayOfWeek] != null;
     }
-    return widget.selectedWorkPattern!.days.any((day) => day.dayOfWeek == dayOfWeek && day.dayType == 'WORK');
+    return selectedWorkPattern!.days.any((day) => day.dayOfWeek == dayOfWeek && day.dayType == 'WORK');
   }
 
   @override
@@ -362,16 +253,16 @@ class _IndividualShiftsPerDaySelectorState extends State<_IndividualShiftsPerDay
       children: List.generate(7, (index) {
         final dayOfWeek = index + 1;
         final dayName = dayNames[index];
-        final selectedShift = widget.dayShifts[dayOfWeek];
+        final selectedShift = dayShifts[dayOfWeek];
         final isWorkingDay = _isWorkingDay(dayOfWeek);
 
         return Container(
           margin: EdgeInsets.only(bottom: index < 6 ? 4.h : 0),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+            color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
             borderRadius: BorderRadius.circular(4.r),
-            border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
           ),
           child: Row(
             children: [
@@ -383,27 +274,20 @@ class _IndividualShiftsPerDaySelectorState extends State<_IndividualShiftsPerDay
                     fontSize: 13.8.sp,
                     fontWeight: FontWeight.w500,
                     color: isWorkingDay
-                        ? (widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimary)
+                        ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary)
                         : AppColors.textSecondary.withValues(alpha: 0.5),
                   ),
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
-                child: DigifyTextField(
-                  controller: _controllers[dayOfWeek]!,
-                  labelText: '',
-                  hintText: isWorkingDay ? 'Select Shift' : 'Rest Day',
-                  readOnly: true,
+                child: ShiftSelectionField(
+                  label: '',
+                  isRequired: false,
+                  enterpriseId: enterpriseId,
+                  selectedShift: selectedShift,
+                  onChanged: (shift) => onDayShiftChanged(dayOfWeek, shift),
                   enabled: isWorkingDay,
-                  onTap: isWorkingDay ? () => _selectShift(context, dayOfWeek, selectedShift) : null,
-                  suffixIcon: isWorkingDay
-                      ? Icon(
-                          Icons.arrow_drop_down,
-                          size: 24.sp,
-                          color: widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                        )
-                      : Icon(Icons.block, size: 20.sp, color: AppColors.textSecondary.withValues(alpha: 0.5)),
                 ),
               ),
             ],
