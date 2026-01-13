@@ -4,6 +4,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/shift.da
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_detail_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_card_header.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class ShiftCardContent extends StatelessWidget {
   final ShiftOverview shift;
@@ -22,7 +23,7 @@ class ShiftCardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ShiftCardHeader(shift: shift, isDark: isDark),
-          SizedBox(height: spacing),
+          Gap(spacing),
           ShiftCardDetailRow(label: 'Time', value: '${shift.startTime} - ${shift.endTime}'),
           ShiftCardDetailRow(label: 'Duration', value: '${DurationFormatter.formatHours(shift.totalHours)} hours'),
           ShiftCardDetailRow(

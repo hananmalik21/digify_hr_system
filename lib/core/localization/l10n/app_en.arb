@@ -945,7 +945,7 @@
   "code": "Code",
   "minimumGrade": "Minimum Grade",
   "maximumGrade": "Maximum Grade",
-  "gradeStructure": "Grade Structure",
+  "gradeStructure": "Grade & Step Structure",
   "reportingStructure": "Reporting Structure",
   "positionTree": "Position Tree",
   "addPosition": "Add Position",

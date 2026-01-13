@@ -1,9 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import '../../../../../core/widgets/assets/digify_asset.dart';
 import '../../../../../gen/assets.gen.dart';
 
@@ -16,80 +18,53 @@ class TimeManagementStatsCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final spacing = 16.w;
+    final int crossAxisCount = context.isMobile ? 1 : (context.isTablet ? 2 : 4);
+    final double aspectRatio = context.isMobile ? 3.6 : (context.isTablet ? 2.2 : 2.5);
+    final double spacing = 16.w;
 
-    if (isMobile) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(child: _buildStatItem(context, index: 0)),
-              SizedBox(width: spacing),
-              Expanded(child: _buildStatItem(context, index: 1)),
-            ],
-          ),
-          SizedBox(height: spacing),
-          Row(
-            children: [
-              Expanded(child: _buildStatItem(context, index: 2)),
-              SizedBox(width: spacing),
-              Expanded(child: _buildStatItem(context, index: 3)),
-            ],
-          ),
-        ],
-      );
-    }
-
-    return Row(
-      children: [
-        Expanded(child: _buildStatItem(context, index: 0)),
-        SizedBox(width: spacing),
-        Expanded(child: _buildStatItem(context, index: 1)),
-        SizedBox(width: spacing),
-        Expanded(child: _buildStatItem(context, index: 2)),
-        SizedBox(width: spacing),
-        Expanded(child: _buildStatItem(context, index: 3)),
-      ],
-    );
-  }
-
-  Widget _buildStatItem(BuildContext context, {required int index}) {
-    final statsList = [
-      (
-        label: 'Total Shifts',
+    final cards = [
+      _buildStatCard(
+        context,
+        label: localizations.shifts,
         value: '${stats.totalShifts}',
         iconPath: Assets.icons.clockIcon.path,
-        iconColor: const Color(0xFF3B82F6),
+        isDark: isDark,
+        color: AppColors.primaryLight,
       ),
-      (
-        label: 'Work Patterns',
+      _buildStatCard(
+        context,
+        label: localizations.workPatterns,
         value: '${stats.workPatterns}',
         iconPath: Assets.icons.leaveManagementIcon.path,
-        iconColor: const Color(0xFF9333EA),
+        isDark: isDark,
+        color: AppColors.statIconPurple,
       ),
-      (
-        label: 'Active Schedules',
+      _buildStatCard(
+        context,
+        label: localizations.workSchedules,
         value: '${stats.activeSchedules}',
         iconPath: Assets.icons.sidebar.workSchedules.path,
-        iconColor: const Color(0xFF22C55E),
+        isDark: isDark,
+        color: AppColors.statIconGreen,
       ),
-      (
-        label: 'Assignments',
+      _buildStatCard(
+        context,
+        label: localizations.scheduleAssignments,
         value: '${stats.assignments}',
         iconPath: Assets.icons.sidebar.scheduleAssignments.path,
-        iconColor: const Color(0xFFEA580C),
+        isDark: isDark,
+        color: AppColors.statIconOrange,
       ),
     ];
 
-    final stat = statsList[index];
-    return _buildStatCard(
-      context,
-      label: stat.label,
-      value: stat.value,
-      iconPath: stat.iconPath,
-      iconColor: stat.iconColor,
-      isDark: isDark,
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: 16.h,
+      crossAxisSpacing: spacing,
+      childAspectRatio: aspectRatio,
+      children: cards,
     );
   }
 
@@ -98,60 +73,42 @@ class TimeManagementStatsCards extends StatelessWidget {
     required String label,
     required String value,
     required String iconPath,
-    required Color iconColor,
     required bool isDark,
+    required Color color,
   }) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final cardPadding = isMobile ? 16.w : 24.w;
-    final valueFontSize = isMobile ? 24.sp : 32.sp;
-    final labelFontSize = isMobile ? 12.sp : 14.sp;
-
     return Container(
-      padding: EdgeInsets.all(cardPadding),
+      padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 4), blurRadius: 10)],
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: labelFontSize,
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-              fontFamily: 'Inter',
-            ),
-          ),
-          SizedBox(height: isMobile ? 4.h : 8.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: AppColors.sidebarChildItemText),
+                ),
+                Gap(4.h),
+                Text(
                   value,
-                  style: TextStyle(
-                    fontSize: valueFontSize,
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.w700,
-                    color: iconColor,
-                    fontFamily: 'Inter',
+                    color: color,
                   ),
                 ),
-              ),
-              DigifyAsset(
-                assetPath: iconPath,
-                width: isMobile ? 20.sp : 24.sp,
-                height: isMobile ? 20.sp : 24.sp,
-                color: iconColor,
-              ),
-            ],
+              ],
+            ),
           ),
+          DigifyAsset(assetPath: iconPath, width: 24.sp, height: 24.sp, color: color),
         ],
       ),
     );

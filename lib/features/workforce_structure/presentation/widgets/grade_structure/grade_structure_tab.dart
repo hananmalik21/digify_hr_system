@@ -1,5 +1,7 @@
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_structure_card.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_structure_header.dart';
@@ -7,6 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class GradeStructureTab extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -17,8 +20,7 @@ class GradeStructureTab extends ConsumerStatefulWidget {
   ConsumerState<GradeStructureTab> createState() => _GradeStructureTabState();
 }
 
-class _GradeStructureTabState extends ConsumerState<GradeStructureTab>
-    with ScrollPaginationMixin {
+class _GradeStructureTabState extends ConsumerState<GradeStructureTab> with ScrollPaginationMixin {
   @override
   ScrollController? get scrollController => widget.scrollController;
 
@@ -49,37 +51,16 @@ class _GradeStructureTabState extends ConsumerState<GradeStructureTab>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const GradeStructureHeader(),
-        SizedBox(height: 24.h),
+        Gap(24.h),
         if (isLoading && grades.isEmpty)
           const GradeStructureSkeleton()
         else if (errorMessage != null && grades.isEmpty)
-          Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 32.h),
-              child: Column(
-                children: [
-                  Text(
-                    errorMessage,
-                    style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                  ),
-                  SizedBox(height: 16.h),
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(gradeNotifierProvider.notifier).refresh(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-          )
+          DigifyErrorState(message: errorMessage, onRetry: () => ref.read(gradeNotifierProvider.notifier).refresh())
         else if (grades.isEmpty)
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 32.h),
-              child: Text(
-                'No grades found',
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-              ),
+              child: Text('No grades found', style: context.textTheme.bodyMedium),
             ),
           )
         else
@@ -94,12 +75,7 @@ class _GradeStructureTabState extends ConsumerState<GradeStructureTab>
         if (gradeState.isLoadingMore)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 24.h),
-            child: const Center(
-              child: AppLoadingIndicator(
-                type: LoadingType.threeBounce,
-                size: 20,
-              ),
-            ),
+            child: const Center(child: AppLoadingIndicator(type: LoadingType.threeBounce, size: 20)),
           ),
       ],
     );

@@ -1,9 +1,12 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/time_management/data/config/time_management_tabs_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class TimeManagementTabBar extends StatelessWidget {
   final AppLocalizations localizations;
@@ -29,15 +32,7 @@ class TimeManagementTabBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-            spreadRadius: -1,
-          ),
-        ],
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -50,6 +45,7 @@ class TimeManagementTabBar extends StatelessWidget {
             return Padding(
               padding: EdgeInsetsDirectional.only(end: 8.w),
               child: _buildTabButton(
+                context: context,
                 label: label,
                 icon: tab.iconPath,
                 isSelected: isSelected,
@@ -63,6 +59,7 @@ class TimeManagementTabBar extends StatelessWidget {
   }
 
   Widget _buildTabButton({
+    required BuildContext context,
     required String label,
     required String icon,
     required bool isSelected,
@@ -72,7 +69,7 @@ class TimeManagementTabBar extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(6.r),
+        borderRadius: BorderRadius.circular(4.r),
         child: Container(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w, vertical: 8.h),
           decoration: BoxDecoration(
@@ -86,16 +83,13 @@ class TimeManagementTabBar extends StatelessWidget {
                 assetPath: icon,
                 width: 16,
                 height: 16,
-                color: isSelected ? Colors.white : AppColors.textSecondary,
+                color: isSelected ? AppColors.dashboardCard : AppColors.textSecondary,
               ),
-              SizedBox(width: 8.w),
+              Gap(8.w),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isSelected ? Colors.white : AppColors.textSecondary,
-                  height: 24 / 15,
+                style: context.textTheme.titleSmall?.copyWith(
+                  color: isSelected ? AppColors.dashboardCard : AppColors.textSecondary,
                 ),
               ),
             ],

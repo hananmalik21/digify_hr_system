@@ -2,16 +2,17 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_content_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShiftsTab extends ConsumerStatefulWidget {
   const ShiftsTab({super.key});
@@ -93,6 +94,9 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
         EnterpriseSelectorWidget(
           selectedEnterpriseId: _selectedEnterpriseId,
           onEnterpriseChanged: _onEnterpriseChanged,
+          subtitle: _selectedEnterpriseId != null
+              ? 'Viewing shifts for selected enterprise'
+              : 'Select an enterprise to view shifts',
         ),
 
         // Enterprise Error Display
@@ -112,7 +116,14 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
             onDelete: (shift) => _handleDelete(context, shift),
           )
         else
-          const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view shifts'),
+          Padding(
+            padding: EdgeInsets.only(top: 24.h),
+            child: EmptyStateWidget(
+              icon: Icons.business_outlined,
+              title: 'Select an Enterprise',
+              message: 'Please select an enterprise from above to view and manage shifts',
+            ),
+          ),
       ],
     );
   }

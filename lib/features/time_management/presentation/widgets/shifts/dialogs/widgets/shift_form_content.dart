@@ -3,14 +3,15 @@ import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_time_picker_dialog.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shift_form_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/widgets/shift_color_picker_field.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/widgets/shift_time_picker_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class ShiftFormContent extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
@@ -78,7 +79,7 @@ class ShiftFormContent extends ConsumerWidget {
                   onChanged: (value) => formNotifier.updateCode(value),
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
                 child: DigifyTextField(
                   labelText: 'Shift Name (English)',
@@ -91,7 +92,7 @@ class ShiftFormContent extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,9 +109,9 @@ class ShiftFormContent extends ConsumerWidget {
                   onChanged: (value) => formNotifier.updateNameAr(value),
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
-                child: DigifySelectField<String>(
+                child: DigifySelectFieldWithLabel<String>(
                   label: 'Shift Type',
                   items: ShiftFormConfig.shiftTypeOptions,
                   itemLabelBuilder: (e) => e,
@@ -121,7 +122,7 @@ class ShiftFormContent extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +137,7 @@ class ShiftFormContent extends ConsumerWidget {
                   isRequired: true,
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
                 child: ShiftTimePickerField(
                   label: 'End Time',
@@ -149,7 +150,7 @@ class ShiftFormContent extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +174,7 @@ class ShiftFormContent extends ConsumerWidget {
                   onChanged: (value) => formNotifier.updateDuration(value),
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
                 child: DigifyTextField(
                   labelText: 'Break Duration (Hours)',
@@ -189,7 +190,7 @@ class ShiftFormContent extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -201,9 +202,9 @@ class ShiftFormContent extends ConsumerWidget {
                   isDark: isDark,
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
-                child: DigifySelectField<String>(
+                child: DigifySelectFieldWithLabel<String>(
                   label: 'Status',
                   items: ShiftFormConfig.statusOptions,
                   itemLabelBuilder: (e) => e,
