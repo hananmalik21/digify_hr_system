@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_buttons.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class ScheduleAssignmentTableRowData {
   final int scheduleAssignmentId;
@@ -44,10 +46,12 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
@@ -59,20 +63,15 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
               children: [
                 Text(
                   data.assignedToName,
-                  style: TextStyle(
-                    fontSize: 13.7.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimary,
-                    height: 20 / 13.7,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                   ),
                 ),
+                Gap(2.h),
                 Text(
                   data.assignedToCode,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textSecondary,
-                    height: 20 / 14,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -82,11 +81,8 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               data.scheduleName,
-              style: TextStyle(
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
-                height: 20 / 13.6,
+              style: context.textTheme.titleSmall?.copyWith(
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
             ),
             297.46.w,
@@ -94,11 +90,8 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               data.startDate,
-              style: TextStyle(
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                height: 20 / 13.6,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
             139.55.w,
@@ -106,32 +99,23 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               data.endDate,
-              style: TextStyle(
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                height: 20 / 13.6,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
             136.6.w,
           ),
-          _buildDataCell(
-            CustomStatusCell(isActive: data.isActive, activeLabel: 'ACTIVE', inactiveLabel: 'INACTIVE'),
-            117.47.w,
-          ),
+          _buildDataCell(ShiftStatusBadge(isActive: data.isActive), 117.47.w),
           _buildDataCell(
             Text(
               data.assignedByName,
-              style: TextStyle(
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textSecondary,
-                height: 20 / 13.7,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
             197.22.w,
           ),
-          _buildActionCell(
+          _buildDataCell(
             ScheduleAssignmentActionButtons(onView: onView, onEdit: onEdit, onDelete: onDelete, isDeleting: isDeleting),
             135.w,
           ),
@@ -145,17 +129,6 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
       width: width,
       alignment: Alignment.centerLeft,
       padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
-      clipBehavior: Clip.none,
-      child: child,
-    );
-  }
-
-  Widget _buildActionCell(Widget child, double width) {
-    return Container(
-      width: width,
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsetsDirectional.only(start: 24.w, top: 16.h, bottom: 16.h, end: 20.w),
-      clipBehavior: Clip.none,
       child: child,
     );
   }

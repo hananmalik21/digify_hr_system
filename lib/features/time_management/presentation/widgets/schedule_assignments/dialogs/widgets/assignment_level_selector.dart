@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 enum AssignmentLevel { department, employee }
 
@@ -23,20 +24,15 @@ class AssignmentLevelSelector extends StatelessWidget {
           children: [
             Text(
               'Assignment Level',
-              style: TextStyle(
-                fontSize: 13.8.sp,
-                fontWeight: FontWeight.w500,
+              style: context.textTheme.titleSmall?.copyWith(
                 color: context.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
               ),
             ),
-            SizedBox(width: 4.w),
-            Text(
-              '*',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.deleteIconRed),
-            ),
+            Gap(4.w),
+            Text('*', style: context.textTheme.titleSmall?.copyWith(color: AppColors.deleteIconRed)),
           ],
         ),
-        SizedBox(height: 12.h),
+        Gap(12.h),
         Row(
           children: [
             Expanded(
@@ -49,7 +45,7 @@ class AssignmentLevelSelector extends StatelessWidget {
                 onTap: () => onLevelChanged(AssignmentLevel.department),
               ),
             ),
-            SizedBox(width: 16.w),
+            Gap(16.w),
             Expanded(
               child: _LevelCard(
                 level: AssignmentLevel.employee,
@@ -124,7 +120,7 @@ class _LevelCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 12.h),
+            Gap(12.h),
             Text(
               title,
               style: TextStyle(
@@ -133,7 +129,7 @@ class _LevelCard extends StatelessWidget {
                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
             ),
-            SizedBox(height: 4.h),
+            Gap(4.h),
             Text(
               description,
               style: TextStyle(
