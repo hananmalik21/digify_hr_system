@@ -70,6 +70,23 @@ class AppTheme {
           textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ),
+      scrollbarTheme: ScrollbarThemeData(
+        thumbVisibility: MaterialStateProperty.all(true),
+        thickness: MaterialStateProperty.all(8.0),
+        radius: const Radius.circular(4.0),
+        minThumbLength: 48.0,
+        thumbColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return AppColors.textSecondary.withOpacity(0.8);
+          }
+          return AppColors.textSecondary.withOpacity(0.5);
+        }),
+        trackColor: MaterialStateProperty.all(Colors.transparent),
+        trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+        crossAxisMargin: 4.0,
+        mainAxisMargin: 4.0,
+        interactive: true,
+      ),
     );
   }
 
@@ -136,6 +153,23 @@ class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
+      ),
+      scrollbarTheme: ScrollbarThemeData(
+        thumbVisibility: MaterialStateProperty.all(true),
+        thickness: MaterialStateProperty.all(8.0),
+        radius: const Radius.circular(4.0),
+        minThumbLength: 48.0,
+        thumbColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.hovered)) {
+            return AppColors.textSecondaryDark.withOpacity(0.8);
+          }
+          return AppColors.textSecondaryDark.withOpacity(0.5);
+        }),
+        trackColor: MaterialStateProperty.all(Colors.transparent),
+        trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+        crossAxisMargin: 4.0,
+        mainAxisMargin: 4.0,
+        interactive: true,
       ),
     );
   }

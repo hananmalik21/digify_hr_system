@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class ScheduleAssignmentsTable extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
+      child: ScrollableSingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final tableWidth = constraints.maxWidth;
-          return SingleChildScrollView(
+          return ScrollableSingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: tableWidth),
@@ -333,7 +334,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final tableWidth = constraints.maxWidth;
-          return SingleChildScrollView(
+          return ScrollableSingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: tableWidth),

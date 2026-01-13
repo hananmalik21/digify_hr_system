@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -113,11 +114,8 @@ class CustomTable extends StatelessWidget {
             )
           else
             Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SingleChildScrollView(
-                  child: _buildTable(context, isDark),
-                ),
+              child: DualAxisScrollable(
+                child: _buildTable(context, isDark),
               ),
             ),
         ],

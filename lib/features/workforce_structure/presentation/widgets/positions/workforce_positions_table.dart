@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/table/position_table_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/table/position_table_row.dart';
@@ -37,7 +38,7 @@ class WorkforcePositionsTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
-      child: SingleChildScrollView(
+      child: ScrollableSingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Skeletonizer(
           enabled: isLoading,

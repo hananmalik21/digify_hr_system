@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_table_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_table_row.dart';
@@ -83,13 +84,15 @@ class WorkPatternsTable extends ConsumerWidget {
           );
 
           if (needsScroll) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: tableContent),
+            return DualAxisScrollable(
+              verticalController: scrollController,
+              child: tableContent,
             );
           } else {
-            return SingleChildScrollView(scrollDirection: Axis.horizontal, child: tableContent);
+            return ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: tableContent,
+            );
           }
         },
       ),

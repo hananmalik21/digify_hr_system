@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_row.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class JobLevelsTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
-      child: SingleChildScrollView(
+      child: ScrollableSingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(
           children: [
