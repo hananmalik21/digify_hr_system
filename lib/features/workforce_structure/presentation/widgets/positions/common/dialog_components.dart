@@ -15,7 +15,7 @@ class PositionDialogSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: context.textTheme.headlineSmall?.copyWith(color: AppColors.dialogTitle)),
+        Text(title, style: context.textTheme.titleSmall?.copyWith(fontSize: 15.0, color: AppColors.dialogTitle)),
         Gap(16.h),
         Wrap(spacing: 16.w, runSpacing: 16.h, children: children),
       ],

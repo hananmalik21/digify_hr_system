@@ -113,9 +113,9 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildGradeFields(localizations),
-            SizedBox(height: 16.h),
+            Gap(24.h),
             _buildStepSalaries(localizations),
-            SizedBox(height: 18.h),
+            Gap(24.h),
             _buildDescription(localizations),
           ],
         ),
@@ -137,7 +137,7 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Row(
       children: [
         Expanded(child: _buildGradeNumberDropdown(localizations)),
-        SizedBox(width: 12.w),
+        Gap(12.w),
         Expanded(child: _buildGradeCategoryDropdown(localizations)),
       ],
     );
@@ -147,8 +147,8 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(localizations.gradeNumber, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500)),
-        SizedBox(height: 4.h),
+        Text(localizations.gradeNumber, style: context.textTheme.titleSmall),
+        Gap(4.h),
         FormField<String>(
           initialValue: selectedGradeNumber,
           validator: (value) {
@@ -195,8 +195,8 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(localizations.gradeCategory, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500)),
-        SizedBox(height: 4.h),
+        Text(localizations.gradeCategory, style: context.textTheme.titleSmall),
+        Gap(4.h),
         FormField<String>(
           initialValue: selectedGradeCategory,
           validator: (value) {
@@ -245,8 +245,8 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(localizations.stepSalaryStructureTitle, style: context.textTheme.titleMedium),
-        SizedBox(height: 12.h),
+        Text(localizations.stepSalaryStructureTitle, style: context.textTheme.titleSmall?.copyWith(fontSize: 16.0)),
+        Gap(12.h),
         Row(
           children: controllers.asMap().entries.map((entry) {
             return Expanded(

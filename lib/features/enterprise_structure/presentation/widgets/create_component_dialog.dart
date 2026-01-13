@@ -299,15 +299,14 @@ class _CreateComponentDialogState extends ConsumerState<CreateComponentDialog> {
     bool isMobile,
     bool isTablet,
   ) {
-    // TODO: Replace with actual parent components list when available
     final parentOptions = <String?>[null];
-    
+
     return DigifySelectFieldWithLabel<String?>(
       label: localizations.parentComponent,
       hint: localizations.selectParentComponent,
       value: state.parentId,
       items: parentOptions,
-      itemLabelBuilder: (item) => item == null ? 'No Parent (Root Level)' : item,
+      itemLabelBuilder: (item) => item ?? 'No Parent (Root Level)',
       onChanged: (value) {
         notifier.updateField('parentId', value);
       },
@@ -1081,11 +1080,7 @@ class _CreateComponentDialogState extends ConsumerState<CreateComponentDialog> {
                       SizedBox(
                         width: 20.sp,
                         height: 20.sp,
-                        child: const AppLoadingIndicator(
-                          type: LoadingType.fadingCircle,
-                          size: 20,
-                          color: Colors.white,
-                        ),
+                        child: const AppLoadingIndicator(type: LoadingType.fadingCircle, size: 20, color: Colors.white),
                       )
                     else
                       DigifyAsset(assetPath: Assets.icons.saveIcon.path, width: 20, height: 20, color: Colors.white),

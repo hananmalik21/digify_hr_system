@@ -71,18 +71,18 @@ class AppTheme {
         ),
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbVisibility: MaterialStateProperty.all(true),
-        thickness: MaterialStateProperty.all(8.0),
+        thumbVisibility: WidgetStateProperty.all(true),
+        thickness: WidgetStateProperty.all(8.0),
         radius: const Radius.circular(4.0),
         minThumbLength: 48.0,
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.hovered)) {
-            return AppColors.textSecondary.withOpacity(0.8);
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.hovered)) {
+            return AppColors.textSecondary.withValues(alpha: 0.8);
           }
-          return AppColors.textSecondary.withOpacity(0.5);
+          return AppColors.textSecondary.withValues(alpha: 0.5);
         }),
-        trackColor: MaterialStateProperty.all(Colors.transparent),
-        trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+        trackColor: WidgetStateProperty.all(Colors.transparent),
+        trackBorderColor: WidgetStateProperty.all(Colors.transparent),
         crossAxisMargin: 4.0,
         mainAxisMargin: 4.0,
         interactive: true,
@@ -155,18 +155,18 @@ class AppTheme {
         ),
       ),
       scrollbarTheme: ScrollbarThemeData(
-        thumbVisibility: MaterialStateProperty.all(true),
-        thickness: MaterialStateProperty.all(8.0),
+        thumbVisibility: WidgetStateProperty.all(true),
+        thickness: WidgetStateProperty.all(8.0),
         radius: const Radius.circular(4.0),
         minThumbLength: 48.0,
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.hovered)) {
-            return AppColors.textSecondaryDark.withOpacity(0.8);
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.hovered)) {
+            return AppColors.textSecondaryDark.withValues(alpha: 0.8);
           }
-          return AppColors.textSecondaryDark.withOpacity(0.5);
+          return AppColors.textSecondaryDark.withValues(alpha: 0.5);
         }),
-        trackColor: MaterialStateProperty.all(Colors.transparent),
-        trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+        trackColor: WidgetStateProperty.all(Colors.transparent),
+        trackBorderColor: WidgetStateProperty.all(Colors.transparent),
         crossAxisMargin: 4.0,
         mainAxisMargin: 4.0,
         interactive: true,

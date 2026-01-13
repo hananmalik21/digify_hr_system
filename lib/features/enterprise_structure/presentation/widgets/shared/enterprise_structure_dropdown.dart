@@ -1,8 +1,5 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EnterpriseStructureDropdown extends StatelessWidget {
   final String label;
@@ -35,4 +32,3 @@ class EnterpriseStructureDropdown extends StatelessWidget {
     );
   }
 }
-

@@ -35,17 +35,14 @@ class PositionDetailCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
-            ),
+            Text(label, style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
             Gap(6.h),
             highlight
                 ? PositionStatusBadge(label: value)
                 : Text(
                     value,
                     textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-                    style: context.textTheme.headlineSmall?.copyWith(color: AppColors.dialogTitle),
+                    style: context.textTheme.titleSmall?.copyWith(fontSize: 15.0, color: AppColors.dialogTitle),
                   ),
           ],
         ),

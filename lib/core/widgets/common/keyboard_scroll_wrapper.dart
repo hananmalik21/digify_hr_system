@@ -38,24 +38,24 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
   bool _isTypingInTextField() {
     final focused = FocusManager.instance.primaryFocus;
     if (focused == null) return false;
-    
+
     final ctx = focused.context;
     if (ctx == null) return false;
-    
+
     // Check if the focused widget is an EditableText (used by TextField/TextFormField)
     final widget = ctx.widget;
     if (widget is EditableText) return true;
-    
+
     // Check if we're inside a TextField or TextFormField by looking up the tree
     if (ctx.findAncestorWidgetOfExactType<TextField>() != null) return true;
     if (ctx.findAncestorWidgetOfExactType<TextFormField>() != null) return true;
-    
+
     return false;
   }
 
   ScrollPosition? _findScrollPosition({bool horizontal = false}) {
     // Try multiple strategies to find a scrollable widget
-    
+
     // Strategy 1: Try from current focus context
     final focused = FocusManager.instance.primaryFocus;
     BuildContext? ctx = focused?.context;
@@ -66,9 +66,7 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
       if (scrollable != null) {
         final pos = scrollable.position;
         final isHorizontalScroll = _isHorizontalScrollable(scrollable);
-        if (pos.hasContentDimensions && 
-            pos.maxScrollExtent > pos.minScrollExtent &&
-            isHorizontalScroll == horizontal) {
+        if (pos.hasContentDimensions && pos.maxScrollExtent > pos.minScrollExtent && isHorizontalScroll == horizontal) {
           return pos;
         }
       }
@@ -90,9 +88,7 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
     if (scrollable != null) {
       final pos = scrollable.position;
       final isHorizontalScroll = _isHorizontalScrollable(scrollable);
-      if (pos.hasContentDimensions && 
-          pos.maxScrollExtent > pos.minScrollExtent &&
-          isHorizontalScroll == horizontal) {
+      if (pos.hasContentDimensions && pos.maxScrollExtent > pos.minScrollExtent && isHorizontalScroll == horizontal) {
         return pos;
       }
     }
@@ -115,16 +111,14 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
       if (scrollable != null) {
         final pos = scrollable.position;
         final isHorizontalScroll = _isHorizontalScrollable(scrollable);
-        if (pos.hasContentDimensions && 
-            pos.maxScrollExtent > pos.minScrollExtent &&
-            isHorizontalScroll == horizontal) {
+        if (pos.hasContentDimensions && pos.maxScrollExtent > pos.minScrollExtent && isHorizontalScroll == horizontal) {
           foundPosition = pos;
           return; // Found one, use it
         }
       }
       element.visitChildElements(searchElement);
     }
-    
+
     context.visitChildElements(searchElement);
 
     return foundPosition;
@@ -134,32 +128,31 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
     // Check if the scrollable is horizontal by examining its context and ancestor widgets
     try {
       final context = scrollable.context;
-      if (context == null) return false;
-      
+
       // Strategy 1: Check for explicit scrollDirection in ancestor widgets
       // Check for SingleChildScrollView with horizontal direction
       final scrollView = context.findAncestorWidgetOfExactType<SingleChildScrollView>();
       if (scrollView != null) {
         return scrollView.scrollDirection == Axis.horizontal;
       }
-      
+
       // Check for ListView with horizontal direction
       final listView = context.findAncestorWidgetOfExactType<ListView>();
       if (listView != null) {
         return listView.scrollDirection == Axis.horizontal;
       }
-      
+
       // Check for GridView with horizontal direction
       final gridView = context.findAncestorWidgetOfExactType<GridView>();
       if (gridView != null) {
         return gridView.scrollDirection == Axis.horizontal;
       }
-      
+
       // Strategy 2: Check if scrollable is inside a table context
       // Tables with many columns often have horizontal scrolling
       final dataTable = context.findAncestorWidgetOfExactType<DataTable>();
       final table = context.findAncestorWidgetOfExactType<Table>();
-      
+
       if (dataTable != null || table != null) {
         // If we're inside a table, check if there's a horizontal scrollable wrapping it
         // by looking for SingleChildScrollView in the ancestor tree
@@ -174,11 +167,11 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
           }
           return true; // Continue searching
         });
-        
+
         if (foundHorizontal) {
           return true;
         }
-        
+
         // Heuristic: If we're inside a table and the scrollable can scroll,
         // and we're looking for horizontal scroll, assume it might be horizontal
         // This is a fallback for tables that are wrapped in horizontal scrollables
@@ -192,7 +185,7 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
     } catch (_) {
       // If we can't determine, assume vertical
     }
-    
+
     return false;
   }
 
@@ -208,16 +201,12 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
 
     final currentPixels = pos.pixels;
     final target = (currentPixels + delta).clamp(pos.minScrollExtent, pos.maxScrollExtent);
-    
+
     // Only scroll if target is different from current position
     if ((target - currentPixels).abs() < 0.1) return;
-    
+
     // Use smooth scrolling for better UX
-    pos.animateTo(
-      target,
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.easeOut,
-    );
+    pos.animateTo(target, duration: const Duration(milliseconds: 100), curve: Curves.easeOut);
   }
 
   @override
@@ -232,7 +221,7 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
           if (event is KeyDownEvent) {
             double? delta;
             bool? isHorizontal;
-            
+
             if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
               delta = 80;
               isHorizontal = false;
@@ -258,7 +247,7 @@ class _AppKeyboardScrollerState extends State<AppKeyboardScroller> {
               delta = 999999;
               isHorizontal = false;
             }
-            
+
             if (delta != null && isHorizontal != null) {
               _scrollActive(delta, horizontal: isHorizontal);
               return KeyEventResult.handled;

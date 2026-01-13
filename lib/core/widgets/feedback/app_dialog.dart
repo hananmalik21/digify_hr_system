@@ -60,13 +60,8 @@ class AppDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontFamily: 'Inter',
-                          fontSize: 15.6.sp,
-                          fontWeight: FontWeight.w600,
+                        style: context.textTheme.titleMedium?.copyWith(
                           color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-                          height: 24 / 15.6,
-                          letterSpacing: 0,
                         ),
                       ),
                     ),

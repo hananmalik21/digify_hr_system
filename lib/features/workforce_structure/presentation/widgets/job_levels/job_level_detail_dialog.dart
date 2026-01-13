@@ -72,13 +72,7 @@ class JobLevelDetailDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        AppButton(
-          label: localizations.close,
-          backgroundColor: AppColors.inputBg,
-          foregroundColor: AppColors.textSecondary,
-          onPressed: () => context.pop(),
-          width: 100.w,
-        ),
+        AppButton.outline(label: localizations.close, onPressed: () => context.pop(), width: 100.w),
         Gap(12.w),
         AppButton.primary(
           label: localizations.edit,
@@ -100,21 +94,9 @@ class JobLevelDetailDialog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
-        ),
+        Text(label, style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
         Gap(4.h),
-        Text(
-          value,
-          style:
-              valueStyle ??
-              context.textTheme.displayLarge?.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-              ),
-        ),
+        Text(value, style: valueStyle ?? context.textTheme.titleMedium?.copyWith(color: AppColors.textPrimary)),
       ],
     );
   }

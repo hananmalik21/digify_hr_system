@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +57,7 @@ class EnterpriseDropdown extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Container(
-            constraints: BoxConstraints(
-              minHeight: 56,
-            ),
+            constraints: BoxConstraints(minHeight: 56),
             padding: EdgeInsetsDirectional.symmetric(horizontal: 17.w, vertical: 9.h),
             decoration: BoxDecoration(
               color: isDark ? AppColors.inputBgDark : Colors.white,
@@ -90,9 +87,7 @@ class EnterpriseDropdown extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.6.sp,
                     fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.textPlaceholderDark
-                        : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+                    color: isDark ? AppColors.textPlaceholderDark : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
                     height: 24 / 15.6,
                     letterSpacing: 0,
                   ),

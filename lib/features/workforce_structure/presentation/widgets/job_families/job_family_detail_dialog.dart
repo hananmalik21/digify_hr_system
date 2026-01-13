@@ -41,7 +41,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
         children: [
           Text(
             localizations.basicInformation,
-            style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
+            style: context.textTheme.titleSmall?.copyWith(fontSize: 15.0, color: AppColors.textPrimary),
           ),
           Gap(16.h),
           _buildCard(
@@ -50,12 +50,12 @@ class JobFamilyDetailDialog extends ConsumerWidget {
               children: [
                 Text(
                   localizations.description,
-                  style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: AppColors.textSecondary),
+                  style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
                 ),
                 Gap(4.h),
                 Text(
                   jobFamily.description,
-                  style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
+                  style: context.textTheme.titleSmall?.copyWith(fontSize: 15.0, color: AppColors.textPrimary),
                 ),
               ],
             ),
@@ -63,7 +63,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
           Gap(24.h),
           Text(
             localizations.positionStatistics,
-            style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
+            style: context.textTheme.titleSmall?.copyWith(fontSize: 15.0, color: AppColors.textPrimary),
           ),
           Gap(16.h),
           Row(
@@ -96,12 +96,7 @@ class JobFamilyDetailDialog extends ConsumerWidget {
         ],
       ),
       actions: [
-        AppButton(
-          label: localizations.close,
-          backgroundColor: AppColors.inputBg,
-          foregroundColor: AppColors.textSecondary,
-          onPressed: () => context.pop(),
-        ),
+        AppButton.outline(label: localizations.close, onPressed: () => context.pop()),
         Gap(12.w),
         AppButton.primary(
           label: localizations.edit,
