@@ -1,16 +1,16 @@
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_bar.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/create_work_pattern_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/delete_work_pattern_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkPatternsTab extends ConsumerStatefulWidget {
   const WorkPatternsTab({super.key});
@@ -44,6 +44,7 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
     final workPatternsState = selectedEnterpriseId != null
         ? ref.watch(workPatternsNotifierProvider(selectedEnterpriseId))
@@ -64,14 +65,8 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            WorkPatternActionBar(
-              onCreatePattern: () {
-                CreateWorkPatternDialog.show(context, selectedEnterpriseId);
-              },
-              onUpload: () {},
-              onExport: () {},
-            ),
-            SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+            WorkPatternHeader(localizations: localizations),
+            Gap(24.h),
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
               child: WorkPatternsTable(
@@ -84,12 +79,8 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
                 onRetry: () {
                   ref.read(workPatternsNotifierProvider(selectedEnterpriseId).notifier).refresh();
                 },
-                onEdit: (pattern) {
-                  EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern);
-                },
-                onDelete: (pattern) {
-                  DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId);
-                },
+                onEdit: (pattern) => EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern),
+                onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId),
               ),
             ),
           ],

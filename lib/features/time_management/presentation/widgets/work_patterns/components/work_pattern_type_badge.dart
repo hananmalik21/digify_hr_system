@@ -20,12 +20,8 @@ class WorkPatternTypeBadge extends StatelessWidget {
       ),
       child: Text(
         type,
-        style: TextStyle(
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+        style: context.textTheme.labelMedium?.copyWith(
           color: isDark ? AppColors.workPatternBadgeTextDark : AppColors.workPatternBadgeTextLight,
-          height: 16 / 12,
-          letterSpacing: 0,
         ),
       ),
     );

@@ -5720,6 +5720,18 @@ abstract class AppLocalizations {
   /// **'Work Patterns'**
   String get workPatterns;
 
+  /// No description provided for @addWorkPattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Work Pattern'**
+  String get addWorkPattern;
+
+  /// No description provided for @createWorkPattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Work Pattern'**
+  String get createWorkPattern;
+
   /// No description provided for @workSchedules.
   ///
   /// In en, this message translates to:

@@ -2905,6 +2905,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get workPatterns => 'أنماط العمل';
 
   @override
+  String get addWorkPattern => 'إضافة نمط عمل';
+
+  @override
+  String get createWorkPattern => 'إنشاء نمط عمل';
+
+  @override
   String get workSchedules => 'جداول العمل';
 
   @override

@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -10,6 +11,8 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/w
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkPatternsTable extends ConsumerWidget {
   final List<WorkPattern> workPatterns;
@@ -44,21 +47,16 @@ class WorkPatternsTable extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
         borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(color: AppColors.shadowColor, offset: const Offset(0, 1), blurRadius: 3),
-          BoxShadow(color: AppColors.shadowColor, offset: const Offset(0, 1), blurRadius: 2, spreadRadius: -1),
-        ],
+        boxShadow: AppShadows.primaryShadow,
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final hasContent = workPatterns.isNotEmpty || isLoading || hasError;
-          final needsScroll = hasContent && constraints.maxHeight > 0;
-
-          final tableContent = Column(
+      child: ScrollableSingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Skeletonizer(
+          enabled: isLoading && workPatterns.isEmpty,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
               WorkPatternTableHeader(isDark: isDark, localizations: localizations),
               if (isLoading && workPatterns.isEmpty)
@@ -81,59 +79,40 @@ class WorkPatternsTable extends ConsumerWidget {
                 if (isLoadingMore) _buildLoadingMoreState(),
               ],
             ],
-          );
-
-          if (needsScroll) {
-            return DualAxisScrollable(
-              verticalController: scrollController,
-              child: tableContent,
-            );
-          } else {
-            return ScrollableSingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: tableContent,
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildErrorState(bool isDark, AppLocalizations localizations) {
-    return SizedBox(
-      width: 1200.w,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 48.h),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                errorMessage ?? 'Something went wrong',
-                style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
-                textAlign: TextAlign.center,
-              ),
-              if (onRetry != null) ...[
-                SizedBox(height: 16.h),
-                ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
-              ],
-            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildEmptyState(bool isDark, AppLocalizations localizations) {
-    return SizedBox(
+  Widget _buildErrorState(bool isDark, AppLocalizations localizations) {
+    return Container(
       width: 1200.w,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 48.h),
-        child: Center(
-          child: Text(
-            localizations.noResultsFound,
-            style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
-          ),
+      padding: EdgeInsets.symmetric(vertical: 48.h),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              errorMessage ?? 'Something went wrong',
+              style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
+              textAlign: TextAlign.center,
+            ),
+            if (onRetry != null) ...[Gap(16.h), ElevatedButton(onPressed: onRetry, child: const Text('Retry'))],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isDark, AppLocalizations localizations) {
+    return Container(
+      width: 1200.w,
+      padding: EdgeInsets.symmetric(vertical: 48.h),
+      child: Center(
+        child: Text(
+          localizations.noResultsFound,
+          style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
         ),
       ),
     );

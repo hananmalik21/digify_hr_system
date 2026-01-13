@@ -8,11 +8,17 @@ import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_type_badge.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
-class WorkPatternDetailsDialog extends StatelessWidget with DateTimeConversionMixin {
+class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMixin {
   final WorkPattern workPattern;
 
   const WorkPatternDetailsDialog({super.key, required this.workPattern});
@@ -25,34 +31,36 @@ class WorkPatternDetailsDialog extends StatelessWidget with DateTimeConversionMi
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
 
     return AppDialog(
       title: 'Work Pattern Details',
-      width: 500.w,
+      width: 700.w,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(isDark),
-          SizedBox(height: 20.h),
-          const DigifyDivider(),
-          SizedBox(height: 20.h),
-          _buildDetailsGrid(isDark),
-          SizedBox(height: 24.h),
-          _buildWorkingDaysSection(isDark),
-          SizedBox(height: 16.h),
-          _buildRestDaysSection(isDark),
+          _buildHeader(context, isDark),
+          DigifyDivider(margin: EdgeInsets.symmetric(vertical: 24.h)),
+          _buildDetailsGrid(context),
+          _buildWorkingDaysSection(context, isDark),
+          Gap(16.h),
+          _buildRestDaysSection(context, isDark),
         ],
       ),
       actions: [
-        AppButton.outline(label: 'Close', width: null, onPressed: () => Navigator.of(context).pop()),
-        SizedBox(width: 8.w),
+        AppButton.outline(label: 'Close', onPressed: () => context.pop()),
+        Gap(8.w),
         AppButton(
           label: 'Edit Pattern',
-          width: null,
-          onPressed: () {},
+          onPressed: () {
+            context.pop();
+            final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+            if (enterpriseId != null) {
+              EditWorkPatternDialog.show(context, enterpriseId, workPattern);
+            }
+          },
           svgPath: Assets.icons.editIcon.path,
           backgroundColor: AppColors.greenButton,
         ),
@@ -60,165 +68,128 @@ class WorkPatternDetailsDialog extends StatelessWidget with DateTimeConversionMi
     );
   }
 
-  Widget _buildHeader(bool isDark) {
-    return SizedBox(
-      height: 113.h,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 12.h),
-            child: Container(
-              width: 64.w,
-              height: 64.h,
-              decoration: BoxDecoration(
-                color: AppColors.workPatternBadgeBgLight,
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: Center(
-                child: DigifyAsset(
-                  assetPath: Assets.icons.leaveManagementMainIcon.path,
-                  width: 32.w,
-                  height: 32.h,
-                  color: AppColors.workPatternBadgeTextLight,
-                ),
-              ),
-            ),
+  Widget _buildHeader(BuildContext context, bool isDark) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 64.w,
+          height: 64.h,
+          decoration: BoxDecoration(
+            color: AppColors.workPatternBadgeBgLight,
+            borderRadius: BorderRadius.circular(14.r),
           ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  workPattern.patternNameEn,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                  ),
+          alignment: Alignment.center,
+          child: DigifyAsset(
+            assetPath: Assets.icons.leaveManagementMainIcon.path,
+            width: 32.w,
+            height: 32.h,
+            color: AppColors.statIconPurple,
+          ),
+        ),
+        Gap(16.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                workPattern.patternNameEn,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontSize: 19.sp,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                 ),
-                if (workPattern.patternNameAr.isNotEmpty) ...[
-                  SizedBox(height: 2.h),
-                  Text(
-                    workPattern.patternNameAr,
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-                SizedBox(height: 4.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.workPatternBadgeBgLight,
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: Text(
-                    workPattern.patternCode,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.workPatternBadgeTextLight,
-                    ),
+              ),
+              if (workPattern.patternNameAr.isNotEmpty) ...[
+                Gap(2.h),
+                Text(
+                  workPattern.patternNameAr,
+                  textDirection: TextDirection.rtl,
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontSize: 14.sp,
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                   ),
                 ),
               ],
-            ),
+              Gap(4.h),
+              WorkPatternTypeBadge(type: workPattern.patternType),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildDetailsGrid(bool isDark) {
+  Widget _buildDetailsGrid(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 16.h,
-      crossAxisSpacing: 16.w,
+      mainAxisSpacing: 0.h,
+      crossAxisSpacing: 0.w,
       childAspectRatio: 4,
       children: [
-        _buildDetailItem('Pattern Type', workPattern.patternType, isDark),
+        _buildDetailItem(context, 'Pattern Type', workPattern.patternType),
         _buildDetailItem(
+          context,
           'Status',
           '',
-          isDark,
           widget: CustomStatusCell(
             isActive: workPattern.status == PositionStatus.active,
             activeLabel: 'ACTIVE',
             inactiveLabel: 'INACTIVE',
           ),
         ),
-        _buildDetailItem('Total Hours/Week', '${workPattern.totalHoursPerWeek} hours', isDark),
-        _buildDetailItem('Created Date', formatDateFromDateTime(workPattern.creationDate), isDark),
+        _buildDetailItem(context, 'Total Hours/Week', '${workPattern.totalHoursPerWeek} hours'),
+        _buildDetailItem(context, 'Created Date', formatDateFromDateTime(workPattern.creationDate)),
       ],
     );
   }
 
-  Widget _buildDetailItem(String label, String value, bool isDark, {Widget? widget}) {
+  Widget _buildDetailItem(BuildContext context, String label, String value, {Widget? widget}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
-        ),
-        SizedBox(height: 4.h),
-        widget ??
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-              ),
-            ),
+        Text(label, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
+        Gap(4.h),
+        widget ?? Text(value, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.dialogTitle)),
       ],
     );
   }
 
-  Widget _buildWorkingDaysSection(bool isDark) {
+  Widget _buildWorkingDaysSection(BuildContext context, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Working Days',
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+          style: context.textTheme.titleSmall?.copyWith(
             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: 12.h),
-        _buildDaysRow(isDark, isWorking: true),
+        Gap(12.h),
+        _buildDaysRow(context, isDark, isWorking: true),
       ],
     );
   }
 
-  Widget _buildRestDaysSection(bool isDark) {
+  Widget _buildRestDaysSection(BuildContext context, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Rest Days',
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+          style: context.textTheme.titleSmall?.copyWith(
             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: 12.h),
-        _buildDaysRow(isDark, isWorking: false),
+        Gap(12.h),
+        _buildDaysRow(context, isDark, isWorking: false),
       ],
     );
   }
 
-  Widget _buildDaysRow(bool isDark, {required bool isWorking}) {
+  Widget _buildDaysRow(BuildContext context, bool isDark, {required bool isWorking}) {
     final dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     final workingDayNumbers = workPattern.days
         .where((day) => day.dayType == 'WORK')
@@ -234,42 +205,35 @@ class WorkPatternDetailsDialog extends StatelessWidget with DateTimeConversionMi
         return Expanded(
           child: Padding(
             padding: EdgeInsetsDirectional.only(end: index < 6 ? 8.w : 0),
-            child: _buildDayButton(dayNames[index], isSelected, isDark, isWorking: isWorking),
+            child: _buildDayButton(context, dayNames[index], isSelected, isDark, isWorking: isWorking),
           ),
         );
       }),
     );
   }
 
-  Widget _buildDayButton(String dayName, bool isSelected, bool isDark, {required bool isWorking}) {
+  Widget _buildDayButton(
+    BuildContext context,
+    String dayName,
+    bool isSelected,
+    bool isDark, {
+    required bool isWorking,
+  }) {
     final backgroundColor = isSelected
-        ? (isWorking
-              ? (isDark ? AppColors.successBgDark : AppColors.successBg)
-              : (isDark ? AppColors.errorBgDark : AppColors.errorBg))
-        : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg);
+        ? (isWorking ? AppColors.shiftActiveStatusBg : AppColors.workPatternRestDayBg)
+        : AppColors.workPatternDisabledDayBg;
     final textColor = isSelected
-        ? (isWorking
-              ? (isDark ? AppColors.successTextDark : AppColors.successText)
-              : (isDark ? AppColors.errorTextDark : AppColors.errorText))
-        : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary);
-    final borderColor = isSelected
-        ? (isWorking
-              ? (isDark ? AppColors.successBorderDark : AppColors.successBorder)
-              : (isDark ? AppColors.errorBorderDark : AppColors.errorBorder))
-        : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder);
+        ? (isWorking ? AppColors.shiftActiveStatusText : AppColors.workPatternRestDayText)
+        : AppColors.workPatternDisabledDayText;
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 4.w),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: borderColor, width: 1.w),
-      ),
-      child: Center(
-        child: Text(
-          dayName,
-          style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: textColor),
-        ),
+      height: 44.h,
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(10.r)),
+      alignment: Alignment.center,
+      child: Text(
+        dayName,
+        textAlign: TextAlign.center,
+        style: context.textTheme.titleSmall?.copyWith(color: textColor),
       ),
     );
   }
