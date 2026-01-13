@@ -278,7 +278,6 @@ class CustomButton extends StatelessWidget {
             fontSize: fontSize ?? dimensions.fontSize,
             fontWeight: fontWeight ?? FontWeight.w400,
             color: colors.foregroundColor,
-            height: 24 / (fontSize ?? dimensions.fontSize),
             letterSpacing: 0,
           ),
           textAlign: TextAlign.center,

@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_form_provider.dart';
@@ -249,77 +250,20 @@ class _CreateComponentDialogState extends ConsumerState<CreateComponentDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text.rich(
-          TextSpan(
-            text: localizations.componentType,
-            style: TextStyle(
-              fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
-              height: 20 / 13.7,
-              letterSpacing: 0,
-            ),
-            children: [
-              TextSpan(
-                text: ' *',
-                style: TextStyle(color: isDark ? AppColors.errorTextDark : const Color(0xFFFB2C36)),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsetsDirectional.only(
-            start: isMobile ? 15.w : (isTablet ? 18.w : 21.w),
-            end: isMobile ? 15.w : (isTablet ? 18.w : 33.w),
-            top: 9.h,
-            bottom: 9.h,
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(
-              color: state.errors.containsKey('type')
-                  ? AppColors.error
-                  : (isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC)),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<ComponentType>(
-              value: state.type ?? widget.defaultType,
-              isExpanded: true,
-              isDense: true,
-              hint: Text(
-                localizations.selectComponentTypePlaceholder,
-                style: TextStyle(
-                  fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.4.sp),
-                  color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-                ),
-              ),
-              items: types.map((type) {
-                return DropdownMenuItem<ComponentType>(
-                  value: type,
-                  child: Text(
-                    getTypeLabel(type),
-                    style: TextStyle(
-                      fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.4.sp),
-                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
-                      height: 19 / 15.4,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                );
-              }).toList(),
-              onChanged: isEditMode
-                  ? null
-                  : (value) {
-                      if (value != null) {
-                        notifier.updateField('type', value);
-                      }
-                    },
-            ),
-          ),
+        DigifySelectFieldWithLabel<ComponentType>(
+          label: localizations.componentType,
+          hint: localizations.selectComponentTypePlaceholder,
+          value: state.type ?? widget.defaultType,
+          items: types,
+          itemLabelBuilder: getTypeLabel,
+          onChanged: isEditMode
+              ? null
+              : (value) {
+                  if (value != null) {
+                    notifier.updateField('type', value);
+                  }
+                },
+          isRequired: true,
         ),
         if (isEditMode) ...[
           SizedBox(height: 8.h),
@@ -355,65 +299,19 @@ class _CreateComponentDialogState extends ConsumerState<CreateComponentDialog> {
     bool isMobile,
     bool isTablet,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.parentComponent,
-          style: TextStyle(
-            fontSize: isMobile ? 12.5.sp : (isTablet ? 13.3.sp : 13.7.sp),
-            fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF364153),
-            height: 20 / 13.7,
-            letterSpacing: 0,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsetsDirectional.only(
-            start: isMobile ? 15.w : (isTablet ? 18.w : 21.w),
-            end: isMobile ? 15.w : (isTablet ? 18.w : 33.w),
-            top: 9.h,
-            bottom: 9.h,
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.inputBgDark : Colors.white,
-            border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: state.parentId,
-              isExpanded: true,
-              isDense: true,
-              hint: Text(
-                localizations.selectParentComponent,
-                style: TextStyle(
-                  fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
-                  color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-                ),
-              ),
-              items: [
-                DropdownMenuItem<String>(
-                  value: null,
-                  child: Text(
-                    'No Parent (Root Level)',
-                    style: TextStyle(
-                      fontSize: isMobile ? 14.5.sp : (isTablet ? 15.sp : 15.3.sp),
-                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
-                      height: 19 / 15.3,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                ),
-              ],
-              onChanged: (value) {
-                notifier.updateField('parentId', value);
-              },
-            ),
-          ),
-        ),
-      ],
+    // TODO: Replace with actual parent components list when available
+    final parentOptions = <String?>[null];
+    
+    return DigifySelectFieldWithLabel<String?>(
+      label: localizations.parentComponent,
+      hint: localizations.selectParentComponent,
+      value: state.parentId,
+      items: parentOptions,
+      itemLabelBuilder: (item) => item == null ? 'No Parent (Root Level)' : item,
+      onChanged: (value) {
+        notifier.updateField('parentId', value);
+      },
+      isRequired: false,
     );
   }
 

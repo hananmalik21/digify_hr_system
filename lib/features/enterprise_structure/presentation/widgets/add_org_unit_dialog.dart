@@ -8,6 +8,7 @@ import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
@@ -647,56 +648,22 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     bool isMobile,
     bool isTablet,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${localizations.status} *',
-          style: TextStyle(
-            fontSize: isMobile ? 12.sp : (isTablet ? 12.5.sp : 13.sp),
-            fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-            height: 20 / 13,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          padding: EdgeInsetsDirectional.symmetric(
-            horizontal: 16.w,
-            vertical: isMobile ? 14.h : (isTablet ? 13.h : 12.h),
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFD1D5DB), width: 1),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedStatus,
-              isExpanded: true,
-              isDense: true,
-              icon: Icon(Icons.arrow_drop_down, color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828)),
-              style: TextStyle(
-                fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-              ),
-              items: _statusOptions.map((String value) {
-                return DropdownMenuItem<String>(value: value, child: Text(value));
-              }).toList(),
-              onChanged: _isLoading
-                  ? null
-                  : (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          _selectedStatus = newValue;
-                        });
-                      }
-                    },
-            ),
-          ),
-        ),
-      ],
+    return DigifySelectFieldWithLabel<String>(
+      label: localizations.status,
+      hint: 'Select status',
+      value: _selectedStatus,
+      items: _statusOptions,
+      itemLabelBuilder: (item) => item,
+      onChanged: _isLoading
+          ? null
+          : (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _selectedStatus = newValue;
+                });
+              }
+            },
+      isRequired: true,
     );
   }
 
@@ -711,6 +678,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
         children: [
           CustomButton.outlined(
             label: localizations.cancel,
+
             onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
           ),
           // TextButton(
