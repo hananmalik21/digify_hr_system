@@ -38,9 +38,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       ];
 
       // Check against allowed credentials
-      final isValid = allowedCredentials.any((cred) =>
-          cred['email']!.toLowerCase() == trimmedEmail &&
-          cred['password'] == trimmedPassword);
+      final isValid = allowedCredentials.any(
+        (cred) => cred['email']!.toLowerCase() == trimmedEmail && cred['password'] == trimmedPassword,
+      );
 
       if (isValid) {
         state = state.copyWith(isAuthenticated: true, isLoading: false);

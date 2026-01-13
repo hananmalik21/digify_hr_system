@@ -3,8 +3,8 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
@@ -14,8 +14,6 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/enterprise_error_widget.dart';
-import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +26,6 @@ class ScheduleAssignmentsTab extends ConsumerStatefulWidget {
 }
 
 class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab> with ScrollPaginationMixin {
-  int? _selectedEnterpriseId;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -42,17 +39,9 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
 
   @override
   void onLoadMore() {
-    if (_selectedEnterpriseId == null) return;
-    ref.read(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!).notifier).loadNextPage();
-  }
-
-  void _onEnterpriseChanged(int? enterpriseId) {
-    setState(() {
-      _selectedEnterpriseId = enterpriseId;
-    });
-    if (enterpriseId != null) {
-      ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
-    }
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
+    ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).loadNextPage();
   }
 
   Future<void> _handleDelete(
@@ -60,7 +49,8 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
     ScheduleAssignmentTableRowData item,
     ScheduleAssignmentState state,
   ) async {
-    if (_selectedEnterpriseId == null) return;
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (enterpriseId == null) return;
 
     final assignment = state.items.firstWhere((a) => a.scheduleAssignmentId == item.scheduleAssignmentId);
 
@@ -76,23 +66,20 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
 
     if (confirmed == true && mounted) {
       await ref
-          .read(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!).notifier)
+          .read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier)
           .deleteScheduleAssignment(assignment.scheduleAssignmentId, hard: true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final enterprisesState = ref.watch(enterprisesProvider);
-    final scheduleAssignmentsState = _selectedEnterpriseId != null
-        ? ref.watch(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!))
+    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
+    final scheduleAssignmentsState = selectedEnterpriseId != null
+        ? ref.watch(scheduleAssignmentsNotifierProvider(selectedEnterpriseId))
         : const ScheduleAssignmentState();
 
-    if (_selectedEnterpriseId != null) {
-      ref.listen<ScheduleAssignmentState>(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!), (
-        previous,
-        next,
-      ) {
+    if (selectedEnterpriseId != null) {
+      ref.listen<ScheduleAssignmentState>(scheduleAssignmentsNotifierProvider(selectedEnterpriseId), (previous, next) {
         final wasDeleting = previous?.deletingAssignmentId != null;
         final isDeleting = next.deletingAssignmentId != null;
 
@@ -109,32 +96,25 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       });
     }
 
+    if (selectedEnterpriseId == null) {
+      return const Center(
+        child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view schedule assignments'),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        EnterpriseSelectorWidget(
-          selectedEnterpriseId: _selectedEnterpriseId,
-          onEnterpriseChanged: _onEnterpriseChanged,
+        ScheduleAssignmentActionBar(
+          onAssignSchedule: () {
+            CreateScheduleAssignmentDialog.show(context, selectedEnterpriseId);
+          },
+          onBulkUpload: () {},
+          onExport: () {},
         ),
-        if (enterprisesState.hasError) EnterpriseErrorWidget(enterprisesState: enterprisesState),
-        if (_selectedEnterpriseId != null && !enterprisesState.hasError) ...[
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          ScheduleAssignmentActionBar(
-            onAssignSchedule: () {
-              if (_selectedEnterpriseId != null) {
-                CreateScheduleAssignmentDialog.show(context, _selectedEnterpriseId!);
-              }
-            },
-            onBulkUpload: () {},
-            onExport: () {},
-          ),
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          _buildContent(scheduleAssignmentsState),
-        ] else
-          const Center(
-            child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view schedule assignments'),
-          ),
+        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+        _buildContent(scheduleAssignmentsState),
       ],
     );
   }
@@ -153,8 +133,9 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                if (_selectedEnterpriseId != null) {
-                  ref.read(scheduleAssignmentsNotifierProvider(_selectedEnterpriseId!).notifier).refresh();
+                final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+                if (enterpriseId != null) {
+                  ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).refresh();
                 }
               },
               child: const Text('Retry'),
@@ -189,8 +170,9 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
               final assignment = scheduleAssignmentsState.items.firstWhere(
                 (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
               );
-              if (_selectedEnterpriseId != null) {
-                EditScheduleAssignmentDialog.show(context, _selectedEnterpriseId!, assignment);
+              final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+              if (enterpriseId != null) {
+                EditScheduleAssignmentDialog.show(context, enterpriseId, assignment);
               }
             },
             onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),

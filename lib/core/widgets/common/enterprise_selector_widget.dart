@@ -3,8 +3,8 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/feedback/shimmer_widget.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +25,7 @@ class EnterpriseSelectorWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final enterprisesState = ref.watch(enterprisesProvider);
+    final enterprisesState = ref.watch(enterprisesCacheStateProvider);
     final isDark = context.isDark;
     final selectedEnterprise = enterprisesState.findEnterpriseById(selectedEnterpriseId);
     final hasSelection = selectedEnterprise != null;
