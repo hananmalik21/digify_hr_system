@@ -31,11 +31,8 @@ class WorkPatternTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               workPattern.patternCode,
-              style: TextStyle(
-                fontSize: 13.8.sp,
-                fontWeight: FontWeight.w600,
+              style: context.textTheme.titleSmall?.copyWith(
                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                height: 20 / 13.8,
               ),
             ),
             166.5.w,
@@ -47,11 +44,8 @@ class WorkPatternTableRow extends StatelessWidget {
               children: [
                 Text(
                   workPattern.patternNameEn,
-                  style: TextStyle(
-                    fontSize: 13.8.sp,
-                    fontWeight: FontWeight.w600,
+                  style: context.textTheme.titleSmall?.copyWith(
                     color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                    height: 20 / 13.8,
                   ),
                 ),
                 if (workPattern.patternNameAr.isNotEmpty) ...[
@@ -59,11 +53,8 @@ class WorkPatternTableRow extends StatelessWidget {
                   Text(
                     workPattern.patternNameAr,
                     textDirection: TextDirection.rtl,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
+                    style: context.textTheme.bodyMedium?.copyWith(
                       color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      height: 20 / 14,
                     ),
                   ),
                 ],
@@ -75,11 +66,8 @@ class WorkPatternTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               '${workPattern.workingDays} ${workPattern.workingDays == 1 ? 'day' : 'days'}',
-              style: TextStyle(
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textSecondary,
-                height: 20 / 13.6,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
             192.6.w,
@@ -87,11 +75,8 @@ class WorkPatternTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               '${workPattern.restDays} ${workPattern.restDays == 1 ? 'day' : 'days'}',
-              style: TextStyle(
-                fontSize: 13.5.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textSecondary,
-                height: 20 / 13.5,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
             207.2.w,
@@ -99,11 +84,8 @@ class WorkPatternTableRow extends StatelessWidget {
           _buildDataCell(
             Text(
               '${workPattern.totalHoursPerWeek}h',
-              style: TextStyle(
-                fontSize: 13.9.sp,
-                fontWeight: FontWeight.w600,
+              style: context.textTheme.titleSmall?.copyWith(
                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                height: 20 / 13.9,
               ),
             ),
             176.52.w,

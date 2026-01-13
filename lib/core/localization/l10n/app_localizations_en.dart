@@ -2922,6 +2922,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workPatterns => 'Work Patterns';
 
   @override
+  String get addWorkPattern => 'Add Work Pattern';
+
+  @override
+  String get createWorkPattern => 'Create Work Pattern';
+
+  @override
   String get workSchedules => 'Work Schedules';
 
   @override

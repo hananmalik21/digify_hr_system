@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/config/work_pattern_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class EditWorkPatternDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
@@ -183,7 +184,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                     enabled: false,
                   ),
                 ),
-                SizedBox(width: 24.w),
+                Gap(24.w),
                 Expanded(
                   child: DigifyTextField(
                     controller: _patternNameEnController,
@@ -200,7 +201,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
 
             // Second row: Pattern Name (Arabic) and Pattern Type
             Row(
@@ -222,9 +223,9 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                     inputFormatters: [AppInputFormatters.nameAr],
                   ),
                 ),
-                SizedBox(width: 24.w),
+                Gap(24.w),
                 Expanded(
-                  child: DigifySelectField<String>(
+                  child: DigifySelectFieldWithLabel<String>(
                     label: 'Pattern Type',
                     value: _selectedPatternType,
                     items: WorkPatternConfig.patternTypes,
@@ -235,65 +236,38 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                       });
                     },
                     isRequired: true,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Pattern type is required';
-                      }
-                      return null;
-                    },
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
 
             // Third row: Total Hours/Week and Status
             Row(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          text: 'Total Hours/Week',
-                          style: TextStyle(
-                            fontSize: 13.8.sp,
-                            fontWeight: FontWeight.w500,
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
-                            height: 20 / 13.8,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(fontWeight: FontWeight.w500, color: AppColors.deleteIconRed),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      DigifyTextField(
-                        controller: _totalHoursController,
-                        hintText: '40',
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Total hours is required';
-                          }
-                          final hours = int.tryParse(value);
-                          if (hours == null || hours <= 0 || hours > 168) {
-                            return 'Please enter a valid number (1-168)';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+                  child: DigifyTextField(
+                    controller: _totalHoursController,
+                    labelText: 'Total Hours/Week',
+                    hintText: '40',
+                    isRequired: true,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Total hours is required';
+                      }
+                      final hours = int.tryParse(value);
+                      if (hours == null || hours <= 0 || hours > 168) {
+                        return 'Please enter a valid number (1-168)';
+                      }
+                      return null;
+                    },
                   ),
                 ),
-                SizedBox(width: 24.w),
+                Gap(24.w),
                 Expanded(
-                  child: DigifySelectField<PositionStatus>(
+                  child: DigifySelectFieldWithLabel<PositionStatus>(
                     label: 'Status',
                     value: _selectedStatus,
                     items: [PositionStatus.active, PositionStatus.inactive],
@@ -310,7 +284,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
 
             // Working Days section
             _buildDaysSection(
@@ -320,7 +294,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
               onDayToggle: _toggleWorkingDay,
               isRequired: true,
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
 
             // Rest Days section
             _buildDaysSection(
@@ -339,7 +313,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
           width: 100.w,
           onPressed: _isUpdating ? null : () => Navigator.of(context).pop(),
         ),
-        SizedBox(width: 12.w),
+        Gap(12.w),
         AppButton(
           label: 'Save Changes',
           width: 179.w,
@@ -381,7 +355,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                 : null,
           ),
         ),
-        SizedBox(height: 12.h),
+        Gap(12.h),
         Row(
           children: List.generate(7, (index) {
             final dayNumber = index + 1;
@@ -424,7 +398,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                             color: isSelected ? AppColors.primary : Colors.transparent,
                           ),
                         ),
-                        SizedBox(width: 8.w),
+                        Gap(8.w),
                         Text(
                           WorkPatternConfig.dayNames[index],
                           style: TextStyle(

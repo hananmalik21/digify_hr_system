@@ -257,6 +257,12 @@ class AppColors {
   static const Color shiftInactiveStatusBg = Color(0xFFFEE2E2);
   static const Color shiftInactiveStatusText = Color(0xFF991B1B);
 
+  // Work Pattern Day Colors
+  static const Color workPatternRestDayBg = Color(0xFFFFE2E2);
+  static const Color workPatternRestDayText = Color(0xFF9F0712);
+  static const Color workPatternDisabledDayBg = Color(0xFFF3F4F6);
+  static const Color workPatternDisabledDayText = Color(0xFF99A1AF);
+
   // Dialog Colors
   static const Color dialogCloseIcon = Color(0xFF99A1AF);
   static const Color dialogTitle = Color(0xFF101828);

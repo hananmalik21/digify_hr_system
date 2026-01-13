@@ -1045,6 +1045,8 @@
   "manageShiftsWorkPatternsAr": "إدارة الورديات وأنماط العمل والجداول والتعيينات",
   "shifts": "Shifts",
   "workPatterns": "Work Patterns",
+  "addWorkPattern": "Add Work Pattern",
+  "createWorkPattern": "Create Work Pattern",
   "workSchedules": "Work Schedules",
   "scheduleAssignments": "Schedule Assignments",
   "viewCalendar": "View Calendar",
