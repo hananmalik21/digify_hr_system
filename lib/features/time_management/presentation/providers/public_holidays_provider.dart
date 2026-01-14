@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/public_holiday_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/public_holiday_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
@@ -137,6 +138,7 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   final DeletePublicHolidayUseCase deleteHolidayUseCase;
   final CreatePublicHolidayUseCase createHolidayUseCase;
   final UpdatePublicHolidayUseCase updateHolidayUseCase;
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   PublicHolidaysNotifier({
     required this.getHolidaysUseCase,
@@ -144,6 +146,12 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
     required this.createHolidayUseCase,
     required this.updateHolidayUseCase,
   }) : super(const PublicHolidaysState());
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
+  }
 
   /// Load holidays
   Future<void> loadHolidays({bool refresh = false}) async {
@@ -214,9 +222,25 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   }
 
   /// Set search query
-  void setSearchQuery(String? query) {
-    if (state.searchQuery == query) return;
-    state = state.copyWith(searchQuery: query, currentPage: 1);
+  void setSearchQuery(String query) {
+    final trimmedQuery = query.trim();
+    if (state.searchQuery == trimmedQuery) return;
+
+    if (trimmedQuery.isEmpty) {
+      clearSearch();
+      return;
+    }
+
+    state = state.copyWith(searchQuery: trimmedQuery, currentPage: 1, isLoading: true, clearError: true);
+    _debouncer.run(() async {
+      await loadHolidays(refresh: true);
+    });
+  }
+
+  /// Clear search query
+  void clearSearch() {
+    if (state.searchQuery == null || state.searchQuery!.isEmpty) return;
+    state = state.copyWith(clearSearch: true, currentPage: 1);
     loadHolidays(refresh: true);
   }
 

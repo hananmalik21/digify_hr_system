@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'holiday_type_badge.dart';
 
@@ -61,7 +62,7 @@ class HolidayCard extends StatelessWidget {
       padding: EdgeInsets.all(17.w),
       decoration: showBorder
           ? BoxDecoration(
-              color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+              color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
             )
@@ -70,9 +71,9 @@ class HolidayCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildDateBadge(context, isDark),
-          SizedBox(width: 16.w),
+          Gap(16.w),
           Expanded(child: _buildHolidayInfo(context, isDark)),
-          SizedBox(width: 16.w),
+          Gap(16.w),
           _buildActionButtons(context),
         ],
       ),
@@ -84,7 +85,7 @@ class HolidayCard extends StatelessWidget {
       width: 64.w,
       height: 64.h,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : const Color(0xFFEFF6FF),
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.infoBg,
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -92,23 +93,17 @@ class HolidayCard extends StatelessWidget {
         children: [
           Text(
             '${holiday.day}',
-            style: TextStyle(
+            style: context.textTheme.displaySmall?.copyWith(
               fontSize: 24.sp,
-              fontWeight: FontWeight.w700,
               color: isDark ? AppColors.textPrimaryDark : AppColors.primary,
-              fontFamily: 'Inter',
-              height: 32 / 24,
             ),
           ),
-          SizedBox(height: 4.h),
+          Gap(4.h),
           Text(
             holiday.month,
-            style: TextStyle(
+            style: context.textTheme.labelSmall?.copyWith(
               fontSize: 11.8.sp,
-              fontWeight: FontWeight.w400,
               color: isDark ? AppColors.textSecondaryDark : AppColors.primary,
-              fontFamily: 'Inter',
-              height: 16 / 11.8,
             ),
           ),
         ],
@@ -124,85 +119,61 @@ class HolidayCard extends StatelessWidget {
           children: [
             Text(
               holiday.nameEn,
-              style: TextStyle(
+              style: context.textTheme.titleMedium?.copyWith(
                 fontSize: 15.8.sp,
-                fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-                fontFamily: 'Inter',
-                height: 24 / 15.8,
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
             ),
-            SizedBox(width: 12.w),
+            Gap(12.w),
             HolidayTypeBadge(type: holiday.type, paymentStatus: holiday.paymentStatus),
           ],
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         Text(
           holiday.nameAr,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+          style: context.textTheme.bodyMedium?.copyWith(
             color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-            fontFamily: 'Inter',
           ),
           textDirection: TextDirection.rtl,
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         Text(
           holiday.descriptionEn,
-          style: TextStyle(
+          style: context.textTheme.bodySmall?.copyWith(
             fontSize: 13.6.sp,
-            fontWeight: FontWeight.w400,
             color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-            fontFamily: 'Inter',
-            height: 20 / 13.6,
           ),
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         Text(
           holiday.descriptionAr,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+          style: context.textTheme.bodyMedium?.copyWith(
             color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-            fontFamily: 'Inter',
-            height: 1.4,
           ),
           textDirection: TextDirection.rtl,
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         Row(
           children: [
             Text(
               'Applies to: ${holiday.appliesTo}',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
-                fontFamily: 'Inter',
-                height: 16 / 12,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textTertiary,
               ),
             ),
-            SizedBox(width: 8.w),
+            Gap(8.w),
             Text(
               '•',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
-                fontFamily: 'Inter',
-                height: 16 / 12,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textTertiary,
               ),
             ),
-            SizedBox(width: 16.w),
+            Gap(16.w),
             Text(
               'Date: ${holiday.date}',
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 fontSize: 11.8.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
-                fontFamily: 'Inter',
-                height: 16 / 11.8,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textTertiary,
               ),
             ),
           ],
@@ -223,7 +194,7 @@ class HolidayCard extends StatelessWidget {
           height: 18,
           color: isDark ? null : AppColors.viewIconBlue,
         ),
-        SizedBox(width: 8.w),
+        Gap(8.w),
         DigifyAssetButton(
           assetPath: Assets.icons.editIcon.path,
           onTap: onEdit,
@@ -231,7 +202,7 @@ class HolidayCard extends StatelessWidget {
           height: 18,
           color: isDark ? null : AppColors.editIconGreen,
         ),
-        SizedBox(width: 8.w),
+        Gap(8.w),
         DigifyAssetButton(
           assetPath: Assets.icons.deleteIconRed.path,
           onTap: onDelete,

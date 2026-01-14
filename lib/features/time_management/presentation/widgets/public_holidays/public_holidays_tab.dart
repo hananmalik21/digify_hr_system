@@ -1,7 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
@@ -9,14 +11,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/monthly_holiday_group.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_action_bar.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_compliance_banner.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_skeleton.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/dialogs/create_holiday_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/dialogs/view_holiday_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/mappers/public_holiday_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 class PublicHolidaysTab extends ConsumerStatefulWidget {
   const PublicHolidaysTab({super.key});
@@ -80,7 +81,7 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
     final state = ref.watch(publicHolidaysNotifierProvider);
     final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
     final holidayGroups = PublicHolidayMapper.groupByMonth(state.holidays);
-    final stats = PublicHolidayMapper.calculateStats(state.holidays);
+    PublicHolidayMapper.calculateStats(state.holidays);
 
     ref.listen<PublicHolidaysState>(publicHolidaysNotifierProvider, (previous, next) {
       if (previous == null) return;
@@ -111,16 +112,6 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PublicHolidaysComplianceBanner(),
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
-          PublicHolidaysStatsCards(
-            totalHolidays: stats.totalHolidays,
-            fixedHolidays: stats.fixedHolidays,
-            islamicHolidays: stats.islamicHolidays,
-            paidHolidays: stats.paidHolidays,
-            isDark: isDark,
-          ),
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
           PublicHolidaysActionBar(
             searchController: _searchController,
             selectedYear: _selectedYear,
@@ -139,37 +130,23 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
               });
               notifier.setSelectedType(_selectedType == PublicHolidaysConfig.defaultType ? null : _selectedType);
             },
-            onSearchChanged: (query) {
-              notifier.setSearchQuery(query.isEmpty ? null : query);
-            },
+            onSearchChanged: (query) => notifier.setSearchQuery(query),
             onAddHoliday: () => CreateHolidayDialog.show(context),
             onImport: () {},
             onExport: () {},
           ),
-          SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+          Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
           if (state.isLoading && state.holidays.isEmpty)
             const PublicHolidaysSkeleton(groupCount: 3, holidaysPerGroup: 2)
           else if (state.hasError)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.w),
-                child: Column(
-                  children: [
-                    Text(state.errorMessage ?? 'An error occurred', style: TextStyle(color: AppColors.error)),
-                    SizedBox(height: 16.h),
-                    ElevatedButton(onPressed: () => notifier.refresh(), child: const Text('Retry')),
-                  ],
-                ),
-              ),
-            )
+            DigifyErrorState(message: state.errorMessage ?? 'An error occurred', onRetry: () => notifier.refresh())
           else if (holidayGroups.isEmpty)
             Center(
               child: Padding(
                 padding: EdgeInsets.all(24.w),
                 child: Text(
                   'No holidays found',
-                  style: TextStyle(
-                    fontSize: 16.sp,
+                  style: context.textTheme.titleMedium?.copyWith(
                     color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                   ),
                 ),
@@ -199,7 +176,7 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
                     },
                     onDeleteHoliday: (id) => _handleDeleteHoliday(context, id, notifier, state),
                   ),
-                  SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+                  Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
                 ],
               ),
             ),
