@@ -2954,4 +2954,206 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get retry => 'إعادة المحاولة';
+
+  @override
+  String get newLeaveRequest => 'طلب إجازة جديد';
+
+  @override
+  String get manageEmployeeLeaveRequests =>
+      'إدارة طلبات إجازات الموظفين وفقاً لقانون العمل الكويتي';
+
+  @override
+  String get kuwaitLaborLawLeaveEntitlements =>
+      'استحقاقات الإجازة بموجب قانون العمل الكويتي';
+
+  @override
+  String get maternityLeave => 'إجازة الأمومة';
+
+  @override
+  String get annualLeaveDescription =>
+      '30 يوماً في السنة بعد سنة واحدة من الخدمة';
+
+  @override
+  String get sickLeaveDescription =>
+      '15 يوماً براتب كامل + 10 أيام بنصف راتب + 10 أيام بدون راتب';
+
+  @override
+  String get maternityLeaveDescription =>
+      '70 يوماً إجمالي (30 قبل الولادة، 40 بعد الولادة)';
+
+  @override
+  String get emergencyLeaveDescription => '5 أيام في السنة للطوارئ';
+
+  @override
+  String get rejected => 'مرفوض';
+
+  @override
+  String get employee => 'الموظف';
+
+  @override
+  String get type => 'النوع';
+
+  @override
+  String get days => 'الأيام';
+
+  @override
+  String get reason => 'السبب';
+
+  @override
+  String get familyVacation => 'إجازة عائلية';
+
+  @override
+  String get medicalTreatment => 'علاج طبي';
+
+  @override
+  String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';
+
+  @override
+  String get submitRequests3DaysAdvance =>
+      'تقديم الطلبات قبل 3 أيام على الأقل للإجازة السنوية';
+
+  @override
+  String get sickLeaveRequiresCertificate =>
+      'الإجازة المرضية تتطلب شهادة طبية إذا كانت أكثر من 3 أيام';
+
+  @override
+  String get ensureWorkHandover =>
+      'التأكد من اكتمال تسليم العمل قبل بدء الإجازة';
+
+  @override
+  String get typeToSearchEmployees => 'اكتب للبحث عن الموظفين...';
+
+  @override
+  String get leaveType => 'نوع الإجازة';
+
+  @override
+  String get regularPaidVacationLeave => 'إجازة مدفوعة عادية';
+
+  @override
+  String get maximum30DaysPerYear => 'الحد الأقصى: 30 يوماً في السنة';
+
+  @override
+  String get startTime => 'وقت البدء';
+
+  @override
+  String get endTime => 'وقت الانتهاء';
+
+  @override
+  String get fullDay => 'يوم كامل';
+
+  @override
+  String get reasonForLeave => 'سبب الإجازة';
+
+  @override
+  String get pleaseProvideDetailedReason =>
+      'يرجى تقديم سبب مفصل لطلب الإجازة...';
+
+  @override
+  String charactersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count/500 حرف',
+      one: '1/500 حرف',
+      zero: '0/500 حرف',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workDelegatedTo => 'العمل المفوض إلى';
+
+  @override
+  String get selectColleagueToHandleWork => 'اختر زميلاً للتعامل مع عملك...';
+
+  @override
+  String get selectColleagueWhoWillHandle =>
+      'اختر زميلاً سيتولى مسؤولياتك أثناء غيابك';
+
+  @override
+  String get contactInformationDuringLeave => 'معلومات الاتصال أثناء الإجازة';
+
+  @override
+  String get addressDuringLeave => 'العنوان أثناء الإجازة';
+
+  @override
+  String get enterAddressOrLocation => 'أدخل عنوانك أو موقعك أثناء الإجازة...';
+
+  @override
+  String get contactPhoneNumber => 'رقم الهاتف للاتصال';
+
+  @override
+  String get emergencyContactName => 'اسم جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get enterEmergencyContactName =>
+      'أدخل اسم جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get emergencyContactPhone => 'هاتف جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get additionalNotes => 'ملاحظات إضافية';
+
+  @override
+  String get anyAdditionalInformation =>
+      'أي معلومات إضافية أو اعتبارات خاصة...';
+
+  @override
+  String get supportingDocuments => 'المستندات الداعمة';
+
+  @override
+  String get clickToUploadOrDragDrop => 'انقر للتحميل أو اسحب وأفلت';
+
+  @override
+  String get pdfDocDocxJpgPngUpTo10MB =>
+      'PDF, DOC, DOCX, JPG, PNG حتى 10 ميجابايت لكل ملف';
+
+  @override
+  String get requiredDocuments => 'المستندات المطلوبة:';
+
+  @override
+  String get supportingDocumentsIfApplicable => 'المستندات الداعمة (إن وجدت)';
+
+  @override
+  String get requestSummary => 'ملخص الطلب';
+
+  @override
+  String get attachments => 'المرفقات';
+
+  @override
+  String filesCount(int count) {
+    return '$count ملف(ات)';
+  }
+
+  @override
+  String get declaration => 'إقرار';
+
+  @override
+  String get declarationText =>
+      'بإرسال طلب الإجازة هذا، أؤكد أن جميع المعلومات المقدمة دقيقة وكاملة. أفهم أن تقديم معلومات خاطئة قد يؤدي إلى إجراءات تأديبية. لقد أكملت تسليم العمل اللازم وأبلغت الأطراف المعنية بغيابي.';
+
+  @override
+  String get completeAllStepsToSubmit => 'أكمل جميع الخطوات لتقديم طلب الإجازة';
+
+  @override
+  String get leaveDetails => 'تفاصيل الإجازة';
+
+  @override
+  String get contactAndNotes => 'الاتصال والملاحظات';
+
+  @override
+  String get documentsAndReview => 'المستندات والمراجعة';
+
+  @override
+  String get previous => 'السابق';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get submitRequest => 'إرسال الطلب';
+
+  @override
+  String get notSelected => 'غير محدد';
 }

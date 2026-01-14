@@ -957,5 +957,86 @@
     }
   },
   "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-  "retry": "إعادة المحاولة"
+  "retry": "إعادة المحاولة",
+  "newLeaveRequest": "طلب إجازة جديد",
+  "manageEmployeeLeaveRequests": "إدارة طلبات إجازات الموظفين وفقاً لقانون العمل الكويتي",
+  "kuwaitLaborLawLeaveEntitlements": "استحقاقات الإجازة بموجب قانون العمل الكويتي",
+  "maternityLeave": "إجازة الأمومة",
+  "annualLeaveDescription": "30 يوماً في السنة بعد سنة واحدة من الخدمة",
+  "sickLeaveDescription": "15 يوماً براتب كامل + 10 أيام بنصف راتب + 10 أيام بدون راتب",
+  "maternityLeaveDescription": "70 يوماً إجمالي (30 قبل الولادة، 40 بعد الولادة)",
+  "emergencyLeaveDescription": "5 أيام في السنة للطوارئ",
+  "all": "الكل",
+  "rejected": "مرفوض",
+  "employee": "الموظف",
+  "type": "النوع",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
+  "days": "الأيام",
+  "reason": "السبب",
+  "status": "الحالة",
+  "actions": "الإجراءات",
+  "familyVacation": "إجازة عائلية",
+  "medicalTreatment": "علاج طبي",
+  "leaveRequestGuidelines": "إرشادات طلب الإجازة",
+  "submitRequests3DaysAdvance": "تقديم الطلبات قبل 3 أيام على الأقل للإجازة السنوية",
+  "sickLeaveRequiresCertificate": "الإجازة المرضية تتطلب شهادة طبية إذا كانت أكثر من 3 أيام",
+  "ensureWorkHandover": "التأكد من اكتمال تسليم العمل قبل بدء الإجازة",
+  "typeToSearchEmployees": "اكتب للبحث عن الموظفين...",
+  "leaveType": "نوع الإجازة",
+  "regularPaidVacationLeave": "إجازة مدفوعة عادية",
+  "maximum30DaysPerYear": "الحد الأقصى: 30 يوماً في السنة",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
+  "startTime": "وقت البدء",
+  "endTime": "وقت الانتهاء",
+  "fullDay": "يوم كامل",
+  "reasonForLeave": "سبب الإجازة",
+  "pleaseProvideDetailedReason": "يرجى تقديم سبب مفصل لطلب الإجازة...",
+  "charactersCount": "{count, plural, =0{0/500 حرف} =1{1/500 حرف} other{{count}/500 حرف}}",
+  "@charactersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workDelegatedTo": "العمل المفوض إلى",
+  "selectColleagueToHandleWork": "اختر زميلاً للتعامل مع عملك...",
+  "selectColleagueWhoWillHandle": "اختر زميلاً سيتولى مسؤولياتك أثناء غيابك",
+  "contactInformationDuringLeave": "معلومات الاتصال أثناء الإجازة",
+  "addressDuringLeave": "العنوان أثناء الإجازة",
+  "enterAddressOrLocation": "أدخل عنوانك أو موقعك أثناء الإجازة...",
+  "contactPhoneNumber": "رقم الهاتف للاتصال",
+  "emergencyContactName": "اسم جهة الاتصال في حالات الطوارئ",
+  "enterEmergencyContactName": "أدخل اسم جهة الاتصال في حالات الطوارئ",
+  "emergencyContactPhone": "هاتف جهة الاتصال في حالات الطوارئ",
+  "additionalNotes": "ملاحظات إضافية",
+  "anyAdditionalInformation": "أي معلومات إضافية أو اعتبارات خاصة...",
+  "supportingDocuments": "المستندات الداعمة",
+  "clickToUploadOrDragDrop": "انقر للتحميل أو اسحب وأفلت",
+  "pdfDocDocxJpgPngUpTo10MB": "PDF, DOC, DOCX, JPG, PNG حتى 10 ميجابايت لكل ملف",
+  "requiredDocuments": "المستندات المطلوبة:",
+  "supportingDocumentsIfApplicable": "المستندات الداعمة (إن وجدت)",
+  "requestSummary": "ملخص الطلب",
+  "duration": "المدة",
+  "attachments": "المرفقات",
+  "filesCount": "{count} ملف(ات)",
+  "@filesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "declaration": "إقرار",
+  "declarationText": "بإرسال طلب الإجازة هذا، أؤكد أن جميع المعلومات المقدمة دقيقة وكاملة. أفهم أن تقديم معلومات خاطئة قد يؤدي إلى إجراءات تأديبية. لقد أكملت تسليم العمل اللازم وأبلغت الأطراف المعنية بغيابي.",
+  "completeAllStepsToSubmit": "أكمل جميع الخطوات لتقديم طلب الإجازة",
+  "leaveDetails": "تفاصيل الإجازة",
+  "contactAndNotes": "الاتصال والملاحظات",
+  "documentsAndReview": "المستندات والمراجعة",
+  "previous": "السابق",
+  "next": "التالي",
+  "submitRequest": "إرسال الطلب",
+  "notSelected": "غير محدد"
 }

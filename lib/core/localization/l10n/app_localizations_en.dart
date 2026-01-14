@@ -2973,4 +2973,203 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get newLeaveRequest => 'New Leave Request';
+
+  @override
+  String get manageEmployeeLeaveRequests =>
+      'Manage employee leave requests according to Kuwait Labor Law';
+
+  @override
+  String get kuwaitLaborLawLeaveEntitlements =>
+      'Kuwait Labor Law Leave Entitlements';
+
+  @override
+  String get maternityLeave => 'Maternity Leave';
+
+  @override
+  String get annualLeaveDescription =>
+      '30 days per year after 1 year of service';
+
+  @override
+  String get sickLeaveDescription =>
+      '15 days full pay + 10 days half pay + 10 days unpaid';
+
+  @override
+  String get maternityLeaveDescription =>
+      '70 days total (30 before, 40 after delivery)';
+
+  @override
+  String get emergencyLeaveDescription => '5 days per year for emergencies';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get employee => 'Employee';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get days => 'Days';
+
+  @override
+  String get reason => 'Reason';
+
+  @override
+  String get familyVacation => 'Family vacation';
+
+  @override
+  String get medicalTreatment => 'Medical treatment';
+
+  @override
+  String get leaveRequestGuidelines => 'Leave Request Guidelines';
+
+  @override
+  String get submitRequests3DaysAdvance =>
+      'Submit requests at least 3 days in advance for annual leave';
+
+  @override
+  String get sickLeaveRequiresCertificate =>
+      'Sick leave requires medical certificate if more than 3 days';
+
+  @override
+  String get ensureWorkHandover =>
+      'Ensure work handover is completed before leave starts';
+
+  @override
+  String get typeToSearchEmployees => 'Type to search employees...';
+
+  @override
+  String get leaveType => 'Leave Type';
+
+  @override
+  String get regularPaidVacationLeave => 'Regular paid vacation leave';
+
+  @override
+  String get maximum30DaysPerYear => 'Maximum: 30 days per year';
+
+  @override
+  String get startTime => 'Start Time';
+
+  @override
+  String get endTime => 'End Time';
+
+  @override
+  String get fullDay => 'Full Day';
+
+  @override
+  String get reasonForLeave => 'Reason for Leave';
+
+  @override
+  String get pleaseProvideDetailedReason =>
+      'Please provide a detailed reason for your leave request...';
+
+  @override
+  String charactersCount(int count) {
+    return '$count/500 characters';
+  }
+
+  @override
+  String get workDelegatedTo => 'Work Delegated To';
+
+  @override
+  String get selectColleagueToHandleWork =>
+      'Select colleague to handle your work...';
+
+  @override
+  String get selectColleagueWhoWillHandle =>
+      'Select a colleague who will handle your responsibilities during your absence';
+
+  @override
+  String get contactInformationDuringLeave =>
+      'Contact Information During Leave';
+
+  @override
+  String get addressDuringLeave => 'Address During Leave';
+
+  @override
+  String get enterAddressOrLocation =>
+      'Enter your address or location during leave...';
+
+  @override
+  String get contactPhoneNumber => 'Contact Phone Number';
+
+  @override
+  String get emergencyContactName => 'Emergency Contact Name';
+
+  @override
+  String get enterEmergencyContactName => 'Enter emergency contact name';
+
+  @override
+  String get emergencyContactPhone => 'Emergency Contact Phone';
+
+  @override
+  String get additionalNotes => 'Additional Notes';
+
+  @override
+  String get anyAdditionalInformation =>
+      'Any additional information or special considerations...';
+
+  @override
+  String get supportingDocuments => 'Supporting Documents';
+
+  @override
+  String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';
+
+  @override
+  String get pdfDocDocxJpgPngUpTo10MB =>
+      'PDF, DOC, DOCX, JPG, PNG up to 10MB each';
+
+  @override
+  String get requiredDocuments => 'Required Documents:';
+
+  @override
+  String get supportingDocumentsIfApplicable =>
+      'Supporting documents (if applicable)';
+
+  @override
+  String get requestSummary => 'Request Summary';
+
+  @override
+  String get attachments => 'Attachments';
+
+  @override
+  String filesCount(int count) {
+    return '$count file(s)';
+  }
+
+  @override
+  String get declaration => 'Declaration';
+
+  @override
+  String get declarationText =>
+      'By submitting this leave request, I confirm that all information provided is accurate and complete. I understand that providing false information may result in disciplinary action. I have completed necessary work handover and informed relevant parties about my absence.';
+
+  @override
+  String get completeAllStepsToSubmit =>
+      'Complete all steps to submit your leave application';
+
+  @override
+  String get leaveDetails => 'Leave Details';
+
+  @override
+  String get contactAndNotes => 'Contact & Notes';
+
+  @override
+  String get documentsAndReview => 'Documents & Review';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get submitRequest => 'Submit Request';
+
+  @override
+  String get notSelected => 'Not selected';
 }

@@ -13,6 +13,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
+import 'package:digify_hr_system/features/time_management/presentation/screens/leave_management_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -177,7 +178,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.leaveManagement,
             name: 'leave-management',
-            builder: (context, state) => const PlaceholderScreen(title: 'Leave Management'),
+            builder: (context, state) => const LeaveManagementScreen(),
           ),
           GoRoute(
             path: AppRoutes.attendance,
