@@ -268,6 +268,7 @@ class DigifyTextArea extends StatelessWidget {
   final bool enabled;
   final TextAlign textAlign;
   final TextDirection? textDirection;
+  final List<TextInputFormatter>? inputFormatters;
 
   const DigifyTextArea({
     super.key,
@@ -283,6 +284,7 @@ class DigifyTextArea extends StatelessWidget {
     this.enabled = true,
     this.textAlign = TextAlign.start,
     this.textDirection,
+    this.inputFormatters,
   });
 
   @override
@@ -327,8 +329,9 @@ class DigifyTextArea extends StatelessWidget {
           readOnly: readOnly,
           enabled: enabled,
           onChanged: onChanged,
-          textAlign: textAlign,
+          textAlign: textDirection == TextDirection.rtl ? TextAlign.right : textAlign,
           textDirection: textDirection,
+          inputFormatters: inputFormatters,
           style: TextStyle(fontSize: 15.sp, color: isDark ? context.themeTextPrimary : AppColors.textPrimary),
           decoration: InputDecoration(
             hintText: hintText,

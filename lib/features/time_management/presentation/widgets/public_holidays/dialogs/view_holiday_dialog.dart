@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/time_management/data/config/public_hol
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class ViewHolidayDialog {
@@ -43,18 +44,18 @@ class _ViewHolidayDialogContent extends StatelessWidget {
               Expanded(
                 child: _buildInfoCard(context, label: 'Holiday Name', value: holiday.nameEn, isDark: isDark),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
                 child: _buildInfoCard(context, label: 'اسم العطلة', value: holiday.nameAr, isDark: isDark, isRtl: true),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SizedBox(
             width: double.infinity,
             child: _buildInfoCard(context, label: 'Date', value: formattedDate, isDark: isDark),
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           Row(
             children: [
               Expanded(
@@ -65,7 +66,7 @@ class _ViewHolidayDialogContent extends StatelessWidget {
                   isDark: isDark,
                 ),
               ),
-              SizedBox(width: 16.w),
+              Gap(16.w),
               Expanded(
                 child: _buildInfoCard(
                   context,
@@ -74,13 +75,9 @@ class _ViewHolidayDialogContent extends StatelessWidget {
                   isDark: isDark,
                 ),
               ),
-              // SizedBox(width: 16.w),
-              // Expanded(
-              //   child: _buildInfoCard(context, label: 'Recurring', value: 'Yes', isDark: isDark),
-              // ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SizedBox(
             width: double.infinity,
             child: _buildDescriptionCard(
@@ -91,7 +88,7 @@ class _ViewHolidayDialogContent extends StatelessWidget {
               isDark: isDark,
             ),
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SizedBox(
             width: double.infinity,
             child: _buildInfoCard(
@@ -118,7 +115,6 @@ class _ViewHolidayDialogContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.inputBgDark : AppColors.inputBg,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,27 +122,19 @@ class _ViewHolidayDialogContent extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontFamily: 'Inter',
+            style: context.textTheme.bodySmall?.copyWith(
               fontSize: 13.6.sp,
-              fontWeight: FontWeight.w400,
-              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-              height: 20 / 13.6,
-              letterSpacing: 0,
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 8.h),
+          Gap(8.h),
           Directionality(
             textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             child: Text(
               value,
-              style: TextStyle(
-                fontFamily: 'Inter',
+              style: context.textTheme.titleSmall?.copyWith(
                 fontSize: 15.6.sp,
-                fontWeight: FontWeight.w500,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-                height: 24 / 15.6,
-                letterSpacing: 0,
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
             ),
           ),
@@ -167,7 +155,6 @@ class _ViewHolidayDialogContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.inputBgDark : AppColors.inputBg,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,39 +162,27 @@ class _ViewHolidayDialogContent extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontFamily: 'Inter',
+            style: context.textTheme.bodySmall?.copyWith(
               fontSize: 13.6.sp,
-              fontWeight: FontWeight.w400,
-              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-              height: 20 / 13.6,
-              letterSpacing: 0,
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 8.h),
+          Gap(8.h),
           Text(
             valueEn,
-            style: TextStyle(
-              fontFamily: 'Inter',
+            style: context.textTheme.titleSmall?.copyWith(
               fontSize: 15.6.sp,
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-              height: 24 / 15.6,
-              letterSpacing: 0,
+              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 8.h),
+          Gap(8.h),
           Directionality(
             textDirection: ui.TextDirection.rtl,
             child: Text(
               valueAr,
-              style: TextStyle(
-                fontFamily: 'Inter',
+              style: context.textTheme.titleSmall?.copyWith(
                 fontSize: 15.6.sp,
-                fontWeight: FontWeight.w500,
-                color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-                height: 24 / 15.6,
-                letterSpacing: 0,
+                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
             ),
           ),

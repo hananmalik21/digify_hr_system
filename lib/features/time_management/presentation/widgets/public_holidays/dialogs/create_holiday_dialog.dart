@@ -6,7 +6,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class CreateHolidayDialog {
@@ -96,8 +97,8 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: isDark ? AppColors.cardBackgroundDark : Colors.white,
+              onPrimary: AppColors.cardBackground,
+              surface: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
               onSurface: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
             ),
           ),
@@ -203,7 +204,7 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
       onClose: () => Navigator.of(context).pop(),
       actions: [
         AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: () => Navigator.of(context).pop()),
-        SizedBox(width: 12.w),
+        Gap(12.w),
         AppButton(
           label: widget.holiday != null ? 'Update' : 'Create',
           type: AppButtonType.primary,
@@ -233,7 +234,7 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                     },
                   ),
                 ),
-                SizedBox(width: 16.w),
+                Gap(16.w),
                 Expanded(
                   child: Directionality(
                     textDirection: ui.TextDirection.rtl,
@@ -254,7 +255,7 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             Row(
               children: [
                 Expanded(
@@ -278,9 +279,9 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                     },
                   ),
                 ),
-                SizedBox(width: 16.w),
+                Gap(16.w),
                 Expanded(
-                  child: DigifySelectField<HolidayType>(
+                  child: DigifySelectFieldWithLabel<HolidayType>(
                     label: 'Type',
                     hint: 'Select type',
                     value: _selectedType,
@@ -292,18 +293,12 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                       });
                     },
                     isRequired: true,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Holiday type is required';
-                      }
-                      return null;
-                    },
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
-            DigifyTextField(
+            Gap(24.h),
+            DigifyTextArea(
               controller: _descriptionEnController,
               labelText: 'Description (English)',
               hintText: 'Enter holiday description in English',
@@ -317,30 +312,29 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                 return null;
               },
             ),
-            SizedBox(height: 24.h),
-            Directionality(
+            Gap(24.h),
+            DigifyTextArea(
+              controller: _descriptionArController,
+              labelText: 'Description (Arabic)',
+              hintText: 'أدخل وصف العطلة بالعربية',
+              isRequired: true,
+              maxLines: 3,
+              minLines: 3,
               textDirection: ui.TextDirection.rtl,
-              child: DigifyTextField(
-                controller: _descriptionArController,
-                labelText: 'Description (Arabic)',
-                hintText: 'أدخل وصف العطلة بالعربية',
-                isRequired: true,
-                maxLines: 3,
-                minLines: 3,
-                inputFormatters: [AppInputFormatters.nameAr],
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Description in Arabic is required';
-                  }
-                  return null;
-                },
-              ),
+              textAlign: TextAlign.right,
+              inputFormatters: [AppInputFormatters.nameAr],
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Description in Arabic is required';
+                }
+                return null;
+              },
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             Row(
               children: [
                 Expanded(
-                  child: DigifySelectField<String>(
+                  child: DigifySelectFieldWithLabel<String>(
                     label: 'Applies To',
                     hint: 'Select applies to',
                     value: _selectedAppliesTo,
@@ -352,15 +346,9 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                       });
                     },
                     isRequired: true,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Applies to is required';
-                      }
-                      return null;
-                    },
                   ),
                 ),
-                SizedBox(width: 16.w),
+                Gap(16.w),
                 Expanded(
                   child: DigifyTextField(
                     controller: _yearController,
@@ -383,20 +371,19 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             Row(
               children: [
                 Checkbox(value: _isPaidHoliday, onChanged: null, activeColor: AppColors.primary),
-                SizedBox(width: 8.w),
+                Gap(8.w),
                 Text(
                   'Paid Holiday',
-                  style: TextStyle(
+                  style: context.textTheme.bodySmall?.copyWith(
                     fontSize: 13.8.sp,
-                    fontWeight: FontWeight.w400,
                     color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                   ),
                 ),
-                SizedBox(width: 24.w),
+                Gap(24.w),
                 // Commented out for now as per requirements
                 // Checkbox(
                 //   value: _isRecurringAnnually,

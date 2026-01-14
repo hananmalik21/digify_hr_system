@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'holiday_card.dart';
 
@@ -35,10 +37,9 @@ class MonthlyHolidayGroup extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 4), blurRadius: 10)],
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +62,7 @@ class MonthlyHolidayGroup extends ConsumerWidget {
                         showBorder: true,
                         isDeleting: deletingHolidayId != null && deletingHolidayId == int.tryParse(holiday.id),
                       ),
-                      if (index < data.holidays.length - 1) SizedBox(height: 16.h),
+                      if (index < data.holidays.length - 1) Gap(16.h),
                     ],
                   );
                 }),
@@ -81,7 +82,7 @@ class MonthlyHolidayGroup extends ConsumerWidget {
         gradient: isDark
             ? null
             : const LinearGradient(
-                colors: [Color(0xFF155DFC), Color(0xFF4F39F6)],
+                colors: [AppColors.primary, AppColors.purple],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -90,12 +91,9 @@ class MonthlyHolidayGroup extends ConsumerWidget {
       ),
       child: Text(
         data.monthYear,
-        style: TextStyle(
+        style: context.textTheme.titleMedium?.copyWith(
           fontSize: 15.6.sp,
-          fontWeight: FontWeight.w600,
-          color: isDark ? AppColors.textPrimaryDark : Colors.white,
-          fontFamily: 'Inter',
-          height: 24 / 15.6,
+          color: isDark ? AppColors.textPrimaryDark : AppColors.cardBackground,
         ),
       ),
     );
