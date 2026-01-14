@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/features/time_management/data/config/schedule_assignments_table_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -13,7 +14,31 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final headerColor = isDark ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB);
-    final columnWidths = [274.86.w, 297.46.w, 139.55.w, 136.6.w, 117.47.w, 197.22.w, 135.w];
+
+    final columnWidths = <double>[];
+    if (ScheduleAssignmentsTableConfig.showAssignedTo) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.assignedToWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showSchedule) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.scheduleWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showStartDate) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.startDateWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showEndDate) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.endDateWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showStatus) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.statusWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showAssignedBy) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.assignedByWidth);
+    }
+    if (ScheduleAssignmentsTableConfig.showActions) {
+      columnWidths.add(ScheduleAssignmentsTableConfig.actionsWidth);
+    }
+
+    final columnCount = columnWidths.length;
 
     return Container(
       decoration: BoxDecoration(
@@ -39,10 +64,10 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
               padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
               child: Row(
                 children: List.generate(
-                  7,
+                  columnCount,
                   (index) => Container(
-                    width: columnWidths[index],
-                    padding: EdgeInsetsDirectional.only(end: index < 6 ? 24.w : 0),
+                    width: columnWidths[index].w,
+                    padding: EdgeInsetsDirectional.only(end: index < columnCount - 1 ? 24.w : 0),
                     child: Container(
                       height: 16.h,
                       decoration: BoxDecoration(color: AppColors.cardBorder, borderRadius: BorderRadius.circular(4.r)),
@@ -64,9 +89,9 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
                     ),
                     child: Row(
                       children: List.generate(
-                        7,
+                        columnCount,
                         (colIndex) => Container(
-                          width: columnWidths[colIndex],
+                          width: columnWidths[colIndex].w,
                           padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
                           child: Container(
                             height: 12.h,

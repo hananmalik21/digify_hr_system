@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/features/time_management/data/config/schedule_assignments_table_config.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_buttons.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
 import 'package:flutter/material.dart';
@@ -56,69 +57,81 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildDataCell(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  data.assignedToName,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+          if (ScheduleAssignmentsTableConfig.showAssignedTo)
+            _buildDataCell(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    data.assignedToName,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                    ),
                   ),
-                ),
-                Gap(2.h),
-                Text(
-                  data.assignedToCode,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  Gap(2.h),
+                  Text(
+                    data.assignedToCode,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                    ),
                   ),
+                ],
+              ),
+              ScheduleAssignmentsTableConfig.assignedToWidth.w,
+            ),
+          if (ScheduleAssignmentsTableConfig.showSchedule)
+            _buildDataCell(
+              Text(
+                data.scheduleName,
+                style: context.textTheme.titleSmall?.copyWith(
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                 ),
-              ],
-            ),
-            274.86.w,
-          ),
-          _buildDataCell(
-            Text(
-              data.scheduleName,
-              style: context.textTheme.titleSmall?.copyWith(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
               ),
+              ScheduleAssignmentsTableConfig.scheduleWidth.w,
             ),
-            297.46.w,
-          ),
-          _buildDataCell(
-            Text(
-              data.startDate,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          if (ScheduleAssignmentsTableConfig.showStartDate)
+            _buildDataCell(
+              Text(
+                data.startDate,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                ),
               ),
+              ScheduleAssignmentsTableConfig.startDateWidth.w,
             ),
-            139.55.w,
-          ),
-          _buildDataCell(
-            Text(
-              data.endDate,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          if (ScheduleAssignmentsTableConfig.showEndDate)
+            _buildDataCell(
+              Text(
+                data.endDate,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                ),
               ),
+              ScheduleAssignmentsTableConfig.endDateWidth.w,
             ),
-            136.6.w,
-          ),
-          _buildDataCell(ShiftStatusBadge(isActive: data.isActive), 117.47.w),
-          _buildDataCell(
-            Text(
-              data.assignedByName,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          if (ScheduleAssignmentsTableConfig.showStatus)
+            _buildDataCell(ShiftStatusBadge(isActive: data.isActive), ScheduleAssignmentsTableConfig.statusWidth.w),
+          if (ScheduleAssignmentsTableConfig.showAssignedBy)
+            _buildDataCell(
+              Text(
+                data.assignedByName,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                ),
               ),
+              ScheduleAssignmentsTableConfig.assignedByWidth.w,
             ),
-            197.22.w,
-          ),
-          _buildDataCell(
-            ScheduleAssignmentActionButtons(onView: onView, onEdit: onEdit, onDelete: onDelete, isDeleting: isDeleting),
-            135.w,
-          ),
+          if (ScheduleAssignmentsTableConfig.showActions)
+            _buildDataCell(
+              ScheduleAssignmentActionButtons(
+                onView: onView,
+                onEdit: onEdit,
+                onDelete: onDelete,
+                isDeleting: isDeleting,
+              ),
+              ScheduleAssignmentsTableConfig.actionsWidth.w,
+            ),
         ],
       ),
     );

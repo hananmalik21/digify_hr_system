@@ -1,12 +1,13 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
+import 'package:digify_hr_system/features/workforce_structure/data/config/workforce_positions_table_config.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/position_badges.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/position_badges.dart';
 
 class PositionTableRow extends StatelessWidget {
   final Position position;
@@ -35,68 +36,85 @@ class PositionTableRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildDataCell(Text(position.code, style: textStyle), 117.53.w),
-          _buildDataCell(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(position.titleEnglish, style: textStyle),
-                Text(
-                  position.titleArabic,
-                  textDirection: TextDirection.rtl,
-                  style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.tableHeaderText),
-                ),
-              ],
-            ),
-            162.79.w,
-          ),
-          _buildDataCell(Text(position.department, style: textStyle), 151.96.w),
-          _buildDataCell(Text(position.jobFamily, style: textStyle), 146.86.w),
-          _buildDataCell(Text(position.level, style: textStyle), 141.12.w),
-          _buildDataCell(
-            Text(
-              '${position.grade.isNotEmpty ? 'Grade ${position.grade}' : ''}${position.grade.isNotEmpty && position.step.isNotEmpty ? ' / ' : ''}${position.step.isNotEmpty ? (position.step.toLowerCase().contains('step') ? position.step : 'Step ${position.step}') : ''}',
-              style: textStyle,
-            ),
-            233.29.w,
-          ),
-          _buildDataCell(Text(position.reportsTo ?? '-', style: textStyle), 140.07.w),
-          _buildDataCell(
-            Text.rich(
-              TextSpan(
+          if (WorkforcePositionsTableConfig.showPositionCode)
+            _buildDataCell(Text(position.code, style: textStyle), WorkforcePositionsTableConfig.positionCodeWidth.w),
+          if (WorkforcePositionsTableConfig.showTitle)
+            _buildDataCell(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextSpan(text: '${position.filled}', style: textStyle),
-                  TextSpan(text: '/${position.headcount}', style: textStyle),
+                  Text(position.titleEnglish, style: textStyle),
+                  Text(
+                    position.titleArabic,
+                    textDirection: TextDirection.rtl,
+                    style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.tableHeaderText),
+                  ),
                 ],
               ),
+              WorkforcePositionsTableConfig.titleWidth.w,
             ),
-            125.12.w,
-          ),
-          _buildDataCell(
-            PositionVacancyBadge(
-              vacancy: position.headcount - position.filled,
-              vacantLabel: localizations.vacant,
-              fullLabel: 'Full',
+          if (WorkforcePositionsTableConfig.showDepartment)
+            _buildDataCell(
+              Text(position.department, style: textStyle),
+              WorkforcePositionsTableConfig.departmentWidth.w,
             ),
-            108.22.w,
-          ),
-          _buildDataCell(
-            PositionStatusBadge(label: localizations.active.toUpperCase(), isActive: position.isActive),
-            107.02.w,
-          ),
-          _buildDataCell(
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 8.w,
-              children: [
-                DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => onView(position)),
-                DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(position)),
-                DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(position)),
-              ],
+          if (WorkforcePositionsTableConfig.showJobFamily)
+            _buildDataCell(Text(position.jobFamily, style: textStyle), WorkforcePositionsTableConfig.jobFamilyWidth.w),
+          if (WorkforcePositionsTableConfig.showJobLevel)
+            _buildDataCell(Text(position.level, style: textStyle), WorkforcePositionsTableConfig.jobLevelWidth.w),
+          if (WorkforcePositionsTableConfig.showGradeStep)
+            _buildDataCell(
+              Text(
+                '${position.grade.isNotEmpty ? 'Grade ${position.grade}' : ''}${position.grade.isNotEmpty && position.step.isNotEmpty ? ' / ' : ''}${position.step.isNotEmpty ? (position.step.toLowerCase().contains('step') ? position.step : 'Step ${position.step}') : ''}',
+                style: textStyle,
+              ),
+              WorkforcePositionsTableConfig.gradeStepWidth.w,
             ),
-            130.w,
-          ),
+          if (WorkforcePositionsTableConfig.showReportsTo)
+            _buildDataCell(
+              Text(position.reportsTo ?? '-', style: textStyle),
+              WorkforcePositionsTableConfig.reportsToWidth.w,
+            ),
+          if (WorkforcePositionsTableConfig.showHeadcount)
+            _buildDataCell(
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: '${position.filled}', style: textStyle),
+                    TextSpan(text: '/${position.headcount}', style: textStyle),
+                  ],
+                ),
+              ),
+              WorkforcePositionsTableConfig.headcountWidth.w,
+            ),
+          if (WorkforcePositionsTableConfig.showVacancy)
+            _buildDataCell(
+              PositionVacancyBadge(
+                vacancy: position.headcount - position.filled,
+                vacantLabel: localizations.vacant,
+                fullLabel: 'Full',
+              ),
+              WorkforcePositionsTableConfig.vacancyWidth.w,
+            ),
+          if (WorkforcePositionsTableConfig.showStatus)
+            _buildDataCell(
+              PositionStatusBadge(label: localizations.active.toUpperCase(), isActive: position.isActive),
+              WorkforcePositionsTableConfig.statusWidth.w,
+            ),
+          if (WorkforcePositionsTableConfig.showActions)
+            _buildDataCell(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
+                children: [
+                  DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => onView(position)),
+                  DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(position)),
+                  DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(position)),
+                ],
+              ),
+              WorkforcePositionsTableConfig.actionsWidth.w,
+            ),
         ],
       ),
     );
