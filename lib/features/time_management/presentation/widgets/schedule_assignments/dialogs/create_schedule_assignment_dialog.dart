@@ -3,19 +3,22 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/work_schedule_selection_field.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_info_box.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/date_field.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/work_schedule_field.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/schedule_assignment_enterprise_structure_fields.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class CreateScheduleAssignmentDialog extends ConsumerStatefulWidget {
@@ -38,8 +41,7 @@ class CreateScheduleAssignmentDialog extends ConsumerStatefulWidget {
 class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleAssignmentDialog> {
   final _formKey = GlobalKey<FormState>();
   AssignmentLevel? _selectedLevel;
-  int? _selectedWorkScheduleId;
-  String? _selectedWorkScheduleName;
+  WorkSchedule? _selectedWorkSchedule;
   String? _selectedStatus;
   final Map<String, String?> _selectedUnitIds = {};
   final _effectiveStartDateController = TextEditingController();
@@ -78,9 +80,9 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
               primary: AppColors.primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
+              onPrimary: AppColors.cardBackground,
+              surface: AppColors.cardBackground,
+              onSurface: AppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -130,7 +132,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       return;
     }
 
-    if (_selectedWorkScheduleId == null) {
+    if (_selectedWorkSchedule == null) {
       ToastService.error(context, 'Please select a work schedule', title: 'Selection Required');
       return;
     }
@@ -154,7 +156,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       'tenant_id': widget.enterpriseId,
       'assignment_level': _selectedLevel == AssignmentLevel.department ? 'DEPARTMENT' : 'EMPLOYEE',
       'org_unit_id': orgUnitId,
-      'work_schedule_id': _selectedWorkScheduleId!,
+      'work_schedule_id': _selectedWorkSchedule!.workScheduleId,
       'effective_start_date': _effectiveStartDateController.text.trim(),
       'effective_end_date': _effectiveEndDateController.text.trim(),
       'status': _selectedStatus!.toUpperCase(),
@@ -170,7 +172,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
         ToastService.success(context, 'Schedule assignment created successfully', title: 'Success');
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
-          Navigator.of(context).pop();
+          context.pop();
         }
       }
     } catch (e) {
@@ -203,54 +205,39 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
                 });
               },
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             ScheduleAssignmentEnterpriseStructureFields(
               localizations: localizations,
               enterpriseId: widget.enterpriseId,
               selectedUnitIds: _selectedUnitIds,
               onSelectionChanged: _handleEnterpriseSelection,
             ),
-            SizedBox(height: 24.h),
-            WorkScheduleField(
-              selectedWorkScheduleId: _selectedWorkScheduleId,
-              selectedWorkScheduleName: _selectedWorkScheduleName,
+            Gap(24.h),
+            WorkScheduleSelectionField(
+              label: 'Work Schedule',
+              isRequired: true,
               enterpriseId: widget.enterpriseId,
+              selectedWorkSchedule: _selectedWorkSchedule,
               onChanged: (schedule) {
                 setState(() {
-                  if (schedule != null) {
-                    _selectedWorkScheduleId = schedule.workScheduleId;
-                    _selectedWorkScheduleName = schedule.scheduleNameEn;
-                  } else {
-                    _selectedWorkScheduleId = null;
-                    _selectedWorkScheduleName = null;
-                  }
+                  _selectedWorkSchedule = schedule;
                 });
               },
-              validator: (value) {
-                if (value == null) {
-                  return 'Please select a work schedule';
-                }
-                return null;
-              },
             ),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             _buildDateFields(),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             _buildStatusField(),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             _buildNotesField(),
-            SizedBox(height: 24.h),
+            Gap(24.h),
             const AssignmentInfoBox(),
           ],
         ),
       ),
       actions: [
-        AppButton(
-          label: 'Cancel',
-          type: AppButtonType.outline,
-          onPressed: isCreating ? null : () => Navigator.of(context).pop(),
-        ),
-        SizedBox(width: 12.w),
+        AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: isCreating ? null : () => context.pop()),
+        Gap(12.w),
         AppButton(
           label: 'Assign Schedule',
           type: AppButtonType.primary,
@@ -268,35 +255,25 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        DateField(
+        DateSelectionField(
           label: 'Effective Start Date',
-          controller: _effectiveStartDateController,
+          isRequired: true,
+          value: _effectiveStartDateController.text.isEmpty ? null : _effectiveStartDateController.text,
           onTap: () => _selectDate(_effectiveStartDateController),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a start date';
-            }
-            return null;
-          },
         ),
-        SizedBox(height: 24.h),
-        DateField(
+        Gap(24.h),
+        DateSelectionField(
           label: 'Effective End Date',
-          controller: _effectiveEndDateController,
+          isRequired: true,
+          value: _effectiveEndDateController.text.isEmpty ? null : _effectiveEndDateController.text,
           onTap: () => _selectDate(_effectiveEndDateController),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select an end date';
-            }
-            return null;
-          },
         ),
       ],
     );
   }
 
   Widget _buildStatusField() {
-    return DigifySelectField<String>(
+    return DigifySelectFieldWithLabel<String>(
       label: 'Status',
       isRequired: true,
       hint: 'Select Status',
@@ -307,12 +284,6 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
         setState(() {
           _selectedStatus = value;
         });
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select a status';
-        }
-        return null;
       },
     );
   }

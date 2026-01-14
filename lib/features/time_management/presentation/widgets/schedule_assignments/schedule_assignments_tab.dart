@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
@@ -9,14 +8,13 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/c
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table_skeleton.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class ScheduleAssignmentsTab extends ConsumerStatefulWidget {
   const ScheduleAssignmentsTab({super.key});
@@ -113,77 +111,39 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
           onBulkUpload: () {},
           onExport: () {},
         ),
-        SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+        Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
         _buildContent(scheduleAssignmentsState),
       ],
     );
   }
 
   Widget _buildContent(ScheduleAssignmentState scheduleAssignmentsState) {
-    if (scheduleAssignmentsState.isLoading && scheduleAssignmentsState.items.isEmpty) {
-      return const ScheduleAssignmentsTableSkeleton(itemCount: 5);
-    }
+    final selectedEnterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    if (selectedEnterpriseId == null) return const SizedBox.shrink();
 
-    if (scheduleAssignmentsState.hasError && scheduleAssignmentsState.items.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Error: ${scheduleAssignmentsState.errorMessage ?? 'Unknown error'}'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
-                if (enterpriseId != null) {
-                  ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).refresh();
-                }
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (scheduleAssignmentsState.items.isEmpty) {
-      return const Center(
-        child: TimeManagementEmptyStateWidget(
-          message: 'No schedule assignments found. Create your first assignment to get started.',
-        ),
-      );
-    }
-
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Column(
-        children: [
-          ScheduleAssignmentsTable(
-            assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
-            deletingAssignmentId: scheduleAssignmentsState.deletingAssignmentId,
-            onView: (item) {
-              final assignment = scheduleAssignmentsState.items.firstWhere(
-                (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
-              );
-              ViewScheduleAssignmentDialog.show(context, assignment);
-            },
-            onEdit: (item) {
-              final assignment = scheduleAssignmentsState.items.firstWhere(
-                (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
-              );
-              final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
-              if (enterpriseId != null) {
-                EditScheduleAssignmentDialog.show(context, enterpriseId, assignment);
-              }
-            },
-            onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),
-          ),
-          if (scheduleAssignmentsState.isLoadingMore)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.h),
-              child: const Center(child: AppLoadingIndicator(type: LoadingType.threeBounce, size: 20)),
-            ),
-        ],
-      ),
+    return ScheduleAssignmentsTable(
+      assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
+      deletingAssignmentId: scheduleAssignmentsState.deletingAssignmentId,
+      isLoading: scheduleAssignmentsState.isLoading && scheduleAssignmentsState.items.isEmpty,
+      isLoadingMore: scheduleAssignmentsState.isLoadingMore,
+      hasError: scheduleAssignmentsState.hasError && scheduleAssignmentsState.items.isEmpty,
+      errorMessage: scheduleAssignmentsState.errorMessage,
+      onRetry: () {
+        ref.read(scheduleAssignmentsNotifierProvider(selectedEnterpriseId).notifier).refresh();
+      },
+      onView: (item) {
+        final assignment = scheduleAssignmentsState.items.firstWhere(
+          (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
+        );
+        ViewScheduleAssignmentDialog.show(context, assignment);
+      },
+      onEdit: (item) {
+        final assignment = scheduleAssignmentsState.items.firstWhere(
+          (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
+        );
+        EditScheduleAssignmentDialog.show(context, selectedEnterpriseId, assignment);
+      },
+      onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),
     );
   }
 }

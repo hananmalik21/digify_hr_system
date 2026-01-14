@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/org_structure_selection_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
@@ -7,6 +8,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/specialized_org_unit_fields.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -165,7 +167,11 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Icon(Icons.arrow_drop_down, color: AppColors.textSecondary, size: 20.sp),
+                DigifyAsset(
+                  assetPath: Assets.icons.workforce.chevronRight.path,
+                  color: AppColors.textSecondary,
+                  height: 15,
+                ),
               ],
             ),
           ),

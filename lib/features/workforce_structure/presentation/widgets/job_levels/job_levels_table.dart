@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/features/workforce_structure/data/config/job_levels_table_config.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_row.dart';
 import 'package:flutter/material.dart';
@@ -37,18 +38,30 @@ class JobLevelsTable extends StatelessWidget {
   Widget _buildTableHeader(BuildContext context, bool isDark) {
     final headerColor = isDark ? AppColors.cardBackgroundDark : AppColors.tableHeaderBackground;
 
+    final headerCells = <Widget>[];
+
+    if (JobLevelsTableConfig.showLevelName) {
+      headerCells.add(_buildHeaderCell(context, 'Level Name', JobLevelsTableConfig.levelNameWidth.w));
+    }
+    if (JobLevelsTableConfig.showCode) {
+      headerCells.add(_buildHeaderCell(context, 'Code', JobLevelsTableConfig.codeWidth.w));
+    }
+    if (JobLevelsTableConfig.showDescription) {
+      headerCells.add(_buildHeaderCell(context, 'Description', JobLevelsTableConfig.descriptionWidth.w));
+    }
+    if (JobLevelsTableConfig.showGradeRange) {
+      headerCells.add(_buildHeaderCell(context, 'Grade Range', JobLevelsTableConfig.gradeRangeWidth.w));
+    }
+    if (JobLevelsTableConfig.showTotalPositions) {
+      headerCells.add(_buildHeaderCell(context, 'Total Positions', JobLevelsTableConfig.totalPositionsWidth.w));
+    }
+    if (JobLevelsTableConfig.showActions) {
+      headerCells.add(_buildHeaderCell(context, 'Actions', JobLevelsTableConfig.actionsWidth.w));
+    }
+
     return Container(
       color: headerColor,
-      child: Row(
-        children: [
-          _buildHeaderCell(context, 'Level Name', 244.57.w),
-          _buildHeaderCell(context, 'Code', 133.38.w),
-          _buildHeaderCell(context, 'Description', 446.61.w),
-          _buildHeaderCell(context, 'Grade Range', 248.44.w),
-          _buildHeaderCell(context, 'Total Positions', 216.64.w),
-          _buildHeaderCell(context, 'Actions', 170.w),
-        ],
-      ),
+      child: Row(children: headerCells),
     );
   }
 

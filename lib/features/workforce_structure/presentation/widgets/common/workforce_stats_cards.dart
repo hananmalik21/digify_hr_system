@@ -2,62 +2,62 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/workforce_stats.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_stats_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../core/widgets/assets/digify_asset.dart';
 import '../../../../../gen/assets.gen.dart';
 
-class WorkforceStatsCards extends StatelessWidget {
+class WorkforceStatsCards extends ConsumerWidget {
   final AppLocalizations localizations;
-  final WorkforceStats stats;
   final bool isDark;
 
-  const WorkforceStatsCards({super.key, required this.localizations, required this.stats, required this.isDark});
+  const WorkforceStatsCards({super.key, required this.localizations, required this.isDark});
 
   @override
-  Widget build(BuildContext context) {
-    final int crossAxisCount = context.isMobile ? 1 : (context.isTablet ? 2 : 4);
-    final double aspectRatio = context.isMobile ? 3.6 : (context.isTablet ? 2.2 : 2.5);
-    final double spacing = 16.w;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(workforceStatsNotifierProvider);
 
-    final cards = [
-      _buildStatCard(
-        context,
-        label: localizations.totalPositions,
-        value: '${stats.totalPositions}',
-        iconPath: Assets.icons.workforce.totalPosition.path,
-        isDark: isDark,
-        color: AppColors.primaryLight,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.filledPositions,
-        value: '${stats.filledPositions}',
-        iconPath: Assets.icons.workforce.filledPosition.path,
-        isDark: isDark,
-        color: AppColors.statIconGreen,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.vacantPositions,
-        value: '${stats.vacantPositions}',
-        iconPath: Assets.icons.workforce.warning.path,
-        isDark: isDark,
-        color: AppColors.statIconOrange,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.fillRate,
-        value: '${stats.fillRate.toStringAsFixed(1)}%',
-        iconPath: Assets.icons.workforce.fillRate.path,
-        isDark: isDark,
-        color: AppColors.primaryLight,
-      ),
-    ];
+    if (statsAsync.isLoading) {
+      return _buildGridView(context, isSkeleton: true);
+    }
 
-    return GridView.count(
+    if (statsAsync.hasError) {
+      return DigifyErrorState(
+        message: 'Failed to load workforce statistics',
+        onRetry: () => ref.read(workforceStatsNotifierProvider.notifier).refresh(),
+      );
+    }
+
+    if (statsAsync.hasValue && statsAsync.value != null) {
+      return _buildGridView(context, stats: statsAsync.value!);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildGridView(BuildContext context, {WorkforceStats? stats, bool isSkeleton = false}) {
+    final crossAxisCount = context.isMobile ? 1 : (context.isTablet ? 2 : 4);
+    final aspectRatio = context.isMobile ? 3.6 : (context.isTablet ? 2.2 : 2.5);
+    final spacing = 16.w;
+
+    final cards = _getCardConfigs(stats).map((config) {
+      return _buildStatCard(
+        context,
+        label: config.label,
+        value: config.value,
+        iconPath: config.iconPath,
+        isDark: isDark,
+        color: config.color,
+      );
+    }).toList();
+
+    final gridView = GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: crossAxisCount,
@@ -66,6 +66,38 @@ class WorkforceStatsCards extends StatelessWidget {
       childAspectRatio: aspectRatio,
       children: cards,
     );
+
+    return isSkeleton ? Skeletonizer(enabled: true, child: gridView) : gridView;
+  }
+
+  List<_CardConfig> _getCardConfigs(WorkforceStats? stats) {
+    final positionsStats = stats?.positionsStats;
+    return [
+      _CardConfig(
+        label: localizations.totalPositions,
+        value: positionsStats?.formattedTotalPositions ?? '000',
+        iconPath: Assets.icons.workforce.totalPosition.path,
+        color: AppColors.primaryLight,
+      ),
+      _CardConfig(
+        label: localizations.filledPositions,
+        value: positionsStats?.formattedFilledPositions ?? '000',
+        iconPath: Assets.icons.workforce.filledPosition.path,
+        color: AppColors.statIconGreen,
+      ),
+      _CardConfig(
+        label: localizations.vacantPositions,
+        value: positionsStats?.formattedVacantPositions ?? '000',
+        iconPath: Assets.icons.workforce.warning.path,
+        color: AppColors.statIconOrange,
+      ),
+      _CardConfig(
+        label: localizations.fillRate,
+        value: positionsStats?.formattedFillRate ?? '00.0%',
+        iconPath: Assets.icons.workforce.fillRate.path,
+        color: AppColors.primaryLight,
+      ),
+    ];
   }
 
   Widget _buildStatCard(
@@ -113,4 +145,13 @@ class WorkforceStatsCards extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CardConfig {
+  final String label;
+  final String value;
+  final String iconPath;
+  final Color color;
+
+  const _CardConfig({required this.label, required this.value, required this.iconPath, required this.color});
 }

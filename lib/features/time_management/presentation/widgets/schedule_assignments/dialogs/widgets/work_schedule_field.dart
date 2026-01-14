@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/work_schedule_selection_dialog.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -77,7 +79,11 @@ class _WorkScheduleFieldState extends State<WorkScheduleField> {
           controller: _controller,
           hintText: 'Select Work Schedule',
           readOnly: true,
-          suffixIcon: Icon(Icons.arrow_drop_down, color: AppColors.textSecondary),
+          suffixIcon: DigifyAsset(
+            assetPath: Assets.icons.workforce.chevronRight.path,
+            color: AppColors.textSecondary,
+            height: 15,
+          ),
           onTap: () async {
             final selectedSchedule = await WorkScheduleSelectionDialog.show(
               context: context,
