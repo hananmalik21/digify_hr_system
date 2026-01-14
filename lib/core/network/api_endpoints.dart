@@ -34,6 +34,7 @@ class ApiEndpoints {
   static const String jobLevels = '$api/job-levels';
   static const String grades = '$api/grades';
   static const String positions = '$api/positions';
+  static const String workforceStats = '$api/workforce-stats';
 
   // Organization Structure Levels (alias for convenience)
   static const String orgStructureLevels = hrOrgStructuresActiveLevels;
@@ -48,4 +49,5 @@ class ApiEndpoints {
   static String tmScheduleAssignmentById(int scheduleAssignmentId) => '$tmScheduleAssignments/$scheduleAssignmentId';
   static const String tmPublicHolidays = '$api/holidays';
   static String tmPublicHolidayById(int holidayId) => '$tmPublicHolidays/$holidayId';
+  static const String tmStats = '$api/tm/stats';
 }

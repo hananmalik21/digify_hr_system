@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_bar.dart';
@@ -41,7 +40,6 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
-    final stats = ref.watch(timeManagementStatsProvider);
     final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
 
     return Container(
@@ -59,7 +57,7 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
               icon: Assets.icons.timeManagementMainIcon.path,
             ),
             Gap(24.h),
-            TimeManagementStatsCards(localizations: localizations, stats: stats, isDark: isDark),
+            TimeManagementStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
             EnterpriseSelectorWidget(
               selectedEnterpriseId: selectedEnterpriseId,

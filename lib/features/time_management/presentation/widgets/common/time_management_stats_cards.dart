@@ -2,62 +2,62 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_provider.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/time_management_stats.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../core/widgets/assets/digify_asset.dart';
 import '../../../../../gen/assets.gen.dart';
 
-class TimeManagementStatsCards extends StatelessWidget {
+class TimeManagementStatsCards extends ConsumerWidget {
   final AppLocalizations localizations;
-  final TimeManagementStats stats;
   final bool isDark;
 
-  const TimeManagementStatsCards({super.key, required this.localizations, required this.stats, required this.isDark});
+  const TimeManagementStatsCards({super.key, required this.localizations, required this.isDark});
 
   @override
-  Widget build(BuildContext context) {
-    final int crossAxisCount = context.isMobile ? 1 : (context.isTablet ? 2 : 4);
-    final double aspectRatio = context.isMobile ? 3.6 : (context.isTablet ? 2.2 : 2.5);
-    final double spacing = 16.w;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(timeManagementStatsNotifierProvider);
 
-    final cards = [
-      _buildStatCard(
-        context,
-        label: localizations.shifts,
-        value: '${stats.totalShifts}',
-        iconPath: Assets.icons.clockIcon.path,
-        isDark: isDark,
-        color: AppColors.primaryLight,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.workPatterns,
-        value: '${stats.workPatterns}',
-        iconPath: Assets.icons.leaveManagementIcon.path,
-        isDark: isDark,
-        color: AppColors.statIconPurple,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.workSchedules,
-        value: '${stats.activeSchedules}',
-        iconPath: Assets.icons.sidebar.workSchedules.path,
-        isDark: isDark,
-        color: AppColors.statIconGreen,
-      ),
-      _buildStatCard(
-        context,
-        label: localizations.scheduleAssignments,
-        value: '${stats.assignments}',
-        iconPath: Assets.icons.sidebar.scheduleAssignments.path,
-        isDark: isDark,
-        color: AppColors.statIconOrange,
-      ),
-    ];
+    if (statsAsync.isLoading) {
+      return _buildGridView(context, isSkeleton: true);
+    }
 
-    return GridView.count(
+    if (statsAsync.hasError) {
+      return DigifyErrorState(
+        message: 'Failed to load time management statistics',
+        onRetry: () => ref.read(timeManagementStatsNotifierProvider.notifier).refresh(),
+      );
+    }
+
+    if (statsAsync.hasValue && statsAsync.value != null) {
+      return _buildGridView(context, stats: statsAsync.value!);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildGridView(BuildContext context, {TimeManagementStats? stats, bool isSkeleton = false}) {
+    final crossAxisCount = context.isMobile ? 1 : (context.isTablet ? 2 : 4);
+    final aspectRatio = context.isMobile ? 3.6 : (context.isTablet ? 2.2 : 2.5);
+    final spacing = 16.w;
+
+    final cards = _getCardConfigs(stats).map((config) {
+      return _buildStatCard(
+        context,
+        label: config.label,
+        value: config.value,
+        iconPath: config.iconPath,
+        isDark: isDark,
+        color: config.color,
+      );
+    }).toList();
+
+    final gridView = GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: crossAxisCount,
@@ -66,6 +66,37 @@ class TimeManagementStatsCards extends StatelessWidget {
       childAspectRatio: aspectRatio,
       children: cards,
     );
+
+    return isSkeleton ? Skeletonizer(enabled: true, child: gridView) : gridView;
+  }
+
+  List<_CardConfig> _getCardConfigs(TimeManagementStats? stats) {
+    return [
+      _CardConfig(
+        label: localizations.shifts,
+        value: stats?.formattedTotalShifts ?? '000',
+        iconPath: Assets.icons.clockIcon.path,
+        color: AppColors.primaryLight,
+      ),
+      _CardConfig(
+        label: localizations.workPatterns,
+        value: stats?.formattedTotalWorkPatterns ?? '000',
+        iconPath: Assets.icons.leaveManagementIcon.path,
+        color: AppColors.statIconPurple,
+      ),
+      _CardConfig(
+        label: localizations.workSchedules,
+        value: stats?.formattedTotalWorkSchedules ?? '000',
+        iconPath: Assets.icons.sidebar.workSchedules.path,
+        color: AppColors.statIconGreen,
+      ),
+      _CardConfig(
+        label: localizations.scheduleAssignments,
+        value: stats?.formattedTotalScheduleAssignments ?? '000',
+        iconPath: Assets.icons.sidebar.scheduleAssignments.path,
+        color: AppColors.statIconOrange,
+      ),
+    ];
   }
 
   Widget _buildStatCard(
@@ -113,4 +144,13 @@ class TimeManagementStatsCards extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CardConfig {
+  final String label;
+  final String value;
+  final String iconPath;
+  final Color color;
+
+  const _CardConfig({required this.label, required this.value, required this.iconPath, required this.color});
 }

@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_stats_cards.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_bar.dart';
@@ -38,7 +37,6 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex));
-    final stats = ref.watch(workforceStatsProvider);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
@@ -55,7 +53,7 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
               icon: Assets.icons.workforceStructureMainIcon.path,
             ),
             Gap(24.h),
-            WorkforceStatsCards(localizations: localizations, stats: stats, isDark: isDark),
+            WorkforceStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
             WorkforceTabBar(
               localizations: localizations,
