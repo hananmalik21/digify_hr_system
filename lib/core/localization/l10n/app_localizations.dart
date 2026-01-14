@@ -5827,6 +5827,834 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @leaveRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Requests'**
+  String get leaveRequests;
+
+  /// No description provided for @leaveRequestsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit and approve requests'**
+  String get leaveRequestsDescription;
+
+  /// No description provided for @leaveBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Balance'**
+  String get leaveBalance;
+
+  /// No description provided for @leaveBalanceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee leave balances'**
+  String get leaveBalanceDescription;
+
+  /// No description provided for @myLeaveBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'My Leave Balance'**
+  String get myLeaveBalance;
+
+  /// No description provided for @myLeaveBalanceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'View your leave balances, carry forward, and forfeit information'**
+  String get myLeaveBalanceDescription;
+
+  /// No description provided for @applyLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Leave'**
+  String get applyLeave;
+
+  /// No description provided for @requestEncashment.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Encashment'**
+  String get requestEncashment;
+
+  /// No description provided for @employeeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Name'**
+  String get employeeName;
+
+  /// No description provided for @employeeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Number'**
+  String get employeeNumber;
+
+  /// No description provided for @joinDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Join Date'**
+  String get joinDate;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Balance'**
+  String get totalBalance;
+
+  /// No description provided for @daysAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'days available'**
+  String get daysAvailable;
+
+  /// No description provided for @currentYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Year'**
+  String get currentYear;
+
+  /// No description provided for @carriedForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Carried Forward'**
+  String get carriedForward;
+
+  /// No description provided for @carryForwardAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Carry Forward Allowed'**
+  String get carryForwardAllowed;
+
+  /// No description provided for @atRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'At Risk'**
+  String get atRisk;
+
+  /// No description provided for @atRiskForfeitable.
+  ///
+  /// In en, this message translates to:
+  /// **'At-Risk (Forfeitable)'**
+  String get atRiskForfeitable;
+
+  /// No description provided for @encashmentAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Encashment Available'**
+  String get encashmentAvailable;
+
+  /// No description provided for @requestEncashmentButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Request →'**
+  String get requestEncashmentButton;
+
+  /// No description provided for @encashmentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You can request to encash unused leave days for monetary compensation'**
+  String get encashmentDescription;
+
+  /// No description provided for @atRiskDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'These days exceed the carry forward limit and will be forfeited after {date}'**
+  String atRiskDescription(String date);
+
+  /// No description provided for @hajjLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Hajj Leave'**
+  String get hajjLeave;
+
+  /// No description provided for @hajjLeaveArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'إجازة الحج'**
+  String get hajjLeaveArabic;
+
+  /// No description provided for @compassionateLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Compassionate Leave'**
+  String get compassionateLeave;
+
+  /// No description provided for @compassionateLeaveArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'إجازة خاصة'**
+  String get compassionateLeaveArabic;
+
+  /// No description provided for @annualLeaveArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'الإجازة السنوية'**
+  String get annualLeaveArabic;
+
+  /// No description provided for @sickLeaveArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'الإجازة المرضية'**
+  String get sickLeaveArabic;
+
+  /// No description provided for @kuwaitLaborLawLeavePolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait Labor Law Leave Policy'**
+  String get kuwaitLaborLawLeavePolicy;
+
+  /// No description provided for @carryForwardPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Carry Forward'**
+  String get carryForwardPolicy;
+
+  /// No description provided for @carryForwardPolicyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual leave can be carried forward subject to Kuwait Labor Law regulations and company policy limits'**
+  String get carryForwardPolicyDescription;
+
+  /// No description provided for @forfeitRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Forfeit Rules'**
+  String get forfeitRules;
+
+  /// No description provided for @forfeitRulesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave days exceeding carry forward limits will be forfeited at the end of the grace period'**
+  String get forfeitRulesDescription;
+
+  /// No description provided for @encashmentPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Encashment'**
+  String get encashmentPolicy;
+
+  /// No description provided for @encashmentPolicyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Eligible leave types can be encashed subject to manager approval and company policy'**
+  String get encashmentPolicyDescription;
+
+  /// No description provided for @teamLeaveRiskDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Team absence risk analysis'**
+  String get teamLeaveRiskDescription;
+
+  /// No description provided for @leavePolicies.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Policies'**
+  String get leavePolicies;
+
+  /// No description provided for @leavePoliciesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait Labor Law policies'**
+  String get leavePoliciesDescription;
+
+  /// No description provided for @policyConfiguration.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy Configuration'**
+  String get policyConfiguration;
+
+  /// No description provided for @policyConfigurationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure leave eligibility'**
+  String get policyConfigurationDescription;
+
+  /// No description provided for @forfeitPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Forfeit Policy'**
+  String get forfeitPolicy;
+
+  /// No description provided for @forfeitPolicyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave forfeit rules'**
+  String get forfeitPolicyDescription;
+
+  /// No description provided for @forfeitProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Forfeit Processing'**
+  String get forfeitProcessing;
+
+  /// No description provided for @forfeitProcessingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Process leave forfeits'**
+  String get forfeitProcessingDescription;
+
+  /// No description provided for @forfeitReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Forfeit Reports'**
+  String get forfeitReports;
+
+  /// No description provided for @forfeitReportsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Forfeit analytics'**
+  String get forfeitReportsDescription;
+
+  /// No description provided for @leaveCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Calendar'**
+  String get leaveCalendar;
+
+  /// No description provided for @leaveCalendarDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Team absence calendar'**
+  String get leaveCalendarDescription;
+
+  /// No description provided for @manageEmployeeLeaveRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage employee leave requests according to Kuwait Labor Law'**
+  String get manageEmployeeLeaveRequests;
+
+  /// No description provided for @newLeaveRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'New Leave Request'**
+  String get newLeaveRequest;
+
+  /// No description provided for @kuwaitLaborLawLeaveEntitlements.
+  ///
+  /// In en, this message translates to:
+  /// **'Kuwait Labor Law Leave Entitlements'**
+  String get kuwaitLaborLawLeaveEntitlements;
+
+  /// No description provided for @annualLeaveEntitlement.
+  ///
+  /// In en, this message translates to:
+  /// **'30 days per year after 1 year of service'**
+  String get annualLeaveEntitlement;
+
+  /// No description provided for @sickLeaveEntitlement.
+  ///
+  /// In en, this message translates to:
+  /// **'15 days full pay + 10 days half pay + 10 days unpaid'**
+  String get sickLeaveEntitlement;
+
+  /// No description provided for @maternityLeaveEntitlement.
+  ///
+  /// In en, this message translates to:
+  /// **'70 days total (30 before, 40 after delivery)'**
+  String get maternityLeaveEntitlement;
+
+  /// No description provided for @emergencyLeaveEntitlement.
+  ///
+  /// In en, this message translates to:
+  /// **'5 days per year for emergencies'**
+  String get emergencyLeaveEntitlement;
+
+  /// No description provided for @leaveFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'all'**
+  String get leaveFilterAll;
+
+  /// No description provided for @leaveFilterPending.
+  ///
+  /// In en, this message translates to:
+  /// **'pending'**
+  String get leaveFilterPending;
+
+  /// No description provided for @leaveFilterApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'approved'**
+  String get leaveFilterApproved;
+
+  /// No description provided for @leaveFilterRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'rejected'**
+  String get leaveFilterRejected;
+
+  /// No description provided for @employee.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee'**
+  String get employee;
+
+  /// No description provided for @leaveType.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Type'**
+  String get leaveType;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get days;
+
+  /// No description provided for @reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get reason;
+
+  /// No description provided for @maternityLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Maternity Leave'**
+  String get maternityLeave;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @leaveRequestGuidelines.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Request Guidelines'**
+  String get leaveRequestGuidelines;
+
+  /// No description provided for @submitRequests3DaysAdvance.
+  ///
+  /// In en, this message translates to:
+  /// **'• Submit requests at least 3 days in advance for annual leave'**
+  String get submitRequests3DaysAdvance;
+
+  /// No description provided for @sickLeaveRequiresCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'• Sick leave requires medical certificate if more than 3 days'**
+  String get sickLeaveRequiresCertificate;
+
+  /// No description provided for @ensureWorkHandover.
+  ///
+  /// In en, this message translates to:
+  /// **'• Ensure work handover is completed before leave starts'**
+  String get ensureWorkHandover;
+
+  /// No description provided for @typeToSearchEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search employees...'**
+  String get typeToSearchEmployees;
+
+  /// No description provided for @leaveTypeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Type *'**
+  String get leaveTypeRequired;
+
+  /// No description provided for @annualLeavePaidVacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual Leave (Paid Vacation)'**
+  String get annualLeavePaidVacation;
+
+  /// No description provided for @regularPaidVacationLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Regular paid vacation leave'**
+  String get regularPaidVacationLeave;
+
+  /// No description provided for @maximum30DaysPerYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum: 30 days per year'**
+  String get maximum30DaysPerYear;
+
+  /// No description provided for @startTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get startTime;
+
+  /// No description provided for @endTime.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get endTime;
+
+  /// No description provided for @fullDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Day'**
+  String get fullDay;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @completeAllStepsToSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete all steps to submit your leave application'**
+  String get completeAllStepsToSubmit;
+
+  /// No description provided for @leaveDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Details'**
+  String get leaveDetails;
+
+  /// No description provided for @contactNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact & Notes'**
+  String get contactNotes;
+
+  /// No description provided for @documentsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents & Review'**
+  String get documentsReview;
+
+  /// No description provided for @reasonForLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for Leave *'**
+  String get reasonForLeave;
+
+  /// No description provided for @pleaseProvideDetailedReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a detailed reason for your leave request...'**
+  String get pleaseProvideDetailedReason;
+
+  /// No description provided for @charactersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/500 characters'**
+  String charactersCount(int count);
+
+  /// No description provided for @workDelegatedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Delegated To'**
+  String get workDelegatedTo;
+
+  /// No description provided for @selectColleagueToHandleWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Select colleague to handle your work...'**
+  String get selectColleagueToHandleWork;
+
+  /// No description provided for @selectColleagueWhoWillHandle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a colleague who will handle your responsibilities during your absence'**
+  String get selectColleagueWhoWillHandle;
+
+  /// No description provided for @contactInformationDuringLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Information During Leave'**
+  String get contactInformationDuringLeave;
+
+  /// No description provided for @addressDuringLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Address During Leave'**
+  String get addressDuringLeave;
+
+  /// No description provided for @enterAddressOrLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your address or location during leave...'**
+  String get enterAddressOrLocation;
+
+  /// No description provided for @contactPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Phone Number'**
+  String get contactPhoneNumber;
+
+  /// No description provided for @emergencyContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact Name'**
+  String get emergencyContactName;
+
+  /// No description provided for @enterEmergencyContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter emergency contact name'**
+  String get enterEmergencyContactName;
+
+  /// No description provided for @emergencyContactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact Phone'**
+  String get emergencyContactPhone;
+
+  /// No description provided for @additionalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Notes'**
+  String get additionalNotes;
+
+  /// No description provided for @anyAdditionalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Any additional information or special considerations...'**
+  String get anyAdditionalInformation;
+
+  /// No description provided for @supportingDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Supporting Documents'**
+  String get supportingDocuments;
+
+  /// No description provided for @clickToUploadOrDragDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Click to upload or drag and drop'**
+  String get clickToUploadOrDragDrop;
+
+  /// No description provided for @pdfDocDocxJpgPngUpTo10MB.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, DOC, DOCX, JPG, PNG up to 10MB each'**
+  String get pdfDocDocxJpgPngUpTo10MB;
+
+  /// No description provided for @requiredDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Documents:'**
+  String get requiredDocuments;
+
+  /// No description provided for @supportingDocumentsIfApplicable.
+  ///
+  /// In en, this message translates to:
+  /// **'• Supporting documents (if applicable)'**
+  String get supportingDocumentsIfApplicable;
+
+  /// No description provided for @requestSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Summary'**
+  String get requestSummary;
+
+  /// No description provided for @attachments.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachments'**
+  String get attachments;
+
+  /// No description provided for @filesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} file(s)'**
+  String filesCount(int count);
+
+  /// No description provided for @declaration.
+  ///
+  /// In en, this message translates to:
+  /// **'Declaration'**
+  String get declaration;
+
+  /// No description provided for @declarationText.
+  ///
+  /// In en, this message translates to:
+  /// **'By submitting this leave request, I confirm that all information provided is accurate and complete. I understand that providing false information may result in disciplinary action. I have completed necessary work handover and informed relevant parties about my absence.'**
+  String get declarationText;
+
+  /// No description provided for @submitRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Request'**
+  String get submitRequest;
+
+  /// No description provided for @notSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not selected'**
+  String get notSelected;
+
+  /// No description provided for @teamLeaveRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leave Risk'**
+  String get teamLeaveRisk;
+
+  /// No description provided for @teamLeaveRiskDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Leave Risk Dashboard'**
+  String get teamLeaveRiskDashboard;
+
+  /// No description provided for @monitorAndManageTeamMembersAtRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor and manage team members at risk of leave forfeit'**
+  String get monitorAndManageTeamMembersAtRisk;
+
+  /// No description provided for @teamMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Team Members'**
+  String get teamMembers;
+
+  /// No description provided for @activeEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Active employees'**
+  String get activeEmployees;
+
+  /// No description provided for @employeesAtRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees at Risk'**
+  String get employeesAtRisk;
+
+  /// No description provided for @totalAtRiskDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Total At-Risk Days'**
+  String get totalAtRiskDays;
+
+  /// No description provided for @acrossAllTeamMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Across all team members'**
+  String get acrossAllTeamMembers;
+
+  /// No description provided for @avgAtRiskPerEmployee.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg At-Risk per Employee'**
+  String get avgAtRiskPerEmployee;
+
+  /// No description provided for @daysPerEmployee.
+  ///
+  /// In en, this message translates to:
+  /// **'Days per employee'**
+  String get daysPerEmployee;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @allLeaveTypes.
+  ///
+  /// In en, this message translates to:
+  /// **'All Leave Types'**
+  String get allLeaveTypes;
+
+  /// No description provided for @exportReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Report'**
+  String get exportReport;
+
+  /// No description provided for @employeesWithAtRiskLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees with At-Risk Leave'**
+  String get employeesWithAtRiskLeave;
+
+  /// No description provided for @atRiskDays.
+  ///
+  /// In en, this message translates to:
+  /// **'At-Risk Days'**
+  String get atRiskDays;
+
+  /// No description provided for @carryForwardLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Carry Forward Limit'**
+  String get carryForwardLimit;
+
+  /// No description provided for @riskLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Level'**
+  String get riskLevel;
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days left'**
+  String daysLeft(int count);
+
+  /// No description provided for @high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// No description provided for @low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @managerActionRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager Action Recommendations'**
+  String get managerActionRecommendations;
+
+  /// No description provided for @encourageLeavePlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Encourage Leave Planning'**
+  String get encourageLeavePlanning;
+
+  /// No description provided for @encourageLeavePlanningDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Proactively discuss leave plans with team members who have high at-risk balances'**
+  String get encourageLeavePlanningDescription;
+
+  /// No description provided for @approvePendingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve Pending Requests'**
+  String get approvePendingRequests;
+
+  /// No description provided for @approvePendingRequestsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Review and approve pending leave requests to help employees utilize their balance'**
+  String get approvePendingRequestsDescription;
+
+  /// No description provided for @encashmentOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Encashment Option'**
+  String get encashmentOption;
+
+  /// No description provided for @encashmentOptionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider approving encashment requests for employees who cannot take leave'**
+  String get encashmentOptionDescription;
 }
 
 class _AppLocalizationsDelegate

@@ -221,7 +221,6 @@ class CustomTable extends StatelessWidget {
   }
 
   Widget _buildTable(BuildContext context, bool isDark) {
-    debugPrint('CustomTable._buildTable: Building ${data.length} rows');
     return Column(
       children: [
         ...data.asMap().entries.map<Widget>((entry) {
