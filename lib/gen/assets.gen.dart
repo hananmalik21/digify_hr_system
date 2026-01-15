@@ -458,6 +458,15 @@ class $AssetsIconsGen {
   /// File path: assets/icons/focus_area_icon.svg
   SvgGenImage get focusAreaIcon => const SvgGenImage('assets/icons/focus_area_icon.svg');
 
+  /// File path: assets/icons/forfeit_policy_icon_figma.svg
+  SvgGenImage get forfeitPolicyIconFigma => const SvgGenImage('assets/icons/forfeit_policy_icon_figma.svg');
+
+  /// File path: assets/icons/forfeit_processing_icon_figma.svg
+  SvgGenImage get forfeitProcessingIconFigma => const SvgGenImage('assets/icons/forfeit_processing_icon_figma.svg');
+
+  /// File path: assets/icons/forfeit_reports_icon_figma.svg
+  SvgGenImage get forfeitReportsIconFigma => const SvgGenImage('assets/icons/forfeit_reports_icon_figma.svg');
+
   /// File path: assets/icons/government_forms_icon.svg
   SvgGenImage get governmentFormsIcon => const SvgGenImage('assets/icons/government_forms_icon.svg');
 
@@ -527,14 +536,29 @@ class $AssetsIconsGen {
   /// File path: assets/icons/leadership_icon.svg
   SvgGenImage get leadershipIcon => const SvgGenImage('assets/icons/leadership_icon.svg');
 
+  /// File path: assets/icons/leave_balance_icon_figma.svg
+  SvgGenImage get leaveBalanceIconFigma => const SvgGenImage('assets/icons/leave_balance_icon_figma.svg');
+
   /// File path: assets/icons/leave_calendar_icon.svg
   SvgGenImage get leaveCalendarIcon => const SvgGenImage('assets/icons/leave_calendar_icon.svg');
+
+  /// File path: assets/icons/leave_calendar_icon_figma.svg
+  SvgGenImage get leaveCalendarIconFigma => const SvgGenImage('assets/icons/leave_calendar_icon_figma.svg');
+
+  /// Directory path: assets/icons/leave_management
+  $AssetsIconsLeaveManagementGen get leaveManagement => const $AssetsIconsLeaveManagementGen();
 
   /// File path: assets/icons/leave_management_icon.svg
   SvgGenImage get leaveManagementIcon => const SvgGenImage('assets/icons/leave_management_icon.svg');
 
   /// File path: assets/icons/leave_management_main_icon.svg
   SvgGenImage get leaveManagementMainIcon => const SvgGenImage('assets/icons/leave_management_main_icon.svg');
+
+  /// File path: assets/icons/leave_policies_icon_figma.svg
+  SvgGenImage get leavePoliciesIconFigma => const SvgGenImage('assets/icons/leave_policies_icon_figma.svg');
+
+  /// File path: assets/icons/leave_requests_icon_figma.svg
+  SvgGenImage get leaveRequestsIconFigma => const SvgGenImage('assets/icons/leave_requests_icon_figma.svg');
 
   /// File path: assets/icons/levels_icon.svg
   SvgGenImage get levelsIcon => const SvgGenImage('assets/icons/levels_icon.svg');
@@ -599,6 +623,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/more_icon.svg
   SvgGenImage get moreIcon => const SvgGenImage('assets/icons/more_icon.svg');
 
+  /// File path: assets/icons/my_leave_balance_icon_figma.svg
+  SvgGenImage get myLeaveBalanceIconFigma => const SvgGenImage('assets/icons/my_leave_balance_icon_figma.svg');
+
   /// File path: assets/icons/notifications_icon.svg
   SvgGenImage get notificationsIcon => const SvgGenImage('assets/icons/notifications_icon.svg');
 
@@ -619,6 +646,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/phone_icon.svg
   SvgGenImage get phoneIcon => const SvgGenImage('assets/icons/phone_icon.svg');
+
+  /// File path: assets/icons/policy_configuration_icon_figma.svg
+  SvgGenImage get policyConfigurationIconFigma => const SvgGenImage('assets/icons/policy_configuration_icon_figma.svg');
 
   /// File path: assets/icons/positions_icon.svg
   SvgGenImage get positionsIcon => const SvgGenImage('assets/icons/positions_icon.svg');
@@ -733,6 +763,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/tasks_icon.svg
   SvgGenImage get tasksIcon => const SvgGenImage('assets/icons/tasks_icon.svg');
+
+  /// File path: assets/icons/team_leave_risk_icon_figma.svg
+  SvgGenImage get teamLeaveRiskIconFigma => const SvgGenImage('assets/icons/team_leave_risk_icon_figma.svg');
 
   /// Directory path: assets/icons/time_management
   $AssetsIconsTimeManagementGen get timeManagement => const $AssetsIconsTimeManagementGen();
@@ -958,6 +991,9 @@ class $AssetsIconsGen {
     filledPositionIcon,
     financialIcon,
     focusAreaIcon,
+    forfeitPolicyIconFigma,
+    forfeitProcessingIconFigma,
+    forfeitReportsIconFigma,
     governmentFormsIcon,
     governmentFormsMainIcon,
     gpsCurrentLocationBlue,
@@ -981,9 +1017,13 @@ class $AssetsIconsGen {
     infoCircleBlue,
     infoIconGreen,
     leadershipIcon,
+    leaveBalanceIconFigma,
     leaveCalendarIcon,
+    leaveCalendarIconFigma,
     leaveManagementIcon,
     leaveManagementMainIcon,
+    leavePoliciesIconFigma,
+    leaveRequestsIconFigma,
     levelsIcon,
     locationCardIcon,
     locationHeaderIcon,
@@ -1005,6 +1045,7 @@ class $AssetsIconsGen {
     moduleCatalogueIcon,
     moduleCatalogueMainIcon,
     moreIcon,
+    myLeaveBalanceIconFigma,
     notificationsIcon,
     overviewIcon,
     payrollIcon,
@@ -1012,6 +1053,7 @@ class $AssetsIconsGen {
     phoneCardIcon,
     phoneDetailIcon,
     phoneIcon,
+    policyConfigurationIconFigma,
     positionsIcon,
     previewIcon,
     previewStructureIcon,
@@ -1049,6 +1091,7 @@ class $AssetsIconsGen {
     structureConfigurationIcon,
     tasksEventsIcon,
     tasksIcon,
+    teamLeaveRiskIconFigma,
     timeManagementIcon,
     timeManagementMainIcon,
     totalBudgetDeptIcon,
@@ -1072,6 +1115,54 @@ class $AssetsIconsGen {
     workforcePlanningIcon,
     workforceStructureIcon,
     workforceStructureMainIcon,
+  ];
+}
+
+class $AssetsIconsLeaveManagementGen {
+  const $AssetsIconsLeaveManagementGen();
+
+  /// File path: assets/icons/leave_management/empty_leave.svg
+  SvgGenImage get emptyLeave => const SvgGenImage('assets/icons/leave_management/empty_leave.svg');
+
+  /// File path: assets/icons/leave_management/forfeit_policy.svg
+  SvgGenImage get forfeitPolicy => const SvgGenImage('assets/icons/leave_management/forfeit_policy.svg');
+
+  /// File path: assets/icons/leave_management/forfeit_processing.svg
+  SvgGenImage get forfeitProcessing => const SvgGenImage('assets/icons/leave_management/forfeit_processing.svg');
+
+  /// File path: assets/icons/leave_management/forfeit_reports.svg
+  SvgGenImage get forfeitReports => const SvgGenImage('assets/icons/leave_management/forfeit_reports.svg');
+
+  /// File path: assets/icons/leave_management/leave_calendar.svg
+  SvgGenImage get leaveCalendar => const SvgGenImage('assets/icons/leave_management/leave_calendar.svg');
+
+  /// File path: assets/icons/leave_management/leave_policy.svg
+  SvgGenImage get leavePolicy => const SvgGenImage('assets/icons/leave_management/leave_policy.svg');
+
+  /// File path: assets/icons/leave_management/leave_requests.svg
+  SvgGenImage get leaveRequests => const SvgGenImage('assets/icons/leave_management/leave_requests.svg');
+
+  /// File path: assets/icons/leave_management/my_leave.svg
+  SvgGenImage get myLeave => const SvgGenImage('assets/icons/leave_management/my_leave.svg');
+
+  /// File path: assets/icons/leave_management/policy_configuration.svg
+  SvgGenImage get policyConfiguration => const SvgGenImage('assets/icons/leave_management/policy_configuration.svg');
+
+  /// File path: assets/icons/leave_management/team_level.svg
+  SvgGenImage get teamLevel => const SvgGenImage('assets/icons/leave_management/team_level.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+    emptyLeave,
+    forfeitPolicy,
+    forfeitProcessing,
+    forfeitReports,
+    leaveCalendar,
+    leavePolicy,
+    leaveRequests,
+    myLeave,
+    policyConfiguration,
+    teamLevel,
   ];
 }
 

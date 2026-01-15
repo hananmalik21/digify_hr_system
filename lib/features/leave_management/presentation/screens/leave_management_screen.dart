@@ -51,9 +51,7 @@ class _LeaveManagementScreenState extends ConsumerState<LeaveManagementScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: _buildTabContent(selectedTabIndex, localizations, isDark),
-          ),
+          Expanded(child: _buildTabContent(selectedTabIndex, localizations, isDark)),
         ],
       ),
     );

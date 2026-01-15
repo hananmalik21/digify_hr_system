@@ -1,5 +1,3 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -19,11 +17,7 @@ class NewLeaveRequestDialog extends ConsumerStatefulWidget {
   const NewLeaveRequestDialog({super.key});
 
   static void show(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const NewLeaveRequestDialog(),
-    );
+    showDialog(context: context, barrierDismissible: false, builder: (context) => const NewLeaveRequestDialog());
   }
 
   @override
@@ -49,11 +43,7 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 25,
-                offset: const Offset(0, 12),
-              ),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
             ],
           ),
           child: Column(
@@ -85,10 +75,7 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
           end: Alignment.topRight,
           colors: [Color(0xFF2563EB), Color(0xFF3B82F6)],
         ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.r),
-          topRight: Radius.circular(16.r),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(16.r), topRight: Radius.circular(16.r)),
       ),
       padding: EdgeInsets.all(24.w),
       child: Column(
@@ -102,18 +89,17 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
                   Text(
                     localizations.newLeaveRequest,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontSize: 22.9.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: Colors.white,
+                      fontSize: 22.9.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Gap(4.h),
                   Text(
                     localizations.completeAllStepsToSubmit,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: const Color(0xFFDBEAFE),
-                          fontSize: 13.6.sp,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: const Color(0xFFDBEAFE), fontSize: 13.6.sp),
                   ),
                 ],
               ),
@@ -207,10 +193,7 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
           height: 40.h,
           decoration: BoxDecoration(
             color: isActive || isCompleted ? Colors.white : Colors.transparent,
-            border: Border.all(
-              color: Colors.white,
-              width: 2,
-            ),
+            border: Border.all(color: Colors.white, width: 2),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -228,19 +211,19 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
               Text(
                 label.split(' ').first,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isActive || isCompleted ? Colors.white : Colors.white.withValues(alpha: 0.5),
-                      fontSize: 13.9.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: isActive || isCompleted ? Colors.white : Colors.white.withValues(alpha: 0.5),
+                  fontSize: 13.9.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               if (label.contains(' '))
                 Text(
                   label.split(' ').skip(1).join(' '),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isActive || isCompleted ? Colors.white : Colors.white.withValues(alpha: 0.5),
-                        fontSize: 13.9.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    color: isActive || isCompleted ? Colors.white : Colors.white.withValues(alpha: 0.5),
+                    fontSize: 13.9.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
             ],
           ),
@@ -270,12 +253,7 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 25.h),
       decoration: BoxDecoration(
         color: const Color(0xFFF9FAFB),
-        border: Border(
-          top: BorderSide(
-            color: const Color(0xFFE5E7EB),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: const Color(0xFFE5E7EB), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -286,10 +264,10 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
               child: Text(
                 localizations.previous,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF364153),
-                      fontSize: 15.5.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: const Color(0xFF364153),
+                  fontSize: 15.5.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             )
           else

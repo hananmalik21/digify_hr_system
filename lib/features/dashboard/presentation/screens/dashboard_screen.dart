@@ -42,26 +42,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   void _handleModuleTap(DashboardButton btn) {
-    // Navigate immediately for Dashboard overview
     if (btn.id == 'dashboard') {
       context.go(btn.route);
       return;
     }
 
-    // Find corresponding SidebarItem
     final sidebarItems = SidebarConfig.getMenuItems();
     SidebarItem? match;
 
     try {
-      // 1. Try exact match
       match = sidebarItems.firstWhere((item) => item.id == btn.id);
     } catch (_) {
-      // 2. Try camelCase conversion match (e.g. enterprise-structure -> enterpriseStructure)
       final camelId = _kebabToCamel(btn.id);
       try {
         match = sidebarItems.firstWhere((item) => item.id == camelId);
       } catch (_) {
-        // 3. Manual mapping fallbacks if needed
         if (btn.id == 'settings') {
           try {
             match = sidebarItems.firstWhere((item) => item.id == 'settingsConfig');
@@ -71,13 +66,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
 
     if (match != null && match.children != null && match.children!.isNotEmpty) {
-      // Open Dialog with sub-items
       showDialog(
         context: context,
         builder: (context) => ModuleSelectionDialog(module: match!, parentColor: btn.color),
       );
     } else {
-      // Navigate directly
       context.go(btn.route);
     }
   }
@@ -109,8 +102,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         child: Stack(
           children: [
             DashboardBackground(isDark: isDark),
-
-            // ✅ RESPONSIVE LAYOUT
             LayoutBuilder(
               builder: (context, constraints) {
                 final w = constraints.maxWidth;
@@ -126,7 +117,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   bottom: 14.h,
                 );
 
-                // right-side cards width for web
                 final sideWidth = (w * 0.22).clamp(260.0, 340.0).toDouble();
 
                 return SingleChildScrollView(
@@ -139,13 +129,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ? Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // grid
                                   Expanded(
                                     child: DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
                                   ),
                                   SizedBox(width: 14.w),
 
-                                  // cards
                                   if (showCards)
                                     SizedBox(
                                       width: sideWidth,
@@ -171,7 +159,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
                                   SizedBox(height: 14.h),
 
-                                  // tablet: show two cards side-by-side
                                   if (isTablet && showCards)
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +179,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       ],
                                     )
                                   else if (showCards) ...[
-                                    // mobile: stack cards
                                     TasksEventsCard(
                                       localizations: localizations,
                                       onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
@@ -212,7 +198,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               },
             ),
 
-            // Floating eye icon (shown when cards are hidden) - placed last so it's on top
             if (!showCards) Positioned(top: 12.h, right: 12.w, child: const FloatingEyeIcon()),
           ],
         ),

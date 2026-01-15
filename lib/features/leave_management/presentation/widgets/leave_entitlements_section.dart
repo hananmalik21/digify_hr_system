@@ -7,10 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class LeaveEntitlementsSection extends StatelessWidget {
   final AppLocalizations localizations;
 
-  const LeaveEntitlementsSection({
-    super.key,
-    required this.localizations,
-  });
+  const LeaveEntitlementsSection({super.key, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +19,7 @@ class LeaveEntitlementsSection extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), offset: const Offset(0, 1), blurRadius: 3),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             offset: const Offset(0, 1),
@@ -116,21 +109,13 @@ class _EntitlementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(10.r),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(10.r)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 15.1.sp,
-              fontWeight: FontWeight.w400,
-              color: titleColor,
-              height: 24 / 15.1,
-            ),
+            style: TextStyle(fontSize: 15.1.sp, fontWeight: FontWeight.w400, color: titleColor, height: 24 / 15.1),
           ),
           SizedBox(height: 4.h),
           Text(

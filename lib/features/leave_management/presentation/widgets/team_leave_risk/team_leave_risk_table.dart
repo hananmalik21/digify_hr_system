@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/team_leave_risk_employee.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,12 +11,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const TeamLeaveRiskTable({
-    super.key,
-    required this.employees,
-    required this.localizations,
-    required this.isDark,
-  });
+  const TeamLeaveRiskTable({super.key, required this.employees, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -25,29 +19,13 @@ class TeamLeaveRiskTable extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(11.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
-      child: Column(
-        children: [
-          _buildHeader(context),
-          _buildTable(context),
-        ],
-      ),
+      child: Column(children: [_buildHeader(context), _buildTable(context)]),
     );
   }
 
@@ -56,12 +34,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
       padding: EdgeInsetsDirectional.symmetric(horizontal: 21.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
       child: Row(
         children: [
@@ -90,10 +63,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Column(
-        children: [
-          _buildTableHeader(context),
-          ...employees.map((employee) => _buildTableRow(context, employee)),
-        ],
+        children: [_buildTableHeader(context), ...employees.map((employee) => _buildTableRow(context, employee))],
       ),
     );
   }
@@ -103,12 +73,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
       padding: EdgeInsetsDirectional.symmetric(horizontal: 21.w, vertical: 10.5.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
       child: Row(
         children: [
@@ -147,12 +112,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 21.w, vertical: 0.h),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,9 +209,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
             width: 147.3.w,
             child: Padding(
               padding: EdgeInsetsDirectional.only(top: 30.5.h, bottom: 31.h),
-              child: Center(
-                child: _buildAtRiskBadge(employee.atRiskDays),
-              ),
+              child: Center(child: _buildAtRiskBadge(employee.atRiskDays)),
             ),
           ),
           SizedBox(
@@ -308,9 +266,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
             width: 125.48.w,
             child: Padding(
               padding: EdgeInsetsDirectional.only(top: 30.25.h, bottom: 30.25.h),
-              child: Center(
-                child: _buildRiskLevelBadge(employee.riskLevel),
-              ),
+              child: Center(child: _buildRiskLevelBadge(employee.riskLevel)),
             ),
           ),
           SizedBox(
@@ -351,10 +307,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
   Widget _buildLeaveTypeBadge(String leaveType) {
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.5.w, vertical: 1.75.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFDBEAFE),
-        borderRadius: BorderRadius.circular(100.r),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFDBEAFE), borderRadius: BorderRadius.circular(100.r)),
       child: Text(
         leaveType,
         style: TextStyle(
@@ -371,10 +324,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
   Widget _buildAtRiskBadge(double days) {
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.5.w, vertical: 1.25.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFE2E2),
-        borderRadius: BorderRadius.circular(100.r),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFFFE2E2), borderRadius: BorderRadius.circular(100.r)),
       child: Text(
         '${days.toStringAsFixed(days == days.toInt() ? 0 : 1)} days',
         style: TextStyle(
@@ -392,21 +342,18 @@ class TeamLeaveRiskTable extends StatelessWidget {
     final bgColor = riskLevel == RiskLevel.high
         ? const Color(0xFFFFEDD4)
         : riskLevel == RiskLevel.medium
-            ? const Color(0xFFDBEAFE)
-            : const Color(0xFFDBEAFE);
+        ? const Color(0xFFDBEAFE)
+        : const Color(0xFFDBEAFE);
     final textColor = riskLevel == RiskLevel.high
         ? const Color(0xFFCA3500)
         : riskLevel == RiskLevel.medium
-            ? const Color(0xFF1447E6)
-            : const Color(0xFF1447E6);
+        ? const Color(0xFF1447E6)
+        : const Color(0xFF1447E6);
     final icon = riskLevel == RiskLevel.high ? Icons.warning_amber_rounded : Icons.info_outline;
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 10.5.w, vertical: 3.5.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(100.r),
-      ),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(100.r)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
