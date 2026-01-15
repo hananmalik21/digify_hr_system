@@ -38,9 +38,9 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsetsDirectional.only(
           top: 0.h,
-          start: 210.w,
-          end: 210.w,
-          bottom: 3.5.h,
+          start: 21.w,
+          end: 21.w,
+          bottom: 30.h,
         ),
         child: SizedBox(
           width: 1470.w,
