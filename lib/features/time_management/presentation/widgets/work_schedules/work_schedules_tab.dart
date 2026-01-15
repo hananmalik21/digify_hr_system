@@ -12,6 +12,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/create_work_schedule_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/update_work_schedule_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/view_work_schedule_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -56,7 +57,9 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   void _handleExport() {}
 
-  void _handleViewDetails(WorkSchedule schedule) {}
+  void _handleViewDetails(WorkSchedule schedule) {
+    ViewWorkScheduleDialog.show(context, schedule: schedule);
+  }
 
   void _handleEdit(WorkSchedule schedule) {
     final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
