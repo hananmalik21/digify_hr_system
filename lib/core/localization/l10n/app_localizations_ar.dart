@@ -492,7 +492,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailAddress => 'عنوان البريد الإلكتروني';
 
   @override
-  String get department => 'الإدارة';
+  String get department => 'القسم';
 
   @override
   String get position => 'المنصب';
@@ -1357,7 +1357,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myUpcomingLeaves => 'إجازاتي القادمة';
 
   @override
-  String get annualLeave => 'إجازة سنوية';
+  String get annualLeave => 'الإجازة السنوية';
 
   @override
   String get leaveDates => '25 ديسمبر - 30 ديسمبر 2024';
@@ -2963,4 +2963,449 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get retry => 'إعادة المحاولة';
+
+  @override
+  String get leaveRequests => 'طلبات الإجازة';
+
+  @override
+  String get leaveRequestsDescription => 'تقديم والموافقة على الطلبات';
+
+  @override
+  String get leaveBalance => 'رصيد الإجازة';
+
+  @override
+  String get leaveBalanceDescription => 'أرصدة إجازات الموظفين';
+
+  @override
+  String get myLeaveBalance => 'رصيد إجازتي';
+
+  @override
+  String get myLeaveBalanceDescription =>
+      'عرض أرصدة إجازاتك ونقلها وقواعد الإسقاط';
+
+  @override
+  String get applyLeave => 'تقديم طلب إجازة';
+
+  @override
+  String get requestEncashment => 'طلب صرف نقدي';
+
+  @override
+  String get employeeName => 'اسم الموظف';
+
+  @override
+  String get employeeNumber => 'رقم الموظف';
+
+  @override
+  String get joinDate => 'تاريخ الانضمام';
+
+  @override
+  String get totalBalance => 'الرصيد الإجمالي';
+
+  @override
+  String get daysAvailable => 'أيام متاحة';
+
+  @override
+  String get currentYear => 'السنة الحالية';
+
+  @override
+  String get carriedForward => 'منقول';
+
+  @override
+  String get carryForwardAllowed => 'السماح بالنقل';
+
+  @override
+  String get atRisk => 'في خطر';
+
+  @override
+  String get atRiskForfeitable => 'في خطر (قابل للإسقاط)';
+
+  @override
+  String get encashmentAvailable => 'الصرف النقدي متاح';
+
+  @override
+  String get requestEncashmentButton => 'طلب →';
+
+  @override
+  String get encashmentDescription =>
+      'يمكنك طلب صرف أيام الإجازة غير المستخدمة مقابل تعويض مالي';
+
+  @override
+  String atRiskDescription(String date) {
+    return 'هذه الأيام تتجاوز حد النقل وسيتم إسقاطها بعد $date';
+  }
+
+  @override
+  String get hajjLeave => 'إجازة الحج';
+
+  @override
+  String get hajjLeaveArabic => 'إجازة الحج';
+
+  @override
+  String get compassionateLeave => 'إجازة التعاطف';
+
+  @override
+  String get compassionateLeaveArabic => 'إجازة خاصة';
+
+  @override
+  String get annualLeaveArabic => 'الإجازة السنوية';
+
+  @override
+  String get sickLeaveArabic => 'الإجازة المرضية';
+
+  @override
+  String get kuwaitLaborLawLeavePolicy =>
+      'سياسة الإجازة بموجب قانون العمل الكويتي';
+
+  @override
+  String get carryForwardPolicy => 'النقل';
+
+  @override
+  String get carryForwardPolicyDescription =>
+      'يمكن نقل الإجازة السنوية وفقًا لقواعد قانون العمل الكويتي وحدود سياسة الشركة';
+
+  @override
+  String get forfeitRules => 'قواعد الإسقاط';
+
+  @override
+  String get forfeitRulesDescription =>
+      'سيتم إسقاط أيام الإجازة التي تتجاوز حدود النقل في نهاية فترة السماح';
+
+  @override
+  String get encashmentPolicy => 'الصرف النقدي';
+
+  @override
+  String get encashmentPolicyDescription =>
+      'يمكن صرف أنواع الإجازات المؤهلة بموافقة المدير وسياسة الشركة';
+
+  @override
+  String get teamLeaveRiskDescription => 'تحليل مخاطر غياب الفريق';
+
+  @override
+  String get leavePolicies => 'سياسات الإجازة';
+
+  @override
+  String get leavePoliciesDescription => 'سياسات قانون العمل الكويتي';
+
+  @override
+  String get policyConfiguration => 'تكوين السياسة';
+
+  @override
+  String get policyConfigurationDescription => 'تكوين أهلية الإجازة';
+
+  @override
+  String get forfeitPolicy => 'سياسة الإسقاط';
+
+  @override
+  String get forfeitPolicyDescription => 'قواعد إسقاط الإجازة';
+
+  @override
+  String get forfeitProcessing => 'معالجة الإسقاط';
+
+  @override
+  String get forfeitProcessingDescription => 'معالجة إسقاط الإجازات';
+
+  @override
+  String get forfeitReports => 'تقارير الإسقاط';
+
+  @override
+  String get forfeitReportsDescription => 'تحليلات الإسقاط';
+
+  @override
+  String get leaveCalendar => 'تقويم الإجازة';
+
+  @override
+  String get leaveCalendarDescription => 'تقويم غياب الفريق';
+
+  @override
+  String get manageEmployeeLeaveRequests =>
+      'إدارة طلبات إجازة الموظفين وفقًا لقانون العمل الكويتي';
+
+  @override
+  String get newLeaveRequest => 'طلب إجازة جديد';
+
+  @override
+  String get kuwaitLaborLawLeaveEntitlements =>
+      'استحقاقات الإجازة بموجب قانون العمل الكويتي';
+
+  @override
+  String get annualLeaveEntitlement =>
+      '30 يومًا سنويًا بعد سنة واحدة من الخدمة';
+
+  @override
+  String get sickLeaveEntitlement =>
+      '15 يومًا براتب كامل + 10 أيام بنصف راتب + 10 أيام بدون راتب';
+
+  @override
+  String get maternityLeaveEntitlement =>
+      '70 يومًا إجمالي (30 قبل الولادة، 40 بعد الولادة)';
+
+  @override
+  String get emergencyLeaveEntitlement => '5 أيام سنويًا للطوارئ';
+
+  @override
+  String get leaveFilterAll => 'الكل';
+
+  @override
+  String get leaveFilterPending => 'قيد الانتظار';
+
+  @override
+  String get leaveFilterApproved => 'موافق عليه';
+
+  @override
+  String get leaveFilterRejected => 'مرفوض';
+
+  @override
+  String get employee => 'الموظف';
+
+  @override
+  String get leaveType => 'نوع الإجازة';
+
+  @override
+  String get days => 'الأيام';
+
+  @override
+  String get reason => 'السبب';
+
+  @override
+  String get maternityLeave => 'إجازة أمومة';
+
+  @override
+  String get rejected => 'مرفوض';
+
+  @override
+  String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';
+
+  @override
+  String get submitRequests3DaysAdvance =>
+      '• تقديم الطلبات قبل 3 أيام على الأقل للإجازة السنوية';
+
+  @override
+  String get sickLeaveRequiresCertificate =>
+      '• إجازة المرض تتطلب شهادة طبية إذا كانت أكثر من 3 أيام';
+
+  @override
+  String get ensureWorkHandover =>
+      '• التأكد من اكتمال تسليم العمل قبل بدء الإجازة';
+
+  @override
+  String get typeToSearchEmployees => 'اكتب للبحث عن الموظفين...';
+
+  @override
+  String get leaveTypeRequired => 'نوع الإجازة *';
+
+  @override
+  String get annualLeavePaidVacation => 'الإجازة السنوية (إجازة مدفوعة)';
+
+  @override
+  String get regularPaidVacationLeave => 'إجازة مدفوعة منتظمة';
+
+  @override
+  String get maximum30DaysPerYear => 'الحد الأقصى: 30 يومًا في السنة';
+
+  @override
+  String get startTime => 'وقت البدء';
+
+  @override
+  String get endTime => 'وقت الانتهاء';
+
+  @override
+  String get fullDay => 'يوم كامل';
+
+  @override
+  String get previous => 'السابق';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get completeAllStepsToSubmit => 'أكمل جميع الخطوات لتقديم طلب الإجازة';
+
+  @override
+  String get leaveDetails => 'تفاصيل الإجازة';
+
+  @override
+  String get contactNotes => 'جهات الاتصال والملاحظات';
+
+  @override
+  String get documentsReview => 'المستندات والمراجعة';
+
+  @override
+  String get reasonForLeave => 'سبب الإجازة *';
+
+  @override
+  String get pleaseProvideDetailedReason =>
+      'يرجى تقديم سبب مفصل لطلب الإجازة...';
+
+  @override
+  String charactersCount(int count) {
+    return '$count/500 حرف';
+  }
+
+  @override
+  String get workDelegatedTo => 'العمل المفوض إلى';
+
+  @override
+  String get selectColleagueToHandleWork => 'اختر زميلًا للتعامل مع عملك...';
+
+  @override
+  String get selectColleagueWhoWillHandle =>
+      'اختر زميلًا سيتعامل مع مسؤولياتك أثناء غيابك';
+
+  @override
+  String get contactInformationDuringLeave => 'معلومات الاتصال أثناء الإجازة';
+
+  @override
+  String get addressDuringLeave => 'العنوان أثناء الإجازة';
+
+  @override
+  String get enterAddressOrLocation => 'أدخل عنوانك أو موقعك أثناء الإجازة...';
+
+  @override
+  String get contactPhoneNumber => 'رقم هاتف الاتصال';
+
+  @override
+  String get emergencyContactName => 'اسم جهة الاتصال الطارئة';
+
+  @override
+  String get enterEmergencyContactName => 'أدخل اسم جهة الاتصال الطارئة';
+
+  @override
+  String get emergencyContactPhone => 'هاتف جهة الاتصال الطارئة';
+
+  @override
+  String get additionalNotes => 'ملاحظات إضافية';
+
+  @override
+  String get anyAdditionalInformation =>
+      'أي معلومات إضافية أو اعتبارات خاصة...';
+
+  @override
+  String get supportingDocuments => 'المستندات الداعمة';
+
+  @override
+  String get clickToUploadOrDragDrop => 'انقر للتحميل أو السحب والإفلات';
+
+  @override
+  String get pdfDocDocxJpgPngUpTo10MB =>
+      'PDF، DOC، DOCX، JPG، PNG حتى 10 ميجابايت لكل منها';
+
+  @override
+  String get requiredDocuments => 'المستندات المطلوبة:';
+
+  @override
+  String get supportingDocumentsIfApplicable => '• المستندات الداعمة (إن وجدت)';
+
+  @override
+  String get requestSummary => 'ملخص الطلب';
+
+  @override
+  String get attachments => 'المرفقات';
+
+  @override
+  String filesCount(int count) {
+    return '$count ملف (ملفات)';
+  }
+
+  @override
+  String get declaration => 'الإقرار';
+
+  @override
+  String get declarationText =>
+      'بإرسال طلب الإجازة هذا، أؤكد أن جميع المعلومات المقدمة دقيقة وكاملة. أفهم أن تقديم معلومات خاطئة قد يؤدي إلى إجراءات تأديبية. لقد أكملت تسليم العمل اللازم وأبلغت الأطراف المعنية بغيابي.';
+
+  @override
+  String get submitRequest => 'إرسال الطلب';
+
+  @override
+  String get notSelected => 'غير محدد';
+
+  @override
+  String get teamLeaveRisk => 'مخاطر إجازة الفريق';
+
+  @override
+  String get teamLeaveRiskDashboard => 'لوحة تحكم مخاطر إجازة الفريق';
+
+  @override
+  String get monitorAndManageTeamMembersAtRisk =>
+      'مراقبة وإدارة أعضاء الفريق المعرضين لخطر فقدان الإجازة';
+
+  @override
+  String get teamMembers => 'أعضاء الفريق';
+
+  @override
+  String get activeEmployees => 'الموظفون النشطون';
+
+  @override
+  String get employeesAtRisk => 'الموظفون المعرضون للخطر';
+
+  @override
+  String get totalAtRiskDays => 'إجمالي الأيام المعرضة للخطر';
+
+  @override
+  String get acrossAllTeamMembers => 'عبر جميع أعضاء الفريق';
+
+  @override
+  String get avgAtRiskPerEmployee => 'متوسط المخاطر لكل موظف';
+
+  @override
+  String get daysPerEmployee => 'أيام لكل موظف';
+
+  @override
+  String get filters => 'المرشحات';
+
+  @override
+  String get allLeaveTypes => 'جميع أنواع الإجازة';
+
+  @override
+  String get exportReport => 'تصدير التقرير';
+
+  @override
+  String get employeesWithAtRiskLeave => 'الموظفون ذوو إجازة معرضة للخطر';
+
+  @override
+  String get atRiskDays => 'أيام الخطر';
+
+  @override
+  String get carryForwardLimit => 'حد التحويل';
+
+  @override
+  String get riskLevel => 'مستوى الخطر';
+
+  @override
+  String daysLeft(int count) {
+    return 'بقي $count أيام';
+  }
+
+  @override
+  String get high => 'عالي';
+
+  @override
+  String get low => 'منخفض';
+
+  @override
+  String get medium => 'متوسط';
+
+  @override
+  String get managerActionRecommendations => 'توصيات إجراءات المدير';
+
+  @override
+  String get encourageLeavePlanning => 'تشجيع تخطيط الإجازة';
+
+  @override
+  String get encourageLeavePlanningDescription =>
+      'مناقشة خطط الإجازة بشكل استباقي مع أعضاء الفريق الذين لديهم أرصدة عالية المعرضة للخطر';
+
+  @override
+  String get approvePendingRequests => 'الموافقة على الطلبات المعلقة';
+
+  @override
+  String get approvePendingRequestsDescription =>
+      'مراجعة والموافقة على طلبات الإجازة المعلقة لمساعدة الموظفين على استخدام رصيدهم';
+
+  @override
+  String get encashmentOption => 'خيار التحصيل';
+
+  @override
+  String get encashmentOptionDescription =>
+      'النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة';
 }

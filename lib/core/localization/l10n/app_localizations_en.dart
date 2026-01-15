@@ -2982,4 +2982,453 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get leaveRequests => 'Leave Requests';
+
+  @override
+  String get leaveRequestsDescription => 'Submit and approve requests';
+
+  @override
+  String get leaveBalance => 'Leave Balance';
+
+  @override
+  String get leaveBalanceDescription => 'Employee leave balances';
+
+  @override
+  String get myLeaveBalance => 'My Leave Balance';
+
+  @override
+  String get myLeaveBalanceDescription =>
+      'View your leave balances, carry forward, and forfeit information';
+
+  @override
+  String get applyLeave => 'Apply Leave';
+
+  @override
+  String get requestEncashment => 'Request Encashment';
+
+  @override
+  String get employeeName => 'Employee Name';
+
+  @override
+  String get employeeNumber => 'Employee Number';
+
+  @override
+  String get joinDate => 'Join Date';
+
+  @override
+  String get totalBalance => 'Total Balance';
+
+  @override
+  String get daysAvailable => 'days available';
+
+  @override
+  String get currentYear => 'Current Year';
+
+  @override
+  String get carriedForward => 'Carried Forward';
+
+  @override
+  String get carryForwardAllowed => 'Carry Forward Allowed';
+
+  @override
+  String get atRisk => 'At Risk';
+
+  @override
+  String get atRiskForfeitable => 'At-Risk (Forfeitable)';
+
+  @override
+  String get encashmentAvailable => 'Encashment Available';
+
+  @override
+  String get requestEncashmentButton => 'Request →';
+
+  @override
+  String get encashmentDescription =>
+      'You can request to encash unused leave days for monetary compensation';
+
+  @override
+  String atRiskDescription(String date) {
+    return 'These days exceed the carry forward limit and will be forfeited after $date';
+  }
+
+  @override
+  String get hajjLeave => 'Hajj Leave';
+
+  @override
+  String get hajjLeaveArabic => 'إجازة الحج';
+
+  @override
+  String get compassionateLeave => 'Compassionate Leave';
+
+  @override
+  String get compassionateLeaveArabic => 'إجازة خاصة';
+
+  @override
+  String get annualLeaveArabic => 'الإجازة السنوية';
+
+  @override
+  String get sickLeaveArabic => 'الإجازة المرضية';
+
+  @override
+  String get kuwaitLaborLawLeavePolicy => 'Kuwait Labor Law Leave Policy';
+
+  @override
+  String get carryForwardPolicy => 'Carry Forward';
+
+  @override
+  String get carryForwardPolicyDescription =>
+      'Annual leave can be carried forward subject to Kuwait Labor Law regulations and company policy limits';
+
+  @override
+  String get forfeitRules => 'Forfeit Rules';
+
+  @override
+  String get forfeitRulesDescription =>
+      'Leave days exceeding carry forward limits will be forfeited at the end of the grace period';
+
+  @override
+  String get encashmentPolicy => 'Encashment';
+
+  @override
+  String get encashmentPolicyDescription =>
+      'Eligible leave types can be encashed subject to manager approval and company policy';
+
+  @override
+  String get teamLeaveRiskDescription => 'Team absence risk analysis';
+
+  @override
+  String get leavePolicies => 'Leave Policies';
+
+  @override
+  String get leavePoliciesDescription => 'Kuwait Labor Law policies';
+
+  @override
+  String get policyConfiguration => 'Policy Configuration';
+
+  @override
+  String get policyConfigurationDescription => 'Configure leave eligibility';
+
+  @override
+  String get forfeitPolicy => 'Forfeit Policy';
+
+  @override
+  String get forfeitPolicyDescription => 'Leave forfeit rules';
+
+  @override
+  String get forfeitProcessing => 'Forfeit Processing';
+
+  @override
+  String get forfeitProcessingDescription => 'Process leave forfeits';
+
+  @override
+  String get forfeitReports => 'Forfeit Reports';
+
+  @override
+  String get forfeitReportsDescription => 'Forfeit analytics';
+
+  @override
+  String get leaveCalendar => 'Leave Calendar';
+
+  @override
+  String get leaveCalendarDescription => 'Team absence calendar';
+
+  @override
+  String get manageEmployeeLeaveRequests =>
+      'Manage employee leave requests according to Kuwait Labor Law';
+
+  @override
+  String get newLeaveRequest => 'New Leave Request';
+
+  @override
+  String get kuwaitLaborLawLeaveEntitlements =>
+      'Kuwait Labor Law Leave Entitlements';
+
+  @override
+  String get annualLeaveEntitlement =>
+      '30 days per year after 1 year of service';
+
+  @override
+  String get sickLeaveEntitlement =>
+      '15 days full pay + 10 days half pay + 10 days unpaid';
+
+  @override
+  String get maternityLeaveEntitlement =>
+      '70 days total (30 before, 40 after delivery)';
+
+  @override
+  String get emergencyLeaveEntitlement => '5 days per year for emergencies';
+
+  @override
+  String get leaveFilterAll => 'all';
+
+  @override
+  String get leaveFilterPending => 'pending';
+
+  @override
+  String get leaveFilterApproved => 'approved';
+
+  @override
+  String get leaveFilterRejected => 'rejected';
+
+  @override
+  String get employee => 'Employee';
+
+  @override
+  String get leaveType => 'Leave Type';
+
+  @override
+  String get days => 'Days';
+
+  @override
+  String get reason => 'Reason';
+
+  @override
+  String get maternityLeave => 'Maternity Leave';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get leaveRequestGuidelines => 'Leave Request Guidelines';
+
+  @override
+  String get submitRequests3DaysAdvance =>
+      '• Submit requests at least 3 days in advance for annual leave';
+
+  @override
+  String get sickLeaveRequiresCertificate =>
+      '• Sick leave requires medical certificate if more than 3 days';
+
+  @override
+  String get ensureWorkHandover =>
+      '• Ensure work handover is completed before leave starts';
+
+  @override
+  String get typeToSearchEmployees => 'Type to search employees...';
+
+  @override
+  String get leaveTypeRequired => 'Leave Type *';
+
+  @override
+  String get annualLeavePaidVacation => 'Annual Leave (Paid Vacation)';
+
+  @override
+  String get regularPaidVacationLeave => 'Regular paid vacation leave';
+
+  @override
+  String get maximum30DaysPerYear => 'Maximum: 30 days per year';
+
+  @override
+  String get startTime => 'Start Time';
+
+  @override
+  String get endTime => 'End Time';
+
+  @override
+  String get fullDay => 'Full Day';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get completeAllStepsToSubmit =>
+      'Complete all steps to submit your leave application';
+
+  @override
+  String get leaveDetails => 'Leave Details';
+
+  @override
+  String get contactNotes => 'Contact & Notes';
+
+  @override
+  String get documentsReview => 'Documents & Review';
+
+  @override
+  String get reasonForLeave => 'Reason for Leave *';
+
+  @override
+  String get pleaseProvideDetailedReason =>
+      'Please provide a detailed reason for your leave request...';
+
+  @override
+  String charactersCount(int count) {
+    return '$count/500 characters';
+  }
+
+  @override
+  String get workDelegatedTo => 'Work Delegated To';
+
+  @override
+  String get selectColleagueToHandleWork =>
+      'Select colleague to handle your work...';
+
+  @override
+  String get selectColleagueWhoWillHandle =>
+      'Select a colleague who will handle your responsibilities during your absence';
+
+  @override
+  String get contactInformationDuringLeave =>
+      'Contact Information During Leave';
+
+  @override
+  String get addressDuringLeave => 'Address During Leave';
+
+  @override
+  String get enterAddressOrLocation =>
+      'Enter your address or location during leave...';
+
+  @override
+  String get contactPhoneNumber => 'Contact Phone Number';
+
+  @override
+  String get emergencyContactName => 'Emergency Contact Name';
+
+  @override
+  String get enterEmergencyContactName => 'Enter emergency contact name';
+
+  @override
+  String get emergencyContactPhone => 'Emergency Contact Phone';
+
+  @override
+  String get additionalNotes => 'Additional Notes';
+
+  @override
+  String get anyAdditionalInformation =>
+      'Any additional information or special considerations...';
+
+  @override
+  String get supportingDocuments => 'Supporting Documents';
+
+  @override
+  String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';
+
+  @override
+  String get pdfDocDocxJpgPngUpTo10MB =>
+      'PDF, DOC, DOCX, JPG, PNG up to 10MB each';
+
+  @override
+  String get requiredDocuments => 'Required Documents:';
+
+  @override
+  String get supportingDocumentsIfApplicable =>
+      '• Supporting documents (if applicable)';
+
+  @override
+  String get requestSummary => 'Request Summary';
+
+  @override
+  String get attachments => 'Attachments';
+
+  @override
+  String filesCount(int count) {
+    return '$count file(s)';
+  }
+
+  @override
+  String get declaration => 'Declaration';
+
+  @override
+  String get declarationText =>
+      'By submitting this leave request, I confirm that all information provided is accurate and complete. I understand that providing false information may result in disciplinary action. I have completed necessary work handover and informed relevant parties about my absence.';
+
+  @override
+  String get submitRequest => 'Submit Request';
+
+  @override
+  String get notSelected => 'Not selected';
+
+  @override
+  String get teamLeaveRisk => 'Team Leave Risk';
+
+  @override
+  String get teamLeaveRiskDashboard => 'Team Leave Risk Dashboard';
+
+  @override
+  String get monitorAndManageTeamMembersAtRisk =>
+      'Monitor and manage team members at risk of leave forfeit';
+
+  @override
+  String get teamMembers => 'Team Members';
+
+  @override
+  String get activeEmployees => 'Active employees';
+
+  @override
+  String get employeesAtRisk => 'Employees at Risk';
+
+  @override
+  String get totalAtRiskDays => 'Total At-Risk Days';
+
+  @override
+  String get acrossAllTeamMembers => 'Across all team members';
+
+  @override
+  String get avgAtRiskPerEmployee => 'Avg At-Risk per Employee';
+
+  @override
+  String get daysPerEmployee => 'Days per employee';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get allLeaveTypes => 'All Leave Types';
+
+  @override
+  String get exportReport => 'Export Report';
+
+  @override
+  String get employeesWithAtRiskLeave => 'Employees with At-Risk Leave';
+
+  @override
+  String get atRiskDays => 'At-Risk Days';
+
+  @override
+  String get carryForwardLimit => 'Carry Forward Limit';
+
+  @override
+  String get riskLevel => 'Risk Level';
+
+  @override
+  String daysLeft(int count) {
+    return '$count days left';
+  }
+
+  @override
+  String get high => 'High';
+
+  @override
+  String get low => 'Low';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get managerActionRecommendations => 'Manager Action Recommendations';
+
+  @override
+  String get encourageLeavePlanning => 'Encourage Leave Planning';
+
+  @override
+  String get encourageLeavePlanningDescription =>
+      'Proactively discuss leave plans with team members who have high at-risk balances';
+
+  @override
+  String get approvePendingRequests => 'Approve Pending Requests';
+
+  @override
+  String get approvePendingRequestsDescription =>
+      'Review and approve pending leave requests to help employees utilize their balance';
+
+  @override
+  String get encashmentOption => 'Encashment Option';
+
+  @override
+  String get encashmentOptionDescription =>
+      'Consider approving encashment requests for employees who cannot take leave';
 }

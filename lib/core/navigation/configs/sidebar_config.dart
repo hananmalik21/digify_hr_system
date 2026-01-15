@@ -230,7 +230,68 @@ class SidebarConfig {
         id: 'leaveManagement',
         svgPath: Assets.icons.leaveManagementIcon.path,
         labelKey: 'leaveManagement',
-        route: '/leave-management',
+        children: [
+          SidebarItem(
+            id: 'leaveRequests',
+            svgPath: Assets.icons.descriptionIcon.path,
+            labelKey: 'leaveRequests',
+            route: '/leave-management/leave-requests',
+          ),
+          SidebarItem(
+            id: 'leaveBalance',
+            svgPath: Assets.icons.budgetIcon.path,
+            labelKey: 'leaveBalance',
+            route: '/leave-management/leave-balance',
+          ),
+          SidebarItem(
+            id: 'myLeaveBalance',
+            svgPath: Assets.icons.leaveManagementIcon.path,
+            labelKey: 'myLeaveBalance',
+            route: '/leave-management/my-leave-balance',
+          ),
+          SidebarItem(
+            id: 'teamLeaveRisk',
+            svgPath: Assets.icons.warningIcon.path,
+            labelKey: 'teamLeaveRisk',
+            route: '/leave-management/leave-requests',
+          ),
+          SidebarItem(
+            id: 'leavePolicies',
+            svgPath: Assets.icons.complianceIcon.path,
+            labelKey: 'leavePolicies',
+            route: '/leave-management/leave-policies',
+          ),
+          SidebarItem(
+            id: 'policyConfiguration',
+            svgPath: Assets.icons.structureConfigurationIcon.path,
+            labelKey: 'policyConfiguration',
+            route: '/leave-management/policy-configuration',
+          ),
+          SidebarItem(
+            id: 'forfeitPolicy',
+            svgPath: Assets.icons.securityIcon.path,
+            labelKey: 'forfeitPolicy',
+            route: '/leave-management/forfeit-policy',
+          ),
+          SidebarItem(
+            id: 'forfeitProcessing',
+            svgPath: Assets.icons.clockIcon.path,
+            labelKey: 'forfeitProcessing',
+            route: '/leave-management/forfeit-processing',
+          ),
+          SidebarItem(
+            id: 'forfeitReports',
+            svgPath: Assets.icons.reportsIcon.path,
+            labelKey: 'forfeitReports',
+            route: '/leave-management/forfeit-reports',
+          ),
+          SidebarItem(
+            id: 'leaveCalendar',
+            svgPath: Assets.icons.leaveCalendarIcon.path,
+            labelKey: 'leaveCalendar',
+            route: '/leave-management/leave-calendar',
+          ),
+        ],
       ),
       SidebarItem(
         id: 'attendance',
@@ -385,6 +446,26 @@ class SidebarConfig {
         return 'Contracts';
       case 'leaveManagement':
         return localizations.leaveManagement;
+      case 'leaveRequests':
+        return localizations.leaveRequests;
+      case 'leaveBalance':
+        return localizations.leaveBalance;
+      case 'myLeaveBalance':
+        return localizations.myLeaveBalance;
+      case 'teamLeaveRisk':
+        return localizations.teamLeaveRisk;
+      case 'leavePolicies':
+        return localizations.leavePolicies;
+      case 'policyConfiguration':
+        return localizations.policyConfiguration;
+      case 'forfeitPolicy':
+        return localizations.forfeitPolicy;
+      case 'forfeitProcessing':
+        return localizations.forfeitProcessing;
+      case 'forfeitReports':
+        return localizations.forfeitReports;
+      case 'leaveCalendar':
+        return localizations.leaveCalendar;
       case 'attendance':
         return localizations.attendance;
       case 'payroll':

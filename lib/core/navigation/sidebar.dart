@@ -6,6 +6,7 @@ import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,18 @@ class _SidebarState extends ConsumerState<Sidebar> {
     }
   }
 
+  /// Maps leave management sidebar item IDs to their corresponding tab indexes
+  int? _getLeaveManagementTabIndex(String itemId) {
+    switch (itemId) {
+      case 'leaveRequests':
+        return 0;
+      case 'teamLeaveRisk':
+        return 2;
+      default:
+        return null;
+    }
+  }
+
   void _handleNavigation(SidebarItem item) {
     if (item.route != null && mounted) {
       context.go(item.route!);
@@ -83,6 +96,15 @@ class _SidebarState extends ConsumerState<Sidebar> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               ref.read(workforceTabStateProvider.notifier).setTabIndex(tabIndex);
+            }
+          });
+        }
+      } else if (item.route == AppRoutes.leaveManagementLeaveRequests) {
+        final tabIndex = _getLeaveManagementTabIndex(item.id);
+        if (tabIndex != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              ref.read(leaveManagementTabStateProvider.notifier).setTabIndex(tabIndex);
             }
           });
         }
@@ -362,16 +384,19 @@ class _SidebarState extends ConsumerState<Sidebar> {
                         final index = entry.key;
                         final child = entry.value;
                         final currentRoute = GoRouterState.of(context).uri.path;
-                        // For time management and workforce structure, check both route and tab index
+                        // For time management, workforce structure, and leave management, check both route and tab index
                         final isChildActive =
                             child.route == currentRoute &&
-                            (item.id != 'timeManagement' && item.id != 'workforceStructure' ||
+                            (item.id != 'timeManagement' && item.id != 'workforceStructure' && item.id != 'leaveManagement' ||
                                 (item.id == 'timeManagement' &&
                                     _getTimeManagementTabIndex(child.id) ==
                                         ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex))) ||
                                 (item.id == 'workforceStructure' &&
                                     _getWorkforceStructureTabIndex(child.id) ==
-                                        ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))));
+                                        ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))) ||
+                                (item.id == 'leaveManagement' &&
+                                    _getLeaveManagementTabIndex(child.id) ==
+                                        ref.watch(leaveManagementTabStateProvider.select((s) => s.currentTabIndex))));
                         final labelText = SidebarConfig.getLocalizedLabel(child.labelKey, localizations);
                         final fontSize = SidebarConfig.getChildItemFontSize(child.labelKey);
                         final isMultiLine = labelText.contains('\n');

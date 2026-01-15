@@ -11,8 +11,11 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/section_management_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/screens/my_leave_balance_view.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_balances_view.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -177,7 +180,30 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.leaveManagement,
             name: 'leave-management',
-            builder: (context, state) => const PlaceholderScreen(title: 'Leave Management'),
+            redirect: (context, state) {
+              // Only redirect if path is exactly /leave-management
+              if (state.uri.path == AppRoutes.leaveManagement) {
+                return AppRoutes.leaveManagementLeaveRequests;
+              }
+              return null; // No redirect for child routes
+            },
+            routes: [
+              GoRoute(
+                path: 'leave-requests',
+                name: 'leave-management-leave-requests',
+                builder: (context, state) => const LeaveManagementScreen(),
+              ),
+              GoRoute(
+                path: 'leave-balance',
+                name: 'leave-management-leave-balance',
+                builder: (context, state) => const LeaveBalancesView(),
+              ),
+              GoRoute(
+                path: 'my-leave-balance',
+                name: 'leave-management-my-leave-balance',
+                builder: (context, state) => const MyLeaveBalanceView(),
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutes.attendance,
