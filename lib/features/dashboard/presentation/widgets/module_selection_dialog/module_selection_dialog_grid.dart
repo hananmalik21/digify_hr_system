@@ -79,13 +79,13 @@ class ModuleSelectionDialogGrid extends StatelessWidget {
 
   SubModuleSizeSpec _buildSubModuleSpec(DialogBreakpoint bp) {
     return SubModuleSizeSpec(
-      iconBox: bp == DialogBreakpoint.mobile ? 60 : (bp == DialogBreakpoint.tablet ? 72 : 80),
-      iconSize: bp == DialogBreakpoint.mobile ? 30 : (bp == DialogBreakpoint.tablet ? 34 : 40),
-      badgeBox: bp == DialogBreakpoint.mobile ? 24 : (bp == DialogBreakpoint.tablet ? 26 : 28),
-      badgeFont: bp == DialogBreakpoint.mobile ? 11 : 12,
+      iconBox: bp == DialogBreakpoint.mobile ? 48 : (bp == DialogBreakpoint.tablet ? 64 : 80),
+      iconSize: bp == DialogBreakpoint.mobile ? 24 : (bp == DialogBreakpoint.tablet ? 32 : 40),
+      badgeBox: bp == DialogBreakpoint.mobile ? 20 : (bp == DialogBreakpoint.tablet ? 24 : 28),
+      badgeFont: bp == DialogBreakpoint.mobile ? 10 : (bp == DialogBreakpoint.tablet ? 11 : 12),
       topPadding: bp == DialogBreakpoint.mobile ? 18 : (bp == DialogBreakpoint.tablet ? 20 : 22),
-      gapAfterIcon: bp == DialogBreakpoint.mobile ? 12 : (bp == DialogBreakpoint.tablet ? 14 : 16),
-      gapBeforeSubtitle: bp == DialogBreakpoint.mobile ? 8 : 12,
+      gapAfterIcon: bp == DialogBreakpoint.mobile ? 10 : (bp == DialogBreakpoint.tablet ? 12 : 16),
+      gapBeforeSubtitle: bp == DialogBreakpoint.mobile ? 6 : 12,
       titleFont: bp == DialogBreakpoint.mobile ? 14.5 : 15.6,
       subtitleFont: bp == DialogBreakpoint.mobile ? 11.2 : 11.8,
       titleHPad: bp == DialogBreakpoint.mobile ? 12 : (bp == DialogBreakpoint.tablet ? 16 : 26),

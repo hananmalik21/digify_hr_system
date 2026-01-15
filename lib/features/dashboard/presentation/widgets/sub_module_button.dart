@@ -174,13 +174,12 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                   child: Text(
                     widget.button.label,
                     textAlign: TextAlign.center,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyLarge?.copyWith(
                       fontSize: spec.titleFont.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.dialogTitle,
-                      height: 24 / 15.6,
                     ),
                   ),
                 ),
@@ -193,13 +192,12 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                     child: Text(
                       widget.button.subtitle!,
                       textAlign: TextAlign.center,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.textTheme.bodySmall?.copyWith(
                         fontSize: spec.subtitleFont.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.inactiveStatusText,
-                        height: 16.8 / 11.8,
                       ),
                     ),
                   ),
