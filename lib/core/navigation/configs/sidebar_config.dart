@@ -253,7 +253,7 @@ class SidebarConfig {
             id: 'teamLeaveRisk',
             svgPath: Assets.icons.warningIcon.path,
             labelKey: 'teamLeaveRisk',
-            route: '/leave-management/team-leave-risk',
+            route: '/leave-management/leave-requests',
           ),
           SidebarItem(
             id: 'leavePolicies',

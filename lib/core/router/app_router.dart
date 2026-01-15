@@ -12,6 +12,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/my_leave_balance_view.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_balances_view.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
@@ -195,7 +196,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'leave-balance',
                 name: 'leave-management-leave-balance',
-                builder: (context, state) => const MyLeaveBalanceView(),
+                builder: (context, state) => const LeaveBalancesView(),
               ),
               GoRoute(
                 path: 'my-leave-balance',
