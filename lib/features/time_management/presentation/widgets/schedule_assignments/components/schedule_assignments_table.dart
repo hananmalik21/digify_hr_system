@@ -43,39 +43,41 @@ class ScheduleAssignmentsTable extends ConsumerWidget {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: AppShadows.primaryShadow,
-      ),
-      child: ScrollableSingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Skeletonizer(
-          enabled: isLoading && assignments.isEmpty,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ScheduleAssignmentTableHeader(isDark: isDark, localizations: localizations),
-              if (isLoading && assignments.isEmpty)
-                ScheduleAssignmentsTableSkeleton(itemCount: 5)
-              else if (hasError && assignments.isEmpty)
-                _buildErrorState(isDark, localizations)
-              else if (assignments.isEmpty && !isLoading)
-                _buildEmptyState(isDark, localizations)
-              else ...[
-                ...assignments.map(
-                  (assignment) => ScheduleAssignmentTableRow(
-                    data: assignment,
-                    onView: onView != null ? () => onView!(assignment) : null,
-                    onEdit: onEdit != null ? () => onEdit!(assignment) : null,
-                    onDelete: onDelete != null ? () => onDelete!(assignment) : null,
-                    isDeleting: deletingAssignmentId == assignment.scheduleAssignmentId,
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: ScrollableSingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Skeletonizer(
+            enabled: isLoading && assignments.isEmpty,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScheduleAssignmentTableHeader(isDark: isDark, localizations: localizations),
+                if (isLoading && assignments.isEmpty)
+                  ScheduleAssignmentsTableSkeleton(itemCount: 5)
+                else if (hasError && assignments.isEmpty)
+                  _buildErrorState(isDark, localizations)
+                else if (assignments.isEmpty && !isLoading)
+                  _buildEmptyState(isDark, localizations)
+                else ...[
+                  ...assignments.map(
+                    (assignment) => ScheduleAssignmentTableRow(
+                      data: assignment,
+                      onView: onView != null ? () => onView!(assignment) : null,
+                      onEdit: onEdit != null ? () => onEdit!(assignment) : null,
+                      onDelete: onDelete != null ? () => onDelete!(assignment) : null,
+                      isDeleting: deletingAssignmentId == assignment.scheduleAssignmentId,
+                    ),
                   ),
-                ),
-                if (isLoadingMore) _buildLoadingMoreState(),
+                  if (isLoadingMore) _buildLoadingMoreState(),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

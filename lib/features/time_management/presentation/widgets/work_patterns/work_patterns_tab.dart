@@ -67,20 +67,22 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
           children: [
             WorkPatternHeader(localizations: localizations),
             Gap(24.h),
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
-              child: WorkPatternsTable(
-                workPatterns: workPatternsState.items,
-                isLoading: workPatternsState.isLoading,
-                isLoadingMore: workPatternsState.isLoadingMore,
-                hasError: workPatternsState.hasError,
-                errorMessage: workPatternsState.errorMessage,
-                scrollController: _scrollController,
-                onRetry: () {
-                  ref.read(workPatternsNotifierProvider(selectedEnterpriseId).notifier).refresh();
-                },
-                onEdit: (pattern) => EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern),
-                onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
+                child: WorkPatternsTable(
+                  workPatterns: workPatternsState.items,
+                  isLoading: workPatternsState.isLoading,
+                  isLoadingMore: workPatternsState.isLoadingMore,
+                  hasError: workPatternsState.hasError,
+                  errorMessage: workPatternsState.errorMessage,
+                  scrollController: _scrollController,
+                  onRetry: () {
+                    ref.read(workPatternsNotifierProvider(selectedEnterpriseId).notifier).refresh();
+                  },
+                  onEdit: (pattern) => EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern),
+                  onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId),
+                ),
               ),
             ),
           ],
