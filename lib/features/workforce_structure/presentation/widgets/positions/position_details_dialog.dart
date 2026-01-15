@@ -1,10 +1,12 @@
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/details/position_detail_cards.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/details/position_detail_sections.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_form_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -22,6 +24,18 @@ class PositionDetailsDialog extends StatelessWidget {
       title: '${localizations.positionDetails} - ${position.titleEnglish}',
       width: 1000.w,
       onClose: () => context.pop(),
+      actions: [
+        AppButton(label: localizations.close, type: AppButtonType.outline, onPressed: () => context.pop()),
+        Gap(12.w),
+        AppButton(
+          label: localizations.editPosition,
+          type: AppButtonType.primary,
+          onPressed: () {
+            context.pop();
+            PositionFormDialog.show(context, position: position, isEdit: true);
+          },
+        ),
+      ],
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
