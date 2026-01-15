@@ -3,11 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/core/widgets/buttons/export_button.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
-import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table/leave_balances_table_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table/leave_balances_table_row.dart';
@@ -62,12 +58,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
     },
   ];
 
-  final List<String> _departments = [
-    'All Departments',
-    'IT',
-    'Human Resources',
-    'Finance',
-  ];
+  final List<String> _departments = ['All Departments', 'IT', 'Human Resources', 'Finance'];
 
   @override
   void dispose() {
@@ -83,12 +74,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
     return Container(
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
       child: SingleChildScrollView(
-        padding: EdgeInsetsDirectional.only(
-          top: 45.5.h,
-          start: 32.w,
-          end: 32.w,
-          bottom: 24.h,
-        ),
+        padding: EdgeInsetsDirectional.only(top: 45.5.h, start: 32.w, end: 32.w, bottom: 24.h),
         child: SizedBox(
           width: 1470.w,
           child: Column(
@@ -232,17 +218,9 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
           Container(
             width: 42.w,
             height: 42.h,
-            decoration: BoxDecoration(
-              color: iconBackground,
-              borderRadius: BorderRadius.circular(7.r),
-            ),
+            decoration: BoxDecoration(color: iconBackground, borderRadius: BorderRadius.circular(7.r)),
             child: Center(
-              child: DigifyAsset(
-                assetPath: iconPath,
-                width: 21,
-                height: 21,
-                color: iconColor,
-              ),
+              child: DigifyAsset(assetPath: iconPath, width: 21, height: 21, color: iconColor),
             ),
           ),
         ],
@@ -344,12 +322,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 13.6.sp,
-              fontWeight: FontWeight.w400,
-              color: titleColor,
-              height: 21 / 13.6,
-            ),
+            style: TextStyle(fontSize: 13.6.sp, fontWeight: FontWeight.w400, color: titleColor, height: 21 / 13.6),
           ),
           Gap(3.5.h),
           Text(
@@ -378,7 +351,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
         builder: (context, constraints) {
           // Use Wrap for smaller screens, Row for larger screens
           final useWrap = constraints.maxWidth < 800;
-          
+
           if (useWrap) {
             return Wrap(
               spacing: 14.w,
@@ -400,7 +373,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
               ],
             );
           }
-          
+
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -431,10 +404,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
       constraints: BoxConstraints(minWidth: 150.w, maxWidth: 200.w),
       padding: EdgeInsets.symmetric(horizontal: 19.w, vertical: 8.h),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
         borderRadius: BorderRadius.circular(7.r),
       ),
       child: DropdownButtonHideUnderline(
@@ -476,10 +446,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
             ),
             iconSize: 24.sp,
           ),
-          buttonStyleData: ButtonStyleData(
-            padding: EdgeInsets.zero,
-            height: 40.h,
-          ),
+          buttonStyleData: ButtonStyleData(padding: EdgeInsets.zero, height: 40.h),
           dropdownStyleData: DropdownStyleData(
             decoration: BoxDecoration(
               color: isDark ? AppColors.cardBackgroundDark : Colors.white,
@@ -503,10 +470,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
           constraints: BoxConstraints(minHeight: 40.h),
           padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
           decoration: BoxDecoration(
-            border: Border.all(
-              color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-              width: 1,
-            ),
+            border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
             borderRadius: BorderRadius.circular(7.r),
           ),
           child: Row(
@@ -546,19 +510,11 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
         child: Container(
           constraints: BoxConstraints(minHeight: 40.h),
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-          decoration: BoxDecoration(
-            color: const Color(0xFF155DFC),
-            borderRadius: BorderRadius.circular(7.r),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFF155DFC), borderRadius: BorderRadius.circular(7.r)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DigifyAsset(
-                assetPath: Assets.icons.refreshGray.path,
-                width: 14,
-                height: 14,
-                color: Colors.white,
-              ),
+              DigifyAsset(assetPath: Assets.icons.refreshGray.path, width: 14, height: 14, color: Colors.white),
               Gap(7.w),
               Text(
                 'Refresh Balances',
@@ -588,10 +544,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            LeaveBalancesTableHeader(
-              isDark: isDark,
-              localizations: localizations,
-            ),
+            LeaveBalancesTableHeader(isDark: isDark, localizations: localizations),
             if (_employees.isEmpty)
               SizedBox(
                 width: 1200.w,
@@ -610,11 +563,8 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
               )
             else
               ..._employees.map(
-                (employee) => LeaveBalancesTableRow(
-                  employeeData: employee,
-                  localizations: localizations,
-                  isDark: isDark,
-                ),
+                (employee) =>
+                    LeaveBalancesTableRow(employeeData: employee, localizations: localizations, isDark: isDark),
               ),
           ],
         ),

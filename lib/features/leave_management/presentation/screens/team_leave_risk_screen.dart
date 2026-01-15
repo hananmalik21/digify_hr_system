@@ -1,9 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/team_leave_risk_employee.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/team_leave_risk_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/manager_action_recommendations_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_filters_section.dart';
@@ -13,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 class TeamLeaveRiskScreen extends ConsumerWidget {
   const TeamLeaveRiskScreen({super.key});
@@ -28,12 +24,7 @@ class TeamLeaveRiskScreen extends ConsumerWidget {
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsetsDirectional.only(
-          top: 45.5.h,
-          start: 21.w,
-          end: 21.w,
-          bottom: 30.h,
-        ),
+        padding: EdgeInsetsDirectional.only(top: 45.5.h, start: 21.w, end: 21.w, bottom: 30.h),
         child: SizedBox(
           width: 1470.w,
           child: Column(
@@ -41,26 +32,13 @@ class TeamLeaveRiskScreen extends ConsumerWidget {
             children: [
               _buildHeader(localizations, isDark),
               Gap(21.h),
-              TeamLeaveRiskStatCards(
-                stats: state.stats,
-                isDark: isDark,
-              ),
+              TeamLeaveRiskStatCards(stats: state.stats, isDark: isDark),
               Gap(21.h),
-              TeamLeaveRiskFiltersSection(
-                localizations: localizations,
-                isDark: isDark,
-              ),
+              TeamLeaveRiskFiltersSection(localizations: localizations, isDark: isDark),
               Gap(21.h),
-              TeamLeaveRiskTable(
-                employees: state.employees,
-                localizations: localizations,
-                isDark: isDark,
-              ),
+              TeamLeaveRiskTable(employees: state.employees, localizations: localizations, isDark: isDark),
               Gap(21.h),
-              ManagerActionRecommendationsSection(
-                localizations: localizations,
-                isDark: isDark,
-              ),
+              ManagerActionRecommendationsSection(localizations: localizations, isDark: isDark),
             ],
           ),
         ),

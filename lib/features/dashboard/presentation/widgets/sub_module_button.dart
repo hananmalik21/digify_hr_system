@@ -3,10 +3,13 @@
 // ============================================================
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_button_model.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/widgets/module_selection_dialog/module_selection_dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class SubModuleSizeSpec {
   final double iconBox;
@@ -23,6 +26,7 @@ class SubModuleSizeSpec {
 
   final double titleHPad;
   final double subtitleHPad;
+  final DialogBreakpoint breakpoint;
 
   const SubModuleSizeSpec({
     required this.iconBox,
@@ -36,6 +40,7 @@ class SubModuleSizeSpec {
     required this.subtitleFont,
     required this.titleHPad,
     required this.subtitleHPad,
+    required this.breakpoint,
   });
 }
 
@@ -46,12 +51,7 @@ class SubModuleButton extends StatefulWidget {
   /// ✅ NEW: responsive sizing config
   final SubModuleSizeSpec spec;
 
-  const SubModuleButton({
-    super.key,
-    required this.button,
-    required this.onTap,
-    required this.spec,
-  });
+  const SubModuleButton({super.key, required this.button, required this.onTap, required this.spec});
 
   @override
   State<SubModuleButton> createState() => _SubModuleButtonState();
@@ -65,7 +65,7 @@ class _SubModuleButtonState extends State<SubModuleButton> {
   }
 
   Color _getGradientEndColor(Color startColor) {
-    return const Color(0xFF615FFF);
+    return AppColors.purple;
   }
 
   @override
@@ -79,35 +79,19 @@ class _SubModuleButtonState extends State<SubModuleButton> {
       child: GestureDetector(
         onTapDown: (_) => _clearHover(),
         onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
-          curve: Curves.easeOut,
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            border: Border.all(
-              color: _isHovered ? const Color(0xFFE5E7EB) : const Color(0xFFF3F4F6),
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: _isHovered ? 0.14 : 0.10),
-                blurRadius: 15,
-                offset: const Offset(0, 10),
-                spreadRadius: -3,
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: _isHovered ? 0.14 : 0.10),
-                blurRadius: 6,
-                offset: const Offset(0, 4),
-                spreadRadius: -4,
-              ),
-            ],
-          ),
+        child: Card(
+          elevation: _isHovered ? 4 : 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+          color: AppColors.cardBackground,
           child: Padding(
-            padding: EdgeInsets.only(top: spec.topPadding),
+            padding: EdgeInsets.all(
+              spec.breakpoint == DialogBreakpoint.mobile
+                  ? 16.0
+                  : (spec.breakpoint == DialogBreakpoint.tablet ? 20.0 : 24.0),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Icon + badge
@@ -123,25 +107,8 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [
-                            const Color(0xFF2B7FFF),
-                            _getGradientEndColor(widget.button.color),
-                          ],
+                          colors: [AppColors.primaryLight, _getGradientEndColor(widget.button.color)],
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.10),
-                            blurRadius: 25,
-                            offset: const Offset(0, 20),
-                            spreadRadius: -5,
-                          ),
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.10),
-                            blurRadius: 10,
-                            offset: const Offset(0, 8),
-                            spreadRadius: -6,
-                          ),
-                        ],
                       ),
                       child: Stack(
                         children: [
@@ -152,8 +119,8 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withValues(alpha: 0.2),
-                                  Colors.white.withValues(alpha: 0.0),
+                                  AppColors.cardBackground.withValues(alpha: 0.2),
+                                  AppColors.cardBackground.withValues(alpha: 0.0),
                                 ],
                               ),
                             ),
@@ -163,7 +130,7 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                               assetPath: widget.button.icon,
                               width: spec.iconSize,
                               height: spec.iconSize,
-                              color: Colors.white,
+                              color: AppColors.cardBackground,
                             ),
                           ),
                         ],
@@ -180,25 +147,8 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             color: AppColors.cardBackground,
-                            border: Border.all(
-                              color: AppColors.primaryLight,
-                              width: 2,
-                            ),
+                            border: Border.all(color: AppColors.primaryLight, width: 2),
                             shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.10),
-                                blurRadius: 15,
-                                offset: const Offset(0, 10),
-                                spreadRadius: -3,
-                              ),
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.10),
-                                blurRadius: 6,
-                                offset: const Offset(0, 4),
-                                spreadRadius: -4,
-                              ),
-                            ],
                           ),
                           child: Center(
                             child: Text(
@@ -216,7 +166,7 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                   ],
                 ),
 
-                SizedBox(height: spec.gapAfterIcon),
+                Gap(spec.gapAfterIcon.h),
 
                 // Title
                 Padding(
@@ -226,30 +176,28 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: context.textTheme.bodyLarge?.copyWith(
                       fontSize: spec.titleFont.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF101828),
-                      height: 24 / 15.6,
+                      color: AppColors.dialogTitle,
                     ),
                   ),
                 ),
 
                 // Subtitle
                 if (widget.button.subtitle != null && widget.button.subtitle!.isNotEmpty) ...[
-                  SizedBox(height: spec.gapBeforeSubtitle),
+                  Gap(16.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: spec.subtitleHPad),
                     child: Text(
                       widget.button.subtitle!,
                       textAlign: TextAlign.center,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: context.textTheme.bodySmall?.copyWith(
                         fontSize: spec.subtitleFont.sp,
                         fontWeight: FontWeight.w400,
-                        color: const Color(0xFF6B7280),
-                        height: 16.8 / 11.8,
+                        color: AppColors.inactiveStatusText,
                       ),
                     ),
                   ),

@@ -7,6 +7,7 @@ class SidebarItem {
   final String labelKey;
   final List<SidebarItem>? children;
   final String? route;
+  final String? subtitle;
 
   const SidebarItem({
     required this.id,
@@ -15,5 +16,6 @@ class SidebarItem {
     required this.labelKey,
     this.children,
     this.route,
+    this.subtitle,
   });
 }

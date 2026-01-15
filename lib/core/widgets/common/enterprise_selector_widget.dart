@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+
 //
 // /// Common widget for selecting an enterprise with engaging visual feedback
 // class EnterpriseSelectorWidget extends ConsumerWidget {
@@ -143,8 +144,7 @@ class EnterpriseSelectorWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final enterprisesState = ref.watch(enterprisesCacheStateProvider);
     final isDark = context.isDark;
-    final selectedEnterprise =
-    enterprisesState.findEnterpriseById(selectedEnterpriseId);
+    final selectedEnterprise = enterprisesState.findEnterpriseById(selectedEnterpriseId);
     final hasSelection = selectedEnterprise != null;
 
     // ✅ Breakpoint: Column on small screens, Row on web/large screens
@@ -170,9 +170,7 @@ class EnterpriseSelectorWidget extends ConsumerWidget {
                 'Enterprise',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : AppColors.textPrimary,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                 ),
               ),
               if (subtitle != null) ...[
@@ -180,9 +178,7 @@ class EnterpriseSelectorWidget extends ConsumerWidget {
                 Text(
                   subtitle!,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppColors.textPlaceholderDark
-                        : AppColors.textPlaceholder,
+                    color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
                   ),
                 ),
               ],
@@ -194,91 +190,80 @@ class EnterpriseSelectorWidget extends ConsumerWidget {
 
     final dropdown = enterprisesState.isLoading
         ? ShimmerWidget(
-      child: Container(
-        height: 40.h,
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.inputBgDark : const Color(0xFFE5E7EB),
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-      ),
-    )
+            child: Container(
+              height: 40.h,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.inputBgDark : const Color(0xFFE5E7EB),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          )
         : DigifySelectField<Enterprise>(
-      label: isCompact ? 'Select Enterprise' : '',
-      isRequired: true,
-      hint: 'Select Enterprise',
-      items: enterprisesState.enterprises,
-      itemLabelBuilder: (e) => e.name,
-      value: selectedEnterprise,
-      onChanged: (e) => onEnterpriseChanged(e?.id),
-    );
+            label: isCompact ? 'Select Enterprise' : '',
+            isRequired: true,
+            hint: 'Select Enterprise',
+            items: enterprisesState.enterprises,
+            itemLabelBuilder: (e) => e.name,
+            value: selectedEnterprise,
+            onChanged: (e) => onEnterpriseChanged(e?.id),
+          );
 
     final selectedBadge = !hasSelection
         ? const SizedBox.shrink()
         : Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: isDark ? 0.12 : 0.08),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check_circle,
-              size: 16.sp, color: AppColors.primary),
-          Gap(6.w),
-          Text(
-            selectedEnterprise!.name,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: isDark ? 0.12 : 0.08),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-          ),
-        ],
-      ),
-    );
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle, size: 16.sp, color: AppColors.primary),
+                Gap(6.w),
+                Text(
+                  selectedEnterprise.name,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          );
 
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         boxShadow: AppShadows.primaryShadow,
       ),
       child: isCompact
-      // 📱 Mobile / Small: Column layout
+          // 📱 Mobile / Small: Column layout
           ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          header,
-          Gap(12.h),
-          dropdown,
-          if (hasSelection) ...[
-            Gap(12.h),
-            selectedBadge,
-          ],
-        ],
-      )
-      // 🖥 Web / Large: Row layout
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                header,
+                Gap(12.h),
+                dropdown,
+                if (hasSelection) ...[Gap(12.h), selectedBadge],
+              ],
+            )
+          // 🖥 Web / Large: Row layout
           : Row(
-        children: [
-          // left header
-          SizedBox(width: 260.w, child: header),
-          Gap(16.w),
+              children: [
+                // left header
+                SizedBox(width: 260.w, child: header),
+                Gap(16.w),
 
-          // middle dropdown
-          Expanded(child: dropdown),
+                // middle dropdown
+                Expanded(child: dropdown),
 
-          // right badge
-          if (hasSelection) ...[
-            Gap(12.w),
-            selectedBadge,
-          ],
-        ],
-      ),
+                // right badge
+                if (hasSelection) ...[Gap(12.w), selectedBadge],
+              ],
+            ),
     );
   }
 }

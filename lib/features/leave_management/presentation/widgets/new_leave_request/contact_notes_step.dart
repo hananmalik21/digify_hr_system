@@ -1,5 +1,4 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -72,10 +71,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.reasonForLeave,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.6.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextArea(
@@ -88,10 +87,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Gap(2.h),
         Text(
           localizations.charactersCount(_reasonController.text.length),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: const Color(0xFF6A7282),
-                fontSize: 11.8.sp,
-              ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: const Color(0xFF6A7282), fontSize: 11.8.sp),
         ),
       ],
     );
@@ -113,10 +109,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.workDelegatedTo,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.7.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextField(
@@ -153,10 +149,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Gap(2.h),
         Text(
           localizations.selectColleagueWhoWillHandle,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: const Color(0xFF6A7282),
-                fontSize: 11.8.sp,
-              ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: const Color(0xFF6A7282), fontSize: 11.8.sp),
         ),
       ],
     );
@@ -174,28 +167,22 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Container(
           padding: EdgeInsets.symmetric(vertical: 25.h),
           decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: const Color(0xFFE5E7EB), width: 1),
-            ),
+            border: Border(top: BorderSide(color: const Color(0xFFE5E7EB), width: 1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.phone,
-                    size: 20.sp,
-                    color: const Color(0xFF101828),
-                  ),
+                  Icon(Icons.phone, size: 20.sp, color: const Color(0xFF101828)),
                   Gap(8.w),
                   Text(
                     localizations.contactInformationDuringLeave,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: const Color(0xFF101828),
-                          fontSize: 15.4.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      color: const Color(0xFF101828),
+                      fontSize: 15.4.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
@@ -204,13 +191,9 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
               Gap(16.h),
               Row(
                 children: [
-                  Expanded(
-                    child: _buildContactPhoneField(localizations, isDark, state, notifier),
-                  ),
+                  Expanded(child: _buildContactPhoneField(localizations, isDark, state, notifier)),
                   Gap(16.w),
-                  Expanded(
-                    child: _buildEmergencyContactNameField(localizations, isDark, state, notifier),
-                  ),
+                  Expanded(child: _buildEmergencyContactNameField(localizations, isDark, state, notifier)),
                 ],
               ),
               Gap(16.h),
@@ -234,10 +217,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.addressDuringLeave,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.7.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextArea(
@@ -263,10 +246,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.contactPhoneNumber,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.8.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.8.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextField(
@@ -292,10 +275,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.emergencyContactName,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.8.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.8.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextField(
@@ -320,10 +303,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.emergencyContactPhone,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.7.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextField(
@@ -349,10 +332,10 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Text(
           localizations.additionalNotes,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.7.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextArea(

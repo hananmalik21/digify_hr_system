@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/adjust_leave_balance_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balance_badge.dart';
@@ -30,9 +29,9 @@ class LeaveBalancesTableRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontSize: 13.7.sp,
-          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-        );
+      fontSize: 13.7.sp,
+      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
+    );
 
     final secondaryTextStyle = textStyle?.copyWith(
       color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
@@ -40,27 +39,13 @@ class LeaveBalancesTableRow extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
       child: Row(
         children: [
           _buildEmployeeCell(employeeData, textStyle, secondaryTextStyle),
-          _buildDataCell(
-            Text(employeeData['department'] ?? '-', style: textStyle),
-            199.w,
-          ),
-          _buildDataCell(
-            Text(
-              _formatDate(employeeData['joinDate']),
-              style: textStyle,
-            ),
-            151.45.w,
-          ),
+          _buildDataCell(Text(employeeData['department'] ?? '-', style: textStyle), 199.w),
+          _buildDataCell(Text(_formatDate(employeeData['joinDate']), style: textStyle), 151.45.w),
           _buildDataCell(
             Center(
               child: LeaveBalanceBadge(
@@ -72,10 +57,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
           ),
           _buildDataCell(
             Center(
-              child: LeaveBalanceBadge(
-                text: '${employeeData['sickLeave'] ?? 0} days',
-                type: LeaveBadgeType.sickLeave,
-              ),
+              child: LeaveBalanceBadge(text: '${employeeData['sickLeave'] ?? 0} days', type: LeaveBadgeType.sickLeave),
             ),
             143.59.w,
           ),
@@ -103,26 +85,16 @@ class LeaveBalancesTableRow extends StatelessWidget {
     );
   }
 
-  Widget _buildEmployeeCell(
-    Map<String, dynamic> employeeData,
-    TextStyle? textStyle,
-    TextStyle? secondaryTextStyle,
-  ) {
+  Widget _buildEmployeeCell(Map<String, dynamic> employeeData, TextStyle? textStyle, TextStyle? secondaryTextStyle) {
     return Container(
       width: 226.84.w,
       padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            employeeData['name'] ?? '-',
-            style: textStyle,
-          ),
+          Text(employeeData['name'] ?? '-', style: textStyle),
           Gap(2.h),
-          Text(
-            employeeData['id'] ?? '-',
-            style: secondaryTextStyle,
-          ),
+          Text(employeeData['id'] ?? '-', style: secondaryTextStyle),
         ],
       ),
     );
@@ -189,21 +161,11 @@ class LeaveBalancesTableRow extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DigifyAsset(
-                assetPath: iconPath,
-                width: 14,
-                height: 14,
-                color: color,
-              ),
+              DigifyAsset(assetPath: iconPath, width: 14, height: 14, color: color),
               Gap(3.5.w),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12.1.sp,
-                  fontWeight: FontWeight.w500,
-                  color: color,
-                  height: 17.5 / 12.1,
-                ),
+                style: TextStyle(fontSize: 12.1.sp, fontWeight: FontWeight.w500, color: color, height: 17.5 / 12.1),
               ),
             ],
           ),

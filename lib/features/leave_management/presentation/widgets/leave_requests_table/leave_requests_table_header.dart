@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,11 +7,7 @@ class LeaveRequestsTableHeader extends StatelessWidget {
   final bool isDark;
   final AppLocalizations localizations;
 
-  const LeaveRequestsTableHeader({
-    super.key,
-    required this.isDark,
-    required this.localizations,
-  });
+  const LeaveRequestsTableHeader({super.key, required this.isDark, required this.localizations});
 
   @override
   Widget build(BuildContext context) {

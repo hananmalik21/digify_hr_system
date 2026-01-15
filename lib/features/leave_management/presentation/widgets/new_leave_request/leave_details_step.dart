@@ -1,5 +1,4 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -77,15 +76,8 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFFDBEAFE),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Icon(
-              Icons.info_outline,
-              size: 20.sp,
-              color: const Color(0xFF1C398E),
-            ),
+            decoration: BoxDecoration(color: const Color(0xFFDBEAFE), borderRadius: BorderRadius.circular(10.r)),
+            child: Icon(Icons.info_outline, size: 20.sp, color: const Color(0xFF1C398E)),
           ),
           Gap(12.w),
           Expanded(
@@ -95,32 +87,29 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
                 Text(
                   localizations.leaveRequestGuidelines,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: const Color(0xFF1C398E),
-                        fontSize: 13.7.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    color: const Color(0xFF1C398E),
+                    fontSize: 13.7.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Gap(4.h),
                 Text(
                   localizations.submitRequests3DaysAdvance,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF1447E6),
-                        fontSize: 11.8.sp,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: const Color(0xFF1447E6), fontSize: 11.8.sp),
                 ),
                 Text(
                   localizations.sickLeaveRequiresCertificate,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF1447E6),
-                        fontSize: 11.8.sp,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: const Color(0xFF1447E6), fontSize: 11.8.sp),
                 ),
                 Text(
                   localizations.ensureWorkHandover,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF1447E6),
-                        fontSize: 11.8.sp,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: const Color(0xFF1447E6), fontSize: 11.8.sp),
                 ),
               ],
             ),
@@ -130,21 +119,17 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
     );
   }
 
-  Widget _buildEmployeeField(
-    AppLocalizations localizations,
-    bool isDark,
-    NewLeaveRequestNotifier notifier,
-  ) {
+  Widget _buildEmployeeField(AppLocalizations localizations, bool isDark, NewLeaveRequestNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '${localizations.employee} *',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: const Color(0xFF364153),
-                fontSize: 13.6.sp,
-                fontWeight: FontWeight.w500,
-              ),
+            color: const Color(0xFF364153),
+            fontSize: 13.6.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(8.h),
         DigifyTextField(
@@ -226,11 +211,7 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: 2.h),
-                  child: Icon(
-                    Icons.info_outline,
-                    size: 16.sp,
-                    color: const Color(0xFF193CB8),
-                  ),
+                  child: Icon(Icons.info_outline, size: 16.sp, color: const Color(0xFF193CB8)),
                 ),
                 Gap(8.w),
                 Expanded(
@@ -240,18 +221,17 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
                       Text(
                         localizations.regularPaidVacationLeave,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF193CB8),
-                              fontSize: 15.4.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          color: const Color(0xFF193CB8),
+                          fontSize: 15.4.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       Gap(4.h),
                       Text(
                         localizations.maximum30DaysPerYear,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: const Color(0xFF1447E6),
-                              fontSize: 15.3.sp,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: const Color(0xFF1447E6), fontSize: 15.3.sp),
                       ),
                     ],
                   ),
@@ -279,10 +259,10 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
               Text(
                 '${localizations.startDate} *',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: const Color(0xFF364153),
-                      fontSize: 13.6.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: const Color(0xFF364153),
+                  fontSize: 13.6.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Gap(8.h),
               GestureDetector(
@@ -297,22 +277,16 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
                     children: [
                       Expanded(
                         child: Text(
-                          state.startDate != null
-                              ? DateFormat('dd/MM/yyyy').format(state.startDate!)
-                              : 'dd/mm/yyyy',
+                          state.startDate != null ? DateFormat('dd/MM/yyyy').format(state.startDate!) : 'dd/mm/yyyy',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: state.startDate != null
-                                    ? const Color(0xFF0A0A0A)
-                                    : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
-                                fontSize: 15.4.sp,
-                              ),
+                            color: state.startDate != null
+                                ? const Color(0xFF0A0A0A)
+                                : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+                            fontSize: 15.4.sp,
+                          ),
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
-                        size: 20.sp,
-                        color: const Color(0xFF0A0A0A),
-                      ),
+                      Icon(Icons.calendar_today, size: 20.sp, color: const Color(0xFF0A0A0A)),
                     ],
                   ),
                 ),
@@ -342,10 +316,10 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
               Text(
                 '${localizations.endDate} *',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: const Color(0xFF364153),
-                      fontSize: 13.7.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: const Color(0xFF364153),
+                  fontSize: 13.7.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               Gap(8.h),
               GestureDetector(
@@ -360,22 +334,16 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
                     children: [
                       Expanded(
                         child: Text(
-                          state.endDate != null
-                              ? DateFormat('dd/MM/yyyy').format(state.endDate!)
-                              : 'dd/mm/yyyy',
+                          state.endDate != null ? DateFormat('dd/MM/yyyy').format(state.endDate!) : 'dd/mm/yyyy',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: state.endDate != null
-                                    ? const Color(0xFF0A0A0A)
-                                    : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
-                                fontSize: 15.4.sp,
-                              ),
+                            color: state.endDate != null
+                                ? const Color(0xFF0A0A0A)
+                                : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+                            fontSize: 15.4.sp,
+                          ),
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
-                        size: 20.sp,
-                        color: const Color(0xFF0A0A0A),
-                      ),
+                      Icon(Icons.calendar_today, size: 20.sp, color: const Color(0xFF0A0A0A)),
                     ],
                   ),
                 ),
@@ -411,45 +379,6 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
     if (picked != null) {
       onDateSelected(picked);
     }
-  }
-
-  void _showLeaveTypePicker(
-    BuildContext context,
-    AppLocalizations localizations,
-    NewLeaveRequestNotifier notifier,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text(localizations.annualLeave),
-              onTap: () {
-                notifier.setLeaveType(TimeOffType.annualLeave);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(localizations.sickLeave),
-              onTap: () {
-                notifier.setLeaveType(TimeOffType.sickLeave);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(localizations.emergencyLeave),
-              onTap: () {
-                notifier.setLeaveType(TimeOffType.emergencyLeave);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   String _getLeaveTypeLabel(TimeOffType type, AppLocalizations localizations) {
