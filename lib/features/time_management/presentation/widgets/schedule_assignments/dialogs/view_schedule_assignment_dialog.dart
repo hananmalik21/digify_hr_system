@@ -2,15 +2,21 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/view_schedule_assignment_dialog_header.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
-class ViewScheduleAssignmentDialog extends StatelessWidget {
+class ViewScheduleAssignmentDialog extends ConsumerWidget {
   final ScheduleAssignment assignment;
 
   const ViewScheduleAssignmentDialog({super.key, required this.assignment});
@@ -24,170 +30,45 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final assignmentLevel = assignment.assignmentLevel.toLowerCase() == 'department'
-        ? AssignmentLevel.department
-        : AssignmentLevel.employee;
+    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
 
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 768.w),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-            borderRadius: BorderRadius.circular(10.r),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildHeader(context, isDark),
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildAssignedEntitySection(context, isDark, assignmentLevel),
-                      SizedBox(height: 24.h),
-                      _buildDetailsSection(context, isDark),
-                      SizedBox(height: 24.h),
-                      _buildInfoBox(context, isDark),
-                    ],
-                  ),
-                ),
-              ),
-              _buildFooter(context, isDark),
-            ],
-          ),
+    return AppDialog(
+      title: 'Schedule Assignment Details',
+      width: 768.w,
+      onClose: () => context.pop(),
+      actions: [
+        AppButton.outline(label: 'Close', width: null, onPressed: () => context.pop()),
+        Gap(8.w),
+        AppButton(
+          label: 'Edit Assignment',
+          width: null,
+          onPressed: enterpriseId != null
+              ? () {
+                  context.pop();
+                  EditScheduleAssignmentDialog.show(context, enterpriseId, assignment);
+                }
+              : null,
+          svgPath: Assets.icons.editIcon.path,
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, bool isDark) {
-    return Container(
-      padding: EdgeInsetsDirectional.all(24.w),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
-      ),
-      child: Row(
-        children: [
-          Text(
-            'Schedule Assignment Details',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontFamily: 'Inter',
-              fontSize: 15.6.sp,
-              fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-              height: 24 / 15.6,
-              letterSpacing: 0,
-            ),
-          ),
-          const Spacer(),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => Navigator.of(context).pop(),
-              borderRadius: BorderRadius.circular(20.r),
-              child: Padding(
-                padding: EdgeInsets.all(6.w),
-                child: DigifyAsset(
-                  assetPath: Assets.icons.closeIcon.path,
-                  width: 24,
-                  height: 24,
-                  color: AppColors.dialogCloseIcon,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAssignedEntitySection(BuildContext context, bool isDark, AssignmentLevel level) {
-    final icon = level == AssignmentLevel.department
-        ? Assets.icons.departmentIcon.path
-        : Assets.icons.addEmployeeIcon.path;
-
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
-      ),
-      child: Row(
+      ],
+      content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 64.w,
-            height: 64.w,
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-              borderRadius: BorderRadius.circular(8.r),
+          if (assignment.workSchedule != null)
+            ViewScheduleAssignmentDialogHeader(
+              title: assignment.workSchedule!.scheduleNameEn,
+              titleArabic: assignment.workSchedule!.scheduleNameAr.isNotEmpty
+                  ? assignment.workSchedule!.scheduleNameAr
+                  : null,
+              code: assignment.workSchedule!.scheduleCode,
             ),
-            child: Center(
-              child: DigifyAsset(
-                assetPath: icon,
-                width: 32,
-                height: 32,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-              ),
-            ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  assignment.assignedToName,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                    height: 28 / 18,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  assignment.assignedToCode,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? AppColors.textMutedDark : AppColors.textMuted,
-                    height: 24 / 15,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    level == AssignmentLevel.department ? 'department' : 'employee',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isDark ? AppColors.textMutedDark : AppColors.textMuted,
-                      height: 20 / 13,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          if (assignment.workSchedule != null) DigifyDivider(margin: EdgeInsets.symmetric(vertical: 24.h)),
+          _buildDetailsSection(context, isDark),
+          Gap(24.h),
+          _buildInfoBox(context, isDark),
         ],
       ),
     );
@@ -206,7 +87,7 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
           subtitle: assignment.workSchedule?.scheduleCode ?? 'N/A',
           fullWidth: true,
         ),
-        SizedBox(height: 16.h),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
@@ -217,7 +98,7 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
                 value: assignment.formattedStartDate,
               ),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
               child: _buildDetailCard(
                 context,
@@ -228,7 +109,7 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        Gap(24.h),
         Row(
           children: [
             Expanded(
@@ -244,7 +125,7 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
               child: _buildDetailCard(
                 context,
@@ -255,13 +136,13 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        Gap(16.h),
         Row(
           children: [
             Expanded(
               child: _buildDetailCard(context, isDark, label: 'Assigned By', value: assignment.assignedByName),
             ),
-            SizedBox(width: 24.w),
+            Gap(24.w),
             Expanded(
               child: _buildDetailCard(
                 context,
@@ -285,50 +166,34 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
     Widget? customWidget,
     bool fullWidth = false,
   }) {
+    final cardWidth = fullWidth ? 720.w : 344.w;
+    final cardHeight = fullWidth ? 108.h : 84.h;
+    final cardPadding = fullWidth
+        ? EdgeInsets.all(16.w)
+        : EdgeInsets.only(top: 16.h, right: 16.w, bottom: 20.h, left: 16.w);
+
     return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
-      ),
+      width: cardWidth,
+      height: cardHeight,
+      padding: cardPadding,
+      decoration: BoxDecoration(color: AppColors.tableHeaderBackground, borderRadius: BorderRadius.circular(10.r)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 13.8.sp,
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
-              height: 20 / 13.8,
-            ),
-          ),
-          SizedBox(height: 8.h),
+          Text(label, style: context.textTheme.labelMedium?.copyWith(fontSize: 14.0, color: AppColors.tableHeaderText)),
+          Gap(4.h),
           if (customWidget != null)
             customWidget
           else ...[
             Text(
               value ?? '',
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                height: 24 / 15,
-              ),
+              style: context.textTheme.titleSmall?.copyWith(fontSize: 17.0, color: AppColors.dialogTitle),
             ),
             if (subtitle != null) ...[
-              SizedBox(height: 4.h),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark ? AppColors.textMutedDark : AppColors.textMuted,
-                  height: 20 / 13,
-                ),
-              ),
+              Gap(4.h),
+              Text(subtitle, style: context.textTheme.bodySmall?.copyWith(color: AppColors.tableHeaderText)),
             ],
           ],
         ],
@@ -345,70 +210,37 @@ class ViewScheduleAssignmentDialog extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.inputBgDark : const Color(0xFFF0F9FF),
+        color: isDark ? AppColors.inputBgDark : AppColors.infoBg,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE0F2FE)),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.infoBorder),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DigifyAsset(assetPath: Assets.icons.infoIconGreen.path, width: 20, height: 20, color: AppColors.primary),
-          SizedBox(width: 12.w),
+          DigifyAsset(
+            assetPath: Assets.icons.timeManagement.tooltip.path,
+            width: 20,
+            height: 20,
+            color: AppColors.primary,
+          ),
+          Gap(12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   statusText,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                  ),
+                  style: context.textTheme.titleSmall?.copyWith(fontSize: 15.sp, color: AppColors.infoText),
                 ),
-                SizedBox(height: 8.h),
+                Gap(8.h),
                 Text(
                   descriptionText,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? AppColors.textMutedDark : AppColors.textMuted,
-                    height: 1.4,
-                  ),
+                  style: context.textTheme.bodySmall?.copyWith(fontSize: 13.sp, color: AppColors.permissionBadgeText),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter(BuildContext context, bool isDark) {
-    return Container(
-      padding: EdgeInsetsDirectional.only(start: 24.w, end: 24.w, top: 20.h, bottom: 24.h),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          AppButton(
-            label: 'Close',
-            type: AppButtonType.outline,
-            onPressed: () => Navigator.of(context).pop(),
-            width: null,
-          ),
-          SizedBox(width: 12.w),
-          AppButton(
-            label: 'Edit Assignment',
-            type: AppButtonType.primary,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            width: null,
-            svgPath: Assets.icons.editIcon.path,
           ),
         ],
       ),
