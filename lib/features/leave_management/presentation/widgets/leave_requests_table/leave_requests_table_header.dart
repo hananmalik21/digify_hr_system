@@ -1,5 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/features/leave_management/data/config/leave_requests_table_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,22 +13,38 @@ class LeaveRequestsTableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headerColor = isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground;
+    final headerColor = isDark ? AppColors.cardBackgroundDark : AppColors.tableHeaderBackground;
+
+    final headerCells = <Widget>[];
+
+    if (LeaveRequestsTableConfig.showEmployee) {
+      headerCells.add(_buildHeaderCell(context, localizations.employee, LeaveRequestsTableConfig.employeeWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showLeaveType) {
+      headerCells.add(_buildHeaderCell(context, localizations.tmType, LeaveRequestsTableConfig.leaveTypeWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showStartDate) {
+      headerCells.add(_buildHeaderCell(context, localizations.startDate, LeaveRequestsTableConfig.startDateWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showEndDate) {
+      headerCells.add(_buildHeaderCell(context, localizations.endDate, LeaveRequestsTableConfig.endDateWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showDays) {
+      headerCells.add(_buildHeaderCell(context, localizations.days, LeaveRequestsTableConfig.daysWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showReason) {
+      headerCells.add(_buildHeaderCell(context, localizations.reason, LeaveRequestsTableConfig.reasonWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showStatus) {
+      headerCells.add(_buildHeaderCell(context, localizations.status, LeaveRequestsTableConfig.statusWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showActions) {
+      headerCells.add(_buildHeaderCell(context, localizations.actions, LeaveRequestsTableConfig.actionsWidth.w));
+    }
 
     return Container(
       color: headerColor,
-      child: Row(
-        children: [
-          _buildHeaderCell(context, localizations.employee, 177.94.w),
-          _buildHeaderCell(context, localizations.leaveType, 164.03.w),
-          _buildHeaderCell(context, localizations.startDate, 188.68.w),
-          _buildHeaderCell(context, localizations.endDate, 186.61.w),
-          _buildHeaderCell(context, localizations.days, 124.29.w),
-          _buildHeaderCell(context, localizations.reason, 258.88.w),
-          _buildHeaderCell(context, localizations.status, 202.09.w),
-          _buildHeaderCell(context, localizations.actions, 161.48.w),
-        ],
-      ),
+      child: Row(children: headerCells),
     );
   }
 
@@ -35,10 +53,7 @@ class LeaveRequestsTableHeader extends StatelessWidget {
       width: width,
       padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 12.h),
       alignment: Alignment.centerLeft,
-      child: Text(
-        text.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.tableHeaderText),
-      ),
+      child: Text(text.toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: AppColors.tableHeaderText)),
     );
   }
 }

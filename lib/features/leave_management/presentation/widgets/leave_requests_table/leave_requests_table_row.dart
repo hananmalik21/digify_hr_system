@@ -1,8 +1,13 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/extensions/string_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/features/leave_management/data/config/leave_requests_table_config.dart';
+import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class LeaveRequestsTableRow extends StatelessWidget {
@@ -23,52 +28,51 @@ class LeaveRequestsTableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.labelMedium?.copyWith(
-      fontSize: 14.sp,
-      color: AppColors.dialogTitle,
-    );
+    final textStyle = context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle);
 
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
         children: [
-          _buildDataCell(
-            Text(request.employeeName.isEmpty ? '-' : request.employeeName, style: textStyle),
-            177.94.w,
-          ),
-          _buildDataCell(_buildTypeCell(), 164.03.w),
-          _buildDataCell(
-            Text(DateFormat('MM/dd/yyyy').format(request.startDate), style: textStyle),
-            188.68.w,
-          ),
-          _buildDataCell(
-            Text(DateFormat('MM/dd/yyyy').format(request.endDate), style: textStyle),
-            186.61.w,
-          ),
-          _buildDataCell(
-            Text(
-              request.totalDays.toInt().toString(),
-              style: textStyle?.copyWith(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-              ),
+          if (LeaveRequestsTableConfig.showEmployee)
+            _buildDataCell(
+              Text(request.employeeName.isEmpty ? '-' : request.employeeName, style: textStyle),
+              LeaveRequestsTableConfig.employeeWidth.w,
             ),
-            124.29.w,
-          ),
-          _buildDataCell(
-            Text(request.reason, style: textStyle),
-            258.88.w,
-          ),
-          _buildDataCell(_buildStatusCell(), 202.09.w),
-          _buildDataCell(_buildActionsCell(), 161.48.w),
+          if (LeaveRequestsTableConfig.showLeaveType)
+            _buildDataCell(_buildTypeCell(context), LeaveRequestsTableConfig.leaveTypeWidth.w),
+          if (LeaveRequestsTableConfig.showStartDate)
+            _buildDataCell(
+              Text(DateFormat('MM/dd/yyyy').format(request.startDate), style: textStyle),
+              LeaveRequestsTableConfig.startDateWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showEndDate)
+            _buildDataCell(
+              Text(DateFormat('MM/dd/yyyy').format(request.endDate), style: textStyle),
+              LeaveRequestsTableConfig.endDateWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showDays)
+            _buildDataCell(
+              Text(
+                request.totalDays.toInt().toString(),
+                style: textStyle?.copyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                ),
+              ),
+              LeaveRequestsTableConfig.daysWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showReason)
+            _buildDataCell(Text(request.reason, style: textStyle), LeaveRequestsTableConfig.reasonWidth.w),
+          if (LeaveRequestsTableConfig.showStatus)
+            _buildDataCell(_buildStatusCell(context), LeaveRequestsTableConfig.statusWidth.w),
+          if (LeaveRequestsTableConfig.showActions)
+            _buildDataCell(_buildActionsCell(), LeaveRequestsTableConfig.actionsWidth.w),
         ],
       ),
     );
@@ -83,7 +87,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeCell() {
+  Widget _buildTypeCell(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.5.h),
       decoration: BoxDecoration(
@@ -91,31 +95,26 @@ class LeaveRequestsTableRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(4.r),
       ),
       child: Text(
-        _getLeaveTypeLabel().toLowerCase(),
-        style: TextStyle(
-          fontSize: 15.4.sp,
-          fontWeight: FontWeight.w400,
-          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
-          height: 24 / 15.4,
-        ),
+        LeaveTypeMapper.getShortLabel(request.type),
+        style: context.textTheme.bodyLarge?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.lightDark),
       ),
     );
   }
 
-  Widget _buildStatusCell() {
+  Widget _buildStatusCell(BuildContext context) {
     Color backgroundColor;
     Color textColor;
     String label;
 
     switch (request.status) {
       case RequestStatus.pending:
-        backgroundColor = AppColors.warningBg;
-        textColor = const Color(0xFF894B00);
+        backgroundColor = AppColors.pendingStatusBackground;
+        textColor = AppColors.pendingStatucColor;
         label = localizations.leaveFilterPending;
         break;
       case RequestStatus.approved:
-        backgroundColor = AppColors.successBg;
-        textColor = AppColors.successText;
+        backgroundColor = AppColors.holidayIslamicPaidBg;
+        textColor = AppColors.holidayIslamicPaidText;
         label = localizations.leaveFilterApproved;
         break;
       case RequestStatus.rejected:
@@ -131,20 +130,9 @@ class LeaveRequestsTableRow extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 1.5.h),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(1000.r),
-      ),
-      child: Text(
-        label.toLowerCase(),
-        style: TextStyle(
-          fontSize: 15.4.sp,
-          fontWeight: FontWeight.w400,
-          color: textColor,
-          height: 24 / 15.4,
-        ),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(100.r)),
+      child: Text(label.capitalizeFirst, style: context.textTheme.bodyLarge?.copyWith(color: textColor)),
     );
   }
 
@@ -156,53 +144,24 @@ class LeaveRequestsTableRow extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
+        InkWell(
           onTap: onApprove,
+          borderRadius: BorderRadius.circular(4.r),
           child: Container(
             padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: Icon(
-              Icons.check,
-              size: 20.sp,
-              color: AppColors.success,
-            ),
+            child: Icon(Icons.check, size: 20.sp, color: AppColors.success),
           ),
         ),
-        SizedBox(width: 8.w),
-        GestureDetector(
+        Gap(8.w),
+        InkWell(
           onTap: onReject,
+          borderRadius: BorderRadius.circular(4.r),
           child: Container(
             padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: Icon(
-              Icons.close,
-              size: 20.sp,
-              color: AppColors.error,
-            ),
+            child: Icon(Icons.close, size: 20.sp, color: AppColors.error),
           ),
         ),
       ],
     );
-  }
-
-  String _getLeaveTypeLabel() {
-    switch (request.type) {
-      case TimeOffType.annualLeave:
-        return localizations.annualLeave;
-      case TimeOffType.sickLeave:
-        return localizations.sickLeave;
-      case TimeOffType.personalLeave:
-        return localizations.emergencyLeave;
-      case TimeOffType.emergencyLeave:
-        return localizations.emergencyLeave;
-      case TimeOffType.unpaidLeave:
-        return 'Unpaid Leave';
-      case TimeOffType.other:
-        return 'Other';
-    }
   }
 }
