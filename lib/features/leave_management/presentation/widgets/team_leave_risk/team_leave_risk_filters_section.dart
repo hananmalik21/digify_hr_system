@@ -9,11 +9,7 @@ class TeamLeaveRiskFiltersSection extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const TeamLeaveRiskFiltersSection({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-  });
+  const TeamLeaveRiskFiltersSection({super.key, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +18,10 @@ class TeamLeaveRiskFiltersSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(11.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
         ],
       ),
       child: Row(
@@ -60,25 +45,13 @@ class TeamLeaveRiskFiltersSection extends StatelessWidget {
                 ),
               ),
               Gap(14.w),
-              _FilterDropdown(
-                label: localizations.allDepartments,
-                isDark: isDark,
-              ),
+              _FilterDropdown(label: localizations.allDepartments, isDark: isDark),
               Gap(14.w),
-              _FilterDropdown(
-                label: localizations.allLeaveTypes,
-                isDark: isDark,
-              ),
+              _FilterDropdown(label: localizations.allLeaveTypes, isDark: isDark),
             ],
           ),
           const Spacer(),
-          AppButton.primary(
-            label: localizations.exportReport,
-            icon: Icons.download,
-            onPressed: () {
-              // TODO: Implement export functionality
-            },
-          ),
+          AppButton.primary(label: localizations.exportReport, icon: Icons.download, onPressed: () {}),
         ],
       ),
     );
@@ -89,25 +62,16 @@ class _FilterDropdown extends StatelessWidget {
   final String label;
   final bool isDark;
 
-  const _FilterDropdown({
-    required this.label,
-    required this.isDark,
-  });
+  const _FilterDropdown({required this.label, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 19.w,
-        vertical: 8.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 19.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(
-          color: isDark ? AppColors.borderGreyDark : AppColors.borderGrey,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.borderGreyDark : AppColors.borderGrey, width: 1),
       ),
       child: Text(
         label,

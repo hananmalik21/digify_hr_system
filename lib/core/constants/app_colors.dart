@@ -6,6 +6,7 @@ class AppColors {
   // Primary Colors
   static const Color primary = Color(0xFF155DFC);
   static const Color primaryLight = Color(0xFF2B7FFF);
+  static const Color gradientBlue = Color(0xFF615FFF);
   static const Color primaryDark = Color(0xFF0A4FE8);
 
   // Brand Colors

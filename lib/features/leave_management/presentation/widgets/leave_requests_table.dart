@@ -58,12 +58,8 @@ class LeaveRequestsTable extends ConsumerWidget {
                   request: request,
                   localizations: localizations,
                   isDark: isDark,
-                  onApprove: () {
-                    // TODO: Handle approve action
-                  },
-                  onReject: () {
-                    // TODO: Handle reject action
-                  },
+                  onApprove: () {},
+                  onReject: () {},
                 ),
               ),
           ],
@@ -71,7 +67,6 @@ class LeaveRequestsTable extends ConsumerWidget {
       ),
     );
   }
-
 
   List<TimeOffRequest> _getMockLeaveRequests() {
     return [

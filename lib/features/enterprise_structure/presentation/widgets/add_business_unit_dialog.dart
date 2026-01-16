@@ -73,9 +73,6 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
 
     _selectedStatus = widget.businessUnit != null ? (widget.businessUnit!.isActive ? 'Active' : 'Inactive') : 'Active';
     _selectedDivision = widget.businessUnit?.divisionName;
-
-    // TODO: Load division ID from API when editing
-    // For now, we'll need to get it from the API response when submitting
   }
 
   String _getInitialValue(String key) {
@@ -526,11 +523,7 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
                 ? SizedBox(
                     width: 20.w,
                     height: 20.h,
-                    child: const AppLoadingIndicator(
-                      type: LoadingType.fadingCircle,
-                      size: 20,
-                      color: Colors.white,
-                    ),
+                    child: const AppLoadingIndicator(type: LoadingType.fadingCircle, size: 20, color: Colors.white),
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.min,
@@ -585,10 +578,7 @@ class _AddBusinessUnitDialogState extends ConsumerState<AddBusinessUnitDialog> {
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Center(
-              child: const AppLoadingIndicator(
-                type: LoadingType.fadingCircle,
-                color: AppColors.primary,
-              ),
+              child: const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
             ),
           ),
         ],

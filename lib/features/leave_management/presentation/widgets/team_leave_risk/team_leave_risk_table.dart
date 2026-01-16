@@ -279,9 +279,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.visibility_outlined, size: 14.sp),
                     color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
-                    onPressed: () {
-                      // TODO: Implement view action
-                    },
+                    onPressed: () {},
                     padding: EdgeInsets.all(7.w),
                     constraints: const BoxConstraints(),
                   ),
@@ -289,9 +287,7 @@ class TeamLeaveRiskTable extends StatelessWidget {
                   IconButton(
                     icon: Icon(Icons.check_circle_outline, size: 14.sp),
                     color: AppColors.success,
-                    onPressed: () {
-                      // TODO: Implement approve action
-                    },
+                    onPressed: () {},
                     padding: EdgeInsets.all(7.w),
                     constraints: const BoxConstraints(),
                   ),

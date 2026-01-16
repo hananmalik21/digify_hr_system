@@ -649,7 +649,7 @@ class ComponentTableView extends StatelessWidget {
       final orgStructureId = int.tryParse(component.parentId ?? '');
       if (orgStructureId != null && orgStructures != null) {
         try {
-          final structure = orgStructures!.firstWhere((s) => s.structureId == orgStructureId);
+          final structure = orgStructures!.firstWhere((s) => s.structureId == orgStructureId.toString());
           return '${structure.structureName} (${structure.structureCode})';
         } catch (e) {
           return '-';

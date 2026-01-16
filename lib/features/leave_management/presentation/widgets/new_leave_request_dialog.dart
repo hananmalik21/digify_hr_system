@@ -296,7 +296,7 @@ class _NewLeaveRequestDialogState extends ConsumerState<NewLeaveRequestDialog> {
                       ? null
                       : () async {
                           await notifier.submit();
-                          if (context.mounted) {
+                          if (mounted && context.mounted) {
                             Navigator.of(context).pop();
                           }
                         },

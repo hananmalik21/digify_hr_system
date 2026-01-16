@@ -598,14 +598,8 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
           onEdit: (component) {
             CreateComponentDialog.show(context, initialValue: component);
           },
-          onDelete: (component) {
-            // TODO: Open delete confirmation
-          },
-          onDuplicate: state.filterType == ComponentType.department
-              ? (component) {
-                  // TODO: Open duplicate dialog
-                }
-              : null,
+          onDelete: (component) {},
+          onDuplicate: state.filterType == ComponentType.department ? (component) {} : null,
         );
       },
     );
@@ -844,7 +838,6 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
             textColor: Colors.white,
             onTap: () {
               if (selectedLevelCode != null) {
-                // TODO: Open bulk upload dialog for org units
                 debugPrint('Bulk upload org units for level: $selectedLevelCode');
               } else {
                 BulkUploadDialog.show(context);
@@ -931,7 +924,6 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
           textColor: Colors.white,
           onTap: () {
             if (selectedLevelCode != null) {
-              // TODO: Open bulk upload dialog for org units
               debugPrint('Bulk upload org units for level: $selectedLevelCode');
             } else {
               BulkUploadDialog.show(context);
@@ -950,10 +942,8 @@ class _ManageComponentValuesScreenState extends ConsumerState<ManageComponentVal
           textColor: Colors.white,
           onTap: () {
             if (selectedLevelCode != null) {
-              // TODO: Export org units
               debugPrint('Export org units for level: $selectedLevelCode');
             } else {
-              // TODO: Export components
               debugPrint('Export components');
             }
           },
