@@ -70,8 +70,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.reasonForLeave,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.6.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -87,7 +87,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Gap(2.h),
         Text(
           localizations.charactersCount(_reasonController.text.length),
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: const Color(0xFF6A7282), fontSize: 11.8.sp),
+          style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 11.8.sp),
         ),
       ],
     );
@@ -108,8 +108,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.workDelegatedTo,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.7.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -119,8 +119,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
           controller: _delegatedToController,
           hintText: localizations.selectColleagueToHandleWork,
           filled: true,
-          fillColor: Colors.white,
-          borderColor: const Color(0xFFD1D5DC),
+          fillColor: AppColors.cardBackground,
+          borderColor: AppColors.borderGrey,
           prefixIcon: Padding(
             padding: EdgeInsetsDirectional.only(start: 17.w, end: 8.w),
             child: DigifyAsset(
@@ -148,7 +148,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Gap(2.h),
         Text(
           localizations.selectColleagueWhoWillHandle,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: const Color(0xFF6A7282), fontSize: 11.8.sp),
+          style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 11.8.sp),
         ),
       ],
     );
@@ -166,19 +166,19 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         Container(
           padding: EdgeInsets.symmetric(vertical: 25.h),
           decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: const Color(0xFFE5E7EB), width: 1)),
+            border: Border(top: BorderSide(color: AppColors.cardBorder, width: 1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(Icons.phone, size: 20.sp, color: const Color(0xFF101828)),
+                  Icon(Icons.phone, size: 20.sp, color: AppColors.textPrimary),
                   Gap(8.w),
                   Text(
                     localizations.contactInformationDuringLeave,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: const Color(0xFF101828),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: AppColors.textPrimary,
                       fontSize: 15.4.sp,
                       fontWeight: FontWeight.w500,
                     ),
@@ -215,8 +215,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.addressDuringLeave,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.7.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -244,8 +244,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.contactPhoneNumber,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.8.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -255,7 +255,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
           controller: _contactPhoneController,
           hintText: '+965 XXXX XXXX',
           keyboardType: TextInputType.phone,
-          borderColor: const Color(0xFFD1D5DC),
+          borderColor: AppColors.borderGrey,
           onChanged: (value) => notifier.setContactPhoneNumber(value),
         ),
       ],
@@ -273,8 +273,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.emergencyContactName,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.8.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -283,7 +283,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
         DigifyTextField(
           controller: _emergencyContactNameController,
           hintText: localizations.enterEmergencyContactName,
-          borderColor: const Color(0xFFD1D5DC),
+          borderColor: AppColors.borderGrey,
           onChanged: (value) => notifier.setEmergencyContactName(value),
         ),
       ],
@@ -301,8 +301,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.emergencyContactPhone,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.7.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -312,7 +312,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
           controller: _emergencyContactPhoneController,
           hintText: '+965 XXXX XXXX',
           keyboardType: TextInputType.phone,
-          borderColor: const Color(0xFFD1D5DC),
+          borderColor: AppColors.borderGrey,
           onChanged: (value) => notifier.setEmergencyContactPhone(value),
         ),
       ],
@@ -330,8 +330,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         Text(
           localizations.additionalNotes,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.7.sp,
             fontWeight: FontWeight.w500,
           ),

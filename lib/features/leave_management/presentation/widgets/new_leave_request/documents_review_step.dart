@@ -1,8 +1,9 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
-import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,8 +44,8 @@ class DocumentsReviewStep extends ConsumerWidget {
       children: [
         Text(
           localizations.supportingDocuments,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: const Color(0xFF364153),
+          style: context.textTheme.titleSmall?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 13.8.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -55,7 +56,7 @@ class DocumentsReviewStep extends ConsumerWidget {
           child: SizedBox(
             width: double.infinity,
             child: DashedBorder(
-              color: const Color(0xFFD1D5DC),
+              color: AppColors.borderGrey,
               strokeWidth: 2,
               dashLength: 8,
               gapLength: 4,
@@ -66,14 +67,14 @@ class DocumentsReviewStep extends ConsumerWidget {
                   children: [
                     Container(
                       padding: EdgeInsets.all(12.w),
-                      decoration: BoxDecoration(color: const Color(0xFFEFF6FF), shape: BoxShape.circle),
-                      child: Icon(Icons.cloud_upload_outlined, size: 32.sp, color: const Color(0xFF2563EB)),
+                      decoration: BoxDecoration(color: AppColors.infoBg, shape: BoxShape.circle),
+                      child: Icon(Icons.cloud_upload_outlined, size: 32.sp, color: AppColors.primary),
                     ),
                     Gap(8.h),
                     Text(
                       localizations.clickToUploadOrDragDrop,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xFF101828),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textPrimary,
                         fontSize: 13.8.sp,
                         fontWeight: FontWeight.w500,
                       ),
@@ -81,9 +82,7 @@ class DocumentsReviewStep extends ConsumerWidget {
                     Gap(4.h),
                     Text(
                       localizations.pdfDocDocxJpgPngUpTo10MB,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: const Color(0xFF6A7282), fontSize: 12.sp),
+                      style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 12.sp),
                     ),
                   ],
                 ),
@@ -97,8 +96,8 @@ class DocumentsReviewStep extends ConsumerWidget {
 
           padding: EdgeInsets.all(13.w),
           decoration: BoxDecoration(
-            color: const Color(0xFFFEFCE8),
-            border: Border.all(color: const Color(0xFFFFF085)),
+            color: AppColors.warningBg,
+            border: Border.all(color: AppColors.warningBorder),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Column(
@@ -106,8 +105,8 @@ class DocumentsReviewStep extends ConsumerWidget {
             children: [
               Text(
                 localizations.requiredDocuments,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF894B00),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: AppColors.warningText,
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -115,9 +114,7 @@ class DocumentsReviewStep extends ConsumerWidget {
               Gap(4.h),
               Text(
                 localizations.supportingDocumentsIfApplicable,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: const Color(0xFFA65F00), fontSize: 11.8.sp),
+                style: context.textTheme.bodySmall?.copyWith(color: AppColors.yellowSubtitle, fontSize: 11.8.sp),
               ),
             ],
           ),
@@ -138,19 +135,19 @@ class DocumentsReviewStep extends ConsumerWidget {
         Container(
           padding: EdgeInsets.symmetric(vertical: 25.h),
           decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: const Color(0xFFE5E7EB), width: 1)),
+            border: Border(top: BorderSide(color: AppColors.cardBorder, width: 1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(Icons.summarize, size: 20.sp, color: const Color(0xFF101828)),
+                  Icon(Icons.summarize, size: 20.sp, color: AppColors.textPrimary),
                   Gap(8.w),
                   Text(
                     localizations.requestSummary,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: const Color(0xFF101828),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: AppColors.textPrimary,
                       fontSize: 15.5.sp,
                       fontWeight: FontWeight.w500,
                     ),
@@ -160,7 +157,10 @@ class DocumentsReviewStep extends ConsumerWidget {
               Gap(16.h),
               Container(
                 padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(color: const Color(0xFFF9FAFB), borderRadius: BorderRadius.circular(14.r)),
+                decoration: BoxDecoration(
+                  color: AppColors.cardBackgroundGrey,
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
                 child: Column(
                   children: [
                     Row(
@@ -177,7 +177,7 @@ class DocumentsReviewStep extends ConsumerWidget {
                             context,
                             localizations.leaveType,
                             state.leaveType != null
-                                ? _getLeaveTypeLabel(state.leaveType!, localizations).toLowerCase()
+                                ? LeaveTypeMapper.getShortLabel(state.leaveType!)
                                 : localizations.notSelected,
                           ),
                         ),
@@ -241,13 +241,13 @@ class DocumentsReviewStep extends ConsumerWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: const Color(0xFF4A5565), fontSize: 11.8.sp),
+          style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 11.8.sp),
         ),
         Gap(4.h),
         Text(
           value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: const Color(0xFF101828),
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: AppColors.textPrimary,
             fontSize: 15.5.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -260,8 +260,8 @@ class DocumentsReviewStep extends ConsumerWidget {
     return Container(
       padding: EdgeInsets.all(17.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF6FF),
-        border: Border.all(color: const Color(0xFFBEDBFF)),
+        color: AppColors.infoBg,
+        border: Border.all(color: AppColors.infoBorder),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
@@ -269,7 +269,7 @@ class DocumentsReviewStep extends ConsumerWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 2.h),
-            child: Icon(Icons.info_outline, size: 20.sp, color: const Color(0xFF193CB8)),
+            child: Icon(Icons.info_outline, size: 20.sp, color: AppColors.infoText),
           ),
           Gap(12.w),
           Expanded(
@@ -278,8 +278,8 @@ class DocumentsReviewStep extends ConsumerWidget {
               children: [
                 Text(
                   localizations.declaration,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF193CB8),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.infoText,
                     fontSize: 13.8.sp,
                     fontWeight: FontWeight.w500,
                   ),
@@ -287,9 +287,11 @@ class DocumentsReviewStep extends ConsumerWidget {
                 Gap(8.h),
                 Text(
                   localizations.declarationText,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: const Color(0xFF1447E6), fontSize: 11.8.sp, height: 1.35),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: AppColors.infoTextSecondary,
+                    fontSize: 11.8.sp,
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),
@@ -297,20 +299,5 @@ class DocumentsReviewStep extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  String _getLeaveTypeLabel(TimeOffType type, AppLocalizations localizations) {
-    switch (type) {
-      case TimeOffType.annualLeave:
-        return localizations.annualLeave;
-      case TimeOffType.sickLeave:
-        return localizations.sickLeave;
-      case TimeOffType.emergencyLeave:
-        return localizations.emergencyLeave;
-      case TimeOffType.personalLeave:
-        return localizations.emergencyLeave;
-      default:
-        return localizations.annualLeave;
-    }
   }
 }

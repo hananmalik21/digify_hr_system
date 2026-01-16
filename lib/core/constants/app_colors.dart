@@ -20,6 +20,7 @@ class AppColors {
 
   // Dark Mode Background Colors
   static const Color backgroundDark = Color(0xFF0F172A);
+  static const Color lightDark = Color(0xFF1E2939);
   static const Color cardBackgroundDark = Color(0xFF1E293B);
   static const Color cardBackgroundGreyDark = Color(0xFF334155);
 
@@ -56,6 +57,10 @@ class AppColors {
   static const Color warningBg = Color(0xFFFEFCE8);
   static const Color warningBorder = Color(0xFFFFF085);
   static const Color warningText = Color(0xFFA65F00);
+  static const Color yellowText = Color(0xFF733E0A);
+  static const Color yellowSubtitle = Color(0xFFA65F00);
+  static const Color pendingStatusBackground = Color(0xFFFEF9C2);
+  static const Color pendingStatucColor = Color(0xFF894B00);
 
   static const Color error = Color(0xFFEF4444);
   static const Color errorBg = Color(0xFFFEE2E2);
@@ -74,6 +79,11 @@ class AppColors {
   static const Color purpleBorder = Color(0xFFE9D4FF);
   static const Color purpleText = Color(0xFF59168B);
   static const Color purpleTextSecondary = Color(0xFF6E11B0);
+
+  // Pink Colors
+  static const Color pinkBackground = Color(0xFFFDF2F8);
+  static const Color pinkTitleText = Color(0xFF861043);
+  static const Color pinkSubtitle = Color(0xFFC6005C);
 
   // Green Colors
   static const Color greenBg = Color(0xFFF0FDF4);
