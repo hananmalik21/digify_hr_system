@@ -65,13 +65,28 @@ class _SidebarState extends ConsumerState<Sidebar> {
     }
   }
 
-  /// Maps leave management sidebar item IDs to their corresponding tab indexes
   int? _getLeaveManagementTabIndex(String itemId) {
     switch (itemId) {
       case 'leaveRequests':
         return 0;
-      case 'teamLeaveRisk':
+      case 'leaveBalance':
+        return 1;
+      case 'myLeaveBalance':
         return 2;
+      case 'teamLeaveRisk':
+        return 3;
+      case 'leavePolicies':
+        return 4;
+      case 'policyConfiguration':
+        return 5;
+      case 'forfeitPolicy':
+        return 6;
+      case 'forfeitProcessing':
+        return 7;
+      case 'forfeitReports':
+        return 8;
+      case 'leaveCalendar':
+        return 9;
       default:
         return null;
     }
@@ -99,7 +114,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
             }
           });
         }
-      } else if (item.route == AppRoutes.leaveManagementLeaveRequests) {
+      } else if (item.route == AppRoutes.leaveManagement) {
         final tabIndex = _getLeaveManagementTabIndex(item.id);
         if (tabIndex != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -386,17 +401,24 @@ class _SidebarState extends ConsumerState<Sidebar> {
                         final currentRoute = GoRouterState.of(context).uri.path;
                         // For time management, workforce structure, and leave management, check both route and tab index
                         final isChildActive =
-                            child.route == currentRoute &&
-                            (item.id != 'timeManagement' && item.id != 'workforceStructure' && item.id != 'leaveManagement' ||
-                                (item.id == 'timeManagement' &&
-                                    _getTimeManagementTabIndex(child.id) ==
-                                        ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex))) ||
-                                (item.id == 'workforceStructure' &&
-                                    _getWorkforceStructureTabIndex(child.id) ==
-                                        ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))) ||
-                                (item.id == 'leaveManagement' &&
-                                    _getLeaveManagementTabIndex(child.id) ==
-                                        ref.watch(leaveManagementTabStateProvider.select((s) => s.currentTabIndex))));
+                            item.id == 'timeManagement' ||
+                                item.id == 'workforceStructure' ||
+                                item.id == 'leaveManagement'
+                            ? (currentRoute == child.route &&
+                                  ((item.id == 'timeManagement' &&
+                                          _getTimeManagementTabIndex(child.id) ==
+                                              ref.watch(
+                                                timeManagementTabStateProvider.select((s) => s.currentTabIndex),
+                                              )) ||
+                                      (item.id == 'workforceStructure' &&
+                                          _getWorkforceStructureTabIndex(child.id) ==
+                                              ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))) ||
+                                      (item.id == 'leaveManagement' &&
+                                          _getLeaveManagementTabIndex(child.id) ==
+                                              ref.watch(
+                                                leaveManagementTabStateProvider.select((s) => s.currentTabIndex),
+                                              ))))
+                            : child.route == currentRoute;
                         final labelText = SidebarConfig.getLocalizedLabel(child.labelKey, localizations);
                         final fontSize = SidebarConfig.getChildItemFontSize(child.labelKey);
                         final isMultiLine = labelText.contains('\n');

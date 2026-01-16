@@ -141,7 +141,6 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
           ),
           readOnly: true,
           onTap: () {
-            // TODO: Open employee selection dialog
             notifier.setDelegatedTo(2, 'Jane Smith');
             _delegatedToController.text = 'Jane Smith';
           },

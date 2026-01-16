@@ -1,7 +1,3 @@
-// ============================================================
-// SubModuleButton.dart ✅ UPDATED (accepts spec + responsive)
-// ============================================================
-
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -64,10 +60,6 @@ class _SubModuleButtonState extends State<SubModuleButton> {
     if (_isHovered) setState(() => _isHovered = false);
   }
 
-  Color _getGradientEndColor(Color startColor) {
-    return AppColors.purple;
-  }
-
   @override
   Widget build(BuildContext context) {
     final spec = widget.spec;
@@ -107,7 +99,7 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [AppColors.primaryLight, _getGradientEndColor(widget.button.color)],
+                          colors: [AppColors.primaryLight, AppColors.gradientBlue],
                         ),
                       ),
                       child: Stack(
@@ -139,8 +131,8 @@ class _SubModuleButtonState extends State<SubModuleButton> {
 
                     if (widget.button.badgeCount != null && widget.button.badgeCount! > 0)
                       Positioned(
-                        top: -8,
-                        right: -8,
+                        top: -10,
+                        right: -10,
                         child: Container(
                           width: spec.badgeBox,
                           height: spec.badgeBox,
@@ -150,15 +142,12 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                             border: Border.all(color: AppColors.primaryLight, width: 2),
                             shape: BoxShape.circle,
                           ),
-                          child: Center(
-                            child: Text(
-                              widget.button.badgeCount.toString(),
-                              style: TextStyle(
-                                fontSize: spec.badgeFont.sp,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primary,
-                                height: 16.0 / 12.0,
-                              ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            widget.button.badgeCount.toString(),
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              fontSize: spec.badgeFont.sp,
+                              color: AppColors.shiftCreateButton,
                             ),
                           ),
                         ),
@@ -176,9 +165,8 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyLarge?.copyWith(
+                    style: context.textTheme.headlineMedium?.copyWith(
                       fontSize: spec.titleFont.sp,
-                      fontWeight: FontWeight.w700,
                       color: AppColors.dialogTitle,
                     ),
                   ),
@@ -196,7 +184,6 @@ class _SubModuleButtonState extends State<SubModuleButton> {
                       overflow: TextOverflow.ellipsis,
                       style: context.textTheme.bodySmall?.copyWith(
                         fontSize: spec.subtitleFont.sp,
-                        fontWeight: FontWeight.w400,
                         color: AppColors.inactiveStatusText,
                       ),
                     ),

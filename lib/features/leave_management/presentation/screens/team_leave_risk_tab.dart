@@ -11,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class TeamLeaveRiskScreen extends ConsumerWidget {
-  const TeamLeaveRiskScreen({super.key});
+class TeamLeaveRiskTab extends ConsumerWidget {
+  const TeamLeaveRiskTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

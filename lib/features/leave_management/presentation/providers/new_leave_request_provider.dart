@@ -91,10 +91,7 @@ class NewLeaveRequestState {
   bool canProceedToNextStep() {
     switch (currentStep) {
       case LeaveRequestStep.leaveDetails:
-        return selectedEmployeeId != null &&
-            leaveType != null &&
-            startDate != null &&
-            endDate != null;
+        return selectedEmployeeId != null && leaveType != null && startDate != null && endDate != null;
       case LeaveRequestStep.contactNotes:
         return reason != null && reason!.isNotEmpty;
       case LeaveRequestStep.documentsReview:
@@ -195,13 +192,11 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
 
   Future<void> submit() async {
     state = state.copyWith(isSubmitting: true);
-    // TODO: Implement actual submission logic
     await Future.delayed(const Duration(seconds: 1)); // Simulate API call
     state = state.copyWith(isSubmitting: false);
   }
 }
 
-final newLeaveRequestProvider =
-    StateNotifierProvider<NewLeaveRequestNotifier, NewLeaveRequestState>((ref) {
+final newLeaveRequestProvider = StateNotifierProvider<NewLeaveRequestNotifier, NewLeaveRequestState>((ref) {
   return NewLeaveRequestNotifier();
 });

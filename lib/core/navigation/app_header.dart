@@ -247,7 +247,6 @@ class AppHeader extends ConsumerWidget {
                       onCanceled: () => debugPrint('⚠️ Popup canceled'),
                       onSelected: (value) {
                         debugPrint('Selected: $value');
-                        // TODO: handle actions
                       },
                       itemBuilder: (context) => [
                         // Header (disabled)

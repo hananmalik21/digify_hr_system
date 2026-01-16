@@ -158,7 +158,6 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
           ),
           readOnly: true,
           onTap: () {
-            // TODO: Open employee selection dialog
             // For now, set a mock employee
             notifier.setEmployee(1, 'John Doe');
             _employeeController.text = 'John Doe';

@@ -462,9 +462,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // TODO: Handle export
-        },
+        onTap: () {},
         borderRadius: BorderRadius.circular(7.r),
         child: Container(
           constraints: BoxConstraints(minHeight: 40.h),
@@ -503,9 +501,7 @@ class _LeaveBalancesViewState extends State<LeaveBalancesView> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          // TODO: Handle refresh
-        },
+        onTap: () {},
         borderRadius: BorderRadius.circular(7.r),
         child: Container(
           constraints: BoxConstraints(minHeight: 40.h),

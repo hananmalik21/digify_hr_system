@@ -15,24 +15,13 @@ class LeaveDetailsDialog extends StatefulWidget {
   final String employeeName;
   final String employeeId;
 
-  const LeaveDetailsDialog({
-    super.key,
-    required this.employeeName,
-    required this.employeeId,
-  });
+  const LeaveDetailsDialog({super.key, required this.employeeName, required this.employeeId});
 
-  static void show(
-    BuildContext context, {
-    required String employeeName,
-    required String employeeId,
-  }) {
+  static void show(BuildContext context, {required String employeeName, required String employeeId}) {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => LeaveDetailsDialog(
-        employeeName: employeeName,
-        employeeId: employeeId,
-      ),
+      builder: (context) => LeaveDetailsDialog(employeeName: employeeName, employeeId: employeeId),
     );
   }
 
@@ -113,11 +102,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 25,
-                offset: const Offset(0, 12),
-              ),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
             ],
           ),
           child: Column(
@@ -157,10 +142,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       padding: EdgeInsetsDirectional.symmetric(horizontal: 21.w, vertical: 21.h),
       decoration: BoxDecoration(
         color: const Color(0xFF155DFC), // Blue header
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.r),
-          topRight: Radius.circular(10.r),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,7 +166,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
                   style: TextStyle(
                     fontSize: 13.7.sp,
                     fontWeight: FontWeight.w400,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     height: 21 / 13.7,
                   ),
                 ),
@@ -216,11 +198,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
     return Row(
       children: [
         Expanded(
-          child: _buildEmployeeInfoCard(
-            label: 'Join Date',
-            value: _employeeData['joinDate'],
-            isDark: isDark,
-          ),
+          child: _buildEmployeeInfoCard(label: 'Join Date', value: _employeeData['joinDate'], isDark: isDark),
         ),
         Gap(14.w),
         Expanded(
@@ -232,39 +210,24 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
         ),
         Gap(14.w),
         Expanded(
-          child: _buildEmployeeInfoCard(
-            label: 'Department',
-            value: _employeeData['department'],
-            isDark: isDark,
-          ),
+          child: _buildEmployeeInfoCard(label: 'Department', value: _employeeData['department'], isDark: isDark),
         ),
         Gap(14.w),
         Expanded(
-          child: _buildEmployeeInfoCard(
-            label: 'Position',
-            value: _employeeData['position'],
-            isDark: isDark,
-          ),
+          child: _buildEmployeeInfoCard(label: 'Position', value: _employeeData['position'], isDark: isDark),
         ),
       ],
     );
   }
 
-  Widget _buildEmployeeInfoCard({
-    required String label,
-    required String value,
-    required bool isDark,
-  }) {
+  Widget _buildEmployeeInfoCard({required String label, required String value, required bool isDark}) {
     return Container(
       // height: 70.5.h,
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
         borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,27 +274,15 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
         Row(
           children: [
             Expanded(
-              child: _buildLeaveTypeButton(
-                label: 'Annual Leave',
-                type: LeaveType.annualLeave,
-                isDark: isDark,
-              ),
+              child: _buildLeaveTypeButton(label: 'Annual Leave', type: LeaveType.annualLeave, isDark: isDark),
             ),
             Gap(7.w),
             Expanded(
-              child: _buildLeaveTypeButton(
-                label: 'Sick Leave',
-                type: LeaveType.sickLeave,
-                isDark: isDark,
-              ),
+              child: _buildLeaveTypeButton(label: 'Sick Leave', type: LeaveType.sickLeave, isDark: isDark),
             ),
             Gap(7.w),
             Expanded(
-              child: _buildLeaveTypeButton(
-                label: 'Unpaid Leave',
-                type: LeaveType.unpaidLeave,
-                isDark: isDark,
-              ),
+              child: _buildLeaveTypeButton(label: 'Unpaid Leave', type: LeaveType.unpaidLeave, isDark: isDark),
             ),
           ],
         ),
@@ -339,11 +290,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
     );
   }
 
-  Widget _buildLeaveTypeButton({
-    required String label,
-    required LeaveType type,
-    required bool isDark,
-  }) {
+  Widget _buildLeaveTypeButton({required String label, required LeaveType type, required bool isDark}) {
     final isSelected = _selectedLeaveType == type;
     return Material(
       color: Colors.transparent,
@@ -370,9 +317,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
-                color: isSelected
-                    ? Colors.white
-                    : (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828)),
+                color: isSelected ? Colors.white : (isDark ? AppColors.textPrimaryDark : const Color(0xFF101828)),
                 height: 21 / 14,
               ),
             ),
@@ -451,10 +396,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -464,17 +406,9 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
               Container(
                 width: 35.w,
                 height: 35.h,
-                decoration: BoxDecoration(
-                  color: iconBg,
-                  borderRadius: BorderRadius.circular(7.r),
-                ),
+                decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(7.r)),
                 child: Center(
-                  child: DigifyAsset(
-                    assetPath: iconPath,
-                    width: 17.5,
-                    height: 17.5,
-                    color: iconColor,
-                  ),
+                  child: DigifyAsset(assetPath: iconPath, width: 17.5, height: 17.5, color: iconColor),
                 ),
               ),
               Gap(10.5.w),
@@ -494,12 +428,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
           Gap(7.h),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: valueColor,
-              height: 28 / 20,
-            ),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600, color: valueColor, height: 28 / 20),
           ),
         ],
       ),
@@ -511,10 +440,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -524,15 +450,9 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
             padding: EdgeInsets.all(21.w),
             decoration: BoxDecoration(
               color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(7.r),
-                topRight: Radius.circular(7.r),
-              ),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(7.r), topRight: Radius.circular(7.r)),
               border: Border(
-                bottom: BorderSide(
-                  color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-                  width: 1,
-                ),
+                bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
               ),
             ),
             child: Row(
@@ -585,8 +505,14 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
           SizedBox(width: 146.22.w, child: _buildHeaderCell('Date', textColor)),
           SizedBox(width: 136.48.w, child: _buildHeaderCell('Type', textColor)),
           Expanded(child: _buildHeaderCell('Description', textColor)),
-          SizedBox(width: 120.84.w, child: _buildHeaderCell('Amount', textColor, alignment: Alignment.center)),
-          SizedBox(width: 128.63.w, child: _buildHeaderCell('Balance', textColor, alignment: Alignment.center)),
+          SizedBox(
+            width: 120.84.w,
+            child: _buildHeaderCell('Amount', textColor, alignment: Alignment.center),
+          ),
+          SizedBox(
+            width: 128.63.w,
+            child: _buildHeaderCell('Balance', textColor, alignment: Alignment.center),
+          ),
         ],
       ),
     );
@@ -597,12 +523,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       alignment: alignment,
       child: Text(
         text.toUpperCase(),
-        style: TextStyle(
-          fontSize: 12.1.sp,
-          fontWeight: FontWeight.w600,
-          color: color,
-          height: 17.5 / 12.1,
-        ),
+        style: TextStyle(fontSize: 12.1.sp, fontWeight: FontWeight.w600, color: color, height: 17.5 / 12.1),
       ),
     );
   }
@@ -616,10 +537,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
         ),
       ),
       padding: EdgeInsetsDirectional.symmetric(horizontal: 21.w, vertical: 16.h),
@@ -629,27 +547,14 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
             width: 146.22.w,
             child: Text(
               DateFormat('MMM d, yyyy').format(date),
-              style: TextStyle(
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w400,
-                color: textColor,
-                height: 21 / 13.7,
-              ),
+              style: TextStyle(fontSize: 13.7.sp, fontWeight: FontWeight.w400, color: textColor, height: 21 / 13.7),
             ),
           ),
-          SizedBox(
-            width: 136.48.w,
-            child: _buildAccrualBadge(),
-          ),
+          SizedBox(width: 136.48.w, child: _buildAccrualBadge()),
           Expanded(
             child: Text(
               transaction['description'] as String,
-              style: TextStyle(
-                fontSize: 13.7.sp,
-                fontWeight: FontWeight.w400,
-                color: textColor,
-                height: 21 / 13.7,
-              ),
+              style: TextStyle(fontSize: 13.7.sp, fontWeight: FontWeight.w400, color: textColor, height: 21 / 13.7),
             ),
           ),
           SizedBox(
@@ -671,12 +576,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
             child: Center(
               child: Text(
                 '${balance.toStringAsFixed(1)} days',
-                style: TextStyle(
-                  fontSize: 13.7.sp,
-                  fontWeight: FontWeight.w400,
-                  color: textColor,
-                  height: 21 / 13.7,
-                ),
+                style: TextStyle(fontSize: 13.7.sp, fontWeight: FontWeight.w400, color: textColor, height: 21 / 13.7),
               ),
             ),
           ),
@@ -688,10 +588,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
   Widget _buildAccrualBadge() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.5.w, vertical: 3.5.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFDCFCE7),
-        borderRadius: BorderRadius.circular(16777200.r),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFDCFCE7), borderRadius: BorderRadius.circular(16777200.r)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -725,10 +622,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -786,11 +680,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
     );
   }
 
-  Widget _buildLawInfoItem({
-    required String title,
-    required String description,
-    required bool isDark,
-  }) {
+  Widget _buildLawInfoItem({required String title, required String description, required bool isDark}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -822,12 +712,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
       padding: EdgeInsetsDirectional.symmetric(horizontal: 28.w, vertical: 22.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB),
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -851,10 +736,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 11.5.h),
                     decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC),
-                        width: 1,
-                      ),
+                      border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFD1D5DC), width: 1),
                       borderRadius: BorderRadius.circular(11.r),
                     ),
                     child: Text(
@@ -873,9 +755,7 @@ class _LeaveDetailsDialogState extends State<LeaveDetailsDialog> {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {
-                    // TODO: Handle export report
-                  },
+                  onTap: () {},
                   borderRadius: BorderRadius.circular(11.r),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 11.25.h),

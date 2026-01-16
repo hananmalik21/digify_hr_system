@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// My Leave Balance View - displays employee's personal leave balances
-class MyLeaveBalanceView extends StatefulWidget {
-  const MyLeaveBalanceView({super.key});
+/// Leave Balance Tab - displays employee's personal leave balances
+class LeaveBalanceTab extends StatefulWidget {
+  const LeaveBalanceTab({super.key});
 
   @override
-  State<MyLeaveBalanceView> createState() => _MyLeaveBalanceViewState();
+  State<LeaveBalanceTab> createState() => _LeaveBalanceTabState();
 }
 
-class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
+class _LeaveBalanceTabState extends State<LeaveBalanceTab> {
   // Mock employee data - replace with actual data from provider
   final Map<String, dynamic> _employeeData = {
     'name': 'Ahmed Al-Mutairi',
@@ -36,12 +36,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
       color: isDark ? AppColors.backgroundDark : const Color(0xFFF9FAFB),
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsetsDirectional.only(
-          top: 0.h,
-          start: 21.w,
-          end: 21.w,
-          bottom: 30.h,
-        ),
+        padding: EdgeInsetsDirectional.only(top: 0.h, start: 21.w, end: 21.w, bottom: 30.h),
         child: SizedBox(
           width: 1470.w,
           child: Column(
@@ -105,9 +100,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
               borderRadius: BorderRadius.circular(11.r),
               padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 10.5.h),
               fontSize: 13.7.sp,
-              onPressed: () {
-                // TODO: Navigate to apply leave
-              },
+              onPressed: () {},
             ),
             Gap(10.51.w),
             AppButton(
@@ -119,9 +112,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
               borderRadius: BorderRadius.circular(11.r),
               padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 10.5.h),
               fontSize: 13.8.sp,
-              onPressed: () {
-                // TODO: Navigate to encashment request
-              },
+              onPressed: () {},
             ),
           ],
         ),
@@ -134,9 +125,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
       padding: EdgeInsets.all(22.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
         borderRadius: BorderRadius.circular(11.r),
         boxShadow: AppShadows.primaryShadow,
       ),
@@ -178,11 +167,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
     );
   }
 
-  Widget _buildInfoField({
-    required String label,
-    required String value,
-    required bool isDark,
-  }) {
+  Widget _buildInfoField({required String label, required String value, required bool isDark}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -231,9 +216,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
                   atRiskDays: 3.5,
                   atRiskExpiryDate: '2024-03-31',
                   encashmentAvailable: true,
-                  onEncashmentRequest: () {
-                    // TODO: Handle encashment request
-                  },
+                  onEncashmentRequest: () {},
                 ),
                 isDark: isDark,
               ),
@@ -369,11 +352,7 @@ class _MyLeaveBalanceViewState extends State<MyLeaveBalanceView> {
     );
   }
 
-  Widget _buildPolicyCard({
-    required String title,
-    required String description,
-    required bool isDark,
-  }) {
+  Widget _buildPolicyCard({required String title, required String description, required bool isDark}) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
