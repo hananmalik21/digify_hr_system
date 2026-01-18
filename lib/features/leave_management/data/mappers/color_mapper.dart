@@ -29,6 +29,18 @@ class ColorMapper {
         return AppColors.yellowText;
       case 'yellowSubtitle':
         return AppColors.yellowSubtitle;
+      case 'sidebarFooterTitle':
+        return AppColors.sidebarFooterTitle;
+      case 'sidebarFooterSubtitle':
+        return AppColors.sidebarFooterSubtitle;
+      case 'greenTextSecondary':
+        return AppColors.greenTextSecondary;
+      case 'purpleBg':
+        return AppColors.purpleBg;
+      case 'purpleText':
+        return AppColors.purpleText;
+      case 'purpleTextSecondary':
+        return AppColors.purpleTextSecondary;
       default:
         return Colors.grey;
     }

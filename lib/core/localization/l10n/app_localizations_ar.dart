@@ -2974,7 +2974,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveBalance => 'رصيد الإجازة';
 
   @override
-  String get leaveBalanceDescription => 'أرصدة إجازات الموظفين';
+  String get leaveBalanceDescription =>
+      'عرض وإدارة أرصدة إجازات الموظفين والاستحقاقات';
 
   @override
   String get myLeaveBalance => 'رصيد إجازتي';

@@ -1,5 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/features/leave_management/data/config/leave_balances_table_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -7,30 +9,50 @@ class LeaveBalancesTableHeader extends StatelessWidget {
   final bool isDark;
   final AppLocalizations localizations;
 
-  const LeaveBalancesTableHeader({
-    super.key,
-    required this.isDark,
-    required this.localizations,
-  });
+  const LeaveBalancesTableHeader({super.key, required this.isDark, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
     final headerColor = isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground;
 
+    final headerCells = <Widget>[];
+
+    if (LeaveBalancesTableConfig.showEmployee) {
+      headerCells.add(_buildHeaderCell(context, localizations.employee, LeaveBalancesTableConfig.employeeWidth.w));
+    }
+    if (LeaveBalancesTableConfig.showDepartment) {
+      headerCells.add(_buildHeaderCell(context, 'Department', LeaveBalancesTableConfig.departmentWidth.w));
+    }
+    if (LeaveBalancesTableConfig.showJoinDate) {
+      headerCells.add(_buildHeaderCell(context, 'Join Date', LeaveBalancesTableConfig.joinDateWidth.w));
+    }
+    if (LeaveBalancesTableConfig.showAnnualLeave) {
+      headerCells.add(
+        _buildHeaderCell(context, 'Annual Leave', LeaveBalancesTableConfig.annualLeaveWidth.w, center: true),
+      );
+    }
+    if (LeaveBalancesTableConfig.showSickLeave) {
+      headerCells.add(_buildHeaderCell(context, 'Sick Leave', LeaveBalancesTableConfig.sickLeaveWidth.w, center: true));
+    }
+    if (LeaveBalancesTableConfig.showUnpaidLeave) {
+      headerCells.add(
+        _buildHeaderCell(context, 'Unpaid Leave', LeaveBalancesTableConfig.unpaidLeaveWidth.w, center: true),
+      );
+    }
+    if (LeaveBalancesTableConfig.showTotalAvailable) {
+      headerCells.add(
+        _buildHeaderCell(context, 'Total Available', LeaveBalancesTableConfig.totalAvailableWidth.w, center: true),
+      );
+    }
+    if (LeaveBalancesTableConfig.showActions) {
+      headerCells.add(
+        _buildHeaderCell(context, localizations.actions, LeaveBalancesTableConfig.actionsWidth.w, center: true),
+      );
+    }
+
     return Container(
       color: headerColor,
-      child: Row(
-        children: [
-          _buildHeaderCell(context, localizations.employee, 226.84.w),
-          _buildHeaderCell(context, 'Department', 199.w),
-          _buildHeaderCell(context, 'Join Date', 151.45.w),
-          _buildHeaderCell(context, 'Annual Leave', 166.79.w, center: true),
-          _buildHeaderCell(context, 'Sick Leave', 143.59.w, center: true),
-          _buildHeaderCell(context, 'Unpaid Leave', 167.9.w, center: true),
-          _buildHeaderCell(context, 'Total Available', 177.06.w, center: true),
-          _buildHeaderCell(context, localizations.actions, 237.37.w, center: true),
-        ],
-      ),
+      child: Row(children: headerCells),
     );
   }
 
@@ -39,10 +61,7 @@ class LeaveBalancesTableHeader extends StatelessWidget {
       width: width,
       padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 12.h),
       alignment: center ? Alignment.center : Alignment.centerLeft,
-      child: Text(
-        text.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.tableHeaderText),
-      ),
+      child: Text(text.toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: AppColors.tableHeaderText)),
     );
   }
 }

@@ -964,7 +964,7 @@
   "leaveRequests": "طلبات الإجازة",
   "leaveRequestsDescription": "تقديم والموافقة على الطلبات",
   "leaveBalance": "رصيد الإجازة",
-  "leaveBalanceDescription": "أرصدة إجازات الموظفين",
+  "leaveBalanceDescription": "عرض وإدارة أرصدة إجازات الموظفين والاستحقاقات",
   "myLeaveBalance": "رصيد إجازتي",
   "myLeaveBalanceDescription": "عرض أرصدة إجازاتك ونقلها وقواعد الإسقاط",
   "applyLeave": "تقديم طلب إجازة",

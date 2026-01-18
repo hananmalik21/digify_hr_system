@@ -2993,7 +2993,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveBalance => 'Leave Balance';
 
   @override
-  String get leaveBalanceDescription => 'Employee leave balances';
+  String get leaveBalanceDescription =>
+      'View and manage employee leave balances and accruals';
 
   @override
   String get myLeaveBalance => 'My Leave Balance';
