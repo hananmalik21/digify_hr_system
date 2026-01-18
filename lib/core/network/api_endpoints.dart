@@ -35,6 +35,7 @@ class ApiEndpoints {
   static const String grades = '$api/grades';
   static const String positions = '$api/positions';
   static const String workforceStats = '$api/workforce-stats';
+  static const String employees = '$api/employees';
 
   // Organization Structure Levels (alias for convenience)
   static const String orgStructureLevels = hrOrgStructuresActiveLevels;

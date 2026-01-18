@@ -255,7 +255,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
   }
 }
 
-class DigifyTextArea extends StatelessWidget {
+class DigifyTextArea extends StatefulWidget {
   final TextEditingController? controller;
   final String? labelText;
   final String? hintText;
@@ -269,6 +269,9 @@ class DigifyTextArea extends StatelessWidget {
   final TextAlign textAlign;
   final TextDirection? textDirection;
   final List<TextInputFormatter>? inputFormatters;
+  final bool showCharacterCount;
+  final int? maxLength;
+  final String Function(int)? characterCountFormatter;
 
   const DigifyTextArea({
     super.key,
@@ -285,22 +288,67 @@ class DigifyTextArea extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.textDirection,
     this.inputFormatters,
+    this.showCharacterCount = false,
+    this.maxLength,
+    this.characterCountFormatter,
   });
+
+  @override
+  State<DigifyTextArea> createState() => _DigifyTextAreaState();
+}
+
+class _DigifyTextAreaState extends State<DigifyTextArea> {
+  late TextEditingController _internalController;
+  bool _isInternalController = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller == null) {
+      _internalController = TextEditingController();
+      _isInternalController = true;
+    } else {
+      _internalController = widget.controller!;
+    }
+    if (widget.showCharacterCount) {
+      _internalController.addListener(_onTextChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.showCharacterCount) {
+      _internalController.removeListener(_onTextChanged);
+    }
+    if (_isInternalController) {
+      _internalController.dispose();
+    }
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    if (widget.showCharacterCount) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final effectiveMinLines = minLines ?? maxLines;
+    final effectiveMinLines = widget.minLines ?? widget.maxLines;
+    final currentLength = _internalController.text.length;
+    final maxLength = widget.maxLength;
+    final isOverLimit = maxLength != null && currentLength > maxLength;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (labelText != null)
+        if (widget.labelText != null)
           RichText(
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: labelText,
+                  text: widget.labelText,
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -308,7 +356,7 @@ class DigifyTextArea extends StatelessWidget {
                     fontFamily: 'Inter',
                   ),
                 ),
-                if (isRequired)
+                if (widget.isRequired)
                   TextSpan(
                     text: ' *',
                     style: TextStyle(
@@ -321,20 +369,26 @@ class DigifyTextArea extends StatelessWidget {
               ],
             ),
           ),
-        if (labelText != null) SizedBox(height: 8.h),
+        if (widget.labelText != null) SizedBox(height: 8.h),
         TextFormField(
-          controller: controller,
-          maxLines: maxLines,
+          controller: _internalController,
+          maxLines: widget.maxLines,
           minLines: effectiveMinLines,
-          readOnly: readOnly,
-          enabled: enabled,
-          onChanged: onChanged,
-          textAlign: textDirection == TextDirection.rtl ? TextAlign.right : textAlign,
-          textDirection: textDirection,
-          inputFormatters: inputFormatters,
+          readOnly: widget.readOnly,
+          enabled: widget.enabled,
+          maxLength: widget.maxLength,
+          onChanged: (value) {
+            if (widget.showCharacterCount) {
+              setState(() {});
+            }
+            widget.onChanged?.call(value);
+          },
+          textAlign: widget.textDirection == TextDirection.rtl ? TextAlign.right : widget.textAlign,
+          textDirection: widget.textDirection,
+          inputFormatters: widget.inputFormatters,
           style: TextStyle(fontSize: 15.sp, color: isDark ? context.themeTextPrimary : AppColors.textPrimary),
           decoration: InputDecoration(
-            hintText: hintText,
+            hintText: widget.hintText,
             filled: true,
             fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
             isDense: true,
@@ -349,9 +403,24 @@ class DigifyTextArea extends StatelessWidget {
             focusedBorder: _buildBorder(isDark, AppColors.primary, width: 1.5),
             errorBorder: _buildBorder(isDark, AppColors.error),
             focusedErrorBorder: _buildBorder(isDark, AppColors.error, width: 1.5),
+            counterText: widget.showCharacterCount ? '' : null,
           ),
-          validator: validator,
+          validator: widget.validator,
         ),
+        if (widget.showCharacterCount) ...[
+          SizedBox(height: 2.h),
+          Text(
+            widget.characterCountFormatter != null
+                ? widget.characterCountFormatter!(currentLength)
+                : maxLength != null
+                ? '$currentLength / $maxLength'
+                : '$currentLength',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: isOverLimit ? AppColors.error : AppColors.textSecondary,
+              fontSize: 11.8.sp,
+            ),
+          ),
+        ],
       ],
     );
   }

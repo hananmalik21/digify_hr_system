@@ -5,14 +5,27 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 class DateSelectionField extends StatelessWidget {
   final String label;
   final bool isRequired;
-  final String? value;
-  final VoidCallback onTap;
+  final DateTime? date;
+  final ValueChanged<DateTime> onDateSelected;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+  final String? hintText;
 
-  const DateSelectionField({super.key, required this.label, this.isRequired = true, this.value, required this.onTap});
+  const DateSelectionField({
+    super.key,
+    required this.label,
+    required this.date,
+    required this.onDateSelected,
+    this.isRequired = false,
+    this.firstDate,
+    this.lastDate,
+    this.hintText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,7 @@ class DateSelectionField extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.deleteIconRed,
+                    color: AppColors.error,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -49,12 +62,12 @@ class DateSelectionField extends StatelessWidget {
         ),
         Gap(6.h),
         InkWell(
-          onTap: onTap,
+          onTap: () => _selectDate(context),
           child: Container(
             height: 40.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
-              color: AppColors.inputBg,
+              color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: AppColors.borderGrey),
             ),
@@ -62,22 +75,36 @@ class DateSelectionField extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    value ?? 'Select Date',
+                    date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: value != null && value!.isNotEmpty
-                          ? AppColors.textPrimary
-                          : AppColors.textSecondary.withValues(alpha: 0.6),
+                      color: date != null ? AppColors.textPrimary : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                DigifyAsset(assetPath: Assets.icons.sidebar.workSchedules.path, width: 20, height: 20),
+                DigifyAsset(
+                  assetPath: Assets.icons.leaveManagement.emptyLeave.path,
+                  color: AppColors.textSecondary,
+                  height: 15,
+                ),
               ],
             ),
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: date ?? DateTime.now(),
+      firstDate: firstDate ?? DateTime.now(),
+      lastDate: lastDate ?? DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      onDateSelected(picked);
+    }
   }
 }

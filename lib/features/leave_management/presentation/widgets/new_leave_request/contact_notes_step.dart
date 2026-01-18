@@ -2,8 +2,12 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/employee_providers.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +23,6 @@ class ContactNotesStep extends ConsumerStatefulWidget {
 
 class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
   final _reasonController = TextEditingController();
-  final _delegatedToController = TextEditingController();
   final _addressController = TextEditingController();
   final _contactPhoneController = TextEditingController();
   final _emergencyContactNameController = TextEditingController();
@@ -29,7 +32,6 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
   @override
   void dispose() {
     _reasonController.dispose();
-    _delegatedToController.dispose();
     _addressController.dispose();
     _contactPhoneController.dispose();
     _emergencyContactNameController.dispose();
@@ -41,114 +43,68 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final isDark = context.isDark;
     final state = ref.watch(newLeaveRequestProvider);
     final notifier = ref.read(newLeaveRequestProvider.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 24.h,
       children: [
-        _buildReasonField(localizations, isDark, state, notifier),
-        Gap(24.h),
-        _buildDelegatedToField(localizations, isDark, state, notifier),
-        Gap(24.h),
-        _buildContactInformationSection(localizations, isDark, state, notifier),
-        Gap(24.h),
-        _buildAdditionalNotesField(localizations, isDark, state, notifier),
+        _buildReasonField(localizations, state, notifier),
+        _buildDelegatedToField(localizations, state, notifier),
+        _buildContactInformationSection(localizations, state, notifier),
+        _buildAdditionalNotesField(localizations, state, notifier),
       ],
     );
   }
 
   Widget _buildReasonField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.reasonForLeave,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.6.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextArea(
-          controller: _reasonController,
-          hintText: localizations.pleaseProvideDetailedReason,
-          maxLines: 6,
-          minLines: 6,
-          onChanged: (value) => notifier.setReason(value),
-        ),
-        Gap(2.h),
-        Text(
-          localizations.charactersCount(_reasonController.text.length),
-          style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 11.8.sp),
-        ),
-      ],
+    return DigifyTextArea(
+      controller: _reasonController,
+      labelText: localizations.reasonForLeave,
+      hintText: localizations.pleaseProvideDetailedReason,
+      maxLines: 6,
+      minLines: 6,
+      showCharacterCount: true,
+      maxLength: 500,
+      isRequired: true,
+      characterCountFormatter: (count) => localizations.charactersCount(count),
+      onChanged: (value) => notifier.setReason(value),
     );
   }
 
   Widget _buildDelegatedToField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    if (state.delegatedToEmployeeName != null) {
-      _delegatedToController.text = state.delegatedToEmployeeName!;
+    final employeesState = ref.watch(employeeNotifierProvider);
+    Employee? delegatedToEmployee;
+    if (state.delegatedToEmployeeId != null) {
+      try {
+        delegatedToEmployee = employeesState.employees.firstWhere((emp) => emp.id == state.delegatedToEmployeeId);
+      } catch (_) {}
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          localizations.workDelegatedTo,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.7.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextField(
-          controller: _delegatedToController,
-          hintText: localizations.selectColleagueToHandleWork,
-          filled: true,
-          fillColor: AppColors.cardBackground,
-          borderColor: AppColors.borderGrey,
-          prefixIcon: Padding(
-            padding: EdgeInsetsDirectional.only(start: 17.w, end: 8.w),
-            child: DigifyAsset(
-              assetPath: Assets.icons.searchIcon.path,
-              width: 18,
-              height: 18,
-              color: AppColors.textMuted,
-            ),
-          ),
-          suffixIcon: Padding(
-            padding: EdgeInsetsDirectional.only(end: 17.w),
-            child: DigifyAsset(
-              assetPath: Assets.icons.dropdownArrowIcon.path,
-              width: 18,
-              height: 18,
-              color: AppColors.textMuted,
-            ),
-          ),
-          readOnly: true,
-          onTap: () {
-            notifier.setDelegatedTo(2, 'Jane Smith');
-            _delegatedToController.text = 'Jane Smith';
+        EmployeeSearchField(
+          label: localizations.workDelegatedTo,
+          enterpriseId: 1001,
+          selectedEmployee: delegatedToEmployee,
+          onEmployeeSelected: (employee) {
+            notifier.setDelegatedTo(employee.id, employee.fullName);
           },
         ),
-        Gap(2.h),
+        Gap(8.h),
         Text(
           localizations.selectColleagueWhoWillHandle,
-          style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary, fontSize: 11.8.sp),
+          style: context.textTheme.bodySmall?.copyWith(color: AppColors.tableHeaderText, fontSize: 12.0.sp),
         ),
       ],
     );
@@ -156,49 +112,39 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
 
   Widget _buildContactInformationSection(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 25.h),
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: AppColors.cardBorder, width: 1)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.phone, size: 20.sp, color: AppColors.textPrimary),
-                  Gap(8.w),
-                  Text(
-                    localizations.contactInformationDuringLeave,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontSize: 15.4.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              Gap(16.h),
-              _buildAddressField(localizations, isDark, state, notifier),
-              Gap(16.h),
-              Row(
-                children: [
-                  Expanded(child: _buildContactPhoneField(localizations, isDark, state, notifier)),
-                  Gap(16.w),
-                  Expanded(child: _buildEmergencyContactNameField(localizations, isDark, state, notifier)),
-                ],
-              ),
-              Gap(16.h),
-              _buildEmergencyContactPhoneField(localizations, isDark, state, notifier),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DigifyDivider(margin: EdgeInsets.only(bottom: 24.h)),
+            Row(
+              children: [
+                DigifyAsset(assetPath: Assets.icons.leaveManagement.phone.path),
+                Gap(8.w),
+                Text(
+                  localizations.contactInformationDuringLeave,
+                  style: context.textTheme.titleSmall?.copyWith(color: AppColors.textPrimary, fontSize: 15.4.sp),
+                ),
+              ],
+            ),
+            Gap(16.h),
+            _buildAddressField(localizations, state, notifier),
+            Gap(16.h),
+            Row(
+              children: [
+                Expanded(child: _buildContactPhoneField(localizations, state, notifier)),
+                Gap(16.w),
+                Expanded(child: _buildEmergencyContactNameField(localizations, state, notifier)),
+              ],
+            ),
+            Gap(16.h),
+            _buildEmergencyContactPhoneField(localizations, state, notifier),
+          ],
         ),
       ],
     );
@@ -206,145 +152,76 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
 
   Widget _buildAddressField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.addressDuringLeave,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.7.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextArea(
-          controller: _addressController,
-          hintText: localizations.enterAddressOrLocation,
-          maxLines: 6,
-          minLines: 6,
-          onChanged: (value) => notifier.setAddressDuringLeave(value),
-        ),
-      ],
+    return DigifyTextArea(
+      controller: _addressController,
+      labelText: localizations.addressDuringLeave,
+      hintText: localizations.enterAddressOrLocation,
+      maxLines: 6,
+      minLines: 6,
+      isRequired: true,
+      onChanged: (value) => notifier.setAddressDuringLeave(value),
     );
   }
 
   Widget _buildContactPhoneField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.contactPhoneNumber,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.8.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextField(
-          controller: _contactPhoneController,
-          hintText: '+965 XXXX XXXX',
-          keyboardType: TextInputType.phone,
-          borderColor: AppColors.borderGrey,
-          onChanged: (value) => notifier.setContactPhoneNumber(value),
-        ),
-      ],
+    return DigifyTextField(
+      controller: _contactPhoneController,
+      labelText: localizations.contactPhoneNumber,
+      hintText: '+965 XXXX XXXX',
+      keyboardType: TextInputType.phone,
+      isRequired: true,
+      onChanged: (value) => notifier.setContactPhoneNumber(value),
     );
   }
 
   Widget _buildEmergencyContactNameField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.emergencyContactName,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.8.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextField(
-          controller: _emergencyContactNameController,
-          hintText: localizations.enterEmergencyContactName,
-          borderColor: AppColors.borderGrey,
-          onChanged: (value) => notifier.setEmergencyContactName(value),
-        ),
-      ],
+    return DigifyTextField(
+      controller: _emergencyContactNameController,
+      labelText: localizations.emergencyContactName,
+      hintText: localizations.enterEmergencyContactName,
+      isRequired: true,
+      onChanged: (value) => notifier.setEmergencyContactName(value),
     );
   }
 
   Widget _buildEmergencyContactPhoneField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.emergencyContactPhone,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.7.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextField(
-          controller: _emergencyContactPhoneController,
-          hintText: '+965 XXXX XXXX',
-          keyboardType: TextInputType.phone,
-          borderColor: AppColors.borderGrey,
-          onChanged: (value) => notifier.setEmergencyContactPhone(value),
-        ),
-      ],
+    return DigifyTextField(
+      controller: _emergencyContactPhoneController,
+      labelText: localizations.emergencyContactPhone,
+      hintText: '+965 XXXX XXXX',
+      keyboardType: TextInputType.phone,
+      isRequired: true,
+      onChanged: (value) => notifier.setEmergencyContactPhone(value),
     );
   }
 
   Widget _buildAdditionalNotesField(
     AppLocalizations localizations,
-    bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizations.additionalNotes,
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.7.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextArea(
-          controller: _additionalNotesController,
-          hintText: localizations.anyAdditionalInformation,
-          maxLines: 6,
-          minLines: 6,
-          onChanged: (value) => notifier.setAdditionalNotes(value),
-        ),
-      ],
+    return DigifyTextArea(
+      controller: _additionalNotesController,
+      labelText: localizations.additionalNotes,
+      hintText: localizations.anyAdditionalInformation,
+      maxLines: 6,
+      minLines: 6,
+      onChanged: (value) => notifier.setAdditionalNotes(value),
     );
   }
 }

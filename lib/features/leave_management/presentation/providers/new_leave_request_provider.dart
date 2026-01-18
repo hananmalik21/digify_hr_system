@@ -1,12 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum LeaveRequestStep { leaveDetails, contactNotes, documentsReview }
 
 class NewLeaveRequestState {
   final LeaveRequestStep currentStep;
-  final int? selectedEmployeeId;
-  final String? selectedEmployeeName;
+  final Employee? selectedEmployee;
   final TimeOffType? leaveType;
   final DateTime? startDate;
   final DateTime? endDate;
@@ -20,18 +21,17 @@ class NewLeaveRequestState {
   final String? emergencyContactName;
   final String? emergencyContactPhone;
   final String? additionalNotes;
-  final List<String>? documentPaths;
+  final List<Document> documents;
   final bool isSubmitting;
 
   const NewLeaveRequestState({
     this.currentStep = LeaveRequestStep.leaveDetails,
-    this.selectedEmployeeId,
-    this.selectedEmployeeName,
+    this.selectedEmployee,
     this.leaveType,
     this.startDate,
     this.endDate,
-    this.startTime = 'Full Day',
-    this.endTime = 'Full Day',
+    this.startTime,
+    this.endTime,
     this.reason,
     this.delegatedToEmployeeId,
     this.delegatedToEmployeeName,
@@ -40,14 +40,13 @@ class NewLeaveRequestState {
     this.emergencyContactName,
     this.emergencyContactPhone,
     this.additionalNotes,
-    this.documentPaths,
+    this.documents = const [],
     this.isSubmitting = false,
   });
 
   NewLeaveRequestState copyWith({
     LeaveRequestStep? currentStep,
-    int? selectedEmployeeId,
-    String? selectedEmployeeName,
+    Employee? selectedEmployee,
     TimeOffType? leaveType,
     DateTime? startDate,
     DateTime? endDate,
@@ -61,15 +60,14 @@ class NewLeaveRequestState {
     String? emergencyContactName,
     String? emergencyContactPhone,
     String? additionalNotes,
-    List<String>? documentPaths,
+    List<Document>? documents,
     bool? isSubmitting,
     bool clearEmployee = false,
     bool clearDelegatedTo = false,
   }) {
     return NewLeaveRequestState(
       currentStep: currentStep ?? this.currentStep,
-      selectedEmployeeId: clearEmployee ? null : (selectedEmployeeId ?? this.selectedEmployeeId),
-      selectedEmployeeName: clearEmployee ? null : (selectedEmployeeName ?? this.selectedEmployeeName),
+      selectedEmployee: clearEmployee ? null : (selectedEmployee ?? this.selectedEmployee),
       leaveType: leaveType ?? this.leaveType,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
@@ -83,7 +81,7 @@ class NewLeaveRequestState {
       emergencyContactName: emergencyContactName ?? this.emergencyContactName,
       emergencyContactPhone: emergencyContactPhone ?? this.emergencyContactPhone,
       additionalNotes: additionalNotes ?? this.additionalNotes,
-      documentPaths: documentPaths ?? this.documentPaths,
+      documents: documents ?? this.documents,
       isSubmitting: isSubmitting ?? this.isSubmitting,
     );
   }
@@ -91,7 +89,7 @@ class NewLeaveRequestState {
   bool canProceedToNextStep() {
     switch (currentStep) {
       case LeaveRequestStep.leaveDetails:
-        return selectedEmployeeId != null && leaveType != null && startDate != null && endDate != null;
+        return selectedEmployee != null && leaveType != null && startDate != null && endDate != null;
       case LeaveRequestStep.contactNotes:
         return reason != null && reason!.isNotEmpty;
       case LeaveRequestStep.documentsReview:
@@ -130,8 +128,8 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     }
   }
 
-  void setEmployee(int id, String name) {
-    state = state.copyWith(selectedEmployeeId: id, selectedEmployeeName: name);
+  void updateEmployee(Employee employee) {
+    state = state.copyWith(selectedEmployee: employee);
   }
 
   void setLeaveType(TimeOffType type) {
@@ -182,8 +180,23 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     state = state.copyWith(additionalNotes: notes);
   }
 
-  void setDocuments(List<String> paths) {
-    state = state.copyWith(documentPaths: paths);
+  void addDocument(Document document) {
+    final updatedDocuments = [...state.documents, document];
+    state = state.copyWith(documents: updatedDocuments);
+  }
+
+  void addDocuments(List<Document> documents) {
+    final updatedDocuments = [...state.documents, ...documents];
+    state = state.copyWith(documents: updatedDocuments);
+  }
+
+  void removeDocument(String documentId) {
+    final updatedDocuments = state.documents.where((doc) => doc.id != documentId).toList();
+    state = state.copyWith(documents: updatedDocuments);
+  }
+
+  void clearDocuments() {
+    state = state.copyWith(documents: []);
   }
 
   void reset() {
