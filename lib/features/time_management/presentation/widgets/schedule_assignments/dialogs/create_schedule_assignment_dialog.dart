@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
@@ -44,8 +43,8 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
   WorkSchedule? _selectedWorkSchedule;
   String? _selectedStatus;
   final Map<String, String?> _selectedUnitIds = {};
-  final _effectiveStartDateController = TextEditingController();
-  final _effectiveEndDateController = TextEditingController();
+  DateTime? _effectiveStartDate;
+  DateTime? _effectiveEndDate;
   final _notesController = TextEditingController();
 
   @override
@@ -63,37 +62,8 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
 
   @override
   void dispose() {
-    _effectiveStartDateController.dispose();
-    _effectiveEndDateController.dispose();
     _notesController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(TextEditingController controller) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.cardBackground,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
-      controller.text = formattedDate;
-    }
   }
 
   void _handleEnterpriseSelection(String levelCode, String? unitId) {
@@ -137,12 +107,12 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       return;
     }
 
-    if (_effectiveStartDateController.text.isEmpty) {
+    if (_effectiveStartDate == null) {
       ToastService.error(context, 'Please select an effective start date', title: 'Selection Required');
       return;
     }
 
-    if (_effectiveEndDateController.text.isEmpty) {
+    if (_effectiveEndDate == null) {
       ToastService.error(context, 'Please select an effective end date', title: 'Selection Required');
       return;
     }
@@ -157,8 +127,8 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       'assignment_level': _selectedLevel == AssignmentLevel.department ? 'DEPARTMENT' : 'EMPLOYEE',
       'org_unit_id': orgUnitId,
       'work_schedule_id': _selectedWorkSchedule!.workScheduleId,
-      'effective_start_date': _effectiveStartDateController.text.trim(),
-      'effective_end_date': _effectiveEndDateController.text.trim(),
+      'effective_start_date': DateFormat('yyyy-MM-dd').format(_effectiveStartDate!),
+      'effective_end_date': DateFormat('yyyy-MM-dd').format(_effectiveEndDate!),
       'status': _selectedStatus!.toUpperCase(),
       if (_notesController.text.trim().isNotEmpty) 'notes': _notesController.text.trim(),
     };
@@ -258,15 +228,27 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
         DateSelectionField(
           label: 'Effective Start Date',
           isRequired: true,
-          value: _effectiveStartDateController.text.isEmpty ? null : _effectiveStartDateController.text,
-          onTap: () => _selectDate(_effectiveStartDateController),
+          date: _effectiveStartDate,
+          onDateSelected: (date) {
+            setState(() {
+              _effectiveStartDate = date;
+            });
+          },
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
         ),
         Gap(24.h),
         DateSelectionField(
           label: 'Effective End Date',
           isRequired: true,
-          value: _effectiveEndDateController.text.isEmpty ? null : _effectiveEndDateController.text,
-          onTap: () => _selectDate(_effectiveEndDateController),
+          date: _effectiveEndDate,
+          onDateSelected: (date) {
+            setState(() {
+              _effectiveEndDate = date;
+            });
+          },
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
         ),
       ],
     );

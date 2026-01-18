@@ -1775,16 +1775,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bulkUploadTemplatePreview => 'معاينة تنسيق القالب';
 
   @override
-  String get bulkUploadTypeHeader => 'النوع*';
+  String get bulkUploadTypeHeader => 'النوع';
 
   @override
-  String get bulkUploadCodeHeader => 'الرمز*';
+  String get bulkUploadCodeHeader => 'الرمز';
 
   @override
-  String get bulkUploadNameHeader => 'الاسم*';
+  String get bulkUploadNameHeader => 'الاسم';
 
   @override
-  String get bulkUploadNameArabicHeader => 'الاسم بالعربية*';
+  String get bulkUploadNameArabicHeader => 'الاسم بالعربية';
 
   @override
   String get bulkUploadParentCodeHeader => 'رمز الأب';
@@ -3191,7 +3191,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get typeToSearchEmployees => 'اكتب للبحث عن الموظفين...';
 
   @override
-  String get leaveTypeRequired => 'نوع الإجازة *';
+  String get leaveTypeRequired => 'نوع الإجازة';
 
   @override
   String get annualLeavePaidVacation => 'الإجازة السنوية (إجازة مدفوعة)';
@@ -3230,7 +3230,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get documentsReview => 'المستندات والمراجعة';
 
   @override
-  String get reasonForLeave => 'سبب الإجازة *';
+  String get reasonForLeave => 'سبب الإجازة';
 
   @override
   String get pleaseProvideDetailedReason =>

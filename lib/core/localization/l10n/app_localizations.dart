@@ -3491,25 +3491,25 @@ abstract class AppLocalizations {
   /// No description provided for @bulkUploadTypeHeader.
   ///
   /// In en, this message translates to:
-  /// **'Type*'**
+  /// **'Type'**
   String get bulkUploadTypeHeader;
 
   /// No description provided for @bulkUploadCodeHeader.
   ///
   /// In en, this message translates to:
-  /// **'Code*'**
+  /// **'Code'**
   String get bulkUploadCodeHeader;
 
   /// No description provided for @bulkUploadNameHeader.
   ///
   /// In en, this message translates to:
-  /// **'Name*'**
+  /// **'Name'**
   String get bulkUploadNameHeader;
 
   /// No description provided for @bulkUploadNameArabicHeader.
   ///
   /// In en, this message translates to:
-  /// **'Name Arabic*'**
+  /// **'Name Arabic'**
   String get bulkUploadNameArabicHeader;
 
   /// No description provided for @bulkUploadParentCodeHeader.
@@ -6251,7 +6251,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveTypeRequired.
   ///
   /// In en, this message translates to:
-  /// **'Leave Type *'**
+  /// **'Leave Type'**
   String get leaveTypeRequired;
 
   /// No description provided for @annualLeavePaidVacation.
@@ -6329,7 +6329,7 @@ abstract class AppLocalizations {
   /// No description provided for @reasonForLeave.
   ///
   /// In en, this message translates to:
-  /// **'Reason for Leave *'**
+  /// **'Reason for Leave'**
   String get reasonForLeave;
 
   /// No description provided for @pleaseProvideDetailedReason.

@@ -1783,16 +1783,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkUploadTemplatePreview => 'Template Format Preview';
 
   @override
-  String get bulkUploadTypeHeader => 'Type*';
+  String get bulkUploadTypeHeader => 'Type';
 
   @override
-  String get bulkUploadCodeHeader => 'Code*';
+  String get bulkUploadCodeHeader => 'Code';
 
   @override
-  String get bulkUploadNameHeader => 'Name*';
+  String get bulkUploadNameHeader => 'Name';
 
   @override
-  String get bulkUploadNameArabicHeader => 'Name Arabic*';
+  String get bulkUploadNameArabicHeader => 'Name Arabic';
 
   @override
   String get bulkUploadParentCodeHeader => 'Parent Code';
@@ -3209,7 +3209,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeToSearchEmployees => 'Type to search employees...';
 
   @override
-  String get leaveTypeRequired => 'Leave Type *';
+  String get leaveTypeRequired => 'Leave Type';
 
   @override
   String get annualLeavePaidVacation => 'Annual Leave (Paid Vacation)';
@@ -3249,7 +3249,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentsReview => 'Documents & Review';
 
   @override
-  String get reasonForLeave => 'Reason for Leave *';
+  String get reasonForLeave => 'Reason for Leave';
 
   @override
   String get pleaseProvideDetailedReason =>

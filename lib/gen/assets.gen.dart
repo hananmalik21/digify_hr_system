@@ -1121,6 +1121,9 @@ class $AssetsIconsGen {
 class $AssetsIconsLeaveManagementGen {
   const $AssetsIconsLeaveManagementGen();
 
+  /// File path: assets/icons/leave_management/attachment.svg
+  SvgGenImage get attachment => const SvgGenImage('assets/icons/leave_management/attachment.svg');
+
   /// File path: assets/icons/leave_management/empty_leave.svg
   SvgGenImage get emptyLeave => const SvgGenImage('assets/icons/leave_management/empty_leave.svg');
 
@@ -1145,14 +1148,21 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/my_leave.svg
   SvgGenImage get myLeave => const SvgGenImage('assets/icons/leave_management/my_leave.svg');
 
+  /// File path: assets/icons/leave_management/phone.svg
+  SvgGenImage get phone => const SvgGenImage('assets/icons/leave_management/phone.svg');
+
   /// File path: assets/icons/leave_management/policy_configuration.svg
   SvgGenImage get policyConfiguration => const SvgGenImage('assets/icons/leave_management/policy_configuration.svg');
+
+  /// File path: assets/icons/leave_management/request.svg
+  SvgGenImage get request => const SvgGenImage('assets/icons/leave_management/request.svg');
 
   /// File path: assets/icons/leave_management/team_level.svg
   SvgGenImage get teamLevel => const SvgGenImage('assets/icons/leave_management/team_level.svg');
 
   /// List of all assets
   List<SvgGenImage> get values => [
+    attachment,
     emptyLeave,
     forfeitPolicy,
     forfeitProcessing,
@@ -1161,7 +1171,9 @@ class $AssetsIconsLeaveManagementGen {
     leavePolicy,
     leaveRequests,
     myLeave,
+    phone,
     policyConfiguration,
+    request,
     teamLevel,
   ];
 }

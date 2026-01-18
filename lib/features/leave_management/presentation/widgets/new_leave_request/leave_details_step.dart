@@ -1,68 +1,45 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
+import 'package:digify_hr_system/features/leave_management/data/config/leave_time_options_config.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
-class LeaveDetailsStep extends ConsumerStatefulWidget {
+class LeaveDetailsStep extends ConsumerWidget {
   const LeaveDetailsStep({super.key});
 
   @override
-  ConsumerState<LeaveDetailsStep> createState() => _LeaveDetailsStepState();
-}
-
-class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
-  final _employeeController = TextEditingController();
-  final _leaveTypeController = TextEditingController();
-
-  @override
-  void dispose() {
-    _employeeController.dispose();
-    _leaveTypeController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final state = ref.watch(newLeaveRequestProvider);
     final notifier = ref.read(newLeaveRequestProvider.notifier);
 
-    if (state.selectedEmployeeName != null) {
-      _employeeController.text = state.selectedEmployeeName!;
-    }
-    if (state.leaveType != null) {
-      _leaveTypeController.text = _getLeaveTypeLabel(state.leaveType!, localizations);
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildGuidelinesBox(localizations, isDark),
+        _buildGuidelinesBox(context, localizations, isDark),
         Gap(24.h),
-        _buildEmployeeField(localizations, isDark, notifier),
+        _buildEmployeeField(context, localizations, isDark, state, notifier),
         Gap(24.h),
-        _buildLeaveTypeField(localizations, isDark, state, notifier),
+        _buildLeaveTypeField(context, localizations, isDark, state, notifier),
         Gap(24.h),
-        _buildDateFields(localizations, isDark, state, notifier),
+        _buildDateFields(context, localizations, isDark, state, notifier),
       ],
     );
   }
 
-  Widget _buildGuidelinesBox(AppLocalizations localizations, bool isDark) {
+  Widget _buildGuidelinesBox(BuildContext context, AppLocalizations localizations, bool isDark) {
     return Container(
-      padding: EdgeInsets.all(17.w),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.infoBg,
         border: Border.all(color: AppColors.infoBorder),
@@ -73,34 +50,30 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
         children: [
           Container(
             padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(color: AppColors.infoBorder, borderRadius: BorderRadius.circular(10.r)),
+            decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(10.r)),
             child: Icon(Icons.info_outline, size: 20.sp, color: AppColors.infoText),
           ),
           Gap(12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
               children: [
                 Text(
                   localizations.leaveRequestGuidelines,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    color: AppColors.infoText,
-                    fontSize: 13.7.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: context.textTheme.titleSmall?.copyWith(color: AppColors.sidebarFooterTitle),
                 ),
-                Gap(4.h),
                 Text(
                   localizations.submitRequests3DaysAdvance,
-                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 11.8.sp),
+                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 12.0.sp),
                 ),
                 Text(
                   localizations.sickLeaveRequiresCertificate,
-                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 11.8.sp),
+                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 12.0.sp),
                 ),
                 Text(
                   localizations.ensureWorkHandover,
-                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 11.8.sp),
+                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.infoTextSecondary, fontSize: 12.0.sp),
                 ),
               ],
             ),
@@ -110,55 +83,26 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
     );
   }
 
-  Widget _buildEmployeeField(AppLocalizations localizations, bool isDark, NewLeaveRequestNotifier notifier) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${localizations.employee} *',
-          style: context.textTheme.titleSmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontSize: 13.6.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        Gap(8.h),
-        DigifyTextField(
-          controller: _employeeController,
-          hintText: localizations.typeToSearchEmployees,
-          filled: true,
-          fillColor: AppColors.cardBackground,
-          borderColor: AppColors.borderGrey,
-          prefixIcon: Padding(
-            padding: EdgeInsetsDirectional.only(start: 17.w, end: 8.w),
-            child: DigifyAsset(
-              assetPath: Assets.icons.searchIcon.path,
-              width: 18,
-              height: 18,
-              color: AppColors.textMuted,
-            ),
-          ),
-          suffixIcon: Padding(
-            padding: EdgeInsetsDirectional.only(end: 17.w),
-            child: DigifyAsset(
-              assetPath: Assets.icons.dropdownArrowIcon.path,
-              width: 18,
-              height: 18,
-              color: AppColors.textMuted,
-            ),
-          ),
-          readOnly: true,
-          onTap: () {
-            // For now, set a mock employee
-            notifier.setEmployee(1, 'John Doe');
-            _employeeController.text = 'John Doe';
-          },
-        ),
-      ],
+  Widget _buildEmployeeField(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool isDark,
+    NewLeaveRequestState state,
+    NewLeaveRequestNotifier notifier,
+  ) {
+    return EmployeeSearchField(
+      label: localizations.employee,
+      isRequired: true,
+      enterpriseId: 1001,
+      selectedEmployee: state.selectedEmployee,
+      onEmployeeSelected: (employee) {
+        notifier.updateEmployee(employee);
+      },
     );
   }
 
   Widget _buildLeaveTypeField(
+    BuildContext context,
     AppLocalizations localizations,
     bool isDark,
     NewLeaveRequestState state,
@@ -236,6 +180,7 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
   }
 
   Widget _buildDateFields(
+    BuildContext context,
     AppLocalizations localizations,
     bool isDark,
     NewLeaveRequestState state,
@@ -247,58 +192,25 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${localizations.startDate} *',
-                style: context.textTheme.titleSmall?.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: 13.6.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+              DateSelectionField(
+                label: localizations.startDate,
+                isRequired: true,
+                date: state.startDate,
+                onDateSelected: notifier.setStartDate,
               ),
-              Gap(8.h),
-              GestureDetector(
-                onTap: () => _selectDate(context, notifier.setStartDate, state.startDate),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 13.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
-                    border: Border.all(color: AppColors.borderGrey),
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          state.startDate != null ? DateFormat('dd/MM/yyyy').format(state.startDate!) : 'dd/mm/yyyy',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: state.startDate != null ? AppColors.textPrimary : AppColors.textPlaceholder,
-                            fontSize: 15.4.sp,
-                          ),
-                        ),
-                      ),
-                      DigifyAsset(
-                        assetPath: Assets.icons.calendarIcon.path,
-                        width: 20,
-                        height: 20,
-                        color: AppColors.textPrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Gap(8.h),
+              Gap(24.h),
               DigifySelectFieldWithLabel<String>(
                 label: localizations.startTime,
-                hint: localizations.fullDay,
-                value: state.startTime,
-                items: [localizations.fullDay],
+                hint: 'Select Time',
+                value: LeaveTimeOptionsConfig.isValidTimeOption(state.startTime) ? state.startTime : null,
+                items: LeaveTimeOptionsConfig.timeOptions,
                 itemLabelBuilder: (time) => time,
                 onChanged: (time) {
                   if (time != null) {
                     notifier.setStartTime(time);
                   }
                 },
-                isRequired: false,
+                isRequired: true,
               ),
             ],
           ),
@@ -308,76 +220,31 @@ class _LeaveDetailsStepState extends ConsumerState<LeaveDetailsStep> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${localizations.endDate} *',
-                style: context.textTheme.titleSmall?.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: 13.7.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+              DateSelectionField(
+                label: localizations.endDate,
+                isRequired: true,
+                date: state.endDate,
+                onDateSelected: notifier.setEndDate,
               ),
-              Gap(8.h),
-              GestureDetector(
-                onTap: () => _selectDate(context, notifier.setEndDate, state.endDate),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 13.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
-                    border: Border.all(color: AppColors.borderGrey),
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          state.endDate != null ? DateFormat('dd/MM/yyyy').format(state.endDate!) : 'dd/mm/yyyy',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: state.endDate != null ? AppColors.textPrimary : AppColors.textPlaceholder,
-                            fontSize: 15.4.sp,
-                          ),
-                        ),
-                      ),
-                      DigifyAsset(
-                        assetPath: Assets.icons.calendarIcon.path,
-                        width: 20,
-                        height: 20,
-                        color: AppColors.textPrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Gap(8.h),
+              Gap(24.h),
               DigifySelectFieldWithLabel<String>(
                 label: localizations.endTime,
-                hint: localizations.fullDay,
-                value: state.endTime,
-                items: [localizations.fullDay],
+                hint: 'Select Time',
+                value: LeaveTimeOptionsConfig.isValidTimeOption(state.endTime) ? state.endTime : null,
+                items: LeaveTimeOptionsConfig.timeOptions,
                 itemLabelBuilder: (time) => time,
                 onChanged: (time) {
                   if (time != null) {
                     notifier.setEndTime(time);
                   }
                 },
-                isRequired: false,
+                isRequired: true,
               ),
             ],
           ),
         ),
       ],
     );
-  }
-
-  Future<void> _selectDate(BuildContext context, Function(DateTime) onDateSelected, DateTime? initialDate) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (picked != null) {
-      onDateSelected(picked);
-    }
   }
 
   String _getLeaveTypeLabel(TimeOffType type, AppLocalizations localizations) {
