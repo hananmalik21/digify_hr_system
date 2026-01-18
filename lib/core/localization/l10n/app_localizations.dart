@@ -5849,7 +5849,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveBalanceDescription.
   ///
   /// In en, this message translates to:
-  /// **'Employee leave balances'**
+  /// **'View and manage employee leave balances and accruals'**
   String get leaveBalanceDescription;
 
   /// No description provided for @myLeaveBalance.

@@ -241,6 +241,7 @@ class AppColors {
   static const Color statIconGreen = Color(0xFF00C950);
   static const Color statIconOrange = Color(0xFFFF6900);
   static const Color statIconPurple = Color(0xFF9810FA);
+  static const informationIconColor = Color(0xFFF54900);
 
   // Delete Icon Color
   static const Color deleteIconRed = Color(0xFFFB2C36);
@@ -298,4 +299,10 @@ class AppColors {
   // Vacancy Badge Colors
   static const Color vacancyBg = Color(0xFFFFEDD4);
   static const Color vacancyText = Color(0xFF9F2D00);
+
+  // Leave Balance Badge Colors
+  static const Color leaveTotalAvailableBg = Color(0xFFE0E7FF);
+  static const Color leaveTotalAvailableText = Color(0xFF432DD7);
+  static const Color leaveTotalAvailableBgDark = Color(0xFF1E3A8A);
+  static const Color leaveTotalAvailableTextDark = Color(0xFF93C5FD);
 }
