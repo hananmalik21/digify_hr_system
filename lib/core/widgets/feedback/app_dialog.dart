@@ -8,6 +8,7 @@ import 'dart:ui';
 
 class AppDialog extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final Widget content;
   final List<Widget>? actions;
   final Widget? icon;
@@ -17,6 +18,7 @@ class AppDialog extends StatelessWidget {
   const AppDialog({
     super.key,
     required this.title,
+    this.subtitle,
     required this.content,
     this.actions,
     this.icon,
@@ -55,14 +57,30 @@ class AppDialog extends StatelessWidget {
                   ),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (icon != null) ...[icon!, SizedBox(width: 16.w)],
                     Expanded(
-                      child: Text(
-                        title,
-                        style: context.textTheme.titleMedium?.copyWith(
-                          color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title,
+                            style: context.textTheme.titleMedium?.copyWith(
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                            ),
+                          ),
+                          if (subtitle != null) ...[
+                            SizedBox(height: 4.h),
+                            Text(
+                              subtitle!,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                     Material(

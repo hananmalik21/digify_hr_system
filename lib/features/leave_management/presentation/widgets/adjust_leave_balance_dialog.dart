@@ -5,7 +5,6 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart' show DigifyTextField, DigifyTextArea;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
@@ -87,6 +86,7 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
 
     return AppDialog(
       title: 'Adjust Leave Balance',
+      subtitle: widget.employeeName,
       width: 700.w,
       content: Form(
         key: _formKey,
@@ -94,20 +94,11 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.employeeName,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-              ),
-            ),
-            Gap(20.5.h),
             _buildLeaveBalanceFieldsRow(context),
             Gap(14.h),
             _buildComparisonSection(context, isDark),
             Gap(14.h),
             _buildReasonField(context),
-            Gap(14.h),
-            _buildWarningNote(context, isDark),
           ],
         ),
       ),
@@ -135,12 +126,10 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
     return Row(
       children: [
         Expanded(
-          child: DigifyTextField(
+          child: DigifyTextField.number(
             controller: _annualLeaveController,
             labelText: 'Annual Leave (days)',
             isRequired: true,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Annual leave is required';
@@ -151,12 +140,10 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
         ),
         Gap(14.w),
         Expanded(
-          child: DigifyTextField(
+          child: DigifyTextField.number(
             controller: _sickLeaveController,
             labelText: 'Sick Leave (days)',
             isRequired: true,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Sick leave is required';
@@ -167,12 +154,10 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
         ),
         Gap(14.w),
         Expanded(
-          child: DigifyTextField(
+          child: DigifyTextField.number(
             controller: _unpaidLeaveController,
             labelText: 'Unpaid Leave (days)',
             isRequired: true,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Unpaid leave is required';
@@ -191,6 +176,16 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
     final newAnnual = int.tryParse(_annualLeaveController.text) ?? previousAnnual;
     final newSick = int.tryParse(_sickLeaveController.text) ?? previousSick;
 
+    final labelStyle = context.textTheme.labelSmall?.copyWith(
+      fontSize: 12.sp,
+      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+    );
+    final valueStyle = context.textTheme.labelSmall?.copyWith(
+      fontSize: 12.sp,
+      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+    );
+    final newValueStyle = context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: AppColors.primary);
+
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(color: AppColors.infoBg, borderRadius: BorderRadius.circular(7.r)),
@@ -204,19 +199,9 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Previous Annual:',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      ),
-                    ),
+                    Text('Previous Annual:', style: labelStyle),
                     Gap(7.w),
-                    Text(
-                      '$previousAnnual days',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                      ),
-                    ),
+                    Text('$previousAnnual days', style: valueStyle),
                   ],
                 ),
               ),
@@ -225,20 +210,15 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'New Annual:',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      ),
-                    ),
+                    Text('New Annual:', style: labelStyle),
                     Gap(7.w),
-                    Text('$newAnnual days', style: context.textTheme.labelSmall?.copyWith(color: AppColors.primary)),
+                    Text('$newAnnual days', style: newValueStyle),
                   ],
                 ),
               ),
             ],
           ),
-          SizedBox(height: 6.h),
+          Gap(6.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -246,19 +226,9 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Previous Sick:',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      ),
-                    ),
+                    Text('Previous Sick:', style: labelStyle),
                     Gap(7.w),
-                    Text(
-                      '$previousSick days',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                      ),
-                    ),
+                    Text('$previousSick days', style: valueStyle),
                   ],
                 ),
               ),
@@ -267,14 +237,9 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'New Sick:',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                      ),
-                    ),
+                    Text('New Sick:', style: labelStyle),
                     Gap(7.w),
-                    Text('$newSick days', style: context.textTheme.labelSmall?.copyWith(color: AppColors.primary)),
+                    Text('$newSick days', style: newValueStyle),
                   ],
                 ),
               ),
@@ -298,36 +263,6 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
         }
         return null;
       },
-    );
-  }
-
-  Widget _buildWarningNote(BuildContext context, bool isDark) {
-    return Container(
-      padding: EdgeInsets.all(11.5.w),
-      decoration: BoxDecoration(
-        color: AppColors.warningBg,
-        border: Border.all(color: AppColors.warningBorder, width: 1),
-        borderRadius: BorderRadius.circular(7.r),
-      ),
-      child: RichText(
-        text: TextSpan(
-          style: context.textTheme.labelSmall?.copyWith(color: AppColors.warningText),
-          children: [
-            TextSpan(
-              text: 'Note: ',
-              style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.warningText),
-            ),
-            TextSpan(
-              text: 'Balance adjustments will be logged in the audit trail. Ensure ',
-              style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w400, color: AppColors.warningText),
-            ),
-            TextSpan(
-              text: 'you provide a clear reason for the adjustment.',
-              style: context.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w400, color: AppColors.warningText),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
