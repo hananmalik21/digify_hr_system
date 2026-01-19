@@ -1,7 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,28 +50,23 @@ class MyLeaveBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Container(
       height: 570.h,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         border: Border.all(
-          color: data.isAtRisk ? const Color(0xFFFFD230) : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+          color: data.isAtRisk ? AppColors.warning : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
           width: data.isAtRisk ? 2 : 1,
         ),
-        borderRadius: BorderRadius.circular(11.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), offset: const Offset(0, 1), blurRadius: 3),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 1), blurRadius: 2),
-        ],
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildHeader(context),
-          Expanded(child: SingleChildScrollView(child: _buildContent(context, localizations))),
+          Expanded(child: SingleChildScrollView(child: _buildContent(context))),
         ],
       ),
     );
@@ -79,12 +75,12 @@ class MyLeaveBalanceCard extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.topRight,
-          colors: [Color(0xFF2B7FFF), Color(0xFF155DFC)],
+          colors: [AppColors.primaryLight, AppColors.primary],
         ),
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(11.r), topRight: Radius.circular(11.r)),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
       ),
       padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 14.h),
       child: Row(
@@ -94,13 +90,12 @@ class MyLeaveBalanceCard extends StatelessWidget {
             height: 35.w,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(7.r),
+              borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Center(
-              child: DigifyAsset(assetPath: data.iconPath, width: 17.5, height: 17.5, color: Colors.white),
-            ),
+            alignment: Alignment.center,
+            child: DigifyAsset(assetPath: data.iconPath, width: 18, height: 18, color: Colors.white),
           ),
-          Gap(10.5.w),
+          Gap(11.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,56 +103,48 @@ class MyLeaveBalanceCard extends StatelessWidget {
               children: [
                 Text(
                   data.leaveType,
-                  style: TextStyle(
-                    fontSize: 15.4.sp,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    height: 24.5 / 15.4,
                   ),
                 ),
                 Text(
                   data.leaveTypeArabic,
-                  style: TextStyle(
-                    fontSize: 12.3.sp,
-                    fontWeight: FontWeight.w400,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    fontSize: 12.sp,
                     color: Colors.white.withValues(alpha: 0.8),
-                    height: 17.5 / 12.3,
                   ),
                   textDirection: TextDirection.rtl,
                 ),
               ],
             ),
           ),
-          if (data.isAtRisk)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.5.w, vertical: 3.5.h),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(1000.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DigifyAsset(assetPath: Assets.icons.arrowUp.path, width: 14, height: 14, color: Colors.white),
-                  Gap(3.5.w),
-                  Text(
-                    'At Risk',
-                    style: TextStyle(
-                      fontSize: 12.3.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                      height: 17.5 / 12.3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          if (data.isAtRisk) _buildAtRiskBadge(),
         ],
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context, AppLocalizations localizations) {
+  Widget _buildAtRiskBadge() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 4.h),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(100.r)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAsset(assetPath: Assets.icons.leaveManagement.warning.path, width: 14, height: 14, color: Colors.white),
+          Gap(4.w),
+          Text(
+            'At Risk',
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(21.w),
       child: Column(
@@ -165,15 +152,13 @@ class MyLeaveBalanceCard extends StatelessWidget {
         children: [
           _buildTotalBalance(context),
           Gap(14.h),
-          _buildBalanceBreakdown(),
-          Gap(14.h),
-          Divider(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, height: 1, thickness: 1),
-          Gap(15.h),
-          _buildCarryForwardInfo(localizations, context),
-          if (data.isAtRisk && data.atRiskDays != null) ...[Gap(7.h), _buildAtRiskSection(localizations)],
-          if (data.encashmentAvailable) ...[Gap(7.h), _buildEncashmentSection(localizations)],
+          _buildBalanceBreakdown(context),
+          DigifyDivider(margin: EdgeInsets.symmetric(vertical: 14.h)),
+          _buildCarryForwardInfo(context),
+          if (data.isAtRisk && data.atRiskDays != null) ...[Gap(7.h), _buildAtRiskSection()],
+          if (data.encashmentAvailable) ...[Gap(7.h), _buildEncashmentSection()],
           Gap(7.h),
-          _buildExpiryDate(localizations, context),
+          _buildExpiryDate(context),
         ],
       ),
     );
@@ -181,44 +166,38 @@ class MyLeaveBalanceCard extends StatelessWidget {
 
   Widget _buildTotalBalance(BuildContext context) {
     return Container(
-      width: 678.5.w,
+      width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 14.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(7.r),
+        color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.securityProfilesBackground,
+        borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'Total Balance',
-            style: TextStyle(
-              fontSize: 12.1.sp,
-              fontWeight: FontWeight.w400,
-              color: isDark ? context.themeTextSecondary : const Color(0xFF4A5565),
-              height: 17.5 / 12.1,
+            style: context.textTheme.labelSmall?.copyWith(
+              fontSize: 12.sp,
+              color: isDark ? context.themeTextSecondary : AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
-          Gap(3.5.h),
+          Gap(4.h),
           Text(
             data.totalBalance.toString(),
-            style: TextStyle(
-              fontSize: 30.6.sp,
-              fontWeight: FontWeight.bold,
-              color: isDark ? context.themeTextPrimary : const Color(0xFF101828),
-              height: 35 / 30.6,
+            style: context.textTheme.displaySmall?.copyWith(
+              fontSize: 31.sp,
+              color: isDark ? context.themeTextPrimary : AppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
-          Gap(3.5.h),
+          Gap(4.h),
           Text(
             'days available',
-            style: TextStyle(
-              fontSize: 12.1.sp,
-              fontWeight: FontWeight.w400,
-              color: isDark ? context.themeTextSecondary : const Color(0xFF6A7282),
-              height: 17.5 / 12.1,
+            style: context.textTheme.labelSmall?.copyWith(
+              fontSize: 12.sp,
+              color: isDark ? context.themeTextSecondary : AppColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -227,307 +206,207 @@ class MyLeaveBalanceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBalanceBreakdown() {
-    return SizedBox(
-      width: 678.5.w,
-      child: Row(
+  Widget _buildBalanceBreakdown(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildBalanceItem(context: context, label: 'Current Year', value: data.currentYear.toString()),
+        ),
+        Gap(14.w),
+        Expanded(
+          child: _buildBalanceItem(context: context, label: 'Carried Forward', value: data.carriedForward.toString()),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBalanceItem({required BuildContext context, required String label, required String value}) {
+    return Container(
+      padding: EdgeInsets.all(11.w),
+      decoration: BoxDecoration(color: AppColors.infoBg, borderRadius: BorderRadius.circular(10.r)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10.5.w),
-              decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(7.r)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Current Year',
-                    style: TextStyle(
-                      fontSize: 10.5.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF155DFC),
-                      height: 14 / 10.5,
-                    ),
-                  ),
-                  Gap(3.5.h),
-                  Text(
-                    data.currentYear.toString(),
-                    style: TextStyle(
-                      fontSize: 17.5.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1C398E),
-                      height: 24.5 / 17.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Gap(14.w),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10.5.w),
-              decoration: BoxDecoration(color: const Color(0xFFFAF5FF), borderRadius: BorderRadius.circular(7.r)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Carried Forward',
-                    style: TextStyle(
-                      fontSize: 10.5.sp,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF9810FA),
-                      height: 14 / 10.5,
-                    ),
-                  ),
-                  Gap(3.5.h),
-                  Text(
-                    data.carriedForward.toString(),
-                    style: TextStyle(
-                      fontSize: 17.5.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF59168B),
-                      height: 24.5 / 17.5,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          Text(label, style: context.textTheme.labelSmall?.copyWith(color: AppColors.primary)),
+          Gap(4.h),
+          Text(
+            value,
+            style: context.textTheme.headlineMedium?.copyWith(fontSize: 18.sp, color: AppColors.textPrimary),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCarryForwardInfo(AppLocalizations localizations, BuildContext context) {
-    return SizedBox(
-      width: 678.5.w,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildCarryForwardInfo(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Carry Forward Allowed',
+              style: context.textTheme.labelSmall?.copyWith(
+                fontSize: 12.sp,
+                color: isDark ? context.themeTextSecondary : AppColors.textSecondary,
+              ),
+            ),
+            Gap(7.w),
+            DigifyAsset(
+              assetPath: Assets.icons.infoCircleBlue.path,
+              width: 14,
+              height: 14,
+              color: isDark ? context.themeTextSecondary : AppColors.textSecondary,
+            ),
+          ],
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: data.carryForwardAllowed ? AppColors.successBg : AppColors.errorBg,
+            borderRadius: BorderRadius.circular(100.r),
+          ),
+          child: Text(
+            data.carryForwardAllowed
+                ? (data.carryForwardMax != null ? 'Yes (Max ${data.carryForwardMax})' : 'Yes')
+                : 'No',
+            style: context.textTheme.labelMedium?.copyWith(
+              fontSize: 11.sp,
+              color: data.carryForwardAllowed ? AppColors.successText : AppColors.errorText,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAtRiskSection() {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: AppColors.warningBg,
+        border: Border.all(color: AppColors.warningBorder),
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Carry Forward Allowed',
-                style: TextStyle(
-                  fontSize: 12.1.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark ? context.themeTextSecondary : const Color(0xFF4A5565),
-                  height: 17.5 / 12.1,
-                ),
+              Row(
+                children: [
+                  DigifyAsset(
+                    assetPath: Assets.icons.leaveManagement.warning.path,
+                    width: 14,
+                    height: 14,
+                    color: AppColors.warningText,
+                  ),
+                  Gap(4.w),
+                  Text(
+                    'At-Risk (Forfeitable)',
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.warningText),
+                  ),
+                ],
               ),
-              Gap(7.w),
-              DigifyAsset(
-                assetPath: Assets.icons.infoCircleBlue.path,
-                width: 14,
-                height: 14,
-                color: isDark ? context.themeTextSecondary : const Color(0xFF4A5565),
+              Text(
+                '${data.atRiskDays} days',
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold, color: AppColors.warningText),
               ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.5.w, vertical: 3.5.h),
-            decoration: BoxDecoration(
-              color: data.carryForwardAllowed ? const Color(0xFFDCFCE7) : const Color(0xFFFFE2E2),
-              borderRadius: BorderRadius.circular(1000.r),
-            ),
-            child: Text(
-              data.carryForwardAllowed
-                  ? (data.carryForwardMax != null ? 'Yes (Max ${data.carryForwardMax})' : 'Yes')
-                  : 'No',
-              style: TextStyle(
-                fontSize: 10.5.sp,
-                fontWeight: FontWeight.w500,
-                color: data.carryForwardAllowed ? const Color(0xFF008236) : const Color(0xFFC10007),
-                height: 14 / 10.5,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAtRiskSection(AppLocalizations localizations) {
-    return SizedBox(
-      width: 678.5.w,
-      child: Container(
-        padding: EdgeInsets.all(11.5.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFBEB),
-          border: Border.all(color: const Color(0xFFFEE685)),
-          borderRadius: BorderRadius.circular(7.r),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 655.5.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      DigifyAsset(
-                        assetPath: Assets.icons.warningIconYellow.path,
-                        width: 14,
-                        height: 14,
-                        color: const Color(0xFF7B3306),
-                      ),
-                      Gap(3.5.w),
-                      Text(
-                        'At-Risk (Forfeitable)',
-                        style: TextStyle(
-                          fontSize: 12.3.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF7B3306),
-                          height: 17.5 / 12.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '${data.atRiskDays} days',
-                    style: TextStyle(
-                      fontSize: 15.4.sp,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF7B3306),
-                      height: 24.5 / 15.4,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Gap(7.h),
-            SizedBox(
-              width: 655.5.w,
-              child: Text(
-                data.atRiskExpiryDate != null
-                    ? 'These days exceed the carry forward limit and will be forfeited after ${data.atRiskExpiryDate}'
-                    : 'These days exceed the carry forward limit and will be forfeited',
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFFBB4D00),
-                  height: 14 / 10.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEncashmentSection(AppLocalizations localizations) {
-    return SizedBox(
-      width: 678.5.w,
-      child: Container(
-        padding: EdgeInsets.all(11.5.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF0FDF4),
-          border: Border.all(color: const Color(0xFFB9F8CF)),
-          borderRadius: BorderRadius.circular(7.r),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 655.5.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      DigifyAsset(
-                        assetPath: Assets.icons.infoIconGreen.path,
-                        width: 14,
-                        height: 14,
-                        color: const Color(0xFF0D542B),
-                      ),
-                      Gap(3.5.w),
-                      Text(
-                        'Encashment Available',
-                        style: TextStyle(
-                          fontSize: 12.1.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF0D542B),
-                          height: 17.5 / 12.1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (data.onEncashmentRequest != null)
-                    GestureDetector(
-                      onTap: data.onEncashmentRequest,
-                      child: Text(
-                        'Request →',
-                        style: TextStyle(
-                          fontSize: 10.5.sp,
-                          fontWeight: FontWeight.w500,
-                          color: const Color(0xFF008236),
-                          height: 14 / 10.5,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            Gap(3.25.h),
-            SizedBox(
-              width: 655.5.w,
-              child: Text(
-                'You can request to encash unused leave days for monetary compensation',
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF008236),
-                  height: 14 / 10.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpiryDate(AppLocalizations localizations, BuildContext context) {
-    return SizedBox(
-      width: 678.5.w,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+          Gap(7.h),
           Text(
-            'Expiry Date',
-            style: TextStyle(
-              fontSize: 12.1.sp,
-              fontWeight: FontWeight.w400,
-              color: isDark ? context.themeTextSecondary : const Color(0xFF4A5565),
-              height: 17.5 / 12.1,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.5.w, vertical: 3.5.h),
-            decoration: BoxDecoration(
-              color: data.expiryDate != null
-                  ? const Color(0xFFDBEAFE)
-                  : (isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6)),
-              borderRadius: BorderRadius.circular(1000.r),
-            ),
-            child: Text(
-              data.expiryDate ?? 'N/A',
-              style: TextStyle(
-                fontSize: 10.5.sp,
-                fontWeight: FontWeight.w500,
-                color: data.expiryDate != null
-                    ? const Color(0xFF1447E6)
-                    : (isDark ? context.themeTextSecondary : const Color(0xFF364153)),
-                height: 14 / 10.5,
-              ),
-            ),
+            data.atRiskExpiryDate != null
+                ? 'These days exceed the carry forward limit and will be forfeited after ${data.atRiskExpiryDate}'
+                : 'These days exceed the carry forward limit and will be forfeited',
+            style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400, color: AppColors.yellowSubtitle),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildEncashmentSection() {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: AppColors.greenBg,
+        border: Border.all(color: AppColors.greenBorder),
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  DigifyAsset(
+                    assetPath: Assets.icons.infoIconGreen.path,
+                    width: 14,
+                    height: 14,
+                    color: AppColors.greenText,
+                  ),
+                  Gap(4.w),
+                  Text(
+                    'Encashment Available',
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500, color: AppColors.greenText),
+                  ),
+                ],
+              ),
+              if (data.onEncashmentRequest != null)
+                GestureDetector(
+                  onTap: data.onEncashmentRequest,
+                  child: Text(
+                    'Request →',
+                    style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w500, color: AppColors.greenTextSecondary),
+                  ),
+                ),
+            ],
+          ),
+          Gap(3.h),
+          Text(
+            'You can request to encash unused leave days for monetary compensation',
+            style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w400, color: AppColors.greenTextSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExpiryDate(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Expiry Date',
+          style: context.textTheme.labelSmall?.copyWith(
+            fontSize: 12.sp,
+            color: isDark ? context.themeTextSecondary : AppColors.textSecondary,
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 11.w, vertical: 4.h),
+          decoration: BoxDecoration(
+            color: data.expiryDate != null
+                ? AppColors.infoBg
+                : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
+            borderRadius: BorderRadius.circular(1000.r),
+          ),
+          child: Text(
+            data.expiryDate ?? 'N/A',
+            style: TextStyle(
+              fontSize: 11.sp,
+              fontWeight: FontWeight.w500,
+              color: data.expiryDate != null
+                  ? AppColors.infoTextSecondary
+                  : (isDark ? context.themeTextSecondary : AppColors.textSecondary),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
