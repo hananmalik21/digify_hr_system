@@ -36,6 +36,7 @@ class DigifyTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final String? initialValue;
   final double? fontSize;
+  final EdgeInsetsGeometry? contentPadding;
 
   const DigifyTextField({
     super.key,
@@ -68,6 +69,7 @@ class DigifyTextField extends StatefulWidget {
     this.focusNode,
     this.initialValue,
     this.fontSize,
+    this.contentPadding,
   });
 
   factory DigifyTextField.search({
@@ -124,6 +126,32 @@ class DigifyTextField extends StatefulWidget {
       focusNode: focusNode,
       filled: true,
       fillColor: Colors.transparent,
+    );
+  }
+
+  factory DigifyTextField.number({
+    required TextEditingController controller,
+    required String labelText,
+    bool isRequired = false,
+    bool enabled = true,
+    ValueChanged<String>? onChanged,
+    String? Function(String?)? validator,
+    List<TextInputFormatter>? inputFormatters,
+    FocusNode? focusNode,
+  }) {
+    return DigifyTextField(
+      controller: controller,
+      labelText: labelText,
+      isRequired: isRequired,
+      enabled: enabled,
+      onChanged: onChanged,
+      validator: validator,
+      keyboardType: TextInputType.number,
+      inputFormatters: inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
+      focusNode: focusNode,
+      filled: true,
+      fillColor: Colors.transparent,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
     );
   }
 
@@ -184,7 +212,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         filled: widget.filled,
         fillColor: effectiveFillColor,
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         hintStyle: TextStyle(
           fontSize: widget.fontSize ?? 15.sp,
           height: 1.0,
