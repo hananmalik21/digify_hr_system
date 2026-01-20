@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

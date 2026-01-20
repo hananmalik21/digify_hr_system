@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 extension ContextExtensions on BuildContext {
   ThemeData get theme => Theme.of(this);
-  TextTheme get textTheme => theme.textTheme;
   ColorScheme get colorScheme => theme.colorScheme;
   MediaQueryData get mediaQuery => MediaQuery.of(this);
   Size get screenSize => mediaQuery.size;
-  double get screenWidth => screenSize.width;
   double get screenHeight => screenSize.height;
   EdgeInsets get padding => mediaQuery.padding;
   EdgeInsets get viewInsets => mediaQuery.viewInsets;
@@ -14,10 +12,6 @@ extension ContextExtensions on BuildContext {
 
   bool get isLandscape => orientation == Orientation.landscape;
   bool get isPortrait => orientation == Orientation.portrait;
-
-  bool get isMobile => screenWidth < 600;
-  bool get isTablet => screenWidth >= 600 && screenWidth < 1024;
-  bool get isDesktop => screenWidth >= 1024;
 
   void pop<T extends Object?>([T? result]) => Navigator.of(this).pop<T>(result);
 

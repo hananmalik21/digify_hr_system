@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/badges/code_badge.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';

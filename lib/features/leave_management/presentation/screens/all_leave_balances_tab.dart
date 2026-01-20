@@ -34,7 +34,7 @@ class _AllLeaveBalancesTabState extends State<AllLeaveBalancesTab> {
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(top: 47.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 24.h,
