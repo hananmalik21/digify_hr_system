@@ -132,6 +132,7 @@ class DigifyTextField extends StatefulWidget {
   factory DigifyTextField.number({
     required TextEditingController controller,
     required String labelText,
+    String? hintText,
     bool isRequired = false,
     bool enabled = true,
     ValueChanged<String>? onChanged,
@@ -142,6 +143,7 @@ class DigifyTextField extends StatefulWidget {
     return DigifyTextField(
       controller: controller,
       labelText: labelText,
+      hintText: hintText,
       isRequired: isRequired,
       enabled: enabled,
       onChanged: onChanged,
