@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/team_leave_risk_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/manager_action_recommendations_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_filters_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_stat_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_table.dart';
