@@ -1127,6 +1127,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/dollar.svg
   SvgGenImage get dollar => const SvgGenImage('assets/icons/leave_management/dollar.svg');
 
+  /// File path: assets/icons/leave_management/downfall.svg
+  SvgGenImage get downfall => const SvgGenImage('assets/icons/leave_management/downfall.svg');
+
   /// File path: assets/icons/leave_management/empty_leave.svg
   SvgGenImage get emptyLeave => const SvgGenImage('assets/icons/leave_management/empty_leave.svg');
 
@@ -1170,6 +1173,7 @@ class $AssetsIconsLeaveManagementGen {
   List<SvgGenImage> get values => [
     attachment,
     dollar,
+    downfall,
     emptyLeave,
     forfeitPolicy,
     forfeitProcessing,

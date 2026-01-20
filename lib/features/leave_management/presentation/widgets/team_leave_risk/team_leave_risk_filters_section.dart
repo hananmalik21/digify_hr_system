@@ -1,87 +1,97 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class TeamLeaveRiskFiltersSection extends StatelessWidget {
+class TeamLeaveRiskFiltersSection extends StatefulWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
   const TeamLeaveRiskFiltersSection({super.key, required this.localizations, required this.isDark});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsetsDirectional.all(22.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(11.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.filter_list,
-                size: 17.5.sp,
-                color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
-              ),
-              Gap(7.w),
-              Text(
-                '${localizations.filters}:',
-                style: TextStyle(
-                  fontSize: 13.9.sp,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
-                  height: 21 / 13.9,
-                  letterSpacing: 0,
-                ),
-              ),
-              Gap(14.w),
-              _FilterDropdown(label: localizations.allDepartments, isDark: isDark),
-              Gap(14.w),
-              _FilterDropdown(label: localizations.allLeaveTypes, isDark: isDark),
-            ],
-          ),
-          const Spacer(),
-          AppButton.primary(label: localizations.exportReport, icon: Icons.download, onPressed: () {}),
-        ],
-      ),
-    );
-  }
+  State<TeamLeaveRiskFiltersSection> createState() => _TeamLeaveRiskFiltersSectionState();
 }
 
-class _FilterDropdown extends StatelessWidget {
-  final String label;
-  final bool isDark;
+class _TeamLeaveRiskFiltersSectionState extends State<TeamLeaveRiskFiltersSection> {
+  late TextEditingController _searchController;
+  String? _selectedLeaveType;
 
-  const _FilterDropdown({required this.label, required this.isDark});
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final leaveTypes = [
+      widget.localizations.annualLeave,
+      widget.localizations.sickLeave,
+      widget.localizations.hajjLeave,
+      widget.localizations.compassionateLeave,
+    ];
+
     return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 19.w, vertical: 8.h),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(7.r),
-        border: Border.all(color: isDark ? AppColors.borderGreyDark : AppColors.borderGrey, width: 1),
+        color: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 13.7.sp,
-          fontWeight: FontWeight.w400,
-          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0A0A0A),
-          height: 16.5 / 13.7,
-          letterSpacing: 0,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DigifyTextField.search(
+            controller: _searchController,
+            hintText: widget.localizations.tmSearchPlaceholder,
+            onChanged: (value) {
+              // Handle search
+            },
+          ),
+          Gap(16.h),
+          Wrap(
+            spacing: 12.w,
+            runSpacing: 12.h,
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: 144.w,
+                child: DigifySelectField<String?>(
+                  label: '',
+                  hint: widget.localizations.allLeaveTypes,
+                  value: _selectedLeaveType,
+                  items: [null, ...leaveTypes],
+                  itemLabelBuilder: (leaveType) => leaveType ?? widget.localizations.allLeaveTypes,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedLeaveType = newValue;
+                    });
+                  },
+                ),
+              ),
+              AppButton(
+                label: widget.localizations.export,
+                onPressed: () {},
+                svgPath: Assets.icons.downloadIcon.path,
+                backgroundColor: AppColors.shiftExportButton,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
