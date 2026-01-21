@@ -5,10 +5,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_type.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_configuration_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/advanced_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/approval_workflows_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/blackout_periods_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/carry_forward_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/compliance_check_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_criteria_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/encashment_rules_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/entitlement_accrual_section.dart';
@@ -159,13 +156,20 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
             ),
             EligibilityCriteriaSection(isDark: isDark, eligibility: config.eligibilityCriteria),
             EntitlementAccrualSection(isDark: isDark, entitlement: config.entitlementAccrual),
-            AdvancedRulesSection(isDark: isDark, advanced: config.advancedRules),
-            ApprovalWorkflowsSection(isDark: isDark, approval: config.approvalWorkflows),
-            BlackoutPeriodsSection(isDark: isDark, blackout: config.blackoutPeriods),
+            AdvancedRulesSection(
+              isDark: isDark,
+              advanced: config.advancedRules,
+              approval: config.approvalWorkflows,
+              blackout: config.blackoutPeriods,
+            ),
             CarryForwardRulesSection(isDark: isDark, carryForward: config.carryForwardRules),
-            ForfeitRulesSection(isDark: isDark, forfeit: config.forfeitRules),
+            ForfeitRulesSection(
+              isDark: isDark,
+              forfeit: config.forfeitRules,
+              carryForwardLimit: config.carryForwardRules.carryForwardLimit,
+              gracePeriod: config.carryForwardRules.gracePeriod,
+            ),
             EncashmentRulesSection(isDark: isDark, encashment: config.encashmentRules),
-            ComplianceCheckSection(isDark: isDark, compliance: config.complianceCheck),
           ],
         );
       },

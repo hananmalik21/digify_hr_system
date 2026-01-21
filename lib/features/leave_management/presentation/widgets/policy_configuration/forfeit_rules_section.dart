@@ -1,97 +1,138 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 class ForfeitRulesSection extends StatelessWidget {
   final bool isDark;
   final ForfeitRules forfeit;
+  final String carryForwardLimit;
+  final String gracePeriod;
 
-  const ForfeitRulesSection({super.key, required this.isDark, required this.forfeit});
+  const ForfeitRulesSection({
+    super.key,
+    required this.isDark,
+    required this.forfeit,
+    required this.carryForwardLimit,
+    required this.gracePeriod,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ExpandableConfigSection(
       title: 'Forfeit Rules',
-      iconPath: Assets.icons.leaveManagement.forfeitPolicy.path,
-      warningBackgroundColor: isDark ? AppColors.warningBgDark.withValues(alpha: 0.2) : AppColors.warningBg,
+      iconPath: Assets.icons.leaveManagement.warning.path,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
         children: [
           Container(
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.warningBgDark.withValues(alpha: 0.2) : AppColors.warningBg,
-              borderRadius: BorderRadius.circular(8.r),
+              color: AppColors.tableHeaderBackground,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: AppColors.cardBorder),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
               children: [
-                Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20.sp),
-                Gap(8.w),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Switch(
-                        value: forfeit.enableAutomaticForfeit,
-                        onChanged: null,
-                        activeThumbColor: AppColors.primary,
-                      ),
-                      Gap(8.w),
-                      Expanded(
-                        child: Text(
-                          'Enable Automatic Forfeit',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
+                DigifyCheckbox(
+                  value: forfeit.enableAutomaticForfeit,
+                  onChanged: null,
+                  label: 'Enable Automatic Forfeit',
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 23.w),
+                  child: Text(
+                    'Automatically forfeit unused leave exceeding carry forward limit',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Text(
-            'Forfeit Configuration',
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.warningBgDark.withValues(alpha: 0.2) : AppColors.warningBg,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: isDark ? AppColors.warningBorderDark : AppColors.warningBorder),
             ),
-          ),
-          Text(
-            'Leave days will be automatically forfeited based on the configured rules',
-            style: context.textTheme.bodySmall?.copyWith(
-              color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 7.h,
+              children: [
+                Text(
+                  'Forfeit Configuration',
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+                  ),
+                ),
+                Text(
+                  'Leave days exceeding the carry forward limit of $carryForwardLimit days will be automatically forfeited after the grace period of $gracePeriod days.',
+                  style: context.textTheme.labelSmall?.copyWith(
+                    fontSize: 12.sp,
+                    color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+                  ),
+                ),
+                Row(
+                  spacing: 24.w,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 4.h,
+                        children: [
+                          Text(
+                            'Forfeit Trigger',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: isDark
+                                  ? AppColors.warningTextDark.withValues(alpha: 0.8)
+                                  : AppColors.yellowText.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          Text(
+                            forfeit.forfeitTrigger ?? 'End of Grace Period',
+                            style: context.textTheme.titleSmall?.copyWith(
+                              color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 4.h,
+                        children: [
+                          Text(
+                            'Notification Period',
+                            style: context.textTheme.labelSmall?.copyWith(
+                              color: isDark
+                                  ? AppColors.warningTextDark.withValues(alpha: 0.8)
+                                  : AppColors.yellowText.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          Text(
+                            forfeit.endOfGracePeriod.isNotEmpty ? forfeit.endOfGracePeriod : '30 days before',
+                            style: context.textTheme.titleSmall?.copyWith(
+                              color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          Row(
-            spacing: 12.w,
-            children: [
-              Expanded(
-                child: DigifySelectFieldWithLabel<String>(
-                  label: 'Forfeit Trigger',
-                  items: ['End of Year', 'End of Grace Period'],
-                  itemLabelBuilder: (item) => item,
-                  value: forfeit.forfeitTrigger,
-                  onChanged: null,
-                ),
-              ),
-              Expanded(
-                child: DigifySelectFieldWithLabel<String>(
-                  label: 'End of Grace Period',
-                  items: ['28 days before', 'End of year'],
-                  itemLabelBuilder: (item) => item,
-                  value: forfeit.endOfGracePeriod,
-                  onChanged: null,
-                ),
-              ),
-            ],
           ),
         ],
       ),

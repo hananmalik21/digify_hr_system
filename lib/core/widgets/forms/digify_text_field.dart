@@ -139,6 +139,8 @@ class DigifyTextField extends StatefulWidget {
     String? Function(String?)? validator,
     List<TextInputFormatter>? inputFormatters,
     FocusNode? focusNode,
+    bool? filled,
+    Color? fillColor,
   }) {
     return DigifyTextField(
       controller: controller,
@@ -151,8 +153,8 @@ class DigifyTextField extends StatefulWidget {
       keyboardType: TextInputType.number,
       inputFormatters: inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
       focusNode: focusNode,
-      filled: true,
-      fillColor: Colors.transparent,
+      filled: filled ?? true,
+      fillColor: fillColor ?? Colors.transparent,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
     );
   }

@@ -1,12 +1,12 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 class EncashmentRulesSection extends StatelessWidget {
   final bool isDark;
@@ -23,46 +23,81 @@ class EncashmentRulesSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
         children: [
-          Row(
-            children: [
-              Switch(value: encashment.allowLeaveEncashment, onChanged: null, activeThumbColor: AppColors.primary),
-              Gap(8.w),
-              Expanded(
-                child: Text(
-                  'Allow Leave Encashment',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+          Container(
+            padding: EdgeInsets.all(14.w),
+            decoration: BoxDecoration(
+              color: AppColors.tableHeaderBackground,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: AppColors.cardBorder),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
+              children: [
+                DigifyCheckbox(
+                  value: encashment.allowLeaveEncashment,
+                  onChanged: null,
+                  label: 'Allow Leave Encashment',
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 23.w),
+                  child: Text(
+                    'Enable employees to request monetary compensation for unused leave',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Row(
             spacing: 12.w,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: DigifyTextField.number(
-                  controller: TextEditingController(text: encashment.encashmentLimit),
-                  labelText: 'Encashment Limit (days)',
-                  hintText: 'e.g., 15',
-                  enabled: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    DigifyTextField.number(
+                      controller: TextEditingController(text: encashment.encashmentLimit),
+                      labelText: 'Encashment Limit (days)',
+                      hintText: 'Enter limit',
+                      filled: true,
+                      fillColor: AppColors.cardBackground,
+                    ),
+                    Text(
+                      'Maximum days allowed for encashment per year',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
-                child: DigifyTextField.number(
-                  controller: TextEditingController(text: encashment.encashmentRate),
-                  labelText: 'Encashment Rate (%)',
-                  hintText: 'e.g., 100',
-                  enabled: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
+                  children: [
+                    DigifyTextField.number(
+                      controller: TextEditingController(text: encashment.encashmentRate),
+                      labelText: 'Encashment Rate (%)',
+                      hintText: 'Enter rate',
+                      filled: true,
+                      fillColor: AppColors.cardBackground,
+                    ),
+                    Text(
+                      'Percentage of daily wage paid',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
-          ),
-          Text(
-            'Employees can encash unused leave days up to the specified limit at the configured rate',
-            style: context.textTheme.bodySmall?.copyWith(
-              color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
-            ),
           ),
         ],
       ),

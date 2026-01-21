@@ -48,8 +48,8 @@ class DigifyCheckbox extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        width: 20.w,
-        height: 20.h,
+        width: 15.w,
+        height: 15.h,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(4.r),
