@@ -13,6 +13,7 @@ import 'package:digify_hr_system/features/leave_management/presentation/widgets/
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/leave_types_list.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_stat_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_details_header.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_history_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -151,7 +152,9 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
               lastModified: config.lastModified,
               selectedBy: config.selectedBy,
               isDark: isDark,
-              onHistoryPressed: () {},
+              onHistoryPressed: () {
+                PolicyHistoryDialog.show(context, config.policyName);
+              },
               onEditPressed: () {},
             ),
             EligibilityCriteriaSection(isDark: isDark, eligibility: config.eligibilityCriteria),
