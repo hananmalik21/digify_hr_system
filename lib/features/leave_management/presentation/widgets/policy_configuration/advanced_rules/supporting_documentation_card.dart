@@ -1,0 +1,50 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+
+class SupportingDocumentationCard extends StatelessWidget {
+  final AdvancedRules advanced;
+  final bool isDark;
+
+  const SupportingDocumentationCard({super.key, required this.advanced, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.warningBgDark.withValues(alpha: 0.2) : AppColors.warningBg,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: isDark ? AppColors.warningBorderDark : AppColors.warningBorder),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          DigifyAsset(
+            assetPath: Assets.icons.leaveManagement.forfeitReports.path,
+            width: 20,
+            height: 20,
+            color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+          ),
+          Gap(12.w),
+          DigifyCheckbox(value: advanced.requiredSupportingDocumentation, onChanged: null),
+          Gap(7.w),
+          Expanded(
+            child: Text(
+              'Requires Supporting Documentation',
+              style: context.textTheme.titleSmall?.copyWith(
+                color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -4,63 +4,75 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// A reusable checkbox widget that follows the app's design system
+/// A reusable radio button widget that follows the app's design system
 /// Supports light/dark themes and can be used with or without a label
-class DigifyCheckbox extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool?>? onChanged;
+class DigifyRadio<T> extends StatelessWidget {
+  final T value;
+  final T? groupValue;
+  final ValueChanged<T?>? onChanged;
   final String? label;
   final Widget? labelWidget;
   final Color? activeColor;
-  final Color? checkColor;
+  final Color? fillColor;
   final bool enabled;
   final EdgeInsetsGeometry? padding;
   final MainAxisAlignment alignment;
 
-  const DigifyCheckbox({
+  const DigifyRadio({
     super.key,
     required this.value,
+    required this.groupValue,
     this.onChanged,
     this.label,
     this.labelWidget,
     this.activeColor,
-    this.checkColor,
+    this.fillColor,
     this.enabled = true,
     this.padding,
     this.alignment = MainAxisAlignment.start,
   }) : assert(label == null || labelWidget == null, 'Cannot provide both label and labelWidget');
 
+  bool get _isSelected => value == groupValue;
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final effectiveActiveColor = activeColor ?? AppColors.primary;
-    final effectiveCheckColor = checkColor ?? Colors.white;
+    final effectiveFillColor = fillColor ?? Colors.white;
 
     final borderColor = enabled
-        ? (value ? effectiveActiveColor : (isDark ? AppColors.borderGreyDark : AppColors.borderGrey))
+        ? (_isSelected ? effectiveActiveColor : (isDark ? AppColors.borderGreyDark : AppColors.borderGrey))
         : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder);
 
-    final backgroundColor = value ? effectiveActiveColor : (isDark ? AppColors.cardBackgroundDark : Colors.white);
+    final backgroundColor = _isSelected ? effectiveActiveColor : (isDark ? AppColors.cardBackgroundDark : Colors.white);
 
-    final checkbox = GestureDetector(
-      onTap: enabled && onChanged != null ? () => onChanged!(!value) : null,
+    final radio = GestureDetector(
+      onTap: enabled && onChanged != null ? () => onChanged!(value) : null,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        width: 15.w,
-        height: 15.h,
+        width: 20.w,
+        height: 20.h,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(4.r),
-          border: Border.all(color: borderColor, width: value ? 0 : 1.5),
+          shape: BoxShape.circle,
+          border: Border.all(color: borderColor, width: _isSelected ? 0 : 1.5),
         ),
-        child: value ? Icon(Icons.check_rounded, size: 14.sp, color: effectiveCheckColor) : null,
+        child: _isSelected
+            ? Center(
+                child: Container(
+                  width: 8.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(color: effectiveFillColor, shape: BoxShape.circle),
+                ),
+              )
+            : null,
       ),
     );
 
     if (label == null && labelWidget == null) {
-      return checkbox;
+      return radio;
     }
 
     return Padding(
@@ -69,7 +81,7 @@ class DigifyCheckbox extends StatelessWidget {
         mainAxisAlignment: alignment,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          checkbox,
+          radio,
           if (label != null || labelWidget != null) ...[
             Gap(8.w),
             Flexible(

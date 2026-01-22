@@ -1133,6 +1133,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/empty_leave.svg
   SvgGenImage get emptyLeave => const SvgGenImage('assets/icons/leave_management/empty_leave.svg');
 
+  /// File path: assets/icons/leave_management/filter.svg
+  SvgGenImage get filter => const SvgGenImage('assets/icons/leave_management/filter.svg');
+
   /// File path: assets/icons/leave_management/forfeit_policy.svg
   SvgGenImage get forfeitPolicy => const SvgGenImage('assets/icons/leave_management/forfeit_policy.svg');
 
@@ -1141,6 +1144,12 @@ class $AssetsIconsLeaveManagementGen {
 
   /// File path: assets/icons/leave_management/forfeit_reports.svg
   SvgGenImage get forfeitReports => const SvgGenImage('assets/icons/leave_management/forfeit_reports.svg');
+
+  /// File path: assets/icons/leave_management/globe.svg
+  SvgGenImage get globe => const SvgGenImage('assets/icons/leave_management/globe.svg');
+
+  /// File path: assets/icons/leave_management/history.svg
+  SvgGenImage get history => const SvgGenImage('assets/icons/leave_management/history.svg');
 
   /// File path: assets/icons/leave_management/leave_calendar.svg
   SvgGenImage get leaveCalendar => const SvgGenImage('assets/icons/leave_management/leave_calendar.svg');
@@ -1151,6 +1160,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/leave_requests.svg
   SvgGenImage get leaveRequests => const SvgGenImage('assets/icons/leave_management/leave_requests.svg');
 
+  /// File path: assets/icons/leave_management/martial-status.svg
+  SvgGenImage get martialStatus => const SvgGenImage('assets/icons/leave_management/martial-status.svg');
+
   /// File path: assets/icons/leave_management/my_leave.svg
   SvgGenImage get myLeave => const SvgGenImage('assets/icons/leave_management/my_leave.svg');
 
@@ -1160,8 +1172,14 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/policy_configuration.svg
   SvgGenImage get policyConfiguration => const SvgGenImage('assets/icons/leave_management/policy_configuration.svg');
 
+  /// File path: assets/icons/leave_management/prohibited.svg
+  SvgGenImage get prohibited => const SvgGenImage('assets/icons/leave_management/prohibited.svg');
+
   /// File path: assets/icons/leave_management/request.svg
   SvgGenImage get request => const SvgGenImage('assets/icons/leave_management/request.svg');
+
+  /// File path: assets/icons/leave_management/shield.svg
+  SvgGenImage get shield => const SvgGenImage('assets/icons/leave_management/shield.svg');
 
   /// File path: assets/icons/leave_management/team_level.svg
   SvgGenImage get teamLevel => const SvgGenImage('assets/icons/leave_management/team_level.svg');
@@ -1175,16 +1193,22 @@ class $AssetsIconsLeaveManagementGen {
     dollar,
     downfall,
     emptyLeave,
+    filter,
     forfeitPolicy,
     forfeitProcessing,
     forfeitReports,
+    globe,
+    history,
     leaveCalendar,
     leavePolicy,
     leaveRequests,
+    martialStatus,
     myLeave,
     phone,
     policyConfiguration,
+    prohibited,
     request,
+    shield,
     teamLevel,
     warning,
   ];
