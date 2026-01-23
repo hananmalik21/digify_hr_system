@@ -3168,6 +3168,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveFilterAll => 'all';
 
   @override
+  String get leaveFilterDraft => 'draft';
+
+  @override
   String get leaveFilterPending => 'pending';
 
   @override

@@ -7,12 +7,7 @@ class TeamLeaveRiskState {
   final bool isLoading;
   final String? error;
 
-  const TeamLeaveRiskState({
-    required this.employees,
-    required this.stats,
-    this.isLoading = false,
-    this.error,
-  });
+  const TeamLeaveRiskState({required this.employees, required this.stats, this.isLoading = false, this.error});
 
   TeamLeaveRiskState copyWith({
     List<TeamLeaveRiskEmployee>? employees,
@@ -36,12 +31,7 @@ class TeamLeaveRiskNotifier extends StateNotifier<TeamLeaveRiskState> {
 
   static const _initialState = TeamLeaveRiskState(
     employees: [],
-    stats: TeamLeaveRiskStats(
-      teamMembers: 0,
-      employeesAtRisk: 0,
-      totalAtRiskDays: 0,
-      avgAtRiskPerEmployee: 0,
-    ),
+    stats: TeamLeaveRiskStats(teamMembers: 0, employeesAtRisk: 0, totalAtRiskDays: 0, avgAtRiskPerEmployee: 0),
   );
 
   void _loadData() {
@@ -108,11 +98,7 @@ class TeamLeaveRiskNotifier extends StateNotifier<TeamLeaveRiskState> {
       avgAtRiskPerEmployee: 4.6,
     );
 
-    state = state.copyWith(
-      employees: employees,
-      stats: stats,
-      isLoading: false,
-    );
+    state = state.copyWith(employees: employees, stats: stats, isLoading: false);
   }
 
   void refresh() {
@@ -121,7 +107,6 @@ class TeamLeaveRiskNotifier extends StateNotifier<TeamLeaveRiskState> {
   }
 }
 
-final teamLeaveRiskProvider =
-    StateNotifierProvider<TeamLeaveRiskNotifier, TeamLeaveRiskState>((ref) {
+final teamLeaveRiskProvider = StateNotifierProvider<TeamLeaveRiskNotifier, TeamLeaveRiskState>((ref) {
   return TeamLeaveRiskNotifier();
 });

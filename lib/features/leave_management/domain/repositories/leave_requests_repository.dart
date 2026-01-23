@@ -9,4 +9,8 @@ abstract class LeaveRequestsRepository {
   Future<Map<String, dynamic>> rejectLeaveRequest(String guid);
 
   Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit);
+
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid);
+
+  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit);
 }

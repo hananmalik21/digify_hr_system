@@ -27,6 +27,13 @@ class LeaveFilterTabs extends ConsumerWidget {
         ),
         Gap(8.w),
         _FilterTab(
+          label: localizations.leaveFilterDraft,
+          isSelected: selectedFilter == LeaveFilter.draft,
+          onTap: () => ref.read(leaveFilterProvider.notifier).setFilter(LeaveFilter.draft),
+          isDark: isDark,
+        ),
+        Gap(8.w),
+        _FilterTab(
           label: localizations.leaveFilterPending,
           isSelected: selectedFilter == LeaveFilter.pending,
           onTap: () => ref.read(leaveFilterProvider.notifier).setFilter(LeaveFilter.pending),

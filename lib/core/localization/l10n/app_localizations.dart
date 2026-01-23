@@ -6170,6 +6170,12 @@ abstract class AppLocalizations {
   /// **'all'**
   String get leaveFilterAll;
 
+  /// No description provided for @leaveFilterDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'draft'**
+  String get leaveFilterDraft;
+
   /// No description provided for @leaveFilterPending.
   ///
   /// In en, this message translates to:

@@ -18,8 +18,11 @@ class LeaveRequestsTableRow extends StatelessWidget {
   final bool isDark;
   final bool isApproveLoading;
   final bool isRejectLoading;
+  final bool isDeleteLoading;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
+  final VoidCallback? onDelete;
+  final VoidCallback? onUpdate;
 
   const LeaveRequestsTableRow({
     super.key,
@@ -28,8 +31,11 @@ class LeaveRequestsTableRow extends StatelessWidget {
     required this.isDark,
     this.isApproveLoading = false,
     this.isRejectLoading = false,
+    this.isDeleteLoading = false,
     this.onApprove,
     this.onReject,
+    this.onDelete,
+    this.onUpdate,
   });
 
   @override
@@ -118,6 +124,11 @@ class LeaveRequestsTableRow extends StatelessWidget {
         textColor = AppColors.pendingStatucColor;
         label = localizations.leaveFilterPending;
         break;
+      case RequestStatus.draft:
+        backgroundColor = isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey;
+        textColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+        label = localizations.leaveFilterDraft;
+        break;
       case RequestStatus.approved:
         backgroundColor = AppColors.holidayIslamicPaidBg;
         textColor = AppColors.holidayIslamicPaidText;
@@ -143,33 +154,59 @@ class LeaveRequestsTableRow extends StatelessWidget {
   }
 
   Widget _buildActionsCell() {
-    if (request.status != RequestStatus.pending) {
-      return const SizedBox.shrink();
+    if (request.status == RequestStatus.pending) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.checkIconGreen.path,
+            onTap: onApprove,
+            width: 20,
+            height: 20,
+            color: AppColors.success,
+            padding: 4.w,
+            isLoading: isApproveLoading,
+          ),
+          Gap(8.w),
+          DigifyAssetButton(
+            assetPath: Assets.icons.closeIcon.path,
+            onTap: onReject,
+            width: 20,
+            height: 20,
+            color: AppColors.error,
+            padding: 4.w,
+            isLoading: isRejectLoading,
+          ),
+        ],
+      );
     }
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        DigifyAssetButton(
-          assetPath: Assets.icons.checkIconGreen.path,
-          onTap: onApprove,
-          width: 20,
-          height: 20,
-          color: AppColors.success,
-          padding: 4.w,
-          isLoading: isApproveLoading,
-        ),
-        Gap(8.w),
-        DigifyAssetButton(
-          assetPath: Assets.icons.closeIcon.path,
-          onTap: onReject,
-          width: 20,
-          height: 20,
-          color: AppColors.error,
-          padding: 4.w,
-          isLoading: isRejectLoading,
-        ),
-      ],
-    );
+    if (request.status == RequestStatus.draft) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.editIconGreen.path,
+            onTap: onUpdate,
+            width: 20,
+            height: 20,
+            color: AppColors.primary,
+            padding: 4.w,
+          ),
+          Gap(8.w),
+          DigifyAssetButton(
+            assetPath: Assets.icons.deleteIconRed.path,
+            onTap: onDelete,
+            width: 20,
+            height: 20,
+            color: AppColors.error,
+            padding: 4.w,
+            isLoading: isDeleteLoading,
+          ),
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }

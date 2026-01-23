@@ -1026,6 +1026,7 @@
   "maternityLeaveEntitlement": "70 يومًا إجمالي (30 قبل الولادة، 40 بعد الولادة)",
   "emergencyLeaveEntitlement": "5 أيام سنويًا للطوارئ",
   "leaveFilterAll": "الكل",
+  "leaveFilterDraft": "مسودة",
   "leaveFilterPending": "قيد الانتظار",
   "leaveFilterApproved": "موافق عليه",
   "leaveFilterRejected": "مرفوض",

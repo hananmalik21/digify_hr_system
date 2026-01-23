@@ -50,6 +50,7 @@ class LeaveRequestsTable extends ConsumerWidget {
                     }
                     final approveLoading = ref.watch(leaveRequestsApproveLoadingProvider);
                     final rejectLoading = ref.watch(leaveRequestsRejectLoadingProvider);
+                    final deleteLoading = ref.watch(leaveRequestsDeleteLoadingProvider);
                     return Column(
                       children: filtered
                           .map(
@@ -59,10 +60,15 @@ class LeaveRequestsTable extends ConsumerWidget {
                               isDark: isDark,
                               isApproveLoading: approveLoading.contains(request.guid),
                               isRejectLoading: rejectLoading.contains(request.guid),
+                              isDeleteLoading: deleteLoading.contains(request.guid),
                               onApprove: () =>
                                   LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
                               onReject: () =>
                                   LeaveRequestsActions.rejectLeaveRequest(context, ref, request, localizations),
+                              onDelete: () =>
+                                  LeaveRequestsActions.deleteLeaveRequest(context, ref, request, localizations),
+                              onUpdate: () =>
+                                  LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
                             ),
                           )
                           .toList(),
@@ -161,6 +167,7 @@ class LeaveRequestsTable extends ConsumerWidget {
     }
 
     final statusMap = {
+      LeaveFilter.draft: RequestStatus.draft,
       LeaveFilter.pending: RequestStatus.pending,
       LeaveFilter.approved: RequestStatus.approved,
       LeaveFilter.rejected: RequestStatus.rejected,

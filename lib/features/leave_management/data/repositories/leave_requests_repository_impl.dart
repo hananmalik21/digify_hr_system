@@ -53,4 +53,26 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
       throw UnknownException('Repository error: Failed to create leave request: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid) async {
+    try {
+      return await remoteDataSource.deleteLeaveRequest(guid);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to delete leave request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+    try {
+      return await remoteDataSource.updateLeaveRequest(guid, state, submit);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to update leave request: ${e.toString()}', originalError: e);
+    }
+  }
 }

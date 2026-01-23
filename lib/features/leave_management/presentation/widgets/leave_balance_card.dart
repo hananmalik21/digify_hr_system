@@ -10,12 +10,7 @@ class LeaveBalanceCard extends StatelessWidget {
   final int notificationCount;
   final VoidCallback? onTap;
 
-  const LeaveBalanceCard({
-    super.key,
-    required this.label,
-    this.notificationCount = 0,
-    this.onTap,
-  });
+  const LeaveBalanceCard({super.key, required this.label, this.notificationCount = 0, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +51,7 @@ class LeaveBalanceCard extends StatelessWidget {
                     child: Center(
                       child: Text(
                         '\$',
-                        style: TextStyle(
-                          fontSize: 32.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 32.sp, fontWeight: FontWeight.w600, color: Colors.white),
                       ),
                     ),
                   ),
@@ -74,10 +65,7 @@ class LeaveBalanceCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFFEFF6FF), // Light blue background
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2.w,
-                          ),
+                          border: Border.all(color: Colors.white, width: 2.w),
                         ),
                         child: Center(
                           child: Text(

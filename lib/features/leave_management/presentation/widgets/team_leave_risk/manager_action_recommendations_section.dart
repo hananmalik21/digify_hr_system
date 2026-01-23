@@ -8,11 +8,7 @@ class ManagerActionRecommendationsSection extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
-  const ManagerActionRecommendationsSection({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-  });
+  const ManagerActionRecommendationsSection({super.key, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -21,33 +17,20 @@ class ManagerActionRecommendationsSection extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
-              ? [
-                  const Color(0xFF1E3A8A),
-                  const Color(0xFF1E293B),
-                ]
-              : [
-                  const Color(0xFFEFF6FF),
-                  const Color(0xFFEEF2FF),
-                ],
+              ? [const Color(0xFF1E3A8A), const Color(0xFF1E293B)]
+              : [const Color(0xFFEFF6FF), const Color(0xFFEEF2FF)],
           begin: AlignmentDirectional.centerStart,
           end: AlignmentDirectional.centerEnd,
         ),
         borderRadius: BorderRadius.circular(11.r),
-        border: Border.all(
-          color: const Color(0xFFBEDBFF),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFBEDBFF), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.lightbulb_outline,
-                size: 17.5.sp,
-                color: isDark ? AppColors.infoTextDark : AppColors.infoText,
-              ),
+              Icon(Icons.lightbulb_outline, size: 17.5.sp, color: isDark ? AppColors.infoTextDark : AppColors.infoText),
               Gap(7.w),
               Text(
                 localizations.managerActionRecommendations,
@@ -100,11 +83,7 @@ class _RecommendationCard extends StatelessWidget {
   final String description;
   final bool isDark;
 
-  const _RecommendationCard({
-    required this.title,
-    required this.description,
-    required this.isDark,
-  });
+  const _RecommendationCard({required this.title, required this.description, required this.isDark});
 
   @override
   Widget build(BuildContext context) {

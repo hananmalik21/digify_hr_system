@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/leave_management/data/repositories/lea
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_requests_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_filter_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_actions_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,6 +64,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     switch (filter) {
       case LeaveFilter.all:
         return null;
+      case LeaveFilter.draft:
+        return 'DRAFT';
       case LeaveFilter.pending:
         return 'SUBMITTED';
       case LeaveFilter.approved:
@@ -187,6 +190,108 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     }
   }
 
+  Future<void> deleteLeaveRequest(String guid) async {
+    try {
+      await _repository.deleteLeaveRequest(guid);
+
+      if (state.data != null) {
+        final updatedRequests = state.data!.requests.where((request) => request.guid != guid).toList();
+        final currentPagination = state.data!.pagination;
+        final updatedPagination = PaginationInfo(
+          currentPage: currentPagination.currentPage,
+          totalPages: currentPagination.totalPages,
+          totalItems: currentPagination.totalItems - 1,
+          pageSize: currentPagination.pageSize,
+          hasNext: currentPagination.hasNext,
+          hasPrevious: currentPagination.hasPrevious,
+        );
+
+        state = state.copyWith(
+          data: PaginatedLeaveRequests(requests: updatedRequests, pagination: updatedPagination),
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+    try {
+      final response = await _repository.updateLeaveRequest(guid, state, submit);
+
+      if (this.state.data != null) {
+        final updatedRequests = this.state.data!.requests.map((request) {
+          if (request.guid == guid) {
+            final data = response['data'] as Map<String, dynamic>?;
+            final leaveRequest = data?['leave_request'] as Map<String, dynamic>?;
+            final contact = data?['contact'] as Map<String, dynamic>?;
+            if (leaveRequest != null) {
+              final reason = contact?['reason_for_leave'] as String? ?? request.reason;
+
+              DateTime parseDateTime(dynamic value) {
+                if (value == null) return DateTime.now();
+                if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
+                return DateTime.now();
+              }
+
+              double parseDouble(dynamic value) {
+                if (value == null) return 0.0;
+                if (value is double) return value;
+                if (value is int) return value.toDouble();
+                if (value is num) return value.toDouble();
+                return 0.0;
+              }
+
+              RequestStatus mapStatus(String? status) {
+                switch (status?.toUpperCase()) {
+                  case 'SUBMITTED':
+                    return RequestStatus.pending;
+                  case 'APPROVED':
+                    return RequestStatus.approved;
+                  case 'REJECTED':
+                    return RequestStatus.rejected;
+                  case 'DRAFT':
+                    return RequestStatus.draft;
+                  case 'WITHDRAWN':
+                  case 'CANCELLED':
+                    return RequestStatus.cancelled;
+                  default:
+                    return RequestStatus.pending;
+                }
+              }
+
+              return TimeOffRequest(
+                id: (leaveRequest['leave_request_id'] as num?)?.toInt() ?? request.id,
+                guid: leaveRequest['leave_request_guid'] as String? ?? request.guid,
+                employeeId: (leaveRequest['employee_id'] as num?)?.toInt() ?? request.employeeId,
+                employeeName: request.employeeName,
+                type: request.type,
+                startDate: parseDateTime(leaveRequest['start_date']),
+                endDate: parseDateTime(leaveRequest['end_date']),
+                totalDays: parseDouble(leaveRequest['total_days']),
+                status: mapStatus(leaveRequest['request_status'] as String?),
+                reason: reason,
+                rejectionReason: request.rejectionReason,
+                approvedBy: request.approvedBy,
+                approvedByName: request.approvedByName,
+                requestedAt: parseDateTime(leaveRequest['submitted_at']),
+                approvedAt: parseDateTime(leaveRequest['approved_at']),
+                rejectedAt: parseDateTime(leaveRequest['rejected_at']),
+              );
+            }
+          }
+          return request;
+        }).toList();
+
+        this.state = this.state.copyWith(
+          data: PaginatedLeaveRequests(requests: updatedRequests, pagination: this.state.data!.pagination),
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   void addLeaveRequestOptimistically(Map<String, dynamic> responseData, String employeeName, TimeOffType leaveType) {
     final data = responseData['data'] as Map<String, dynamic>?;
     if (data == null) return;
@@ -219,6 +324,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
           return RequestStatus.approved;
         case 'REJECTED':
           return RequestStatus.rejected;
+        case 'DRAFT':
+          return RequestStatus.draft;
         case 'WITHDRAWN':
         case 'CANCELLED':
           return RequestStatus.cancelled;
@@ -326,6 +433,7 @@ List<TimeOffRequest> _filterRequests(List<TimeOffRequest> requests, LeaveFilter 
   }
 
   final statusMap = {
+    LeaveFilter.draft: RequestStatus.draft,
     LeaveFilter.pending: RequestStatus.pending,
     LeaveFilter.approved: RequestStatus.approved,
     LeaveFilter.rejected: RequestStatus.rejected,

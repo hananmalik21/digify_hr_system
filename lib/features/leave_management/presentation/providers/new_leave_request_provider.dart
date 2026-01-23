@@ -229,19 +229,20 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     }
   }
 
-  Future<void> saveAsDraft() async {
+  Future<Map<String, dynamic>> saveAsDraft() async {
     if (_repository == null) {
       throw Exception('Repository not provided');
     }
 
     state = state.copyWith(isSavingDraft: true);
     try {
-      await _repository.createLeaveRequest(state, false);
+      final response = await _repository.createLeaveRequest(state, false);
+      state = state.copyWith(isSavingDraft: false);
+      return response;
     } catch (e) {
       state = state.copyWith(isSavingDraft: false);
       rethrow;
     }
-    state = state.copyWith(isSavingDraft: false);
   }
 }
 

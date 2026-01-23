@@ -70,7 +70,7 @@ class TimeOffRequestOverview {
 enum TimeOffType { annualLeave, sickLeave, personalLeave, emergencyLeave, unpaidLeave, other }
 
 /// Request status enum
-enum RequestStatus { pending, approved, rejected, cancelled }
+enum RequestStatus { pending, approved, rejected, cancelled, draft }
 
 /// Paginated time-off request response
 class PaginatedTimeOffRequests {
