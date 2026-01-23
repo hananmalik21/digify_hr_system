@@ -1,7 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/contact_notes_step.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/documents_review/documents_review_step.dart';
@@ -53,21 +55,57 @@ class NewLeaveRequestDialog extends ConsumerWidget {
           },
         ),
         Gap(8.w),
+        AppButton.outline(
+          label: localizations.saveAsDraft,
+          isLoading: state.isSavingDraft,
+          onPressed: state.isSavingDraft || state.isSubmitting
+              ? null
+              : () async {
+                  try {
+                    await notifier.saveAsDraft();
+                    if (context.mounted) {
+                      ToastService.success(context, localizations.draftSaved);
+                      notifier.reset();
+                      Navigator.of(context).pop();
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                      ToastService.error(context, errorMessage);
+                    }
+                  }
+                },
+        ),
+        Gap(8.w),
         if (state.currentStep != LeaveRequestStep.documentsReview)
           AppButton(
             label: localizations.next,
-            onPressed: state.canProceedToNextStep() ? () => notifier.nextStep() : null,
+            onPressed: (state.isSavingDraft || !state.canProceedToNextStep()) ? null : () => notifier.nextStep(),
             type: AppButtonType.primary,
           )
         else
           AppButton(
             label: localizations.submitRequest,
-            onPressed: state.isSubmitting
+            isLoading: state.isSubmitting,
+            onPressed: (state.isSubmitting || state.isSavingDraft)
                 ? null
                 : () async {
-                    await notifier.submit();
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
+                    try {
+                      final response = await notifier.submit();
+                      if (context.mounted) {
+                        final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
+                        final employeeName = state.selectedEmployee?.fullName ?? '';
+                        final leaveType = state.leaveType!;
+                        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
+                        ToastService.success(context, localizations.submitRequest);
+                        notifier.reset();
+                        Navigator.of(context).pop();
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                        ToastService.error(context, errorMessage);
+                      }
                     }
                   },
             type: AppButtonType.primary,

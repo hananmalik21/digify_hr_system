@@ -60,10 +60,14 @@ class EmployeeDto {
       dateOfBirth: json['date_of_birth'] != null ? DateTime.parse(json['date_of_birth'] as String) : null,
       status: json['status'] as String? ?? '',
       isActive: json['is_active'] as String? ?? 'N',
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: json['creation_date'] != null
+          ? DateTime.parse(json['creation_date'] as String)
+          : (json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now()),
       createdBy: json['created_by'] as String?,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
-      updatedBy: json['updated_by'] as String?,
+      updatedAt: json['last_update_date'] != null
+          ? (DateTime.tryParse(json['last_update_date'] as String))
+          : (json['updated_at'] != null ? DateTime.tryParse(json['updated_at'] as String) : null),
+      updatedBy: json['last_updated_by'] as String? ?? json['updated_by'] as String?,
     );
   }
 
