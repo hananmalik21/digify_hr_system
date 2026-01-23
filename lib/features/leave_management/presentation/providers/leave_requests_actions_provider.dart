@@ -1,7 +1,9 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +125,26 @@ class LeaveRequestsActions {
     TimeOffRequest request,
     AppLocalizations localizations,
   ) async {
-    NewLeaveRequestDialog.show(context);
+    final notifier = ref.read(newLeaveRequestProvider.notifier);
+    final repository = ref.read(leaveRequestsRepositoryProvider);
+
+    notifier.setLoadingDraft(true);
+
+    if (context.mounted) {
+      NewLeaveRequestDialog.show(context);
+    }
+
+    try {
+      final tenantId = ref.read(leaveManagementSelectedEnterpriseProvider);
+      final response = await repository.getLeaveRequestById(request.guid, tenantId: tenantId);
+      await notifier.loadDraftData(response);
+      notifier.setLoadingDraft(false);
+    } catch (e) {
+      notifier.setLoadingDraft(false);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
+      }
+    }
   }
 }

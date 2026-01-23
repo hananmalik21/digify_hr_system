@@ -2,10 +2,12 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/leave_type_search_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_time_options_config.dart';
-import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,7 @@ class LeaveDetailsStep extends ConsumerWidget {
         Gap(24.h),
         _buildEmployeeField(context, localizations, isDark, state, notifier),
         Gap(24.h),
-        _buildLeaveTypeField(context, localizations, isDark, state, notifier),
+        _buildLeaveTypeField(context, localizations, isDark, state, notifier, ref),
         Gap(24.h),
         _buildDateFields(context, localizations, isDark, state, notifier),
       ],
@@ -107,31 +109,40 @@ class LeaveDetailsStep extends ConsumerWidget {
     bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
+    WidgetRef ref,
   ) {
-    final leaveTypes = [
-      TimeOffType.annualLeave,
-      TimeOffType.sickLeave,
-      TimeOffType.emergencyLeave,
-      TimeOffType.personalLeave,
-    ];
+    final leaveTypesState = ref.watch(leaveTypesNotifierProvider);
+    ApiLeaveType? selectedApiLeaveType;
+
+    if (state.leaveTypeId != null && leaveTypesState.leaveTypes.isNotEmpty) {
+      try {
+        selectedApiLeaveType = leaveTypesState.leaveTypes.firstWhere((lt) => lt.id == state.leaveTypeId);
+      } catch (_) {
+        final leaveCode = _getLeaveCodeFromType(state.leaveType);
+        if (leaveCode.isNotEmpty) {
+          try {
+            selectedApiLeaveType = leaveTypesState.leaveTypes.firstWhere(
+              (lt) => lt.code.toUpperCase() == leaveCode.toUpperCase(),
+            );
+          } catch (_) {
+            selectedApiLeaveType = null;
+          }
+        }
+      }
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DigifySelectFieldWithLabel<TimeOffType>(
+        LeaveTypeSearchField(
           label: localizations.leaveTypeRequired,
-          hint: localizations.leaveTypeRequired,
-          value: state.leaveType,
-          items: leaveTypes,
-          itemLabelBuilder: (type) => _getLeaveTypeLabel(type, localizations),
-          onChanged: (type) {
-            if (type != null) {
-              notifier.setLeaveType(type);
-            }
-          },
           isRequired: true,
+          selectedLeaveType: selectedApiLeaveType,
+          onLeaveTypeSelected: (leaveType) {
+            notifier.setLeaveTypeFromApi(leaveType.id, leaveType.code);
+          },
         ),
-        if (state.leaveType == TimeOffType.annualLeave) ...[
+        if (state.leaveType == TimeOffType.annualLeave || (selectedApiLeaveType?.code.toUpperCase() == 'ANNUAL')) ...[
           Gap(8.h),
           Container(
             padding: EdgeInsets.all(13.w),
@@ -162,7 +173,9 @@ class LeaveDetailsStep extends ConsumerWidget {
                       ),
                       Gap(4.h),
                       Text(
-                        localizations.maximum30DaysPerYear,
+                        selectedApiLeaveType?.maxDaysPerYear != null
+                            ? 'Maximum ${selectedApiLeaveType!.maxDaysPerYear} days per year'
+                            : localizations.maximum30DaysPerYear,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: AppColors.infoTextSecondary,
                           fontSize: 15.3.sp,
@@ -177,6 +190,24 @@ class LeaveDetailsStep extends ConsumerWidget {
         ],
       ],
     );
+  }
+
+  String _getLeaveCodeFromType(TimeOffType? type) {
+    if (type == null) return '';
+    switch (type) {
+      case TimeOffType.annualLeave:
+        return 'ANNUAL';
+      case TimeOffType.sickLeave:
+        return 'SICK';
+      case TimeOffType.personalLeave:
+        return 'PERSONAL';
+      case TimeOffType.emergencyLeave:
+        return 'EMERGENCY';
+      case TimeOffType.unpaidLeave:
+        return 'UNPAID';
+      case TimeOffType.other:
+        return 'OTHER';
+    }
   }
 
   Widget _buildDateFields(
@@ -245,9 +276,5 @@ class LeaveDetailsStep extends ConsumerWidget {
         ),
       ],
     );
-  }
-
-  String _getLeaveTypeLabel(TimeOffType type, AppLocalizations localizations) {
-    return LeaveTypeMapper.getShortLabel(type);
   }
 }

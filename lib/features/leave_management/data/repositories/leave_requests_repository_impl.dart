@@ -10,9 +10,19 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   LeaveRequestsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<PaginatedLeaveRequests> getLeaveRequests({int page = 1, int pageSize = 10, String? status}) async {
+  Future<PaginatedLeaveRequests> getLeaveRequests({
+    int page = 1,
+    int pageSize = 10,
+    String? status,
+    int? tenantId,
+  }) async {
     try {
-      final dto = await remoteDataSource.getLeaveRequests(page: page, pageSize: pageSize, status: status);
+      final dto = await remoteDataSource.getLeaveRequests(
+        page: page,
+        pageSize: pageSize,
+        status: status,
+        tenantId: tenantId,
+      );
       return dto.toDomain();
     } on AppException {
       rethrow;
@@ -22,9 +32,20 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> approveLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> getLeaveRequestById(String guid, {int? tenantId}) async {
     try {
-      return await remoteDataSource.approveLeaveRequest(guid);
+      return await remoteDataSource.getLeaveRequestById(guid, tenantId: tenantId);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to fetch leave request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> approveLeaveRequest(String guid, {int? tenantId}) async {
+    try {
+      return await remoteDataSource.approveLeaveRequest(guid, tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -33,9 +54,9 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> rejectLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> rejectLeaveRequest(String guid, {int? tenantId}) async {
     try {
-      return await remoteDataSource.rejectLeaveRequest(guid);
+      return await remoteDataSource.rejectLeaveRequest(guid, tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -44,9 +65,9 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit) async {
+  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit, {int? tenantId}) async {
     try {
-      return await remoteDataSource.createLeaveRequest(state, submit);
+      return await remoteDataSource.createLeaveRequest(state, submit, tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -55,9 +76,9 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> deleteLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid, {int? tenantId}) async {
     try {
-      return await remoteDataSource.deleteLeaveRequest(guid);
+      return await remoteDataSource.deleteLeaveRequest(guid, tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -66,9 +87,14 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+  Future<Map<String, dynamic>> updateLeaveRequest(
+    String guid,
+    NewLeaveRequestState state,
+    bool submit, {
+    int? tenantId,
+  }) async {
     try {
-      return await remoteDataSource.updateLeaveRequest(guid, state, submit);
+      return await remoteDataSource.updateLeaveRequest(guid, state, submit, tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {

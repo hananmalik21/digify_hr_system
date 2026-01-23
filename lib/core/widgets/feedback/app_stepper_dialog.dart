@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,6 +56,9 @@ class AppStepperDialog extends StatelessWidget {
   /// Whether the dialog can be dismissed by tapping outside
   final bool barrierDismissible;
 
+  /// Whether to show a loading overlay over the dialog content
+  final bool isLoading;
+
   const AppStepperDialog({
     super.key,
     required this.title,
@@ -69,6 +73,7 @@ class AppStepperDialog extends StatelessWidget {
     this.maxHeight,
     this.contentPadding,
     this.barrierDismissible = false,
+    this.isLoading = false,
   });
 
   /// Static method to show the dialog
@@ -86,6 +91,7 @@ class AppStepperDialog extends StatelessWidget {
     double? maxHeight,
     EdgeInsets? contentPadding,
     bool barrierDismissible = false,
+    bool isLoading = false,
   }) {
     return showDialog<T>(
       context: context,
@@ -103,6 +109,7 @@ class AppStepperDialog extends StatelessWidget {
         maxHeight: maxHeight,
         contentPadding: contentPadding,
         barrierDismissible: barrierDismissible,
+        isLoading: isLoading,
       ),
     );
   }
@@ -126,17 +133,22 @@ class AppStepperDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: AppShadows.primaryShadow,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Stack(
             children: [
-              _buildHeader(context, isDark),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: contentPadding ?? EdgeInsets.symmetric(horizontal: 32.w, vertical: 32.h),
-                  child: content,
-                ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildHeader(context, isDark),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: contentPadding ?? EdgeInsets.symmetric(horizontal: 32.w, vertical: 32.h),
+                      child: content,
+                    ),
+                  ),
+                  if (footerActions != null || footerLeftActions != null) _buildFooter(context, isDark),
+                ],
               ),
-              if (footerActions != null || footerLeftActions != null) _buildFooter(context, isDark),
+              if (isLoading) _buildLoadingOverlay(),
             ],
           ),
         ),
@@ -299,6 +311,18 @@ class AppStepperDialog extends StatelessWidget {
           if (footerLeftActions != null) Row(children: footerLeftActions!),
           if (footerActions != null) Row(children: footerActions!),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingOverlay() {
+    return Positioned.fill(
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.blackTextColor.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: const Center(child: AppLoadingIndicator(type: LoadingType.circle)),
       ),
     );
   }

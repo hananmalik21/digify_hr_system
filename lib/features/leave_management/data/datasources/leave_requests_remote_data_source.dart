@@ -9,28 +9,42 @@ import 'package:digify_hr_system/features/leave_management/presentation/provider
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 abstract class LeaveRequestsRemoteDataSource {
-  Future<PaginatedLeaveRequestsDto> getLeaveRequests({int page = 1, int pageSize = 10, String? status});
+  Future<PaginatedLeaveRequestsDto> getLeaveRequests({int page = 1, int pageSize = 10, String? status, int? tenantId});
 
-  Future<Map<String, dynamic>> approveLeaveRequest(String guid);
+  Future<Map<String, dynamic>> getLeaveRequestById(String guid, {int? tenantId});
 
-  Future<Map<String, dynamic>> rejectLeaveRequest(String guid);
+  Future<Map<String, dynamic>> approveLeaveRequest(String guid, {int? tenantId});
 
-  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit);
+  Future<Map<String, dynamic>> rejectLeaveRequest(String guid, {int? tenantId});
 
-  Future<Map<String, dynamic>> deleteLeaveRequest(String guid);
+  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit, {int? tenantId});
 
-  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit);
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid, {int? tenantId});
+
+  Future<Map<String, dynamic>> updateLeaveRequest(
+    String guid,
+    NewLeaveRequestState state,
+    bool submit, {
+    int? tenantId,
+  });
 }
 
 class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource {
   final ApiClient apiClient;
 
-  static const Map<String, String> _absHeaders = {'x-tenant-id': '1001', 'x-user-id': 'admin'};
-
   LeaveRequestsRemoteDataSourceImpl({required this.apiClient});
 
+  Map<String, String> _buildHeaders({int? tenantId}) {
+    return {if (tenantId != null) 'x-tenant-id': tenantId.toString(), 'x-user-id': 'admin'};
+  }
+
   @override
-  Future<PaginatedLeaveRequestsDto> getLeaveRequests({int page = 1, int pageSize = 10, String? status}) async {
+  Future<PaginatedLeaveRequestsDto> getLeaveRequests({
+    int page = 1,
+    int pageSize = 10,
+    String? status,
+    int? tenantId,
+  }) async {
     try {
       final queryParameters = <String, String>{'page': page.toString(), 'page_size': pageSize.toString()};
 
@@ -38,7 +52,11 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
         queryParameters['status'] = status;
       }
 
-      final response = await apiClient.get(ApiEndpoints.absLeaveRequests, queryParameters: queryParameters);
+      final response = await apiClient.get(
+        ApiEndpoints.absLeaveRequests,
+        queryParameters: queryParameters,
+        headers: _buildHeaders(tenantId: tenantId),
+      );
 
       return PaginatedLeaveRequestsDto.fromJson(response);
     } on AppException {
@@ -49,9 +67,34 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> approveLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> getLeaveRequestById(String guid, {int? tenantId}) async {
     try {
-      final response = await apiClient.post(ApiEndpoints.absLeaveRequestApprove(guid), headers: _absHeaders);
+      final response = await apiClient.get(
+        ApiEndpoints.absLeaveRequestById(guid),
+        headers: _buildHeaders(tenantId: tenantId),
+      );
+
+      final success = response['success'] as bool?;
+      if (success == false) {
+        final message = response['message'] as String? ?? 'Failed to fetch leave request';
+        throw ServerException(message, statusCode: 400);
+      }
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to fetch leave request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> approveLeaveRequest(String guid, {int? tenantId}) async {
+    try {
+      final response = await apiClient.post(
+        ApiEndpoints.absLeaveRequestApprove(guid),
+        headers: _buildHeaders(tenantId: tenantId),
+      );
 
       return response;
     } on AppException {
@@ -62,9 +105,12 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> rejectLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> rejectLeaveRequest(String guid, {int? tenantId}) async {
     try {
-      final response = await apiClient.post(ApiEndpoints.absLeaveRequestReject(guid), headers: _absHeaders);
+      final response = await apiClient.post(
+        ApiEndpoints.absLeaveRequestReject(guid),
+        headers: _buildHeaders(tenantId: tenantId),
+      );
 
       return response;
     } on AppException {
@@ -75,7 +121,7 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit) async {
+  Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit, {int? tenantId}) async {
     try {
       if (state.selectedEmployee == null ||
           state.leaveType == null ||
@@ -95,7 +141,9 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final formData = FormData();
 
       formData.fields.add(MapEntry('employee_guid', state.selectedEmployee!.guid));
-      formData.fields.add(MapEntry('leave_type_id', LeaveTypeMapper.getLeaveTypeId(state.leaveType!).toString()));
+      formData.fields.add(
+        MapEntry('leave_type_id', (state.leaveTypeId ?? LeaveTypeMapper.getLeaveTypeId(state.leaveType!)).toString()),
+      );
       formData.fields.add(MapEntry('start_date', _formatDate(state.startDate!)));
       formData.fields.add(MapEntry('end_date', _formatDate(state.endDate!)));
 
@@ -103,6 +151,10 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final endPortion = _mapTimeToPortion(state.endTime);
       formData.fields.add(MapEntry('start_portion', startPortion));
       formData.fields.add(MapEntry('end_portion', endPortion));
+
+      if (state.delegatedToEmployeeId != null) {
+        formData.fields.add(MapEntry('delegated_employee_id', state.delegatedToEmployeeId!.toString()));
+      }
 
       if (state.reason != null && state.reason!.isNotEmpty) {
         formData.fields.add(MapEntry('reason_for_leave', state.reason!));
@@ -145,7 +197,7 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final response = await apiClient.postMultipart(
         ApiEndpoints.absLeaveRequests,
         formData: formData,
-        headers: _absHeaders,
+        headers: _buildHeaders(tenantId: tenantId),
       );
 
       return response;
@@ -183,9 +235,12 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> deleteLeaveRequest(String guid) async {
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid, {int? tenantId}) async {
     try {
-      final response = await apiClient.delete(ApiEndpoints.absLeaveRequestDelete(guid), headers: _absHeaders);
+      final response = await apiClient.delete(
+        ApiEndpoints.absLeaveRequestDelete(guid),
+        headers: _buildHeaders(tenantId: tenantId),
+      );
 
       final success = response['success'] as bool?;
       if (success == false) {
@@ -202,7 +257,12 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+  Future<Map<String, dynamic>> updateLeaveRequest(
+    String guid,
+    NewLeaveRequestState state,
+    bool submit, {
+    int? tenantId,
+  }) async {
     try {
       if (state.selectedEmployee == null ||
           state.leaveType == null ||
@@ -222,7 +282,9 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final formData = FormData();
 
       formData.fields.add(MapEntry('employee_guid', state.selectedEmployee!.guid));
-      formData.fields.add(MapEntry('leave_type_id', LeaveTypeMapper.getLeaveTypeId(state.leaveType!).toString()));
+      formData.fields.add(
+        MapEntry('leave_type_id', (state.leaveTypeId ?? LeaveTypeMapper.getLeaveTypeId(state.leaveType!)).toString()),
+      );
       formData.fields.add(MapEntry('start_date', _formatDate(state.startDate!)));
       formData.fields.add(MapEntry('end_date', _formatDate(state.endDate!)));
 
@@ -230,6 +292,10 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final endPortion = _mapTimeToPortion(state.endTime);
       formData.fields.add(MapEntry('start_portion', startPortion));
       formData.fields.add(MapEntry('end_portion', endPortion));
+
+      if (state.delegatedToEmployeeId != null) {
+        formData.fields.add(MapEntry('delegated_employee_id', state.delegatedToEmployeeId!.toString()));
+      }
 
       if (state.reason != null && state.reason!.isNotEmpty) {
         formData.fields.add(MapEntry('reason_for_leave', state.reason!));
@@ -272,7 +338,7 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       final response = await apiClient.putMultipart(
         ApiEndpoints.absLeaveRequestUpdate(guid),
         formData: formData,
-        headers: _absHeaders,
+        headers: _buildHeaders(tenantId: tenantId),
       );
 
       return response;

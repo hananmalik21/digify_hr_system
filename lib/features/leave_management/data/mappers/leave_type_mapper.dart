@@ -36,4 +36,22 @@ class LeaveTypeMapper {
         return 6;
     }
   }
+
+  static TimeOffType? getLeaveTypeFromCode(String? code) {
+    if (code == null) return null;
+    switch (code.toUpperCase()) {
+      case 'ANNUAL':
+        return TimeOffType.annualLeave;
+      case 'SICK':
+        return TimeOffType.sickLeave;
+      case 'PERSONAL':
+        return TimeOffType.personalLeave;
+      case 'EMERGENCY':
+        return TimeOffType.emergencyLeave;
+      case 'UNPAID':
+        return TimeOffType.unpaidLeave;
+      default:
+        return TimeOffType.other;
+    }
+  }
 }

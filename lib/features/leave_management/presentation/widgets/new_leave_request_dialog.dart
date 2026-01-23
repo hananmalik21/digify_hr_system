@@ -63,20 +63,30 @@ class NewLeaveRequestDialog extends ConsumerWidget {
               : () async {
                   try {
                     final response = await notifier.saveAsDraft();
-                    if (context.mounted) {
-                      final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
-                      final employeeName = state.selectedEmployee?.fullName ?? '';
-                      final leaveType = state.leaveType!;
+                    if (!context.mounted) return;
+                    final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
+                    final currentState = ref.read(newLeaveRequestProvider);
+                    if (currentState.editingRequestGuid != null) {
+                      await leaveRequestsNotifier.updateLeaveRequest(
+                        currentState.editingRequestGuid!,
+                        currentState,
+                        false,
+                        response,
+                      );
+                    } else {
+                      final employeeName = currentState.selectedEmployee?.fullName ?? '';
+                      final leaveType = currentState.leaveType!;
                       leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-                      ToastService.success(context, localizations.draftSaved);
-                      notifier.reset();
-                      Navigator.of(context).pop();
                     }
+                    if (!context.mounted) return;
+                    ToastService.success(context, localizations.draftSaved);
+                    notifier.reset();
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop();
                   } catch (e) {
-                    if (context.mounted) {
-                      final errorMessage = e.toString().replaceFirst('Exception: ', '');
-                      ToastService.error(context, errorMessage);
-                    }
+                    if (!context.mounted) return;
+                    final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                    ToastService.error(context, errorMessage);
                   }
                 },
         ),
@@ -96,20 +106,30 @@ class NewLeaveRequestDialog extends ConsumerWidget {
                 : () async {
                     try {
                       final response = await notifier.submit();
-                      if (context.mounted) {
-                        final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
-                        final employeeName = state.selectedEmployee?.fullName ?? '';
-                        final leaveType = state.leaveType!;
+                      if (!context.mounted) return;
+                      final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
+                      final currentState = ref.read(newLeaveRequestProvider);
+                      if (currentState.editingRequestGuid != null) {
+                        await leaveRequestsNotifier.updateLeaveRequest(
+                          currentState.editingRequestGuid!,
+                          currentState,
+                          true,
+                          response,
+                        );
+                      } else {
+                        final employeeName = currentState.selectedEmployee?.fullName ?? '';
+                        final leaveType = currentState.leaveType!;
                         leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-                        ToastService.success(context, localizations.submitRequest);
-                        notifier.reset();
-                        Navigator.of(context).pop();
                       }
+                      if (!context.mounted) return;
+                      ToastService.success(context, localizations.submitRequest);
+                      notifier.reset();
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();
                     } catch (e) {
-                      if (context.mounted) {
-                        final errorMessage = e.toString().replaceFirst('Exception: ', '');
-                        ToastService.error(context, errorMessage);
-                      }
+                      if (!context.mounted) return;
+                      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+                      ToastService.error(context, errorMessage);
                     }
                   },
             type: AppButtonType.primary,
@@ -117,6 +137,7 @@ class NewLeaveRequestDialog extends ConsumerWidget {
             icon: Icons.check,
           ),
       ],
+      isLoading: state.isLoadingDraft,
     );
   }
 

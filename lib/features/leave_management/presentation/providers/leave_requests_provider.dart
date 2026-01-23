@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/leave_management/data/dto/paginated_le
 import 'package:digify_hr_system/features/leave_management/data/repositories/leave_requests_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_requests_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_filter_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_actions_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
@@ -57,6 +58,11 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
         _loadRequests();
       }
     });
+    _ref.listen(leaveManagementSelectedEnterpriseProvider, (previous, next) {
+      if (previous != next) {
+        _loadRequests();
+      }
+    });
     _loadRequests();
   }
 
@@ -78,6 +84,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
   Future<void> _loadRequests() async {
     final pagination = _ref.read(leaveRequestsPaginationProvider);
     final filter = _ref.read(leaveFilterProvider);
+    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
     final status = _mapFilterToStatus(filter);
 
     state = state.copyWith(isLoading: true, error: null);
@@ -87,6 +94,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
         page: pagination.page,
         pageSize: pagination.pageSize,
         status: status,
+        tenantId: tenantId,
       );
       state = state.copyWith(data: data, isLoading: false);
     } on AppException catch (e) {
@@ -107,7 +115,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     };
 
     try {
-      await _repository.approveLeaveRequest(guid);
+      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      await _repository.approveLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
         final updatedRequests = state.data!.requests.map((request) {
@@ -152,7 +161,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     };
 
     try {
-      await _repository.rejectLeaveRequest(guid);
+      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      await _repository.rejectLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
         final updatedRequests = state.data!.requests.map((request) {
@@ -192,7 +202,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
 
   Future<void> deleteLeaveRequest(String guid) async {
     try {
-      await _repository.deleteLeaveRequest(guid);
+      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      await _repository.deleteLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
         final updatedRequests = state.data!.requests.where((request) => request.guid != guid).toList();
@@ -215,77 +226,123 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     }
   }
 
-  Future<void> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+  Future<void> updateLeaveRequest(
+    String guid,
+    NewLeaveRequestState state,
+    bool submit, [
+    Map<String, dynamic>? responseData,
+  ]) async {
     try {
-      final response = await _repository.updateLeaveRequest(guid, state, submit);
+      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final response = responseData ?? await _repository.updateLeaveRequest(guid, state, submit, tenantId: tenantId);
 
       if (this.state.data != null) {
-        final updatedRequests = this.state.data!.requests.map((request) {
-          if (request.guid == guid) {
-            final data = response['data'] as Map<String, dynamic>?;
-            final leaveRequest = data?['leave_request'] as Map<String, dynamic>?;
-            final contact = data?['contact'] as Map<String, dynamic>?;
-            if (leaveRequest != null) {
-              final reason = contact?['reason_for_leave'] as String? ?? request.reason;
+        final data = response['data'] as List<dynamic>?;
+        if (data != null && data.isNotEmpty) {
+          final item = data[0] as Map<String, dynamic>;
+          final leaveDetails = item['leave_details'] as Map<String, dynamic>?;
+          final leaveContactInfo = item['leave_contact_info'] as Map<String, dynamic>?;
 
-              DateTime parseDateTime(dynamic value) {
-                if (value == null) return DateTime.now();
-                if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
-                return DateTime.now();
-              }
+          if (leaveDetails != null) {
+            final updatedGuid = leaveDetails['leave_request_guid'] as String? ?? guid;
+            final updatedRequests = this.state.data!.requests.map((request) {
+              if (request.guid == updatedGuid) {
+                final employeeInfo = leaveDetails['employee_info'] as Map<String, dynamic>?;
+                final leaveTypeInfo = leaveDetails['leave_type_info'] as Map<String, dynamic>?;
 
-              double parseDouble(dynamic value) {
-                if (value == null) return 0.0;
-                if (value is double) return value;
-                if (value is int) return value.toDouble();
-                if (value is num) return value.toDouble();
-                return 0.0;
-              }
-
-              RequestStatus mapStatus(String? status) {
-                switch (status?.toUpperCase()) {
-                  case 'SUBMITTED':
-                    return RequestStatus.pending;
-                  case 'APPROVED':
-                    return RequestStatus.approved;
-                  case 'REJECTED':
-                    return RequestStatus.rejected;
-                  case 'DRAFT':
-                    return RequestStatus.draft;
-                  case 'WITHDRAWN':
-                  case 'CANCELLED':
-                    return RequestStatus.cancelled;
-                  default:
-                    return RequestStatus.pending;
+                String employeeName = request.employeeName;
+                if (employeeInfo != null) {
+                  final firstName = employeeInfo['first_name'] as String? ?? '';
+                  final middleName = employeeInfo['middle_name'] as String?;
+                  final lastName = employeeInfo['last_name'] as String? ?? '';
+                  employeeName = '$firstName ${middleName ?? ''} $lastName'.trim();
                 }
+
+                TimeOffType leaveType = request.type;
+                if (leaveTypeInfo != null) {
+                  final leaveCode = leaveTypeInfo['leave_code'] as String?;
+                  if (leaveCode != null) {
+                    switch (leaveCode.toUpperCase()) {
+                      case 'ANNUAL':
+                        leaveType = TimeOffType.annualLeave;
+                        break;
+                      case 'SICK':
+                        leaveType = TimeOffType.sickLeave;
+                        break;
+                      case 'PERSONAL':
+                        leaveType = TimeOffType.personalLeave;
+                        break;
+                      case 'EMERGENCY':
+                        leaveType = TimeOffType.emergencyLeave;
+                        break;
+                      case 'UNPAID':
+                        leaveType = TimeOffType.unpaidLeave;
+                        break;
+                      default:
+                        leaveType = TimeOffType.other;
+                    }
+                  }
+                }
+
+                DateTime parseDateTime(dynamic value) {
+                  if (value == null) return DateTime.now();
+                  if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
+                  return DateTime.now();
+                }
+
+                double parseDouble(dynamic value) {
+                  if (value == null) return 0.0;
+                  if (value is double) return value;
+                  if (value is int) return value.toDouble();
+                  if (value is num) return value.toDouble();
+                  return 0.0;
+                }
+
+                RequestStatus mapStatus(String? status) {
+                  switch (status?.toUpperCase()) {
+                    case 'SUBMITTED':
+                      return RequestStatus.pending;
+                    case 'APPROVED':
+                      return RequestStatus.approved;
+                    case 'REJECTED':
+                      return RequestStatus.rejected;
+                    case 'DRAFT':
+                      return RequestStatus.draft;
+                    case 'WITHDRAWN':
+                    case 'CANCELLED':
+                      return RequestStatus.cancelled;
+                    default:
+                      return RequestStatus.pending;
+                  }
+                }
+
+                return TimeOffRequest(
+                  id: (leaveDetails['leave_request_id'] as num?)?.toInt() ?? request.id,
+                  guid: updatedGuid,
+                  employeeId: (leaveDetails['employee_id'] as num?)?.toInt() ?? request.employeeId,
+                  employeeName: employeeName,
+                  type: leaveType,
+                  startDate: parseDateTime(leaveDetails['start_date']),
+                  endDate: parseDateTime(leaveDetails['end_date']),
+                  totalDays: parseDouble(leaveDetails['total_days']),
+                  status: mapStatus(leaveDetails['request_status'] as String?),
+                  reason: leaveContactInfo?['reason_for_leave'] as String? ?? request.reason,
+                  rejectionReason: request.rejectionReason,
+                  approvedBy: request.approvedBy,
+                  approvedByName: request.approvedByName,
+                  requestedAt: parseDateTime(leaveDetails['submitted_at']),
+                  approvedAt: parseDateTime(leaveDetails['approved_at']),
+                  rejectedAt: parseDateTime(leaveDetails['rejected_at']),
+                );
               }
+              return request;
+            }).toList();
 
-              return TimeOffRequest(
-                id: (leaveRequest['leave_request_id'] as num?)?.toInt() ?? request.id,
-                guid: leaveRequest['leave_request_guid'] as String? ?? request.guid,
-                employeeId: (leaveRequest['employee_id'] as num?)?.toInt() ?? request.employeeId,
-                employeeName: request.employeeName,
-                type: request.type,
-                startDate: parseDateTime(leaveRequest['start_date']),
-                endDate: parseDateTime(leaveRequest['end_date']),
-                totalDays: parseDouble(leaveRequest['total_days']),
-                status: mapStatus(leaveRequest['request_status'] as String?),
-                reason: reason,
-                rejectionReason: request.rejectionReason,
-                approvedBy: request.approvedBy,
-                approvedByName: request.approvedByName,
-                requestedAt: parseDateTime(leaveRequest['submitted_at']),
-                approvedAt: parseDateTime(leaveRequest['approved_at']),
-                rejectedAt: parseDateTime(leaveRequest['rejected_at']),
-              );
-            }
+            this.state = this.state.copyWith(
+              data: PaginatedLeaveRequests(requests: updatedRequests, pagination: this.state.data!.pagination),
+            );
           }
-          return request;
-        }).toList();
-
-        this.state = this.state.copyWith(
-          data: PaginatedLeaveRequests(requests: updatedRequests, pagination: this.state.data!.pagination),
-        );
+        }
       }
     } catch (e) {
       rethrow;

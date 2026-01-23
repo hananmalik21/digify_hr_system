@@ -2,7 +2,9 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_type.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_configuration_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/advanced_rules_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/carry_forward_rules_section.dart';
@@ -34,6 +36,7 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
     final isDark = context.isDark;
     final isMobile = context.isMobile;
     final leaveTypesAsync = ref.watch(leaveTypesProvider);
+    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -45,6 +48,15 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
           DigifyTabHeader(
             title: 'Leave Policy Configuration',
             description: 'Configure comprehensive leave policies with eligibility criteria and advanced rules.',
+          ),
+          EnterpriseSelectorWidget(
+            selectedEnterpriseId: selectedEnterpriseId,
+            onEnterpriseChanged: (enterpriseId) {
+              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+            },
+            subtitle: selectedEnterpriseId != null
+                ? 'Viewing data for selected enterprise'
+                : 'Select an enterprise to view data',
           ),
           PolicyConfigurationStatCards(isDark: isDark),
           leaveTypesAsync.when(
