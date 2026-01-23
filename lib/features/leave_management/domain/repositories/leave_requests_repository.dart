@@ -1,6 +1,9 @@
-import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
+import 'package:digify_hr_system/features/leave_management/data/dto/paginated_leave_requests_dto.dart';
 
-/// Repository interface for leave requests operations
 abstract class LeaveRequestsRepository {
-  Future<List<TimeOffRequest>> getLeaveRequests();
+  Future<PaginatedLeaveRequests> getLeaveRequests({int page = 1, int pageSize = 10});
+
+  Future<Map<String, dynamic>> approveLeaveRequest(String guid);
+
+  Future<Map<String, dynamic>> rejectLeaveRequest(String guid);
 }

@@ -2,9 +2,11 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/string_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_requests_table_config.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -14,6 +16,8 @@ class LeaveRequestsTableRow extends StatelessWidget {
   final TimeOffRequest request;
   final AppLocalizations localizations;
   final bool isDark;
+  final bool isApproveLoading;
+  final bool isRejectLoading;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
@@ -22,6 +26,8 @@ class LeaveRequestsTableRow extends StatelessWidget {
     required this.request,
     required this.localizations,
     required this.isDark,
+    this.isApproveLoading = false,
+    this.isRejectLoading = false,
     this.onApprove,
     this.onReject,
   });
@@ -144,22 +150,24 @@ class LeaveRequestsTableRow extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        InkWell(
+        DigifyAssetButton(
+          assetPath: Assets.icons.checkIconGreen.path,
           onTap: onApprove,
-          borderRadius: BorderRadius.circular(4.r),
-          child: Container(
-            padding: EdgeInsets.all(4.w),
-            child: Icon(Icons.check, size: 20.sp, color: AppColors.success),
-          ),
+          width: 20,
+          height: 20,
+          color: AppColors.success,
+          padding: 4.w,
+          isLoading: isApproveLoading,
         ),
         Gap(8.w),
-        InkWell(
+        DigifyAssetButton(
+          assetPath: Assets.icons.closeIcon.path,
           onTap: onReject,
-          borderRadius: BorderRadius.circular(4.r),
-          child: Container(
-            padding: EdgeInsets.all(4.w),
-            child: Icon(Icons.close, size: 20.sp, color: AppColors.error),
-          ),
+          width: 20,
+          height: 20,
+          color: AppColors.error,
+          padding: 4.w,
+          isLoading: isRejectLoading,
         ),
       ],
     );

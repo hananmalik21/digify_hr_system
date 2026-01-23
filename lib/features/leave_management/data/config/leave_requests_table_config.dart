@@ -6,7 +6,7 @@ class LeaveRequestsTableConfig {
   static const bool showStartDate = true;
   static const bool showEndDate = true;
   static const bool showDays = true;
-  static const bool showReason = true;
+  static const bool showReason = false;
   static const bool showStatus = true;
   static const bool showActions = true;
 

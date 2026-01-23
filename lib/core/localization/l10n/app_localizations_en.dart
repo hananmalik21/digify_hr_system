@@ -1369,6 +1369,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get approved => 'Approved';
 
   @override
+  String get approve => 'Approve';
+
+  @override
   String get teamOnLeaveToday => 'TEAM ON LEAVE TODAY';
 
   @override
@@ -3190,6 +3193,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rejected => 'Rejected';
+
+  @override
+  String get reject => 'Reject';
 
   @override
   String get leaveRequestGuidelines => 'Leave Request Guidelines';
