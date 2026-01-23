@@ -180,6 +180,8 @@ class LeaveRequestDto {
         return RequestStatus.rejected;
       case LeaveRequestStatus.withdrawn:
         return RequestStatus.cancelled;
+      case LeaveRequestStatus.draft:
+        return RequestStatus.draft;
     }
   }
 

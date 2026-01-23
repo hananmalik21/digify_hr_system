@@ -20,7 +20,8 @@ class LeaveManagementTabNotifier extends StateNotifier<LeaveManagementTabState> 
   }
 }
 
-final leaveManagementTabStateProvider =
-    StateNotifierProvider<LeaveManagementTabNotifier, LeaveManagementTabState>((ref) {
+final leaveManagementTabStateProvider = StateNotifierProvider<LeaveManagementTabNotifier, LeaveManagementTabState>((
+  ref,
+) {
   return LeaveManagementTabNotifier();
 });

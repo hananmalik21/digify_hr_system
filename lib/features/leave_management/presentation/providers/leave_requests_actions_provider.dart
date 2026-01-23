@@ -2,12 +2,14 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final leaveRequestsApproveLoadingProvider = StateProvider<Set<String>>((ref) => <String>{});
 final leaveRequestsRejectLoadingProvider = StateProvider<Set<String>>((ref) => <String>{});
+final leaveRequestsDeleteLoadingProvider = StateProvider<Set<String>>((ref) => <String>{});
 
 class LeaveRequestsActions {
   static Future<void> approveLeaveRequest(
@@ -72,5 +74,55 @@ class LeaveRequestsActions {
         ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
       }
     }
+  }
+
+  static Future<void> deleteLeaveRequest(
+    BuildContext context,
+    WidgetRef ref,
+    TimeOffRequest request,
+    AppLocalizations localizations,
+  ) async {
+    final confirmed = await AppConfirmationDialog.show(
+      context,
+      title: localizations.delete,
+      message: 'Are you sure you want to delete this draft leave request?',
+      confirmLabel: localizations.delete,
+      cancelLabel: localizations.close,
+      type: ConfirmationType.danger,
+      icon: Icons.delete_outline,
+    );
+
+    if (confirmed != true) return;
+
+    ref.read(leaveRequestsDeleteLoadingProvider.notifier).state = {
+      ...ref.read(leaveRequestsDeleteLoadingProvider),
+      request.guid,
+    };
+
+    try {
+      final notifier = ref.read(leaveRequestsNotifierProvider.notifier);
+      await notifier.deleteLeaveRequest(request.guid);
+
+      if (context.mounted) {
+        ToastService.success(context, 'Draft leave request deleted successfully');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
+      }
+    } finally {
+      final loadingSet = {...ref.read(leaveRequestsDeleteLoadingProvider)};
+      loadingSet.remove(request.guid);
+      ref.read(leaveRequestsDeleteLoadingProvider.notifier).state = loadingSet;
+    }
+  }
+
+  static Future<void> updateLeaveRequest(
+    BuildContext context,
+    WidgetRef ref,
+    TimeOffRequest request,
+    AppLocalizations localizations,
+  ) async {
+    NewLeaveRequestDialog.show(context);
   }
 }

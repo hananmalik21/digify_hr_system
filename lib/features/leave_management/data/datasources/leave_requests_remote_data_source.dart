@@ -16,6 +16,10 @@ abstract class LeaveRequestsRemoteDataSource {
   Future<Map<String, dynamic>> rejectLeaveRequest(String guid);
 
   Future<Map<String, dynamic>> createLeaveRequest(NewLeaveRequestState state, bool submit);
+
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid);
+
+  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit);
 }
 
 class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource {
@@ -176,5 +180,106 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
     }
 
     return 'FULL_DAY';
+  }
+
+  @override
+  Future<Map<String, dynamic>> deleteLeaveRequest(String guid) async {
+    try {
+      final response = await apiClient.delete(ApiEndpoints.absLeaveRequestDelete(guid), headers: _absHeaders);
+
+      final success = response['success'] as bool?;
+      if (success == false) {
+        final message = response['message'] as String? ?? 'Failed to delete leave request';
+        throw ServerException(message, statusCode: 400);
+      }
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to delete leave request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateLeaveRequest(String guid, NewLeaveRequestState state, bool submit) async {
+    try {
+      if (state.selectedEmployee == null ||
+          state.leaveType == null ||
+          state.startDate == null ||
+          state.endDate == null) {
+        throw ValidationException(
+          'Required fields are missing',
+          errors: {
+            'employee': 'Employee is required',
+            'leaveType': 'Leave type is required',
+            'startDate': 'Start date is required',
+            'endDate': 'End date is required',
+          },
+        );
+      }
+
+      final formData = FormData();
+
+      formData.fields.add(MapEntry('employee_guid', state.selectedEmployee!.guid));
+      formData.fields.add(MapEntry('leave_type_id', LeaveTypeMapper.getLeaveTypeId(state.leaveType!).toString()));
+      formData.fields.add(MapEntry('start_date', _formatDate(state.startDate!)));
+      formData.fields.add(MapEntry('end_date', _formatDate(state.endDate!)));
+
+      final startPortion = _mapTimeToPortion(state.startTime);
+      final endPortion = _mapTimeToPortion(state.endTime);
+      formData.fields.add(MapEntry('start_portion', startPortion));
+      formData.fields.add(MapEntry('end_portion', endPortion));
+
+      if (state.reason != null && state.reason!.isNotEmpty) {
+        formData.fields.add(MapEntry('reason_for_leave', state.reason!));
+      }
+
+      if (state.addressDuringLeave != null && state.addressDuringLeave!.isNotEmpty) {
+        formData.fields.add(MapEntry('address_during_leave', state.addressDuringLeave!));
+      }
+
+      if (state.contactPhoneNumber != null && state.contactPhoneNumber!.isNotEmpty) {
+        formData.fields.add(MapEntry('contact_phone', state.contactPhoneNumber!));
+      }
+
+      if (state.emergencyContactName != null && state.emergencyContactName!.isNotEmpty) {
+        formData.fields.add(MapEntry('emergency_contact_name', state.emergencyContactName!));
+      }
+
+      if (state.emergencyContactPhone != null && state.emergencyContactPhone!.isNotEmpty) {
+        formData.fields.add(MapEntry('emergency_contact_phone', state.emergencyContactPhone!));
+      }
+
+      if (state.additionalNotes != null && state.additionalNotes!.isNotEmpty) {
+        formData.fields.add(MapEntry('additional_notes', state.additionalNotes!));
+      }
+
+      formData.fields.add(MapEntry('submit', submit.toString()));
+
+      for (final document in state.documents) {
+        if (kIsWeb) {
+          continue;
+        } else {
+          final file = File(document.path);
+          if (await file.exists()) {
+            final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
+            formData.files.add(MapEntry('documents', multipartFile));
+          }
+        }
+      }
+
+      final response = await apiClient.putMultipart(
+        ApiEndpoints.absLeaveRequestUpdate(guid),
+        formData: formData,
+        headers: _absHeaders,
+      );
+
+      return response;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update leave request: ${e.toString()}', originalError: e);
+    }
   }
 }

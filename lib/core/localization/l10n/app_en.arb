@@ -1145,6 +1145,7 @@
   "maternityLeaveEntitlement": "70 days total (30 before, 40 after delivery)",
   "emergencyLeaveEntitlement": "5 days per year for emergencies",
   "leaveFilterAll": "all",
+  "leaveFilterDraft": "draft",
   "leaveFilterPending": "pending",
   "leaveFilterApproved": "approved",
   "leaveFilterRejected": "rejected",

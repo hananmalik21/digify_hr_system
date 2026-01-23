@@ -62,8 +62,12 @@ class NewLeaveRequestDialog extends ConsumerWidget {
               ? null
               : () async {
                   try {
-                    await notifier.saveAsDraft();
+                    final response = await notifier.saveAsDraft();
                     if (context.mounted) {
+                      final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
+                      final employeeName = state.selectedEmployee?.fullName ?? '';
+                      final leaveType = state.leaveType!;
+                      leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
                       ToastService.success(context, localizations.draftSaved);
                       notifier.reset();
                       Navigator.of(context).pop();

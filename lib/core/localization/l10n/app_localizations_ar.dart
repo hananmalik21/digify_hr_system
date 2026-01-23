@@ -3150,6 +3150,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveFilterAll => 'الكل';
 
   @override
+  String get leaveFilterDraft => 'مسودة';
+
+  @override
   String get leaveFilterPending => 'قيد الانتظار';
 
   @override

@@ -80,6 +80,26 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> putMultipart(
+    String endpoint, {
+    required FormData formData,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final response = await _dio.put(
+        endpoint,
+        data: formData,
+        options: Options(headers: {...?headers, 'Content-Type': 'multipart/form-data'}),
+      );
+
+      return _handleResponse(response);
+    } on DioException catch (e) {
+      throw _mapDioException(e);
+    } catch (e) {
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
+    }
+  }
+
   Future<Map<String, dynamic>> put(
     String endpoint, {
     Map<String, dynamic>? body,
