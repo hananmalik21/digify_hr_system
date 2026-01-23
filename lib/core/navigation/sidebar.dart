@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
+import 'package:digify_hr_system/core/navigation/mixins/tab_index_mixin.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
@@ -21,83 +22,16 @@ class Sidebar extends ConsumerStatefulWidget {
   ConsumerState<Sidebar> createState() => _SidebarState();
 }
 
-class _SidebarState extends ConsumerState<Sidebar> {
+class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
   final Map<String, bool> _expandedItems = {};
   String? _lastAutoExpandedRoute;
-
-  /// Maps time management sidebar item IDs to their corresponding tab indexes
-  int? _getTimeManagementTabIndex(String itemId) {
-    switch (itemId) {
-      case 'shifts':
-        return 0;
-      case 'workPatterns':
-        return 1;
-      case 'workSchedules':
-        return 2;
-      case 'scheduleAssignments':
-        return 3;
-      case 'viewCalendar':
-        return 4;
-      case 'publicHolidays':
-        return 5;
-      default:
-        return null;
-    }
-  }
-
-  /// Maps workforce structure sidebar item IDs to their corresponding tab indexes
-  int? _getWorkforceStructureTabIndex(String itemId) {
-    switch (itemId) {
-      case 'positions':
-        return 0;
-      case 'jobFamilies':
-        return 1;
-      case 'jobLevels':
-        return 2;
-      case 'gradeStructure':
-        return 3;
-      case 'reportingStructure':
-        return 4;
-      case 'positionTree':
-        return 5;
-      default:
-        return null;
-    }
-  }
-
-  int? _getLeaveManagementTabIndex(String itemId) {
-    switch (itemId) {
-      case 'leaveRequests':
-        return 0;
-      case 'leaveBalance':
-        return 1;
-      case 'myLeaveBalance':
-        return 2;
-      case 'teamLeaveRisk':
-        return 3;
-      case 'leavePolicies':
-        return 4;
-      case 'policyConfiguration':
-        return 5;
-      case 'forfeitPolicy':
-        return 6;
-      case 'forfeitProcessing':
-        return 7;
-      case 'forfeitReports':
-        return 8;
-      case 'leaveCalendar':
-        return 9;
-      default:
-        return null;
-    }
-  }
 
   void _handleNavigation(SidebarItem item) {
     if (item.route != null && mounted) {
       context.go(item.route!);
 
       if (item.route == AppRoutes.timeManagement) {
-        final tabIndex = _getTimeManagementTabIndex(item.id);
+        final tabIndex = getTimeManagementTabIndex(item.id);
         if (tabIndex != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -106,7 +40,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
           });
         }
       } else if (item.route == AppRoutes.workforceStructure) {
-        final tabIndex = _getWorkforceStructureTabIndex(item.id);
+        final tabIndex = getWorkforceStructureTabIndex(item.id);
         if (tabIndex != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -115,7 +49,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
           });
         }
       } else if (item.route == AppRoutes.leaveManagement) {
-        final tabIndex = _getLeaveManagementTabIndex(item.id);
+        final tabIndex = getLeaveManagementTabIndex(item.id);
         if (tabIndex != null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -406,15 +340,15 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                 item.id == 'leaveManagement'
                             ? (currentRoute == child.route &&
                                   ((item.id == 'timeManagement' &&
-                                          _getTimeManagementTabIndex(child.id) ==
+                                          getTimeManagementTabIndex(child.id) ==
                                               ref.watch(
                                                 timeManagementTabStateProvider.select((s) => s.currentTabIndex),
                                               )) ||
                                       (item.id == 'workforceStructure' &&
-                                          _getWorkforceStructureTabIndex(child.id) ==
+                                          getWorkforceStructureTabIndex(child.id) ==
                                               ref.watch(workforceTabStateProvider.select((s) => s.currentTabIndex))) ||
                                       (item.id == 'leaveManagement' &&
-                                          _getLeaveManagementTabIndex(child.id) ==
+                                          getLeaveManagementTabIndex(child.id) ==
                                               ref.watch(
                                                 leaveManagementTabStateProvider.select((s) => s.currentTabIndex),
                                               ))))
