@@ -3347,6 +3347,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submitRequest => 'Submit Request';
 
   @override
+  String get saveAsDraft => 'Save as draft';
+
+  @override
+  String get draftSaved => 'Draft saved';
+
+  @override
   String get notSelected => 'Not selected';
 
   @override

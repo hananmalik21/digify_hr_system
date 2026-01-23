@@ -18,4 +18,22 @@ class LeaveTypeMapper {
         return 'Other';
     }
   }
+
+  /// Note: Adjust these IDs based on your backend configuration
+  static int getLeaveTypeId(TimeOffType type) {
+    switch (type) {
+      case TimeOffType.annualLeave:
+        return 1;
+      case TimeOffType.sickLeave:
+        return 2;
+      case TimeOffType.personalLeave:
+        return 3;
+      case TimeOffType.emergencyLeave:
+        return 4;
+      case TimeOffType.unpaidLeave:
+        return 5;
+      case TimeOffType.other:
+        return 6;
+    }
+  }
 }

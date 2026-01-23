@@ -6494,6 +6494,18 @@ abstract class AppLocalizations {
   /// **'Submit Request'**
   String get submitRequest;
 
+  /// No description provided for @saveAsDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as draft'**
+  String get saveAsDraft;
+
+  /// No description provided for @draftSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved'**
+  String get draftSaved;
+
   /// No description provided for @notSelected.
   ///
   /// In en, this message translates to:

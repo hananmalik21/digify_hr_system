@@ -60,6 +60,26 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> postMultipart(
+    String endpoint, {
+    required FormData formData,
+    Map<String, String>? headers,
+  }) async {
+    try {
+      final response = await _dio.post(
+        endpoint,
+        data: formData,
+        options: Options(headers: {...?headers, 'Content-Type': 'multipart/form-data'}),
+      );
+
+      return _handleResponse(response);
+    } on DioException catch (e) {
+      throw _mapDioException(e);
+    } catch (e) {
+      throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
+    }
+  }
+
   Future<Map<String, dynamic>> put(
     String endpoint, {
     Map<String, dynamic>? body,
@@ -406,7 +426,24 @@ class _LoggingInterceptor extends Interceptor {
       debugPrint('│ REQUEST: ${options.method} ${options.uri}');
       debugPrint('│ Headers: ${options.headers}');
       if (options.data != null) {
-        debugPrint('│ Body: ${options.data}');
+        if (options.data is FormData) {
+          final formData = options.data as FormData;
+          debugPrint('│ Form Data:');
+          if (formData.fields.isNotEmpty) {
+            debugPrint('│   Fields:');
+            for (final field in formData.fields) {
+              debugPrint('│     ${field.key}: ${field.value}');
+            }
+          }
+          if (formData.files.isNotEmpty) {
+            debugPrint('│   Files:');
+            for (final file in formData.files) {
+              debugPrint('│     ${file.key}: ${file.value.filename ?? 'unnamed'} (${file.value.length} bytes)');
+            }
+          }
+        } else {
+          debugPrint('│ Body: ${options.data}');
+        }
       }
       if (options.queryParameters.isNotEmpty) {
         debugPrint('│ Query Parameters: ${options.queryParameters}');

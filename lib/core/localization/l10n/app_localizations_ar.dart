@@ -3324,6 +3324,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get submitRequest => 'إرسال الطلب';
 
   @override
+  String get saveAsDraft => 'حفظ كمسودة';
+
+  @override
+  String get draftSaved => 'تم حفظ المسودة';
+
+  @override
   String get notSelected => 'غير محدد';
 
   @override

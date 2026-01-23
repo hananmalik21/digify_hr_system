@@ -1,4 +1,6 @@
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
+import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_requests_repository.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +25,7 @@ class NewLeaveRequestState {
   final String? additionalNotes;
   final List<Document> documents;
   final bool isSubmitting;
+  final bool isSavingDraft;
 
   const NewLeaveRequestState({
     this.currentStep = LeaveRequestStep.leaveDetails,
@@ -42,6 +45,7 @@ class NewLeaveRequestState {
     this.additionalNotes,
     this.documents = const [],
     this.isSubmitting = false,
+    this.isSavingDraft = false,
   });
 
   NewLeaveRequestState copyWith({
@@ -62,6 +66,7 @@ class NewLeaveRequestState {
     String? additionalNotes,
     List<Document>? documents,
     bool? isSubmitting,
+    bool? isSavingDraft,
     bool clearEmployee = false,
     bool clearDelegatedTo = false,
   }) {
@@ -83,6 +88,7 @@ class NewLeaveRequestState {
       additionalNotes: additionalNotes ?? this.additionalNotes,
       documents: documents ?? this.documents,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      isSavingDraft: isSavingDraft ?? this.isSavingDraft,
     );
   }
 
@@ -104,7 +110,11 @@ class NewLeaveRequestState {
 }
 
 class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
-  NewLeaveRequestNotifier() : super(const NewLeaveRequestState());
+  final LeaveRequestsRepository? _repository;
+
+  NewLeaveRequestNotifier({LeaveRequestsRepository? repository})
+    : _repository = repository,
+      super(const NewLeaveRequestState());
 
   void setStep(LeaveRequestStep step) {
     state = state.copyWith(currentStep: step);
@@ -203,13 +213,39 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     state = const NewLeaveRequestState();
   }
 
-  Future<void> submit() async {
+  Future<Map<String, dynamic>> submit() async {
+    if (_repository == null) {
+      throw Exception('Repository not provided');
+    }
+
     state = state.copyWith(isSubmitting: true);
-    await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-    state = state.copyWith(isSubmitting: false);
+    try {
+      final response = await _repository.createLeaveRequest(state, true);
+      state = state.copyWith(isSubmitting: false);
+      return response;
+    } catch (e) {
+      state = state.copyWith(isSubmitting: false);
+      rethrow;
+    }
+  }
+
+  Future<void> saveAsDraft() async {
+    if (_repository == null) {
+      throw Exception('Repository not provided');
+    }
+
+    state = state.copyWith(isSavingDraft: true);
+    try {
+      await _repository.createLeaveRequest(state, false);
+    } catch (e) {
+      state = state.copyWith(isSavingDraft: false);
+      rethrow;
+    }
+    state = state.copyWith(isSavingDraft: false);
   }
 }
 
 final newLeaveRequestProvider = StateNotifierProvider<NewLeaveRequestNotifier, NewLeaveRequestState>((ref) {
-  return NewLeaveRequestNotifier();
+  final repository = ref.watch(leaveRequestsRepositoryProvider);
+  return NewLeaveRequestNotifier(repository: repository);
 });
