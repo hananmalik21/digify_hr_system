@@ -12,6 +12,7 @@ class LeaveRequestsLocalDataSourceImpl implements LeaveRequestsLocalDataSource {
     return [
       TimeOffRequest(
         id: 1,
+        guid: '',
         employeeId: 1,
         employeeName: '',
         type: TimeOffType.annualLeave,
@@ -23,6 +24,7 @@ class LeaveRequestsLocalDataSourceImpl implements LeaveRequestsLocalDataSource {
       ),
       TimeOffRequest(
         id: 2,
+        guid: '',
         employeeId: 2,
         employeeName: '',
         type: TimeOffType.sickLeave,

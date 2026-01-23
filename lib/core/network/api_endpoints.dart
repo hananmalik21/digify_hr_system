@@ -51,4 +51,9 @@ class ApiEndpoints {
   static const String tmPublicHolidays = '$api/holidays';
   static String tmPublicHolidayById(int holidayId) => '$tmPublicHolidays/$holidayId';
   static const String tmStats = '$api/tm/stats';
+
+  // Leave Management (ABS) endpoints
+  static const String absLeaveRequests = '$api/abs/leave-requests';
+  static String absLeaveRequestApprove(String guid) => '$absLeaveRequests/$guid/approve';
+  static String absLeaveRequestReject(String guid) => '$absLeaveRequests/$guid/reject';
 }

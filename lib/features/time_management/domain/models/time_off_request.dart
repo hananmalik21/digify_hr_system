@@ -3,6 +3,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/paginati
 /// Domain model for Time-off Request
 class TimeOffRequest {
   final int id;
+  final String guid;
   final int employeeId;
   final String employeeName;
   final TimeOffType type;
@@ -20,6 +21,7 @@ class TimeOffRequest {
 
   const TimeOffRequest({
     required this.id,
+    required this.guid,
     required this.employeeId,
     required this.employeeName,
     required this.type,
@@ -65,31 +67,15 @@ class TimeOffRequestOverview {
 }
 
 /// Time-off request type
-enum TimeOffType {
-  annualLeave,
-  sickLeave,
-  personalLeave,
-  emergencyLeave,
-  unpaidLeave,
-  other,
-}
+enum TimeOffType { annualLeave, sickLeave, personalLeave, emergencyLeave, unpaidLeave, other }
 
 /// Request status enum
-enum RequestStatus {
-  pending,
-  approved,
-  rejected,
-  cancelled,
-}
+enum RequestStatus { pending, approved, rejected, cancelled }
 
 /// Paginated time-off request response
 class PaginatedTimeOffRequests {
   final List<TimeOffRequestOverview> requests;
   final PaginationInfo pagination;
 
-  const PaginatedTimeOffRequests({
-    required this.requests,
-    required this.pagination,
-  });
+  const PaginatedTimeOffRequests({required this.requests, required this.pagination});
 }
-

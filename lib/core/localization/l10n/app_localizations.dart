@@ -2732,6 +2732,12 @@ abstract class AppLocalizations {
   /// **'Approved'**
   String get approved;
 
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
   /// No description provided for @teamOnLeaveToday.
   ///
   /// In en, this message translates to:
@@ -6217,6 +6223,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rejected'**
   String get rejected;
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
 
   /// No description provided for @leaveRequestGuidelines.
   ///

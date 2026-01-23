@@ -1366,6 +1366,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get approved => 'موافق عليه';
 
   @override
+  String get approve => 'موافقة';
+
+  @override
   String get teamOnLeaveToday => 'الفريق في إجازة اليوم';
 
   @override
@@ -3172,6 +3175,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rejected => 'مرفوض';
+
+  @override
+  String get reject => 'رفض';
 
   @override
   String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';
