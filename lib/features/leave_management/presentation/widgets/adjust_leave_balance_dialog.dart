@@ -1,74 +1,59 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart' show DigifyTextField, DigifyTextArea;
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balances_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class AdjustLeaveBalanceDialog extends StatefulWidget {
-  final String employeeName;
-  final String employeeId;
-  final int currentAnnualLeave;
-  final int currentSickLeave;
-  final int currentUnpaidLeave;
+class AdjustLeaveBalanceDialog extends ConsumerStatefulWidget {
+  final LeaveBalance balance;
 
-  const AdjustLeaveBalanceDialog({
-    super.key,
-    required this.employeeName,
-    required this.employeeId,
-    required this.currentAnnualLeave,
-    required this.currentSickLeave,
-    required this.currentUnpaidLeave,
-  });
+  const AdjustLeaveBalanceDialog({super.key, required this.balance});
 
-  static Future<void> show(
-    BuildContext context, {
-    required String employeeName,
-    required String employeeId,
-    required int currentAnnualLeave,
-    required int currentSickLeave,
-    required int currentUnpaidLeave,
-  }) {
+  static Future<void> show(BuildContext context, {required LeaveBalance balance}) {
     return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => AdjustLeaveBalanceDialog(
-        employeeName: employeeName,
-        employeeId: employeeId,
-        currentAnnualLeave: currentAnnualLeave,
-        currentSickLeave: currentSickLeave,
-        currentUnpaidLeave: currentUnpaidLeave,
-      ),
+      builder: (ctx) => AdjustLeaveBalanceDialog(balance: balance),
     );
   }
 
   @override
-  State<AdjustLeaveBalanceDialog> createState() => _AdjustLeaveBalanceDialogState();
+  ConsumerState<AdjustLeaveBalanceDialog> createState() => _AdjustLeaveBalanceDialogState();
 }
 
-class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
+class _AdjustLeaveBalanceDialogState extends ConsumerState<AdjustLeaveBalanceDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _annualLeaveController;
   late TextEditingController _sickLeaveController;
   late TextEditingController _unpaidLeaveController;
   late TextEditingController _reasonController;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
-    _annualLeaveController = TextEditingController(text: widget.currentAnnualLeave.toString());
-    _sickLeaveController = TextEditingController(text: widget.currentSickLeave.toString());
-    _unpaidLeaveController = TextEditingController(text: widget.currentUnpaidLeave.toString());
+    final b = widget.balance;
+    _annualLeaveController = TextEditingController(text: _formatDouble(b.availableDays));
+    _sickLeaveController = TextEditingController(text: '0');
+    _unpaidLeaveController = TextEditingController(text: '0');
     _reasonController = TextEditingController();
 
-    // Add listeners to update comparison section when values change
     _annualLeaveController.addListener(() => setState(() {}));
     _sickLeaveController.addListener(() => setState(() {}));
     _unpaidLeaveController.addListener(() => setState(() {}));
+  }
+
+  String _formatDouble(double v) {
+    return v == v.toInt() ? v.toInt().toString() : v.toString();
   }
 
   @override
@@ -80,6 +65,36 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
     super.dispose();
   }
 
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false) || _isSubmitting) return;
+
+    setState(() => _isSubmitting = true);
+
+    final params = UpdateLeaveBalanceParams(
+      openingBalanceDays: widget.balance.openingBalanceDays,
+      accruedDays: widget.balance.accruedDays,
+      takenDays: widget.balance.takenDays,
+      adjustedDays: widget.balance.adjustedDays,
+      availableDays: (int.tryParse(_annualLeaveController.text) ?? 0).toDouble(),
+      status: widget.balance.status,
+      comments: _reasonController.text.trim(),
+    );
+
+    try {
+      await ref
+          .read(leaveBalancesNotifierProvider.notifier)
+          .updateLeaveBalance(widget.balance.employeeLeaveBalanceGuid, params);
+      if (!mounted) return;
+      ToastService.success(context, 'Leave balance updated successfully');
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -87,7 +102,7 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
 
     return AppDialog(
       title: 'Adjust Leave Balance',
-      subtitle: widget.employeeName,
+      subtitle: widget.balance.employeeName,
       width: 700.w,
       content: Form(
         key: _formKey,
@@ -107,17 +122,14 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
         AppButton(
           label: localizations.cancel,
           type: AppButtonType.outline,
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
         ),
         Gap(12.w),
         AppButton(
           label: 'Update Balance',
           type: AppButtonType.primary,
-          onPressed: () {
-            if (_formKey.currentState?.validate() ?? false) {
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: _isSubmitting ? null : _submit,
+          isLoading: _isSubmitting,
         ),
       ],
     );
@@ -172,10 +184,10 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
   }
 
   Widget _buildComparisonSection(BuildContext context, bool isDark) {
-    final previousAnnual = widget.currentAnnualLeave;
-    final previousSick = widget.currentSickLeave;
-    final newAnnual = int.tryParse(_annualLeaveController.text) ?? previousAnnual;
-    final newSick = int.tryParse(_sickLeaveController.text) ?? previousSick;
+    final previousAnnual = _formatDouble(widget.balance.availableDays);
+    final previousSick = '0';
+    final newAnnual = _annualLeaveController.text;
+    final newSick = _sickLeaveController.text;
 
     final labelStyle = context.textTheme.labelSmall?.copyWith(
       fontSize: 12.sp,
@@ -213,7 +225,7 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                   children: [
                     Text('New Annual:', style: labelStyle),
                     Gap(7.w),
-                    Text('$newAnnual days', style: newValueStyle),
+                    Text('${newAnnual.isEmpty ? '0' : newAnnual} days', style: newValueStyle),
                   ],
                 ),
               ),
@@ -240,7 +252,7 @@ class _AdjustLeaveBalanceDialogState extends State<AdjustLeaveBalanceDialog> {
                   children: [
                     Text('New Sick:', style: labelStyle),
                     Gap(7.w),
-                    Text('$newSick days', style: newValueStyle),
+                    Text('${newSick.isEmpty ? '0' : newSick} days', style: newValueStyle),
                   ],
                 ),
               ),
