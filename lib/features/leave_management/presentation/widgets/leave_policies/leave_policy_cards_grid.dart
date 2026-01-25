@@ -1,10 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/components/leave_policy_card.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policy_cards_grid_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,8 +21,20 @@ class LeavePolicyCardsGrid extends ConsumerWidget {
     final policiesAsync = ref.watch(leavePoliciesProvider);
 
     return policiesAsync.when(
-      data: (policies) => _buildGrid(context, policies),
-      loading: () => const Center(child: AppLoadingIndicator()),
+      data: (policies) {
+        if (policies.isEmpty) {
+          return Center(
+            child: Text(
+              localizations.noResultsFound,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              ),
+            ),
+          );
+        }
+        return _buildGrid(context, policies);
+      },
+      loading: () => LeavePolicyCardsGridSkeleton(isDark: isDark),
       error: (error, stackTrace) => Center(
         child: Text(
           'Error loading policies: ${error.toString()}',
