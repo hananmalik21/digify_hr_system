@@ -3,23 +3,24 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_filter_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class LeavePoliciesFiltersSection extends StatefulWidget {
+class LeavePoliciesFiltersSection extends ConsumerStatefulWidget {
   final AppLocalizations localizations;
   final bool isDark;
 
   const LeavePoliciesFiltersSection({super.key, required this.localizations, required this.isDark});
 
   @override
-  State<LeavePoliciesFiltersSection> createState() => _LeavePoliciesFiltersSectionState();
+  ConsumerState<LeavePoliciesFiltersSection> createState() => _LeavePoliciesFiltersSectionState();
 }
 
-class _LeavePoliciesFiltersSectionState extends State<LeavePoliciesFiltersSection> {
+class _LeavePoliciesFiltersSectionState extends ConsumerState<LeavePoliciesFiltersSection> {
   late TextEditingController _searchController;
-  String? _selectedType;
 
   @override
   void initState() {
@@ -33,15 +34,23 @@ class _LeavePoliciesFiltersSectionState extends State<LeavePoliciesFiltersSectio
     super.dispose();
   }
 
+  static const List<String?> _statusItems = [null, 'ACTIVE', 'INACTIVE'];
+
+  static const List<String?> _typeValues = [null, 'kuwait_y', 'kuwait_n'];
+
+  String _statusLabel(String? v) {
+    if (v == null) return 'All Status';
+    return v == 'ACTIVE' ? 'Active' : 'Inactive';
+  }
+
+  String _typeLabel(String? v) {
+    if (v == null) return 'All';
+    return v == 'kuwait_y' ? 'Compliant' : 'Not compliant';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final leaveTypes = [
-      widget.localizations.annualLeave,
-      widget.localizations.sickLeave,
-      widget.localizations.maternityLeave,
-      widget.localizations.hajjLeave,
-      widget.localizations.compassionateLeave,
-    ];
+    final filter = ref.watch(leavePoliciesFilterProvider);
 
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -56,9 +65,7 @@ class _LeavePoliciesFiltersSectionState extends State<LeavePoliciesFiltersSectio
             child: DigifyTextField.search(
               controller: _searchController,
               hintText: 'Search policies...',
-              onChanged: (value) {
-                // Handle search
-              },
+              onChanged: (_) {},
             ),
           ),
           Gap(12.w),
@@ -66,15 +73,23 @@ class _LeavePoliciesFiltersSectionState extends State<LeavePoliciesFiltersSectio
             width: 144.w,
             child: DigifySelectField<String?>(
               label: '',
-              hint: 'All Types',
-              value: _selectedType,
-              items: [null, ...leaveTypes],
-              itemLabelBuilder: (type) => type ?? 'All Types',
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedType = newValue;
-                });
-              },
+              hint: 'Kuwait Labor Compliant',
+              value: filter.type,
+              items: _typeValues,
+              itemLabelBuilder: _typeLabel,
+              onChanged: (v) => ref.read(leavePoliciesFilterProvider.notifier).setType(v),
+            ),
+          ),
+          Gap(12.w),
+          SizedBox(
+            width: 144.w,
+            child: DigifySelectField<String?>(
+              label: '',
+              hint: 'Status',
+              value: filter.status,
+              items: _statusItems,
+              itemLabelBuilder: _statusLabel,
+              onChanged: (v) => ref.read(leavePoliciesFilterProvider.notifier).setStatus(v),
             ),
           ),
         ],

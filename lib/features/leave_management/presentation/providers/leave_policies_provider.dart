@@ -1,24 +1,43 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
-import 'package:digify_hr_system/features/leave_management/data/datasources/leave_policies_local_data_source.dart';
+import 'package:digify_hr_system/features/leave_management/data/datasources/leave_policies_remote_data_source.dart';
 import 'package:digify_hr_system/features/leave_management/data/repositories/leave_policies_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
+import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_policies_repository.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_filter_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Provider for leave policies local data source
-final leavePoliciesLocalDataSourceProvider = Provider<LeavePoliciesLocalDataSource>(
-  (ref) => LeavePoliciesLocalDataSourceImpl(),
-);
+final _leavePoliciesApiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient(baseUrl: ApiConfig.baseUrl);
+});
 
-/// Provider for leave policies repository
-final leavePoliciesRepositoryProvider = Provider<LeavePoliciesRepositoryImpl>(
-  (ref) => LeavePoliciesRepositoryImpl(localDataSource: ref.watch(leavePoliciesLocalDataSourceProvider)),
-);
+final leavePoliciesRemoteDataSourceProvider = Provider<LeavePoliciesRemoteDataSource>((ref) {
+  final apiClient = ref.watch(_leavePoliciesApiClientProvider);
+  return LeavePoliciesRemoteDataSourceImpl(apiClient: apiClient);
+});
 
-/// Provider for leave policies
+final leavePoliciesRepositoryProvider = Provider<LeavePoliciesRepository>((ref) {
+  final remoteDataSource = ref.watch(leavePoliciesRemoteDataSourceProvider);
+  return LeavePoliciesRepositoryImpl(remoteDataSource: remoteDataSource);
+});
+
 final leavePoliciesProvider = FutureProvider<List<LeavePolicy>>((ref) async {
+  final tenantId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+  if (tenantId == null) return <LeavePolicy>[];
+
+  final filter = ref.watch(leavePoliciesFilterProvider);
+  String? kuwait;
+  if (filter.type == 'kuwait_y') {
+    kuwait = 'Y';
+  } else if (filter.type == 'kuwait_n') {
+    kuwait = 'N';
+  }
+
   final repository = ref.watch(leavePoliciesRepositoryProvider);
   try {
-    return await repository.getLeavePolicies();
+    return await repository.getLeavePolicies(tenantId: tenantId, status: filter.status, kuwaitLaborCompliant: kuwait);
   } on AppException {
     rethrow;
   } catch (e) {

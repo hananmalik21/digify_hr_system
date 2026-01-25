@@ -1,4 +1,5 @@
 class LeavePolicy {
+  final String? policyGuid;
   final String nameEn;
   final String nameAr;
   final bool isKuwaitLaw;
@@ -13,6 +14,7 @@ class LeavePolicy {
   final String? genderRestriction;
 
   const LeavePolicy({
+    this.policyGuid,
     required this.nameEn,
     required this.nameAr,
     required this.isKuwaitLaw,
