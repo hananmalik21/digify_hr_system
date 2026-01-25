@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_balances_table_config.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/adjust_leave_balance_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balance_badge.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_details_dialog.dart';
@@ -181,14 +182,9 @@ class LeaveBalancesTableRow extends StatelessWidget {
   }
 
   void _handleAdjust(BuildContext context) {
-    AdjustLeaveBalanceDialog.show(
-      context,
-      employeeName: employeeData['name'] ?? '',
-      employeeId: employeeData['id'] ?? '',
-      currentAnnualLeave: employeeData['annualLeave'] ?? 0,
-      currentSickLeave: employeeData['sickLeave'] ?? 0,
-      currentUnpaidLeave: employeeData['unpaidLeave'] ?? 0,
-    );
+    final balance = employeeData['balance'] as LeaveBalance?;
+    if (balance == null) return;
+    AdjustLeaveBalanceDialog.show(context, balance: balance);
   }
 
   void _handleDetails(BuildContext context) {

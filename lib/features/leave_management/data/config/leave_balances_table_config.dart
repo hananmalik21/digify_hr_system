@@ -2,11 +2,11 @@ class LeaveBalancesTableConfig {
   LeaveBalancesTableConfig._();
 
   static const bool showEmployee = true;
-  static const bool showDepartment = true;
-  static const bool showJoinDate = true;
-  static const bool showAnnualLeave = false;
-  static const bool showSickLeave = false;
-  static const bool showUnpaidLeave = false;
+  static const bool showDepartment = false;
+  static const bool showJoinDate = false;
+  static const bool showAnnualLeave = true;
+  static const bool showSickLeave = true;
+  static const bool showUnpaidLeave = true;
   static const bool showTotalAvailable = true;
   static const bool showActions = true;
 
