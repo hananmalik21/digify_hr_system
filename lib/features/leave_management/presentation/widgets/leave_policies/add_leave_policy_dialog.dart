@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
@@ -8,13 +9,17 @@ import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class AddLeavePolicyDialog extends StatefulWidget {
+class AddLeavePolicyDialog extends ConsumerStatefulWidget {
   const AddLeavePolicyDialog({super.key});
 
   static Future<void> show(BuildContext context) {
@@ -26,10 +31,10 @@ class AddLeavePolicyDialog extends StatefulWidget {
   }
 
   @override
-  State<AddLeavePolicyDialog> createState() => _AddLeavePolicyDialogState();
+  ConsumerState<AddLeavePolicyDialog> createState() => _AddLeavePolicyDialogState();
 }
 
-class _AddLeavePolicyDialogState extends State<AddLeavePolicyDialog> {
+class _AddLeavePolicyDialogState extends ConsumerState<AddLeavePolicyDialog> {
   late final TextEditingController _nameEnController;
   late final TextEditingController _nameArController;
   late final TextEditingController _descriptionController;
@@ -47,11 +52,14 @@ class _AddLeavePolicyDialogState extends State<AddLeavePolicyDialog> {
   bool _isPaidLeave = true;
   bool _requiresAttachment = false;
   bool _isKuwaitLawCompliant = false;
+  bool _isSubmitting = false;
 
   final List<String> _policyTypes = ['Kuwait Law', 'Custom'];
   final List<String> _accrualTypes = ['Yearly Allocation', 'Monthly Allocation', 'None'];
   final List<String> _genderOptions = ['All', 'Male', 'Female'];
   final List<String> _nationalityOptions = ['All', 'Kuwaiti', 'Non-Kuwaiti'];
+
+  static const List<String> _accrualCodes = ['YEARLY', 'MONTHLY', 'NONE'];
 
   @override
   void initState() {
@@ -81,6 +89,58 @@ class _AddLeavePolicyDialogState extends State<AddLeavePolicyDialog> {
     super.dispose();
   }
 
+  String _accrualCodeFromType(String type) {
+    final i = _accrualTypes.indexOf(type);
+    return i >= 0 ? _accrualCodes[i] : 'NONE';
+  }
+
+  Future<void> _submit() async {
+    final leaveTypeEn = _nameEnController.text.trim();
+    if (leaveTypeEn.isEmpty) {
+      ToastService.warning(context, 'Policy Name (English) is required');
+      return;
+    }
+    final leaveTypeAr = _nameArController.text.trim();
+    if (leaveTypeAr.isEmpty) {
+      ToastService.warning(context, 'Policy Name (Arabic) is required');
+      return;
+    }
+    final entitlementDays = int.tryParse(_entitlementController.text.trim());
+    if (entitlementDays == null || entitlementDays < 0) {
+      ToastService.warning(context, 'Enter a valid Entitlement (days)');
+      return;
+    }
+
+    final tenantId = ref.read(leaveManagementSelectedEnterpriseProvider);
+    if (tenantId == null) {
+      ToastService.warning(context, 'Select an enterprise first');
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    try {
+      final params = CreateLeavePolicyParams(
+        tenantId: tenantId,
+        leaveTypeId: 0,
+        leaveTypeEn: leaveTypeEn,
+        leaveTypeAr: leaveTypeAr,
+        entitlementDays: entitlementDays,
+        accrualMethodCode: _accrualCodeFromType(_selectedAccrualType ?? 'Yearly Allocation'),
+        status: 'ACTIVE',
+        kuwaitLaborCompliant: _selectedPolicyType == 'Kuwait Law' ? 'Y' : 'N',
+      );
+      await ref.read(leavePoliciesNotifierProvider.notifier).createLeavePolicy(params);
+      if (!mounted) return;
+      ToastService.success(context, 'Leave policy created successfully');
+      context.pop();
+    } on Exception catch (e) {
+      if (!mounted) return;
+      ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
@@ -105,14 +165,13 @@ class _AddLeavePolicyDialogState extends State<AddLeavePolicyDialog> {
         ],
       ),
       actions: [
-        AppButton.outline(label: 'Cancel', onPressed: () => context.pop()),
+        AppButton.outline(label: 'Cancel', onPressed: _isSubmitting ? null : () => context.pop()),
         Gap(12.w),
         AppButton.primary(
           label: 'Save Policy',
           svgPath: Assets.icons.saveIcon.path,
-          onPressed: () {
-            context.pop();
-          },
+          onPressed: _isSubmitting ? null : _submit,
+          isLoading: _isSubmitting,
         ),
       ],
     );
