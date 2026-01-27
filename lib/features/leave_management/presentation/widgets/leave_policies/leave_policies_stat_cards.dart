@@ -22,13 +22,15 @@ class LeavePoliciesStatCards extends StatelessWidget {
     ];
 
     if (isMobile) {
-      return Column(
-        children: [
-          for (int i = 0; i < cards.length; i++) ...[
-            SizedBox(width: double.infinity, child: cards[i]),
-            if (i < cards.length - 1) Gap(12.h),
-          ],
-        ],
+      return Wrap(
+        spacing: 12.w,
+        runSpacing: 12.h,
+        children: cards.map((card) {
+          return SizedBox(
+            width: (context.screenWidth - 48.w - 12.w) / 2,
+            child: card,
+          );
+        }).toList(),
       );
     } else if (isTablet) {
       return Wrap(

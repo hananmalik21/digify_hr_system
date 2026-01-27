@@ -1,14 +1,15 @@
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/common/leave_management_stat_card.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class PolicyConfigurationStatCards extends StatelessWidget {
+import '../../../../../gen/assets.gen.dart';
+
+class ForfeitPolicyStatCards extends StatelessWidget {
   final bool isDark;
 
-  const PolicyConfigurationStatCards({super.key, required this.isDark});
+  const ForfeitPolicyStatCards({super.key, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
