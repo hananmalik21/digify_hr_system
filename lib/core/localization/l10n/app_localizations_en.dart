@@ -3121,10 +3121,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forfeitPolicyDescription => 'Leave forfeit rules';
 
   @override
-  String get forfeitProcessing => 'Forfeit Processing';
+  String get forfeitProcessing => 'Leave Forfeit Processing';
 
   @override
-  String get forfeitProcessingDescription => 'Process leave forfeits';
+  String get forfeitProcessingDescription =>
+      'Process automatic leave forfeit for employees exceeding carry forward limits';
 
   @override
   String get forfeitReports => 'Forfeit Reports';

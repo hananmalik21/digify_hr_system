@@ -1172,6 +1172,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/phone.svg
   SvgGenImage get phone => const SvgGenImage('assets/icons/leave_management/phone.svg');
 
+  /// File path: assets/icons/leave_management/play.svg
+  SvgGenImage get play => const SvgGenImage('assets/icons/leave_management/play.svg');
+
   /// File path: assets/icons/leave_management/policy_configuration.svg
   SvgGenImage get policyConfiguration => const SvgGenImage('assets/icons/leave_management/policy_configuration.svg');
 
@@ -1209,6 +1212,7 @@ class $AssetsIconsLeaveManagementGen {
     martialStatus,
     myLeave,
     phone,
+    play,
     policyConfiguration,
     prohibited,
     request,
