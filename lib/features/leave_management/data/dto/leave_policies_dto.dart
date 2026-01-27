@@ -71,6 +71,10 @@ class LeavePolicyDto {
       carryoverDays: null,
       requiresAttachment: false,
       genderRestriction: null,
+      entitlementDays: entitlementDays,
+      accrualMethodCode: accrualMethodCode,
+      status: status,
+      kuwaitLaborCompliant: kuwaitLaborCompliant,
     );
   }
 

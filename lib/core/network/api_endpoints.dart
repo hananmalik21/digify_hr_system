@@ -63,4 +63,5 @@ class ApiEndpoints {
   static const String absLeaveBalances = '$api/abs/leave-balances';
   static String absLeaveBalanceUpdate(String employeeLeaveBalanceGuid) => '$absLeaveBalances/$employeeLeaveBalanceGuid';
   static const String absLeavePolicies = '$api/abs/leave-policies';
+  static String absLeavePolicyUpdate(String policyGuid) => '$absLeavePolicies/$policyGuid';
 }

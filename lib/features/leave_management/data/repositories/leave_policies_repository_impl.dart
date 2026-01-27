@@ -23,4 +23,14 @@ class LeavePoliciesRepositoryImpl implements LeavePoliciesRepository {
       throw UnknownException('Repository error: Failed to fetch leave policies: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<LeavePolicy> createLeavePolicy(CreateLeavePolicyParams params) async {
+    return remoteDataSource.createLeavePolicy(params);
+  }
+
+  @override
+  Future<void> updateLeavePolicy(String policyGuid, UpdateLeavePolicyParams params, {int? tenantId}) async {
+    await remoteDataSource.updateLeavePolicy(policyGuid, params, tenantId: tenantId);
+  }
 }
