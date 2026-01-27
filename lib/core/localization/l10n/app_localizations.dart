@@ -6089,13 +6089,13 @@ abstract class AppLocalizations {
   /// No description provided for @forfeitProcessing.
   ///
   /// In en, this message translates to:
-  /// **'Forfeit Processing'**
+  /// **'Leave Forfeit Processing'**
   String get forfeitProcessing;
 
   /// No description provided for @forfeitProcessingDescription.
   ///
   /// In en, this message translates to:
-  /// **'Process leave forfeits'**
+  /// **'Process automatic leave forfeit for employees exceeding carry forward limits'**
   String get forfeitProcessingDescription;
 
   /// No description provided for @forfeitReports.

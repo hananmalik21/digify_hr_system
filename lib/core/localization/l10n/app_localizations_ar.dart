@@ -3103,10 +3103,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forfeitPolicyDescription => 'قواعد إسقاط الإجازة';
 
   @override
-  String get forfeitProcessing => 'معالجة الإسقاط';
+  String get forfeitProcessing => 'معالجة إسقاط الإجازات';
 
   @override
-  String get forfeitProcessingDescription => 'معالجة إسقاط الإجازات';
+  String get forfeitProcessingDescription =>
+      'معالجة إسقاط الإجازات التلقائي للموظفين الذين يتجاوزون حدود التحويل';
 
   @override
   String get forfeitReports => 'تقارير الإسقاط';
