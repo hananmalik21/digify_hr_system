@@ -3,26 +3,26 @@ import 'package:digify_hr_system/core/constants/app_gradients.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/leave_type.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class LeaveTypesList extends StatefulWidget {
-  final List<LeaveType> leaveTypes;
-  final ValueChanged<LeaveType>? onLeaveTypeSelected;
+  final List<PolicyListItem> policies;
+  final ValueChanged<PolicyListItem>? onPolicySelected;
   final bool isDark;
-  final LeaveType? selectedLeaveType;
+  final PolicyListItem? selectedPolicy;
 
   const LeaveTypesList({
     super.key,
-    required this.leaveTypes,
-    this.onLeaveTypeSelected,
+    required this.policies,
+    this.onPolicySelected,
     required this.isDark,
-    this.selectedLeaveType,
+    this.selectedPolicy,
   });
 
   @override
@@ -41,7 +41,7 @@ class _LeaveTypesListState extends State<LeaveTypesList> {
   @override
   void didUpdateWidget(LeaveTypesList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.selectedLeaveType != oldWidget.selectedLeaveType && widget.selectedLeaveType != null) {
+    if (widget.selectedPolicy != oldWidget.selectedPolicy && widget.selectedPolicy != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToSelectedItem();
       });
@@ -49,11 +49,11 @@ class _LeaveTypesListState extends State<LeaveTypesList> {
   }
 
   void _scrollToSelectedItem() {
-    if (widget.selectedLeaveType == null) return;
-    final index = widget.leaveTypes.indexWhere((lt) => lt.name == widget.selectedLeaveType!.name);
+    if (widget.selectedPolicy == null) return;
+    final index = widget.policies.indexWhere((p) => p.policyGuid == widget.selectedPolicy!.policyGuid);
     if (index != -1 && _scrollController.hasClients) {
-      final itemHeight = 100.0;
-      final separatorHeight = 1.0;
+      const itemHeight = 100.0;
+      const separatorHeight = 1.0;
       final targetOffset = index * (itemHeight + separatorHeight);
       _scrollController.animateTo(
         targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent),
@@ -90,7 +90,7 @@ class _LeaveTypesListState extends State<LeaveTypesList> {
             child: Row(
               children: [
                 Text(
-                  'Leave Types (${widget.leaveTypes.length})',
+                  'Policies (${widget.policies.length})',
                   style: context.textTheme.headlineMedium?.copyWith(fontSize: 16.sp, color: AppColors.cardBackground),
                 ),
               ],
@@ -99,16 +99,16 @@ class _LeaveTypesListState extends State<LeaveTypesList> {
           Expanded(
             child: ListView.separated(
               controller: _scrollController,
-              itemCount: widget.leaveTypes.length,
+              itemCount: widget.policies.length,
               separatorBuilder: (context, index) => DigifyDivider.horizontal(),
               itemBuilder: (context, index) {
-                final leaveType = widget.leaveTypes[index];
-                final isSelected = widget.selectedLeaveType?.name == leaveType.name;
-                return _LeaveTypeItem(
-                  leaveType: leaveType,
+                final policy = widget.policies[index];
+                final isSelected = widget.selectedPolicy?.policyGuid == policy.policyGuid;
+                return _PolicyListItemWidget(
+                  policy: policy,
                   isDark: widget.isDark,
                   isSelected: isSelected,
-                  onTap: () => widget.onLeaveTypeSelected?.call(leaveType),
+                  onTap: () => widget.onPolicySelected?.call(policy),
                 );
               },
             ),
@@ -119,13 +119,13 @@ class _LeaveTypesListState extends State<LeaveTypesList> {
   }
 }
 
-class _LeaveTypeItem extends StatelessWidget {
-  final LeaveType leaveType;
+class _PolicyListItemWidget extends StatelessWidget {
+  final PolicyListItem policy;
   final bool isDark;
   final bool isSelected;
   final VoidCallback? onTap;
 
-  const _LeaveTypeItem({required this.leaveType, required this.isDark, required this.isSelected, this.onTap});
+  const _PolicyListItemWidget({required this.policy, required this.isDark, required this.isSelected, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -153,22 +153,22 @@ class _LeaveTypeItem extends StatelessWidget {
                   spacing: 7.h,
                   children: [
                     Text(
-                      leaveType.name,
+                      policy.name,
                       style: context.textTheme.titleSmall?.copyWith(
                         color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                       ),
                     ),
                     Text(
-                      leaveType.nameArabic,
+                      policy.nameArabic,
                       style: context.textTheme.labelSmall?.copyWith(
                         color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
                       ),
                     ),
-                    if (leaveType.tags.isNotEmpty) ...[
+                    if (policy.tags.isNotEmpty) ...[
                       Wrap(
                         spacing: 7.w,
                         runSpacing: 4.h,
-                        children: leaveType.tags.map((tag) {
+                        children: policy.tags.map((tag) {
                           return DigifySquareCapsule(
                             label: tag,
                             backgroundColor: isSelected
@@ -185,7 +185,7 @@ class _LeaveTypeItem extends StatelessWidget {
                 ),
               ),
               Gap(12.w),
-              if (leaveType.isActive)
+              if (policy.isActive)
                 DigifyAsset(
                   assetPath: Assets.icons.checkIconGreen.path,
                   width: 14.w,

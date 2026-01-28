@@ -1,21 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/leave_type.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_configuration_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/advanced_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/carry_forward_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_criteria_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/encashment_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/entitlement_accrual_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/forfeit_rules_section.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/leave_types_list.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_skeleton.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_stat_cards.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_details_header.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_history_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_details_content.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_list_with_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,13 +22,15 @@ class PolicyConfigurationTab extends ConsumerStatefulWidget {
 }
 
 class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab> {
-  LeaveType? _selectedLeaveType;
+  PolicyListItem? _selectedPolicy;
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final isMobile = context.isMobile;
-    final leaveTypesAsync = ref.watch(leaveTypesProvider);
+    final policiesAsync = ref.watch(absPoliciesProvider);
+    final notifierState = ref.watch(absPoliciesNotifierProvider);
+    final pagination = ref.watch(absPoliciesPaginationProvider);
     final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
 
     return SingleChildScrollView(
@@ -51,149 +46,127 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
           ),
           EnterpriseSelectorWidget(
             selectedEnterpriseId: selectedEnterpriseId,
-            onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
-            },
+            onEnterpriseChanged: (id) =>
+                ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
             subtitle: selectedEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),
           PolicyConfigurationStatCards(isDark: isDark),
-          leaveTypesAsync.when(
-            data: (leaveTypes) {
-              if (_selectedLeaveType == null && leaveTypes.isNotEmpty) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  final selected = leaveTypes.firstWhere((lt) => lt.isSelected, orElse: () => leaveTypes.first);
-                  setState(() => _selectedLeaveType = selected);
-                });
-              }
-              if (isMobile) {
-                return _buildMobileLayout(isDark, leaveTypes);
-              } else {
-                return _buildDesktopLayout(isDark, leaveTypes);
-              }
+          policiesAsync.when(
+            data: (paginated) {
+              _syncSelection(paginated.policies);
+              return isMobile
+                  ? _buildMobileLayout(isDark, paginated.policies, pagination, notifierState)
+                  : _buildDesktopLayout(isDark, paginated.policies, pagination, notifierState);
             },
-            loading: () => const Center(child: AppLoadingIndicator()),
-            error: (error, stackTrace) => Center(
-              child: Text(
-                'Error loading leave types: ${error.toString()}',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.errorTextDark : AppColors.errorText,
-                ),
-              ),
-            ),
+            loading: () => PolicyConfigurationSkeleton(isDark: isDark, isMobile: isMobile),
+            error: (e, _) => _buildError(context, isDark, e.toString()),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMobileLayout(bool isDark, List<LeaveType> leaveTypes) {
+  void _syncSelection(List<PolicyListItem> policies) {
+    final needSelection = _selectedPolicy == null && policies.isNotEmpty;
+    final selectionMissing =
+        _selectedPolicy != null &&
+        policies.isNotEmpty &&
+        !policies.any((p) => p.policyGuid == _selectedPolicy!.policyGuid);
+    if (needSelection || selectionMissing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() => _selectedPolicy = policies.isNotEmpty ? policies.first : null);
+        }
+      });
+    }
+  }
+
+  void _goToPage(int page) {
+    final pagination = ref.read(absPoliciesPaginationProvider);
+    ref.read(absPoliciesPaginationProvider.notifier).state = (page: page, pageSize: pagination.pageSize);
+  }
+
+  Widget _buildListWithPagination({
+    required bool isDark,
+    required List<PolicyListItem> policies,
+    required ({int page, int pageSize}) pagination,
+    required AbsPoliciesState notifierState,
+    required BoxConstraints listConstraints,
+    double? width,
+  }) {
+    final meta = notifierState.data;
+    final paginationInfo = meta != null && meta.policies.isNotEmpty ? meta.pagination : null;
+
+    return PolicyListWithPagination(
+      policies: policies,
+      selectedPolicy: _selectedPolicy,
+      onPolicySelected: (p) => setState(() => _selectedPolicy = p),
+      isDark: isDark,
+      listConstraints: listConstraints,
+      paginationInfo: paginationInfo,
+      currentPage: pagination.page,
+      pageSize: pagination.pageSize,
+      onPrevious: () => _goToPage(pagination.page - 1),
+      onNext: () => _goToPage(pagination.page + 1),
+      isLoading: notifierState.isLoading,
+      width: width,
+    );
+  }
+
+  Widget _buildMobileLayout(
+    bool isDark,
+    List<PolicyListItem> policies,
+    ({int page, int pageSize}) pagination,
+    AbsPoliciesState notifierState,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16.h,
       children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: 300.h),
-          child: LeaveTypesList(
-            leaveTypes: leaveTypes,
-            isDark: isDark,
-            selectedLeaveType: _selectedLeaveType,
-            onLeaveTypeSelected: (leaveType) {
-              setState(() {
-                _selectedLeaveType = leaveType;
-              });
-            },
-          ),
+        _buildListWithPagination(
+          isDark: isDark,
+          policies: policies,
+          pagination: pagination,
+          notifierState: notifierState,
+          listConstraints: BoxConstraints(maxHeight: 300.h),
         ),
-        _buildPolicyDetailsContent(isDark),
+        PolicyDetailsContent(selectedPolicy: _selectedPolicy, isDark: isDark),
       ],
     );
   }
 
-  Widget _buildDesktopLayout(bool isDark, List<LeaveType> leaveTypes) {
+  Widget _buildDesktopLayout(
+    bool isDark,
+    List<PolicyListItem> policies,
+    ({int page, int pageSize}) pagination,
+    AbsPoliciesState notifierState,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 350.w, maxHeight: 800.h),
-          child: LeaveTypesList(
-            leaveTypes: leaveTypes,
-            isDark: isDark,
-            selectedLeaveType: _selectedLeaveType,
-            onLeaveTypeSelected: (leaveType) {
-              setState(() {
-                _selectedLeaveType = leaveType;
-              });
-            },
-          ),
+        _buildListWithPagination(
+          isDark: isDark,
+          policies: policies,
+          pagination: pagination,
+          notifierState: notifierState,
+          listConstraints: BoxConstraints(maxHeight: 800.h),
+          width: 350.w,
         ),
         Gap(21.w),
-        Expanded(child: _buildPolicyDetailsContent(isDark)),
+        Expanded(
+          child: PolicyDetailsContent(selectedPolicy: _selectedPolicy, isDark: isDark),
+        ),
       ],
     );
   }
 
-  Widget _buildPolicyDetailsContent(bool isDark) {
-    if (_selectedLeaveType == null) {
-      return const Gap(0);
-    }
-
-    final configAsync = ref.watch(policyConfigurationProvider(_selectedLeaveType!.name));
-
-    return configAsync.when(
-      data: (config) {
-        if (config == null) {
-          return Center(
-            child: Text(
-              'Policy configuration not found',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-              ),
-            ),
-          );
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            PolicyDetailsHeader(
-              policyName: config.policyName,
-              policyNameArabic: config.policyNameArabic,
-              version: config.version,
-              lastModified: config.lastModified,
-              selectedBy: config.selectedBy,
-              isDark: isDark,
-              onHistoryPressed: () {
-                PolicyHistoryDialog.show(context, config.policyName);
-              },
-              onEditPressed: () {},
-            ),
-            EligibilityCriteriaSection(isDark: isDark, eligibility: config.eligibilityCriteria),
-            EntitlementAccrualSection(isDark: isDark, entitlement: config.entitlementAccrual),
-            AdvancedRulesSection(
-              isDark: isDark,
-              advanced: config.advancedRules,
-              approval: config.approvalWorkflows,
-              blackout: config.blackoutPeriods,
-            ),
-            CarryForwardRulesSection(isDark: isDark, carryForward: config.carryForwardRules),
-            ForfeitRulesSection(
-              isDark: isDark,
-              forfeit: config.forfeitRules,
-              carryForwardLimit: config.carryForwardRules.carryForwardLimit,
-              gracePeriod: config.carryForwardRules.gracePeriod,
-            ),
-            EncashmentRulesSection(isDark: isDark, encashment: config.encashmentRules),
-          ],
-        );
-      },
-      loading: () => const Center(child: AppLoadingIndicator()),
-      error: (error, stackTrace) => Center(
-        child: Text(
-          'Error loading policy configuration: ${error.toString()}',
-          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.errorTextDark : AppColors.errorText),
-        ),
+  Widget _buildError(BuildContext context, bool isDark, String message) {
+    return Center(
+      child: Text(
+        'Error loading leave policies: $message',
+        style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.errorTextDark : AppColors.errorText),
       ),
     );
   }
