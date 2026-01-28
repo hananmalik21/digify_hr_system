@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/forfeit_preview_employee.dart';
@@ -9,6 +10,7 @@ import 'package:digify_hr_system/features/leave_management/domain/models/forfeit
 import 'package:digify_hr_system/features/leave_management/domain/models/forfeit_schedule_entry.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_schedule_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/confirm_run_content.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/forfeit_processing_stepper.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/preview_review_content.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/processing_summary_card.dart';
@@ -17,9 +19,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ForfeitProcessingTab extends ConsumerWidget {
+class ForfeitProcessingTab extends ConsumerStatefulWidget {
   const ForfeitProcessingTab({super.key});
 
+  @override
+  ConsumerState<ForfeitProcessingTab> createState() => _ForfeitProcessingTabState();
+}
+
+class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
   String _getButtonLabel(ForfeitProcessingStep step) {
     switch (step) {
       case ForfeitProcessingStep.upcomingForfeits:
@@ -34,7 +41,7 @@ class ForfeitProcessingTab extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
@@ -138,9 +145,7 @@ class ForfeitProcessingTab extends ConsumerWidget {
             isDark: isDark,
             onEntrySelected: onEntrySelected,
           ),
-          loading: () => Center(
-            child: Padding(padding: EdgeInsets.all(40.h), child: CircularProgressIndicator()),
-          ),
+          loading: () => const Center(child: AppLoadingIndicator()),
           error: (error, stack) => Center(
             child: Padding(
               padding: EdgeInsets.all(40.h),
@@ -155,9 +160,7 @@ class ForfeitProcessingTab extends ConsumerWidget {
         return previewEmployeesAsync.when(
           data: (employees) =>
               PreviewReviewContent(employees: employees, isDark: isDark, selectedScheduleEntry: selectedEntry),
-          loading: () => Center(
-            child: Padding(padding: EdgeInsets.all(40.h), child: CircularProgressIndicator()),
-          ),
+          loading: () => const Center(child: AppLoadingIndicator()),
           error: (error, stack) => Center(
             child: Padding(
               padding: EdgeInsets.all(40.h),
@@ -169,13 +172,23 @@ class ForfeitProcessingTab extends ConsumerWidget {
           ),
         );
       case ForfeitProcessingStep.confirmRun:
-        return Text("Waiting for confirmaiton here");
+        return previewEmployeesAsync.when(
+          data: (employees) => ConfirmRunContent(employees: employees),
+          loading: () => const Center(child: AppLoadingIndicator()),
+          error: (error, stack) => Center(
+            child: Padding(
+              padding: EdgeInsets.all(40.h),
+              child: Text(
+                'Error loading preview data',
+                style: TextStyle(color: isDark ? AppColors.errorTextDark : AppColors.error),
+              ),
+            ),
+          ),
+        );
       case ForfeitProcessingStep.resultsSummary:
         return processingSummaryAsync.when(
           data: (summary) => ProcessingSummaryCard(summary: summary, isDark: isDark),
-          loading: () => Center(
-            child: Padding(padding: EdgeInsets.all(40.h), child: CircularProgressIndicator()),
-          ),
+          loading: () => const Center(child: AppLoadingIndicator()),
           error: (error, stack) => Center(
             child: Padding(
               padding: EdgeInsets.all(40.h),
