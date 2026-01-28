@@ -11,22 +11,24 @@ import 'package:gap/gap.dart';
 class PolicyDetailsHeader extends StatelessWidget {
   final String policyName;
   final String policyNameArabic;
-  final String version;
   final String lastModified;
   final String selectedBy;
-  final VoidCallback? onHistoryPressed;
+  final bool isEditing;
   final VoidCallback? onEditPressed;
+  final VoidCallback? onCancelPressed;
+  final VoidCallback? onSavePressed;
   final bool isDark;
 
   const PolicyDetailsHeader({
     super.key,
     required this.policyName,
     required this.policyNameArabic,
-    required this.version,
     required this.lastModified,
     required this.selectedBy,
-    this.onHistoryPressed,
+    this.isEditing = false,
     this.onEditPressed,
+    this.onCancelPressed,
+    this.onSavePressed,
     required this.isDark,
   });
 
@@ -66,9 +68,8 @@ class PolicyDetailsHeader extends StatelessWidget {
                     ),
                     Gap(14.h),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: 24.w,
                       children: [
-                        LabelValuePair(label: 'Version', value: 'v$version', isDark: isDark),
                         LabelValuePair(label: 'Last Modified', value: lastModified, isDark: isDark),
                         LabelValuePair(label: 'Modified By', value: selectedBy, isDark: isDark),
                       ],
@@ -76,17 +77,16 @@ class PolicyDetailsHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              AppButton.outline(
-                label: 'History',
-                svgPath: Assets.icons.leaveManagement.history.path,
-                onPressed: onHistoryPressed,
-              ),
-              Gap(7.w),
-              AppButton.primary(
-                label: 'Edit Policy',
-                svgPath: Assets.icons.editIconGreen.path,
-                onPressed: onEditPressed,
-              ),
+              if (isEditing) ...[
+                AppButton.outline(label: 'Cancel', onPressed: onCancelPressed),
+                Gap(7.w),
+                AppButton.primary(label: 'Save', svgPath: Assets.icons.saveConfigIcon.path, onPressed: onSavePressed),
+              ] else
+                AppButton.primary(
+                  label: 'Edit Policy',
+                  svgPath: Assets.icons.editIconGreen.path,
+                  onPressed: onEditPressed,
+                ),
             ],
           ),
         ],

@@ -15,6 +15,8 @@ class DateSelectionField extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final String? hintText;
+  final String? labelIconPath;
+  final bool enabled;
 
   const DateSelectionField({
     super.key,
@@ -25,6 +27,8 @@ class DateSelectionField extends StatelessWidget {
     this.firstDate,
     this.lastDate,
     this.hintText,
+    this.labelIconPath,
+    this.enabled = true,
   });
 
   @override
@@ -35,39 +39,53 @@ class DateSelectionField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: label,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                  fontFamily: 'Inter',
-                ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (labelIconPath != null) ...[
+              DigifyAsset(
+                assetPath: labelIconPath!,
+                width: 16.w,
+                height: 16.h,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.primary,
               ),
-              if (isRequired)
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.error,
-                    fontFamily: 'Inter',
-                  ),
-                ),
+              Gap(8.w),
             ],
-          ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: label,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  if (isRequired)
+                    TextSpan(
+                      text: ' *',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.error,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
         Gap(6.h),
         InkWell(
-          onTap: () => _selectDate(context),
+          onTap: enabled ? () => _selectDate(context) : null,
           child: Container(
             height: 40.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
-              color: AppColors.cardBackground,
+              color: enabled ? AppColors.cardBackground : AppColors.cardBackground.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: AppColors.borderGrey),
             ),
@@ -78,7 +96,9 @@ class DateSelectionField extends StatelessWidget {
                     date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: date != null ? AppColors.textPrimary : AppColors.textSecondary.withValues(alpha: 0.6),
+                      color: date != null
+                          ? (enabled ? AppColors.textPrimary : AppColors.textSecondary)
+                          : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

@@ -3,7 +3,6 @@ import 'package:digify_hr_system/features/leave_management/presentation/widgets/
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/employee_category_subsection.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/employment_type_subsection.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/gender_religion_marital_subsection.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/grade_level_restrictions_subsection.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/probation_period_subsection.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/years_of_service_subsection.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
@@ -32,7 +31,6 @@ class EligibilityCriteriaSection extends StatelessWidget {
           ContractTypeSubsection(eligibility: eligibility, isDark: isDark),
           GenderReligionMaritalSubsection(eligibility: eligibility, isDark: isDark),
           ProbationPeriodSubsection(eligibility: eligibility, isDark: isDark),
-          GradeLevelRestrictionsSubsection(eligibility: eligibility, isDark: isDark),
         ],
       ),
     );
