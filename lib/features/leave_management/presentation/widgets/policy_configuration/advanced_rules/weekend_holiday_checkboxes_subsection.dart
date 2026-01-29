@@ -6,8 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeekendHolidayCheckboxesSubsection extends StatelessWidget {
   final AdvancedRules advanced;
+  final bool isEditing;
 
-  const WeekendHolidayCheckboxesSubsection({super.key, required this.advanced});
+  const WeekendHolidayCheckboxesSubsection({super.key, required this.advanced, required this.isEditing});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class WeekendHolidayCheckboxesSubsection extends StatelessWidget {
             ),
             child: DigifyCheckbox(
               value: advanced.countWeekendsAsLeave,
-              onChanged: null,
+              onChanged: isEditing ? (_) {} : null,
               label: 'Count weekends as leave days',
             ),
           ),
@@ -37,7 +38,7 @@ class WeekendHolidayCheckboxesSubsection extends StatelessWidget {
             ),
             child: DigifyCheckbox(
               value: advanced.countPublicHolidaysAsLeave,
-              onChanged: null,
+              onChanged: isEditing ? (_) {} : null,
               label: 'Count public holidays as leave days',
             ),
           ),

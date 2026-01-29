@@ -10,8 +10,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AdvancedRulesSection extends StatelessWidget {
   final bool isDark;
   final AdvancedRules advanced;
+  final bool isEditing;
 
-  const AdvancedRulesSection({super.key, required this.isDark, required this.advanced});
+  const AdvancedRulesSection({super.key, required this.isDark, required this.advanced, required this.isEditing});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,9 @@ class AdvancedRulesSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 14.h,
         children: [
-          DaysAndNoticePeriodSubsection(advanced: advanced, isDark: isDark),
-          WeekendHolidayCheckboxesSubsection(advanced: advanced),
-          SupportingDocumentationCard(advanced: advanced, isDark: isDark),
+          DaysAndNoticePeriodSubsection(advanced: advanced, isDark: isDark, isEditing: isEditing),
+          WeekendHolidayCheckboxesSubsection(advanced: advanced, isEditing: isEditing),
+          SupportingDocumentationCard(advanced: advanced, isDark: isDark, isEditing: isEditing),
         ],
       ),
     );

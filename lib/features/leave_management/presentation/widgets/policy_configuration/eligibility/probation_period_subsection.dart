@@ -3,19 +3,28 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class ProbationPeriodSubsection extends StatelessWidget {
+class ProbationPeriodSubsection extends ConsumerWidget {
   final EligibilityCriteria eligibility;
   final bool isDark;
+  final bool isEditing;
 
-  const ProbationPeriodSubsection({super.key, required this.eligibility, required this.isDark});
+  const ProbationPeriodSubsection({
+    super.key,
+    required this.eligibility,
+    required this.isDark,
+    required this.isEditing,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -26,7 +35,10 @@ class ProbationPeriodSubsection extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          DigifyCheckbox(value: eligibility.availableDuringProbation, onChanged: null),
+          DigifyCheckbox(
+            value: eligibility.availableDuringProbation,
+            onChanged: isEditing ? (checked) => draftNotifier.updateProbationAllowed(checked ?? false) : null,
+          ),
           Gap(12.w),
           DigifyAsset(
             assetPath: Assets.icons.leaveManagement.prohibited.path,

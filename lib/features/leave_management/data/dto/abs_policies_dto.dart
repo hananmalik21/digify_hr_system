@@ -42,7 +42,6 @@ class AbsPoliciesResponseDto {
 }
 
 class AbsPolicyItemDto {
-  // Basic Policy Info
   final int policyId;
   final String policyGuid;
   final int tenantId;
@@ -57,7 +56,6 @@ class AbsPolicyItemDto {
   final String? policyCreatedBy;
   final String? policyCreatedDate;
 
-  // Eligibility
   final int? eligibilityId;
   final int? minServiceYears;
   final int? maxServiceYears;
@@ -69,7 +67,6 @@ class AbsPolicyItemDto {
   final String? maritalStatusCode;
   final String? probationAllowed;
 
-  // Rules
   final int? ruleId;
   final int? minNoticeDays;
   final int? maxConsecutiveDays;
@@ -77,7 +74,6 @@ class AbsPolicyItemDto {
   final String? rulesAllowCarryForward;
   final String? rulesAllowEncashment;
 
-  // Carry Forward
   final int? cfRuleId;
   final String? cfAllowCarryForward;
   final int? carryForwardLimitDays;
@@ -86,13 +82,11 @@ class AbsPolicyItemDto {
   final String? forfeitTriggerCode;
   final int? notifyBeforeDays;
 
-  // Encashment
   final int? encashRuleId;
   final String? encashAllowEncashment;
   final int? encashmentLimitDays;
   final int? encashmentRatePct;
 
-  // Grade Rows
   final List<GradeRowDto> gradeRows;
 
   const AbsPolicyItemDto({
@@ -306,6 +300,189 @@ class GradeRowDto {
       entitlementDays: gradeEntitlementDays,
       accrualRate: gradeAccrualRate,
       isActive: gradeStatus.toUpperCase() == 'ACTIVE',
+    );
+  }
+}
+
+class UpdatePolicyRequestDto {
+  final int tenantId;
+  final int leaveTypeId;
+  final int entitlementDays;
+  final String accrualMethodCode;
+  final String updatedBy;
+  final String? policyName;
+  final int? minServiceYears;
+  final int? maxServiceYears;
+  final String? employeeCategoryCode;
+  final String? employmentTypeCode;
+  final String? contractTypeCode;
+  final String? genderCode;
+  final String? religionCode;
+  final String? maritalStatusCode;
+  final String probationAllowed;
+  final String policyStatus;
+  final int? minNoticeDays;
+  final int? maxConsecutiveDays;
+  final String requiresDocument;
+  final String allowCarryForward;
+  final String allowEncashment;
+  final int? carryForwardLimit;
+  final int? gracePeriodDays;
+  final String autoForfeitFlag;
+  final int? notifyBeforeDays;
+  final int? encashmentLimitDays;
+  final int? encashmentRatePct;
+  final List<UpdatePolicyGradeRowDto> gradeRows;
+
+  const UpdatePolicyRequestDto({
+    required this.tenantId,
+    required this.leaveTypeId,
+    required this.entitlementDays,
+    required this.accrualMethodCode,
+    required this.updatedBy,
+    this.policyName,
+    this.minServiceYears,
+    this.maxServiceYears,
+    this.employeeCategoryCode,
+    this.employmentTypeCode,
+    this.contractTypeCode,
+    this.genderCode,
+    this.religionCode,
+    this.maritalStatusCode,
+    required this.probationAllowed,
+    required this.policyStatus,
+    this.minNoticeDays,
+    this.maxConsecutiveDays,
+    required this.requiresDocument,
+    required this.allowCarryForward,
+    required this.allowEncashment,
+    this.carryForwardLimit,
+    this.gracePeriodDays,
+    required this.autoForfeitFlag,
+    this.notifyBeforeDays,
+    this.encashmentLimitDays,
+    this.encashmentRatePct,
+    this.gradeRows = const [],
+  });
+
+  factory UpdatePolicyRequestDto.fromDetail(PolicyDetail detail, {required String updatedBy}) {
+    return UpdatePolicyRequestDto(
+      tenantId: detail.tenantId,
+      leaveTypeId: detail.leaveTypeId,
+      entitlementDays: detail.entitlementDays,
+      accrualMethodCode: detail.accrualMethod.code,
+      updatedBy: updatedBy,
+      policyName: detail.policyName,
+      minServiceYears: detail.minServiceYears,
+      maxServiceYears: detail.maxServiceYears,
+      employeeCategoryCode: detail.employeeCategoryCode,
+      employmentTypeCode: detail.employmentTypeCode,
+      contractTypeCode: detail.contractTypeCode,
+      genderCode: detail.genderCode,
+      religionCode: detail.religionCode,
+      maritalStatusCode: detail.maritalStatusCode,
+      probationAllowed: detail.probationAllowed ? 'Y' : 'N',
+      policyStatus: detail.status.code,
+      minNoticeDays: detail.minNoticeDays,
+      maxConsecutiveDays: detail.maxConsecutiveDays,
+      requiresDocument: detail.requiresDocument ? 'Y' : 'N',
+      allowCarryForward: detail.allowCarryForward ? 'Y' : 'N',
+      allowEncashment: detail.allowEncashment ? 'Y' : 'N',
+      carryForwardLimit: detail.carryForwardLimitDays,
+      gracePeriodDays: detail.gracePeriodDays,
+      autoForfeitFlag: detail.autoForfeit ? 'Y' : 'N',
+      notifyBeforeDays: detail.notifyBeforeDays,
+      encashmentLimitDays: detail.encashmentLimitDays,
+      encashmentRatePct: detail.encashmentRatePct,
+      gradeRows: detail.gradeRows
+          .map(
+            (g) => UpdatePolicyGradeRowDto(
+              gradeFrom: g.gradeFrom ?? 1,
+              gradeTo: g.gradeTo,
+              entitlementDays: g.entitlementDays,
+              accrualRate: g.accrualRate,
+              status: g.isActive ? 'ACTIVE' : 'INACTIVE',
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'tenant_id': tenantId,
+      'leave_type_id': leaveTypeId,
+      'entitlement_days': entitlementDays,
+      'accrual_method_code': accrualMethodCode,
+      'updated_by': updatedBy,
+      'policy_name': policyName,
+      'min_service_years': minServiceYears,
+      'max_service_years': maxServiceYears,
+      'employee_category_code': employeeCategoryCode,
+      'employment_type_code': employmentTypeCode,
+      'contract_type_code': contractTypeCode,
+      'gender_code': genderCode,
+      'religion_code': religionCode,
+      'marital_status_code': maritalStatusCode,
+      'probation_allowed': probationAllowed,
+      'policy_status': policyStatus,
+      'min_notice_days': minNoticeDays,
+      'max_consecutive_days': maxConsecutiveDays,
+      'requires_document': requiresDocument,
+      'allow_carry_forward': allowCarryForward,
+      'allow_encashment': allowEncashment,
+      'carry_forward_limit': carryForwardLimit,
+      'grace_period_days': gracePeriodDays,
+      'auto_forfeit_flag': autoForfeitFlag,
+      'notify_before_days': notifyBeforeDays,
+      'encashment_limit_days': encashmentLimitDays,
+      'encashment_rate_pct': encashmentRatePct,
+      'grade_rows': gradeRows.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class UpdatePolicyGradeRowDto {
+  final int gradeFrom;
+  final int? gradeTo;
+  final int entitlementDays;
+  final double? accrualRate;
+  final String status;
+
+  const UpdatePolicyGradeRowDto({
+    required this.gradeFrom,
+    this.gradeTo,
+    required this.entitlementDays,
+    this.accrualRate,
+    required this.status,
+  });
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'grade_from': gradeFrom,
+      'grade_to': gradeTo,
+      'entitlement_days': entitlementDays,
+      'accrual_rate': accrualRate,
+      'status': status,
+    };
+  }
+}
+
+class UpdatePolicyResponseDto {
+  final bool success;
+  final String message;
+  final AbsPolicyItemDto data;
+  final Map<String, dynamic>? meta;
+
+  const UpdatePolicyResponseDto({required this.success, required this.message, required this.data, this.meta});
+
+  factory UpdatePolicyResponseDto.fromJson(Map<String, dynamic> json) {
+    final dataJson = json['data'] as Map<String, dynamic>?;
+    return UpdatePolicyResponseDto(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: dataJson != null ? AbsPolicyItemDto.fromJson(dataJson) : AbsPolicyItemDto.fromJson({}),
+      meta: json['meta'] as Map<String, dynamic>?,
     );
   }
 }

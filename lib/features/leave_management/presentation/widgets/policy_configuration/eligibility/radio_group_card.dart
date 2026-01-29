@@ -10,6 +10,7 @@ class RadioGroupCard extends StatelessWidget {
   final List<String> options;
   final String? selectedValue;
   final bool isDark;
+  final void Function(String?)? onChanged;
 
   const RadioGroupCard({
     super.key,
@@ -18,6 +19,7 @@ class RadioGroupCard extends StatelessWidget {
     required this.options,
     required this.selectedValue,
     required this.isDark,
+    this.onChanged,
   });
 
   @override
@@ -38,7 +40,7 @@ class RadioGroupCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
             children: options.map((option) {
-              return DigifyRadio<String>(value: option, groupValue: selectedValue, onChanged: (_) {}, label: option);
+              return DigifyRadio<String>(value: option, groupValue: selectedValue, onChanged: onChanged, label: option);
             }).toList(),
           ),
         ],

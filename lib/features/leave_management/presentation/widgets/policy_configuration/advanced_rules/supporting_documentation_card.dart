@@ -11,8 +11,9 @@ import 'package:gap/gap.dart';
 class SupportingDocumentationCard extends StatelessWidget {
   final AdvancedRules advanced;
   final bool isDark;
+  final bool isEditing;
 
-  const SupportingDocumentationCard({super.key, required this.advanced, required this.isDark});
+  const SupportingDocumentationCard({super.key, required this.advanced, required this.isDark, required this.isEditing});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class SupportingDocumentationCard extends StatelessWidget {
             color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
           ),
           Gap(12.w),
-          DigifyCheckbox(value: advanced.requiredSupportingDocumentation, onChanged: null),
+          DigifyCheckbox(value: advanced.requiredSupportingDocumentation, onChanged: isEditing ? (_) {} : null),
           Gap(7.w),
           Expanded(
             child: Text(

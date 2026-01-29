@@ -11,8 +11,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class EncashmentRulesSection extends StatelessWidget {
   final bool isDark;
   final EncashmentRules encashment;
+  final bool isEditing;
 
-  const EncashmentRulesSection({super.key, required this.isDark, required this.encashment});
+  const EncashmentRulesSection({super.key, required this.isDark, required this.encashment, required this.isEditing});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class EncashmentRulesSection extends StatelessWidget {
               children: [
                 DigifyCheckbox(
                   value: encashment.allowLeaveEncashment,
-                  onChanged: null,
+                  onChanged: isEditing ? (_) {} : null,
                   label: 'Allow Leave Encashment',
                 ),
                 Padding(
@@ -66,6 +67,7 @@ class EncashmentRulesSection extends StatelessWidget {
                       hintText: 'Enter limit',
                       filled: true,
                       fillColor: AppColors.cardBackground,
+                      readOnly: !isEditing,
                     ),
                     Text(
                       'Maximum days allowed for encashment per year',
@@ -87,6 +89,7 @@ class EncashmentRulesSection extends StatelessWidget {
                       hintText: 'Enter rate',
                       filled: true,
                       fillColor: AppColors.cardBackground,
+                      readOnly: !isEditing,
                     ),
                     Text(
                       'Percentage of daily wage paid',

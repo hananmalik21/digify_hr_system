@@ -12,6 +12,7 @@ class ForfeitRulesSection extends StatelessWidget {
   final ForfeitRules forfeit;
   final String carryForwardLimit;
   final String gracePeriod;
+  final bool isEditing;
 
   const ForfeitRulesSection({
     super.key,
@@ -19,6 +20,7 @@ class ForfeitRulesSection extends StatelessWidget {
     required this.forfeit,
     required this.carryForwardLimit,
     required this.gracePeriod,
+    required this.isEditing,
   });
 
   @override
@@ -43,7 +45,7 @@ class ForfeitRulesSection extends StatelessWidget {
               children: [
                 DigifyCheckbox(
                   value: forfeit.enableAutomaticForfeit,
-                  onChanged: null,
+                  onChanged: isEditing ? (_) {} : null,
                   label: 'Enable Automatic Forfeit',
                 ),
                 Padding(

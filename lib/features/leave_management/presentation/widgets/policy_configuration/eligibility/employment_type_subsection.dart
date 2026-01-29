@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_subsection_header.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,15 @@ import 'package:gap/gap.dart';
 class EmploymentTypeSubsection extends ConsumerWidget {
   final EligibilityCriteria eligibility;
   final bool isDark;
+  final bool isEditing;
 
-  const EmploymentTypeSubsection({super.key, required this.eligibility, required this.isDark});
+  const EmploymentTypeSubsection({super.key, required this.eligibility, required this.isDark, required this.isEditing});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final values = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.empType));
     final selectedCode = eligibility.employmentTypeCode;
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
     final mid = values.isEmpty ? 0 : (values.length / 2).ceil();
     final first = values.sublist(0, mid);
     final second = values.isEmpty ? values : values.sublist(mid);
@@ -53,7 +56,11 @@ class EmploymentTypeSubsection extends ConsumerWidget {
                       if (i > 0) Gap(12.h),
                       DigifyCheckbox(
                         value: selectedCode != null && first[i].lookupValueCode == selectedCode,
-                        onChanged: null,
+                        onChanged: isEditing
+                            ? (checked) => draftNotifier.updateEmploymentTypeCode(
+                                checked == true ? first[i].lookupValueCode : null,
+                              )
+                            : null,
                         label: first[i].lookupValueName,
                       ),
                     ],
@@ -70,7 +77,11 @@ class EmploymentTypeSubsection extends ConsumerWidget {
                       if (i > 0) Gap(12.h),
                       DigifyCheckbox(
                         value: selectedCode != null && second[i].lookupValueCode == selectedCode,
-                        onChanged: null,
+                        onChanged: isEditing
+                            ? (checked) => draftNotifier.updateEmploymentTypeCode(
+                                checked == true ? second[i].lookupValueCode : null,
+                              )
+                            : null,
                         label: second[i].lookupValueName,
                       ),
                     ],

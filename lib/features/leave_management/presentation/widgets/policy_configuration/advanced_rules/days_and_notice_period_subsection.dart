@@ -8,8 +8,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DaysAndNoticePeriodSubsection extends StatelessWidget {
   final AdvancedRules advanced;
   final bool isDark;
+  final bool isEditing;
 
-  const DaysAndNoticePeriodSubsection({super.key, required this.advanced, required this.isDark});
+  const DaysAndNoticePeriodSubsection({
+    super.key,
+    required this.advanced,
+    required this.isDark,
+    required this.isEditing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +34,7 @@ class DaysAndNoticePeriodSubsection extends StatelessWidget {
                 hintText: 'Enter maximum consecutive days',
                 filled: true,
                 fillColor: AppColors.cardBackground,
+                readOnly: !isEditing,
               ),
               Text(
                 'Maximum days in a single request',
@@ -49,6 +56,7 @@ class DaysAndNoticePeriodSubsection extends StatelessWidget {
                 hintText: 'Enter minimum notice period',
                 filled: true,
                 fillColor: AppColors.cardBackground,
+                readOnly: !isEditing,
               ),
               Text(
                 'Days before leave start date',

@@ -14,24 +14,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class PolicyConfigurationTab extends ConsumerStatefulWidget {
+class PolicyConfigurationTab extends ConsumerWidget {
   const PolicyConfigurationTab({super.key});
 
   @override
-  ConsumerState<PolicyConfigurationTab> createState() => _PolicyConfigurationTabState();
-}
-
-class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab> {
-  PolicyListItem? _selectedPolicy;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
     final isMobile = context.isMobile;
     final policiesAsync = ref.watch(absPoliciesProvider);
     final notifierState = ref.watch(absPoliciesNotifierProvider);
     final pagination = ref.watch(absPoliciesPaginationProvider);
     final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final selectedPolicy = ref.watch(selectedPolicyConfigurationProvider);
+    final setSelectedGuid = ref.read(selectedPolicyGuidProvider.notifier).setSelectedPolicyGuid;
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -55,10 +50,27 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
           PolicyConfigurationStatCards(isDark: isDark),
           policiesAsync.when(
             data: (paginated) {
-              _syncSelection(paginated.policies);
               return isMobile
-                  ? _buildMobileLayout(isDark, paginated.policies, pagination, notifierState)
-                  : _buildDesktopLayout(isDark, paginated.policies, pagination, notifierState);
+                  ? _buildMobileLayout(
+                      ref,
+                      context,
+                      isDark,
+                      paginated.policies,
+                      pagination,
+                      notifierState,
+                      selectedPolicy,
+                      setSelectedGuid,
+                    )
+                  : _buildDesktopLayout(
+                      ref,
+                      context,
+                      isDark,
+                      paginated.policies,
+                      pagination,
+                      notifierState,
+                      selectedPolicy,
+                      setSelectedGuid,
+                    );
             },
             loading: () => PolicyConfigurationSkeleton(isDark: isDark, isMobile: isMobile),
             error: (e, _) => _buildError(context, isDark, e.toString()),
@@ -68,32 +80,21 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
     );
   }
 
-  void _syncSelection(List<PolicyListItem> policies) {
-    final needSelection = _selectedPolicy == null && policies.isNotEmpty;
-    final selectionMissing =
-        _selectedPolicy != null &&
-        policies.isNotEmpty &&
-        !policies.any((p) => p.policyGuid == _selectedPolicy!.policyGuid);
-    if (needSelection || selectionMissing) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() => _selectedPolicy = policies.isNotEmpty ? policies.first : null);
-        }
-      });
-    }
-  }
-
-  void _goToPage(int page) {
+  static void _goToPage(WidgetRef ref, int page) {
     final pagination = ref.read(absPoliciesPaginationProvider);
     ref.read(absPoliciesPaginationProvider.notifier).state = (page: page, pageSize: pagination.pageSize);
   }
 
-  Widget _buildListWithPagination({
+  static Widget _buildListWithPagination({
+    required BuildContext context,
+    required WidgetRef ref,
     required bool isDark,
     required List<PolicyListItem> policies,
     required ({int page, int pageSize}) pagination,
     required AbsPoliciesState notifierState,
     required BoxConstraints listConstraints,
+    required PolicyListItem? selectedPolicy,
+    required void Function(String?) onPolicySelected,
     double? width,
   }) {
     final meta = notifierState.data;
@@ -101,68 +102,84 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
 
     return PolicyListWithPagination(
       policies: policies,
-      selectedPolicy: _selectedPolicy,
-      onPolicySelected: (p) => setState(() => _selectedPolicy = p),
+      selectedPolicy: selectedPolicy,
+      onPolicySelected: (p) => onPolicySelected(p.policyGuid),
       isDark: isDark,
       listConstraints: listConstraints,
       paginationInfo: paginationInfo,
       currentPage: pagination.page,
       pageSize: pagination.pageSize,
-      onPrevious: () => _goToPage(pagination.page - 1),
-      onNext: () => _goToPage(pagination.page + 1),
+      onPrevious: () => _goToPage(ref, pagination.page - 1),
+      onNext: () => _goToPage(ref, pagination.page + 1),
       isLoading: notifierState.isLoading,
       width: width,
     );
   }
 
-  Widget _buildMobileLayout(
+  static Widget _buildMobileLayout(
+    WidgetRef ref,
+    BuildContext context,
     bool isDark,
     List<PolicyListItem> policies,
     ({int page, int pageSize}) pagination,
     AbsPoliciesState notifierState,
+    PolicyListItem? selectedPolicy,
+    void Function(String?) setSelectedGuid,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 16.h,
       children: [
         _buildListWithPagination(
+          context: context,
+          ref: ref,
           isDark: isDark,
           policies: policies,
           pagination: pagination,
           notifierState: notifierState,
           listConstraints: BoxConstraints(maxHeight: 300.h),
+          selectedPolicy: selectedPolicy,
+          onPolicySelected: setSelectedGuid,
         ),
-        PolicyDetailsContent(selectedPolicy: _selectedPolicy, isDark: isDark),
+        PolicyDetailsContent(selectedPolicy: selectedPolicy, isDark: isDark),
       ],
     );
   }
 
-  Widget _buildDesktopLayout(
+  static Widget _buildDesktopLayout(
+    WidgetRef ref,
+    BuildContext context,
     bool isDark,
     List<PolicyListItem> policies,
     ({int page, int pageSize}) pagination,
     AbsPoliciesState notifierState,
+    PolicyListItem? selectedPolicy,
+    void Function(String?) setSelectedGuid,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildListWithPagination(
+          context: context,
+          ref: ref,
           isDark: isDark,
           policies: policies,
           pagination: pagination,
           notifierState: notifierState,
           listConstraints: BoxConstraints(maxHeight: 800.h),
+          selectedPolicy: selectedPolicy,
+          onPolicySelected: setSelectedGuid,
           width: 350.w,
         ),
         Gap(21.w),
         Expanded(
-          child: PolicyDetailsContent(selectedPolicy: _selectedPolicy, isDark: isDark),
+          child: PolicyDetailsContent(selectedPolicy: selectedPolicy, isDark: isDark),
         ),
       ],
     );
   }
 
-  Widget _buildError(BuildContext context, bool isDark, String message) {
+  static Widget _buildError(BuildContext context, bool isDark, String message) {
     return Center(
       child: Text(
         'Error loading leave policies: $message',

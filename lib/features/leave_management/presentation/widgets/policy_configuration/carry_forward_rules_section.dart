@@ -11,8 +11,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CarryForwardRulesSection extends StatelessWidget {
   final bool isDark;
   final CarryForwardRules carryForward;
+  final bool isEditing;
 
-  const CarryForwardRulesSection({super.key, required this.isDark, required this.carryForward});
+  const CarryForwardRulesSection({
+    super.key,
+    required this.isDark,
+    required this.carryForward,
+    required this.isEditing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class CarryForwardRulesSection extends StatelessWidget {
               children: [
                 DigifyCheckbox(
                   value: carryForward.allowCarryForward,
-                  onChanged: null,
+                  onChanged: isEditing ? (_) {} : null,
                   label: 'Allow Carry Forward to Next Year',
                 ),
                 Padding(
@@ -66,6 +72,7 @@ class CarryForwardRulesSection extends StatelessWidget {
                       hintText: 'Enter limit',
                       filled: true,
                       fillColor: AppColors.cardBackground,
+                      readOnly: !isEditing,
                     ),
                     Text(
                       'Maximum days allowed to carry forward',
@@ -87,6 +94,7 @@ class CarryForwardRulesSection extends StatelessWidget {
                       hintText: 'Enter grace period',
                       filled: true,
                       fillColor: AppColors.cardBackground,
+                      readOnly: !isEditing,
                     ),
                     Text(
                       'Days after year-end to use carried leave',

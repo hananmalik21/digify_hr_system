@@ -14,6 +14,7 @@ class PolicyDetailsHeader extends StatelessWidget {
   final String lastModified;
   final String selectedBy;
   final bool isEditing;
+  final bool isSaving;
   final VoidCallback? onEditPressed;
   final VoidCallback? onCancelPressed;
   final VoidCallback? onSavePressed;
@@ -26,6 +27,7 @@ class PolicyDetailsHeader extends StatelessWidget {
     required this.lastModified,
     required this.selectedBy,
     this.isEditing = false,
+    this.isSaving = false,
     this.onEditPressed,
     this.onCancelPressed,
     this.onSavePressed,
@@ -78,9 +80,14 @@ class PolicyDetailsHeader extends StatelessWidget {
                 ),
               ),
               if (isEditing) ...[
-                AppButton.outline(label: 'Cancel', onPressed: onCancelPressed),
+                AppButton.outline(label: 'Cancel', onPressed: isSaving ? null : onCancelPressed),
                 Gap(7.w),
-                AppButton.primary(label: 'Save', svgPath: Assets.icons.saveConfigIcon.path, onPressed: onSavePressed),
+                AppButton.primary(
+                  label: 'Save',
+                  svgPath: Assets.icons.saveConfigIcon.path,
+                  onPressed: isSaving ? null : onSavePressed,
+                  isLoading: isSaving,
+                ),
               ] else
                 AppButton.primary(
                   label: 'Edit Policy',

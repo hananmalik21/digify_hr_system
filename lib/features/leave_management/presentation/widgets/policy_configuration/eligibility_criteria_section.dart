@@ -13,8 +13,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class EligibilityCriteriaSection extends StatelessWidget {
   final bool isDark;
   final EligibilityCriteria eligibility;
+  final bool isEditing;
 
-  const EligibilityCriteriaSection({super.key, required this.isDark, required this.eligibility});
+  const EligibilityCriteriaSection({
+    super.key,
+    required this.isDark,
+    required this.eligibility,
+    required this.isEditing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +31,12 @@ class EligibilityCriteriaSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 14.h,
         children: [
-          YearsOfServiceSubsection(eligibility: eligibility, isDark: isDark),
-          EmployeeCategorySubsection(eligibility: eligibility, isDark: isDark),
-          EmploymentTypeSubsection(eligibility: eligibility, isDark: isDark),
-          ContractTypeSubsection(eligibility: eligibility, isDark: isDark),
-          GenderReligionMaritalSubsection(eligibility: eligibility, isDark: isDark),
-          ProbationPeriodSubsection(eligibility: eligibility, isDark: isDark),
+          YearsOfServiceSubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
+          EmployeeCategorySubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
+          EmploymentTypeSubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
+          ContractTypeSubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
+          GenderReligionMaritalSubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
+          ProbationPeriodSubsection(eligibility: eligibility, isDark: isDark, isEditing: isEditing),
         ],
       ),
     );
