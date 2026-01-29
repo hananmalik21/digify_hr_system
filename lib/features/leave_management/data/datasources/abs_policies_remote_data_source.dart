@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/leave_management/data/dto/abs_policies
 
 abstract class AbsPoliciesRemoteDataSource {
   Future<AbsPoliciesResponseDto> getPolicies({required int tenantId, int page = 1, int pageSize = 10});
+  Future<UpdatePolicyResponseDto> updatePolicy(String policyGuid, UpdatePolicyRequestDto body);
 }
 
 class AbsPoliciesRemoteDataSourceImpl implements AbsPoliciesRemoteDataSource {
@@ -28,6 +29,18 @@ class AbsPoliciesRemoteDataSourceImpl implements AbsPoliciesRemoteDataSource {
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to fetch leave policies: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<UpdatePolicyResponseDto> updatePolicy(String policyGuid, UpdatePolicyRequestDto body) async {
+    try {
+      final response = await apiClient.put(ApiEndpoints.absUpdatePolicy(policyGuid), body: body.toJson());
+      return UpdatePolicyResponseDto.fromJson(response);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update policy: ${e.toString()}', originalError: e);
     }
   }
 }

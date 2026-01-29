@@ -2,6 +2,7 @@ import 'package:digify_hr_system/features/leave_management/domain/models/abs_loo
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/radio_group_card.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,21 @@ import 'package:gap/gap.dart';
 class GenderReligionMaritalSubsection extends ConsumerWidget {
   final EligibilityCriteria eligibility;
   final bool isDark;
+  final bool isEditing;
 
-  const GenderReligionMaritalSubsection({super.key, required this.eligibility, required this.isDark});
+  const GenderReligionMaritalSubsection({
+    super.key,
+    required this.eligibility,
+    required this.isDark,
+    required this.isEditing,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final genderValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.gender));
     final religionValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.religionCode));
     final maritalValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.maritalStatus));
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
 
     final genderOptions = ['All', ...genderValues.map((v) => v.lookupValueName)];
     final religionOptions = ['All', ...religionValues.map((v) => v.lookupValueName)];
@@ -38,6 +46,7 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
           options: genderOptions,
           selectedValue: genderSelected,
           isDark: isDark,
+          onChanged: isEditing ? (name) => draftNotifier.updateGenderCode(_codeForName(name, genderValues)) : null,
         );
         final religion = RadioGroupCard(
           title: 'Religion',
@@ -45,6 +54,7 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
           options: religionOptions,
           selectedValue: religionSelected,
           isDark: isDark,
+          onChanged: isEditing ? (name) => draftNotifier.updateReligionCode(_codeForName(name, religionValues)) : null,
         );
         final marital = RadioGroupCard(
           title: 'Marital Status',
@@ -52,6 +62,9 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
           options: maritalOptions,
           selectedValue: maritalSelected,
           isDark: isDark,
+          onChanged: isEditing
+              ? (name) => draftNotifier.updateMaritalStatusCode(_codeForName(name, maritalValues))
+              : null,
         );
         if (isMobile) {
           return Column(
@@ -79,5 +92,11 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
       if (v.lookupValueCode == code) return v.lookupValueName;
     }
     return addAll ? 'All' : null;
+  }
+
+  static String? _codeForName(String? name, List<AbsLookupValue> values) {
+    if (name == null || name.isEmpty || name == 'All') return null;
+    final v = values.where((e) => e.lookupValueName == name).firstOrNull;
+    return v?.lookupValueCode;
   }
 }

@@ -1,20 +1,47 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_subsection_header.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class YearsOfServiceSubsection extends StatelessWidget {
+class YearsOfServiceSubsection extends ConsumerStatefulWidget {
   final EligibilityCriteria eligibility;
   final bool isDark;
+  final bool isEditing;
 
-  const YearsOfServiceSubsection({super.key, required this.eligibility, required this.isDark});
+  const YearsOfServiceSubsection({super.key, required this.eligibility, required this.isDark, required this.isEditing});
+
+  @override
+  ConsumerState<YearsOfServiceSubsection> createState() => _YearsOfServiceSubsectionState();
+}
+
+class _YearsOfServiceSubsectionState extends ConsumerState<YearsOfServiceSubsection> {
+  late final TextEditingController _minController;
+  late final TextEditingController _maxController;
+
+  static String _maxDisplay(String? v) => (v == null || v.isEmpty || v == 'No limit') ? '' : v;
+
+  @override
+  void initState() {
+    super.initState();
+    _minController = TextEditingController(text: widget.eligibility.minYearsRequired ?? '');
+    _maxController = TextEditingController(text: _maxDisplay(widget.eligibility.maxYearsAllowed));
+  }
+
+  @override
+  void dispose() {
+    _minController.dispose();
+    _maxController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -26,28 +53,36 @@ class YearsOfServiceSubsection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12.h,
         children: [
-          EligibilitySubsectionHeader(title: 'Years of Service', iconPath: Assets.icons.gradeIcon.path, isDark: isDark),
+          EligibilitySubsectionHeader(
+            title: 'Years of Service',
+            iconPath: Assets.icons.gradeIcon.path,
+            isDark: widget.isDark,
+          ),
           Row(
             spacing: 12.w,
             children: [
               Expanded(
-                child: DigifyTextField(
-                  controller: TextEditingController(text: eligibility.minYearsRequired ?? ''),
+                child: DigifyTextField.number(
+                  controller: _minController,
                   labelText: 'Minimum Years Required',
-                  hintText: 'Enter minimum years',
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  hintText: '1',
+                  readOnly: !widget.isEditing,
                   filled: true,
                   fillColor: AppColors.cardBackground,
+                  onChanged: widget.isEditing ? (v) => draftNotifier.updateMinServiceYears(int.tryParse(v)) : null,
                 ),
               ),
               Expanded(
-                child: DigifyTextField(
-                  controller: TextEditingController(text: eligibility.maxYearsAllowed ?? ''),
+                child: DigifyTextField.number(
+                  controller: _maxController,
                   labelText: 'Maximum Years (Optional)',
-                  hintText: 'No limit',
+                  hintText: '0',
+                  readOnly: !widget.isEditing,
                   filled: true,
                   fillColor: AppColors.cardBackground,
+                  onChanged: widget.isEditing
+                      ? (v) => draftNotifier.updateMaxServiceYears(v.isEmpty ? null : int.tryParse(v))
+                      : null,
                 ),
               ),
             ],

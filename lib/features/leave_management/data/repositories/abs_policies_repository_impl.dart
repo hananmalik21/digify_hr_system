@@ -1,6 +1,8 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/leave_management/data/datasources/abs_policies_remote_data_source.dart';
+import 'package:digify_hr_system/features/leave_management/data/dto/abs_policies_dto.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/abs_policies_repository.dart';
 
 class AbsPoliciesRepositoryImpl implements AbsPoliciesRepository {
@@ -17,6 +19,20 @@ class AbsPoliciesRepositoryImpl implements AbsPoliciesRepository {
       rethrow;
     } catch (e) {
       throw UnknownException('Repository error: Failed to fetch leave policies: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<PolicyListItem?> updatePolicy(String policyGuid, dynamic updateRequest) async {
+    try {
+      final request = updateRequest as UpdatePolicyRequestDto;
+      final response = await remoteDataSource.updatePolicy(policyGuid, request);
+      if (!response.success) return null;
+      return response.data.toDomain();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to update policy: ${e.toString()}', originalError: e);
     }
   }
 }

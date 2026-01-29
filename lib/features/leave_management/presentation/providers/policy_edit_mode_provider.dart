@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Provider for managing policy edit mode state
 final policyEditModeProvider = StateNotifierProvider<PolicyEditModeNotifier, bool>((ref) {
   return PolicyEditModeNotifier();
 });
+
+final policySaveInProgressProvider = StateProvider<bool>((ref) => false);
 
 class PolicyEditModeNotifier extends StateNotifier<bool> {
   PolicyEditModeNotifier() : super(false);

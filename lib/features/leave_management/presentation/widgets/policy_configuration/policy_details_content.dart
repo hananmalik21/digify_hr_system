@@ -1,6 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/features/leave_management/data/dto/abs_policies_dto.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_edit_mode_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/advanced_rules_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/carry_forward_rules_section.dart';
@@ -13,7 +17,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-/// Policy configuration detail panel: header + eligibility, entitlement, rules, etc.
+const String _kUpdatedBy = 'ADMIN';
+
+Future<void> _performSave(
+  BuildContext context,
+  WidgetRef ref,
+  PolicyListItem policy,
+  PolicyEditModeNotifier editNotifier,
+) async {
+  final detail = policy.detail;
+  if (detail == null) return;
+
+  final draft = ref.read(policyDraftProvider);
+  final detailToSave = draft ?? detail;
+
+  ref.read(policySaveInProgressProvider.notifier).state = true;
+  try {
+    final repo = ref.read(absPoliciesRepositoryProvider);
+    final request = UpdatePolicyRequestDto.fromDetail(detailToSave, updatedBy: _kUpdatedBy);
+    final updated = await repo.updatePolicy(policy.policyGuid, request);
+    if (updated != null) {
+      ref.read(absPoliciesNotifierProvider.notifier).replacePolicyWith(updated);
+      ref.read(policyDraftProvider.notifier).clear();
+      editNotifier.saveChanges();
+      if (context.mounted) {
+        ToastService.success(context, 'Policy updated successfully');
+      }
+    }
+  } catch (_) {
+    if (context.mounted) {
+      ToastService.error(context, 'Failed to update policy');
+    }
+  } finally {
+    ref.read(policySaveInProgressProvider.notifier).state = false;
+  }
+}
+
 class PolicyDetailsContent extends ConsumerWidget {
   final PolicyListItem? selectedPolicy;
   final bool isDark;
@@ -23,6 +62,7 @@ class PolicyDetailsContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditing = ref.watch(policyEditModeProvider);
+    final isSaving = ref.watch(policySaveInProgressProvider);
     final editNotifier = ref.read(policyEditModeProvider.notifier);
 
     if (selectedPolicy == null) {
@@ -34,7 +74,9 @@ class PolicyDetailsContent extends ConsumerWidget {
       return _buildMessage(context, 'Policy details not available');
     }
 
-    final config = detail.toConfiguration();
+    final draft = ref.watch(policyDraftProvider);
+    final detailForDisplay = draft ?? detail;
+    final config = detailForDisplay.toConfiguration();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,28 +88,36 @@ class PolicyDetailsContent extends ConsumerWidget {
           selectedBy: config.selectedBy,
           isDark: isDark,
           isEditing: isEditing,
-          onEditPressed: editNotifier.startEditing,
-          onCancelPressed: editNotifier.cancelEditing,
-          onSavePressed: editNotifier.saveChanges,
+          isSaving: isSaving,
+          onEditPressed: () {
+            ref.read(policyDraftProvider.notifier).setDraft(detail);
+            editNotifier.startEditing();
+          },
+          onCancelPressed: () {
+            ref.read(policyDraftProvider.notifier).clear();
+            editNotifier.cancelEditing();
+          },
+          onSavePressed: () => _performSave(context, ref, selectedPolicy!, editNotifier),
         ),
-        EligibilityCriteriaSection(isDark: isDark, eligibility: config.eligibilityCriteria),
+        EligibilityCriteriaSection(isDark: isDark, eligibility: config.eligibilityCriteria, isEditing: isEditing),
         GradeBasedEntitlementsSection(
           isDark: isDark,
-          gradeRows: detail.gradeRows,
-          effectiveDate: detail.formattedCreatedDate,
-          enableProRata: config.entitlementAccrual.enableProRataCalculation,
-          accrualMethod: detail.accrualMethod.displayName,
+          gradeRows: detailForDisplay.gradeRows,
+          effectiveDate: detailForDisplay.formattedCreatedDate,
+          enableProRata: detailForDisplay.enableProRata,
+          accrualMethodCode: detailForDisplay.accrualMethod.code,
           isEditing: isEditing,
         ),
-        AdvancedRulesSection(isDark: isDark, advanced: config.advancedRules),
-        CarryForwardRulesSection(isDark: isDark, carryForward: config.carryForwardRules),
+        AdvancedRulesSection(isDark: isDark, advanced: config.advancedRules, isEditing: isEditing),
+        CarryForwardRulesSection(isDark: isDark, carryForward: config.carryForwardRules, isEditing: isEditing),
         ForfeitRulesSection(
           isDark: isDark,
           forfeit: config.forfeitRules,
           carryForwardLimit: config.carryForwardRules.carryForwardLimit,
           gracePeriod: config.carryForwardRules.gracePeriod,
+          isEditing: isEditing,
         ),
-        EncashmentRulesSection(isDark: isDark, encashment: config.encashmentRules),
+        EncashmentRulesSection(isDark: isDark, encashment: config.encashmentRules, isEditing: isEditing),
       ],
     );
   }

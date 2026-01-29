@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/leave_management/data/datasources/abs_policies_remote_data_source.dart';
 import 'package:digify_hr_system/features/leave_management/data/repositories/abs_policies_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/abs_policies_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,6 +94,18 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
       await _load();
     }
   }
+
+  void replacePolicyWith(PolicyListItem updated) {
+    final current = state.data;
+    if (current == null) return;
+    final list = current.policies.toList();
+    final index = list.indexWhere((p) => p.policyGuid == updated.policyGuid);
+    if (index < 0) return;
+    list[index] = updated;
+    state = state.copyWith(
+      data: PaginatedPolicies(policies: list, pagination: current.pagination),
+    );
+  }
 }
 
 final absPoliciesNotifierProvider = StateNotifierProvider<AbsPoliciesNotifier, AbsPoliciesState>((ref) {
@@ -112,4 +125,38 @@ final absPoliciesProvider = Provider<AsyncValue<PaginatedPolicies>>((ref) {
     return AsyncValue.data(state.data!);
   }
   return const AsyncValue.loading();
+});
+
+class SelectedPolicyGuidNotifier extends StateNotifier<String?> {
+  SelectedPolicyGuidNotifier(this._ref) : super(null) {
+    _ref.listen<AbsPoliciesState>(absPoliciesNotifierProvider, (_, next) {
+      _syncWithPolicies(next.data?.policies ?? []);
+    });
+  }
+
+  final Ref _ref;
+
+  void _syncWithPolicies(List<PolicyListItem> policies) {
+    final needSelection = state == null && policies.isNotEmpty;
+    final selectionMissing = state != null && policies.isNotEmpty && !policies.any((p) => p.policyGuid == state);
+    if (needSelection || selectionMissing) {
+      state = policies.isNotEmpty ? policies.first.policyGuid : null;
+    }
+  }
+
+  void setSelectedPolicyGuid(String? guid) {
+    state = guid;
+  }
+}
+
+final selectedPolicyGuidProvider = StateNotifierProvider<SelectedPolicyGuidNotifier, String?>((ref) {
+  return SelectedPolicyGuidNotifier(ref);
+});
+
+final selectedPolicyConfigurationProvider = Provider<PolicyListItem?>((ref) {
+  final paginated = ref.watch(absPoliciesProvider).value;
+  final policies = paginated?.policies ?? [];
+  final guid = ref.watch(selectedPolicyGuidProvider);
+  if (guid == null || policies.isEmpty) return null;
+  return policies.where((p) => p.policyGuid == guid).firstOrNull;
 });
