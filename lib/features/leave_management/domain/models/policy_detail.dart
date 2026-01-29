@@ -35,6 +35,8 @@ class PolicyDetail {
   final int? minNoticeDays;
   final int? maxConsecutiveDays;
   final bool requiresDocument;
+  final bool countWeekendsAsLeave;
+  final bool countPublicHolidaysAsLeave;
 
   // Carry Forward
   final bool allowCarryForward;
@@ -53,6 +55,7 @@ class PolicyDetail {
 
   // Grade Entitlements
   final List<GradeEntitlement> gradeRows;
+  final bool enableProRata;
 
   const PolicyDetail({
     required this.policyId,
@@ -80,6 +83,8 @@ class PolicyDetail {
     this.minNoticeDays,
     this.maxConsecutiveDays,
     required this.requiresDocument,
+    this.countWeekendsAsLeave = false,
+    this.countPublicHolidaysAsLeave = false,
     required this.allowCarryForward,
     this.carryForwardLimitDays,
     this.gracePeriodDays,
@@ -90,6 +95,7 @@ class PolicyDetail {
     this.encashmentLimitDays,
     this.encashmentRatePct,
     this.gradeRows = const [],
+    this.enableProRata = false,
   });
 
   PolicyDetail copyWith({
@@ -118,6 +124,8 @@ class PolicyDetail {
     int? minNoticeDays,
     int? maxConsecutiveDays,
     bool? requiresDocument,
+    bool? countWeekendsAsLeave,
+    bool? countPublicHolidaysAsLeave,
     bool? allowCarryForward,
     int? carryForwardLimitDays,
     int? gracePeriodDays,
@@ -128,6 +136,7 @@ class PolicyDetail {
     int? encashmentLimitDays,
     int? encashmentRatePct,
     List<GradeEntitlement>? gradeRows,
+    bool? enableProRata,
   }) {
     return PolicyDetail(
       policyId: policyId ?? this.policyId,
@@ -155,6 +164,8 @@ class PolicyDetail {
       minNoticeDays: minNoticeDays ?? this.minNoticeDays,
       maxConsecutiveDays: maxConsecutiveDays ?? this.maxConsecutiveDays,
       requiresDocument: requiresDocument ?? this.requiresDocument,
+      countWeekendsAsLeave: countWeekendsAsLeave ?? this.countWeekendsAsLeave,
+      countPublicHolidaysAsLeave: countPublicHolidaysAsLeave ?? this.countPublicHolidaysAsLeave,
       allowCarryForward: allowCarryForward ?? this.allowCarryForward,
       carryForwardLimitDays: carryForwardLimitDays ?? this.carryForwardLimitDays,
       gracePeriodDays: gracePeriodDays ?? this.gracePeriodDays,
@@ -165,6 +176,7 @@ class PolicyDetail {
       encashmentLimitDays: encashmentLimitDays ?? this.encashmentLimitDays,
       encashmentRatePct: encashmentRatePct ?? this.encashmentRatePct,
       gradeRows: gradeRows ?? this.gradeRows,
+      enableProRata: enableProRata ?? this.enableProRata,
     );
   }
 
@@ -229,13 +241,13 @@ class PolicyDetail {
         accrualMethod: accrualMethod.displayName,
         accrualRate: _calculateAccrualRate(),
         effectiveDate: formattedCreatedDate,
-        enableProRataCalculation: false,
+        enableProRataCalculation: enableProRata,
       ),
       advancedRules: AdvancedRules(
         maxConsecutiveDays: maxConsecutiveDays?.toString() ?? '-',
         minNoticePeriod: minNoticeDays?.toString() ?? '-',
-        countWeekendsAsLeave: false,
-        countPublicHolidaysAsLeave: false,
+        countWeekendsAsLeave: countWeekendsAsLeave,
+        countPublicHolidaysAsLeave: countPublicHolidaysAsLeave,
         requiredSupportingDocumentation: requiresDocument,
       ),
       approvalWorkflows: const ApprovalWorkflows(approvalWorkflow: 'Manager', autoApprovalThreshold: '0'),
@@ -306,6 +318,7 @@ class GradeEntitlement {
   final int entitlementDays;
   final double? accrualRate;
   final bool isActive;
+  final String? accrualMethodCode;
 
   const GradeEntitlement({
     required this.entitlementId,
@@ -314,11 +327,32 @@ class GradeEntitlement {
     required this.entitlementDays,
     this.accrualRate,
     required this.isActive,
+    this.accrualMethodCode,
   });
 
   String get gradeRange {
     final from = gradeFrom ?? 1;
     final to = gradeTo != null ? '$gradeTo' : '+';
     return '$from - $to';
+  }
+
+  GradeEntitlement copyWith({
+    int? entitlementId,
+    int? gradeFrom,
+    int? gradeTo,
+    int? entitlementDays,
+    double? accrualRate,
+    bool? isActive,
+    String? accrualMethodCode,
+  }) {
+    return GradeEntitlement(
+      entitlementId: entitlementId ?? this.entitlementId,
+      gradeFrom: gradeFrom ?? this.gradeFrom,
+      gradeTo: gradeTo ?? this.gradeTo,
+      entitlementDays: entitlementDays ?? this.entitlementDays,
+      accrualRate: accrualRate ?? this.accrualRate,
+      isActive: isActive ?? this.isActive,
+      accrualMethodCode: accrualMethodCode ?? this.accrualMethodCode,
+    );
   }
 }

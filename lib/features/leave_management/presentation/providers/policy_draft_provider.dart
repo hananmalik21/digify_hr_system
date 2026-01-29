@@ -47,6 +47,85 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
   void updateMaxServiceYears(int? value) {
     state = state?.copyWith(maxServiceYears: value);
   }
+
+  void updateGradeRowAt(int index, GradeEntitlement grade) {
+    final List<GradeEntitlement> list = state?.gradeRows.toList() ?? <GradeEntitlement>[];
+    if (index < 0 || index >= list.length) return;
+    list[index] = grade;
+    state = state?.copyWith(gradeRows: list);
+  }
+
+  void addGradeRow() {
+    const newRow = GradeEntitlement(
+      entitlementId: 0,
+      gradeFrom: 1,
+      gradeTo: null,
+      entitlementDays: 0,
+      accrualRate: null,
+      isActive: true,
+    );
+    final List<GradeEntitlement> list = [...(state?.gradeRows ?? <GradeEntitlement>[]), newRow];
+    state = state?.copyWith(gradeRows: list);
+  }
+
+  void removeGradeRowAt(int index) {
+    final List<GradeEntitlement> list = state?.gradeRows.toList() ?? <GradeEntitlement>[];
+    if (index < 0 || index >= list.length) return;
+    list.removeAt(index);
+    state = state?.copyWith(gradeRows: list);
+  }
+
+  void updateEnableProRata(bool value) {
+    state = state?.copyWith(enableProRata: value);
+  }
+
+  void updateMinNoticeDays(int? value) {
+    state = state?.copyWith(minNoticeDays: value);
+  }
+
+  void updateMaxConsecutiveDays(int? value) {
+    state = state?.copyWith(maxConsecutiveDays: value);
+  }
+
+  void updateRequiresDocument(bool value) {
+    state = state?.copyWith(requiresDocument: value);
+  }
+
+  void updateCountWeekendsAsLeave(bool value) {
+    state = state?.copyWith(countWeekendsAsLeave: value);
+  }
+
+  void updateCountPublicHolidaysAsLeave(bool value) {
+    state = state?.copyWith(countPublicHolidaysAsLeave: value);
+  }
+
+  void updateAllowCarryForward(bool value) {
+    state = state?.copyWith(allowCarryForward: value);
+  }
+
+  void updateCarryForwardLimitDays(int? value) {
+    state = state?.copyWith(carryForwardLimitDays: value);
+  }
+
+  void updateGracePeriodDays(int? value) {
+    state = state?.copyWith(gracePeriodDays: value);
+  }
+
+  void updateAutoForfeit(bool value) {
+    state = state?.copyWith(autoForfeit: value);
+  }
+
+  void updateAllowEncashment(bool value) {
+    state = state?.copyWith(allowEncashment: value);
+  }
+
+  void updateEncashmentLimitDays(int? value) {
+    state = state?.copyWith(encashmentLimitDays: value);
+  }
+
+  void updateEncashmentRatePct(int? value) {
+    state = state?.copyWith(encashmentRatePct: value);
+  }
 }
 
 final policyDraftProvider = StateNotifierProvider<PolicyDraftNotifier, PolicyDetail?>((ref) {

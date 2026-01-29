@@ -2,12 +2,14 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ForfeitRulesSection extends StatelessWidget {
+class ForfeitRulesSection extends ConsumerWidget {
   final bool isDark;
   final ForfeitRules forfeit;
   final String carryForwardLimit;
@@ -24,7 +26,9 @@ class ForfeitRulesSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
+
     return ExpandableConfigSection(
       title: 'Forfeit Rules',
       iconPath: Assets.icons.leaveManagement.warning.path,
@@ -35,9 +39,9 @@ class ForfeitRulesSection extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
-              color: AppColors.tableHeaderBackground,
+              color: isDark ? AppColors.cardBackgroundDark : AppColors.tableHeaderBackground,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: AppColors.cardBorder),
+              border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +49,7 @@ class ForfeitRulesSection extends StatelessWidget {
               children: [
                 DigifyCheckbox(
                   value: forfeit.enableAutomaticForfeit,
-                  onChanged: isEditing ? (_) {} : null,
+                  onChanged: isEditing ? (v) => draftNotifier.updateAutoForfeit(v ?? false) : null,
                   label: 'Enable Automatic Forfeit',
                 ),
                 Padding(

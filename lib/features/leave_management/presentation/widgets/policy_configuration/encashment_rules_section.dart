@@ -3,12 +3,15 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class EncashmentRulesSection extends StatelessWidget {
+class EncashmentRulesSection extends ConsumerStatefulWidget {
   final bool isDark;
   final EncashmentRules encashment;
   final bool isEditing;
@@ -16,7 +19,35 @@ class EncashmentRulesSection extends StatelessWidget {
   const EncashmentRulesSection({super.key, required this.isDark, required this.encashment, required this.isEditing});
 
   @override
+  ConsumerState<EncashmentRulesSection> createState() => _EncashmentRulesSectionState();
+}
+
+class _EncashmentRulesSectionState extends ConsumerState<EncashmentRulesSection> {
+  late TextEditingController _limitController;
+  late TextEditingController _rateController;
+
+  static String _display(String v) => (v.isEmpty || v == '-') ? '' : v;
+
+  @override
+  void initState() {
+    super.initState();
+    _limitController = TextEditingController(text: _display(widget.encashment.encashmentLimit));
+    _rateController = TextEditingController(text: _display(widget.encashment.encashmentRate));
+  }
+
+  @override
+  void dispose() {
+    _limitController.dispose();
+    _rateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isDark = widget.isDark;
+    final isEditing = widget.isEditing;
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
+
     return ExpandableConfigSection(
       title: 'Encashment Rules',
       iconPath: Assets.icons.leaveManagement.dollar.path,
@@ -27,17 +58,17 @@ class EncashmentRulesSection extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
-              color: AppColors.tableHeaderBackground,
+              color: isDark ? AppColors.cardBackgroundDark : AppColors.tableHeaderBackground,
               borderRadius: BorderRadius.circular(10.r),
-              border: Border.all(color: AppColors.cardBorder),
+              border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 4.h,
               children: [
                 DigifyCheckbox(
-                  value: encashment.allowLeaveEncashment,
-                  onChanged: isEditing ? (_) {} : null,
+                  value: widget.encashment.allowLeaveEncashment,
+                  onChanged: isEditing ? (v) => draftNotifier.updateAllowEncashment(v ?? false) : null,
                   label: 'Allow Leave Encashment',
                 ),
                 Padding(
@@ -62,12 +93,14 @@ class EncashmentRulesSection extends StatelessWidget {
                   spacing: 4.h,
                   children: [
                     DigifyTextField.number(
-                      controller: TextEditingController(text: encashment.encashmentLimit),
+                      controller: _limitController,
                       labelText: 'Encashment Limit (days)',
-                      hintText: 'Enter limit',
+                      hintText: '0',
                       filled: true,
-                      fillColor: AppColors.cardBackground,
+                      fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
                       readOnly: !isEditing,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: isEditing ? (v) => draftNotifier.updateEncashmentLimitDays(int.tryParse(v)) : null,
                     ),
                     Text(
                       'Maximum days allowed for encashment per year',
@@ -84,12 +117,14 @@ class EncashmentRulesSection extends StatelessWidget {
                   spacing: 4.h,
                   children: [
                     DigifyTextField.number(
-                      controller: TextEditingController(text: encashment.encashmentRate),
+                      controller: _rateController,
                       labelText: 'Encashment Rate (%)',
-                      hintText: 'Enter rate',
+                      hintText: '0',
                       filled: true,
-                      fillColor: AppColors.cardBackground,
+                      fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
                       readOnly: !isEditing,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: isEditing ? (v) => draftNotifier.updateEncashmentRatePct(int.tryParse(v)) : null,
                     ),
                     Text(
                       'Percentage of daily wage paid',

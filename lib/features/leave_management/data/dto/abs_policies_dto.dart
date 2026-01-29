@@ -271,6 +271,7 @@ class GradeRowDto {
   final int gradeEntitlementDays;
   final double? gradeAccrualRate;
   final String gradeStatus;
+  final String? accrualMethodCode;
 
   const GradeRowDto({
     required this.entitlementId,
@@ -279,6 +280,7 @@ class GradeRowDto {
     required this.gradeEntitlementDays,
     this.gradeAccrualRate,
     required this.gradeStatus,
+    this.accrualMethodCode,
   });
 
   factory GradeRowDto.fromJson(Map<String, dynamic> json) {
@@ -289,6 +291,7 @@ class GradeRowDto {
       gradeEntitlementDays: (json['grade_entitlement_days'] as num?)?.toInt() ?? 0,
       gradeAccrualRate: (json['grade_accrual_rate'] as num?)?.toDouble(),
       gradeStatus: json['grade_status'] as String? ?? 'ACTIVE',
+      accrualMethodCode: json['accrual_method_code'] as String? ?? json['grade_accrual_method'] as String?,
     );
   }
 
@@ -300,6 +303,7 @@ class GradeRowDto {
       entitlementDays: gradeEntitlementDays,
       accrualRate: gradeAccrualRate,
       isActive: gradeStatus.toUpperCase() == 'ACTIVE',
+      accrualMethodCode: accrualMethodCode,
     );
   }
 }
@@ -329,6 +333,7 @@ class UpdatePolicyRequestDto {
   final int? carryForwardLimit;
   final int? gracePeriodDays;
   final String autoForfeitFlag;
+  final String? forfeitTriggerCode;
   final int? notifyBeforeDays;
   final int? encashmentLimitDays;
   final int? encashmentRatePct;
@@ -359,6 +364,7 @@ class UpdatePolicyRequestDto {
     this.carryForwardLimit,
     this.gracePeriodDays,
     required this.autoForfeitFlag,
+    this.forfeitTriggerCode,
     this.notifyBeforeDays,
     this.encashmentLimitDays,
     this.encashmentRatePct,
@@ -391,6 +397,7 @@ class UpdatePolicyRequestDto {
       carryForwardLimit: detail.carryForwardLimitDays,
       gracePeriodDays: detail.gracePeriodDays,
       autoForfeitFlag: detail.autoForfeit ? 'Y' : 'N',
+      forfeitTriggerCode: detail.forfeitTriggerCode,
       notifyBeforeDays: detail.notifyBeforeDays,
       encashmentLimitDays: detail.encashmentLimitDays,
       encashmentRatePct: detail.encashmentRatePct,
@@ -402,6 +409,7 @@ class UpdatePolicyRequestDto {
               entitlementDays: g.entitlementDays,
               accrualRate: g.accrualRate,
               status: g.isActive ? 'ACTIVE' : 'INACTIVE',
+              accrualMethodCode: g.accrualMethodCode,
             ),
           )
           .toList(),
@@ -434,6 +442,7 @@ class UpdatePolicyRequestDto {
       'carry_forward_limit': carryForwardLimit,
       'grace_period_days': gracePeriodDays,
       'auto_forfeit_flag': autoForfeitFlag,
+      'forfeit_trigger_code': forfeitTriggerCode,
       'notify_before_days': notifyBeforeDays,
       'encashment_limit_days': encashmentLimitDays,
       'encashment_rate_pct': encashmentRatePct,
@@ -448,6 +457,7 @@ class UpdatePolicyGradeRowDto {
   final int entitlementDays;
   final double? accrualRate;
   final String status;
+  final String? accrualMethodCode;
 
   const UpdatePolicyGradeRowDto({
     required this.gradeFrom,
@@ -455,16 +465,21 @@ class UpdatePolicyGradeRowDto {
     required this.entitlementDays,
     this.accrualRate,
     required this.status,
+    this.accrualMethodCode,
   });
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    final map = <String, dynamic>{
       'grade_from': gradeFrom,
       'grade_to': gradeTo,
       'entitlement_days': entitlementDays,
       'accrual_rate': accrualRate,
       'status': status,
     };
+    if (accrualMethodCode != null) {
+      map['accrual_method_code'] = accrualMethodCode;
+    }
+    return map;
   }
 }
 
