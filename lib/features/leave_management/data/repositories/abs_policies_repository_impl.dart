@@ -23,6 +23,20 @@ class AbsPoliciesRepositoryImpl implements AbsPoliciesRepository {
   }
 
   @override
+  Future<PolicyListItem?> createPolicy(dynamic createRequest) async {
+    try {
+      final request = createRequest as CreatePolicyRequestDto;
+      final response = await remoteDataSource.createPolicy(request);
+      if (!response.success) return null;
+      return response.data.toDomain();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to create policy: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
   Future<PolicyListItem?> updatePolicy(String policyGuid, dynamic updateRequest) async {
     try {
       final request = updateRequest as UpdatePolicyRequestDto;

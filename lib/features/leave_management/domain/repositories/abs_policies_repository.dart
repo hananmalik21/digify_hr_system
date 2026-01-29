@@ -3,5 +3,6 @@ import 'package:digify_hr_system/features/leave_management/domain/models/policy_
 
 abstract class AbsPoliciesRepository {
   Future<PaginatedPolicies> getPolicies({required int tenantId, int page = 1, int pageSize = 10});
+  Future<PolicyListItem?> createPolicy(dynamic createRequest);
   Future<PolicyListItem?> updatePolicy(String policyGuid, dynamic updateRequest);
 }

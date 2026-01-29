@@ -1,10 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/add_policy_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_skeleton.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_stat_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_details_content.dart';
@@ -19,6 +23,7 @@ class PolicyConfigurationTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final isMobile = context.isMobile;
     final policiesAsync = ref.watch(absPoliciesProvider);
@@ -36,8 +41,13 @@ class PolicyConfigurationTab extends ConsumerWidget {
         spacing: 21.h,
         children: [
           DigifyTabHeader(
-            title: 'Leave Policy Configuration',
-            description: 'Configure comprehensive leave policies with eligibility criteria and advanced rules.',
+            title: localizations.policyConfiguration,
+            description: localizations.policyConfigurationDescription,
+            trailing: AppButton.primary(
+              label: localizations.addNewPolicy,
+              svgPath: Assets.icons.addBusinessUnitIcon.path,
+              onPressed: () => AddPolicyDialog.show(context),
+            ),
           ),
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,

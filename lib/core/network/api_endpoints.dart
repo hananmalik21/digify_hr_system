@@ -65,6 +65,7 @@ class ApiEndpoints {
   static const String absLeavePolicies = '$api/abs/leave-policies';
   static String absLeavePolicyUpdate(String policyGuid) => '$absLeavePolicies/$policyGuid';
   static const String absPolicies = '$api/abs/policies';
+  static const String absCreatePolicy = '$api/abs/create-policy';
   static String absUpdatePolicy(String policyGuid) => '$api/abs/update-policy/$policyGuid';
   static const String absLookups = '$api/abs/lookups';
   static String absLookupValues(int lookupId) => '$absLookups/$lookupId/values';
