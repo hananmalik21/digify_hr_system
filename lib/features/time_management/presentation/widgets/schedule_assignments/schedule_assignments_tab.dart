@@ -37,7 +37,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
 
   @override
   void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
     ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).loadNextPage();
   }
@@ -47,7 +47,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
     ScheduleAssignmentTableRowData item,
     ScheduleAssignmentState state,
   ) async {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final assignment = state.items.firstWhere((a) => a.scheduleAssignmentId == item.scheduleAssignmentId);
@@ -71,13 +71,13 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
 
   @override
   Widget build(BuildContext context) {
-    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
-    final scheduleAssignmentsState = selectedEnterpriseId != null
-        ? ref.watch(scheduleAssignmentsNotifierProvider(selectedEnterpriseId))
+    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final scheduleAssignmentsState = effectiveEnterpriseId != null
+        ? ref.watch(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId))
         : const ScheduleAssignmentState();
 
-    if (selectedEnterpriseId != null) {
-      ref.listen<ScheduleAssignmentState>(scheduleAssignmentsNotifierProvider(selectedEnterpriseId), (previous, next) {
+    if (effectiveEnterpriseId != null) {
+      ref.listen<ScheduleAssignmentState>(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId), (previous, next) {
         final wasDeleting = previous?.deletingAssignmentId != null;
         final isDeleting = next.deletingAssignmentId != null;
 
@@ -94,7 +94,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       });
     }
 
-    if (selectedEnterpriseId == null) {
+    if (effectiveEnterpriseId == null) {
       return const Center(
         child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view schedule assignments'),
       );
@@ -106,7 +106,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       children: [
         ScheduleAssignmentActionBar(
           onAssignSchedule: () {
-            CreateScheduleAssignmentDialog.show(context, selectedEnterpriseId);
+            CreateScheduleAssignmentDialog.show(context, effectiveEnterpriseId);
           },
           onBulkUpload: () {},
           onExport: () {},
@@ -118,8 +118,8 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
   }
 
   Widget _buildContent(ScheduleAssignmentState scheduleAssignmentsState) {
-    final selectedEnterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
-    if (selectedEnterpriseId == null) return const SizedBox.shrink();
+    final effectiveEnterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    if (effectiveEnterpriseId == null) return const SizedBox.shrink();
 
     return ScheduleAssignmentsTable(
       assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
@@ -129,7 +129,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       hasError: scheduleAssignmentsState.hasError && scheduleAssignmentsState.items.isEmpty,
       errorMessage: scheduleAssignmentsState.errorMessage,
       onRetry: () {
-        ref.read(scheduleAssignmentsNotifierProvider(selectedEnterpriseId).notifier).refresh();
+        ref.read(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId).notifier).refresh();
       },
       onView: (item) {
         final assignment = scheduleAssignmentsState.items.firstWhere(
@@ -141,7 +141,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
         final assignment = scheduleAssignmentsState.items.firstWhere(
           (a) => a.scheduleAssignmentId == item.scheduleAssignmentId,
         );
-        EditScheduleAssignmentDialog.show(context, selectedEnterpriseId, assignment);
+        EditScheduleAssignmentDialog.show(context, effectiveEnterpriseId, assignment);
       },
       onDelete: (item) => _handleDelete(context, item, scheduleAssignmentsState),
     );

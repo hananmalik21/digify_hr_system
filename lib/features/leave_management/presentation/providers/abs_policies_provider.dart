@@ -46,7 +46,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
     _ref.listen(absPoliciesPaginationProvider, (previous, next) {
       if (previous != next) _load();
     });
-    _ref.listen(leaveManagementSelectedEnterpriseProvider, (previous, next) {
+    _ref.listen(leaveManagementEnterpriseIdProvider, (previous, next) {
       if (previous != next) {
         final pagination = _ref.read(absPoliciesPaginationProvider);
         if (pagination.page != 1) {
@@ -61,7 +61,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
 
   Future<void> _load() async {
     final pagination = _ref.read(absPoliciesPaginationProvider);
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
 
     state = state.copyWith(isLoading: true, error: null);
 

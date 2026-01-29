@@ -31,7 +31,7 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -42,11 +42,11 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
           LeaveBalanceTabHeader(localizations: localizations, isDark: isDark),
           Gap(24.h),
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

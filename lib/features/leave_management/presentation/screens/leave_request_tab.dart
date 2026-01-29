@@ -16,7 +16,7 @@ class LeaveRequestTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -29,11 +29,11 @@ class LeaveRequestTab extends ConsumerWidget {
           KuwaitLawEntitlementsSection(localizations: localizations),
           Gap(24.h),
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

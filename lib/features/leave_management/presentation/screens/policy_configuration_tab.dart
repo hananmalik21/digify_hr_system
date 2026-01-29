@@ -31,7 +31,7 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
     final policiesAsync = ref.watch(absPoliciesProvider);
     final notifierState = ref.watch(absPoliciesNotifierProvider);
     final pagination = ref.watch(absPoliciesPaginationProvider);
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -45,10 +45,10 @@ class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab>
             description: 'Configure comprehensive leave policies with eligibility criteria and advanced rules.',
           ),
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (id) =>
                 ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

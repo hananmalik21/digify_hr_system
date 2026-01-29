@@ -26,7 +26,7 @@ class WorkPatternHeader extends ConsumerWidget {
             AppButton(
               label: localizations.createWorkPattern,
               onPressed: () {
-                final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+                final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
                 if (enterpriseId != null) {
                   CreateWorkPatternDialog.show(context, enterpriseId);
                 }

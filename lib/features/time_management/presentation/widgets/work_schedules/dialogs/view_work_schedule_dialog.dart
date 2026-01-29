@@ -35,7 +35,7 @@ class _ViewWorkScheduleDialogContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     final dateFormatter = DateFormat('EEEE, d MMMM yyyy');
     final formattedStartDate = dateFormatter.format(schedule.effectiveStartDate);
     final formattedEndDate = schedule.effectiveEndDate != null

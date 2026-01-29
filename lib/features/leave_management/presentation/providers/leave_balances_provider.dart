@@ -48,7 +48,7 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
         _loadBalances();
       }
     });
-    _ref.listen(leaveManagementSelectedEnterpriseProvider, (previous, next) {
+    _ref.listen(leaveManagementEnterpriseIdProvider, (previous, next) {
       if (previous != next) {
         final pagination = _ref.read(leaveBalancesPaginationProvider);
         if (pagination.page != 1) {
@@ -63,7 +63,7 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
 
   Future<void> _loadBalances() async {
     final pagination = _ref.read(leaveBalancesPaginationProvider);
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
 
     state = state.copyWith(isLoading: true, error: null);
 
@@ -92,7 +92,7 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
   }
 
   Future<void> updateLeaveBalance(String employeeLeaveBalanceGuid, UpdateLeaveBalanceParams params) async {
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     await _repository.updateLeaveBalance(employeeLeaveBalanceGuid, params, tenantId: tenantId);
 
     final current = state.data;

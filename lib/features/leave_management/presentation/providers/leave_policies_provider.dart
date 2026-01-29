@@ -53,13 +53,13 @@ class LeavePoliciesNotifier extends StateNotifier<LeavePoliciesState> {
   final Ref _ref;
 
   LeavePoliciesNotifier(this._repository, this._ref) : super(const LeavePoliciesState(isLoading: true)) {
-    _ref.listen(leaveManagementSelectedEnterpriseProvider, (_, __) => _load());
+    _ref.listen(leaveManagementEnterpriseIdProvider, (_, __) => _load());
     _ref.listen(leavePoliciesFilterProvider, (_, __) => _load());
     _load();
   }
 
   Future<void> _load() async {
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     if (tenantId == null) {
       state = const LeavePoliciesState(data: [], isLoading: false);
       return;
@@ -96,7 +96,7 @@ class LeavePoliciesNotifier extends StateNotifier<LeavePoliciesState> {
   }
 
   Future<void> updateLeavePolicy(String policyGuid, UpdateLeavePolicyParams params) async {
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     await _repository.updateLeavePolicy(policyGuid, params, tenantId: tenantId);
 
     final list = state.data;

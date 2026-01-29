@@ -111,7 +111,7 @@ class _AddLeavePolicyDialogState extends ConsumerState<AddLeavePolicyDialog> {
       return;
     }
 
-    final tenantId = ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = ref.read(leaveManagementEnterpriseIdProvider);
     if (tenantId == null) {
       ToastService.warning(context, 'Select an enterprise first');
       return;

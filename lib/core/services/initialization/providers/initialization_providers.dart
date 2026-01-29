@@ -4,16 +4,28 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 
 final appInitializationServiceProvider = Provider<AppInitializationService>((ref) {
   final getEnterprisesUseCase = ref.watch(getEnterprisesUseCaseProvider);
   final getActiveLevelsUseCase = ref.watch(getActiveLevelsUseCaseProvider);
   final orgStructureLevelRemoteDataSource = ref.watch(orgStructureLevelRemoteDataSourceProvider);
+  Future<void> loadAbsLookups(int tenantId) => ref.read(absLookupsNotifierProvider.notifier).fetch(tenantId);
+  Future<void> loadAbsLookupValues(int tenantId) =>
+      ref.read(absLookupValuesByCodeProvider.notifier).fetchForTenant(tenantId);
+  void onActiveEnterpriseReady(int? id) {
+    if (id != null) {
+      ref.read(activeEnterpriseIdNotifierProvider.notifier).setActiveEnterpriseId(id);
+    }
+  }
 
   return AppInitializationService(
     getEnterprisesUseCase: getEnterprisesUseCase,
     getActiveLevelsUseCase: getActiveLevelsUseCase,
     orgStructureLevelRemoteDataSource: orgStructureLevelRemoteDataSource,
+    loadAbsLookups: loadAbsLookups,
+    loadAbsLookupValues: loadAbsLookupValues,
+    onActiveEnterpriseReady: onActiveEnterpriseReady,
   );
 });
 
@@ -32,7 +44,18 @@ final activeLevelsCacheProvider = Provider<List<ActiveStructureLevel>?>((ref) {
   return service.activeLevels;
 });
 
+class ActiveEnterpriseIdNotifier extends StateNotifier<int?> {
+  ActiveEnterpriseIdNotifier() : super(null);
+
+  void setActiveEnterpriseId(int? enterpriseId) {
+    state = enterpriseId;
+  }
+}
+
+final activeEnterpriseIdNotifierProvider = StateNotifierProvider<ActiveEnterpriseIdNotifier, int?>((ref) {
+  return ActiveEnterpriseIdNotifier();
+});
+
 final activeEnterpriseIdProvider = Provider<int?>((ref) {
-  final service = ref.watch(appInitializationServiceProvider);
-  return service.activeEnterpriseId;
+  return ref.watch(activeEnterpriseIdNotifierProvider);
 });

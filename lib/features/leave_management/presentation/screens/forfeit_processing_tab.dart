@@ -44,7 +44,7 @@ class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
     final scheduleEntriesAsync = ref.watch(forfeitScheduleEntriesProvider);
     final selectedEntry = ref.watch(forfeitScheduleNotifierProvider).selectedEntry;
     final currentStep = ref.watch(forfeitProcessingStepProvider);
@@ -65,11 +65,11 @@ class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
                 description: localizations.forfeitProcessingDescription,
               ),
               EnterpriseSelectorWidget(
-                selectedEnterpriseId: selectedEnterpriseId,
+                selectedEnterpriseId: effectiveEnterpriseId,
                 onEnterpriseChanged: (enterpriseId) {
                   ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
                 },
-                subtitle: selectedEnterpriseId != null
+                subtitle: effectiveEnterpriseId != null
                     ? 'Viewing data for selected enterprise'
                     : 'Select an enterprise to view data',
               ),

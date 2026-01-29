@@ -58,7 +58,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
         _loadRequests();
       }
     });
-    _ref.listen(leaveManagementSelectedEnterpriseProvider, (previous, next) {
+    _ref.listen(leaveManagementEnterpriseIdProvider, (previous, next) {
       if (previous != next) {
         _loadRequests();
       }
@@ -84,7 +84,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
   Future<void> _loadRequests() async {
     final pagination = _ref.read(leaveRequestsPaginationProvider);
     final filter = _ref.read(leaveFilterProvider);
-    final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     final status = _mapFilterToStatus(filter);
 
     state = state.copyWith(isLoading: true, error: null);
@@ -115,7 +115,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     };
 
     try {
-      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
       await _repository.approveLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
@@ -161,7 +161,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     };
 
     try {
-      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
       await _repository.rejectLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
@@ -202,7 +202,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
 
   Future<void> deleteLeaveRequest(String guid) async {
     try {
-      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
       await _repository.deleteLeaveRequest(guid, tenantId: tenantId);
 
       if (state.data != null) {
@@ -233,7 +233,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
     Map<String, dynamic>? responseData,
   ]) async {
     try {
-      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
       final response = responseData ?? await _repository.updateLeaveRequest(guid, state, submit, tenantId: tenantId);
 
       if (this.state.data != null) {

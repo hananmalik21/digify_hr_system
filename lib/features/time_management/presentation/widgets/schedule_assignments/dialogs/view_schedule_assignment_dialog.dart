@@ -32,7 +32,7 @@ class ViewScheduleAssignmentDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
 
     return AppDialog(
       title: 'Schedule Assignment Details',
