@@ -1,10 +1,36 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/navigation/configs/menu_feature_config.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class SidebarConfig {
+  static List<SidebarItem> _filterItems(List<SidebarItem> items) {
+    final result = <SidebarItem>[];
+    for (final item in items) {
+      if (!MenuFeatureConfig.isEnabled(item.id)) continue;
+      if (item.children != null) {
+        final filteredChildren = _filterItems(item.children!);
+        if (filteredChildren.isEmpty) continue;
+        result.add(
+          SidebarItem(
+            id: item.id,
+            icon: item.icon,
+            svgPath: item.svgPath,
+            labelKey: item.labelKey,
+            children: filteredChildren,
+            route: item.route,
+            subtitle: item.subtitle,
+          ),
+        );
+      } else {
+        result.add(item);
+      }
+    }
+    return result;
+  }
+
   static List<SidebarItem> getMenuItems() {
-    return [
+    return _filterItems([
       SidebarItem(
         id: 'dashboard',
         svgPath: Assets.icons.dashboardIcon.path,
@@ -59,36 +85,36 @@ class SidebarConfig {
             labelKey: 'manageComponentValues',
             route: '/enterprise-structure/component-values',
           ),
-          // SidebarItem(
-          //   id: 'company',
-          //   svgPath: Assets.icons.companyIcon.path,
-          //   labelKey: 'company',
-          //   route: '/enterprise-structure/company',
-          // ),
-          // SidebarItem(
-          //   id: 'division',
-          //   svgPath: Assets.icons.divisionIcon.path,
-          //   labelKey: 'division',
-          //   route: '/enterprise-structure/division',
-          // ),
-          // SidebarItem(
-          //   id: 'businessUnit',
-          //   svgPath: Assets.icons.businessUnitIcon.path,
-          //   labelKey: 'businessUnit',
-          //   route: '/enterprise-structure/business-unit',
-          // ),
-          // SidebarItem(
-          //   id: 'department',
-          //   svgPath: Assets.icons.departmentIcon.path,
-          //   labelKey: 'department',
-          //   route: '/enterprise-structure/department',
-          // ),
-          // SidebarItem(
-          //   id: 'section',
-          //   svgPath: Assets.icons.sectionIcon.path,
-          //   labelKey: 'section',
-          //   route: '/enterprise-structure/section',
-          // ),
+          SidebarItem(
+            id: 'company',
+            svgPath: Assets.icons.companyIcon.path,
+            labelKey: 'company',
+            route: '/enterprise-structure/company',
+          ),
+          SidebarItem(
+            id: 'division',
+            svgPath: Assets.icons.divisionIcon.path,
+            labelKey: 'division',
+            route: '/enterprise-structure/division',
+          ),
+          SidebarItem(
+            id: 'businessUnit',
+            svgPath: Assets.icons.businessUnitIcon.path,
+            labelKey: 'businessUnit',
+            route: '/enterprise-structure/business-unit',
+          ),
+          SidebarItem(
+            id: 'department',
+            svgPath: Assets.icons.departmentIcon.path,
+            labelKey: 'department',
+            route: '/enterprise-structure/department',
+          ),
+          SidebarItem(
+            id: 'section',
+            svgPath: Assets.icons.sectionIcon.path,
+            labelKey: 'section',
+            route: '/enterprise-structure/section',
+          ),
         ],
       ),
       SidebarItem(
@@ -120,12 +146,12 @@ class SidebarConfig {
             labelKey: 'gradeStructure',
             route: '/workforce-structure',
           ),
-          // SidebarItem(
-          //   id: 'reportingStructure',
-          //   svgPath: Assets.icons.companyIcon.path,
-          //   labelKey: 'reportingStructure',
-          //   route: '/workforce-structure',
-          // ),
+          SidebarItem(
+            id: 'reportingStructure',
+            svgPath: Assets.icons.companyIcon.path,
+            labelKey: 'reportingStructure',
+            route: '/workforce-structure',
+          ),
           SidebarItem(
             id: 'positionTree',
             svgPath: Assets.icons.positionsIcon.path,
@@ -347,7 +373,7 @@ class SidebarConfig {
         labelKey: 'settingsConfig',
         route: '/settings',
       ),
-    ];
+    ]);
   }
 
   static double getChildItemFontSize(String key) {

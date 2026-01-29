@@ -12,6 +12,18 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
     state = null;
   }
 
+  void updatePolicyName(String? name) {
+    state = state?.copyWith(policyName: name);
+  }
+
+  void updateLeaveType(int leaveTypeId, String leaveTypeEn, String leaveTypeAr) {
+    state = state?.copyWith(leaveTypeId: leaveTypeId, leaveTypeEn: leaveTypeEn, leaveTypeAr: leaveTypeAr);
+  }
+
+  void updateEntitlementDays(int value) {
+    state = state?.copyWith(entitlementDays: value);
+  }
+
   void updateEmployeeCategoryCode(String? code) {
     state = state?.copyWith(employeeCategoryCode: code);
   }

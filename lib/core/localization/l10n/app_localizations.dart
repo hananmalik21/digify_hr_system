@@ -6074,6 +6074,12 @@ abstract class AppLocalizations {
   /// **'Configure leave eligibility'**
   String get policyConfigurationDescription;
 
+  /// No description provided for @addNewPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Policy'**
+  String get addNewPolicy;
+
   /// No description provided for @forfeitPolicy.
   ///
   /// In en, this message translates to:

@@ -3097,6 +3097,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get policyConfigurationDescription => 'تكوين أهلية الإجازة';
 
   @override
+  String get addNewPolicy => 'إضافة سياسة جديدة';
+
+  @override
   String get forfeitPolicy => 'سياسة الإسقاط';
 
   @override

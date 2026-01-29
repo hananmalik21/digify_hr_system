@@ -3115,6 +3115,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get policyConfigurationDescription => 'Configure leave eligibility';
 
   @override
+  String get addNewPolicy => 'Add New Policy';
+
+  @override
   String get forfeitPolicy => 'Forfeit Policy';
 
   @override

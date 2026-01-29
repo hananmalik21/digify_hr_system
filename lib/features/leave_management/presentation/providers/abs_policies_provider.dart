@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/leave_management/data/datasources/abs_
 import 'package:digify_hr_system/features/leave_management/data/repositories/abs_policies_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/abs_policies_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -102,6 +103,33 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
     final index = list.indexWhere((p) => p.policyGuid == updated.policyGuid);
     if (index < 0) return;
     list[index] = updated;
+    state = state.copyWith(
+      data: PaginatedPolicies(policies: list, pagination: current.pagination),
+    );
+  }
+
+  void addPolicy(PolicyListItem created) {
+    final current = state.data;
+    final list = current != null ? [created, ...current.policies] : [created];
+    final pagination =
+        current?.pagination ??
+        const PaginationInfo(
+          currentPage: 1,
+          totalPages: 1,
+          totalItems: 1,
+          pageSize: 10,
+          hasNext: false,
+          hasPrevious: false,
+        );
+    state = state.copyWith(
+      data: PaginatedPolicies(policies: list, pagination: pagination),
+    );
+  }
+
+  void removePolicyByGuid(String policyGuid) {
+    final current = state.data;
+    if (current == null) return;
+    final list = current.policies.where((p) => p.policyGuid != policyGuid).toList();
     state = state.copyWith(
       data: PaginatedPolicies(policies: list, pagination: current.pagination),
     );

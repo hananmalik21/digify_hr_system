@@ -57,6 +57,50 @@ class PolicyDetail {
   final List<GradeEntitlement> gradeRows;
   final bool enableProRata;
 
+  /// Empty policy for "Add New Policy" form. All optional fields are null/empty; required fields use safe defaults.
+  static PolicyDetail empty() {
+    return PolicyDetail(
+      policyId: 0,
+      policyGuid: '',
+      tenantId: 0,
+      leaveTypeId: 0,
+      leaveTypeEn: '',
+      leaveTypeAr: '',
+      policyName: null,
+      entitlementDays: 0,
+      accrualMethod: PolicyAccrualMethod.yearly,
+      status: PolicyStatus.draft,
+      kuwaitLaborCompliant: false,
+      createdBy: null,
+      createdDate: null,
+      minServiceYears: null,
+      maxServiceYears: null,
+      employeeCategoryCode: null,
+      employmentTypeCode: null,
+      contractTypeCode: null,
+      genderCode: null,
+      religionCode: null,
+      maritalStatusCode: null,
+      probationAllowed: true,
+      minNoticeDays: null,
+      maxConsecutiveDays: null,
+      requiresDocument: false,
+      countWeekendsAsLeave: false,
+      countPublicHolidaysAsLeave: false,
+      allowCarryForward: false,
+      carryForwardLimitDays: null,
+      gracePeriodDays: null,
+      autoForfeit: false,
+      forfeitTriggerCode: null,
+      notifyBeforeDays: null,
+      allowEncashment: false,
+      encashmentLimitDays: null,
+      encashmentRatePct: null,
+      gradeRows: const [],
+      enableProRata: false,
+    );
+  }
+
   const PolicyDetail({
     required this.policyId,
     required this.policyGuid,

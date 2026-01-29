@@ -1010,6 +1010,7 @@
   "leavePoliciesDescription": "سياسات قانون العمل الكويتي",
   "policyConfiguration": "تكوين السياسة",
   "policyConfigurationDescription": "تكوين أهلية الإجازة",
+  "addNewPolicy": "إضافة سياسة جديدة",
   "forfeitPolicy": "سياسة الإسقاط",
   "forfeitPolicyDescription": "قواعد إسقاط الإجازة",
   "forfeitProcessing": "معالجة إسقاط الإجازات",

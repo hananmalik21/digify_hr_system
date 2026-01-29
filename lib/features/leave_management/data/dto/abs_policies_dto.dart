@@ -502,6 +502,189 @@ class UpdatePolicyResponseDto {
   }
 }
 
+/// Request body for POST /api/abs/create-policy.
+class CreatePolicyRequestDto {
+  final int tenantId;
+  final int leaveTypeId;
+  final int entitlementDays;
+  final String policyName;
+  final String accrualMethodCode;
+  final String createdBy;
+  final int? minServiceYears;
+  final int? maxServiceYears;
+  final String? employeeCategoryCode;
+  final String? employmentTypeCode;
+  final String? contractTypeCode;
+  final String? genderCode;
+  final String? religionCode;
+  final String? maritalStatusCode;
+  final String probationAllowed;
+  final int? minNoticeDays;
+  final int? maxConsecutiveDays;
+  final String requiresDocument;
+  final String allowCarryForward;
+  final String allowEncashment;
+  final int? carryForwardLimit;
+  final int? gracePeriodDays;
+  final String autoForfeitFlag;
+  final int? notifyBeforeDays;
+  final int? encashmentLimitDays;
+  final int? encashmentRatePct;
+  final List<CreatePolicyGradeRowDto> gradeRows;
+
+  const CreatePolicyRequestDto({
+    required this.tenantId,
+    required this.leaveTypeId,
+    required this.entitlementDays,
+    required this.policyName,
+    required this.accrualMethodCode,
+    required this.createdBy,
+    this.minServiceYears,
+    this.maxServiceYears,
+    this.employeeCategoryCode,
+    this.employmentTypeCode,
+    this.contractTypeCode,
+    this.genderCode,
+    this.religionCode,
+    this.maritalStatusCode,
+    required this.probationAllowed,
+    this.minNoticeDays,
+    this.maxConsecutiveDays,
+    required this.requiresDocument,
+    required this.allowCarryForward,
+    required this.allowEncashment,
+    this.carryForwardLimit,
+    this.gracePeriodDays,
+    required this.autoForfeitFlag,
+    this.notifyBeforeDays,
+    this.encashmentLimitDays,
+    this.encashmentRatePct,
+    this.gradeRows = const [],
+  });
+
+  factory CreatePolicyRequestDto.fromDetail(PolicyDetail detail, {required int tenantId, required String createdBy}) {
+    return CreatePolicyRequestDto(
+      tenantId: tenantId,
+      leaveTypeId: detail.leaveTypeId,
+      entitlementDays: detail.entitlementDays,
+      policyName: detail.policyName?.trim().isNotEmpty == true
+          ? detail.policyName!.trim()
+          : (detail.leaveTypeEn.trim().isNotEmpty ? detail.leaveTypeEn.trim() : 'New Policy'),
+      accrualMethodCode: detail.accrualMethod.code,
+      createdBy: createdBy,
+      minServiceYears: detail.minServiceYears,
+      maxServiceYears: detail.maxServiceYears,
+      employeeCategoryCode: detail.employeeCategoryCode,
+      employmentTypeCode: detail.employmentTypeCode,
+      contractTypeCode: detail.contractTypeCode,
+      genderCode: detail.genderCode,
+      religionCode: detail.religionCode,
+      maritalStatusCode: detail.maritalStatusCode,
+      probationAllowed: detail.probationAllowed ? 'Y' : 'N',
+      minNoticeDays: detail.minNoticeDays,
+      maxConsecutiveDays: detail.maxConsecutiveDays,
+      requiresDocument: detail.requiresDocument ? 'Y' : 'N',
+      allowCarryForward: detail.allowCarryForward ? 'Y' : 'N',
+      allowEncashment: detail.allowEncashment ? 'Y' : 'N',
+      carryForwardLimit: detail.carryForwardLimitDays,
+      gracePeriodDays: detail.gracePeriodDays,
+      autoForfeitFlag: detail.autoForfeit ? 'Y' : 'N',
+      notifyBeforeDays: detail.notifyBeforeDays,
+      encashmentLimitDays: detail.encashmentLimitDays,
+      encashmentRatePct: detail.encashmentRatePct,
+      gradeRows: detail.gradeRows
+          .map(
+            (g) => CreatePolicyGradeRowDto(
+              gradeFrom: g.gradeFrom ?? 1,
+              gradeTo: g.gradeTo,
+              entitlementDays: g.entitlementDays,
+              accrualRate: g.accrualRate,
+              status: g.isActive ? 'ACTIVE' : 'INACTIVE',
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'tenant_id': tenantId,
+      'leave_type_id': leaveTypeId,
+      'entitlement_days': entitlementDays,
+      'policy_name': policyName,
+      'accrual_method_code': accrualMethodCode,
+      'created_by': createdBy,
+      'min_service_years': minServiceYears,
+      'max_service_years': maxServiceYears,
+      'employee_category_code': employeeCategoryCode,
+      'employment_type_code': employmentTypeCode,
+      'contract_type_code': contractTypeCode,
+      'gender_code': genderCode,
+      'religion_code': religionCode,
+      'marital_status_code': maritalStatusCode,
+      'probation_allowed': probationAllowed,
+      'min_notice_days': minNoticeDays,
+      'max_consecutive_days': maxConsecutiveDays,
+      'requires_document': requiresDocument,
+      'allow_carry_forward': allowCarryForward,
+      'allow_encashment': allowEncashment,
+      'carry_forward_limit': carryForwardLimit,
+      'grace_period_days': gracePeriodDays,
+      'auto_forfeit_flag': autoForfeitFlag,
+      'notify_before_days': notifyBeforeDays,
+      'encashment_limit_days': encashmentLimitDays,
+      'encashment_rate_pct': encashmentRatePct,
+      'grade_rows': gradeRows.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class CreatePolicyGradeRowDto {
+  final int gradeFrom;
+  final int? gradeTo;
+  final int entitlementDays;
+  final double? accrualRate;
+  final String status;
+
+  const CreatePolicyGradeRowDto({
+    required this.gradeFrom,
+    this.gradeTo,
+    required this.entitlementDays,
+    this.accrualRate,
+    required this.status,
+  });
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'grade_from': gradeFrom,
+      'grade_to': gradeTo,
+      'entitlement_days': entitlementDays,
+      'accrual_rate': accrualRate,
+      'status': status,
+    };
+  }
+}
+
+/// Response for POST /api/abs/create-policy. Same shape as update; data is single policy.
+class CreatePolicyResponseDto {
+  final bool success;
+  final String message;
+  final AbsPolicyItemDto data;
+  final Map<String, dynamic>? meta;
+
+  const CreatePolicyResponseDto({required this.success, required this.message, required this.data, this.meta});
+
+  factory CreatePolicyResponseDto.fromJson(Map<String, dynamic> json) {
+    final dataJson = json['data'] as Map<String, dynamic>?;
+    return CreatePolicyResponseDto(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: dataJson != null ? AbsPolicyItemDto.fromJson(dataJson) : AbsPolicyItemDto.fromJson({}),
+      meta: json['meta'] as Map<String, dynamic>?,
+    );
+  }
+}
+
 class AbsPoliciesMetaDto {
   final int count;
   final int? tenantId;

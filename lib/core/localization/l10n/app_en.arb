@@ -1129,6 +1129,7 @@
   "leavePoliciesDescription": "Kuwait Labor Law policies",
   "policyConfiguration": "Policy Configuration",
   "policyConfigurationDescription": "Configure leave eligibility",
+  "addNewPolicy": "Add New Policy",
   "forfeitPolicy": "Forfeit Policy",
   "forfeitPolicyDescription": "Leave forfeit rules",
   "forfeitProcessing": "Leave Forfeit Processing",
