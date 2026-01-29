@@ -135,7 +135,7 @@ class LeaveRequestsActions {
     }
 
     try {
-      final tenantId = ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = ref.read(leaveManagementEnterpriseIdProvider);
       final response = await repository.getLeaveRequestById(request.guid, tenantId: tenantId);
       await notifier.loadDraftData(response);
       notifier.setLoadingDraft(false);

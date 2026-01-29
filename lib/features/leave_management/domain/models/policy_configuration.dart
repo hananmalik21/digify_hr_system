@@ -42,16 +42,22 @@ class EligibilityCriteria {
   final String? maxYearsAllowed;
   final bool employeeCategoryEnabled;
   final String? employeeCategory;
+  final String? employeeCategoryCode;
   final bool employmentTypeEnabled;
   final String? employmentType;
+  final String? employmentTypeCode;
   final bool contractTypeEnabled;
   final String? contractType;
+  final String? contractTypeCode;
   final bool genderEnabled;
   final String? gender;
+  final String? genderCode;
   final bool religionEnabled;
   final String? religion;
+  final String? religionCode;
   final bool maritalStatusEnabled;
   final String? maritalStatus;
+  final String? maritalStatusCode;
   final bool availableDuringProbation;
   final String? gradesRestriction;
 
@@ -61,16 +67,22 @@ class EligibilityCriteria {
     this.maxYearsAllowed,
     this.employeeCategoryEnabled = false,
     this.employeeCategory,
+    this.employeeCategoryCode,
     this.employmentTypeEnabled = false,
     this.employmentType,
+    this.employmentTypeCode,
     this.contractTypeEnabled = false,
     this.contractType,
+    this.contractTypeCode,
     this.genderEnabled = false,
     this.gender,
+    this.genderCode,
     this.religionEnabled = false,
     this.religion,
+    this.religionCode,
     this.maritalStatusEnabled = false,
     this.maritalStatus,
+    this.maritalStatusCode,
     this.availableDuringProbation = false,
     this.gradesRestriction,
   });

@@ -33,7 +33,7 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
 
   @override
   void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final state = ref.read(workPatternsNotifierProvider(enterpriseId));
@@ -45,12 +45,12 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
-    final workPatternsState = selectedEnterpriseId != null
-        ? ref.watch(workPatternsNotifierProvider(selectedEnterpriseId))
+    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final workPatternsState = effectiveEnterpriseId != null
+        ? ref.watch(workPatternsNotifierProvider(effectiveEnterpriseId))
         : const WorkPatternState();
 
-    if (selectedEnterpriseId == null) {
+    if (effectiveEnterpriseId == null) {
       return const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work patterns');
     }
 
@@ -78,10 +78,10 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPa
                   errorMessage: workPatternsState.errorMessage,
                   scrollController: _scrollController,
                   onRetry: () {
-                    ref.read(workPatternsNotifierProvider(selectedEnterpriseId).notifier).refresh();
+                    ref.read(workPatternsNotifierProvider(effectiveEnterpriseId).notifier).refresh();
                   },
-                  onEdit: (pattern) => EditWorkPatternDialog.show(context, selectedEnterpriseId, pattern),
-                  onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, selectedEnterpriseId),
+                  onEdit: (pattern) => EditWorkPatternDialog.show(context, effectiveEnterpriseId, pattern),
+                  onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, effectiveEnterpriseId),
                 ),
               ),
             ),

@@ -106,7 +106,7 @@ class ShiftDetailsDialog extends ConsumerWidget with DateTimeConversionMixin {
           width: null,
           onPressed: () {
             context.pop();
-            final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+            final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
             if (enterpriseId != null) {
               UpdateShiftDialog.show(context, shift, enterpriseId: enterpriseId);
             }

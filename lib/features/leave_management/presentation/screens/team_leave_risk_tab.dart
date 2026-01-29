@@ -19,7 +19,7 @@ class TeamLeaveRiskTab extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final state = ref.watch(teamLeaveRiskProvider);
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -33,11 +33,11 @@ class TeamLeaveRiskTab extends ConsumerWidget {
             description: localizations.monitorAndManageTeamMembersAtRisk,
           ),
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

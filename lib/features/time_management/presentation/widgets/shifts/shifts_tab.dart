@@ -20,19 +20,19 @@ class ShiftsTab extends ConsumerStatefulWidget {
 
 class _ShiftsTabState extends ConsumerState<ShiftsTab> {
   void _onSearchChanged(String searchText) {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
     ref.read(shiftsNotifierProvider(enterpriseId).notifier).search(searchText);
   }
 
   void _onStatusChanged(String? status) {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (status == null || enterpriseId == null) return;
     ref.read(shiftsNotifierProvider(enterpriseId).notifier).setStatusFilterFromString(status);
   }
 
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final confirmed = await AppConfirmationDialog.show(
@@ -69,12 +69,12 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
-    final shiftsState = selectedEnterpriseId != null
-        ? ref.watch(shiftsNotifierProvider(selectedEnterpriseId))
+    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final shiftsState = effectiveEnterpriseId != null
+        ? ref.watch(shiftsNotifierProvider(effectiveEnterpriseId))
         : const ShiftState();
 
-    if (selectedEnterpriseId == null) {
+    if (effectiveEnterpriseId == null) {
       return Padding(
         padding: EdgeInsets.only(top: 24.h),
         child: EmptyStateWidget(
@@ -89,7 +89,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
       onSearchChanged: _onSearchChanged,
       onStatusChanged: _onStatusChanged,
       shiftsState: shiftsState,
-      enterpriseId: selectedEnterpriseId,
+      enterpriseId: effectiveEnterpriseId,
       onDelete: (shift) => _handleDelete(context, shift),
     );
   }

@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/attendance_leaves_card.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_background.dart';
@@ -32,12 +31,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final initService = ref.read(appInitializationServiceProvider);
-      initService.initializeAfterAuth().catchError((e) {
-        if (kDebugMode) {
-          debugPrint('Initialization error: $e');
-        }
-      });
+      ref.read(appInitializationServiceProvider).initializeAfterAuth();
     });
   }
 

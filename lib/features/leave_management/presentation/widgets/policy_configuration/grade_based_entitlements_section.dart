@@ -6,14 +6,18 @@ import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class GradeBasedEntitlementsSection extends StatelessWidget {
+class GradeBasedEntitlementsSection extends ConsumerWidget {
   final bool isDark;
   final List<GradeEntitlement> gradeRows;
   final String effectiveDate;
@@ -32,7 +36,9 @@ class GradeBasedEntitlementsSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final accrualOptions = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.accrualMethod));
+
     return ExpandableConfigSection(
       title: 'Grade-Based Entitlements & Accrual',
       iconPath: Assets.icons.leaveManagementIcon.path,
@@ -41,7 +47,13 @@ class GradeBasedEntitlementsSection extends StatelessWidget {
         spacing: 16.h,
         children: [
           ...gradeRows.map(
-            (grade) => _GradeRowCard(grade: grade, isDark: isDark, accrualMethod: accrualMethod, isEditing: isEditing),
+            (grade) => _GradeRowCard(
+              grade: grade,
+              isDark: isDark,
+              accrualMethod: accrualMethod,
+              accrualOptions: accrualOptions,
+              isEditing: isEditing,
+            ),
           ),
           if (isEditing)
             Align(
@@ -60,9 +72,16 @@ class _GradeRowCard extends StatelessWidget {
   final GradeEntitlement grade;
   final bool isDark;
   final String accrualMethod;
+  final List<AbsLookupValue> accrualOptions;
   final bool isEditing;
 
-  const _GradeRowCard({required this.grade, required this.isDark, required this.accrualMethod, this.isEditing = false});
+  const _GradeRowCard({
+    required this.grade,
+    required this.isDark,
+    required this.accrualMethod,
+    required this.accrualOptions,
+    this.isEditing = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -128,13 +147,19 @@ class _GradeRowCard extends StatelessWidget {
   }
 
   Widget _buildAccrualMethodDropdown(BuildContext context) {
-    final accrualOptions = ['Monthly', 'Yearly', 'None'];
+    AbsLookupValue? selected;
+    for (final v in accrualOptions) {
+      if (v.lookupValueName == accrualMethod) {
+        selected = v;
+        break;
+      }
+    }
 
-    return DigifySelectFieldWithLabel<String>(
+    return DigifySelectFieldWithLabel<AbsLookupValue>(
       label: 'Accrual Method',
       items: accrualOptions,
-      itemLabelBuilder: (item) => item,
-      value: accrualMethod,
+      itemLabelBuilder: (v) => v.lookupValueName,
+      value: selected,
       onChanged: isEditing ? (_) {} : null,
     );
   }

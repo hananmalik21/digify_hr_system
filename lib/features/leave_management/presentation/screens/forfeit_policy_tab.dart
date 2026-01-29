@@ -28,7 +28,7 @@ class _ForfeitPolicyTabState extends ConsumerState<ForfeitPolicyTab> {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final isMobile = context.isMobile;
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
     final forfeitPoliciesAsync = ref.watch(forfeitPoliciesProvider);
 
     return SingleChildScrollView(
@@ -43,11 +43,11 @@ class _ForfeitPolicyTabState extends ConsumerState<ForfeitPolicyTab> {
             description: 'Manage and configure forfeit policies for leave management.',
           ),
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

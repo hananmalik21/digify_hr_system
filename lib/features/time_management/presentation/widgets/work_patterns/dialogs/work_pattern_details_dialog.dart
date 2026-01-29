@@ -56,7 +56,7 @@ class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMix
           label: 'Edit Pattern',
           onPressed: () {
             context.pop();
-            final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+            final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
             if (enterpriseId != null) {
               EditWorkPatternDialog.show(context, enterpriseId, workPattern);
             }

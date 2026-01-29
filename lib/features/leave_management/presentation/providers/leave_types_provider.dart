@@ -48,7 +48,7 @@ class LeaveTypesNotifier extends StateNotifier<LeaveTypesState> {
   Future<void> loadLeaveTypes({String? search}) async {
     state = state.copyWith(isLoading: true, error: null, searchQuery: search);
     try {
-      final tenantId = _ref.read(leaveManagementSelectedEnterpriseProvider);
+      final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
       final leaveTypes = await _repository.getLeaveTypes(search: search, tenantId: tenantId);
       state = state.copyWith(leaveTypes: leaveTypes, isLoading: false);
     } catch (e) {

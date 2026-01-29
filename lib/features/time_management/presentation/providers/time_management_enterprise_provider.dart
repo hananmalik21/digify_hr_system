@@ -8,43 +8,30 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 
 final timeManagementSelectedEnterpriseProvider = StateNotifierProvider<TimeManagementEnterpriseNotifier, int?>((ref) {
   final notifier = TimeManagementEnterpriseNotifier(ref);
-
+  final initialActive = ref.read(activeEnterpriseIdProvider);
+  if (initialActive != null) {
+    notifier.setEnterpriseId(initialActive);
+  }
   ref.listen<int?>(activeEnterpriseIdProvider, (previous, next) {
-    if (next != null) {
-      notifier.syncWithActiveEnterprise(next);
+    if (next != null && !notifier.hasSelection) {
+      notifier.setEnterpriseId(next);
     }
   });
-
   return notifier;
 });
 
 class TimeManagementEnterpriseNotifier extends StateNotifier<int?> {
   final Ref ref;
 
-  TimeManagementEnterpriseNotifier(this.ref) : super(null) {
-    final activeEnterpriseId = ref.read(activeEnterpriseIdProvider);
-    if (activeEnterpriseId != null) {
-      state = activeEnterpriseId;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updateAllTabProviders(activeEnterpriseId);
-      });
-    }
-  }
+  TimeManagementEnterpriseNotifier(this.ref) : super(null);
+
+  bool get hasSelection => state != null;
 
   void setEnterpriseId(int? enterpriseId) {
     state = enterpriseId;
     if (enterpriseId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _updateAllTabProviders(enterpriseId);
-      });
-    }
-  }
-
-  void syncWithActiveEnterprise(int activeEnterpriseId) {
-    if (state == null) {
-      state = activeEnterpriseId;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _updateAllTabProviders(activeEnterpriseId);
       });
     }
   }
@@ -56,3 +43,9 @@ class TimeManagementEnterpriseNotifier extends StateNotifier<int?> {
     ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
   }
 }
+
+final timeManagementEnterpriseIdProvider = Provider<int?>((ref) {
+  final selected = ref.watch(timeManagementSelectedEnterpriseProvider);
+  final active = ref.watch(activeEnterpriseIdProvider);
+  return selected ?? active;
+});

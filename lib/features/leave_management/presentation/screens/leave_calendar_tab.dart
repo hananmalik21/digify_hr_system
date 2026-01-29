@@ -15,7 +15,7 @@ class LeaveCalendarTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final selectedEnterpriseId = ref.watch(leaveManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -24,11 +24,11 @@ class LeaveCalendarTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           EnterpriseSelectorWidget(
-            selectedEnterpriseId: selectedEnterpriseId,
+            selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
-            subtitle: selectedEnterpriseId != null
+            subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),

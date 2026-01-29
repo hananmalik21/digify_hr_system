@@ -1,19 +1,26 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_subsection_header.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-class EmployeeCategorySubsection extends StatelessWidget {
+class EmployeeCategorySubsection extends ConsumerWidget {
   final EligibilityCriteria eligibility;
   final bool isDark;
 
   const EmployeeCategorySubsection({super.key, required this.eligibility, required this.isDark});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final values = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.empCategory));
+    final selectedCode = eligibility.employeeCategoryCode;
+
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -23,30 +30,26 @@ class EmployeeCategorySubsection extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.h,
+        mainAxisSize: MainAxisSize.min,
         children: [
           EligibilitySubsectionHeader(
             title: 'Employee Category',
             iconPath: Assets.icons.leaveManagement.globe.path,
             isDark: isDark,
           ),
+          Gap(12.h),
           Row(
-            spacing: 16.w,
             children: [
-              Flexible(
-                child: DigifyCheckbox(
-                  value: eligibility.employeeCategory == 'Kuwaiti Nationals',
-                  onChanged: null,
-                  label: 'Kuwaiti Nationals',
+              for (int i = 0; i < values.length; i++) ...[
+                if (i > 0) Gap(16.w),
+                Flexible(
+                  child: DigifyCheckbox(
+                    value: selectedCode != null && values[i].lookupValueCode == selectedCode,
+                    onChanged: null,
+                    label: values[i].lookupValueName,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: DigifyCheckbox(
-                  value: eligibility.employeeCategory == 'Expatriates',
-                  onChanged: null,
-                  label: 'Expatriates',
-                ),
-              ),
+              ],
             ],
           ),
         ],

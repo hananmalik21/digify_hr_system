@@ -38,7 +38,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   @override
   void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final state = ref.read(workSchedulesNotifierProvider(enterpriseId));
@@ -48,7 +48,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
   }
 
   void _handleCreateSchedule() {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
     CreateWorkScheduleDialog.show(context, enterpriseId);
   }
@@ -62,13 +62,13 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
   }
 
   void _handleEdit(WorkSchedule schedule) {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
     UpdateWorkScheduleDialog.show(context, enterpriseId, schedule);
   }
 
   Future<void> _handleDelete(WorkSchedule schedule) async {
-    final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final confirmed = await AppConfirmationDialog.show(
@@ -115,12 +115,12 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
 
   @override
   Widget build(BuildContext context) {
-    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
-    final workSchedulesState = selectedEnterpriseId != null
-        ? ref.watch(workSchedulesNotifierProvider(selectedEnterpriseId))
+    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final workSchedulesState = effectiveEnterpriseId != null
+        ? ref.watch(workSchedulesNotifierProvider(effectiveEnterpriseId))
         : const WorkScheduleState();
 
-    if (selectedEnterpriseId == null) {
+    if (effectiveEnterpriseId == null) {
       return const Center(
         child: TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work schedules'),
       );
@@ -155,7 +155,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
             Gap(16.h),
             ElevatedButton(
               onPressed: () {
-                final enterpriseId = ref.read(timeManagementSelectedEnterpriseProvider);
+                final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
                 if (enterpriseId != null) {
                   ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
                 }

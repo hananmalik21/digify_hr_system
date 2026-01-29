@@ -40,7 +40,7 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
-    final selectedEnterpriseId = ref.watch(timeManagementSelectedEnterpriseProvider);
+    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
@@ -60,11 +60,11 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
             TimeManagementStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
             EnterpriseSelectorWidget(
-              selectedEnterpriseId: selectedEnterpriseId,
+              selectedEnterpriseId: effectiveEnterpriseId,
               onEnterpriseChanged: (enterpriseId) {
                 ref.read(timeManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
               },
-              subtitle: selectedEnterpriseId != null
+              subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'
                   : 'Select an enterprise to view data',
             ),

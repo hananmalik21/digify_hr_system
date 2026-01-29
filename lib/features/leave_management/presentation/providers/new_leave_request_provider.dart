@@ -329,7 +329,7 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
       throw Exception('Repository not provided');
     }
 
-    final tenantId = _ref?.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref?.read(leaveManagementEnterpriseIdProvider);
 
     state = state.copyWith(isSubmitting: true);
     try {
@@ -349,7 +349,7 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
       throw Exception('Repository not provided');
     }
 
-    final tenantId = _ref?.read(leaveManagementSelectedEnterpriseProvider);
+    final tenantId = _ref?.read(leaveManagementEnterpriseIdProvider);
 
     state = state.copyWith(isSavingDraft: true);
     try {
