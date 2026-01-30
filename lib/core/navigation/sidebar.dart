@@ -25,6 +25,13 @@ class Sidebar extends ConsumerStatefulWidget {
 class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
   final Map<String, bool> _expandedItems = {};
   String? _lastAutoExpandedRoute;
+  final ScrollController _menuScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _menuScrollController.dispose();
+    super.dispose();
+  }
 
   void _handleNavigation(SidebarItem item) {
     if (item.route != null && mounted) {
@@ -192,21 +199,34 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
   }
 
   Widget _buildMenu(BuildContext context, List<SidebarItem> items, bool isExpanded, AppLocalizations localizations) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: SingleChildScrollView(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: isExpanded ? 16.w : 0, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: items.asMap().entries.map((entry) {
-            final index = entry.key;
-            final item = entry.value;
-            return Padding(
-              key: ValueKey('menu-item-${item.id}'),
-              padding: EdgeInsetsDirectional.only(bottom: index < items.length - 1 ? 4.h : 0),
-              child: _buildMenuItem(context, item, isExpanded, localizations, items),
-            );
-          }).toList(),
+    final scrollbarTheme = Theme.of(context).scrollbarTheme.copyWith(
+      thumbColor: WidgetStateProperty.all(AppColors.primary),
+      thickness: WidgetStateProperty.all(5.w),
+      radius: Radius.circular(4.r),
+      mainAxisMargin: 24.h,
+      minThumbLength: 32.h,
+    );
+
+    return Theme(
+      data: Theme.of(context).copyWith(scrollbarTheme: scrollbarTheme),
+      child: Scrollbar(
+        controller: _menuScrollController,
+        thumbVisibility: false,
+        child: SingleChildScrollView(
+          controller: _menuScrollController,
+          padding: EdgeInsetsDirectional.symmetric(horizontal: isExpanded ? 16.w : 0, vertical: 16.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: items.asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              return Padding(
+                key: ValueKey('menu-item-${item.id}'),
+                padding: EdgeInsetsDirectional.only(bottom: index < items.length - 1 ? 4.h : 0),
+                child: _buildMenuItem(context, item, isExpanded, localizations, items),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
