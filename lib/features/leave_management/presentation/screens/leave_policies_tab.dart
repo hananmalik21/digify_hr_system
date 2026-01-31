@@ -2,6 +2,8 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policies_filters_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policies_stat_cards.dart';
@@ -18,6 +20,12 @@ class LeavePoliciesTab extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final paginatedAsync = ref.watch(absPoliciesProvider);
+    final paginationState = ref.watch(absPoliciesPaginationProvider);
+    final notifierState = ref.watch(absPoliciesNotifierProvider);
+
+    final paginationInfo = paginatedAsync.valueOrNull?.pagination;
+    final showPagination = paginationInfo != null;
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -42,8 +50,26 @@ class LeavePoliciesTab extends ConsumerWidget {
           LeavePoliciesStatCards(isDark: isDark),
           LeavePoliciesFiltersSection(localizations: localizations, isDark: isDark),
           LeavePolicyCardsGrid(localizations: localizations, isDark: isDark),
+          if (showPagination)
+            PaginationControls.fromPaginationInfo(
+              paginationInfo: paginationInfo,
+              currentPage: paginationState.page,
+              pageSize: paginationState.pageSize,
+              onPrevious: paginationInfo.hasPrevious && !notifierState.isLoading
+                  ? () => _goToPage(ref, paginationState.page - 1, paginationState.pageSize)
+                  : null,
+              onNext: paginationInfo.hasNext && !notifierState.isLoading
+                  ? () => _goToPage(ref, paginationState.page + 1, paginationState.pageSize)
+                  : null,
+              isLoading: false,
+              style: PaginationStyle.simple,
+            ),
         ],
       ),
     );
+  }
+
+  void _goToPage(WidgetRef ref, int page, int pageSize) {
+    ref.read(absPoliciesPaginationProvider.notifier).state = (page: page, pageSize: pageSize);
   }
 }

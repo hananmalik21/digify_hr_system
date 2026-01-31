@@ -67,7 +67,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
     final pagination = _ref.read(absPoliciesPaginationProvider);
     final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
 
-    state = state.copyWith(isLoading: true, error: null);
+    state = AbsPoliciesState(data: null, isLoading: true, error: null);
 
     if (tenantId == null) {
       state = state.copyWith(data: PaginatedPolicies.empty, isLoading: false, error: null);
