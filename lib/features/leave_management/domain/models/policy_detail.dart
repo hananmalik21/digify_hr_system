@@ -56,6 +56,8 @@ class PolicyDetail {
   // Grade Entitlements
   final List<GradeEntitlement> gradeRows;
   final bool enableProRata;
+  final DateTime? effectiveStartDate;
+  final DateTime? effectiveEndDate;
 
   /// Empty policy for "Add New Policy" form. All optional fields are null/empty; required fields use safe defaults.
   static PolicyDetail empty() {
@@ -98,6 +100,8 @@ class PolicyDetail {
       encashmentRatePct: null,
       gradeRows: const [],
       enableProRata: false,
+      effectiveStartDate: null,
+      effectiveEndDate: null,
     );
   }
 
@@ -140,6 +144,8 @@ class PolicyDetail {
     this.encashmentRatePct,
     this.gradeRows = const [],
     this.enableProRata = false,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
   });
 
   PolicyDetail copyWith({
@@ -181,6 +187,8 @@ class PolicyDetail {
     int? encashmentRatePct,
     List<GradeEntitlement>? gradeRows,
     bool? enableProRata,
+    DateTime? effectiveStartDate,
+    DateTime? effectiveEndDate,
   }) {
     return PolicyDetail(
       policyId: policyId ?? this.policyId,
@@ -221,6 +229,8 @@ class PolicyDetail {
       encashmentRatePct: encashmentRatePct ?? this.encashmentRatePct,
       gradeRows: gradeRows ?? this.gradeRows,
       enableProRata: enableProRata ?? this.enableProRata,
+      effectiveStartDate: effectiveStartDate ?? this.effectiveStartDate,
+      effectiveEndDate: effectiveEndDate ?? this.effectiveEndDate,
     );
   }
 
@@ -231,6 +241,18 @@ class PolicyDetail {
   String get formattedCreatedDate {
     if (createdDate == null) return '-';
     return DateFormat('yyyy-MM-dd').format(createdDate!);
+  }
+
+  /// Formatted effective start date (yyyy-MM-dd)
+  String get formattedEffectiveStartDate {
+    if (effectiveStartDate == null) return '-';
+    return DateFormat('yyyy-MM-dd').format(effectiveStartDate!);
+  }
+
+  /// Formatted effective end date (yyyy-MM-dd)
+  String get formattedEffectiveEndDate {
+    if (effectiveEndDate == null) return '-';
+    return DateFormat('yyyy-MM-dd').format(effectiveEndDate!);
   }
 
   /// Build grade restriction string from grade rows
@@ -284,7 +306,9 @@ class PolicyDetail {
         annualEntitlement: entitlementDays.toString(),
         accrualMethod: accrualMethod.displayName,
         accrualRate: _calculateAccrualRate(),
-        effectiveDate: formattedCreatedDate,
+        effectiveDate: effectiveStartDate != null || effectiveEndDate != null
+            ? '$formattedEffectiveStartDate – $formattedEffectiveEndDate'
+            : formattedCreatedDate,
         enableProRataCalculation: enableProRata,
       ),
       advancedRules: AdvancedRules(

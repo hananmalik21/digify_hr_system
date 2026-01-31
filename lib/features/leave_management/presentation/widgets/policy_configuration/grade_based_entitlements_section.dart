@@ -23,7 +23,8 @@ import 'package:gap/gap.dart';
 class GradeBasedEntitlementsSection extends ConsumerWidget {
   final bool isDark;
   final List<GradeEntitlement> gradeRows;
-  final String effectiveDate;
+  final DateTime? effectiveStartDate;
+  final DateTime? effectiveEndDate;
   final bool enableProRata;
   final String accrualMethodCode;
   final bool isEditing;
@@ -32,7 +33,8 @@ class GradeBasedEntitlementsSection extends ConsumerWidget {
     super.key,
     required this.isDark,
     required this.gradeRows,
-    required this.effectiveDate,
+    required this.effectiveStartDate,
+    required this.effectiveEndDate,
     required this.enableProRata,
     required this.accrualMethodCode,
     this.isEditing = false,
@@ -72,7 +74,12 @@ class GradeBasedEntitlementsSection extends ConsumerWidget {
                 onPressed: () => draftNotifier.addGradeRow(),
               ),
             ),
-          _EffectiveDateCard(effectiveDate: effectiveDate, isDark: isDark, isEditing: isEditing),
+          _EffectiveDateCard(
+            effectiveStartDate: effectiveStartDate,
+            effectiveEndDate: effectiveEndDate,
+            isDark: isDark,
+            isEditing: isEditing,
+          ),
           _ProRataCard(
             enableProRata: enableProRata,
             isDark: isDark,
@@ -331,24 +338,23 @@ class _GradeRowCardState extends State<_GradeRowCard> {
   }
 }
 
-class _EffectiveDateCard extends StatelessWidget {
-  final String effectiveDate;
+class _EffectiveDateCard extends ConsumerWidget {
+  final DateTime? effectiveStartDate;
+  final DateTime? effectiveEndDate;
   final bool isDark;
   final bool isEditing;
 
-  const _EffectiveDateCard({required this.effectiveDate, required this.isDark, this.isEditing = false});
-
-  DateTime? _parseDate(String dateStr) {
-    if (dateStr.isEmpty || dateStr == '-') return null;
-    try {
-      return DateTime.parse(dateStr);
-    } catch (_) {
-      return null;
-    }
-  }
+  const _EffectiveDateCard({
+    required this.effectiveStartDate,
+    required this.effectiveEndDate,
+    required this.isDark,
+    this.isEditing = false,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final draftNotifier = ref.read(policyDraftProvider.notifier);
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -356,15 +362,35 @@ class _EffectiveDateCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
       ),
-      child: DateSelectionField(
-        label: 'Effective Date (applies to all grade ranges)',
-        labelIconPath: Assets.icons.clockIcon.path,
-        date: _parseDate(effectiveDate),
-        hintText: 'Select effective date',
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-        onDateSelected: (_) {},
-        enabled: false,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16.w,
+        children: [
+          Expanded(
+            child: DateSelectionField(
+              label: 'Effective Start Date',
+              labelIconPath: Assets.icons.clockIcon.path,
+              date: effectiveStartDate,
+              hintText: 'Select start date',
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+              onDateSelected: isEditing ? (d) => draftNotifier.updateEffectiveStartDate(d) : (_) {},
+              enabled: isEditing,
+            ),
+          ),
+          Expanded(
+            child: DateSelectionField(
+              label: 'Effective End Date',
+              labelIconPath: Assets.icons.clockIcon.path,
+              date: effectiveEndDate,
+              hintText: 'Select end date',
+              firstDate: effectiveStartDate ?? DateTime(2000),
+              lastDate: DateTime(2100),
+              onDateSelected: isEditing ? (d) => draftNotifier.updateEffectiveEndDate(d) : (_) {},
+              enabled: isEditing,
+            ),
+          ),
+        ],
       ),
     );
   }

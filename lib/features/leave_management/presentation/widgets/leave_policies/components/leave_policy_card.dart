@@ -3,10 +3,8 @@ import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -14,9 +12,8 @@ import 'package:gap/gap.dart';
 class LeavePolicyCard extends StatelessWidget {
   final LeavePolicy policy;
   final bool isDark;
-  final VoidCallback? onEdit;
 
-  const LeavePolicyCard({super.key, required this.policy, required this.isDark, this.onEdit});
+  const LeavePolicyCard({super.key, required this.policy, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +79,6 @@ class LeavePolicyCard extends StatelessWidget {
                   ],
                 ),
               ),
-              DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit),
             ],
           ),
           Gap(gapMedium),

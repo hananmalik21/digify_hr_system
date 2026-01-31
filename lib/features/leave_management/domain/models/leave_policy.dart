@@ -1,3 +1,5 @@
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
+
 class LeavePolicy {
   final String? policyGuid;
   final String nameEn;
@@ -16,6 +18,30 @@ class LeavePolicy {
   final String? accrualMethodCode;
   final String? status;
   final String? kuwaitLaborCompliant;
+
+  /// Maps from ABS policy list item for display in Leave Policies tab (same card design).
+  factory LeavePolicy.fromPolicyListItem(PolicyListItem item) {
+    final detail = item.detail;
+    return LeavePolicy(
+      policyGuid: item.policyGuid,
+      nameEn: item.name,
+      nameAr: item.nameArabic,
+      isKuwaitLaw: detail?.kuwaitLaborCompliant ?? false,
+      description: item.tags.isEmpty ? '' : item.tags.join(', '),
+      entitlement: '${item.entitlementDays}',
+      accrualType: item.accrualMethod.displayName,
+      minService: detail?.minServiceYears?.toString() ?? '-',
+      advanceNotice: detail?.minNoticeDays?.toString() ?? '-',
+      isPaid: true,
+      carryoverDays: detail?.carryForwardLimitDays,
+      requiresAttachment: detail?.requiresDocument ?? false,
+      genderRestriction: null,
+      entitlementDays: item.entitlementDays,
+      accrualMethodCode: item.accrualMethod.code,
+      status: item.status.code,
+      kuwaitLaborCompliant: detail?.kuwaitLaborCompliant == true ? 'Y' : 'N',
+    );
+  }
 
   const LeavePolicy({
     this.policyGuid,

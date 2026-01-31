@@ -91,6 +91,14 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
     state = state?.copyWith(enableProRata: value);
   }
 
+  void updateEffectiveStartDate(DateTime? value) {
+    state = state?.copyWith(effectiveStartDate: value);
+  }
+
+  void updateEffectiveEndDate(DateTime? value) {
+    state = state?.copyWith(effectiveEndDate: value);
+  }
+
   void updateMinNoticeDays(int? value) {
     state = state?.copyWith(minNoticeDays: value);
   }
