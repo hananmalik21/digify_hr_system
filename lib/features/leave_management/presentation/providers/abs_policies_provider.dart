@@ -4,10 +4,12 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/leave_management/data/datasources/abs_policies_remote_data_source.dart';
 import 'package:digify_hr_system/features/leave_management/data/repositories/abs_policies_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/abs_policies_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_filter_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AbsPoliciesState {
@@ -153,6 +155,28 @@ final absPoliciesProvider = Provider<AsyncValue<PaginatedPolicies>>((ref) {
     return AsyncValue.data(state.data!);
   }
   return const AsyncValue.loading();
+});
+
+final leavePoliciesFromAbsProvider = Provider<AsyncValue<List<LeavePolicy>>>((ref) {
+  final paginated = ref.watch(absPoliciesProvider);
+  final filter = ref.watch(leavePoliciesFilterProvider);
+
+  return paginated.when(
+    data: (data) {
+      var list = data.policies.map(LeavePolicy.fromPolicyListItem).toList();
+      if (filter.status != null) {
+        list = list.where((p) => p.status == filter.status).toList();
+      }
+      if (filter.type == 'kuwait_y') {
+        list = list.where((p) => p.kuwaitLaborCompliant == 'Y').toList();
+      } else if (filter.type == 'kuwait_n') {
+        list = list.where((p) => p.kuwaitLaborCompliant == 'N').toList();
+      }
+      return AsyncValue.data(list);
+    },
+    loading: () => const AsyncValue.loading(),
+    error: (e, st) => AsyncValue.error(e, st),
+  );
 });
 
 class SelectedPolicyGuidNotifier extends StateNotifier<String?> {

@@ -103,7 +103,8 @@ class PolicyDetailsContent extends ConsumerWidget {
         GradeBasedEntitlementsSection(
           isDark: isDark,
           gradeRows: detailForDisplay.gradeRows,
-          effectiveDate: detailForDisplay.formattedCreatedDate,
+          effectiveStartDate: detailForDisplay.effectiveStartDate,
+          effectiveEndDate: detailForDisplay.effectiveEndDate,
           enableProRata: detailForDisplay.enableProRata,
           accrualMethodCode: detailForDisplay.accrualMethod.code,
           isEditing: isEditing,

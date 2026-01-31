@@ -2,7 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/components/leave_policy_card.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policy_cards_grid_skeleton.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +12,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class LeavePolicyCardsGrid extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final ValueChanged<LeavePolicy>? onEdit;
 
-  const LeavePolicyCardsGrid({super.key, required this.localizations, required this.isDark, this.onEdit});
+  const LeavePolicyCardsGrid({super.key, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final policiesAsync = ref.watch(leavePoliciesProvider);
+    final policiesAsync = ref.watch(leavePoliciesFromAbsProvider);
 
     return policiesAsync.when(
       data: (policies) {
@@ -65,11 +64,7 @@ class LeavePolicyCardsGrid extends ConsumerWidget {
           itemCount: policies.length,
           itemBuilder: (context, index) {
             final policy = policies[index];
-            return LeavePolicyCard(
-              policy: policy,
-              isDark: isDark,
-              onEdit: onEdit != null ? () => onEdit!(policy) : null,
-            );
+            return LeavePolicyCard(policy: policy, isDark: isDark);
           },
         );
       },

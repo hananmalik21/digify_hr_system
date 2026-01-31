@@ -165,7 +165,8 @@ class _AddPolicyDialogContent extends ConsumerWidget {
         GradeBasedEntitlementsSection(
           isDark: isDark,
           gradeRows: draft.gradeRows,
-          effectiveDate: draft.formattedCreatedDate,
+          effectiveStartDate: draft.effectiveStartDate,
+          effectiveEndDate: draft.effectiveEndDate,
           enableProRata: draft.enableProRata,
           accrualMethodCode: draft.accrualMethod.code,
           isEditing: true,

@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
+import 'package:intl/intl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_enums.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
@@ -87,6 +88,10 @@ class AbsPolicyItemDto {
   final int? encashmentLimitDays;
   final int? encashmentRatePct;
 
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? enableProRata;
+
   final List<GradeRowDto> gradeRows;
 
   const AbsPolicyItemDto({
@@ -130,6 +135,9 @@ class AbsPolicyItemDto {
     this.encashAllowEncashment,
     this.encashmentLimitDays,
     this.encashmentRatePct,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.enableProRata,
     this.gradeRows = const [],
   });
 
@@ -177,6 +185,9 @@ class AbsPolicyItemDto {
       encashAllowEncashment: json['encash_allow_encashment'] as String?,
       encashmentLimitDays: (json['encashment_limit_days'] as num?)?.toInt(),
       encashmentRatePct: (json['encashment_rate_pct'] as num?)?.toInt(),
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
+      enableProRata: json['enable_pro_rata'] as String?,
       gradeRows: gradeRowsList.map((e) => GradeRowDto.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
@@ -244,6 +255,9 @@ class AbsPolicyItemDto {
       encashmentLimitDays: encashmentLimitDays,
       encashmentRatePct: encashmentRatePct,
       gradeRows: gradeRows.map((g) => g.toDomain()).toList(),
+      enableProRata: _isYes(enableProRata),
+      effectiveStartDate: _parseDateTime(effectiveStartDate),
+      effectiveEndDate: _parseDateTime(effectiveEndDate),
     );
   }
 
@@ -337,6 +351,9 @@ class UpdatePolicyRequestDto {
   final int? notifyBeforeDays;
   final int? encashmentLimitDays;
   final int? encashmentRatePct;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String enableProRata;
   final List<UpdatePolicyGradeRowDto> gradeRows;
 
   const UpdatePolicyRequestDto({
@@ -368,6 +385,9 @@ class UpdatePolicyRequestDto {
     this.notifyBeforeDays,
     this.encashmentLimitDays,
     this.encashmentRatePct,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    required this.enableProRata,
     this.gradeRows = const [],
   });
 
@@ -401,6 +421,13 @@ class UpdatePolicyRequestDto {
       notifyBeforeDays: detail.notifyBeforeDays,
       encashmentLimitDays: detail.encashmentLimitDays,
       encashmentRatePct: detail.encashmentRatePct,
+      effectiveStartDate: detail.effectiveStartDate != null
+          ? DateFormat('yyyy-MM-dd').format(detail.effectiveStartDate!)
+          : null,
+      effectiveEndDate: detail.effectiveEndDate != null
+          ? DateFormat('yyyy-MM-dd').format(detail.effectiveEndDate!)
+          : null,
+      enableProRata: detail.enableProRata ? 'Y' : 'N',
       gradeRows: detail.gradeRows
           .map(
             (g) => UpdatePolicyGradeRowDto(
@@ -446,6 +473,9 @@ class UpdatePolicyRequestDto {
       'notify_before_days': notifyBeforeDays,
       'encashment_limit_days': encashmentLimitDays,
       'encashment_rate_pct': encashmentRatePct,
+      'effective_start_date': effectiveStartDate,
+      'effective_end_date': effectiveEndDate,
+      'enable_pro_rata': enableProRata,
       'grade_rows': gradeRows.map((e) => e.toJson()).toList(),
     };
   }
@@ -530,6 +560,9 @@ class CreatePolicyRequestDto {
   final int? notifyBeforeDays;
   final int? encashmentLimitDays;
   final int? encashmentRatePct;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String enableProRata;
   final List<CreatePolicyGradeRowDto> gradeRows;
 
   const CreatePolicyRequestDto({
@@ -559,6 +592,9 @@ class CreatePolicyRequestDto {
     this.notifyBeforeDays,
     this.encashmentLimitDays,
     this.encashmentRatePct,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    required this.enableProRata,
     this.gradeRows = const [],
   });
 
@@ -592,6 +628,13 @@ class CreatePolicyRequestDto {
       notifyBeforeDays: detail.notifyBeforeDays,
       encashmentLimitDays: detail.encashmentLimitDays,
       encashmentRatePct: detail.encashmentRatePct,
+      effectiveStartDate: detail.effectiveStartDate != null
+          ? DateFormat('yyyy-MM-dd').format(detail.effectiveStartDate!)
+          : null,
+      effectiveEndDate: detail.effectiveEndDate != null
+          ? DateFormat('yyyy-MM-dd').format(detail.effectiveEndDate!)
+          : null,
+      enableProRata: detail.enableProRata ? 'Y' : 'N',
       gradeRows: detail.gradeRows
           .map(
             (g) => CreatePolicyGradeRowDto(
@@ -634,6 +677,9 @@ class CreatePolicyRequestDto {
       'notify_before_days': notifyBeforeDays,
       'encashment_limit_days': encashmentLimitDays,
       'encashment_rate_pct': encashmentRatePct,
+      'effective_start_date': effectiveStartDate,
+      'effective_end_date': effectiveEndDate,
+      'enable_pro_rata': enableProRata,
       'grade_rows': gradeRows.map((e) => e.toJson()).toList(),
     };
   }

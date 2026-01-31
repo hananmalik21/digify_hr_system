@@ -48,7 +48,7 @@ class LeavePolicyCardsGridSkeleton extends StatelessWidget {
             ),
             itemCount: skeletonCount,
             itemBuilder: (context, index) {
-              return LeavePolicyCard(policy: _skeletonPolicy, isDark: isDark, onEdit: null);
+              return LeavePolicyCard(policy: _skeletonPolicy, isDark: isDark);
             },
           ),
         );
