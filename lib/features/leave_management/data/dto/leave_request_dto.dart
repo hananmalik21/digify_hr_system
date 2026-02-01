@@ -28,12 +28,12 @@ class EmployeeInfoDto {
     return EmployeeInfoDto(
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
       employeeGuid: json['employee_guid'] as String? ?? '',
-      firstName: json['first_name'] as String? ?? '',
-      middleName: json['middle_name'] as String?,
-      lastName: json['last_name'] as String? ?? '',
+      firstName: json['first_name_en'] as String? ?? json['first_name'] as String? ?? '',
+      middleName: json['middle_name_en'] as String? ?? json['middle_name'] as String?,
+      lastName: json['last_name_en'] as String? ?? json['last_name'] as String? ?? '',
       firstNameAr: json['first_name_ar'] as String?,
       middleNameAr: json['middle_name_ar'] as String?,
-      lastNameAr: json['last_name_ar'] as String?,
+      lastNameAr: json['last_name_ar'] as String? ?? json['family_name_ar'] as String?,
       email: json['email'] as String?,
     );
   }

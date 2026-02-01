@@ -61,6 +61,8 @@ class LeaveRequestsTable extends ConsumerWidget {
                               isApproveLoading: approveLoading.contains(request.guid),
                               isRejectLoading: rejectLoading.contains(request.guid),
                               isDeleteLoading: deleteLoading.contains(request.guid),
+                              onView: () =>
+                                  LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
                               onApprove: () =>
                                   LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
                               onReject: () =>
@@ -137,6 +139,9 @@ class LeaveRequestsTable extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          if (LeaveRequestsTableConfig.showLeaveNumber) _buildLoadingCell(LeaveRequestsTableConfig.leaveNumberWidth.w),
+          if (LeaveRequestsTableConfig.showEmployeeNumber)
+            _buildLoadingCell(LeaveRequestsTableConfig.employeeNumberWidth.w),
           if (LeaveRequestsTableConfig.showEmployee) _buildLoadingCell(LeaveRequestsTableConfig.employeeWidth.w),
           if (LeaveRequestsTableConfig.showLeaveType) _buildLoadingCell(LeaveRequestsTableConfig.leaveTypeWidth.w),
           if (LeaveRequestsTableConfig.showStartDate) _buildLoadingCell(LeaveRequestsTableConfig.startDateWidth.w),
