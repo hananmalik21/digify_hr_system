@@ -1,5 +1,3 @@
-/// List item model for the Manage Employees table row.
-/// Holds display data for #, EMPLOYEE, POSITION, DEPARTMENT, STATUS.
 class EmployeeListItem {
   final String id;
   final String fullName;
@@ -7,6 +5,8 @@ class EmployeeListItem {
   final String position;
   final String department;
   final String status;
+  final String? email;
+  final String? phone;
 
   const EmployeeListItem({
     required this.id,
@@ -15,6 +15,8 @@ class EmployeeListItem {
     required this.position,
     required this.department,
     required this.status,
+    this.email,
+    this.phone,
   });
 
   factory EmployeeListItem.empty() =>

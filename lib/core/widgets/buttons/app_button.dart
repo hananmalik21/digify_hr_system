@@ -177,7 +177,7 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveHeight = height?.h;
+    final effectiveHeight = height?.h ?? 40.h;
     final effectiveWidth = width?.w;
 
     final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h);
@@ -185,14 +185,13 @@ class AppButton extends StatelessWidget {
     final effectiveFontSize = fontSize ?? 15.sp;
 
     final isDisabled = isLoading || onPressed == null;
-    final backgroundColor = _getBackgroundColor();
+    final bgColor = _getBackgroundColor();
     final contentColor = isDisabled
         ? (type == AppButtonType.outline ? AppColors.textMuted : Colors.white70)
         : _getTextColor();
     final borderProp = _getBorder();
 
-    List<Widget> children = [];
-
+    final List<Widget> children = [];
     if (icon != null) {
       children.add(Icon(icon, size: 20.sp, color: contentColor));
       children.add(SizedBox(width: 8.w));
@@ -200,18 +199,19 @@ class AppButton extends StatelessWidget {
       children.add(DigifyAsset(assetPath: svgPath!, width: 20, height: 20, color: contentColor));
       children.add(SizedBox(width: 8.w));
     }
-
-    children.add(
-      Text(
-        label,
-        style: context.textTheme.bodyMedium?.copyWith(
-          fontSize: effectiveFontSize,
-          fontWeight: FontWeight.w400,
-          color: contentColor,
-          height: 1.0,
+    if (label.isNotEmpty) {
+      children.add(
+        Text(
+          label,
+          style: context.textTheme.bodyMedium?.copyWith(
+            fontSize: effectiveFontSize,
+            fontWeight: FontWeight.w400,
+            color: contentColor,
+            height: 1.0,
+          ),
         ),
-      ),
-    );
+      );
+    }
 
     return Material(
       color: Colors.transparent,
@@ -221,7 +221,7 @@ class AppButton extends StatelessWidget {
               height: effectiveHeight,
               child: Ink(
                 decoration: BoxDecoration(
-                  color: backgroundColor,
+                  color: bgColor,
                   borderRadius: effectiveBorderRadius,
                   border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
                 ),
@@ -252,7 +252,7 @@ class AppButton extends StatelessWidget {
             )
           : Ink(
               decoration: BoxDecoration(
-                color: backgroundColor,
+                color: bgColor,
                 borderRadius: effectiveBorderRadius,
                 border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
               ),
@@ -261,7 +261,7 @@ class AppButton extends StatelessWidget {
                 borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
                 child: Container(
                   padding: effectivePadding,
-                  constraints: BoxConstraints(minHeight: effectiveHeight ?? 0),
+                  constraints: BoxConstraints(minHeight: effectiveHeight),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,

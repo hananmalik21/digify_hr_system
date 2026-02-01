@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_view_toggle_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
@@ -43,6 +44,7 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
     final localizations = widget.localizations;
     final isDark = widget.isDark;
     final showFilters = ref.watch(manageEmployeesShowFiltersProvider);
+    final viewMode = ref.watch(manageEmployeesViewModeProvider);
 
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -60,47 +62,52 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
             onChanged: (_) {},
           ),
           Gap(16.h),
-          Wrap(
-            spacing: 12.w,
-            runSpacing: 12.h,
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              SizedBox(
-                width: 144.w,
-                child: DigifySelectField<String?>(
-                  label: '',
-                  hint: localizations.allStatus,
-                  value: _filterValue,
-                  items: [null],
-                  itemLabelBuilder: (v) => localizations.allStatus,
-                  onChanged: (value) {
-                    setState(() => _filterValue = value);
-                  },
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.hardEdge,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 144.w,
+                  child: DigifySelectField<String?>(
+                    label: '',
+                    hint: localizations.allStatus,
+                    value: _filterValue,
+                    items: [null],
+                    itemLabelBuilder: (v) => localizations.allStatus,
+                    onChanged: (value) {
+                      setState(() => _filterValue = value);
+                    },
+                  ),
                 ),
-              ),
-              AppButton(
-                label: localizations.filters,
-                onPressed: () {
-                  ref.read(manageEmployeesShowFiltersProvider.notifier).state = !showFilters;
-                },
-                svgPath: Assets.icons.leaveManagement.filter.path,
-                backgroundColor: showFilters ? AppColors.primary.withValues(alpha: 0.15) : null,
-              ),
-              AppButton(
-                label: localizations.export,
-                onPressed: () {},
-                svgPath: Assets.icons.downloadIcon.path,
-                backgroundColor: AppColors.shiftExportButton,
-              ),
-              AppButton(
-                label: localizations.import,
-                onPressed: () {},
-                svgPath: Assets.icons.bulkUploadIconFigma.path,
-                backgroundColor: AppColors.shiftUploadButton,
-              ),
-              AppButton(label: localizations.refresh, onPressed: () {}, svgPath: Assets.icons.refreshGray.path),
-            ],
+                Gap(12.w),
+                AppButton.outline(
+                  label: localizations.filters,
+                  onPressed: () => ref.read(manageEmployeesShowFiltersProvider.notifier).state = !showFilters,
+                  svgPath: Assets.icons.employeeManagement.filterMain.path,
+                ),
+                Gap(12.w),
+                _buildViewModeToggle(context, viewMode, isDark),
+                Gap(12.w),
+                AppButton(
+                  label: localizations.export,
+                  onPressed: () {},
+                  svgPath: Assets.icons.downloadIcon.path,
+                  backgroundColor: AppColors.shiftExportButton,
+                ),
+                Gap(12.w),
+                AppButton(
+                  label: localizations.import,
+                  onPressed: () {},
+                  svgPath: Assets.icons.bulkUploadIconFigma.path,
+                  backgroundColor: AppColors.shiftUploadButton,
+                ),
+                Gap(12.w),
+                AppButton(label: localizations.refresh, onPressed: () {}, svgPath: Assets.icons.refreshGray.path),
+              ],
+            ),
           ),
           if (showFilters) ...[
             Gap(16.h),
@@ -122,7 +129,7 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           DigifyAsset(
-                            assetPath: Assets.icons.leaveManagement.filter.path,
+                            assetPath: Assets.icons.employeeManagement.filterMain.path,
                             width: 20,
                             height: 20,
                             color: AppColors.statIconPurple,
@@ -184,6 +191,22 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildViewModeToggle(BuildContext context, EmployeeViewMode viewMode, bool isDark) {
+    final nextMode = viewMode == EmployeeViewMode.grid ? EmployeeViewMode.list : EmployeeViewMode.grid;
+    final assetPath = viewMode == EmployeeViewMode.grid
+        ? Assets.icons.employeeManagement.gridView.path
+        : Assets.icons.employeeListIcon.path;
+    return AppViewToggleButton(
+      svgPath: assetPath,
+      onPressed: () {
+        ref.read(manageEmployeesViewModeProvider.notifier).state = nextMode;
+      },
+      backgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
+      foregroundColor: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+      borderColor: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
     );
   }
 

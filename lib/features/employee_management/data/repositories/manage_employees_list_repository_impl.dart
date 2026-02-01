@@ -1,15 +1,15 @@
-import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_local_data_source.dart';
-import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
+import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_remote_data_source.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/manage_employees_page_result.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
 
 class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository {
-  final ManageEmployeesLocalDataSource localDataSource;
+  final ManageEmployeesRemoteDataSource remoteDataSource;
 
-  ManageEmployeesListRepositoryImpl({required this.localDataSource});
+  ManageEmployeesListRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<EmployeeListItem>> getEmployees() async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    return localDataSource.getEmployees();
+  Future<ManageEmployeesPageResult> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10}) async {
+    final dto = await remoteDataSource.getEmployees(enterpriseId: enterpriseId, page: page, pageSize: pageSize);
+    return dto.toDomain();
   }
 }
