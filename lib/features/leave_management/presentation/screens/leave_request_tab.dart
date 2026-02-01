@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/kuwait_law_entitlements_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_entitlements_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_filter_tabs.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table.dart';
@@ -26,8 +25,8 @@ class LeaveRequestTab extends ConsumerWidget {
         children: [
           LeaveEntitlementsSection(localizations: localizations),
           Gap(24.h),
-          KuwaitLawEntitlementsSection(localizations: localizations),
-          Gap(24.h),
+          // KuwaitLawEntitlementsSection(localizations: localizations),
+          // Gap(24.h),
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {

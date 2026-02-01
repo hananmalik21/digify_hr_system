@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/string_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_requests_table_config.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
@@ -19,6 +20,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
   final bool isApproveLoading;
   final bool isRejectLoading;
   final bool isDeleteLoading;
+  final VoidCallback? onView;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
   final VoidCallback? onDelete;
@@ -32,6 +34,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
     this.isApproveLoading = false,
     this.isRejectLoading = false,
     this.isDeleteLoading = false,
+    this.onView,
     this.onApprove,
     this.onReject,
     this.onDelete,
@@ -50,9 +53,19 @@ class LeaveRequestsTableRow extends StatelessWidget {
       ),
       child: Row(
         children: [
+          if (LeaveRequestsTableConfig.showLeaveNumber)
+            _buildDataCell(
+              _buildClickableText(context, request.id.toString(), onView),
+              LeaveRequestsTableConfig.leaveNumberWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showEmployeeNumber)
+            _buildDataCell(
+              _buildClickableText(context, 'EMP${request.employeeId.toString().padLeft(3, '0')}', onView),
+              LeaveRequestsTableConfig.employeeNumberWidth.w,
+            ),
           if (LeaveRequestsTableConfig.showEmployee)
             _buildDataCell(
-              Text(request.employeeName.isEmpty ? '-' : request.employeeName, style: textStyle),
+              _buildClickableText(context, request.employeeName.isEmpty ? '-' : request.employeeName, onView),
               LeaveRequestsTableConfig.employeeWidth.w,
             ),
           if (LeaveRequestsTableConfig.showLeaveType)
@@ -99,6 +112,34 @@ class LeaveRequestsTableRow extends StatelessWidget {
     );
   }
 
+  Widget _buildClickableText(BuildContext context, String text, VoidCallback? onTap) {
+    if (onTap == null) {
+      return Text(
+        text,
+        style: context.textTheme.labelMedium?.copyWith(
+          fontSize: 14.sp,
+          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(4.r),
+      child: Text(
+        text,
+        style: context.textTheme.labelMedium?.copyWith(
+          fontSize: 14.sp,
+          color: AppColors.primary,
+          decoration: TextDecoration.none,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
   Widget _buildTypeCell(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.5.h),
@@ -116,12 +157,16 @@ class LeaveRequestsTableRow extends StatelessWidget {
   Widget _buildStatusCell(BuildContext context) {
     Color backgroundColor;
     Color textColor;
+    Color? iconColor;
     String label;
+    String? iconPath;
 
     switch (request.status) {
       case RequestStatus.pending:
         backgroundColor = AppColors.pendingStatusBackground;
         textColor = AppColors.pendingStatucColor;
+        iconColor = AppColors.pendingStatucColor;
+        iconPath = Assets.icons.clockIcon.path;
         label = localizations.leaveFilterPending;
         break;
       case RequestStatus.draft:
@@ -132,6 +177,8 @@ class LeaveRequestsTableRow extends StatelessWidget {
       case RequestStatus.approved:
         backgroundColor = AppColors.holidayIslamicPaidBg;
         textColor = AppColors.holidayIslamicPaidText;
+        iconPath = Assets.icons.checkIconGreen.path;
+        iconColor = AppColors.holidayIslamicPaidText;
         label = localizations.leaveFilterApproved;
         break;
       case RequestStatus.rejected:
@@ -149,7 +196,16 @@ class LeaveRequestsTableRow extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
       decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(100.r)),
-      child: Text(label.capitalizeFirst, style: context.textTheme.bodyLarge?.copyWith(color: textColor)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (iconPath != null) ...[
+            DigifyAsset(assetPath: iconPath, width: 14.w, height: 14.h, color: iconColor),
+            Gap(6.w),
+          ],
+          Text(label.capitalizeFirst, style: context.textTheme.bodyLarge?.copyWith(color: textColor)),
+        ],
+      ),
     );
   }
 
@@ -158,6 +214,15 @@ class LeaveRequestsTableRow extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.viewIconBlue.path,
+            onTap: onView,
+            width: 20,
+            height: 20,
+            color: AppColors.viewIconBlue,
+            padding: 4.w,
+          ),
+          Gap(8.w),
           DigifyAssetButton(
             assetPath: Assets.icons.checkIconGreen.path,
             onTap: onApprove,
@@ -207,6 +272,19 @@ class LeaveRequestsTableRow extends StatelessWidget {
       );
     }
 
-    return const SizedBox.shrink();
+    // Approved / Rejected / Cancelled: show only view icon
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DigifyAssetButton(
+          assetPath: Assets.icons.viewIconBlue.path,
+          onTap: onView,
+          width: 20,
+          height: 20,
+          color: AppColors.viewIconBlue,
+          padding: 4.w,
+        ),
+      ],
+    );
   }
 }

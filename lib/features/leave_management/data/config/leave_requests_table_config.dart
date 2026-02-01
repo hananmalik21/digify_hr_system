@@ -1,6 +1,8 @@
 class LeaveRequestsTableConfig {
   LeaveRequestsTableConfig._();
 
+  static const bool showLeaveNumber = true;
+  static const bool showEmployeeNumber = true;
   static const bool showEmployee = true;
   static const bool showLeaveType = true;
   static const bool showStartDate = true;
@@ -10,6 +12,8 @@ class LeaveRequestsTableConfig {
   static const bool showStatus = true;
   static const bool showActions = true;
 
+  static const double leaveNumberWidth = 80;
+  static const double employeeNumberWidth = 100;
   static const double employeeWidth = 177.94;
   static const double leaveTypeWidth = 164.03;
   static const double startDateWidth = 188.68;

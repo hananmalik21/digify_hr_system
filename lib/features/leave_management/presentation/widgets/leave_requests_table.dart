@@ -8,6 +8,7 @@ import 'package:digify_hr_system/features/leave_management/data/config/leave_req
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_filter_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_actions_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_request_details_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_row.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -61,6 +62,28 @@ class LeaveRequestsTable extends ConsumerWidget {
                               isApproveLoading: approveLoading.contains(request.guid),
                               isRejectLoading: rejectLoading.contains(request.guid),
                               isDeleteLoading: deleteLoading.contains(request.guid),
+                              onView: () {
+                                LeaveRequestDetailsDialog.show(
+                                  context,
+                                  request: request,
+                                  onApprove: request.status == RequestStatus.pending
+                                      ? () => LeaveRequestsActions.approveLeaveRequest(
+                                          context,
+                                          ref,
+                                          request,
+                                          localizations,
+                                        )
+                                      : null,
+                                  onReject: request.status == RequestStatus.pending
+                                      ? () => LeaveRequestsActions.rejectLeaveRequest(
+                                          context,
+                                          ref,
+                                          request,
+                                          localizations,
+                                        )
+                                      : null,
+                                );
+                              },
                               onApprove: () =>
                                   LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
                               onReject: () =>
@@ -137,6 +160,9 @@ class LeaveRequestsTable extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          if (LeaveRequestsTableConfig.showLeaveNumber) _buildLoadingCell(LeaveRequestsTableConfig.leaveNumberWidth.w),
+          if (LeaveRequestsTableConfig.showEmployeeNumber)
+            _buildLoadingCell(LeaveRequestsTableConfig.employeeNumberWidth.w),
           if (LeaveRequestsTableConfig.showEmployee) _buildLoadingCell(LeaveRequestsTableConfig.employeeWidth.w),
           if (LeaveRequestsTableConfig.showLeaveType) _buildLoadingCell(LeaveRequestsTableConfig.leaveTypeWidth.w),
           if (LeaveRequestsTableConfig.showStartDate) _buildLoadingCell(LeaveRequestsTableConfig.startDateWidth.w),
