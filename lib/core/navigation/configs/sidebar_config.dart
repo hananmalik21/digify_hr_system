@@ -209,46 +209,32 @@ class SidebarConfig {
         labelKey: 'employees',
         children: [
           SidebarItem(
-            id: 'employeeList',
+            id: 'manageEmployees',
             svgPath: Assets.icons.employeeListIcon.path,
-            labelKey: 'employeeList',
-            route: '/employees/list',
-          ),
-          SidebarItem(
-            id: 'addEmployee',
-            svgPath: Assets.icons.addEmployeeIcon.path,
-            labelKey: 'addEmployee',
-            route: '/employees/add',
+            labelKey: 'manageEmployees',
+            route: '/employees',
+            subtitle: 'View & manage employees',
           ),
           SidebarItem(
             id: 'employeeActions',
             svgPath: Assets.icons.employeeActionsIcon.path,
             labelKey: 'employeeActions',
-            route: '/employees/actions',
-          ),
-          SidebarItem(
-            id: 'orgStructure',
-            svgPath: Assets.icons.companyIcon.path,
-            labelKey: 'orgStructure',
-            route: '/employees/org-structure',
+            route: '/employees',
+            subtitle: '60+ lifecycle actions',
           ),
           SidebarItem(
             id: 'workforcePlanning',
             svgPath: Assets.icons.workforcePlanningIcon.path,
             labelKey: 'workforcePlanning',
-            route: '/employees/workforce-planning',
-          ),
-          SidebarItem(
-            id: 'positions',
-            svgPath: Assets.icons.positionsIcon.path,
-            labelKey: 'positions',
-            route: '/employees/positions',
+            route: '/employees',
+            subtitle: 'Headcount planning',
           ),
           SidebarItem(
             id: 'contracts',
             svgPath: Assets.icons.contractsIcon.path,
             labelKey: 'contracts',
-            route: '/employees/contracts',
+            route: '/employees',
+            subtitle: 'Digital contract management',
           ),
         ],
       ),
@@ -383,6 +369,7 @@ class SidebarConfig {
       case 'analytics':
       case 'manageComponentValues':
       case 'department':
+      case 'manageEmployees':
       case 'employeeList':
       case 'addEmployee':
       case 'employeeActions':
@@ -466,6 +453,8 @@ class SidebarConfig {
         return 'Public Holidays';
       case 'employees':
         return localizations.employees;
+      case 'manageEmployees':
+        return 'Manage Employees';
       case 'employeeList':
         return 'Employee List';
       case 'addEmployee':

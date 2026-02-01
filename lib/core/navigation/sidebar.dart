@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
@@ -35,36 +36,29 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
 
   void _handleNavigation(SidebarItem item) {
     if (item.route != null && mounted) {
-      context.go(item.route!);
-
-      if (item.route == AppRoutes.timeManagement) {
+      if (item.route == AppRoutes.employees) {
+        final tabIndex = getEmployeeManagementTabIndex(item.id);
+        if (tabIndex != null) {
+          ref.read(employeeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+        }
+      } else if (item.route == AppRoutes.timeManagement) {
         final tabIndex = getTimeManagementTabIndex(item.id);
         if (tabIndex != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              ref.read(timeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
-            }
-          });
+          ref.read(timeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.workforceStructure) {
         final tabIndex = getWorkforceStructureTabIndex(item.id);
         if (tabIndex != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              ref.read(workforceTabStateProvider.notifier).setTabIndex(tabIndex);
-            }
-          });
+          ref.read(workforceTabStateProvider.notifier).setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.leaveManagement) {
         final tabIndex = getLeaveManagementTabIndex(item.id);
         if (tabIndex != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              ref.read(leaveManagementTabStateProvider.notifier).setTabIndex(tabIndex);
-            }
-          });
+          ref.read(leaveManagementTabStateProvider.notifier).setTabIndex(tabIndex);
         }
       }
+
+      context.go(item.route!);
     }
   }
 
@@ -353,13 +347,19 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                         final index = entry.key;
                         final child = entry.value;
                         final currentRoute = GoRouterState.of(context).uri.path;
-                        // For time management, workforce structure, and leave management, check both route and tab index
+                        // For employees, time management, workforce structure, and leave management, check route and tab index
                         final isChildActive =
-                            item.id == 'timeManagement' ||
+                            item.id == 'employees' ||
+                                item.id == 'timeManagement' ||
                                 item.id == 'workforceStructure' ||
                                 item.id == 'leaveManagement'
                             ? (currentRoute == child.route &&
-                                  ((item.id == 'timeManagement' &&
+                                  ((item.id == 'employees' &&
+                                          getEmployeeManagementTabIndex(child.id) ==
+                                              ref.watch(
+                                                employeeManagementTabStateProvider.select((s) => s.currentTabIndex),
+                                              )) ||
+                                      (item.id == 'timeManagement' &&
                                           getTimeManagementTabIndex(child.id) ==
                                               ref.watch(
                                                 timeManagementTabStateProvider.select((s) => s.currentTabIndex),
