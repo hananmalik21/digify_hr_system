@@ -1423,6 +1423,57 @@ class AppLocalizationsAr extends AppLocalizations {
   String get employees => 'الموظفون';
 
   @override
+  String get manageEmployees => 'إدارة الموظفين';
+
+  @override
+  String get manageEmployeesDescription => 'عرض وإدارة الموظفين';
+
+  @override
+  String get addNewEmployee => 'إضافة موظف جديد';
+
+  @override
+  String get newHiresThisMonth => 'الجدد هذا الشهر';
+
+  @override
+  String get employeeStatDescriptionAll => 'جميع الموظفين في المؤسسة';
+
+  @override
+  String get employeeStatDescriptionActive => 'نشط حاليًا';
+
+  @override
+  String get employeeStatDescriptionDepartments => 'عبر المؤسسة';
+
+  @override
+  String get employeeStatDescriptionNewHires => 'انضموا هذا الشهر';
+
+  @override
+  String get onProbation => 'تحت التجربة';
+
+  @override
+  String get advancedFilters => 'مرشحات متقدمة';
+
+  @override
+  String get clearAll => 'مسح الكل';
+
+  @override
+  String get allStatuses => 'جميع الحالات';
+
+  @override
+  String get allPositions => 'جميع المناصب';
+
+  @override
+  String get allWorkforceStructures => 'جميع هياكل القوى العاملة';
+
+  @override
+  String get allJobFamilies => 'جميع عائلات الوظائف';
+
+  @override
+  String get allJobLevels => 'جميع مستويات الوظائف';
+
+  @override
+  String get allGrades => 'جميع الدرجات';
+
+  @override
   String get attendance => 'الحضور';
 
   @override

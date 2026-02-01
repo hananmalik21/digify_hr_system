@@ -1,68 +1,69 @@
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_management_stats_cards.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_search_and_actions.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/manage_employees_table.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Dummy screen for Manage Employees module.
-/// Route: /employees/list — View & manage employees.
-class ManageEmployeesScreen extends StatelessWidget {
+class ManageEmployeesScreen extends ConsumerWidget {
   const ManageEmployeesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(24.w),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final employeesAsync = ref.watch(manageEmployeesListProvider);
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 24.h,
         children: [
-          Text(
-            'Manage Employees',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, color: context.themeTextPrimary),
+          DigifyTabHeader(
+            title: localizations.manageEmployees,
+            description: localizations.manageEmployeesDescription,
+            trailing: AppButton.primary(
+              label: localizations.addNewEmployee,
+              svgPath: Assets.icons.addDivisionIcon.path,
+              onPressed: () {},
+            ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'View & manage employees',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: context.themeTextSecondary),
+          EmployeeManagementStatsCards(localizations: localizations, isDark: isDark),
+          EmployeeSearchAndActions(localizations: localizations, isDark: isDark),
+          employeesAsync.when(
+            data: (employees) => ManageEmployeesTable(
+              localizations: localizations,
+              employees: employees,
+              isDark: isDark,
+              isLoading: false,
+              onView: (_) {},
+              onEdit: (_) {},
+              onMore: () {},
+            ),
+            loading: () => ManageEmployeesTable(
+              localizations: localizations,
+              employees: [],
+              isDark: isDark,
+              isLoading: true,
+              onView: (_) {},
+              onEdit: (_) {},
+              onMore: () {},
+            ),
+            error: (error, _) => DigifyErrorState(
+              message: localizations.somethingWentWrong,
+              retryLabel: localizations.retry,
+              onRetry: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
+            ),
           ),
-          SizedBox(height: 24.h),
-          Expanded(child: _buildPlaceholderContent(context)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPlaceholderContent(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        color: context.themeCardBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: context.themeCardBorder),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.people_outline,
-              size: 64.sp,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'Coming Soon',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: context.themeTextSecondary),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Employee list and management will be available here.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: context.themeTextTertiary),
-            ),
-          ],
-        ),
       ),
     );
   }

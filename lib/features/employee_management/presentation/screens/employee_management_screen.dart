@@ -14,7 +14,6 @@ class _EmployeeManagementTabIndex {
   static const int contracts = 3;
 }
 
-/// Single screen for Employee Management; content is driven by tab index (sidebar / module dialog).
 class EmployeeManagementScreen extends ConsumerWidget {
   const EmployeeManagementScreen({super.key});
 

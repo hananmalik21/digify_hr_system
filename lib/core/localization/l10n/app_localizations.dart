@@ -2846,6 +2846,108 @@ abstract class AppLocalizations {
   /// **'Employees'**
   String get employees;
 
+  /// No description provided for @manageEmployees.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Employees'**
+  String get manageEmployees;
+
+  /// No description provided for @manageEmployeesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'View and manage employees'**
+  String get manageEmployeesDescription;
+
+  /// No description provided for @addNewEmployee.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Employee'**
+  String get addNewEmployee;
+
+  /// No description provided for @newHiresThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'New This Month'**
+  String get newHiresThisMonth;
+
+  /// No description provided for @employeeStatDescriptionAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All employees in organization'**
+  String get employeeStatDescriptionAll;
+
+  /// No description provided for @employeeStatDescriptionActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently active'**
+  String get employeeStatDescriptionActive;
+
+  /// No description provided for @employeeStatDescriptionDepartments.
+  ///
+  /// In en, this message translates to:
+  /// **'Across organization'**
+  String get employeeStatDescriptionDepartments;
+
+  /// No description provided for @employeeStatDescriptionNewHires.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined this month'**
+  String get employeeStatDescriptionNewHires;
+
+  /// No description provided for @onProbation.
+  ///
+  /// In en, this message translates to:
+  /// **'On Probation'**
+  String get onProbation;
+
+  /// No description provided for @advancedFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Filters'**
+  String get advancedFilters;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @allStatuses.
+  ///
+  /// In en, this message translates to:
+  /// **'All Statuses'**
+  String get allStatuses;
+
+  /// No description provided for @allPositions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Positions'**
+  String get allPositions;
+
+  /// No description provided for @allWorkforceStructures.
+  ///
+  /// In en, this message translates to:
+  /// **'All Workforce Structures'**
+  String get allWorkforceStructures;
+
+  /// No description provided for @allJobFamilies.
+  ///
+  /// In en, this message translates to:
+  /// **'All Job Families'**
+  String get allJobFamilies;
+
+  /// No description provided for @allJobLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'All Job Levels'**
+  String get allJobLevels;
+
+  /// No description provided for @allGrades.
+  ///
+  /// In en, this message translates to:
+  /// **'All Grades'**
+  String get allGrades;
+
   /// No description provided for @attendance.
   ///
   /// In en, this message translates to:
