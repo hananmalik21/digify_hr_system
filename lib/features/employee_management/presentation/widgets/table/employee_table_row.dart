@@ -125,7 +125,7 @@ class EmployeeTableRow extends StatelessWidget {
                 children: [
                   DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => onView(employee)),
                   DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(employee)),
-                  DigifyAssetButton(assetPath: Assets.icons.moreIcon.path, onTap: onMore ?? () {}),
+                  DigifyAssetButton(assetPath: Assets.icons.employeeManagement.more.path, onTap: onMore ?? () {}),
                 ],
               ),
               ManageEmployeesTableConfig.actionsWidth.w,

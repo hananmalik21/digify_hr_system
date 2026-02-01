@@ -401,6 +401,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/employee_list_icon.svg
   SvgGenImage get employeeListIcon => const SvgGenImage('assets/icons/employee_list_icon.svg');
 
+  /// Directory path: assets/icons/employee_management
+  $AssetsIconsEmployeeManagementGen get employeeManagement => const $AssetsIconsEmployeeManagementGen();
+
   /// File path: assets/icons/employees_assigned_icon.svg
   SvgGenImage get employeesAssignedIcon => const SvgGenImage('assets/icons/employees_assigned_icon.svg');
 
@@ -1116,6 +1119,22 @@ class $AssetsIconsGen {
     workforceStructureIcon,
     workforceStructureMainIcon,
   ];
+}
+
+class $AssetsIconsEmployeeManagementGen {
+  const $AssetsIconsEmployeeManagementGen();
+
+  /// File path: assets/icons/employee_management/filter-main.svg
+  SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
+
+  /// File path: assets/icons/employee_management/grid-view.svg
+  SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
+
+  /// File path: assets/icons/employee_management/more.svg
+  SvgGenImage get more => const SvgGenImage('assets/icons/employee_management/more.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [filterMain, gridView, more];
 }
 
 class $AssetsIconsLeaveManagementGen {
