@@ -63,4 +63,19 @@ mixin TabIndexMixin {
         return null;
     }
   }
+
+  int? getEmployeeManagementTabIndex(String itemId) {
+    switch (itemId) {
+      case 'manageEmployees':
+        return 0;
+      case 'employeeActions':
+        return 1;
+      case 'workforcePlanning':
+        return 2;
+      case 'contracts':
+        return 3;
+      default:
+        return null;
+    }
+  }
 }

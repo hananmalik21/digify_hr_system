@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_button_model.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/module_selection_dialog/module_selection_dialog_utils.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/sub_module_button.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
@@ -86,7 +87,14 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
 
   /// Handles tab navigation for routes that have tabs
   void _handleTabNavigation(String route, String itemId, WidgetRef ref) {
-    if (route == AppRoutes.timeManagement) {
+    if (route == AppRoutes.employees) {
+      final tabIndex = getEmployeeManagementTabIndex(itemId);
+      if (tabIndex != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(employeeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+        });
+      }
+    } else if (route == AppRoutes.timeManagement) {
       final tabIndex = getTimeManagementTabIndex(itemId);
       if (tabIndex != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {

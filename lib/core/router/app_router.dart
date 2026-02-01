@@ -13,6 +13,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/screens/employee_management_screens.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -136,44 +137,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.employees,
             name: 'employees',
-            redirect: (context, state) => AppRoutes.employeesList,
-            routes: [
-              GoRoute(
-                path: 'list',
-                name: 'employees-list',
-                builder: (context, state) => const PlaceholderScreen(title: 'Employee List'),
-              ),
-              GoRoute(
-                path: 'add',
-                name: 'employees-add',
-                builder: (context, state) => const PlaceholderScreen(title: 'Add Employee'),
-              ),
-              GoRoute(
-                path: 'actions',
-                name: 'employees-actions',
-                builder: (context, state) => const PlaceholderScreen(title: 'Employee Actions'),
-              ),
-              GoRoute(
-                path: 'org-structure',
-                name: 'employees-org-structure',
-                builder: (context, state) => const PlaceholderScreen(title: 'Org Structure'),
-              ),
-              GoRoute(
-                path: 'workforce-planning',
-                name: 'employees-workforce-planning',
-                builder: (context, state) => const PlaceholderScreen(title: 'Workforce Planning'),
-              ),
-              GoRoute(
-                path: 'positions',
-                name: 'employees-positions',
-                builder: (context, state) => const PlaceholderScreen(title: 'Positions'),
-              ),
-              GoRoute(
-                path: 'contracts',
-                name: 'employees-contracts',
-                builder: (context, state) => const PlaceholderScreen(title: 'Contracts'),
-              ),
-            ],
+            builder: (context, state) => const EmployeeManagementScreen(),
           ),
           GoRoute(
             path: AppRoutes.leaveManagement,

@@ -1426,6 +1426,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employees => 'Employees';
 
   @override
+  String get manageEmployees => 'Manage Employees';
+
+  @override
+  String get manageEmployeesDescription => 'View and manage employees';
+
+  @override
+  String get addNewEmployee => 'Add New Employee';
+
+  @override
+  String get newHiresThisMonth => 'New This Month';
+
+  @override
+  String get employeeStatDescriptionAll => 'All employees in organization';
+
+  @override
+  String get employeeStatDescriptionActive => 'Currently active';
+
+  @override
+  String get employeeStatDescriptionDepartments => 'Across organization';
+
+  @override
+  String get employeeStatDescriptionNewHires => 'Joined this month';
+
+  @override
+  String get onProbation => 'On Probation';
+
+  @override
+  String get advancedFilters => 'Advanced Filters';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get allStatuses => 'All Statuses';
+
+  @override
+  String get allPositions => 'All Positions';
+
+  @override
+  String get allWorkforceStructures => 'All Workforce Structures';
+
+  @override
+  String get allJobFamilies => 'All Job Families';
+
+  @override
+  String get allJobLevels => 'All Job Levels';
+
+  @override
+  String get allGrades => 'All Grades';
+
+  @override
   String get attendance => 'Attendance';
 
   @override
