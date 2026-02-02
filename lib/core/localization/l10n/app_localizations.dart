@@ -3020,6 +3020,102 @@ abstract class AppLocalizations {
   /// **'Enter last name'**
   String get hintLastNameArabic;
 
+  /// No description provided for @demographicsAndIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics & Identity'**
+  String get demographicsAndIdentity;
+
+  /// No description provided for @demographicsAndIdentitySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal demographics and identification documents.'**
+  String get demographicsAndIdentitySubtitle;
+
+  /// No description provided for @demographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics'**
+  String get demographics;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @nationality.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get nationality;
+
+  /// No description provided for @maritalStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Marital Status'**
+  String get maritalStatus;
+
+  /// No description provided for @religion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religion'**
+  String get religion;
+
+  /// No description provided for @identificationDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Identification Documents'**
+  String get identificationDocuments;
+
+  /// No description provided for @civilIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Civil ID Number'**
+  String get civilIdNumber;
+
+  /// No description provided for @passportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number'**
+  String get passportNumber;
+
+  /// No description provided for @hintGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select gender'**
+  String get hintGender;
+
+  /// No description provided for @hintNationality.
+  ///
+  /// In en, this message translates to:
+  /// **'Select nationality'**
+  String get hintNationality;
+
+  /// No description provided for @hintMaritalStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select marital status'**
+  String get hintMaritalStatus;
+
+  /// No description provided for @hintReligion.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter religion'**
+  String get hintReligion;
+
+  /// No description provided for @hintCivilIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Civil ID number'**
+  String get hintCivilIdNumber;
+
+  /// No description provided for @hintPassportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter passport number'**
+  String get hintPassportNumber;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

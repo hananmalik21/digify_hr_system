@@ -1513,6 +1513,55 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintLastNameArabic => 'أدخل اسم العائلة';
 
   @override
+  String get demographicsAndIdentity => 'البيانات الديموغرافية والهوية';
+
+  @override
+  String get demographicsAndIdentitySubtitle =>
+      'البيانات الديموغرافية الشخصية ووثائق الهوية.';
+
+  @override
+  String get demographics => 'البيانات الديموغرافية';
+
+  @override
+  String get gender => 'الجنس';
+
+  @override
+  String get nationality => 'الجنسية';
+
+  @override
+  String get maritalStatus => 'الحالة الاجتماعية';
+
+  @override
+  String get religion => 'الدين';
+
+  @override
+  String get identificationDocuments => 'وثائق الهوية';
+
+  @override
+  String get civilIdNumber => 'رقم البطاقة المدنية';
+
+  @override
+  String get passportNumber => 'رقم جواز السفر';
+
+  @override
+  String get hintGender => 'اختر الجنس';
+
+  @override
+  String get hintNationality => 'اختر الجنسية';
+
+  @override
+  String get hintMaritalStatus => 'اختر الحالة الاجتماعية';
+
+  @override
+  String get hintReligion => 'أدخل الدين';
+
+  @override
+  String get hintCivilIdNumber => 'أدخل رقم البطاقة المدنية';
+
+  @override
+  String get hintPassportNumber => 'أدخل رقم جواز السفر';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

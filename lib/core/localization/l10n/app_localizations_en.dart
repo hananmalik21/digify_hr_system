@@ -1516,6 +1516,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintLastNameArabic => 'Enter last name';
 
   @override
+  String get demographicsAndIdentity => 'Demographics & Identity';
+
+  @override
+  String get demographicsAndIdentitySubtitle =>
+      'Personal demographics and identification documents.';
+
+  @override
+  String get demographics => 'Demographics';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get nationality => 'Nationality';
+
+  @override
+  String get maritalStatus => 'Marital Status';
+
+  @override
+  String get religion => 'Religion';
+
+  @override
+  String get identificationDocuments => 'Identification Documents';
+
+  @override
+  String get civilIdNumber => 'Civil ID Number';
+
+  @override
+  String get passportNumber => 'Passport Number';
+
+  @override
+  String get hintGender => 'Select gender';
+
+  @override
+  String get hintNationality => 'Select nationality';
+
+  @override
+  String get hintMaritalStatus => 'Select marital status';
+
+  @override
+  String get hintReligion => 'Enter religion';
+
+  @override
+  String get hintCivilIdNumber => 'Enter Civil ID number';
+
+  @override
+  String get hintPassportNumber => 'Enter passport number';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

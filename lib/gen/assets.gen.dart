@@ -1157,6 +1157,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/more.svg
   SvgGenImage get more => const SvgGenImage('assets/icons/employee_management/more.svg');
 
+  /// File path: assets/icons/employee_management/passport.svg
+  SvgGenImage get passport => const SvgGenImage('assets/icons/employee_management/passport.svg');
+
   /// File path: assets/icons/employee_management/user.svg
   SvgGenImage get user => const SvgGenImage('assets/icons/employee_management/user.svg');
 
@@ -1173,6 +1176,7 @@ class $AssetsIconsEmployeeManagementGen {
     gridView,
     mail,
     more,
+    passport,
     user,
   ];
 }
