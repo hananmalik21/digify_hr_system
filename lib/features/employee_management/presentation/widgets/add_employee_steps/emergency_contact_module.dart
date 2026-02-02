@@ -16,7 +16,6 @@ class EmergencyContactModule extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final em = Assets.icons.employeeManagement;
     final personIcon = _prefixIcon(context, Assets.icons.userIcon.path, isDark);
     final relationshipIcon = _prefixIcon(context, Assets.icons.employeeListIcon.path, isDark);
     final phoneIcon = Padding(
