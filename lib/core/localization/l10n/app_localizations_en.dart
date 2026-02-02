@@ -1590,6 +1590,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintRelationship => 'Enter relationship';
 
   @override
+  String get assignmentInformation => 'Assignment Information';
+
+  @override
+  String get assignmentInformationSubtitle =>
+      'Organizational structure and job details.';
+
+  @override
+  String get organizationalStructure => 'Organizational Structure';
+
+  @override
+  String get jobAndEmploymentDetails => 'Job & Employment Details';
+
+  @override
+  String get workLocation => 'Work Location';
+
+  @override
+  String get gradeLevel => 'Grade Level';
+
+  @override
+  String get contractType => 'Contract Type';
+
+  @override
+  String get reportingTo => 'Reporting To';
+
+  @override
+  String get enterpriseHireDate => 'Enterprise Hire Date';
+
+  @override
+  String get probationPeriodDays => 'Probation Period (days)';
+
+  @override
+  String get employmentStatus => 'Employment Status';
+
+  @override
+  String get hintWorkLocation => 'Enter work location';
+
+  @override
+  String get hintEmployeeNumber => 'Enter employee number';
+
+  @override
+  String get hintGradeLevel => 'Select grade level';
+
+  @override
+  String get hintContractType => 'Select contract type';
+
+  @override
+  String get hintReportingTo => 'Enter reporting to';
+
+  @override
+  String get hintEnterpriseHireDate => 'Select hire date';
+
+  @override
+  String get hintProbationPeriodDays => 'Enter days';
+
+  @override
+  String get hintEmploymentStatus => 'Select employment status';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog_label_
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/demographics_step.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,7 @@ class AddEmployeeDialog extends ConsumerWidget {
       case 2:
         return const AddEmployeeAddressStep();
       case 3:
+        return const AddEmployeeAssignmentStep();
       case 4:
       case 5:
       case 6:

@@ -1588,6 +1588,64 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintRelationship => 'أدخل العلاقة';
 
   @override
+  String get assignmentInformation => 'معلومات التعيين';
+
+  @override
+  String get assignmentInformationSubtitle =>
+      'الهيكل التنظيمي وتفاصيل الوظيفة.';
+
+  @override
+  String get organizationalStructure => 'الهيكل التنظيمي';
+
+  @override
+  String get jobAndEmploymentDetails => 'تفاصيل الوظيفة والتوظيف';
+
+  @override
+  String get workLocation => 'موقع العمل';
+
+  @override
+  String get gradeLevel => 'مستوى الدرجة';
+
+  @override
+  String get contractType => 'نوع العقد';
+
+  @override
+  String get reportingTo => 'الإبلاغ إلى';
+
+  @override
+  String get enterpriseHireDate => 'تاريخ التعيين في المؤسسة';
+
+  @override
+  String get probationPeriodDays => 'فترة التجربة (أيام)';
+
+  @override
+  String get employmentStatus => 'حالة التوظيف';
+
+  @override
+  String get hintWorkLocation => 'أدخل موقع العمل';
+
+  @override
+  String get hintEmployeeNumber => 'أدخل رقم الموظف';
+
+  @override
+  String get hintGradeLevel => 'اختر مستوى الدرجة';
+
+  @override
+  String get hintContractType => 'اختر نوع العقد';
+
+  @override
+  String get hintReportingTo => 'أدخل الإبلاغ إلى';
+
+  @override
+  String get hintEnterpriseHireDate => 'اختر تاريخ التعيين';
+
+  @override
+  String get hintProbationPeriodDays => 'أدخل الأيام';
+
+  @override
+  String get hintEmploymentStatus => 'اختر حالة التوظيف';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

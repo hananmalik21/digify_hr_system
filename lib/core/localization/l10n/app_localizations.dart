@@ -3164,6 +3164,120 @@ abstract class AppLocalizations {
   /// **'Enter relationship'**
   String get hintRelationship;
 
+  /// No description provided for @assignmentInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Information'**
+  String get assignmentInformation;
+
+  /// No description provided for @assignmentInformationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational structure and job details.'**
+  String get assignmentInformationSubtitle;
+
+  /// No description provided for @organizationalStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Structure'**
+  String get organizationalStructure;
+
+  /// No description provided for @jobAndEmploymentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Job & Employment Details'**
+  String get jobAndEmploymentDetails;
+
+  /// No description provided for @workLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Location'**
+  String get workLocation;
+
+  /// No description provided for @gradeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Level'**
+  String get gradeLevel;
+
+  /// No description provided for @contractType.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract Type'**
+  String get contractType;
+
+  /// No description provided for @reportingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting To'**
+  String get reportingTo;
+
+  /// No description provided for @enterpriseHireDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enterprise Hire Date'**
+  String get enterpriseHireDate;
+
+  /// No description provided for @probationPeriodDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Probation Period (days)'**
+  String get probationPeriodDays;
+
+  /// No description provided for @employmentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Status'**
+  String get employmentStatus;
+
+  /// No description provided for @hintWorkLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter work location'**
+  String get hintWorkLocation;
+
+  /// No description provided for @hintEmployeeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter employee number'**
+  String get hintEmployeeNumber;
+
+  /// No description provided for @hintGradeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select grade level'**
+  String get hintGradeLevel;
+
+  /// No description provided for @hintContractType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select contract type'**
+  String get hintContractType;
+
+  /// No description provided for @hintReportingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter reporting to'**
+  String get hintReportingTo;
+
+  /// No description provided for @hintEnterpriseHireDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select hire date'**
+  String get hintEnterpriseHireDate;
+
+  /// No description provided for @hintProbationPeriodDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter days'**
+  String get hintProbationPeriodDays;
+
+  /// No description provided for @hintEmploymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select employment status'**
+  String get hintEmploymentStatus;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:
