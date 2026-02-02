@@ -247,9 +247,9 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
         border: Border(top: BorderSide(color: AppColors.cardBorder, width: 1)),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (footerLeftActions != null) Row(children: footerLeftActions!),
+          const Spacer(),
           if (footerActions != null) Row(children: footerActions!),
         ],
       ),

@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 class DigifyTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -465,6 +466,90 @@ class _DigifyTextAreaState extends State<DigifyTextArea> {
       borderSide: BorderSide(
         color: isDark && color == AppColors.inputBorder ? AppColors.inputBorderDark : color,
         width: width.w,
+      ),
+    );
+  }
+}
+
+class DigifyDateField extends StatefulWidget {
+  final String label;
+  final String? hintText;
+  final bool isRequired;
+  final String? calendarIconPath;
+  final DateTime? initialDate;
+  final DateTime? firstDate;
+  final ValueChanged<DateTime>? onDateSelected;
+
+  const DigifyDateField({
+    super.key,
+    required this.label,
+    this.hintText,
+    this.isRequired = true,
+    this.calendarIconPath,
+    this.initialDate,
+    this.firstDate,
+    this.onDateSelected,
+  });
+
+  @override
+  State<DigifyDateField> createState() => _DigifyDateFieldState();
+}
+
+class _DigifyDateFieldState extends State<DigifyDateField> {
+  final TextEditingController _controller = TextEditingController();
+  DateTime? _date;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialDate != null) {
+      _date = widget.initialDate;
+      _controller.text = DateFormat('dd/MM/yyyy').format(widget.initialDate!);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _openDatePicker() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _date ?? DateTime.now(),
+      firstDate: widget.firstDate ?? DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && mounted) {
+      setState(() {
+        _date = picked;
+        _controller.text = DateFormat('dd/MM/yyyy').format(picked);
+      });
+      widget.onDateSelected?.call(picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDark;
+    final iconPath = widget.calendarIconPath ?? Assets.icons.leaveManagementIcon.path;
+
+    return DigifyTextField(
+      labelText: widget.label,
+      isRequired: widget.isRequired,
+      controller: _controller,
+      hintText: widget.hintText,
+      readOnly: true,
+      onTap: _openDatePicker,
+      prefixIcon: Padding(
+        padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
+        child: DigifyAsset(
+          assetPath: iconPath,
+          width: 20,
+          height: 20,
+          color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
+        ),
       ),
     );
   }

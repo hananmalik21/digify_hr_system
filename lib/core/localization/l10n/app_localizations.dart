@@ -2966,6 +2966,60 @@ abstract class AppLocalizations {
   /// **'Mobile Number'**
   String get mobileNumber;
 
+  /// No description provided for @firstNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name (Arabic)'**
+  String get firstNameArabic;
+
+  /// No description provided for @lastNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name (Arabic)'**
+  String get lastNameArabic;
+
+  /// No description provided for @hintFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter first name'**
+  String get hintFirstName;
+
+  /// No description provided for @hintLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter last name'**
+  String get hintLastName;
+
+  /// No description provided for @hintMiddleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter middle name'**
+  String get hintMiddleName;
+
+  /// No description provided for @hintMobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter mobile number'**
+  String get hintMobileNumber;
+
+  /// No description provided for @hintDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date of birth'**
+  String get hintDateOfBirth;
+
+  /// No description provided for @hintFirstNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter first name'**
+  String get hintFirstNameArabic;
+
+  /// No description provided for @hintLastNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter last name'**
+  String get hintLastNameArabic;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

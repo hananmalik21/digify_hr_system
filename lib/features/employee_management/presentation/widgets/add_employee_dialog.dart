@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 class AddEmployeeDialog extends ConsumerWidget {
   const AddEmployeeDialog({super.key});
@@ -62,14 +61,6 @@ class AddEmployeeDialog extends ConsumerWidget {
           ? [AppButton.outline(label: localizations.previous, onPressed: () => notifier.previousStep())]
           : null,
       footerActions: [
-        AppButton.outline(
-          label: localizations.cancel,
-          onPressed: () {
-            notifier.reset();
-            context.pop();
-          },
-        ),
-        Gap(8.w),
         if (state.isLastStep)
           AppButton.primary(
             label: localizations.saveChanges,

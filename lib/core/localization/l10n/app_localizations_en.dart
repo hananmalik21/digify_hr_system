@@ -1489,6 +1489,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mobileNumber => 'Mobile Number';
 
   @override
+  String get firstNameArabic => 'First Name (Arabic)';
+
+  @override
+  String get lastNameArabic => 'Last Name (Arabic)';
+
+  @override
+  String get hintFirstName => 'Enter first name';
+
+  @override
+  String get hintLastName => 'Enter last name';
+
+  @override
+  String get hintMiddleName => 'Enter middle name';
+
+  @override
+  String get hintMobileNumber => 'Enter mobile number';
+
+  @override
+  String get hintDateOfBirth => 'Select date of birth';
+
+  @override
+  String get hintFirstNameArabic => 'Enter first name';
+
+  @override
+  String get hintLastNameArabic => 'Enter last name';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

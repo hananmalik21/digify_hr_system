@@ -1486,6 +1486,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get mobileNumber => 'رقم الجوال';
 
   @override
+  String get firstNameArabic => 'الاسم الأول';
+
+  @override
+  String get lastNameArabic => 'اسم العائلة';
+
+  @override
+  String get hintFirstName => 'أدخل الاسم الأول';
+
+  @override
+  String get hintLastName => 'أدخل اسم العائلة';
+
+  @override
+  String get hintMiddleName => 'أدخل الاسم الأوسط';
+
+  @override
+  String get hintMobileNumber => 'أدخل رقم الجوال';
+
+  @override
+  String get hintDateOfBirth => 'اختر تاريخ الميلاد';
+
+  @override
+  String get hintFirstNameArabic => 'أدخل الاسم الأول';
+
+  @override
+  String get hintLastNameArabic => 'أدخل اسم العائلة';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

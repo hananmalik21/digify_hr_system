@@ -30,30 +30,30 @@ class SectionHeaderCard extends StatelessWidget {
       'SectionHeaderCard: Either icon or iconAssetPath must be provided',
     );
     final isDark = context.isDark;
-    final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h);
+    final effectivePadding = padding ?? EdgeInsets.all(14.0);
     final effectiveRadius = borderRadius ?? 10.r;
 
     return Container(
       padding: effectivePadding,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.dashboardCardBorder),
         borderRadius: BorderRadius.circular(effectiveRadius),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 40.w,
-            height: 40.h,
+            width: 32.w,
+            height: 32.h,
             decoration: BoxDecoration(
               color: AppColors.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(effectiveRadius),
             ),
             alignment: Alignment.center,
-            child: icon ?? DigifyAsset(assetPath: iconAssetPath!, width: 20, height: 20, color: AppColors.primary),
+            child: icon ?? DigifyAsset(assetPath: iconAssetPath!, width: 17, height: 17, color: AppColors.primary),
           ),
-          Gap(12.w),
+          Gap(11.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,16 +62,16 @@ class SectionHeaderCard extends StatelessWidget {
                 Text(
                   title,
                   style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.blackTextColor,
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
                   ),
                 ),
                 if (subtitle != null && subtitle!.isNotEmpty) ...[
                   Gap(4.h),
                   Text(
                     subtitle!,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
+                    style: context.textTheme.labelSmall?.copyWith(
+                      fontSize: 12.sp,
+                      color: isDark ? AppColors.textSecondaryDark : AppColors.shiftExportButton,
                     ),
                   ),
                 ],

@@ -31,6 +31,9 @@ class InfoBannerCard extends StatelessWidget {
     final isDark = context.isDark;
     final effectivePadding = padding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h);
     final effectiveRadius = borderRadius ?? 10.r;
+    final textStyle = context.textTheme.bodySmall?.copyWith(
+      color: isDark ? AppColors.textSecondaryDark : AppColors.sidebarFooterTitle,
+    );
 
     return Container(
       padding: effectivePadding,
@@ -40,7 +43,6 @@ class InfoBannerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(effectiveRadius),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null || iconAssetPath != null) ...[
             icon ??
@@ -50,18 +52,9 @@ class InfoBannerCard extends StatelessWidget {
                   height: 20,
                   color: isDark ? AppColors.infoTextDark : AppColors.infoText,
                 ),
-            Gap(12.w),
+            Gap(8.w),
           ],
-          Expanded(
-            child:
-                child ??
-                Text(
-                  message!,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.sidebarFooterTitle,
-                  ),
-                ),
-          ),
+          Expanded(child: child ?? Text(message!, style: textStyle)),
         ],
       ),
     );

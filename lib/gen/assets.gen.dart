@@ -1142,11 +1142,17 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/document.svg
   SvgGenImage get document => const SvgGenImage('assets/icons/employee_management/document.svg');
 
+  /// File path: assets/icons/employee_management/enterprise.svg
+  SvgGenImage get enterprise => const SvgGenImage('assets/icons/employee_management/enterprise.svg');
+
   /// File path: assets/icons/employee_management/filter-main.svg
   SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
 
   /// File path: assets/icons/employee_management/grid-view.svg
   SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
+
+  /// File path: assets/icons/employee_management/mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/icons/employee_management/mail.svg');
 
   /// File path: assets/icons/employee_management/more.svg
   SvgGenImage get more => const SvgGenImage('assets/icons/employee_management/more.svg');
@@ -1162,8 +1168,10 @@ class $AssetsIconsEmployeeManagementGen {
     compensation,
     demographics,
     document,
+    enterprise,
     filterMain,
     gridView,
+    mail,
     more,
     user,
   ];
