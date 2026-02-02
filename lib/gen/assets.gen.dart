@@ -1133,6 +1133,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/basic-info.svg
   SvgGenImage get basicInfo => const SvgGenImage('assets/icons/employee_management/basic-info.svg');
 
+  /// File path: assets/icons/employee_management/card.svg
+  SvgGenImage get card => const SvgGenImage('assets/icons/employee_management/card.svg');
+
   /// File path: assets/icons/employee_management/compensation.svg
   SvgGenImage get compensation => const SvgGenImage('assets/icons/employee_management/compensation.svg');
 
@@ -1168,6 +1171,7 @@ class $AssetsIconsEmployeeManagementGen {
     assignment,
     banking,
     basicInfo,
+    card,
     compensation,
     demographics,
     document,

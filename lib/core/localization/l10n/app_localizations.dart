@@ -3380,6 +3380,54 @@ abstract class AppLocalizations {
   /// **'Enter amount'**
   String get hintEnterAmount;
 
+  /// No description provided for @bankingInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Banking Information'**
+  String get bankingInformation;
+
+  /// No description provided for @bankingInformationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account details for salary transfer'**
+  String get bankingInformationSubtitle;
+
+  /// No description provided for @bankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Name'**
+  String get bankName;
+
+  /// No description provided for @accountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Number'**
+  String get accountNumber;
+
+  /// No description provided for @iban.
+  ///
+  /// In en, this message translates to:
+  /// **'IBAN'**
+  String get iban;
+
+  /// No description provided for @hintBankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter bank name'**
+  String get hintBankName;
+
+  /// No description provided for @hintAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter account number'**
+  String get hintAccountNumber;
+
+  /// No description provided for @hintIban.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter IBAN'**
+  String get hintIban;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

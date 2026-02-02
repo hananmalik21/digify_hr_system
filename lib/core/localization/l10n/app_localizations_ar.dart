@@ -1700,6 +1700,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintEnterAmount => 'أدخل المبلغ';
 
   @override
+  String get bankingInformation => 'معلومات البنك';
+
+  @override
+  String get bankingInformationSubtitle => 'تفاصيل الحساب البنكي لتحويل الراتب';
+
+  @override
+  String get bankName => 'اسم البنك';
+
+  @override
+  String get accountNumber => 'رقم الحساب';
+
+  @override
+  String get iban => 'رقم الآيبان';
+
+  @override
+  String get hintBankName => 'أدخل اسم البنك';
+
+  @override
+  String get hintAccountNumber => 'أدخل رقم الحساب';
+
+  @override
+  String get hintIban => 'أدخل رقم الآيبان';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

@@ -1703,6 +1703,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintEnterAmount => 'Enter amount';
 
   @override
+  String get bankingInformation => 'Banking Information';
+
+  @override
+  String get bankingInformationSubtitle =>
+      'Bank account details for salary transfer';
+
+  @override
+  String get bankName => 'Bank Name';
+
+  @override
+  String get accountNumber => 'Account Number';
+
+  @override
+  String get iban => 'IBAN';
+
+  @override
+  String get hintBankName => 'Enter bank name';
+
+  @override
+  String get hintAccountNumber => 'Enter account number';
+
+  @override
+  String get hintIban => 'Enter IBAN';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 
