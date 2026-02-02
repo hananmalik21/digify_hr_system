@@ -1432,6 +1432,372 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addNewEmployee => 'إضافة موظف جديد';
 
   @override
+  String addEmployeeStepSubtitle(int step) {
+    return 'الخطوة $step من 9';
+  }
+
+  @override
+  String get addEmployeeStepBasicInfo => 'المعلومات الأساسية';
+
+  @override
+  String get addEmployeeStepDemographics => 'البيانات الديموغرافية';
+
+  @override
+  String get addEmployeeStepAddress => 'العنوان';
+
+  @override
+  String get addEmployeeStepAssignmentInfo => 'معلومات التعيين';
+
+  @override
+  String get addEmployeeStepWorkSchedule => 'جدول العمل';
+
+  @override
+  String get addEmployeeStepCompensation => 'التعويضات';
+
+  @override
+  String get addEmployeeStepBanking => 'البنك';
+
+  @override
+  String get addEmployeeStepDocuments => 'المستندات';
+
+  @override
+  String get addEmployeeStepReview => 'المراجعة';
+
+  @override
+  String get addEmployeeBasicInfoSubtitle => 'الاسم وتفاصيل الاتصال الأساسية';
+
+  @override
+  String get addEmployeeNameFieldsConfigured =>
+      'يتم تكوين حقول الاسم من هيكل المؤسسة → إعدادات هيكل الاسم';
+
+  @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get lastName => 'اسم العائلة';
+
+  @override
+  String get middleName => 'الاسم الأوسط';
+
+  @override
+  String get dateOfBirth => 'تاريخ الميلاد';
+
+  @override
+  String get mobileNumber => 'رقم الجوال';
+
+  @override
+  String get firstNameArabic => 'الاسم الأول';
+
+  @override
+  String get lastNameArabic => 'اسم العائلة';
+
+  @override
+  String get hintFirstName => 'أدخل الاسم الأول';
+
+  @override
+  String get hintLastName => 'أدخل اسم العائلة';
+
+  @override
+  String get hintMiddleName => 'أدخل الاسم الأوسط';
+
+  @override
+  String get hintMobileNumber => 'أدخل رقم الجوال';
+
+  @override
+  String get hintDateOfBirth => 'اختر تاريخ الميلاد';
+
+  @override
+  String get hintFirstNameArabic => 'أدخل الاسم الأول';
+
+  @override
+  String get hintLastNameArabic => 'أدخل اسم العائلة';
+
+  @override
+  String get demographicsAndIdentity => 'البيانات الديموغرافية والهوية';
+
+  @override
+  String get demographicsAndIdentitySubtitle =>
+      'البيانات الديموغرافية الشخصية ووثائق الهوية.';
+
+  @override
+  String get demographics => 'البيانات الديموغرافية';
+
+  @override
+  String get gender => 'الجنس';
+
+  @override
+  String get nationality => 'الجنسية';
+
+  @override
+  String get maritalStatus => 'الحالة الاجتماعية';
+
+  @override
+  String get religion => 'الدين';
+
+  @override
+  String get identificationDocuments => 'وثائق الهوية';
+
+  @override
+  String get civilIdNumber => 'رقم البطاقة المدنية';
+
+  @override
+  String get passportNumber => 'رقم جواز السفر';
+
+  @override
+  String get hintGender => 'اختر الجنس';
+
+  @override
+  String get hintNationality => 'اختر الجنسية';
+
+  @override
+  String get hintMaritalStatus => 'اختر الحالة الاجتماعية';
+
+  @override
+  String get hintReligion => 'أدخل الدين';
+
+  @override
+  String get hintCivilIdNumber => 'أدخل رقم البطاقة المدنية';
+
+  @override
+  String get hintPassportNumber => 'أدخل رقم جواز السفر';
+
+  @override
+  String get addressAndEmergencyContact =>
+      'العنوان وجهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get addressAndEmergencyContactSubtitle =>
+      'العنوان السكني ومعلومات جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get residentialAddress => 'العنوان السكني';
+
+  @override
+  String get emergencyContact => 'جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get contactName => 'اسم جهة الاتصال';
+
+  @override
+  String get relationship => 'العلاقة';
+
+  @override
+  String get hintContactName => 'أدخل اسم جهة الاتصال';
+
+  @override
+  String get hintRelationship => 'أدخل العلاقة';
+
+  @override
+  String get assignmentInformation => 'معلومات التعيين';
+
+  @override
+  String get assignmentInformationSubtitle =>
+      'الهيكل التنظيمي وتفاصيل الوظيفة.';
+
+  @override
+  String get organizationalStructure => 'الهيكل التنظيمي';
+
+  @override
+  String get jobAndEmploymentDetails => 'تفاصيل الوظيفة والتوظيف';
+
+  @override
+  String get workLocation => 'موقع العمل';
+
+  @override
+  String get gradeLevel => 'مستوى الدرجة';
+
+  @override
+  String get contractType => 'نوع العقد';
+
+  @override
+  String get reportingTo => 'الإبلاغ إلى';
+
+  @override
+  String get enterpriseHireDate => 'تاريخ التعيين في المؤسسة';
+
+  @override
+  String get probationPeriodDays => 'فترة التجربة (أيام)';
+
+  @override
+  String get employmentStatus => 'حالة التوظيف';
+
+  @override
+  String get hintWorkLocation => 'أدخل موقع العمل';
+
+  @override
+  String get hintEmployeeNumber => 'أدخل رقم الموظف';
+
+  @override
+  String get hintGradeLevel => 'اختر مستوى الدرجة';
+
+  @override
+  String get hintContractType => 'اختر نوع العقد';
+
+  @override
+  String get hintReportingTo => 'أدخل الإبلاغ إلى';
+
+  @override
+  String get hintEnterpriseHireDate => 'اختر تاريخ التعيين';
+
+  @override
+  String get hintProbationPeriodDays => 'أدخل الأيام';
+
+  @override
+  String get hintEmploymentStatus => 'اختر حالة التوظيف';
+
+  @override
+  String get timeManagementWorkSchedule => 'إدارة الوقت - جدول العمل';
+
+  @override
+  String get timeManagementWorkScheduleSubtitle =>
+      'تعيين جدول العمل لتتبع الحضور';
+
+  @override
+  String get workScheduleAssignment => 'تعيين جدول العمل';
+
+  @override
+  String get workSchedule => 'جدول العمل';
+
+  @override
+  String get hintSelectWorkSchedule => 'اختر جدول العمل';
+
+  @override
+  String get compensationAndBenefits => 'التعويضات والمزايا';
+
+  @override
+  String get compensationAndBenefitsSubtitle => 'هيكل الراتب والبدلات';
+
+  @override
+  String get basicSalaryKwd => 'الراتب الأساسي (د.ك)';
+
+  @override
+  String get allowances => 'البدلات';
+
+  @override
+  String get housingAllowanceKwd => 'بدل السكن (د.ك)';
+
+  @override
+  String get transportationKwd => 'النقل (د.ك)';
+
+  @override
+  String get foodAllowanceKwd => 'بدل الطعام (د.ك)';
+
+  @override
+  String get mobileAllowanceKwd => 'بدل الجوال (د.ك)';
+
+  @override
+  String get otherAllowancesKwd => 'بدلات أخرى (د.ك)';
+
+  @override
+  String get totalMonthlyCompensation => 'إجمالي التعويض الشهري';
+
+  @override
+  String annualKwd(String value) {
+    return 'سنوي: $value د.ك';
+  }
+
+  @override
+  String get hintEnterAmount => 'أدخل المبلغ';
+
+  @override
+  String get bankingInformation => 'معلومات البنك';
+
+  @override
+  String get bankingInformationSubtitle => 'تفاصيل الحساب البنكي لتحويل الراتب';
+
+  @override
+  String get bankName => 'اسم البنك';
+
+  @override
+  String get accountNumber => 'رقم الحساب';
+
+  @override
+  String get iban => 'رقم الآيبان';
+
+  @override
+  String get hintBankName => 'أدخل اسم البنك';
+
+  @override
+  String get hintAccountNumber => 'أدخل رقم الحساب';
+
+  @override
+  String get hintIban => 'أدخل رقم الآيبان';
+
+  @override
+  String get documentsAndCompliance => 'المستندات والامتثال';
+
+  @override
+  String get documentsAndComplianceSubtitle =>
+      'تواريخ انتهاء المستندات وتتبع الامتثال';
+
+  @override
+  String get documentExpiryDates => 'تواريخ انتهاء المستندات';
+
+  @override
+  String get civilIdExpiry => 'انتهاء البطاقة المدنية';
+
+  @override
+  String get passportExpiry => 'انتهاء جواز السفر';
+
+  @override
+  String get visaNumber => 'رقم التأشيرة';
+
+  @override
+  String get visaExpiry => 'انتهاء التأشيرة';
+
+  @override
+  String get workPermitNumber => 'رقم تصريح العمل';
+
+  @override
+  String get workPermitExpiry => 'انتهاء تصريح العمل';
+
+  @override
+  String get hintSelectDate => 'اختر التاريخ';
+
+  @override
+  String get hintVisaNumber => 'أدخل رقم التأشيرة';
+
+  @override
+  String get hintWorkPermitNumber => 'أدخل رقم تصريح العمل';
+
+  @override
+  String get reviewAndConfirm => 'المراجعة والتأكيد';
+
+  @override
+  String get reviewAndConfirmSubtitle =>
+      'راجع جميع المعلومات قبل إنشاء سجل الموظف';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get employmentDetails => 'تفاصيل التوظيف';
+
+  @override
+  String get reviewName => 'الاسم';
+
+  @override
+  String get reviewDob => 'تاريخ الميلاد';
+
+  @override
+  String get reviewBank => 'البنك';
+
+  @override
+  String get reviewAccount => 'الحساب';
+
+  @override
+  String get reviewTotal => 'الإجمالي';
+
+  @override
+  String get reviewProbation => 'تجريبي';
+
+  @override
+  String get reviewPermanent => 'دائم';
+
+  @override
+  String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
+
+  @override
   String get newHiresThisMonth => 'الجدد هذا الشهر';
 
   @override

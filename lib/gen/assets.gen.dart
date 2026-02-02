@@ -1124,17 +1124,65 @@ class $AssetsIconsGen {
 class $AssetsIconsEmployeeManagementGen {
   const $AssetsIconsEmployeeManagementGen();
 
+  /// File path: assets/icons/employee_management/assignment.svg
+  SvgGenImage get assignment => const SvgGenImage('assets/icons/employee_management/assignment.svg');
+
+  /// File path: assets/icons/employee_management/banking.svg
+  SvgGenImage get banking => const SvgGenImage('assets/icons/employee_management/banking.svg');
+
+  /// File path: assets/icons/employee_management/basic-info.svg
+  SvgGenImage get basicInfo => const SvgGenImage('assets/icons/employee_management/basic-info.svg');
+
+  /// File path: assets/icons/employee_management/card.svg
+  SvgGenImage get card => const SvgGenImage('assets/icons/employee_management/card.svg');
+
+  /// File path: assets/icons/employee_management/compensation.svg
+  SvgGenImage get compensation => const SvgGenImage('assets/icons/employee_management/compensation.svg');
+
+  /// File path: assets/icons/employee_management/demographics.svg
+  SvgGenImage get demographics => const SvgGenImage('assets/icons/employee_management/demographics.svg');
+
+  /// File path: assets/icons/employee_management/document.svg
+  SvgGenImage get document => const SvgGenImage('assets/icons/employee_management/document.svg');
+
+  /// File path: assets/icons/employee_management/enterprise.svg
+  SvgGenImage get enterprise => const SvgGenImage('assets/icons/employee_management/enterprise.svg');
+
   /// File path: assets/icons/employee_management/filter-main.svg
   SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
 
   /// File path: assets/icons/employee_management/grid-view.svg
   SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
 
+  /// File path: assets/icons/employee_management/mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/icons/employee_management/mail.svg');
+
   /// File path: assets/icons/employee_management/more.svg
   SvgGenImage get more => const SvgGenImage('assets/icons/employee_management/more.svg');
 
+  /// File path: assets/icons/employee_management/passport.svg
+  SvgGenImage get passport => const SvgGenImage('assets/icons/employee_management/passport.svg');
+
+  /// File path: assets/icons/employee_management/user.svg
+  SvgGenImage get user => const SvgGenImage('assets/icons/employee_management/user.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [filterMain, gridView, more];
+  List<SvgGenImage> get values => [
+    assignment,
+    banking,
+    basicInfo,
+    card,
+    compensation,
+    demographics,
+    document,
+    enterprise,
+    filterMain,
+    gridView,
+    mail,
+    more,
+    passport,
+    user,
+  ];
 }
 
 class $AssetsIconsLeaveManagementGen {

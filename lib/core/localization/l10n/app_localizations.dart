@@ -2864,6 +2864,714 @@ abstract class AppLocalizations {
   /// **'Add New Employee'**
   String get addNewEmployee;
 
+  /// No description provided for @addEmployeeStepSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of 9'**
+  String addEmployeeStepSubtitle(int step);
+
+  /// No description provided for @addEmployeeStepBasicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get addEmployeeStepBasicInfo;
+
+  /// No description provided for @addEmployeeStepDemographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics'**
+  String get addEmployeeStepDemographics;
+
+  /// No description provided for @addEmployeeStepAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get addEmployeeStepAddress;
+
+  /// No description provided for @addEmployeeStepAssignmentInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Info'**
+  String get addEmployeeStepAssignmentInfo;
+
+  /// No description provided for @addEmployeeStepWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule'**
+  String get addEmployeeStepWorkSchedule;
+
+  /// No description provided for @addEmployeeStepCompensation.
+  ///
+  /// In en, this message translates to:
+  /// **'Compensation'**
+  String get addEmployeeStepCompensation;
+
+  /// No description provided for @addEmployeeStepBanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Banking'**
+  String get addEmployeeStepBanking;
+
+  /// No description provided for @addEmployeeStepDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get addEmployeeStepDocuments;
+
+  /// No description provided for @addEmployeeStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get addEmployeeStepReview;
+
+  /// No description provided for @addEmployeeBasicInfoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name and primary contact details'**
+  String get addEmployeeBasicInfoSubtitle;
+
+  /// No description provided for @addEmployeeNameFieldsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Name fields are configured from Enterprise Structure → Name Structure Settings'**
+  String get addEmployeeNameFieldsConfigured;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @middleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle Name'**
+  String get middleName;
+
+  /// No description provided for @dateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirth;
+
+  /// No description provided for @mobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobileNumber;
+
+  /// No description provided for @firstNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name (Arabic)'**
+  String get firstNameArabic;
+
+  /// No description provided for @lastNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name (Arabic)'**
+  String get lastNameArabic;
+
+  /// No description provided for @hintFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter first name'**
+  String get hintFirstName;
+
+  /// No description provided for @hintLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter last name'**
+  String get hintLastName;
+
+  /// No description provided for @hintMiddleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter middle name'**
+  String get hintMiddleName;
+
+  /// No description provided for @hintMobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter mobile number'**
+  String get hintMobileNumber;
+
+  /// No description provided for @hintDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date of birth'**
+  String get hintDateOfBirth;
+
+  /// No description provided for @hintFirstNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter first name'**
+  String get hintFirstNameArabic;
+
+  /// No description provided for @hintLastNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter last name'**
+  String get hintLastNameArabic;
+
+  /// No description provided for @demographicsAndIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics & Identity'**
+  String get demographicsAndIdentity;
+
+  /// No description provided for @demographicsAndIdentitySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal demographics and identification documents.'**
+  String get demographicsAndIdentitySubtitle;
+
+  /// No description provided for @demographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics'**
+  String get demographics;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @nationality.
+  ///
+  /// In en, this message translates to:
+  /// **'Nationality'**
+  String get nationality;
+
+  /// No description provided for @maritalStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Marital Status'**
+  String get maritalStatus;
+
+  /// No description provided for @religion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religion'**
+  String get religion;
+
+  /// No description provided for @identificationDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Identification Documents'**
+  String get identificationDocuments;
+
+  /// No description provided for @civilIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Civil ID Number'**
+  String get civilIdNumber;
+
+  /// No description provided for @passportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number'**
+  String get passportNumber;
+
+  /// No description provided for @hintGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select gender'**
+  String get hintGender;
+
+  /// No description provided for @hintNationality.
+  ///
+  /// In en, this message translates to:
+  /// **'Select nationality'**
+  String get hintNationality;
+
+  /// No description provided for @hintMaritalStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select marital status'**
+  String get hintMaritalStatus;
+
+  /// No description provided for @hintReligion.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter religion'**
+  String get hintReligion;
+
+  /// No description provided for @hintCivilIdNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Civil ID number'**
+  String get hintCivilIdNumber;
+
+  /// No description provided for @hintPassportNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter passport number'**
+  String get hintPassportNumber;
+
+  /// No description provided for @addressAndEmergencyContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Address & Emergency Contact'**
+  String get addressAndEmergencyContact;
+
+  /// No description provided for @addressAndEmergencyContactSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Residential address and emergency contact information'**
+  String get addressAndEmergencyContactSubtitle;
+
+  /// No description provided for @residentialAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Residential Address'**
+  String get residentialAddress;
+
+  /// No description provided for @emergencyContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact'**
+  String get emergencyContact;
+
+  /// No description provided for @contactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Name'**
+  String get contactName;
+
+  /// No description provided for @relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get relationship;
+
+  /// No description provided for @hintContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter contact name'**
+  String get hintContactName;
+
+  /// No description provided for @hintRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter relationship'**
+  String get hintRelationship;
+
+  /// No description provided for @assignmentInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Information'**
+  String get assignmentInformation;
+
+  /// No description provided for @assignmentInformationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational structure and job details.'**
+  String get assignmentInformationSubtitle;
+
+  /// No description provided for @organizationalStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Organizational Structure'**
+  String get organizationalStructure;
+
+  /// No description provided for @jobAndEmploymentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Job & Employment Details'**
+  String get jobAndEmploymentDetails;
+
+  /// No description provided for @workLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Location'**
+  String get workLocation;
+
+  /// No description provided for @gradeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade Level'**
+  String get gradeLevel;
+
+  /// No description provided for @contractType.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract Type'**
+  String get contractType;
+
+  /// No description provided for @reportingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting To'**
+  String get reportingTo;
+
+  /// No description provided for @enterpriseHireDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enterprise Hire Date'**
+  String get enterpriseHireDate;
+
+  /// No description provided for @probationPeriodDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Probation Period (days)'**
+  String get probationPeriodDays;
+
+  /// No description provided for @employmentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Status'**
+  String get employmentStatus;
+
+  /// No description provided for @hintWorkLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter work location'**
+  String get hintWorkLocation;
+
+  /// No description provided for @hintEmployeeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter employee number'**
+  String get hintEmployeeNumber;
+
+  /// No description provided for @hintGradeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select grade level'**
+  String get hintGradeLevel;
+
+  /// No description provided for @hintContractType.
+  ///
+  /// In en, this message translates to:
+  /// **'Select contract type'**
+  String get hintContractType;
+
+  /// No description provided for @hintReportingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter reporting to'**
+  String get hintReportingTo;
+
+  /// No description provided for @hintEnterpriseHireDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select hire date'**
+  String get hintEnterpriseHireDate;
+
+  /// No description provided for @hintProbationPeriodDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter days'**
+  String get hintProbationPeriodDays;
+
+  /// No description provided for @hintEmploymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select employment status'**
+  String get hintEmploymentStatus;
+
+  /// No description provided for @timeManagementWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Management - Work Schedule'**
+  String get timeManagementWorkSchedule;
+
+  /// No description provided for @timeManagementWorkScheduleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign work schedule for attendance tracking'**
+  String get timeManagementWorkScheduleSubtitle;
+
+  /// No description provided for @workScheduleAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule Assignment'**
+  String get workScheduleAssignment;
+
+  /// No description provided for @workSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule'**
+  String get workSchedule;
+
+  /// No description provided for @hintSelectWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Select work schedule'**
+  String get hintSelectWorkSchedule;
+
+  /// No description provided for @compensationAndBenefits.
+  ///
+  /// In en, this message translates to:
+  /// **'Compensation & Benefits'**
+  String get compensationAndBenefits;
+
+  /// No description provided for @compensationAndBenefitsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary structure and allowances'**
+  String get compensationAndBenefitsSubtitle;
+
+  /// No description provided for @basicSalaryKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Salary (KWD)'**
+  String get basicSalaryKwd;
+
+  /// No description provided for @allowances.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances'**
+  String get allowances;
+
+  /// No description provided for @housingAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Housing Allowance (KWD)'**
+  String get housingAllowanceKwd;
+
+  /// No description provided for @transportationKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation (KWD)'**
+  String get transportationKwd;
+
+  /// No description provided for @foodAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Allowance (KWD)'**
+  String get foodAllowanceKwd;
+
+  /// No description provided for @mobileAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Allowance (KWD)'**
+  String get mobileAllowanceKwd;
+
+  /// No description provided for @otherAllowancesKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Allowances (KWD)'**
+  String get otherAllowancesKwd;
+
+  /// No description provided for @totalMonthlyCompensation.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Monthly Compensation'**
+  String get totalMonthlyCompensation;
+
+  /// No description provided for @annualKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual: {value} KWD'**
+  String annualKwd(String value);
+
+  /// No description provided for @hintEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter amount'**
+  String get hintEnterAmount;
+
+  /// No description provided for @bankingInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Banking Information'**
+  String get bankingInformation;
+
+  /// No description provided for @bankingInformationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account details for salary transfer'**
+  String get bankingInformationSubtitle;
+
+  /// No description provided for @bankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Name'**
+  String get bankName;
+
+  /// No description provided for @accountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Number'**
+  String get accountNumber;
+
+  /// No description provided for @iban.
+  ///
+  /// In en, this message translates to:
+  /// **'IBAN'**
+  String get iban;
+
+  /// No description provided for @hintBankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter bank name'**
+  String get hintBankName;
+
+  /// No description provided for @hintAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter account number'**
+  String get hintAccountNumber;
+
+  /// No description provided for @hintIban.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter IBAN'**
+  String get hintIban;
+
+  /// No description provided for @documentsAndCompliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents & Compliance'**
+  String get documentsAndCompliance;
+
+  /// No description provided for @documentsAndComplianceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document expiry dates and compliance tracking'**
+  String get documentsAndComplianceSubtitle;
+
+  /// No description provided for @documentExpiryDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Expiry Dates'**
+  String get documentExpiryDates;
+
+  /// No description provided for @civilIdExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Civil ID Expiry'**
+  String get civilIdExpiry;
+
+  /// No description provided for @passportExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Expiry'**
+  String get passportExpiry;
+
+  /// No description provided for @visaNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Number'**
+  String get visaNumber;
+
+  /// No description provided for @visaExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Expiry'**
+  String get visaExpiry;
+
+  /// No description provided for @workPermitNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Permit Number'**
+  String get workPermitNumber;
+
+  /// No description provided for @workPermitExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Permit Expiry'**
+  String get workPermitExpiry;
+
+  /// No description provided for @hintSelectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get hintSelectDate;
+
+  /// No description provided for @hintVisaNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter visa number'**
+  String get hintVisaNumber;
+
+  /// No description provided for @hintWorkPermitNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter work permit number'**
+  String get hintWorkPermitNumber;
+
+  /// No description provided for @reviewAndConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Confirm'**
+  String get reviewAndConfirm;
+
+  /// No description provided for @reviewAndConfirmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review all information before creating the employee record'**
+  String get reviewAndConfirmSubtitle;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @employmentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Details'**
+  String get employmentDetails;
+
+  /// No description provided for @reviewName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get reviewName;
+
+  /// No description provided for @reviewDob.
+  ///
+  /// In en, this message translates to:
+  /// **'DOB'**
+  String get reviewDob;
+
+  /// No description provided for @reviewBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get reviewBank;
+
+  /// No description provided for @reviewAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get reviewAccount;
+
+  /// No description provided for @reviewTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get reviewTotal;
+
+  /// No description provided for @reviewProbation.
+  ///
+  /// In en, this message translates to:
+  /// **'Probation'**
+  String get reviewProbation;
+
+  /// No description provided for @reviewPermanent.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent'**
+  String get reviewPermanent;
+
+  /// No description provided for @addEmployeeStepContentPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Content for this step coming soon.'**
+  String get addEmployeeStepContentPlaceholder;
+
   /// No description provided for @newHiresThisMonth.
   ///
   /// In en, this message translates to:
