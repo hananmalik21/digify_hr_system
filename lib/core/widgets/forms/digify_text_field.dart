@@ -225,6 +225,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
           height: 1.0,
           color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
         ),
+        errorStyle: TextStyle(fontSize: 12.sp, color: AppColors.error, height: 1.2),
         border: _buildBorder(10.r, effectiveBorderColor),
         enabledBorder: _buildBorder(10.r, effectiveBorderColor),
         focusedBorder: _buildBorder(10.r, effectiveFocusedColor, width: 1.5),
@@ -240,7 +241,9 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
       );
     }
 
-    // If there's a label, wrap in Column with label above
+    // Keep input at a fixed min height so layout doesn't shrink when error text appears.
+    const double singleLineMinHeight = 56;
+
     if (widget.labelText != null) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -272,13 +275,18 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
             ),
           ),
           SizedBox(height: 8.h),
-          SizedBox(height: 40.h, child: field),
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: singleLineMinHeight.h),
+            child: field,
+          ),
         ],
       );
     }
 
-    // No label - return just the field in a SizedBox
-    return SizedBox(height: 40.h, child: field);
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: singleLineMinHeight.h),
+      child: field,
+    );
   }
 
   InputBorder _buildBorder(double radius, Color color, {double width = 1.0}) {
