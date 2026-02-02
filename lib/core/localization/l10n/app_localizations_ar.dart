@@ -1562,6 +1562,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintPassportNumber => 'أدخل رقم جواز السفر';
 
   @override
+  String get addressAndEmergencyContact =>
+      'العنوان وجهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get addressAndEmergencyContactSubtitle =>
+      'العنوان السكني ومعلومات جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get residentialAddress => 'العنوان السكني';
+
+  @override
+  String get emergencyContact => 'جهة الاتصال في حالات الطوارئ';
+
+  @override
+  String get contactName => 'اسم جهة الاتصال';
+
+  @override
+  String get relationship => 'العلاقة';
+
+  @override
+  String get hintContactName => 'أدخل اسم جهة الاتصال';
+
+  @override
+  String get hintRelationship => 'أدخل العلاقة';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

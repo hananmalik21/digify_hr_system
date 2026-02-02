@@ -1565,6 +1565,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintPassportNumber => 'Enter passport number';
 
   @override
+  String get addressAndEmergencyContact => 'Address & Emergency Contact';
+
+  @override
+  String get addressAndEmergencyContactSubtitle =>
+      'Residential address and emergency contact information';
+
+  @override
+  String get residentialAddress => 'Residential Address';
+
+  @override
+  String get emergencyContact => 'Emergency Contact';
+
+  @override
+  String get contactName => 'Contact Name';
+
+  @override
+  String get relationship => 'Relationship';
+
+  @override
+  String get hintContactName => 'Enter contact name';
+
+  @override
+  String get hintRelationship => 'Enter relationship';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

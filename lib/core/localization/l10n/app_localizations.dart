@@ -3116,6 +3116,54 @@ abstract class AppLocalizations {
   /// **'Enter passport number'**
   String get hintPassportNumber;
 
+  /// No description provided for @addressAndEmergencyContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Address & Emergency Contact'**
+  String get addressAndEmergencyContact;
+
+  /// No description provided for @addressAndEmergencyContactSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Residential address and emergency contact information'**
+  String get addressAndEmergencyContactSubtitle;
+
+  /// No description provided for @residentialAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Residential Address'**
+  String get residentialAddress;
+
+  /// No description provided for @emergencyContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Contact'**
+  String get emergencyContact;
+
+  /// No description provided for @contactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Name'**
+  String get contactName;
+
+  /// No description provided for @relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get relationship;
+
+  /// No description provided for @hintContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter contact name'**
+  String get hintContactName;
+
+  /// No description provided for @hintRelationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter relationship'**
+  String get hintRelationship;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:
