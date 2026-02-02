@@ -93,10 +93,12 @@ class ShiftFormState {
 
 /// StateNotifier for managing shift form
 class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
+  final int _enterpriseId;
   final CreateShiftUseCase? _createShiftUseCase;
 
-  ShiftFormNotifier({CreateShiftUseCase? createShiftUseCase})
-    : _createShiftUseCase = createShiftUseCase,
+  ShiftFormNotifier({required int enterpriseId, CreateShiftUseCase? createShiftUseCase})
+    : _enterpriseId = enterpriseId,
+      _createShiftUseCase = createShiftUseCase,
       super(ShiftFormState());
 
   /// Update code field
@@ -263,7 +265,7 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
 
     try {
       final shiftData = <String, dynamic>{
-        'tenant_id': 1001,
+        'tenant_id': _enterpriseId,
         'shift_code': state.code.trim(),
         'shift_name_en': state.nameEn.trim(),
         'shift_name_ar': state.nameAr.trim(),
@@ -302,5 +304,8 @@ final createShiftUseCaseProvider = Provider.family<CreateShiftUseCase, int>((ref
 
 /// Family provider for shift form that accepts enterprise ID
 final shiftFormProvider = StateNotifierProvider.autoDispose.family<ShiftFormNotifier, ShiftFormState, int>(
-  (ref, enterpriseId) => ShiftFormNotifier(createShiftUseCase: ref.read(createShiftUseCaseProvider(enterpriseId))),
+  (ref, enterpriseId) => ShiftFormNotifier(
+    enterpriseId: enterpriseId,
+    createShiftUseCase: ref.read(createShiftUseCaseProvider(enterpriseId)),
+  ),
 );
