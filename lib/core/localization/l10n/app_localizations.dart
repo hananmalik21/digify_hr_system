@@ -3308,6 +3308,78 @@ abstract class AppLocalizations {
   /// **'Select work schedule'**
   String get hintSelectWorkSchedule;
 
+  /// No description provided for @compensationAndBenefits.
+  ///
+  /// In en, this message translates to:
+  /// **'Compensation & Benefits'**
+  String get compensationAndBenefits;
+
+  /// No description provided for @compensationAndBenefitsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary structure and allowances'**
+  String get compensationAndBenefitsSubtitle;
+
+  /// No description provided for @basicSalaryKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Salary (KWD)'**
+  String get basicSalaryKwd;
+
+  /// No description provided for @allowances.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowances'**
+  String get allowances;
+
+  /// No description provided for @housingAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Housing Allowance (KWD)'**
+  String get housingAllowanceKwd;
+
+  /// No description provided for @transportationKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation (KWD)'**
+  String get transportationKwd;
+
+  /// No description provided for @foodAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Allowance (KWD)'**
+  String get foodAllowanceKwd;
+
+  /// No description provided for @mobileAllowanceKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Allowance (KWD)'**
+  String get mobileAllowanceKwd;
+
+  /// No description provided for @otherAllowancesKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Allowances (KWD)'**
+  String get otherAllowancesKwd;
+
+  /// No description provided for @totalMonthlyCompensation.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Monthly Compensation'**
+  String get totalMonthlyCompensation;
+
+  /// No description provided for @annualKwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual: {value} KWD'**
+  String annualKwd(String value);
+
+  /// No description provided for @hintEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter amount'**
+  String get hintEnterAmount;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

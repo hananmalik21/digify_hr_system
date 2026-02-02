@@ -1662,6 +1662,44 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintSelectWorkSchedule => 'اختر جدول العمل';
 
   @override
+  String get compensationAndBenefits => 'التعويضات والمزايا';
+
+  @override
+  String get compensationAndBenefitsSubtitle => 'هيكل الراتب والبدلات';
+
+  @override
+  String get basicSalaryKwd => 'الراتب الأساسي (د.ك)';
+
+  @override
+  String get allowances => 'البدلات';
+
+  @override
+  String get housingAllowanceKwd => 'بدل السكن (د.ك)';
+
+  @override
+  String get transportationKwd => 'النقل (د.ك)';
+
+  @override
+  String get foodAllowanceKwd => 'بدل الطعام (د.ك)';
+
+  @override
+  String get mobileAllowanceKwd => 'بدل الجوال (د.ك)';
+
+  @override
+  String get otherAllowancesKwd => 'بدلات أخرى (د.ك)';
+
+  @override
+  String get totalMonthlyCompensation => 'إجمالي التعويض الشهري';
+
+  @override
+  String annualKwd(String value) {
+    return 'سنوي: $value د.ك';
+  }
+
+  @override
+  String get hintEnterAmount => 'أدخل المبلغ';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

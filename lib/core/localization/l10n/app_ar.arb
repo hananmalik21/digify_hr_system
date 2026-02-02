@@ -527,6 +527,25 @@
   "workScheduleAssignment": "تعيين جدول العمل",
   "workSchedule": "جدول العمل",
   "hintSelectWorkSchedule": "اختر جدول العمل",
+  "compensationAndBenefits": "التعويضات والمزايا",
+  "compensationAndBenefitsSubtitle": "هيكل الراتب والبدلات",
+  "basicSalaryKwd": "الراتب الأساسي (د.ك)",
+  "allowances": "البدلات",
+  "housingAllowanceKwd": "بدل السكن (د.ك)",
+  "transportationKwd": "النقل (د.ك)",
+  "foodAllowanceKwd": "بدل الطعام (د.ك)",
+  "mobileAllowanceKwd": "بدل الجوال (د.ك)",
+  "otherAllowancesKwd": "بدلات أخرى (د.ك)",
+  "totalMonthlyCompensation": "إجمالي التعويض الشهري",
+  "annualKwd": "سنوي: {value} د.ك",
+  "@annualKwd": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "hintEnterAmount": "أدخل المبلغ",
   "workLocation": "موقع العمل",
   "gradeLevel": "مستوى الدرجة",
   "contractType": "نوع العقد",

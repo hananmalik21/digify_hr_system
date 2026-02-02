@@ -636,6 +636,25 @@
   "workScheduleAssignment": "Work Schedule Assignment",
   "workSchedule": "Work Schedule",
   "hintSelectWorkSchedule": "Select work schedule",
+  "compensationAndBenefits": "Compensation & Benefits",
+  "compensationAndBenefitsSubtitle": "Salary structure and allowances",
+  "basicSalaryKwd": "Basic Salary (KWD)",
+  "allowances": "Allowances",
+  "housingAllowanceKwd": "Housing Allowance (KWD)",
+  "transportationKwd": "Transportation (KWD)",
+  "foodAllowanceKwd": "Food Allowance (KWD)",
+  "mobileAllowanceKwd": "Mobile Allowance (KWD)",
+  "otherAllowancesKwd": "Other Allowances (KWD)",
+  "totalMonthlyCompensation": "Total Monthly Compensation",
+  "annualKwd": "Annual: {value} KWD",
+  "@annualKwd": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "hintEnterAmount": "Enter amount",
   "addEmployeeStepContentPlaceholder": "Content for this step coming soon.",
   "newHiresThisMonth": "New This Month",
   "employeeStatDescriptionAll": "All employees in organization",

@@ -1664,6 +1664,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintSelectWorkSchedule => 'Select work schedule';
 
   @override
+  String get compensationAndBenefits => 'Compensation & Benefits';
+
+  @override
+  String get compensationAndBenefitsSubtitle =>
+      'Salary structure and allowances';
+
+  @override
+  String get basicSalaryKwd => 'Basic Salary (KWD)';
+
+  @override
+  String get allowances => 'Allowances';
+
+  @override
+  String get housingAllowanceKwd => 'Housing Allowance (KWD)';
+
+  @override
+  String get transportationKwd => 'Transportation (KWD)';
+
+  @override
+  String get foodAllowanceKwd => 'Food Allowance (KWD)';
+
+  @override
+  String get mobileAllowanceKwd => 'Mobile Allowance (KWD)';
+
+  @override
+  String get otherAllowancesKwd => 'Other Allowances (KWD)';
+
+  @override
+  String get totalMonthlyCompensation => 'Total Monthly Compensation';
+
+  @override
+  String annualKwd(String value) {
+    return 'Annual: $value KWD';
+  }
+
+  @override
+  String get hintEnterAmount => 'Enter amount';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 
