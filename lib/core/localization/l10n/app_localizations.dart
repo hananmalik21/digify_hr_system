@@ -3428,6 +3428,78 @@ abstract class AppLocalizations {
   /// **'Enter IBAN'**
   String get hintIban;
 
+  /// No description provided for @documentsAndCompliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents & Compliance'**
+  String get documentsAndCompliance;
+
+  /// No description provided for @documentsAndComplianceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Document expiry dates and compliance tracking'**
+  String get documentsAndComplianceSubtitle;
+
+  /// No description provided for @documentExpiryDates.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Expiry Dates'**
+  String get documentExpiryDates;
+
+  /// No description provided for @civilIdExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Civil ID Expiry'**
+  String get civilIdExpiry;
+
+  /// No description provided for @passportExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Expiry'**
+  String get passportExpiry;
+
+  /// No description provided for @visaNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Number'**
+  String get visaNumber;
+
+  /// No description provided for @visaExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa Expiry'**
+  String get visaExpiry;
+
+  /// No description provided for @workPermitNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Permit Number'**
+  String get workPermitNumber;
+
+  /// No description provided for @workPermitExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Permit Expiry'**
+  String get workPermitExpiry;
+
+  /// No description provided for @hintSelectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get hintSelectDate;
+
+  /// No description provided for @hintVisaNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter visa number'**
+  String get hintVisaNumber;
+
+  /// No description provided for @hintWorkPermitNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter work permit number'**
+  String get hintWorkPermitNumber;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

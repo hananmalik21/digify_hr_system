@@ -1724,6 +1724,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintIban => 'أدخل رقم الآيبان';
 
   @override
+  String get documentsAndCompliance => 'المستندات والامتثال';
+
+  @override
+  String get documentsAndComplianceSubtitle =>
+      'تواريخ انتهاء المستندات وتتبع الامتثال';
+
+  @override
+  String get documentExpiryDates => 'تواريخ انتهاء المستندات';
+
+  @override
+  String get civilIdExpiry => 'انتهاء البطاقة المدنية';
+
+  @override
+  String get passportExpiry => 'انتهاء جواز السفر';
+
+  @override
+  String get visaNumber => 'رقم التأشيرة';
+
+  @override
+  String get visaExpiry => 'انتهاء التأشيرة';
+
+  @override
+  String get workPermitNumber => 'رقم تصريح العمل';
+
+  @override
+  String get workPermitExpiry => 'انتهاء تصريح العمل';
+
+  @override
+  String get hintSelectDate => 'اختر التاريخ';
+
+  @override
+  String get hintVisaNumber => 'أدخل رقم التأشيرة';
+
+  @override
+  String get hintWorkPermitNumber => 'أدخل رقم تصريح العمل';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override

@@ -1728,6 +1728,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintIban => 'Enter IBAN';
 
   @override
+  String get documentsAndCompliance => 'Documents & Compliance';
+
+  @override
+  String get documentsAndComplianceSubtitle =>
+      'Document expiry dates and compliance tracking';
+
+  @override
+  String get documentExpiryDates => 'Document Expiry Dates';
+
+  @override
+  String get civilIdExpiry => 'Civil ID Expiry';
+
+  @override
+  String get passportExpiry => 'Passport Expiry';
+
+  @override
+  String get visaNumber => 'Visa Number';
+
+  @override
+  String get visaExpiry => 'Visa Expiry';
+
+  @override
+  String get workPermitNumber => 'Work Permit Number';
+
+  @override
+  String get workPermitExpiry => 'Work Permit Expiry';
+
+  @override
+  String get hintSelectDate => 'Select date';
+
+  @override
+  String get hintVisaNumber => 'Enter visa number';
+
+  @override
+  String get hintWorkPermitNumber => 'Enter work permit number';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 
