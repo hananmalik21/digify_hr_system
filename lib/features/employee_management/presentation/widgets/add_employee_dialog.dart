@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/demographics_step.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/work_schedule_step.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,6 +90,7 @@ class AddEmployeeDialog extends ConsumerWidget {
       case 3:
         return const AddEmployeeAssignmentStep();
       case 4:
+        return const AddEmployeeWorkScheduleStep();
       case 5:
       case 6:
       case 7:

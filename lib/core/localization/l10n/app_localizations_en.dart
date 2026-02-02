@@ -1648,6 +1648,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintEmploymentStatus => 'Select employment status';
 
   @override
+  String get timeManagementWorkSchedule => 'Time Management - Work Schedule';
+
+  @override
+  String get timeManagementWorkScheduleSubtitle =>
+      'Assign work schedule for attendance tracking';
+
+  @override
+  String get workScheduleAssignment => 'Work Schedule Assignment';
+
+  @override
+  String get workSchedule => 'Work Schedule';
+
+  @override
+  String get hintSelectWorkSchedule => 'Select work schedule';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

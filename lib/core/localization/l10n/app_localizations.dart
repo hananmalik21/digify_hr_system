@@ -3278,6 +3278,36 @@ abstract class AppLocalizations {
   /// **'Select employment status'**
   String get hintEmploymentStatus;
 
+  /// No description provided for @timeManagementWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Management - Work Schedule'**
+  String get timeManagementWorkSchedule;
+
+  /// No description provided for @timeManagementWorkScheduleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign work schedule for attendance tracking'**
+  String get timeManagementWorkScheduleSubtitle;
+
+  /// No description provided for @workScheduleAssignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule Assignment'**
+  String get workScheduleAssignment;
+
+  /// No description provided for @workSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule'**
+  String get workSchedule;
+
+  /// No description provided for @hintSelectWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Select work schedule'**
+  String get hintSelectWorkSchedule;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

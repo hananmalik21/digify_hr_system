@@ -1646,6 +1646,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintEmploymentStatus => 'اختر حالة التوظيف';
 
   @override
+  String get timeManagementWorkSchedule => 'إدارة الوقت - جدول العمل';
+
+  @override
+  String get timeManagementWorkScheduleSubtitle =>
+      'تعيين جدول العمل لتتبع الحضور';
+
+  @override
+  String get workScheduleAssignment => 'تعيين جدول العمل';
+
+  @override
+  String get workSchedule => 'جدول العمل';
+
+  @override
+  String get hintSelectWorkSchedule => 'اختر جدول العمل';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override
