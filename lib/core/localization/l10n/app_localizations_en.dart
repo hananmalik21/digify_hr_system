@@ -1765,6 +1765,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintWorkPermitNumber => 'Enter work permit number';
 
   @override
+  String get reviewAndConfirm => 'Review & Confirm';
+
+  @override
+  String get reviewAndConfirmSubtitle =>
+      'Review all information before creating the employee record';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get employmentDetails => 'Employment Details';
+
+  @override
+  String get reviewName => 'Name';
+
+  @override
+  String get reviewDob => 'DOB';
+
+  @override
+  String get reviewBank => 'Bank';
+
+  @override
+  String get reviewAccount => 'Account';
+
+  @override
+  String get reviewTotal => 'Total';
+
+  @override
+  String get reviewProbation => 'Probation';
+
+  @override
+  String get reviewPermanent => 'Permanent';
+
+  @override
   String get addEmployeeStepContentPlaceholder =>
       'Content for this step coming soon.';
 

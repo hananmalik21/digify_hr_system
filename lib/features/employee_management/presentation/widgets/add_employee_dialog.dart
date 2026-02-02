@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/banking_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/documents_step.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/review_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/work_schedule_step.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -101,24 +102,9 @@ class AddEmployeeDialog extends ConsumerWidget {
       case 7:
         return const AddEmployeeDocumentsStep();
       case 8:
-        return const _PlaceholderStepContent();
+        return const AddEmployeeReviewStep();
       default:
         return const SizedBox.shrink();
     }
-  }
-}
-
-class _PlaceholderStepContent extends StatelessWidget {
-  const _PlaceholderStepContent();
-
-  @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.w),
-        child: Text(localizations.addEmployeeStepContentPlaceholder, style: Theme.of(context).textTheme.bodyLarge),
-      ),
-    );
   }
 }

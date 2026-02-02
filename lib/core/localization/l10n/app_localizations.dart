@@ -3500,6 +3500,72 @@ abstract class AppLocalizations {
   /// **'Enter work permit number'**
   String get hintWorkPermitNumber;
 
+  /// No description provided for @reviewAndConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Review & Confirm'**
+  String get reviewAndConfirm;
+
+  /// No description provided for @reviewAndConfirmSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review all information before creating the employee record'**
+  String get reviewAndConfirmSubtitle;
+
+  /// No description provided for @personalInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// No description provided for @employmentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Employment Details'**
+  String get employmentDetails;
+
+  /// No description provided for @reviewName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get reviewName;
+
+  /// No description provided for @reviewDob.
+  ///
+  /// In en, this message translates to:
+  /// **'DOB'**
+  String get reviewDob;
+
+  /// No description provided for @reviewBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get reviewBank;
+
+  /// No description provided for @reviewAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get reviewAccount;
+
+  /// No description provided for @reviewTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get reviewTotal;
+
+  /// No description provided for @reviewProbation.
+  ///
+  /// In en, this message translates to:
+  /// **'Probation'**
+  String get reviewProbation;
+
+  /// No description provided for @reviewPermanent.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanent'**
+  String get reviewPermanent;
+
   /// No description provided for @addEmployeeStepContentPlaceholder.
   ///
   /// In en, this message translates to:

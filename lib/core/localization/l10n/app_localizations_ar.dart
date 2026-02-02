@@ -1761,6 +1761,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintWorkPermitNumber => 'أدخل رقم تصريح العمل';
 
   @override
+  String get reviewAndConfirm => 'المراجعة والتأكيد';
+
+  @override
+  String get reviewAndConfirmSubtitle =>
+      'راجع جميع المعلومات قبل إنشاء سجل الموظف';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get employmentDetails => 'تفاصيل التوظيف';
+
+  @override
+  String get reviewName => 'الاسم';
+
+  @override
+  String get reviewDob => 'تاريخ الميلاد';
+
+  @override
+  String get reviewBank => 'البنك';
+
+  @override
+  String get reviewAccount => 'الحساب';
+
+  @override
+  String get reviewTotal => 'الإجمالي';
+
+  @override
+  String get reviewProbation => 'تجريبي';
+
+  @override
+  String get reviewPermanent => 'دائم';
+
+  @override
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override
