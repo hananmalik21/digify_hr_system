@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_management_stats_cards.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_search_and_actions.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employees_grid_view.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/manage_employees_table.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
               trailing: AppButton.primary(
                 label: localizations.addNewEmployee,
                 svgPath: Assets.icons.addDivisionIcon.path,
-                onPressed: () {},
+                onPressed: () => AddEmployeeDialog.show(context),
               ),
             ),
             Gap(24.h),

@@ -1432,6 +1432,63 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addNewEmployee => 'إضافة موظف جديد';
 
   @override
+  String addEmployeeStepSubtitle(int step) {
+    return 'الخطوة $step من 9';
+  }
+
+  @override
+  String get addEmployeeStepBasicInfo => 'المعلومات الأساسية';
+
+  @override
+  String get addEmployeeStepDemographics => 'البيانات الديموغرافية';
+
+  @override
+  String get addEmployeeStepAddress => 'العنوان';
+
+  @override
+  String get addEmployeeStepAssignmentInfo => 'معلومات التعيين';
+
+  @override
+  String get addEmployeeStepWorkSchedule => 'جدول العمل';
+
+  @override
+  String get addEmployeeStepCompensation => 'التعويضات';
+
+  @override
+  String get addEmployeeStepBanking => 'البنك';
+
+  @override
+  String get addEmployeeStepDocuments => 'المستندات';
+
+  @override
+  String get addEmployeeStepReview => 'المراجعة';
+
+  @override
+  String get addEmployeeBasicInfoSubtitle => 'الاسم وتفاصيل الاتصال الأساسية';
+
+  @override
+  String get addEmployeeNameFieldsConfigured =>
+      'يتم تكوين حقول الاسم من هيكل المؤسسة → إعدادات هيكل الاسم';
+
+  @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get lastName => 'اسم العائلة';
+
+  @override
+  String get middleName => 'الاسم الأوسط';
+
+  @override
+  String get dateOfBirth => 'تاريخ الميلاد';
+
+  @override
+  String get mobileNumber => 'رقم الجوال';
+
+  @override
+  String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
+
+  @override
   String get newHiresThisMonth => 'الجدد هذا الشهر';
 
   @override

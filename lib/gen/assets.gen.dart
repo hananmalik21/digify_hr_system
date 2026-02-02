@@ -1124,6 +1124,24 @@ class $AssetsIconsGen {
 class $AssetsIconsEmployeeManagementGen {
   const $AssetsIconsEmployeeManagementGen();
 
+  /// File path: assets/icons/employee_management/assignment.svg
+  SvgGenImage get assignment => const SvgGenImage('assets/icons/employee_management/assignment.svg');
+
+  /// File path: assets/icons/employee_management/banking.svg
+  SvgGenImage get banking => const SvgGenImage('assets/icons/employee_management/banking.svg');
+
+  /// File path: assets/icons/employee_management/basic-info.svg
+  SvgGenImage get basicInfo => const SvgGenImage('assets/icons/employee_management/basic-info.svg');
+
+  /// File path: assets/icons/employee_management/compensation.svg
+  SvgGenImage get compensation => const SvgGenImage('assets/icons/employee_management/compensation.svg');
+
+  /// File path: assets/icons/employee_management/demographics.svg
+  SvgGenImage get demographics => const SvgGenImage('assets/icons/employee_management/demographics.svg');
+
+  /// File path: assets/icons/employee_management/document.svg
+  SvgGenImage get document => const SvgGenImage('assets/icons/employee_management/document.svg');
+
   /// File path: assets/icons/employee_management/filter-main.svg
   SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
 
@@ -1133,8 +1151,22 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/more.svg
   SvgGenImage get more => const SvgGenImage('assets/icons/employee_management/more.svg');
 
+  /// File path: assets/icons/employee_management/user.svg
+  SvgGenImage get user => const SvgGenImage('assets/icons/employee_management/user.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [filterMain, gridView, more];
+  List<SvgGenImage> get values => [
+    assignment,
+    banking,
+    basicInfo,
+    compensation,
+    demographics,
+    document,
+    filterMain,
+    gridView,
+    more,
+    user,
+  ];
 }
 
 class $AssetsIconsLeaveManagementGen {

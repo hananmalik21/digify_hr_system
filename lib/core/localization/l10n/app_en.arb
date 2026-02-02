@@ -555,6 +555,31 @@
   "manageEmployees": "Manage Employees",
   "manageEmployeesDescription": "View and manage employees",
   "addNewEmployee": "Add New Employee",
+  "addEmployeeStepSubtitle": "Step {step} of 9",
+  "@addEmployeeStepSubtitle": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "addEmployeeStepBasicInfo": "Basic Info",
+  "addEmployeeStepDemographics": "Demographics",
+  "addEmployeeStepAddress": "Address",
+  "addEmployeeStepAssignmentInfo": "Assignment Info",
+  "addEmployeeStepWorkSchedule": "Work Schedule",
+  "addEmployeeStepCompensation": "Compensation",
+  "addEmployeeStepBanking": "Banking",
+  "addEmployeeStepDocuments": "Documents",
+  "addEmployeeStepReview": "Review",
+  "addEmployeeBasicInfoSubtitle": "Name and primary contact details",
+  "addEmployeeNameFieldsConfigured": "Name fields are configured from Enterprise Structure → Name Structure Settings",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "middleName": "Middle Name",
+  "dateOfBirth": "Date of Birth",
+  "mobileNumber": "Mobile Number",
+  "addEmployeeStepContentPlaceholder": "Content for this step coming soon.",
   "newHiresThisMonth": "New This Month",
   "employeeStatDescriptionAll": "All employees in organization",
   "employeeStatDescriptionActive": "Currently active",

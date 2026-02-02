@@ -2864,6 +2864,114 @@ abstract class AppLocalizations {
   /// **'Add New Employee'**
   String get addNewEmployee;
 
+  /// No description provided for @addEmployeeStepSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of 9'**
+  String addEmployeeStepSubtitle(int step);
+
+  /// No description provided for @addEmployeeStepBasicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get addEmployeeStepBasicInfo;
+
+  /// No description provided for @addEmployeeStepDemographics.
+  ///
+  /// In en, this message translates to:
+  /// **'Demographics'**
+  String get addEmployeeStepDemographics;
+
+  /// No description provided for @addEmployeeStepAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get addEmployeeStepAddress;
+
+  /// No description provided for @addEmployeeStepAssignmentInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment Info'**
+  String get addEmployeeStepAssignmentInfo;
+
+  /// No description provided for @addEmployeeStepWorkSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Schedule'**
+  String get addEmployeeStepWorkSchedule;
+
+  /// No description provided for @addEmployeeStepCompensation.
+  ///
+  /// In en, this message translates to:
+  /// **'Compensation'**
+  String get addEmployeeStepCompensation;
+
+  /// No description provided for @addEmployeeStepBanking.
+  ///
+  /// In en, this message translates to:
+  /// **'Banking'**
+  String get addEmployeeStepBanking;
+
+  /// No description provided for @addEmployeeStepDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get addEmployeeStepDocuments;
+
+  /// No description provided for @addEmployeeStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get addEmployeeStepReview;
+
+  /// No description provided for @addEmployeeBasicInfoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name and primary contact details'**
+  String get addEmployeeBasicInfoSubtitle;
+
+  /// No description provided for @addEmployeeNameFieldsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Name fields are configured from Enterprise Structure → Name Structure Settings'**
+  String get addEmployeeNameFieldsConfigured;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @middleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle Name'**
+  String get middleName;
+
+  /// No description provided for @dateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirth;
+
+  /// No description provided for @mobileNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile Number'**
+  String get mobileNumber;
+
+  /// No description provided for @addEmployeeStepContentPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Content for this step coming soon.'**
+  String get addEmployeeStepContentPlaceholder;
+
   /// No description provided for @newHiresThisMonth.
   ///
   /// In en, this message translates to:

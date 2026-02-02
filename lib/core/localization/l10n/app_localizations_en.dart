@@ -1435,6 +1435,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addNewEmployee => 'Add New Employee';
 
   @override
+  String addEmployeeStepSubtitle(int step) {
+    return 'Step $step of 9';
+  }
+
+  @override
+  String get addEmployeeStepBasicInfo => 'Basic Info';
+
+  @override
+  String get addEmployeeStepDemographics => 'Demographics';
+
+  @override
+  String get addEmployeeStepAddress => 'Address';
+
+  @override
+  String get addEmployeeStepAssignmentInfo => 'Assignment Info';
+
+  @override
+  String get addEmployeeStepWorkSchedule => 'Work Schedule';
+
+  @override
+  String get addEmployeeStepCompensation => 'Compensation';
+
+  @override
+  String get addEmployeeStepBanking => 'Banking';
+
+  @override
+  String get addEmployeeStepDocuments => 'Documents';
+
+  @override
+  String get addEmployeeStepReview => 'Review';
+
+  @override
+  String get addEmployeeBasicInfoSubtitle => 'Name and primary contact details';
+
+  @override
+  String get addEmployeeNameFieldsConfigured =>
+      'Name fields are configured from Enterprise Structure → Name Structure Settings';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get middleName => 'Middle Name';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get mobileNumber => 'Mobile Number';
+
+  @override
+  String get addEmployeeStepContentPlaceholder =>
+      'Content for this step coming soon.';
+
+  @override
   String get newHiresThisMonth => 'New This Month';
 
   @override

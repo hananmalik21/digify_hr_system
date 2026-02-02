@@ -12,6 +12,7 @@ class DigifyDivider extends StatelessWidget {
   final double? indent;
   final double? endIndent;
   final EdgeInsetsGeometry? margin;
+  final double? borderRadius;
 
   const DigifyDivider({
     super.key,
@@ -21,6 +22,7 @@ class DigifyDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
     this.margin,
+    this.borderRadius,
   });
 
   /// Creates a standard horizontal divider with default styling
@@ -32,6 +34,7 @@ class DigifyDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
     this.margin,
+    this.borderRadius,
   });
 
   /// Creates a thin divider (0.5px thickness)
@@ -43,6 +46,7 @@ class DigifyDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
     this.margin,
+    this.borderRadius,
   });
 
   /// Creates a thick divider (2px thickness)
@@ -54,19 +58,32 @@ class DigifyDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
     this.margin,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final defaultColor = isDark
-        ? AppColors.cardBorderDark
-        : AppColors.cardBorder;
+    final defaultColor = isDark ? AppColors.cardBorderDark : AppColors.cardBorder;
+
+    final effectiveColor = color ?? defaultColor;
+    final effectiveThickness = thickness ?? 1;
+
+    if (borderRadius != null && borderRadius! > 0) {
+      final bar = Container(
+        height: effectiveThickness,
+        decoration: BoxDecoration(color: effectiveColor, borderRadius: BorderRadius.circular(borderRadius!)),
+      );
+      if (margin != null) {
+        return Padding(padding: margin!, child: bar);
+      }
+      return bar;
+    }
 
     final divider = Divider(
       height: height,
-      thickness: thickness ?? 1,
-      color: color ?? defaultColor,
+      thickness: effectiveThickness,
+      color: effectiveColor,
       indent: indent,
       endIndent: endIndent,
     );
@@ -114,9 +131,7 @@ class DigifyVerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final defaultColor = isDark
-        ? AppColors.cardBorderDark
-        : AppColors.cardBorder;
+    final defaultColor = isDark ? AppColors.cardBorderDark : AppColors.cardBorder;
 
     final divider = VerticalDivider(
       width: width,
