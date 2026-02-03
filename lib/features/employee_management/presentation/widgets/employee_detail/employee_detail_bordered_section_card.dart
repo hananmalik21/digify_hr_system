@@ -13,13 +13,14 @@ class EmployeeDetailBorderedField {
     required this.value,
     this.isValueRtl = false,
     this.dividerAbove = false,
+    this.valueWidget,
   });
 
   final String label;
   final String value;
   final bool isValueRtl;
-
   final bool dividerAbove;
+  final Widget? valueWidget;
 }
 
 class EmployeeDetailBorderedSectionCard extends StatelessWidget {
@@ -132,11 +133,12 @@ class _BorderedFieldRow extends StatelessWidget {
       children: [
         Text(field.label, style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
         Gap(4.h),
-        Text(
-          field.value,
-          style: context.textTheme.titleSmall?.copyWith(color: AppColors.textPrimary, fontSize: 16.sp),
-          textAlign: field.isValueRtl ? TextAlign.right : TextAlign.left,
-        ),
+        field.valueWidget ??
+            Text(
+              field.value,
+              style: context.textTheme.titleSmall?.copyWith(color: AppColors.textPrimary, fontSize: 16.sp),
+              textAlign: field.isValueRtl ? TextAlign.right : TextAlign.left,
+            ),
       ],
     );
   }
