@@ -26,7 +26,6 @@ class EmployeeDetailHeader extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(24.w),
-      margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
@@ -45,9 +44,9 @@ class EmployeeDetailHeader extends StatelessWidget {
                   style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
                 ),
               ),
-              AppButton.outline(label: 'Download PDF', icon: Icons.download_outlined, onPressed: () {}),
-              Gap(12.w),
-              AppButton.primary(label: 'Edit Profile', icon: Icons.edit_outlined, onPressed: () {}),
+              AppButton.outline(label: 'Download PDF', svgPath: Assets.icons.downloadIcon.path, onPressed: () {}),
+              Gap(8.w),
+              AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: () {}),
             ],
           ),
           Gap(8.h),

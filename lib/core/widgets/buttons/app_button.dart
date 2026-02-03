@@ -18,6 +18,7 @@ class AppButton extends StatelessWidget {
   final AppButtonType type;
   final IconData? icon;
   final String? svgPath;
+  final Color? svgAssetColor;
   final double? width;
   final double? height;
   final double? fontSize;
@@ -34,6 +35,7 @@ class AppButton extends StatelessWidget {
     this.type = AppButtonType.primary,
     this.icon,
     this.svgPath,
+    this.svgAssetColor,
     this.width,
     double? height,
     this.fontSize,
@@ -49,6 +51,7 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
+    Color? svgAssetColor,
     double? width,
     double? height,
   }) {
@@ -59,6 +62,7 @@ class AppButton extends StatelessWidget {
       type: AppButtonType.primary,
       icon: icon,
       svgPath: svgPath,
+      svgAssetColor: svgAssetColor,
       width: width,
       height: height,
     );
@@ -70,6 +74,7 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
+    Color? svgAssetColor,
     double? width,
     double? height,
   }) {
@@ -80,6 +85,7 @@ class AppButton extends StatelessWidget {
       type: AppButtonType.secondary,
       icon: icon,
       svgPath: svgPath,
+      svgAssetColor: svgAssetColor,
       width: width,
       height: height,
     );
@@ -91,6 +97,7 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
+    Color? svgAssetColor,
     double? width,
     double? height,
   }) {
@@ -101,6 +108,7 @@ class AppButton extends StatelessWidget {
       type: AppButtonType.outline,
       icon: icon,
       svgPath: svgPath,
+      svgAssetColor: svgAssetColor,
       width: width,
       height: height,
     );
@@ -112,6 +120,7 @@ class AppButton extends StatelessWidget {
     bool isLoading = false,
     IconData? icon,
     String? svgPath,
+    Color? svgAssetColor,
     double? width,
     double? height,
   }) {
@@ -122,6 +131,7 @@ class AppButton extends StatelessWidget {
       type: AppButtonType.danger,
       icon: icon,
       svgPath: svgPath,
+      svgAssetColor: svgAssetColor,
       width: width,
       height: height,
     );
@@ -196,7 +206,7 @@ class AppButton extends StatelessWidget {
       children.add(Icon(icon, size: 20.sp, color: contentColor));
       children.add(SizedBox(width: 8.w));
     } else if (svgPath != null) {
-      children.add(DigifyAsset(assetPath: svgPath!, width: 20, height: 20, color: contentColor));
+      children.add(DigifyAsset(assetPath: svgPath!, width: 20, height: 20, color: svgAssetColor ?? contentColor));
       children.add(SizedBox(width: 8.w));
     }
     if (label.isNotEmpty) {
