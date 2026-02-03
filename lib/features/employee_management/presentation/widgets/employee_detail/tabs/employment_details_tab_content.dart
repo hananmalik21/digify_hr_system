@@ -1,9 +1,10 @@
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_section_card.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/tabs/employment_details_sections/employment_details_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// Tab content for Employment Details: job information and reporting.
+/// Tab content for Employment Details.
+/// Composes section modules; each section owns its own data and card.
 class EmploymentDetailsTabContent extends StatelessWidget {
   const EmploymentDetailsTabContent({super.key, required this.isDark, this.wrapInScrollView = true});
 
@@ -12,30 +13,18 @@ class EmploymentDetailsTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        EmployeeDetailSectionCard(
-          title: 'Job Information',
-          isDark: isDark,
-          rows: const [
-            EmployeeDetailSectionRow(label: 'Position', value: '—'),
-            EmployeeDetailSectionRow(label: 'Department', value: '—'),
-            EmployeeDetailSectionRow(label: 'Start Date', value: '—'),
-            EmployeeDetailSectionRow(label: 'Employee ID', value: '—'),
-            EmployeeDetailSectionRow(label: 'Work Location', value: '—'),
-          ],
-        ),
-        Gap(16.h),
-        EmployeeDetailSectionCard(
-          title: 'Reporting',
-          isDark: isDark,
-          rows: const [
-            EmployeeDetailSectionRow(label: 'Reports To', value: '—'),
-            EmployeeDetailSectionRow(label: 'Job Grade', value: '—'),
-          ],
-        ),
-      ],
+    final content = Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          EnterpriseStructureSection(isDark: isDark),
+          Gap(24.h),
+          WorkforceStructureSection(isDark: isDark),
+          Gap(24.h),
+          EmploymentInformationSection(isDark: isDark),
+        ],
+      ),
     );
     if (wrapInScrollView) {
       return SingleChildScrollView(
@@ -44,9 +33,6 @@ class EmploymentDetailsTabContent extends StatelessWidget {
         child: content,
       );
     }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: content,
-    );
+    return content;
   }
 }
