@@ -2,7 +2,6 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 
-/// Employment Details tab: Workforce Structure section.
 class WorkforceStructureSection extends StatelessWidget {
   const WorkforceStructureSection({super.key, required this.isDark});
 

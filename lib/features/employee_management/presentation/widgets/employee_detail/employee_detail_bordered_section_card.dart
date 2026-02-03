@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// A single field row for [EmployeeDetailBorderedSectionCard]: label and value.
 class EmployeeDetailBorderedField {
   const EmployeeDetailBorderedField({
     required this.label,
