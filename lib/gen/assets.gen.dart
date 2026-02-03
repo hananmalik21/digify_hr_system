@@ -1127,6 +1127,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/assignment.svg
   SvgGenImage get assignment => const SvgGenImage('assets/icons/employee_management/assignment.svg');
 
+  /// File path: assets/icons/employee_management/back-arrow.svg
+  SvgGenImage get backArrow => const SvgGenImage('assets/icons/employee_management/back-arrow.svg');
+
   /// File path: assets/icons/employee_management/banking.svg
   SvgGenImage get banking => const SvgGenImage('assets/icons/employee_management/banking.svg');
 
@@ -1154,6 +1157,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/grid-view.svg
   SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
 
+  /// File path: assets/icons/employee_management/hash.svg
+  SvgGenImage get hash => const SvgGenImage('assets/icons/employee_management/hash.svg');
+
   /// File path: assets/icons/employee_management/mail.svg
   SvgGenImage get mail => const SvgGenImage('assets/icons/employee_management/mail.svg');
 
@@ -1169,6 +1175,7 @@ class $AssetsIconsEmployeeManagementGen {
   /// List of all assets
   List<SvgGenImage> get values => [
     assignment,
+    backArrow,
     banking,
     basicInfo,
     card,
@@ -1178,6 +1185,7 @@ class $AssetsIconsEmployeeManagementGen {
     enterprise,
     filterMain,
     gridView,
+    hash,
     mail,
     more,
     passport,

@@ -24,13 +24,9 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
 
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10}) async {
     state = state.copyWith(isLoading: true, error: null, lastEnterpriseId: enterpriseId, currentPage: page);
-    try {
-      final repository = ref.read(manageEmployeesListRepositoryProvider);
-      final result = await repository.getEmployees(enterpriseId: enterpriseId, page: page, pageSize: pageSize);
-      state = state.copyWith(items: result.items, pagination: result.pagination, isLoading: false, error: null);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e, items: []);
-    }
+    final repository = ref.read(manageEmployeesListRepositoryProvider);
+    final result = await repository.getEmployees(enterpriseId: enterpriseId, page: page, pageSize: pageSize);
+    state = state.copyWith(items: result.items, pagination: result.pagination, isLoading: false, error: null);
   }
 
   Future<void> goToPage(int page, {int pageSize = 10}) async {

@@ -44,6 +44,7 @@ class AppRoutes {
   static const String employeesWorkforcePlanning = '$employees/workforce-planning';
   static const String employeesPositions = '$employees/positions';
   static const String employeesContracts = '$employees/contracts';
+  static const String employeeDetail = '$employees/detail';
 
   // Other routes
   static const String leaveManagement = '/leave-management';
