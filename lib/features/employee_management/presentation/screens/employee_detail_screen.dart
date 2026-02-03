@@ -54,7 +54,6 @@ class _EmployeeDetailScreenState extends State<EmployeeDetailScreen> with Single
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
               child: EmployeeDetailHeader(employee: widget.employee, isDark: isDark),
             ),
-            Gap(24.h),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 24.w),
               decoration: BoxDecoration(

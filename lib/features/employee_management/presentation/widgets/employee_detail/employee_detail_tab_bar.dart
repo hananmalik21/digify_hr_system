@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// Tab bar for employee detail: Personal Information, Employment Details,
-/// Compensation & Benefits, Documents & Banking.
 class EmployeeDetailTabBar extends StatelessWidget implements PreferredSizeWidget {
   const EmployeeDetailTabBar({super.key, required this.controller, required this.isDark});
 

@@ -1,9 +1,9 @@
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_section_card.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_document_card.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// Tab content for Documents & Banking: documents and bank details.
 class DocumentsBankingTabContent extends StatelessWidget {
   const DocumentsBankingTabContent({super.key, required this.isDark, this.wrapInScrollView = true});
 
@@ -12,29 +12,66 @@ class DocumentsBankingTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        EmployeeDetailSectionCard(
-          title: 'Documents',
-          isDark: isDark,
-          rows: const [
-            EmployeeDetailSectionRow(label: 'Civil ID', value: '—'),
-            EmployeeDetailSectionRow(label: 'Contract', value: '—'),
-            EmployeeDetailSectionRow(label: 'Passport', value: '—'),
-          ],
-        ),
-        Gap(16.h),
-        EmployeeDetailSectionCard(
-          title: 'Banking',
-          isDark: isDark,
-          rows: const [
-            EmployeeDetailSectionRow(label: 'Bank Name', value: '—'),
-            EmployeeDetailSectionRow(label: 'IBAN', value: '—'),
-            EmployeeDetailSectionRow(label: 'Account Number', value: '—'),
-          ],
-        ),
-      ],
+    final content = Padding(
+      padding: EdgeInsets.all(24.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: EmployeeDetailDocumentCard(
+                  title: 'Civil ID',
+                  iconPath: Assets.icons.employeeManagement.basicInfo.path,
+                  statusLabel: 'Valid',
+                  number: '989987878',
+                  expiryDate: '19/09/2027',
+                  isDark: isDark,
+                ),
+              ),
+              Gap(12.w),
+              Expanded(
+                child: EmployeeDetailDocumentCard(
+                  title: 'Passport',
+                  iconPath: Assets.icons.employeeManagement.passport.path,
+                  statusLabel: 'Valid',
+                  number: '8777898978',
+                  expiryDate: '10/10/2026',
+                  isDark: isDark,
+                ),
+              ),
+            ],
+          ),
+          Gap(12.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: EmployeeDetailDocumentCard(
+                  title: 'Visa',
+                  iconPath: Assets.icons.employeeManagement.document.path,
+                  statusLabel: 'Valid',
+                  number: '12312312',
+                  expiryDate: '01/01/2027',
+                  isDark: isDark,
+                ),
+              ),
+              Gap(12.w),
+              Expanded(
+                child: EmployeeDetailDocumentCard(
+                  title: 'Work Permit',
+                  iconPath: Assets.icons.employeeManagement.document.path,
+                  statusLabel: 'Valid',
+                  number: '1231',
+                  expiryDate: '01/12/2027',
+                  isDark: isDark,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
     if (wrapInScrollView) {
       return SingleChildScrollView(
@@ -43,9 +80,6 @@ class DocumentsBankingTabContent extends StatelessWidget {
         child: content,
       );
     }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-      child: content,
-    );
+    return content;
   }
 }
