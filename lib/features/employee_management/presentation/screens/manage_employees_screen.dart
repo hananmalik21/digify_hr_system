@@ -16,6 +16,8 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
@@ -87,7 +89,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 localizations: localizations,
                 isDark: isDark,
                 isLoading: listState.isLoading,
-                onView: (_) {},
+                onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onMore: () {},
               ),
               if (listState.pagination != null) ...[
@@ -121,8 +123,8 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 onNext: listState.pagination != null && listState.pagination!.hasNext
                     ? () => ref.read(manageEmployeesListProvider.notifier).goToPage(listState.currentPage + 1)
                     : null,
-                onView: (_) {},
-                onEdit: (_) {},
+                onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
+                onEdit: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onMore: () {},
               ),
           ],
