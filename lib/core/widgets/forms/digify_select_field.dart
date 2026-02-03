@@ -39,7 +39,7 @@ class DigifySelectField<T> extends StatelessWidget {
     final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
 
     return SizedBox(
-      height: 40.h,
+      height: 48.h,
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<T>(
           isExpanded: true,

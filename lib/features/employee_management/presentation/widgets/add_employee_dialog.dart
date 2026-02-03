@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog_label_below.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
@@ -63,6 +64,7 @@ class AddEmployeeDialog extends ConsumerWidget {
       maxWidth: 1200.w,
       onClose: () {
         notifier.reset();
+        ref.read(addEmployeeDemographicsProvider.notifier).reset();
         context.pop();
       },
       footerLeftActions: state.canGoPrevious
@@ -74,6 +76,7 @@ class AddEmployeeDialog extends ConsumerWidget {
             label: localizations.saveChanges,
             onPressed: () {
               notifier.reset();
+              ref.read(addEmployeeDemographicsProvider.notifier).reset();
               context.pop();
             },
           )
