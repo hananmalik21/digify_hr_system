@@ -69,6 +69,7 @@ class IdentificationDocumentsModule extends ConsumerWidget {
                 hintText: localizations.hintCivilIdNumber,
                 initialValue: demographics.civilIdNumber,
                 onChanged: (v) => notifier.setCivilIdNumber(v.isEmpty ? null : v),
+                isRequired: true,
               );
               final passport = DigifyTextField(
                 labelText: localizations.passportNumber,
@@ -76,6 +77,7 @@ class IdentificationDocumentsModule extends ConsumerWidget {
                 hintText: localizations.hintPassportNumber,
                 initialValue: demographics.passportNumber,
                 onChanged: (v) => notifier.setPassportNumber(v.isEmpty ? null : v),
+                isRequired: true,
               );
               if (useTwoColumns) {
                 return Row(

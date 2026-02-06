@@ -1565,10 +1565,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintReligion => 'أدخل الدين';
 
   @override
-  String get hintCivilIdNumber => 'أدخل رقم البطاقة المدنية';
+  String get hintCivilIdNumber => 'مثال: 123456789012';
 
   @override
-  String get hintPassportNumber => 'أدخل رقم جواز السفر';
+  String get hintPassportNumber => 'مثال: AB1234567';
 
   @override
   String get addressAndEmergencyContact =>

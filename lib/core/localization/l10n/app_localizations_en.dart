@@ -1568,10 +1568,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintReligion => 'Enter religion';
 
   @override
-  String get hintCivilIdNumber => 'Enter Civil ID number';
+  String get hintCivilIdNumber => 'e.g. 123456789012';
 
   @override
-  String get hintPassportNumber => 'Enter passport number';
+  String get hintPassportNumber => 'e.g. AB1234567';
 
   @override
   String get addressAndEmergencyContact => 'Address & Emergency Contact';

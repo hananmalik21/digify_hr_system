@@ -7,6 +7,8 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -53,6 +55,18 @@ class AddEmployeeDialogFlow {
       }
 
       if (!form.isStep1Valid) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
+    if (stepperState.currentStepIndex == 1) {
+      final demographics = _ref.read(addEmployeeDemographicsProvider);
+      final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider) ?? 0;
+      final typesAsync = _ref.read(emplLookupTypesProvider(enterpriseId));
+      final orderedTypes = typesAsync.valueOrNull ?? [];
+      final requiredTypeCodes = orderedTypes.map((t) => t.typeCode);
+      if (!demographics.isStepValid(requiredTypeCodes)) {
         ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
         return;
       }
@@ -114,8 +128,7 @@ void logAddEmployeeState(dynamic ref) {
     'phoneNumber=${f.phoneNumber}, mobileNumber=${f.mobileNumber}, dateOfBirth=${f.dateOfBirth}',
   );
   debugPrint(
-    'Demographics: genderCode=${demographics.genderCode}, nationality=${demographics.nationality}, '
-    'maritalStatusCode=${demographics.maritalStatusCode}, religionCode=${demographics.religionCode}, '
+    'Demographics: lookupCodes=${demographics.lookupCodesByTypeCode}, '
     'civilIdNumber=${demographics.civilIdNumber}, passportNumber=${demographics.passportNumber}',
   );
   debugPrint(
