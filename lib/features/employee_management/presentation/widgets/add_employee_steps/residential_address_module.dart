@@ -4,16 +4,19 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class ResidentialAddressModule extends StatelessWidget {
+class ResidentialAddressModule extends ConsumerWidget {
   const ResidentialAddressModule({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final addressState = ref.watch(addEmployeeAddressProvider);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final addressIcon = Padding(
@@ -58,6 +61,8 @@ class ResidentialAddressModule extends StatelessWidget {
             labelText: localizations.address,
             prefixIcon: addressIcon,
             hintText: localizations.hintAddress,
+            initialValue: addressState.emergAddress ?? '',
+            onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergAddress(value),
           ),
         ],
       ),

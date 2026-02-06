@@ -4,20 +4,27 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_level_selection_dialog.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class JobEmploymentDetailsModule extends StatelessWidget {
+class JobEmploymentDetailsModule extends ConsumerWidget {
   const JobEmploymentDetailsModule({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
-    final searchIcon = _prefixIcon(context, Assets.icons.searchIcon.path, isDark);
+    final jobState = ref.watch(addEmployeeJobEmploymentProvider);
     final documentIcon = _prefixIcon(context, em.document.path, isDark);
     final personIcon = _prefixIcon(context, Assets.icons.userIcon.path, isDark);
     final clockIcon = _prefixIcon(context, Assets.icons.clockIcon.path, isDark);
@@ -59,21 +66,39 @@ class JobEmploymentDetailsModule extends StatelessWidget {
             builder: (context, constraints) {
               final useTwoColumns = constraints.maxWidth > 500;
               final leftColumn = [
-                DigifyTextField(
-                  labelText: localizations.employeeNumber,
-                  prefixIcon: hashIcon,
-                  hintText: localizations.hintEmployeeNumber,
+                ColoredBox(
+                  color: Colors.blue,
+                  child: DigifyTextField(
+                    labelText: localizations.employeeNumber,
+                    prefixIcon: hashIcon,
+                    hintText: localizations.hintEmployeeNumber,
+                  ),
                 ),
-                DigifyTextField(
-                  labelText: localizations.jobFamily,
-                  isRequired: true,
-                  prefixIcon: searchIcon,
-                  hintText: localizations.hintGradeLevel,
+                ColoredBox(
+                  color: Colors.red,
+                  child: JobEmploymentPickerField(
+                    label: localizations.jobFamily,
+                    isRequired: true,
+                    value: jobState.selectedJobFamily?.nameEnglish,
+                    hint: localizations.hintGradeLevel,
+                    onTap: () async {
+                      final selected = await JobFamilySelectionDialog.show(context);
+                      if (selected != null && context.mounted) {
+                        ref.read(addEmployeeJobEmploymentProvider.notifier).setJobFamily(selected);
+                      }
+                    },
+                  ),
                 ),
-                DigifyTextField(
-                  labelText: localizations.gradeLevel,
-                  prefixIcon: searchIcon,
-                  hintText: localizations.hintGradeLevel,
+                JobEmploymentPickerField(
+                  label: localizations.gradeLevel,
+                  value: jobState.selectedGrade?.gradeLabel,
+                  hint: localizations.hintGradeLevel,
+                  onTap: () async {
+                    final selected = await GradeSelectionDialog.show(context);
+                    if (selected != null && context.mounted) {
+                      ref.read(addEmployeeJobEmploymentProvider.notifier).setGrade(selected);
+                    }
+                  },
                 ),
                 DigifyTextField(
                   labelText: localizations.contractType,
@@ -88,17 +113,29 @@ class JobEmploymentDetailsModule extends StatelessWidget {
                 ),
               ];
               final rightColumn = [
-                DigifyTextField(
-                  labelText: localizations.position,
+                JobEmploymentPickerField(
+                  label: localizations.position,
                   isRequired: true,
-                  prefixIcon: searchIcon,
-                  hintText: localizations.hintGradeLevel,
+                  value: jobState.selectedPosition?.titleEnglish,
+                  hint: localizations.hintGradeLevel,
+                  onTap: () async {
+                    final selected = await PositionSelectionDialog.show(context);
+                    if (selected != null && context.mounted) {
+                      ref.read(addEmployeeJobEmploymentProvider.notifier).setPosition(selected);
+                    }
+                  },
                 ),
-                DigifyTextField(
-                  labelText: localizations.jobLevels,
+                JobEmploymentPickerField(
+                  label: localizations.jobLevels,
                   isRequired: true,
-                  prefixIcon: searchIcon,
-                  hintText: localizations.hintGradeLevel,
+                  value: jobState.selectedJobLevel?.nameEn,
+                  hint: localizations.hintGradeLevel,
+                  onTap: () async {
+                    final selected = await JobLevelSelectionDialog.show(context);
+                    if (selected != null && context.mounted) {
+                      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobLevel(selected);
+                    }
+                  },
                 ),
                 DigifyDateField(
                   label: localizations.enterpriseHireDate,
@@ -122,7 +159,7 @@ class JobEmploymentDetailsModule extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 16.h, children: leftColumn),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 12.h, children: leftColumn),
                     ),
                     Gap(14.w),
                     Expanded(
@@ -143,7 +180,7 @@ class JobEmploymentDetailsModule extends StatelessWidget {
     );
   }
 
-  Widget _prefixIcon(BuildContext context, String path, bool isDark) {
+  static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
     return Padding(
       padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
       child: DigifyAsset(

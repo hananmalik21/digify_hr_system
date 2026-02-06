@@ -1798,6 +1798,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addEmployeeStepContentPlaceholder => 'محتوى هذه الخطوة قريبًا.';
 
   @override
+  String get addEmployeeFillRequiredFields => 'يرجى ملء جميع الحقول المطلوبة.';
+
+  @override
+  String get addEmployeeCreatedSuccess => 'تم إنشاء الموظف بنجاح.';
+
+  @override
   String get newHiresThisMonth => 'الجدد هذا الشهر';
 
   @override

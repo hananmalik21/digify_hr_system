@@ -1803,6 +1803,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Content for this step coming soon.';
 
   @override
+  String get addEmployeeFillRequiredFields =>
+      'Please fill all required fields.';
+
+  @override
+  String get addEmployeeCreatedSuccess => 'Employee created successfully.';
+
+  @override
   String get newHiresThisMonth => 'New This Month';
 
   @override

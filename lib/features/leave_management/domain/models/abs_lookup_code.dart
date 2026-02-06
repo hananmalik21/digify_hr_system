@@ -4,8 +4,10 @@ enum AbsLookupCode {
   contractType('CONTRACT_TYPE'),
   empType('EMP_TYPE'),
   gender('GENDER'),
-  religionCode('RELIGION_CODE'),
   maritalStatus('MARITAL_STATUS'),
+  nationality('NATIONALITY'),
+  religion('RELIGION'),
+  religionCode('RELIGION_CODE'),
   accrualMethod('ACCRUAL_METHOD');
 
   const AbsLookupCode(this.code);

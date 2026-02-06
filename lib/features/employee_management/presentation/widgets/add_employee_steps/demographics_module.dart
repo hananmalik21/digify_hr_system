@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
@@ -23,22 +22,21 @@ class DemographicsModule extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
-    final lm = Assets.icons.leaveManagement;
     final demographics = ref.watch(addEmployeeDemographicsProvider);
     final demographicsNotifier = ref.read(addEmployeeDemographicsProvider.notifier);
 
     final genderValues = ref.watch(employeeAbsLookupValuesForCodeProvider(AbsLookupCode.gender));
-    final religionValues = ref.watch(employeeAbsLookupValuesForCodeProvider(AbsLookupCode.religionCode));
     final maritalValues = ref.watch(employeeAbsLookupValuesForCodeProvider(AbsLookupCode.maritalStatus));
+    final nationalityValues = ref.watch(employeeAbsLookupValuesForCodeProvider(AbsLookupCode.nationality));
+    final religionValues = ref.watch(employeeAbsLookupValuesForCodeProvider(AbsLookupCode.religion));
 
     final lookupValuesAsync = ref.watch(employeeAbsLookupValuesAsyncProvider);
     final isLoadingLookups = lookupValuesAsync.isLoading;
 
-    final globeIcon = _prefixIcon(context, lm.globe.path, isDark);
-
     final selectedGender = _valueByCode(demographics.genderCode, genderValues);
-    final selectedReligion = _valueByCode(demographics.religionCode, religionValues);
     final selectedMarital = _valueByCode(demographics.maritalStatusCode, maritalValues);
+    final selectedNationality = _valueByCode(demographics.nationality, nationalityValues);
+    final selectedReligion = _valueByCode(demographics.religionCode, religionValues);
 
     return Container(
       padding: EdgeInsets.all(18.w),
@@ -82,13 +80,14 @@ class DemographicsModule extends ConsumerWidget {
                 onChanged: isLoadingLookups ? null : (v) => demographicsNotifier.setGenderCode(v?.lookupValueCode),
               );
 
-              final nationalityField = DigifyTextField(
-                labelText: localizations.nationality,
+              final nationalityField = DigifySelectFieldWithLabel<AbsLookupValue>(
+                label: localizations.nationality,
                 isRequired: true,
-                prefixIcon: globeIcon,
-                hintText: localizations.hintNationality,
-                initialValue: demographics.nationality,
-                onChanged: (v) => demographicsNotifier.setNationality(v.isEmpty ? null : v),
+                hint: localizations.hintNationality,
+                items: nationalityValues,
+                itemLabelBuilder: (v) => v.lookupValueName,
+                value: selectedNationality,
+                onChanged: isLoadingLookups ? null : (v) => demographicsNotifier.setNationality(v?.lookupValueCode),
               );
 
               final maritalField = DigifySelectFieldWithLabel<AbsLookupValue>(
@@ -157,17 +156,5 @@ class DemographicsModule extends ConsumerWidget {
     } catch (_) {
       return null;
     }
-  }
-
-  Widget _prefixIcon(BuildContext context, String path, bool isDark) {
-    return Padding(
-      padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-      child: DigifyAsset(
-        assetPath: path,
-        width: 20,
-        height: 20,
-        color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
-      ),
-    );
   }
 }

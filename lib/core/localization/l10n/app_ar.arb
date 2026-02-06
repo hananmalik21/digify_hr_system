@@ -593,6 +593,8 @@
   "hintProbationPeriodDays": "أدخل الأيام",
   "hintEmploymentStatus": "اختر حالة التوظيف",
   "addEmployeeStepContentPlaceholder": "محتوى هذه الخطوة قريبًا.",
+  "addEmployeeFillRequiredFields": "يرجى ملء جميع الحقول المطلوبة.",
+  "addEmployeeCreatedSuccess": "تم إنشاء الموظف بنجاح.",
   "newHiresThisMonth": "الجدد هذا الشهر",
   "employeeStatDescriptionAll": "جميع الموظفين في المؤسسة",
   "employeeStatDescriptionActive": "نشط حاليًا",

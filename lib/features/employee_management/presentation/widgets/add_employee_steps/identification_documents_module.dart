@@ -4,19 +4,24 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class IdentificationDocumentsModule extends StatelessWidget {
+class IdentificationDocumentsModule extends ConsumerWidget {
   const IdentificationDocumentsModule({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
+    final demographics = ref.watch(addEmployeeDemographicsProvider);
+    final notifier = ref.read(addEmployeeDemographicsProvider.notifier);
+
     final documentIcon = Padding(
       padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
       child: DigifyAsset(
@@ -62,11 +67,15 @@ class IdentificationDocumentsModule extends StatelessWidget {
                 labelText: localizations.civilIdNumber,
                 prefixIcon: documentIcon,
                 hintText: localizations.hintCivilIdNumber,
+                initialValue: demographics.civilIdNumber,
+                onChanged: (v) => notifier.setCivilIdNumber(v.isEmpty ? null : v),
               );
               final passport = DigifyTextField(
                 labelText: localizations.passportNumber,
                 prefixIcon: documentIcon,
                 hintText: localizations.hintPassportNumber,
+                initialValue: demographics.passportNumber,
+                onChanged: (v) => notifier.setPassportNumber(v.isEmpty ? null : v),
               );
               if (useTwoColumns) {
                 return Row(

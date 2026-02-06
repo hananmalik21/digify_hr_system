@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_remote_data_source.dart';
 import 'package:digify_hr_system/features/employee_management/data/repositories/manage_employees_list_repository_impl.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +21,18 @@ final manageEmployeesListRepositoryProvider = Provider<ManageEmployeesListReposi
 
 class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   @override
-  ManageEmployeesListState build() => const ManageEmployeesListState();
+  ManageEmployeesListState build() {
+    ref.listen<int?>(manageEmployeesEnterpriseIdProvider, (previous, next) {
+      if (next != null && previous != null) {
+        loadPage(next, 1);
+      }
+    });
+    final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId != null) {
+      Future.microtask(() => loadPage(enterpriseId, 1));
+    }
+    return const ManageEmployeesListState();
+  }
 
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10}) async {
     state = state.copyWith(isLoading: true, error: null, lastEnterpriseId: enterpriseId, currentPage: page);

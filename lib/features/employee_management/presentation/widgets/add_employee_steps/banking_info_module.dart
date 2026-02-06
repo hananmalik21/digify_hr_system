@@ -4,12 +4,14 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class BankingInfoModule extends StatelessWidget {
+class BankingInfoModule extends ConsumerWidget {
   const BankingInfoModule({super.key});
 
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
@@ -25,24 +27,30 @@ class BankingInfoModule extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final state = ref.watch(addEmployeeBankingProvider);
+    final notifier = ref.read(addEmployeeBankingProvider.notifier);
     final em = Assets.icons.employeeManagement;
     final bankIcon = _prefixIcon(context, em.banking.path, isDark);
     final cardIcon = _prefixIcon(context, em.card.path, isDark);
 
-    final bankName = DigifyTextField(
+    final bankCodeField = DigifyTextField(
       labelText: localizations.bankName,
       isRequired: true,
       prefixIcon: bankIcon,
       hintText: localizations.hintBankName,
+      initialValue: state.bankCode ?? '',
+      onChanged: notifier.setBankCode,
     );
-    final accountNumber = DigifyTextField(
+    final accountNumberField = DigifyTextField(
       labelText: localizations.accountNumber,
       isRequired: true,
       prefixIcon: cardIcon,
       hintText: localizations.hintAccountNumber,
+      initialValue: state.accountNumber ?? '',
+      onChanged: notifier.setAccountNumber,
     );
     final iban = DigifyTextField(labelText: localizations.iban, prefixIcon: cardIcon, hintText: localizations.hintIban);
 
@@ -64,9 +72,9 @@ class BankingInfoModule extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: bankName),
+                    Expanded(child: bankCodeField),
                     Gap(14.w),
-                    Expanded(child: accountNumber),
+                    Expanded(child: accountNumberField),
                   ],
                 ),
                 iban,
@@ -76,7 +84,7 @@ class BankingInfoModule extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,
-            children: [bankName, accountNumber, iban],
+            children: [bankCodeField, accountNumberField, iban],
           );
         },
       ),

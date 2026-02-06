@@ -687,6 +687,8 @@
   "reviewProbation": "Probation",
   "reviewPermanent": "Permanent",
   "addEmployeeStepContentPlaceholder": "Content for this step coming soon.",
+  "addEmployeeFillRequiredFields": "Please fill all required fields.",
+  "addEmployeeCreatedSuccess": "Employee created successfully.",
   "newHiresThisMonth": "New This Month",
   "employeeStatDescriptionAll": "All employees in organization",
   "employeeStatDescriptionActive": "Currently active",
