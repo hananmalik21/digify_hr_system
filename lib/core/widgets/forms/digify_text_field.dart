@@ -241,9 +241,6 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
       );
     }
 
-    // Keep input at a fixed min height so layout doesn't shrink when error text appears.
-    const double singleLineMinHeight = 56;
-
     if (widget.labelText != null) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -275,18 +272,12 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
             ),
           ),
           SizedBox(height: 8.h),
-          ConstrainedBox(
-            constraints: BoxConstraints(minHeight: singleLineMinHeight.h),
-            child: field,
-          ),
+          field,
         ],
       );
     }
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: singleLineMinHeight.h),
-      child: field,
-    );
+    return field;
   }
 
   InputBorder _buildBorder(double radius, Color color, {double width = 1.0}) {

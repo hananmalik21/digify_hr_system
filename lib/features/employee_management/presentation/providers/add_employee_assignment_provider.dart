@@ -7,6 +7,15 @@ class AddEmployeeAssignmentState {
 
   const AddEmployeeAssignmentState({this.selectedUnitIds = const {}, this.orgUnitIdHex, this.workLocation});
 
+  bool isStepValid(Iterable<String> requiredLevelCodes) {
+    for (final code in requiredLevelCodes) {
+      final value = selectedUnitIds[code];
+      if (value == null || value.trim().isEmpty) return false;
+    }
+    final loc = workLocation?.trim() ?? '';
+    return loc.isNotEmpty;
+  }
+
   AddEmployeeAssignmentState copyWith({
     Map<String, String?>? selectedUnitIds,
     String? orgUnitIdHex,

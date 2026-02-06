@@ -21,6 +21,16 @@ class CreateEmployeeBasicInfoRequest {
   final Map<String, String?>? lookupCodesByTypeCode;
   final String? civilIdNumber;
   final String? passportNumber;
+  final String? workLocation;
+  final String? positionIdHex;
+  final DateTime? enterpriseHireDate;
+  final int? jobFamilyId;
+  final int? jobLevelId;
+  final int? gradeId;
+  final int? probationDays;
+  final String? contractTypeCode;
+  final String? employmentStatusCode;
+  final int? enterpriseId;
 
   const CreateEmployeeBasicInfoRequest({
     this.firstNameEn,
@@ -43,6 +53,16 @@ class CreateEmployeeBasicInfoRequest {
     this.lookupCodesByTypeCode,
     this.civilIdNumber,
     this.passportNumber,
+    this.workLocation,
+    this.positionIdHex,
+    this.enterpriseHireDate,
+    this.jobFamilyId,
+    this.jobLevelId,
+    this.gradeId,
+    this.probationDays,
+    this.contractTypeCode,
+    this.employmentStatusCode,
+    this.enterpriseId,
   });
 
   CreateEmployeeBasicInfoRequest copyWith({
@@ -86,6 +106,26 @@ class CreateEmployeeBasicInfoRequest {
     bool clearLookupCodesByTypeCode = false,
     bool clearCivilIdNumber = false,
     bool clearPassportNumber = false,
+    String? workLocation,
+    bool clearWorkLocation = false,
+    String? positionIdHex,
+    DateTime? enterpriseHireDate,
+    int? jobFamilyId,
+    int? jobLevelId,
+    int? gradeId,
+    int? probationDays,
+    String? contractTypeCode,
+    String? employmentStatusCode,
+    bool clearPositionIdHex = false,
+    bool clearEnterpriseHireDate = false,
+    bool clearJobFamilyId = false,
+    bool clearJobLevelId = false,
+    bool clearGradeId = false,
+    bool clearProbationDays = false,
+    bool clearContractTypeCode = false,
+    bool clearEmploymentStatusCode = false,
+    int? enterpriseId,
+    bool clearEnterpriseId = false,
   }) {
     return CreateEmployeeBasicInfoRequest(
       firstNameEn: clearFirstNameEn ? null : (firstNameEn ?? this.firstNameEn),
@@ -108,6 +148,16 @@ class CreateEmployeeBasicInfoRequest {
       lookupCodesByTypeCode: clearLookupCodesByTypeCode ? null : (lookupCodesByTypeCode ?? this.lookupCodesByTypeCode),
       civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
       passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
+      workLocation: clearWorkLocation ? null : (workLocation ?? this.workLocation),
+      positionIdHex: clearPositionIdHex ? null : (positionIdHex ?? this.positionIdHex),
+      enterpriseHireDate: clearEnterpriseHireDate ? null : (enterpriseHireDate ?? this.enterpriseHireDate),
+      jobFamilyId: clearJobFamilyId ? null : (jobFamilyId ?? this.jobFamilyId),
+      jobLevelId: clearJobLevelId ? null : (jobLevelId ?? this.jobLevelId),
+      gradeId: clearGradeId ? null : (gradeId ?? this.gradeId),
+      probationDays: clearProbationDays ? null : (probationDays ?? this.probationDays),
+      contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
+      employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
+      enterpriseId: clearEnterpriseId ? null : (enterpriseId ?? this.enterpriseId),
     );
   }
 
