@@ -73,6 +73,15 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
         'contract_type_code': request.contractTypeCode!.trim(),
       if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
+      if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
+        'basic_salary_kwd': request.basicSalaryKwd!.trim(),
+      if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
+        'housing_kwd': request.housingKwd!.trim(),
+      if (request.transportKwd != null && request.transportKwd!.trim().isNotEmpty)
+        'transport_kwd': request.transportKwd!.trim(),
+      if (request.foodKwd != null && request.foodKwd!.trim().isNotEmpty) 'food_kwd': request.foodKwd!.trim(),
+      if (request.mobileKwd != null && request.mobileKwd!.trim().isNotEmpty) 'mobile_kwd': request.mobileKwd!.trim(),
+      if (request.otherKwd != null && request.otherKwd!.trim().isNotEmpty) 'other_kwd': request.otherKwd!.trim(),
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     final formData = FormData.fromMap(map);

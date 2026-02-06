@@ -36,6 +36,19 @@ class AddEmployeeCompensationState {
   String get monthlyTotalFormatted => totalMonthly.toStringAsFixed(3);
   String get annualTotalFormatted => totalAnnual.toStringAsFixed(3);
 
+  static bool _isFilled(String? value) {
+    final t = value?.trim();
+    return t != null && t.isNotEmpty;
+  }
+
+  bool get isStepValid =>
+      _isFilled(basicSalaryKwd) &&
+      _isFilled(housingKwd) &&
+      _isFilled(transportKwd) &&
+      _isFilled(foodKwd) &&
+      _isFilled(mobileKwd) &&
+      _isFilled(otherKwd);
+
   AddEmployeeCompensationState copyWith({
     String? basicSalaryKwd,
     String? housingKwd,

@@ -38,6 +38,7 @@ class CompensationAllowancesModule extends ConsumerWidget {
 
     final housing = DigifyTextField(
       labelText: localizations.housingAllowanceKwd,
+      isRequired: true,
       prefixIcon: dollarIcon,
       hintText: hint,
       keyboardType: FieldFormat.currency,
@@ -47,6 +48,7 @@ class CompensationAllowancesModule extends ConsumerWidget {
     );
     final transportation = DigifyTextField(
       labelText: localizations.transportationKwd,
+      isRequired: true,
       prefixIcon: dollarIcon,
       hintText: hint,
       keyboardType: FieldFormat.currency,
@@ -56,6 +58,7 @@ class CompensationAllowancesModule extends ConsumerWidget {
     );
     final food = DigifyTextField(
       labelText: localizations.foodAllowanceKwd,
+      isRequired: true,
       prefixIcon: dollarIcon,
       hintText: hint,
       keyboardType: FieldFormat.currency,
@@ -65,6 +68,7 @@ class CompensationAllowancesModule extends ConsumerWidget {
     );
     final mobile = DigifyTextField(
       labelText: localizations.mobileAllowanceKwd,
+      isRequired: true,
       prefixIcon: dollarIcon,
       hintText: hint,
       keyboardType: FieldFormat.currency,
@@ -74,6 +78,7 @@ class CompensationAllowancesModule extends ConsumerWidget {
     );
     final other = DigifyTextField(
       labelText: localizations.otherAllowancesKwd,
+      isRequired: true,
       prefixIcon: dollarIcon,
       hintText: hint,
       keyboardType: FieldFormat.currency,
