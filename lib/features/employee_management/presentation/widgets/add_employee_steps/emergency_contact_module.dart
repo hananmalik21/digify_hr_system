@@ -77,6 +77,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 hintText: localizations.hintContactName,
                 initialValue: addressState.contactName ?? '',
                 onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setContactName(value),
+                isRequired: true,
               );
               final relationship = DigifyTextField(
                 labelText: localizations.relationship,
@@ -84,6 +85,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 hintText: localizations.hintRelationship,
                 initialValue: addressState.emergRelationship ?? '',
                 onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergRelationship(value),
+                isRequired: true,
               );
               final phoneNumber = DigifyTextField(
                 labelText: localizations.phoneNumber,
@@ -92,6 +94,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 hintText: localizations.hintPhone,
                 initialValue: addressState.emergPhone ?? '',
                 onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergPhone(value),
+                isRequired: true,
               );
               final emailAddress = DigifyTextField(
                 labelText: localizations.emailAddress,
@@ -100,6 +103,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 hintText: localizations.hintEmail,
                 initialValue: addressState.emergEmail ?? '',
                 onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergEmail(value),
+                isRequired: true,
               );
               if (useTwoColumns) {
                 return Column(
