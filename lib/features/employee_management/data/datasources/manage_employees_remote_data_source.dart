@@ -54,8 +54,24 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.orgUnitIdHex != null && request.orgUnitIdHex!.isNotEmpty)
         'org_unit_id_hex': request.orgUnitIdHex!.trim(),
       'work_location_id': 1,
+      'civil_id_number': request.civilIdNumber?.trim() ?? '',
+      'passport_number': request.passportNumber?.trim() ?? '',
+      ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     final formData = FormData.fromMap(map);
     return apiClient.postMultipart(ApiEndpoints.createEmployee, formData: formData);
+  }
+
+  static Map<String, dynamic> _lookupCodesToFormFields(Map<String, String?>? lookupCodesByTypeCode) {
+    if (lookupCodesByTypeCode == null || lookupCodesByTypeCode.isEmpty) return {};
+    final result = <String, dynamic>{};
+    for (final entry in lookupCodesByTypeCode.entries) {
+      final value = entry.value?.trim();
+      if (value != null && value.isNotEmpty) {
+        final apiKey = CreateEmployeeBasicInfoRequest.typeCodeToApiKey(entry.key);
+        result[apiKey] = value;
+      }
+    }
+    return result;
   }
 }

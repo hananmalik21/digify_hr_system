@@ -18,6 +18,9 @@ class CreateEmployeeBasicInfoRequest {
   final String? contactName;
   final int? workScheduleId;
   final String? orgUnitIdHex;
+  final Map<String, String?>? lookupCodesByTypeCode;
+  final String? civilIdNumber;
+  final String? passportNumber;
 
   const CreateEmployeeBasicInfoRequest({
     this.firstNameEn,
@@ -37,6 +40,9 @@ class CreateEmployeeBasicInfoRequest {
     this.contactName,
     this.workScheduleId,
     this.orgUnitIdHex,
+    this.lookupCodesByTypeCode,
+    this.civilIdNumber,
+    this.passportNumber,
   });
 
   CreateEmployeeBasicInfoRequest copyWith({
@@ -74,6 +80,12 @@ class CreateEmployeeBasicInfoRequest {
     bool clearContactName = false,
     bool clearWorkScheduleId = false,
     bool clearOrgUnitIdHex = false,
+    Map<String, String?>? lookupCodesByTypeCode,
+    String? civilIdNumber,
+    String? passportNumber,
+    bool clearLookupCodesByTypeCode = false,
+    bool clearCivilIdNumber = false,
+    bool clearPassportNumber = false,
   }) {
     return CreateEmployeeBasicInfoRequest(
       firstNameEn: clearFirstNameEn ? null : (firstNameEn ?? this.firstNameEn),
@@ -93,8 +105,13 @@ class CreateEmployeeBasicInfoRequest {
       contactName: clearContactName ? null : (contactName ?? this.contactName),
       workScheduleId: clearWorkScheduleId ? null : (workScheduleId ?? this.workScheduleId),
       orgUnitIdHex: clearOrgUnitIdHex ? null : (orgUnitIdHex ?? this.orgUnitIdHex),
+      lookupCodesByTypeCode: clearLookupCodesByTypeCode ? null : (lookupCodesByTypeCode ?? this.lookupCodesByTypeCode),
+      civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
+      passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
     );
   }
+
+  static String typeCodeToApiKey(String typeCode) => '${typeCode.toLowerCase()}_code';
 
   static String formatDateOfBirth(DateTime d) {
     final y = d.year;

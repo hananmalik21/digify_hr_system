@@ -81,6 +81,7 @@ class AddEmployeeDialogFlow {
     final addressState = _ref.read(addEmployeeAddressProvider);
     final workScheduleState = _ref.read(addEmployeeWorkScheduleProvider);
     final assignmentState = _ref.read(addEmployeeAssignmentProvider);
+    final demographicsState = _ref.read(addEmployeeDemographicsProvider);
     final request = basicState.form.copyWith(
       emergAddress: _emptyToNull(addressState.emergAddress),
       emergPhone: _emptyToNull(addressState.emergPhone),
@@ -89,6 +90,9 @@ class AddEmployeeDialogFlow {
       contactName: _emptyToNull(addressState.contactName),
       workScheduleId: workScheduleState.workScheduleId,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
+      lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,
+      civilIdNumber: _emptyToNull(demographicsState.civilIdNumber),
+      passportNumber: _emptyToNull(demographicsState.passportNumber),
     );
     final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
     if (!context.mounted) return;
