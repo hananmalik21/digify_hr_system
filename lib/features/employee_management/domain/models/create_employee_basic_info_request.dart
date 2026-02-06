@@ -1,3 +1,5 @@
+import 'package:digify_hr_system/core/utils/form_validators.dart';
+
 class CreateEmployeeBasicInfoRequest {
   final String? firstNameEn;
   final String? lastNameEn;
@@ -101,12 +103,16 @@ class CreateEmployeeBasicInfoRequest {
     return '$y-$m-$day';
   }
 
+  bool get isEmailValid => FormValidators.email(email) == null;
+
+  bool get isPhoneValid => FormValidators.phone(phoneNumber) == null;
+
   bool get isStep1Valid =>
       (firstNameEn?.trim().isNotEmpty ?? false) &&
       (lastNameEn?.trim().isNotEmpty ?? false) &&
       (firstNameAr?.trim().isNotEmpty ?? false) &&
       (lastNameAr?.trim().isNotEmpty ?? false) &&
-      (email?.trim().isNotEmpty ?? false) &&
-      (phoneNumber?.trim().isNotEmpty ?? false) &&
+      isEmailValid &&
+      isPhoneValid &&
       dateOfBirth != null;
 }

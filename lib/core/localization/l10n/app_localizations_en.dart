@@ -135,6 +135,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'Please enter a valid email';
 
   @override
+  String get invalidPhone => 'Please enter a valid phone number';
+
+  @override
   String get passwordTooShort => 'Password must be at least 6 characters';
 
   @override
@@ -1483,6 +1486,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get middleName => 'Middle Name';
 
   @override
+  String get middleNameArabic => 'Middle Name (Arabic)';
+
+  @override
   String get dateOfBirth => 'Date of Birth';
 
   @override
@@ -1495,25 +1501,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastNameArabic => 'Last Name (Arabic)';
 
   @override
-  String get hintFirstName => 'Enter first name';
+  String get hintFirstName => 'e.g. John';
 
   @override
-  String get hintLastName => 'Enter last name';
+  String get hintLastName => 'e.g. Smith';
 
   @override
-  String get hintMiddleName => 'Enter middle name';
+  String get hintMiddleName => 'e.g. Robert';
 
   @override
-  String get hintMobileNumber => 'Enter mobile number';
+  String get hintMiddleNameArabic => 'e.g. محمد';
 
   @override
-  String get hintDateOfBirth => 'Select date of birth';
+  String get hintMobileNumber => 'e.g. +965 5555 5555';
 
   @override
-  String get hintFirstNameArabic => 'Enter first name';
+  String get hintDateOfBirth => 'e.g. 15/06/1990';
 
   @override
-  String get hintLastNameArabic => 'Enter last name';
+  String get hintFirstNameArabic => 'e.g. جون';
+
+  @override
+  String get hintLastNameArabic => 'e.g. سميث';
 
   @override
   String get demographicsAndIdentity => 'Demographics & Identity';
@@ -2528,10 +2537,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintZipCode => 'Enter zip code';
 
   @override
-  String get hintPhone => 'Enter phone number';
+  String get hintPhone => 'e.g. +965 2222 2222';
 
   @override
-  String get hintEmail => 'Enter email address';
+  String get hintEmail => 'e.g. john.smith@company.com';
 
   @override
   String get hintWebsite => 'Enter website URL';
