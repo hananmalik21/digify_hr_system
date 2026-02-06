@@ -15,6 +15,15 @@ class AddEmployeeAddressState {
     this.contactName,
   });
 
+  bool get isStepValid {
+    final a = emergAddress?.trim() ?? '';
+    final p = emergPhone?.trim() ?? '';
+    final e = emergEmail?.trim() ?? '';
+    final r = emergRelationship?.trim() ?? '';
+    final c = contactName?.trim() ?? '';
+    return a.isNotEmpty && p.isNotEmpty && e.isNotEmpty && r.isNotEmpty && c.isNotEmpty;
+  }
+
   AddEmployeeAddressState copyWith({
     String? emergAddress,
     String? emergPhone,

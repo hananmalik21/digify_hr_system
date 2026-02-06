@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
@@ -67,6 +68,18 @@ class AddEmployeeDialogFlow {
       final orderedTypes = typesAsync.valueOrNull ?? [];
       final requiredTypeCodes = orderedTypes.map((t) => t.typeCode);
       if (!demographics.isStepValid(requiredTypeCodes)) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
+    if (stepperState.currentStepIndex == 2) {
+      final addressState = _ref.read(addEmployeeAddressProvider);
+      if (FormValidators.email(addressState.emergEmail) != null) {
+        ToastService.error(context, localizations.invalidEmail);
+        return;
+      }
+      if (!addressState.isStepValid) {
         ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
         return;
       }

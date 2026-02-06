@@ -63,6 +63,7 @@ class ResidentialAddressModule extends ConsumerWidget {
             hintText: localizations.hintAddress,
             initialValue: addressState.emergAddress ?? '',
             onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergAddress(value),
+            isRequired: true,
           ),
         ],
       ),
