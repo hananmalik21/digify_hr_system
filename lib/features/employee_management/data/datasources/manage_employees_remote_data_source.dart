@@ -51,11 +51,28 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'relationship': request.emergRelationship?.trim() ?? '',
       'contact_name': request.contactName?.trim() ?? '',
       if (request.workScheduleId != null) 'work_schedule_id': request.workScheduleId!,
+      if (request.enterpriseId != null) 'enterprise_id': request.enterpriseId!,
       if (request.orgUnitIdHex != null && request.orgUnitIdHex!.isNotEmpty)
         'org_unit_id_hex': request.orgUnitIdHex!.trim(),
-      'work_location_id': 1,
+      'address_line1': request.workLocation?.trim() ?? '',
+      'address_line2': request.workLocation?.trim() ?? '',
+      'city': request.workLocation?.trim() ?? '',
+      'area': request.workLocation?.trim() ?? '',
+      'country_code': request.workLocation?.trim() ?? '',
       'civil_id_number': request.civilIdNumber?.trim() ?? '',
       'passport_number': request.passportNumber?.trim() ?? '',
+      if (request.positionIdHex != null && request.positionIdHex!.isNotEmpty)
+        'position_id_hex': request.positionIdHex!.trim(),
+      if (request.enterpriseHireDate != null)
+        'enterprise_hire_date': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.enterpriseHireDate!),
+      if (request.jobFamilyId != null) 'job_family_id': request.jobFamilyId!,
+      if (request.jobLevelId != null) 'job_level_id': request.jobLevelId!,
+      if (request.gradeId != null) 'grade_id': request.gradeId!,
+      if (request.probationDays != null) 'probation_days': request.probationDays!,
+      if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
+        'contract_type_code': request.contractTypeCode!.trim(),
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
+        'employment_status': request.employmentStatusCode!.trim(),
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     final formData = FormData.fromMap(map);

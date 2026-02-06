@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
@@ -11,7 +12,6 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/org_
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_skeleton.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +56,28 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
           children: [
             _ModuleHeader(theme: theme),
             Gap(18.h),
-            const EnterpriseStructureSkeleton(),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 32.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppLoadingIndicator(
+                      type: LoadingType.circle,
+                      color: theme.isDark ? AppColors.textSecondaryDark : AppColors.primary,
+                      size: 32.r,
+                    ),
+                    Gap(12.h),
+                    Text(
+                      AppLocalizations.of(theme)!.pleaseWait,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.isDark ? AppColors.textSecondaryDark : AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -242,6 +263,7 @@ class _WorkLocationSection extends StatelessWidget {
       hintText: l10n.hintWorkLocation,
       initialValue: initialValue,
       onChanged: onChanged,
+      isRequired: true,
     );
   }
 }

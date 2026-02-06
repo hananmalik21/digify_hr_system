@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
@@ -25,14 +26,8 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
     final jobState = ref.watch(addEmployeeJobEmploymentProvider);
-    final documentIcon = _prefixIcon(context, em.document.path, isDark);
     final personIcon = _prefixIcon(context, Assets.icons.userIcon.path, isDark);
     final clockIcon = _prefixIcon(context, Assets.icons.clockIcon.path, isDark);
-    final checkIcon = _prefixIcon(context, Assets.icons.checkIconGreen.path, isDark);
-    final hashIcon = Padding(
-      padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-      child: Icon(Icons.tag, size: 20.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
-    );
 
     return Container(
       padding: EdgeInsets.all(18.w),
@@ -66,31 +61,21 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
             builder: (context, constraints) {
               final useTwoColumns = constraints.maxWidth > 500;
               final leftColumn = [
-                ColoredBox(
-                  color: Colors.blue,
-                  child: DigifyTextField(
-                    labelText: localizations.employeeNumber,
-                    prefixIcon: hashIcon,
-                    hintText: localizations.hintEmployeeNumber,
-                  ),
-                ),
-                ColoredBox(
-                  color: Colors.red,
-                  child: JobEmploymentPickerField(
-                    label: localizations.jobFamily,
-                    isRequired: true,
-                    value: jobState.selectedJobFamily?.nameEnglish,
-                    hint: localizations.hintGradeLevel,
-                    onTap: () async {
-                      final selected = await JobFamilySelectionDialog.show(context);
-                      if (selected != null && context.mounted) {
-                        ref.read(addEmployeeJobEmploymentProvider.notifier).setJobFamily(selected);
-                      }
-                    },
-                  ),
+                JobEmploymentPickerField(
+                  label: localizations.jobFamily,
+                  isRequired: true,
+                  value: jobState.selectedJobFamily?.nameEnglish,
+                  hint: localizations.hintGradeLevel,
+                  onTap: () async {
+                    final selected = await JobFamilySelectionDialog.show(context);
+                    if (selected != null && context.mounted) {
+                      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobFamily(selected);
+                    }
+                  },
                 ),
                 JobEmploymentPickerField(
                   label: localizations.gradeLevel,
+                  isRequired: true,
                   value: jobState.selectedGrade?.gradeLabel,
                   hint: localizations.hintGradeLevel,
                   onTap: () async {
@@ -100,16 +85,28 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                     }
                   },
                 ),
-                DigifyTextField(
-                  labelText: localizations.contractType,
+                DigifySelectFieldWithLabel<String>(
+                  label: localizations.contractType,
                   isRequired: true,
-                  prefixIcon: documentIcon,
-                  hintText: localizations.hintContractType,
+                  hint: localizations.hintContractType,
+                  items: const ['PERMANENT', 'TEMPORARY'],
+                  itemLabelBuilder: (code) => code == 'PERMANENT' ? 'Permanent' : 'Temporary',
+                  value: jobState.contractTypeCode,
+                  onChanged: (v) => ref.read(addEmployeeJobEmploymentProvider.notifier).setContractTypeCode(v),
                 ),
                 DigifyTextField(
                   labelText: localizations.reportingTo,
                   prefixIcon: personIcon,
                   hintText: localizations.hintReportingTo,
+                ),
+                DigifySelectFieldWithLabel<String>(
+                  label: localizations.employmentStatus,
+                  isRequired: true,
+                  hint: localizations.hintEmploymentStatus,
+                  items: const ['ACTIVE', 'INACTIVE'],
+                  itemLabelBuilder: (code) => code == 'ACTIVE' ? 'Active' : 'Inactive',
+                  value: jobState.employmentStatusCode,
+                  onChanged: (v) => ref.read(addEmployeeJobEmploymentProvider.notifier).setEmploymentStatusCode(v),
                 ),
               ];
               final rightColumn = [
@@ -141,17 +138,20 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   label: localizations.enterpriseHireDate,
                   isRequired: true,
                   hintText: localizations.hintEnterpriseHireDate,
+                  initialDate: jobState.enterpriseHireDate,
+                  onDateSelected: (d) => ref.read(addEmployeeJobEmploymentProvider.notifier).setEnterpriseHireDate(d),
                 ),
                 DigifyTextField(
                   labelText: localizations.probationPeriodDays,
                   keyboardType: TextInputType.number,
                   prefixIcon: clockIcon,
                   hintText: localizations.hintProbationPeriodDays,
-                ),
-                DigifyTextField(
-                  labelText: localizations.employmentStatus,
-                  prefixIcon: checkIcon,
-                  hintText: localizations.hintEmploymentStatus,
+                  isRequired: true,
+                  initialValue: jobState.probationDays?.toString(),
+                  onChanged: (v) {
+                    final n = int.tryParse(v);
+                    ref.read(addEmployeeJobEmploymentProvider.notifier).setProbationDays(n);
+                  },
                 ),
               ];
               if (useTwoColumns) {
@@ -163,7 +163,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                     ),
                     Gap(14.w),
                     Expanded(
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 16.h, children: rightColumn),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 12.h, children: rightColumn),
                     ),
                   ],
                 );

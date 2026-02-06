@@ -5,11 +5,12 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,6 +86,21 @@ class AddEmployeeDialogFlow {
       }
     }
 
+    if (stepperState.currentStepIndex == 3) {
+      final assignmentState = _ref.read(addEmployeeAssignmentProvider);
+      final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
+      final requiredLevelCodes = enterpriseId != null
+          ? _ref
+                .read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier)
+                .activeLevels
+                .map((l) => l.levelCode)
+          : <String>[];
+      if (!assignmentState.isStepValid(requiredLevelCodes)) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
     _ref.read(addEmployeeStepperProvider.notifier).nextStep();
     logAddEmployeeState(_ref);
   }
@@ -95,6 +111,8 @@ class AddEmployeeDialogFlow {
     final workScheduleState = _ref.read(addEmployeeWorkScheduleProvider);
     final assignmentState = _ref.read(addEmployeeAssignmentProvider);
     final demographicsState = _ref.read(addEmployeeDemographicsProvider);
+    final jobState = _ref.read(addEmployeeJobEmploymentProvider);
+    final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
     final request = basicState.form.copyWith(
       emergAddress: _emptyToNull(addressState.emergAddress),
       emergPhone: _emptyToNull(addressState.emergPhone),
@@ -103,9 +121,21 @@ class AddEmployeeDialogFlow {
       contactName: _emptyToNull(addressState.contactName),
       workScheduleId: workScheduleState.workScheduleId,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
+      workLocation: _emptyToNull(assignmentState.workLocation),
       lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,
       civilIdNumber: _emptyToNull(demographicsState.civilIdNumber),
       passportNumber: _emptyToNull(demographicsState.passportNumber),
+      positionIdHex: jobState.selectedPosition?.id != null && jobState.selectedPosition!.id.isNotEmpty
+          ? jobState.selectedPosition!.id
+          : null,
+      enterpriseHireDate: jobState.enterpriseHireDate,
+      jobFamilyId: jobState.selectedJobFamily?.id,
+      jobLevelId: jobState.selectedJobLevel?.id,
+      gradeId: jobState.selectedGrade?.id,
+      probationDays: jobState.probationDays,
+      contractTypeCode: _emptyToNull(jobState.contractTypeCode),
+      employmentStatusCode: _emptyToNull(jobState.employmentStatusCode),
+      enterpriseId: enterpriseId,
     );
     final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
     if (!context.mounted) return;
