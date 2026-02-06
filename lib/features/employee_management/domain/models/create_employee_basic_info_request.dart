@@ -31,6 +31,12 @@ class CreateEmployeeBasicInfoRequest {
   final String? contractTypeCode;
   final String? employmentStatusCode;
   final int? enterpriseId;
+  final String? basicSalaryKwd;
+  final String? housingKwd;
+  final String? transportKwd;
+  final String? foodKwd;
+  final String? mobileKwd;
+  final String? otherKwd;
 
   const CreateEmployeeBasicInfoRequest({
     this.firstNameEn,
@@ -63,6 +69,12 @@ class CreateEmployeeBasicInfoRequest {
     this.contractTypeCode,
     this.employmentStatusCode,
     this.enterpriseId,
+    this.basicSalaryKwd,
+    this.housingKwd,
+    this.transportKwd,
+    this.foodKwd,
+    this.mobileKwd,
+    this.otherKwd,
   });
 
   CreateEmployeeBasicInfoRequest copyWith({
@@ -126,6 +138,18 @@ class CreateEmployeeBasicInfoRequest {
     bool clearEmploymentStatusCode = false,
     int? enterpriseId,
     bool clearEnterpriseId = false,
+    String? basicSalaryKwd,
+    String? housingKwd,
+    String? transportKwd,
+    String? foodKwd,
+    String? mobileKwd,
+    String? otherKwd,
+    bool clearBasicSalaryKwd = false,
+    bool clearHousingKwd = false,
+    bool clearTransportKwd = false,
+    bool clearFoodKwd = false,
+    bool clearMobileKwd = false,
+    bool clearOtherKwd = false,
   }) {
     return CreateEmployeeBasicInfoRequest(
       firstNameEn: clearFirstNameEn ? null : (firstNameEn ?? this.firstNameEn),
@@ -158,6 +182,12 @@ class CreateEmployeeBasicInfoRequest {
       contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
       employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
       enterpriseId: clearEnterpriseId ? null : (enterpriseId ?? this.enterpriseId),
+      basicSalaryKwd: clearBasicSalaryKwd ? null : (basicSalaryKwd ?? this.basicSalaryKwd),
+      housingKwd: clearHousingKwd ? null : (housingKwd ?? this.housingKwd),
+      transportKwd: clearTransportKwd ? null : (transportKwd ?? this.transportKwd),
+      foodKwd: clearFoodKwd ? null : (foodKwd ?? this.foodKwd),
+      mobileKwd: clearMobileKwd ? null : (mobileKwd ?? this.mobileKwd),
+      otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
     );
   }
 

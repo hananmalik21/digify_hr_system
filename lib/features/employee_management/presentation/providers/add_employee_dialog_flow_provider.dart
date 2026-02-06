@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
@@ -27,6 +28,7 @@ class AddEmployeeDialogFlow {
     _ref.read(addEmployeeWorkScheduleProvider.notifier).reset();
     _ref.read(addEmployeeAssignmentProvider.notifier).reset();
     _ref.read(addEmployeeJobEmploymentProvider.notifier).reset();
+    _ref.read(addEmployeeCompensationProvider.notifier).reset();
   }
 
   void close(BuildContext context) {
@@ -101,18 +103,33 @@ class AddEmployeeDialogFlow {
       }
     }
 
+    if (stepperState.currentStepIndex == 5) {
+      final compensationState = _ref.read(addEmployeeCompensationProvider);
+      if (!compensationState.isStepValid) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
     _ref.read(addEmployeeStepperProvider.notifier).nextStep();
     logAddEmployeeState(_ref);
   }
 
   Future<void> saveAndClose(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     final basicState = _ref.read(addEmployeeBasicInfoProvider);
     final addressState = _ref.read(addEmployeeAddressProvider);
     final workScheduleState = _ref.read(addEmployeeWorkScheduleProvider);
     final assignmentState = _ref.read(addEmployeeAssignmentProvider);
     final demographicsState = _ref.read(addEmployeeDemographicsProvider);
     final jobState = _ref.read(addEmployeeJobEmploymentProvider);
+    final compensationState = _ref.read(addEmployeeCompensationProvider);
     final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
+
+    if (!compensationState.isStepValid) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
     final request = basicState.form.copyWith(
       emergAddress: _emptyToNull(addressState.emergAddress),
       emergPhone: _emptyToNull(addressState.emergPhone),
@@ -136,6 +153,12 @@ class AddEmployeeDialogFlow {
       contractTypeCode: _emptyToNull(jobState.contractTypeCode),
       employmentStatusCode: _emptyToNull(jobState.employmentStatusCode),
       enterpriseId: enterpriseId,
+      basicSalaryKwd: _emptyToNull(compensationState.basicSalaryKwd),
+      housingKwd: _emptyToNull(compensationState.housingKwd),
+      transportKwd: _emptyToNull(compensationState.transportKwd),
+      foodKwd: _emptyToNull(compensationState.foodKwd),
+      mobileKwd: _emptyToNull(compensationState.mobileKwd),
+      otherKwd: _emptyToNull(compensationState.otherKwd),
     );
     final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
     if (!context.mounted) return;
