@@ -5,18 +5,23 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class AddEmployeeBasicInfoForm extends StatelessWidget {
+class AddEmployeeBasicInfoForm extends ConsumerWidget {
   const AddEmployeeBasicInfoForm({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final state = ref.watch(addEmployeeBasicInfoProvider);
+    final notifier = ref.read(addEmployeeBasicInfoProvider.notifier);
 
     final personIcon = _buildPrefixIcon(
       context,
@@ -46,23 +51,39 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
       ),
     );
 
+    final form = state.form;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final useTwoColumns = constraints.maxWidth > 500;
-        final leftFields = _buildLeftColumn(localizations, personIcon, emailIcon, phoneIcon);
-        final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon);
+        final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, phoneIcon, form, notifier);
+        final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon, form, notifier);
 
-        if (useTwoColumns) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Column(children: leftFields)),
-              Gap(24.w),
-              Expanded(child: Column(children: rightFields)),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (state.submitError != null) ...[
+              Padding(
+                padding: EdgeInsets.only(bottom: 12.h),
+                child: Text(
+                  state.submitError!,
+                  style: TextStyle(fontSize: 13.sp, color: AppColors.error),
+                ),
+              ),
             ],
-          );
-        }
-        return Column(children: [...leftFields, ...rightFields]);
+            if (useTwoColumns)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: Column(children: leftFields)),
+                  Gap(24.w),
+                  Expanded(child: Column(children: rightFields)),
+                ],
+              )
+            else
+              Column(children: [...leftFields, ...rightFields]),
+          ],
+        );
       },
     );
   }
@@ -74,18 +95,41 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildLeftColumn(AppLocalizations l10n, Widget personIcon, Widget emailIcon, Widget phoneIcon) {
+  List<Widget> _buildLeftColumn(
+    BuildContext context,
+    AppLocalizations l10n,
+    Widget personIcon,
+    Widget emailIcon,
+    Widget phoneIcon,
+    CreateEmployeeBasicInfoRequest form,
+    AddEmployeeBasicInfoNotifier notifier,
+  ) {
     return [
       DigifyTextField(
         labelText: l10n.firstName,
         isRequired: true,
         prefixIcon: personIcon,
         hintText: l10n.hintFirstName,
+        initialValue: form.firstNameEn,
+        onChanged: notifier.setFirstNameEn,
       ),
       Gap(16.h),
-      DigifyTextField(labelText: l10n.lastName, isRequired: true, prefixIcon: personIcon, hintText: l10n.hintLastName),
+      DigifyTextField(
+        labelText: l10n.lastName,
+        isRequired: true,
+        prefixIcon: personIcon,
+        hintText: l10n.hintLastName,
+        initialValue: form.lastNameEn,
+        onChanged: notifier.setLastNameEn,
+      ),
       Gap(16.h),
-      DigifyTextField(labelText: l10n.middleName, prefixIcon: personIcon, hintText: l10n.hintMiddleName),
+      DigifyTextField(
+        labelText: l10n.middleName,
+        prefixIcon: personIcon,
+        hintText: l10n.hintMiddleName,
+        initialValue: form.middleNameEn,
+        onChanged: notifier.setMiddleNameEn,
+      ),
       Gap(16.h),
       DigifyTextField(
         labelText: l10n.emailAddress,
@@ -93,6 +137,8 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         keyboardType: TextInputType.emailAddress,
         prefixIcon: emailIcon,
         hintText: l10n.hintEmail,
+        initialValue: form.email,
+        onChanged: notifier.setEmail,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -100,13 +146,28 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         keyboardType: TextInputType.phone,
         prefixIcon: phoneIcon,
         hintText: l10n.hintMobileNumber,
+        initialValue: form.mobileNumber,
+        onChanged: notifier.setMobileNumber,
       ),
     ];
   }
 
-  List<Widget> _buildRightColumn(BuildContext context, AppLocalizations l10n, Widget personIcon, Widget phoneIcon) {
+  List<Widget> _buildRightColumn(
+    BuildContext context,
+    AppLocalizations l10n,
+    Widget personIcon,
+    Widget phoneIcon,
+    CreateEmployeeBasicInfoRequest form,
+    AddEmployeeBasicInfoNotifier notifier,
+  ) {
     return [
-      DigifyTextField(labelText: l10n.middleName, prefixIcon: personIcon, hintText: l10n.hintMiddleName),
+      DigifyTextField(
+        labelText: l10n.middleName,
+        prefixIcon: personIcon,
+        hintText: l10n.hintMiddleName,
+        initialValue: form.middleNameAr,
+        onChanged: notifier.setMiddleNameAr,
+      ),
       Gap(16.h),
       DigifyTextField(
         labelText: l10n.firstNameArabic,
@@ -114,6 +175,8 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         prefixIcon: personIcon,
         hintText: l10n.hintFirstNameArabic,
         textDirection: ui.TextDirection.rtl,
+        initialValue: form.firstNameAr,
+        onChanged: notifier.setFirstNameAr,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -122,6 +185,8 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         prefixIcon: personIcon,
         hintText: l10n.hintLastNameArabic,
         textDirection: ui.TextDirection.rtl,
+        initialValue: form.lastNameAr,
+        onChanged: notifier.setLastNameAr,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -130,6 +195,8 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         keyboardType: TextInputType.phone,
         prefixIcon: phoneIcon,
         hintText: l10n.hintPhone,
+        initialValue: form.phoneNumber,
+        onChanged: notifier.setPhoneNumber,
       ),
       Gap(16.h),
       DigifyDateField(
@@ -137,6 +204,8 @@ class AddEmployeeBasicInfoForm extends StatelessWidget {
         hintText: l10n.hintDateOfBirth,
         isRequired: true,
         firstDate: DateTime(1900),
+        initialDate: form.dateOfBirth,
+        onDateSelected: notifier.setDateOfBirth,
       ),
     ];
   }

@@ -2,18 +2,20 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CompensationTotalSummaryModule extends StatelessWidget {
-  const CompensationTotalSummaryModule({super.key, this.monthlyTotal = '0.000', this.annualTotal = '0.000'});
-
-  final String monthlyTotal;
-  final String annualTotal;
+class CompensationTotalSummaryModule extends ConsumerWidget {
+  const CompensationTotalSummaryModule({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(addEmployeeCompensationProvider);
+    final monthlyTotal = state.monthlyTotalFormatted;
+    final annualTotal = state.annualTotalFormatted;
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final summaryBg = isDark ? AppColors.primary.withValues(alpha: 0.2) : AppColors.infoBg;

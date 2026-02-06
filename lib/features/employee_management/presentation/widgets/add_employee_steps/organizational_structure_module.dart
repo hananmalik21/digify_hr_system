@@ -4,21 +4,161 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_skeleton.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class OrganizationalStructureModule extends StatelessWidget {
+class OrganizationalStructureModule extends ConsumerStatefulWidget {
   const OrganizationalStructureModule({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final isDark = context.isDark;
-    final searchIcon = _prefixIcon(context, Assets.icons.searchIcon.path, isDark);
-    final locationIcon = _prefixIcon(context, Assets.icons.locationPinIcon.path, isDark);
+  ConsumerState<OrganizationalStructureModule> createState() => _OrganizationalStructureModuleState();
+}
 
+class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalStructureModule> {
+  StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState>? _cachedSelectionProvider;
+  String? _cachedStructureId;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    final orgState = enterpriseId != null ? ref.watch(enterpriseOrgStructureNotifierProvider(enterpriseId)) : null;
+
+    if (enterpriseId == null) {
+      return _AssignmentCard(
+        isDark: theme.isDark,
+        child: _MessageContent(
+          message: AppLocalizations.of(theme)!.organizationalStructure,
+          isDark: theme.isDark,
+          textTheme: theme.textTheme,
+        ),
+      );
+    }
+
+    _ensureOrgStructureLoaded(enterpriseId, orgState);
+
+    if (orgState?.isLoading ?? true) {
+      return _AssignmentCard(
+        isDark: theme.isDark,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _ModuleHeader(theme: theme),
+            Gap(18.h),
+            const EnterpriseStructureSkeleton(),
+          ],
+        ),
+      );
+    }
+
+    if (orgState?.error != null) {
+      return _AssignmentCard(
+        isDark: theme.isDark,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _ModuleHeader(theme: theme),
+            Gap(18.h),
+            Text(
+              orgState!.error!,
+              style: TextStyle(color: AppColors.error, fontSize: 12.sp),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final activeLevels = orgState?.orgStructure?.activeLevels ?? [];
+    if (activeLevels.isEmpty) {
+      return _AssignmentCard(
+        isDark: theme.isDark,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _ModuleHeader(theme: theme),
+            Gap(18.h),
+            _MessageContent(
+              message: 'No organizational structure available for this enterprise.',
+              isDark: theme.isDark,
+              textTheme: theme.textTheme,
+            ),
+          ],
+        ),
+      );
+    }
+
+    final structureId = orgState!.orgStructure!.structureId;
+    if (_cachedSelectionProvider == null || _cachedStructureId != structureId) {
+      _cachedStructureId = structureId;
+      _cachedSelectionProvider = enterpriseSelectionNotifierProvider((levels: activeLevels, structureId: structureId));
+    }
+
+    final selectionProvider = _cachedSelectionProvider!;
+    final selectionState = ref.watch(selectionProvider);
+    final workLocation = ref.watch(addEmployeeAssignmentProvider).workLocation;
+
+    return _AssignmentCard(
+      isDark: theme.isDark,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ModuleHeader(theme: theme),
+          Gap(18.h),
+          _OrgLevelsSection(
+            activeLevels: activeLevels,
+            selectionProvider: selectionProvider,
+            selectionState: selectionState,
+            onSelectionChanged: (levelCode, unitId) =>
+                ref.read(addEmployeeAssignmentProvider.notifier).setSelection(levelCode, unitId),
+          ),
+          Gap(24.h),
+          _WorkLocationSection(
+            theme: theme,
+            initialValue: workLocation ?? '',
+            onChanged: (value) => ref.read(addEmployeeAssignmentProvider.notifier).setWorkLocation(value),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _ensureOrgStructureLoaded(int enterpriseId, dynamic orgState) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
+      if (orgState?.isLoading != true) {
+        if (orgState?.allStructures.isEmpty ?? true) {
+          notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
+        } else if (orgState?.orgStructure == null && (orgState?.allStructures.isNotEmpty ?? false)) {
+          notifier.selectStructure(orgState!.allStructures.first.structureId);
+        }
+      }
+    });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Private UI building blocks
+// ---------------------------------------------------------------------------
+
+class _AssignmentCard extends StatelessWidget {
+  const _AssignmentCard({required this.isDark, required this.child});
+
+  final bool isDark;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
@@ -26,96 +166,119 @@ class OrganizationalStructureModule extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 18.h,
-        children: [
-          Row(
-            children: [
-              DigifyAsset(
-                assetPath: Assets.icons.locationHeaderIcon.path,
-                width: 14,
-                height: 14,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textPrimary,
-              ),
-              Gap(7.w),
-              Text(
-                localizations.organizationalStructure,
-                style: context.textTheme.titleSmall?.copyWith(
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-                ),
-              ),
-            ],
-          ),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final useTwoColumns = constraints.maxWidth > 500;
-              final company = DigifyTextField(
-                labelText: localizations.company,
-                isRequired: true,
-                prefixIcon: searchIcon,
-                hintText: localizations.hintCompanyCode,
-              );
-              final department = DigifyTextField(
-                labelText: localizations.department,
-                prefixIcon: searchIcon,
-                hintText: localizations.hintDepartmentNameEnglish,
-              );
-              final businessUnit = DigifyTextField(
-                labelText: localizations.businessUnit,
-                prefixIcon: searchIcon,
-                hintText: localizations.hintBusinessUnitName,
-              );
-              final workLocation = DigifyTextField(
-                labelText: localizations.workLocation,
-                prefixIcon: locationIcon,
-                hintText: localizations.hintWorkLocation,
-              );
-              if (useTwoColumns) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 16.h,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: company),
-                        Gap(14.w),
-                        Expanded(child: businessUnit),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: department),
-                        Gap(14.w),
-                        Expanded(child: workLocation),
-                      ],
-                    ),
-                  ],
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16.h,
-                children: [company, department, businessUnit, workLocation],
-              );
-            },
-          ),
-        ],
-      ),
+      child: child,
     );
   }
+}
 
-  Widget _prefixIcon(BuildContext context, String path, bool isDark) {
-    return Padding(
+class _ModuleHeader extends StatelessWidget {
+  const _ModuleHeader({required this.theme});
+
+  final BuildContext theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = theme.isDark;
+    final l10n = AppLocalizations.of(theme)!;
+    return Row(
+      children: [
+        DigifyAsset(
+          assetPath: Assets.icons.locationHeaderIcon.path,
+          width: 14,
+          height: 14,
+          color: isDark ? AppColors.textSecondaryDark : AppColors.textPrimary,
+        ),
+        Gap(7.w),
+        Text(
+          l10n.organizationalStructure,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MessageContent extends StatelessWidget {
+  const _MessageContent({required this.message, required this.isDark, required this.textTheme});
+
+  final String message;
+  final bool isDark;
+  final TextTheme? textTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      message,
+      style: textTheme?.titleSmall?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
+    );
+  }
+}
+
+class _WorkLocationSection extends StatelessWidget {
+  const _WorkLocationSection({required this.theme, required this.initialValue, required this.onChanged});
+
+  final BuildContext theme;
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = theme.isDark;
+    final l10n = AppLocalizations.of(theme)!;
+    final locationIcon = Padding(
       padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
       child: DigifyAsset(
-        assetPath: path,
+        assetPath: Assets.icons.locationPinIcon.path,
         width: 20,
         height: 20,
         color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
       ),
+    );
+    return DigifyTextField(
+      labelText: l10n.workLocation,
+      prefixIcon: locationIcon,
+      hintText: l10n.hintWorkLocation,
+      initialValue: initialValue,
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _OrgLevelsSection extends StatelessWidget {
+  const _OrgLevelsSection({
+    required this.activeLevels,
+    required this.selectionProvider,
+    required this.selectionState,
+    required this.onSelectionChanged,
+  });
+
+  final List<OrgStructureLevel> activeLevels;
+  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
+  final EnterpriseSelectionState selectionState;
+  final void Function(String levelCode, String? unitId) onSelectionChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...activeLevels.asMap().entries.map((entry) {
+          final index = entry.key;
+          final level = entry.value;
+          final isEnabled = index == 0 || selectionState.getSelection(activeLevels[index - 1].levelCode) != null;
+          return Padding(
+            padding: EdgeInsets.only(bottom: index < activeLevels.length - 1 ? 16.h : 0),
+            child: DigifyStyleOrgLevelField(
+              level: level,
+              selectionProvider: selectionProvider,
+              isEnabled: isEnabled,
+              onSelectionChanged: onSelectionChanged,
+            ),
+          );
+        }),
+      ],
     );
   }
 }

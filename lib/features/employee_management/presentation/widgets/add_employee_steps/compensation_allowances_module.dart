@@ -5,12 +5,14 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class CompensationAllowancesModule extends StatelessWidget {
+class CompensationAllowancesModule extends ConsumerWidget {
   const CompensationAllowancesModule({super.key});
 
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
@@ -26,9 +28,11 @@ class CompensationAllowancesModule extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final state = ref.watch(addEmployeeCompensationProvider);
+    final notifier = ref.read(addEmployeeCompensationProvider.notifier);
     final dollarIcon = _prefixIcon(context, Assets.icons.leaveManagement.dollar.path, isDark);
     final hint = localizations.hintEnterAmount;
 
@@ -38,6 +42,8 @@ class CompensationAllowancesModule extends StatelessWidget {
       hintText: hint,
       keyboardType: FieldFormat.currency,
       inputFormatters: FieldFormat.currencyAmount,
+      initialValue: state.housingKwd ?? '',
+      onChanged: notifier.setHousingKwd,
     );
     final transportation = DigifyTextField(
       labelText: localizations.transportationKwd,
@@ -45,6 +51,8 @@ class CompensationAllowancesModule extends StatelessWidget {
       hintText: hint,
       keyboardType: FieldFormat.currency,
       inputFormatters: FieldFormat.currencyAmount,
+      initialValue: state.transportKwd ?? '',
+      onChanged: notifier.setTransportKwd,
     );
     final food = DigifyTextField(
       labelText: localizations.foodAllowanceKwd,
@@ -52,6 +60,8 @@ class CompensationAllowancesModule extends StatelessWidget {
       hintText: hint,
       keyboardType: FieldFormat.currency,
       inputFormatters: FieldFormat.currencyAmount,
+      initialValue: state.foodKwd ?? '',
+      onChanged: notifier.setFoodKwd,
     );
     final mobile = DigifyTextField(
       labelText: localizations.mobileAllowanceKwd,
@@ -59,6 +69,8 @@ class CompensationAllowancesModule extends StatelessWidget {
       hintText: hint,
       keyboardType: FieldFormat.currency,
       inputFormatters: FieldFormat.currencyAmount,
+      initialValue: state.mobileKwd ?? '',
+      onChanged: notifier.setMobileKwd,
     );
     final other = DigifyTextField(
       labelText: localizations.otherAllowancesKwd,
@@ -66,6 +78,8 @@ class CompensationAllowancesModule extends StatelessWidget {
       hintText: hint,
       keyboardType: FieldFormat.currency,
       inputFormatters: FieldFormat.currencyAmount,
+      initialValue: state.otherKwd ?? '',
+      onChanged: notifier.setOtherKwd,
     );
 
     return Container(

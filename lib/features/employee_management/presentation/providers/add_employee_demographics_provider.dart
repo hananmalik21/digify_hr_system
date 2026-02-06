@@ -1,29 +1,43 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Demographics form state for Add Employee flow (Gender, Nationality, Marital Status, Religion).
 class AddEmployeeDemographicsState {
   final String? genderCode;
   final String? nationality;
   final String? maritalStatusCode;
   final String? religionCode;
+  final String? civilIdNumber;
+  final String? passportNumber;
 
-  const AddEmployeeDemographicsState({this.genderCode, this.nationality, this.maritalStatusCode, this.religionCode});
+  const AddEmployeeDemographicsState({
+    this.genderCode,
+    this.nationality,
+    this.maritalStatusCode,
+    this.religionCode,
+    this.civilIdNumber,
+    this.passportNumber,
+  });
 
   AddEmployeeDemographicsState copyWith({
     String? genderCode,
     String? nationality,
     String? maritalStatusCode,
     String? religionCode,
+    String? civilIdNumber,
+    String? passportNumber,
     bool clearGenderCode = false,
     bool clearNationality = false,
     bool clearMaritalStatusCode = false,
     bool clearReligionCode = false,
+    bool clearCivilIdNumber = false,
+    bool clearPassportNumber = false,
   }) {
     return AddEmployeeDemographicsState(
       genderCode: clearGenderCode ? null : (genderCode ?? this.genderCode),
       nationality: clearNationality ? null : (nationality ?? this.nationality),
       maritalStatusCode: clearMaritalStatusCode ? null : (maritalStatusCode ?? this.maritalStatusCode),
       religionCode: clearReligionCode ? null : (religionCode ?? this.religionCode),
+      civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
+      passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
     );
   }
 }
@@ -45,6 +59,14 @@ class AddEmployeeDemographicsNotifier extends StateNotifier<AddEmployeeDemograph
 
   void setReligionCode(String? value) {
     state = state.copyWith(religionCode: value, clearReligionCode: value == null);
+  }
+
+  void setCivilIdNumber(String? value) {
+    state = state.copyWith(civilIdNumber: value, clearCivilIdNumber: value == null || value.isEmpty);
+  }
+
+  void setPassportNumber(String? value) {
+    state = state.copyWith(passportNumber: value, clearPassportNumber: value == null || value.isEmpty);
   }
 
   void reset() {

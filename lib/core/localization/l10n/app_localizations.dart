@@ -3572,6 +3572,18 @@ abstract class AppLocalizations {
   /// **'Content for this step coming soon.'**
   String get addEmployeeStepContentPlaceholder;
 
+  /// No description provided for @addEmployeeFillRequiredFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields.'**
+  String get addEmployeeFillRequiredFields;
+
+  /// No description provided for @addEmployeeCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee created successfully.'**
+  String get addEmployeeCreatedSuccess;
+
   /// No description provided for @newHiresThisMonth.
   ///
   /// In en, this message translates to:

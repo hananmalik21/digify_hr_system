@@ -2,21 +2,21 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog_label_below.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_dialog_flow_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_step.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/demographics_step.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/banking_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_step.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/demographics_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/documents_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/review_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/work_schedule_step.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddEmployeeDialog extends ConsumerWidget {
@@ -33,8 +33,9 @@ class AddEmployeeDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final state = ref.watch(addEmployeeStepperProvider);
-    final notifier = ref.read(addEmployeeStepperProvider.notifier);
+    final stepperState = ref.watch(addEmployeeStepperProvider);
+    final basicInfoState = ref.watch(addEmployeeBasicInfoProvider);
+    final flow = ref.watch(addEmployeeDialogFlowProvider);
 
     final em = Assets.icons.employeeManagement;
     final stepperSteps = [
@@ -52,37 +53,35 @@ class AddEmployeeDialog extends ConsumerWidget {
       StepperStepConfig(assetPath: Assets.icons.checkIconGreen.path, label: localizations.addEmployeeStepReview),
     ];
 
-    final subtitle = localizations.addEmployeeStepSubtitle(state.currentStepIndex + 1);
-
     return AppStepperDialogLabelBelow(
       title: localizations.addNewEmployee,
-      subtitle: subtitle,
-      content: _buildStepContent(state.currentStepIndex),
+      subtitle: localizations.addEmployeeStepSubtitle(stepperState.currentStepIndex + 1),
+      content: _buildStepContent(stepperState.currentStepIndex),
       stepperSteps: stepperSteps,
       contentPadding: EdgeInsets.all(20.w),
-      currentStepIndex: state.currentStepIndex,
+      currentStepIndex: stepperState.currentStepIndex,
       maxWidth: 1200.w,
-      onClose: () {
-        notifier.reset();
-        ref.read(addEmployeeDemographicsProvider.notifier).reset();
-        context.pop();
-      },
-      footerLeftActions: state.canGoPrevious
-          ? [AppButton.outline(label: localizations.previous, onPressed: () => notifier.previousStep())]
+      onClose: () => flow.close(context),
+      footerLeftActions: stepperState.canGoPrevious
+          ? [AppButton.outline(label: localizations.previous, onPressed: flow.goPrevious)]
           : null,
-      footerActions: [
-        if (state.isLastStep)
-          AppButton.primary(
-            label: localizations.saveChanges,
-            onPressed: () {
-              notifier.reset();
-              ref.read(addEmployeeDemographicsProvider.notifier).reset();
-              context.pop();
-            },
-          )
-        else
-          AppButton.primary(label: localizations.next, onPressed: () => notifier.nextStep()),
-      ],
+      footerActions: stepperState.isLastStep
+          ? [
+              AppButton.primary(
+                label: localizations.saveChanges,
+                isLoading: basicInfoState.isSubmitting,
+                onPressed: () => flow.saveAndClose(context),
+              ),
+            ]
+          : [
+              AppButton.primary(
+                label: localizations.next,
+                onPressed: () {
+                  ref.read(addEmployeeStepperProvider.notifier).nextStep();
+                  logAddEmployeeState(ref);
+                },
+              ),
+            ],
     );
   }
 

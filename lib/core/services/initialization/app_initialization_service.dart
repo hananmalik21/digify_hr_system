@@ -31,8 +31,8 @@ class AppInitializationService {
     await _loadEnterprises();
     await _loadActiveLevels();
     onActiveEnterpriseReady?.call(_activeEnterpriseId);
-    _loadAbsLookups();
-    _loadAbsLookupValues();
+    await _loadAbsLookups();
+    await _loadAbsLookupValues();
   }
 
   Future<void> _loadAbsLookups() async {
