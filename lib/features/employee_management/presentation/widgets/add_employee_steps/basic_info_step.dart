@@ -32,28 +32,16 @@ class AddEmployeeBasicInfoStep extends StatelessWidget {
           boldPhrases: const ['Enterprise Structure', 'Name Structure Settings'],
           iconAssetPath: em.document.path,
         ),
-        _BasicInfoFieldsCard(isDark: isDark, child: const AddEmployeeBasicInfoForm()),
+        Container(
+          padding: EdgeInsets.all(18.w),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: AppShadows.primaryShadow,
+          ),
+          child: const AddEmployeeBasicInfoForm(),
+        ),
       ],
-    );
-  }
-}
-
-class _BasicInfoFieldsCard extends StatelessWidget {
-  const _BasicInfoFieldsCard({required this.child, required this.isDark});
-
-  final Widget child;
-  final bool isDark;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(18.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: AppShadows.primaryShadow,
-      ),
-      child: child,
     );
   }
 }

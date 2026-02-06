@@ -42,7 +42,6 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'middle_name_ar': request.middleNameAr?.trim() ?? '',
       'email': request.email?.trim() ?? '',
       'phone_number': request.phoneNumber?.trim() ?? '',
-      'mobile_number': request.mobileNumber?.trim() ?? '',
       'date_of_birth': request.dateOfBirth != null
           ? CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.dateOfBirth!)
           : '',

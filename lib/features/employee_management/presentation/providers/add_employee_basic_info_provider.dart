@@ -1,7 +1,21 @@
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+CreateEmployeeBasicInfoRequest _initialMockForm() {
+  return CreateEmployeeBasicInfoRequest(
+    firstNameEn: 'John',
+    lastNameEn: 'Smith',
+    middleNameEn: 'Robert',
+    firstNameAr: 'جون',
+    lastNameAr: 'سميث',
+    middleNameAr: 'محمد',
+    email: 'john.smith@example.com',
+    phoneNumber: '+965 2222 2222',
+    dateOfBirth: DateTime(1990, 6, 15),
+  );
+}
 
 class AddEmployeeBasicInfoState {
   final CreateEmployeeBasicInfoRequest form;
@@ -29,7 +43,7 @@ class AddEmployeeBasicInfoState {
 }
 
 class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoState> {
-  AddEmployeeBasicInfoNotifier(this._repository) : super(const AddEmployeeBasicInfoState());
+  AddEmployeeBasicInfoNotifier(this._repository) : super(AddEmployeeBasicInfoState(form: _initialMockForm()));
 
   final ManageEmployeesListRepository _repository;
 
@@ -98,7 +112,7 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
   }
 
   void reset() {
-    state = const AddEmployeeBasicInfoState();
+    state = AddEmployeeBasicInfoState(form: _initialMockForm());
   }
 
   Future<bool> submitStep1() async {
@@ -122,8 +136,6 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
   }
 }
 
-final addEmployeeBasicInfoProvider = StateNotifierProvider<AddEmployeeBasicInfoNotifier, AddEmployeeBasicInfoState>((
-  ref,
-) {
-  return AddEmployeeBasicInfoNotifier(ref.read(manageEmployeesListRepositoryProvider));
-});
+final addEmployeeBasicInfoProvider = StateNotifierProvider<AddEmployeeBasicInfoNotifier, AddEmployeeBasicInfoState>(
+  (ref) => AddEmployeeBasicInfoNotifier(ref.read(manageEmployeesListRepositoryProvider)),
+);

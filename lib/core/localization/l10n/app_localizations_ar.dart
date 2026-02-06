@@ -136,6 +136,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
 
   @override
+  String get invalidPhone => 'يرجى إدخال رقم هاتف صحيح';
+
+  @override
   String get passwordTooShort => 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
 
   @override
@@ -1480,6 +1483,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get middleName => 'الاسم الأوسط';
 
   @override
+  String get middleNameArabic => 'الاسم الأوسط (بالعربية)';
+
+  @override
   String get dateOfBirth => 'تاريخ الميلاد';
 
   @override
@@ -1492,25 +1498,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lastNameArabic => 'اسم العائلة';
 
   @override
-  String get hintFirstName => 'أدخل الاسم الأول';
+  String get hintFirstName => 'مثال: John';
 
   @override
-  String get hintLastName => 'أدخل اسم العائلة';
+  String get hintLastName => 'مثال: Smith';
 
   @override
-  String get hintMiddleName => 'أدخل الاسم الأوسط';
+  String get hintMiddleName => 'مثال: Robert';
 
   @override
-  String get hintMobileNumber => 'أدخل رقم الجوال';
+  String get hintMiddleNameArabic => 'مثال: محمد';
 
   @override
-  String get hintDateOfBirth => 'اختر تاريخ الميلاد';
+  String get hintMobileNumber => 'مثال: 5555 5555 965+';
 
   @override
-  String get hintFirstNameArabic => 'أدخل الاسم الأول';
+  String get hintDateOfBirth => 'مثال: 1990/06/15';
 
   @override
-  String get hintLastNameArabic => 'أدخل اسم العائلة';
+  String get hintFirstNameArabic => 'مثال: جون';
+
+  @override
+  String get hintLastNameArabic => 'مثال: سميث';
 
   @override
   String get demographicsAndIdentity => 'البيانات الديموغرافية والهوية';
@@ -2516,10 +2525,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintZipCode => 'أدخل الرمز البريدي';
 
   @override
-  String get hintPhone => 'أدخل رقم الهاتف';
+  String get hintPhone => 'مثال: 2222 2222 965+';
 
   @override
-  String get hintEmail => 'أدخل عنوان البريد الإلكتروني';
+  String get hintEmail => 'مثال: john.smith@company.com';
 
   @override
   String get hintWebsite => 'أدخل رابط الموقع';

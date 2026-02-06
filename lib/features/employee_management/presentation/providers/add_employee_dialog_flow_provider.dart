@@ -34,6 +34,34 @@ class AddEmployeeDialogFlow {
     _ref.read(addEmployeeStepperProvider.notifier).previousStep();
   }
 
+  void goNext(BuildContext context) {
+    final stepperState = _ref.read(addEmployeeStepperProvider);
+    final localizations = AppLocalizations.of(context)!;
+
+    if (stepperState.currentStepIndex == 0) {
+      final basicInfoState = _ref.read(addEmployeeBasicInfoProvider);
+      final form = basicInfoState.form;
+
+      if (!form.isEmailValid) {
+        ToastService.error(context, localizations.invalidEmail);
+        return;
+      }
+
+      if (!form.isPhoneValid) {
+        ToastService.error(context, localizations.invalidPhone);
+        return;
+      }
+
+      if (!form.isStep1Valid) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
+    _ref.read(addEmployeeStepperProvider.notifier).nextStep();
+    logAddEmployeeState(_ref);
+  }
+
   Future<void> saveAndClose(BuildContext context) async {
     final basicState = _ref.read(addEmployeeBasicInfoProvider);
     final addressState = _ref.read(addEmployeeAddressProvider);

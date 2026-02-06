@@ -73,15 +73,7 @@ class AddEmployeeDialog extends ConsumerWidget {
                 onPressed: () => flow.saveAndClose(context),
               ),
             ]
-          : [
-              AppButton.primary(
-                label: localizations.next,
-                onPressed: () {
-                  ref.read(addEmployeeStepperProvider.notifier).nextStep();
-                  logAddEmployeeState(ref);
-                },
-              ),
-            ],
+          : [AppButton.primary(label: localizations.next, onPressed: () => flow.goNext(context))],
     );
   }
 

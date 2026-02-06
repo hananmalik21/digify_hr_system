@@ -338,6 +338,12 @@ abstract class AppLocalizations {
   /// **'Please enter a valid email'**
   String get invalidEmail;
 
+  /// No description provided for @invalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get invalidPhone;
+
   /// No description provided for @passwordTooShort.
   ///
   /// In en, this message translates to:
@@ -2954,6 +2960,12 @@ abstract class AppLocalizations {
   /// **'Middle Name'**
   String get middleName;
 
+  /// No description provided for @middleNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle Name (Arabic)'**
+  String get middleNameArabic;
+
   /// No description provided for @dateOfBirth.
   ///
   /// In en, this message translates to:
@@ -2981,43 +2993,49 @@ abstract class AppLocalizations {
   /// No description provided for @hintFirstName.
   ///
   /// In en, this message translates to:
-  /// **'Enter first name'**
+  /// **'e.g. John'**
   String get hintFirstName;
 
   /// No description provided for @hintLastName.
   ///
   /// In en, this message translates to:
-  /// **'Enter last name'**
+  /// **'e.g. Smith'**
   String get hintLastName;
 
   /// No description provided for @hintMiddleName.
   ///
   /// In en, this message translates to:
-  /// **'Enter middle name'**
+  /// **'e.g. Robert'**
   String get hintMiddleName;
+
+  /// No description provided for @hintMiddleNameArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. محمد'**
+  String get hintMiddleNameArabic;
 
   /// No description provided for @hintMobileNumber.
   ///
   /// In en, this message translates to:
-  /// **'Enter mobile number'**
+  /// **'e.g. +965 5555 5555'**
   String get hintMobileNumber;
 
   /// No description provided for @hintDateOfBirth.
   ///
   /// In en, this message translates to:
-  /// **'Select date of birth'**
+  /// **'e.g. 15/06/1990'**
   String get hintDateOfBirth;
 
   /// No description provided for @hintFirstNameArabic.
   ///
   /// In en, this message translates to:
-  /// **'Enter first name'**
+  /// **'e.g. جون'**
   String get hintFirstNameArabic;
 
   /// No description provided for @hintLastNameArabic.
   ///
   /// In en, this message translates to:
-  /// **'Enter last name'**
+  /// **'e.g. سميث'**
   String get hintLastNameArabic;
 
   /// No description provided for @demographicsAndIdentity.
@@ -4943,13 +4961,13 @@ abstract class AppLocalizations {
   /// No description provided for @hintPhone.
   ///
   /// In en, this message translates to:
-  /// **'Enter phone number'**
+  /// **'e.g. +965 2222 2222'**
   String get hintPhone;
 
   /// No description provided for @hintEmail.
   ///
   /// In en, this message translates to:
-  /// **'Enter email address'**
+  /// **'e.g. john.smith@company.com'**
   String get hintEmail;
 
   /// No description provided for @hintWebsite.

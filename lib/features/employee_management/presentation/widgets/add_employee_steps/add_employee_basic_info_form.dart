@@ -9,9 +9,14 @@ import 'package:digify_hr_system/features/employee_management/domain/models/crea
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+
+final _arabicOnlyFormatter = [FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF\u0750-\u077F\s]'))];
+
+final _phoneFormatter = [FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s]'))];
 
 class AddEmployeeBasicInfoForm extends ConsumerWidget {
   const AddEmployeeBasicInfoForm({super.key});
@@ -56,7 +61,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final useTwoColumns = constraints.maxWidth > 500;
-        final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, phoneIcon, form, notifier);
+        final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, form, notifier);
         final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon, form, notifier);
 
         return Column(
@@ -100,7 +105,6 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
     AppLocalizations l10n,
     Widget personIcon,
     Widget emailIcon,
-    Widget phoneIcon,
     CreateEmployeeBasicInfoRequest form,
     AddEmployeeBasicInfoNotifier notifier,
   ) {
@@ -141,13 +145,13 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         onChanged: notifier.setEmail,
       ),
       Gap(16.h),
-      DigifyTextField(
-        labelText: l10n.mobileNumber,
-        keyboardType: TextInputType.phone,
-        prefixIcon: phoneIcon,
-        hintText: l10n.hintMobileNumber,
-        initialValue: form.mobileNumber,
-        onChanged: notifier.setMobileNumber,
+      DigifyDateField(
+        label: l10n.dateOfBirth,
+        hintText: l10n.hintDateOfBirth,
+        isRequired: true,
+        firstDate: DateTime(1900),
+        initialDate: form.dateOfBirth,
+        onDateSelected: notifier.setDateOfBirth,
       ),
     ];
   }
@@ -162,14 +166,6 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
   ) {
     return [
       DigifyTextField(
-        labelText: l10n.middleName,
-        prefixIcon: personIcon,
-        hintText: l10n.hintMiddleName,
-        initialValue: form.middleNameAr,
-        onChanged: notifier.setMiddleNameAr,
-      ),
-      Gap(16.h),
-      DigifyTextField(
         labelText: l10n.firstNameArabic,
         isRequired: true,
         prefixIcon: personIcon,
@@ -177,16 +173,28 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         textDirection: ui.TextDirection.rtl,
         initialValue: form.firstNameAr,
         onChanged: notifier.setFirstNameAr,
+        inputFormatters: _arabicOnlyFormatter,
       ),
       Gap(16.h),
       DigifyTextField(
         labelText: l10n.lastNameArabic,
-        isRequired: true,
         prefixIcon: personIcon,
         hintText: l10n.hintLastNameArabic,
         textDirection: ui.TextDirection.rtl,
         initialValue: form.lastNameAr,
         onChanged: notifier.setLastNameAr,
+        inputFormatters: _arabicOnlyFormatter,
+        isRequired: true,
+      ),
+      Gap(16.h),
+      DigifyTextField(
+        labelText: l10n.middleNameArabic,
+        prefixIcon: personIcon,
+        hintText: l10n.hintMiddleNameArabic,
+        initialValue: form.middleNameAr,
+        onChanged: notifier.setMiddleNameAr,
+        textDirection: ui.TextDirection.rtl,
+        inputFormatters: _arabicOnlyFormatter,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -197,15 +205,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         hintText: l10n.hintPhone,
         initialValue: form.phoneNumber,
         onChanged: notifier.setPhoneNumber,
-      ),
-      Gap(16.h),
-      DigifyDateField(
-        label: l10n.dateOfBirth,
-        hintText: l10n.hintDateOfBirth,
-        isRequired: true,
-        firstDate: DateTime(1900),
-        initialDate: form.dateOfBirth,
-        onDateSelected: notifier.setDateOfBirth,
+        inputFormatters: _phoneFormatter,
       ),
     ];
   }
