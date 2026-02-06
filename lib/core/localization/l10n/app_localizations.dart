@@ -3125,13 +3125,13 @@ abstract class AppLocalizations {
   /// No description provided for @hintCivilIdNumber.
   ///
   /// In en, this message translates to:
-  /// **'Enter Civil ID number'**
+  /// **'e.g. 123456789012'**
   String get hintCivilIdNumber;
 
   /// No description provided for @hintPassportNumber.
   ///
   /// In en, this message translates to:
-  /// **'Enter passport number'**
+  /// **'e.g. AB1234567'**
   String get hintPassportNumber;
 
   /// No description provided for @addressAndEmergencyContact.

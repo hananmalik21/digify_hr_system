@@ -1,41 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddEmployeeDemographicsState {
-  final String? genderCode;
-  final String? nationality;
-  final String? maritalStatusCode;
-  final String? religionCode;
+  final Map<String, String?> lookupCodesByTypeCode;
   final String? civilIdNumber;
   final String? passportNumber;
 
-  const AddEmployeeDemographicsState({
-    this.genderCode,
-    this.nationality,
-    this.maritalStatusCode,
-    this.religionCode,
-    this.civilIdNumber,
-    this.passportNumber,
-  });
+  const AddEmployeeDemographicsState({this.lookupCodesByTypeCode = const {}, this.civilIdNumber, this.passportNumber});
+
+  String? getLookupCodeByTypeCode(String typeCode) => lookupCodesByTypeCode[typeCode];
+
+  bool isStepValid(Iterable<String> requiredTypeCodes) {
+    for (final code in requiredTypeCodes) {
+      final value = lookupCodesByTypeCode[code];
+      if (value == null || value.trim().isEmpty) return false;
+    }
+    final civil = civilIdNumber?.trim() ?? '';
+    final passport = passportNumber?.trim() ?? '';
+    return civil.isNotEmpty && passport.isNotEmpty;
+  }
 
   AddEmployeeDemographicsState copyWith({
-    String? genderCode,
-    String? nationality,
-    String? maritalStatusCode,
-    String? religionCode,
+    Map<String, String?>? lookupCodesByTypeCode,
     String? civilIdNumber,
     String? passportNumber,
-    bool clearGenderCode = false,
-    bool clearNationality = false,
-    bool clearMaritalStatusCode = false,
-    bool clearReligionCode = false,
     bool clearCivilIdNumber = false,
     bool clearPassportNumber = false,
   }) {
     return AddEmployeeDemographicsState(
-      genderCode: clearGenderCode ? null : (genderCode ?? this.genderCode),
-      nationality: clearNationality ? null : (nationality ?? this.nationality),
-      maritalStatusCode: clearMaritalStatusCode ? null : (maritalStatusCode ?? this.maritalStatusCode),
-      religionCode: clearReligionCode ? null : (religionCode ?? this.religionCode),
+      lookupCodesByTypeCode: lookupCodesByTypeCode ?? this.lookupCodesByTypeCode,
       civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
       passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
     );
@@ -45,20 +37,14 @@ class AddEmployeeDemographicsState {
 class AddEmployeeDemographicsNotifier extends StateNotifier<AddEmployeeDemographicsState> {
   AddEmployeeDemographicsNotifier() : super(const AddEmployeeDemographicsState());
 
-  void setGenderCode(String? value) {
-    state = state.copyWith(genderCode: value, clearGenderCode: value == null);
-  }
-
-  void setNationality(String? value) {
-    state = state.copyWith(nationality: value, clearNationality: value == null);
-  }
-
-  void setMaritalStatusCode(String? value) {
-    state = state.copyWith(maritalStatusCode: value, clearMaritalStatusCode: value == null);
-  }
-
-  void setReligionCode(String? value) {
-    state = state.copyWith(religionCode: value, clearReligionCode: value == null);
+  void setLookupValueByTypeCode(String typeCode, String? value) {
+    final newMap = Map<String, String?>.from(state.lookupCodesByTypeCode);
+    if (value == null) {
+      newMap.remove(typeCode);
+    } else {
+      newMap[typeCode] = value;
+    }
+    state = state.copyWith(lookupCodesByTypeCode: newMap);
   }
 
   void setCivilIdNumber(String? value) {

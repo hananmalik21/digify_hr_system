@@ -7,6 +7,8 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,6 +60,18 @@ class AddEmployeeDialogFlow {
       }
     }
 
+    if (stepperState.currentStepIndex == 1) {
+      final demographics = _ref.read(addEmployeeDemographicsProvider);
+      final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider) ?? 0;
+      final typesAsync = _ref.read(emplLookupTypesProvider(enterpriseId));
+      final orderedTypes = typesAsync.valueOrNull ?? [];
+      final requiredTypeCodes = orderedTypes.map((t) => t.typeCode);
+      if (!demographics.isStepValid(requiredTypeCodes)) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
     _ref.read(addEmployeeStepperProvider.notifier).nextStep();
     logAddEmployeeState(_ref);
   }
@@ -67,6 +81,7 @@ class AddEmployeeDialogFlow {
     final addressState = _ref.read(addEmployeeAddressProvider);
     final workScheduleState = _ref.read(addEmployeeWorkScheduleProvider);
     final assignmentState = _ref.read(addEmployeeAssignmentProvider);
+    final demographicsState = _ref.read(addEmployeeDemographicsProvider);
     final request = basicState.form.copyWith(
       emergAddress: _emptyToNull(addressState.emergAddress),
       emergPhone: _emptyToNull(addressState.emergPhone),
@@ -75,6 +90,9 @@ class AddEmployeeDialogFlow {
       contactName: _emptyToNull(addressState.contactName),
       workScheduleId: workScheduleState.workScheduleId,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
+      lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,
+      civilIdNumber: _emptyToNull(demographicsState.civilIdNumber),
+      passportNumber: _emptyToNull(demographicsState.passportNumber),
     );
     final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
     if (!context.mounted) return;
@@ -114,8 +132,7 @@ void logAddEmployeeState(dynamic ref) {
     'phoneNumber=${f.phoneNumber}, mobileNumber=${f.mobileNumber}, dateOfBirth=${f.dateOfBirth}',
   );
   debugPrint(
-    'Demographics: genderCode=${demographics.genderCode}, nationality=${demographics.nationality}, '
-    'maritalStatusCode=${demographics.maritalStatusCode}, religionCode=${demographics.religionCode}, '
+    'Demographics: lookupCodes=${demographics.lookupCodesByTypeCode}, '
     'civilIdNumber=${demographics.civilIdNumber}, passportNumber=${demographics.passportNumber}',
   );
   debugPrint(
