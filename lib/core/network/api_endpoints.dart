@@ -36,6 +36,7 @@ class ApiEndpoints {
   static const String positions = '$api/positions';
   static const String workforceStats = '$api/workforce-stats';
   static const String employees = '$api/employees';
+  static String employeeFullDetails(String employeeGuid) => '$employees/$employeeGuid/full-details';
   static const String createEmployee = '$api/create-employee';
 
   // Employee (empl) lookups

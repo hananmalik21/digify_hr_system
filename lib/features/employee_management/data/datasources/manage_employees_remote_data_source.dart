@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
+import 'package:digify_hr_system/features/employee_management/data/dto/employee_full_details_dto.dart';
 import 'package:digify_hr_system/features/employee_management/data/dto/employees_response_dto.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 
 abstract class ManageEmployeesRemoteDataSource {
   Future<EmployeesResponseDto> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10});
+
+  Future<EmployeeFullDetails?> getEmployeeFullDetails(String employeeGuid, {required int enterpriseId});
 
   Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document});
 }
@@ -25,6 +29,13 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     };
     final response = await apiClient.get(ApiEndpoints.employees, queryParameters: queryParameters);
     return EmployeesResponseDto.fromJson(response);
+  }
+
+  @override
+  Future<EmployeeFullDetails?> getEmployeeFullDetails(String employeeGuid, {required int enterpriseId}) async {
+    final headers = {'x-enterprise-id': enterpriseId.toString()};
+    final response = await apiClient.get(ApiEndpoints.employeeFullDetails(employeeGuid), headers: headers);
+    return EmployeeFullDetailsResponseDto.fromJson(response).toDomain();
   }
 
   @override
