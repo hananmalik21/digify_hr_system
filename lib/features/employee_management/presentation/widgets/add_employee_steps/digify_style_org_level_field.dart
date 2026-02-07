@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_dialog.dart';
@@ -15,13 +16,15 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     required this.level,
     required this.selectionProvider,
     required this.isEnabled,
+    this.displayLabel,
     required this.onSelectionChanged,
   });
 
   final OrgStructureLevel level;
   final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
   final bool isEnabled;
-  final void Function(String levelCode, String? unitId) onSelectionChanged;
+  final String? displayLabel;
+  final void Function(String levelCode, OrgUnit? unit) onSelectionChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,6 +33,7 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     final options = selectionState.getOptions(level.levelCode);
     final isLoading = selectionState.isLoading(level.levelCode);
     final error = selectionState.getError(level.levelCode);
+    final label = displayLabel ?? selectedUnit?.orgUnitNameEn ?? 'Select ${level.levelName}';
 
     return PositionLabeledField(
       label: level.getLabel(),
@@ -47,7 +51,7 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
                 );
                 if (selected) {
                   final newSelection = ref.read(selectionProvider).getSelection(level.levelCode);
-                  onSelectionChanged(level.levelCode, newSelection?.orgUnitId);
+                  onSelectionChanged(level.levelCode, newSelection);
                 }
               }
             : null,
@@ -63,10 +67,10 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  selectedUnit?.orgUnitNameEn ?? 'Select ${level.levelName}',
+                  label,
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: selectedUnit != null
+                    color: (displayLabel != null && displayLabel!.isNotEmpty) || selectedUnit != null
                         ? AppColors.textPrimary
                         : AppColors.textSecondary.withValues(alpha: 0.6),
                   ),

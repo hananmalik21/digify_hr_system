@@ -1,30 +1,44 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class LevelSelection {
+  final String orgUnitId;
+  final String displayNameEn;
+
+  const LevelSelection({required this.orgUnitId, required this.displayNameEn});
+}
+
 class AddEmployeeAssignmentState {
-  final Map<String, String?> selectedUnitIds;
+  final Map<String, LevelSelection> levelSelections;
   final String? orgUnitIdHex;
   final String? workLocation;
 
-  const AddEmployeeAssignmentState({this.selectedUnitIds = const {}, this.orgUnitIdHex, this.workLocation});
+  const AddEmployeeAssignmentState({this.levelSelections = const {}, this.orgUnitIdHex, this.workLocation});
+
+  String? getSelectedUnitId(String levelCode) => levelSelections[levelCode]?.orgUnitId;
+
+  String? getDisplayName(String levelCode) => levelSelections[levelCode]?.displayNameEn;
+
+  Map<String, String?> get selectedUnitIds =>
+      Map.fromEntries(levelSelections.entries.map((e) => MapEntry(e.key, e.value.orgUnitId)));
 
   bool isStepValid(Iterable<String> requiredLevelCodes) {
     for (final code in requiredLevelCodes) {
-      final value = selectedUnitIds[code];
-      if (value == null || value.trim().isEmpty) return false;
+      final id = getSelectedUnitId(code);
+      if (id == null || id.trim().isEmpty) return false;
     }
     final loc = workLocation?.trim() ?? '';
     return loc.isNotEmpty;
   }
 
   AddEmployeeAssignmentState copyWith({
-    Map<String, String?>? selectedUnitIds,
+    Map<String, LevelSelection>? levelSelections,
     String? orgUnitIdHex,
     String? workLocation,
     bool clearOrgUnitIdHex = false,
     bool clearWorkLocation = false,
   }) {
     return AddEmployeeAssignmentState(
-      selectedUnitIds: selectedUnitIds ?? this.selectedUnitIds,
+      levelSelections: levelSelections ?? this.levelSelections,
       orgUnitIdHex: clearOrgUnitIdHex ? null : (orgUnitIdHex ?? this.orgUnitIdHex),
       workLocation: clearWorkLocation ? null : (workLocation ?? this.workLocation),
     );
@@ -34,10 +48,18 @@ class AddEmployeeAssignmentState {
 class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentState> {
   AddEmployeeAssignmentNotifier() : super(const AddEmployeeAssignmentState());
 
-  void setSelection(String levelCode, String? unitId) {
-    final newMap = Map<String, String?>.from(state.selectedUnitIds);
-    newMap[levelCode] = unitId;
-    state = state.copyWith(selectedUnitIds: newMap, orgUnitIdHex: unitId);
+  void setSelection(String levelCode, String unitId, String displayNameEn, {required List<String> orderedLevelCodes}) {
+    final newSelections = Map<String, LevelSelection>.from(state.levelSelections);
+    newSelections[levelCode] = LevelSelection(orgUnitId: unitId, displayNameEn: displayNameEn);
+
+    final levelIndex = orderedLevelCodes.indexOf(levelCode);
+    if (levelIndex >= 0) {
+      for (var i = levelIndex + 1; i < orderedLevelCodes.length; i++) {
+        newSelections.remove(orderedLevelCodes[i]);
+      }
+    }
+
+    state = state.copyWith(levelSelections: newSelections, orgUnitIdHex: unitId);
   }
 
   void setWorkLocation(String? value) {
