@@ -1,4 +1,8 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/active_flag_enum.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/contract_type_code_enum.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_status_enum.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/manage_employees_page_result.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
@@ -6,7 +10,7 @@ class EmployeesResponseDto {
   final bool success;
   final String? message;
   final PaginationMetaDto meta;
-  final List<ManageEmployeeItemDto> data;
+  final List<EmployeeListItemDto> data;
 
   const EmployeesResponseDto({required this.success, this.message, required this.meta, required this.data});
 
@@ -18,13 +22,13 @@ class EmployeesResponseDto {
       success: json['success'] as bool? ?? false,
       message: json['message'] as String?,
       meta: PaginationMetaDto.fromJson(paginationJson),
-      data: dataList.map((e) => ManageEmployeeItemDto.fromJson(e as Map<String, dynamic>)).toList(),
+      data: dataList.map((e) => EmployeeListItemDto.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }
 
   ManageEmployeesPageResult toDomain() {
     return ManageEmployeesPageResult(
-      items: data.map((e) => e.toEmployeeListItem()).toList(),
+      items: data.map((e) => e.toDomain()).toList(),
       pagination: meta.toPaginationInfo(),
     );
   }
@@ -70,11 +74,45 @@ class PaginationMetaDto {
   }
 }
 
-class ManageEmployeeItemDto {
+class OrgStructureItemDto {
+  final int level;
+  final String orgUnitId;
+  final String orgUnitCode;
+  final String? orgUnitNameEn;
+  final String? orgUnitNameAr;
+  final String levelCode;
+  final String? status;
+  final String? isActive;
+
+  const OrgStructureItemDto({
+    required this.level,
+    required this.orgUnitId,
+    required this.orgUnitCode,
+    this.orgUnitNameEn,
+    this.orgUnitNameAr,
+    required this.levelCode,
+    this.status,
+    this.isActive,
+  });
+
+  factory OrgStructureItemDto.fromJson(Map<String, dynamic> json) {
+    return OrgStructureItemDto(
+      level: (json['level'] as num?)?.toInt() ?? 0,
+      orgUnitId: json['org_unit_id'] as String? ?? '',
+      orgUnitCode: json['org_unit_code'] as String? ?? '',
+      orgUnitNameEn: json['org_unit_name_en'] as String?,
+      orgUnitNameAr: json['org_unit_name_ar'] as String?,
+      levelCode: json['level_code'] as String? ?? '',
+      status: json['status'] as String?,
+      isActive: json['is_active'] as String?,
+    );
+  }
+}
+
+class EmployeeListItemDto {
+  final int enterpriseId;
   final int employeeId;
   final String employeeGuid;
-  final int? tenantId;
-  final int? enterpriseId;
   final String? firstNameEn;
   final String? middleNameEn;
   final String? lastNameEn;
@@ -86,15 +124,35 @@ class ManageEmployeeItemDto {
   final String? phoneNumber;
   final String? mobileNumber;
   final String? dateOfBirth;
-  final String status;
-  final String? isActive;
-  final String? createdBy;
+  final String? employeeStatus;
+  final String? employeeIsActive;
+  final String? creationDate;
+  final String? lastUpdateDate;
+  final int? assignmentId;
+  final String? assignmentGuid;
+  final String? employeeNumber;
+  final String? orgUnitId;
+  final List<OrgStructureItemDto> orgStructureList;
+  final int? workLocationId;
+  final String? positionId;
+  final int? jobFamilyId;
+  final int? jobLevelId;
+  final int? gradeId;
+  final String? enterpriseHireDate;
+  final String? contractTypeCode;
+  final int? probationDays;
+  final int? reportingToEmpId;
+  final String? employmentStatus;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? assignmentStatus;
+  final String? assignmentIsActive;
+  final int? rn;
 
-  const ManageEmployeeItemDto({
+  const EmployeeListItemDto({
+    required this.enterpriseId,
     required this.employeeId,
     required this.employeeGuid,
-    this.tenantId,
-    this.enterpriseId,
     this.firstNameEn,
     this.middleNameEn,
     this.lastNameEn,
@@ -106,17 +164,38 @@ class ManageEmployeeItemDto {
     this.phoneNumber,
     this.mobileNumber,
     this.dateOfBirth,
-    required this.status,
-    this.isActive,
-    this.createdBy,
+    this.employeeStatus,
+    this.employeeIsActive,
+    this.creationDate,
+    this.lastUpdateDate,
+    this.assignmentId,
+    this.assignmentGuid,
+    this.employeeNumber,
+    this.orgUnitId,
+    this.orgStructureList = const [],
+    this.workLocationId,
+    this.positionId,
+    this.jobFamilyId,
+    this.jobLevelId,
+    this.gradeId,
+    this.enterpriseHireDate,
+    this.contractTypeCode,
+    this.probationDays,
+    this.reportingToEmpId,
+    this.employmentStatus,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.assignmentStatus,
+    this.assignmentIsActive,
+    this.rn,
   });
 
-  factory ManageEmployeeItemDto.fromJson(Map<String, dynamic> json) {
-    return ManageEmployeeItemDto(
-      employeeId: (json['employee_id'] as num).toInt(),
+  factory EmployeeListItemDto.fromJson(Map<String, dynamic> json) {
+    final orgList = json['org_structure_list'] as List<dynamic>? ?? [];
+    return EmployeeListItemDto(
+      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
+      employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
       employeeGuid: json['employee_guid'] as String? ?? '',
-      tenantId: (json['tenant_id'] as num?)?.toInt(),
-      enterpriseId: (json['enterprise_id'] as num?)?.toInt(),
       firstNameEn: json['first_name_en'] as String?,
       middleNameEn: json['middle_name_en'] as String?,
       lastNameEn: json['last_name_en'] as String?,
@@ -128,24 +207,69 @@ class ManageEmployeeItemDto {
       phoneNumber: json['phone_number'] as String?,
       mobileNumber: json['mobile_number'] as String?,
       dateOfBirth: json['date_of_birth'] as String?,
-      status: json['status'] as String? ?? '',
-      isActive: json['is_active'] as String?,
-      createdBy: json['created_by'] as String?,
+      employeeStatus: json['employee_status'] as String?,
+      employeeIsActive: json['employee_is_active'] as String?,
+      creationDate: json['creation_date'] as String?,
+      lastUpdateDate: json['last_update_date'] as String?,
+      assignmentId: (json['assignment_id'] as num?)?.toInt(),
+      assignmentGuid: json['assignment_guid'] as String?,
+      employeeNumber: json['employee_number'] as String?,
+      orgUnitId: json['org_unit_id'] as String?,
+      orgStructureList: orgList.map((e) => OrgStructureItemDto.fromJson(e as Map<String, dynamic>)).toList(),
+      workLocationId: (json['work_location_id'] as num?)?.toInt(),
+      positionId: json['position_id'] as String?,
+      jobFamilyId: (json['job_family_id'] as num?)?.toInt(),
+      jobLevelId: (json['job_level_id'] as num?)?.toInt(),
+      gradeId: (json['grade_id'] as num?)?.toInt(),
+      enterpriseHireDate: json['enterprise_hire_date'] as String?,
+      contractTypeCode: json['contract_type_code'] as String?,
+      probationDays: (json['probation_days'] as num?)?.toInt(),
+      reportingToEmpId: (json['reporting_to_emp_id'] as num?)?.toInt(),
+      employmentStatus: json['employment_status'] as String?,
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
+      assignmentStatus: json['assignment_status'] as String?,
+      assignmentIsActive: json['assignment_is_active'] as String?,
+      rn: (json['rn'] as num?)?.toInt(),
     );
   }
 
-  EmployeeListItem toEmployeeListItem() {
-    final parts = [firstNameEn, middleNameEn, lastNameEn].whereType<String>().where((s) => s.trim().isNotEmpty);
-    final fullName = parts.join(' ').trim();
+  EmployeeListItem toDomain() {
+    final nameParts = [firstNameEn, middleNameEn, lastNameEn].whereType<String>().where((s) => s.trim().isNotEmpty);
+    final fullName = nameParts.join(' ').trim();
+    final status = EmployeeStatus.fromRaw(employeeStatus ?? employmentStatus);
+    final department = _departmentFromOrgStructure();
     return EmployeeListItem(
       id: employeeGuid.isNotEmpty ? employeeGuid : '$employeeId',
       fullName: fullName.isEmpty ? 'Employee $employeeId' : fullName,
-      employeeId: 'EMP$employeeId',
+      employeeNumber: employeeNumber ?? 'EMP-$employeeId',
       position: '',
-      department: '',
-      status: status.isNotEmpty ? status.toLowerCase() : '',
+      positionId: positionId,
+      department: department,
+      status: status.raw.isEmpty ? (employeeStatus ?? employmentStatus ?? '') : status.raw,
+      employeeStatus: status,
       email: email,
       phone: phoneNumber ?? mobileNumber,
+      assignmentId: assignmentId,
+      assignmentGuid: assignmentGuid,
+      orgUnitId: orgUnitId,
+      contractTypeCode: ContractTypeCode.fromRaw(contractTypeCode),
+      employmentStatus: AssignmentStatus.fromRaw(employmentStatus ?? employeeStatus),
+      employeeIsActive: ActiveFlag.fromRaw(employeeIsActive),
     );
+  }
+
+  String _departmentFromOrgStructure() {
+    const departmentLevel = 'DEPARTMENT';
+    for (final item in orgStructureList) {
+      if (item.levelCode == departmentLevel && (item.orgUnitNameEn?.trim().isNotEmpty ?? false)) {
+        return item.orgUnitNameEn!.trim();
+      }
+    }
+    if (orgStructureList.isNotEmpty) {
+      final last = orgStructureList.last;
+      return last.orgUnitNameEn?.trim() ?? '';
+    }
+    return '';
   }
 }
