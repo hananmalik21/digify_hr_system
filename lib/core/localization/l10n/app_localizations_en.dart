@@ -1731,10 +1731,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintBankName => 'Enter bank name';
 
   @override
+  String get hintSelectBank => 'Select bank';
+
+  @override
   String get hintAccountNumber => 'Enter account number';
 
   @override
-  String get hintIban => 'Enter IBAN';
+  String get hintIban => 'e.g. KW81CBKU0000000000001234560101';
+
+  @override
+  String get invalidIban => 'Please enter a valid IBAN';
 
   @override
   String get documentsAndCompliance => 'Documents & Compliance';

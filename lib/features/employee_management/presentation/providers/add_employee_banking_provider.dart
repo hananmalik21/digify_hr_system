@@ -1,20 +1,28 @@
+import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddEmployeeBankingState {
-  final String? bankCode;
   final String? accountNumber;
+  final String? iban;
 
-  const AddEmployeeBankingState({this.bankCode, this.accountNumber});
+  const AddEmployeeBankingState({this.accountNumber, this.iban});
+
+  static bool _isFilled(String? value) {
+    final t = value?.trim();
+    return t != null && t.isNotEmpty;
+  }
+
+  bool get isStepValid => _isFilled(accountNumber) && _isFilled(iban) && FormValidators.iban(iban) == null;
 
   AddEmployeeBankingState copyWith({
-    String? bankCode,
     String? accountNumber,
-    bool clearBankCode = false,
+    String? iban,
     bool clearAccountNumber = false,
+    bool clearIban = false,
   }) {
     return AddEmployeeBankingState(
-      bankCode: clearBankCode ? null : (bankCode ?? this.bankCode),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
+      iban: clearIban ? null : (iban ?? this.iban),
     );
   }
 }
@@ -22,12 +30,12 @@ class AddEmployeeBankingState {
 class AddEmployeeBankingNotifier extends StateNotifier<AddEmployeeBankingState> {
   AddEmployeeBankingNotifier() : super(const AddEmployeeBankingState());
 
-  void setBankCode(String? value) {
-    state = state.copyWith(bankCode: value, clearBankCode: value == null || value.isEmpty);
-  }
-
   void setAccountNumber(String? value) {
     state = state.copyWith(accountNumber: value, clearAccountNumber: value == null || value.isEmpty);
+  }
+
+  void setIban(String? value) {
+    state = state.copyWith(iban: value, clearIban: value == null || value.isEmpty);
   }
 
   void reset() {

@@ -37,6 +37,8 @@ class CreateEmployeeBasicInfoRequest {
   final String? foodKwd;
   final String? mobileKwd;
   final String? otherKwd;
+  final String? accountNumber;
+  final String? iban;
 
   const CreateEmployeeBasicInfoRequest({
     this.firstNameEn,
@@ -75,6 +77,8 @@ class CreateEmployeeBasicInfoRequest {
     this.foodKwd,
     this.mobileKwd,
     this.otherKwd,
+    this.accountNumber,
+    this.iban,
   });
 
   CreateEmployeeBasicInfoRequest copyWith({
@@ -150,6 +154,10 @@ class CreateEmployeeBasicInfoRequest {
     bool clearFoodKwd = false,
     bool clearMobileKwd = false,
     bool clearOtherKwd = false,
+    String? accountNumber,
+    String? iban,
+    bool clearAccountNumber = false,
+    bool clearIban = false,
   }) {
     return CreateEmployeeBasicInfoRequest(
       firstNameEn: clearFirstNameEn ? null : (firstNameEn ?? this.firstNameEn),
@@ -188,6 +196,8 @@ class CreateEmployeeBasicInfoRequest {
       foodKwd: clearFoodKwd ? null : (foodKwd ?? this.foodKwd),
       mobileKwd: clearMobileKwd ? null : (mobileKwd ?? this.mobileKwd),
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
+      accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
+      iban: clearIban ? null : (iban ?? this.iban),
     );
   }
 

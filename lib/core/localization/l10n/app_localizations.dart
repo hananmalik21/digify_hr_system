@@ -3434,6 +3434,12 @@ abstract class AppLocalizations {
   /// **'Enter bank name'**
   String get hintBankName;
 
+  /// No description provided for @hintSelectBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Select bank'**
+  String get hintSelectBank;
+
   /// No description provided for @hintAccountNumber.
   ///
   /// In en, this message translates to:
@@ -3443,8 +3449,14 @@ abstract class AppLocalizations {
   /// No description provided for @hintIban.
   ///
   /// In en, this message translates to:
-  /// **'Enter IBAN'**
+  /// **'e.g. KW81CBKU0000000000001234560101'**
   String get hintIban;
+
+  /// No description provided for @invalidIban.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid IBAN'**
+  String get invalidIban;
 
   /// No description provided for @documentsAndCompliance.
   ///
