@@ -1,12 +1,14 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/tabs/employment_details_sections/employment_details_sections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class EmploymentDetailsTabContent extends StatelessWidget {
-  const EmploymentDetailsTabContent({super.key, required this.isDark, this.wrapInScrollView = true});
+  const EmploymentDetailsTabContent({super.key, required this.isDark, this.fullDetails, this.wrapInScrollView = true});
 
   final bool isDark;
+  final EmployeeFullDetails? fullDetails;
   final bool wrapInScrollView;
 
   @override
@@ -16,11 +18,11 @@ class EmploymentDetailsTabContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          EnterpriseStructureSection(isDark: isDark),
+          EnterpriseStructureSection(isDark: isDark, fullDetails: fullDetails),
           Gap(24.h),
-          WorkforceStructureSection(isDark: isDark),
+          WorkforceStructureSection(isDark: isDark, fullDetails: fullDetails),
           Gap(24.h),
-          EmploymentInformationSection(isDark: isDark),
+          EmploymentInformationSection(isDark: isDark, fullDetails: fullDetails),
         ],
       ),
     );

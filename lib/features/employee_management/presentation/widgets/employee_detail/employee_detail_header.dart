@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_display_data.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_chip.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +15,9 @@ import 'employee_detail_summary_cards.dart';
 
 /// Header section of the employee detail screen: back, name, actions, and meta chips.
 class EmployeeDetailHeader extends StatelessWidget {
-  const EmployeeDetailHeader({super.key, required this.employee, required this.isDark});
+  const EmployeeDetailHeader({super.key, required this.displayData, required this.isDark});
 
-  final EmployeeListItem employee;
+  final EmployeeDetailDisplayData displayData;
   final bool isDark;
 
   @override
@@ -40,7 +40,7 @@ class EmployeeDetailHeader extends StatelessWidget {
               Gap(24.w),
               Expanded(
                 child: Text(
-                  employee.fullName.toUpperCase(),
+                  displayData.displayName,
                   style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
                 ),
               ),
@@ -55,16 +55,20 @@ class EmployeeDetailHeader extends StatelessWidget {
             children: [
               Gap(18.w),
               EmployeeDetailChip(path: Assets.icons.deiDashboardIcon.path, label: 'HR Manager', isDark: isDark),
-              EmployeeDetailChip(path: Assets.icons.departmentIcon.path, label: 'PURCHASING', isDark: isDark),
+              EmployeeDetailChip(
+                path: Assets.icons.departmentIcon.path,
+                label: displayData.departmentLabel,
+                isDark: isDark,
+              ),
               EmployeeDetailChip(
                 path: Assets.icons.employeeManagement.hash.path,
-                label: employee.employeeId,
+                label: displayData.employeeNumber,
                 isDark: isDark,
               ),
             ],
           ),
           Gap(24.h),
-          EmployeeDetailSummaryCards(isDark: isDark),
+          EmployeeDetailSummaryCards(displayData: displayData, isDark: isDark),
         ],
       ),
     );
