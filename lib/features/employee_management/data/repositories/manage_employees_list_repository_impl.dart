@@ -2,6 +2,7 @@ import 'package:digify_hr_system/features/employee_management/data/datasources/m
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/manage_employees_page_result.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 
 class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository {
   final ManageEmployeesRemoteDataSource remoteDataSource;
@@ -15,7 +16,7 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
   }
 
   @override
-  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request) async {
-    return remoteDataSource.createEmployee(request);
+  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document}) async {
+    return remoteDataSource.createEmployee(request, document: document);
   }
 }

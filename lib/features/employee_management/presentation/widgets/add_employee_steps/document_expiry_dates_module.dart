@@ -4,12 +4,14 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_documents_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class DocumentExpiryDatesModule extends StatelessWidget {
+class DocumentExpiryDatesModule extends ConsumerWidget {
   const DocumentExpiryDatesModule({super.key});
 
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
@@ -25,42 +27,67 @@ class DocumentExpiryDatesModule extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
     final documentIcon = _prefixIcon(context, em.document.path, isDark);
     final calendarPath = Assets.icons.leaveManagementMainIcon.path;
+    final state = ref.watch(addEmployeeDocumentsProvider);
+    final notifier = ref.read(addEmployeeDocumentsProvider.notifier);
+    final lastExpiryDate = DateTime(2100, 12, 31);
 
     final civilIdExpiry = DigifyDateField(
       label: localizations.civilIdExpiry,
+      isRequired: true,
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
-    );
-    final visaNumber = DigifyTextField(
-      labelText: localizations.visaNumber,
-      prefixIcon: documentIcon,
-      hintText: localizations.hintVisaNumber,
-    );
-    final workPermitNumber = DigifyTextField(
-      labelText: localizations.workPermitNumber,
-      prefixIcon: documentIcon,
-      hintText: localizations.hintWorkPermitNumber,
+      initialDate: state.civilIdExpiry,
+      lastDate: lastExpiryDate,
+      onDateSelected: notifier.setCivilIdExpiry,
     );
     final passportExpiry = DigifyDateField(
       label: localizations.passportExpiry,
+      isRequired: true,
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
+      initialDate: state.passportExpiry,
+      lastDate: lastExpiryDate,
+      onDateSelected: notifier.setPassportExpiry,
+    );
+    final visaNumber = DigifyTextField(
+      labelText: localizations.visaNumber,
+      isRequired: true,
+      prefixIcon: documentIcon,
+      hintText: localizations.hintVisaNumber,
+      initialValue: state.visaNumber ?? '',
+      onChanged: notifier.setVisaNumber,
     );
     final visaExpiry = DigifyDateField(
       label: localizations.visaExpiry,
+      isRequired: true,
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
+      initialDate: state.visaExpiry,
+      lastDate: lastExpiryDate,
+      onDateSelected: notifier.setVisaExpiry,
+    );
+    final workPermitNumber = DigifyTextField(
+      labelText: localizations.workPermitNumber,
+      isRequired: true,
+      prefixIcon: documentIcon,
+      hintText: localizations.hintWorkPermitNumber,
+      initialValue: state.workPermitNumber ?? '',
+      onChanged: notifier.setWorkPermitNumber,
     );
     final workPermitExpiry = DigifyDateField(
       label: localizations.workPermitExpiry,
+      isRequired: true,
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
+      initialDate: state.workPermitExpiry,
+      lastDate: lastExpiryDate,
+      onDateSelected: notifier.setWorkPermitExpiry,
     );
 
     return Container(

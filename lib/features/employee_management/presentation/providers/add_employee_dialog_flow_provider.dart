@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_documents_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
@@ -31,6 +32,7 @@ class AddEmployeeDialogFlow {
     _ref.read(addEmployeeJobEmploymentProvider.notifier).reset();
     _ref.read(addEmployeeCompensationProvider.notifier).reset();
     _ref.read(addEmployeeBankingProvider.notifier).reset();
+    _ref.read(addEmployeeDocumentsProvider.notifier).reset();
   }
 
   void close(BuildContext context) {
@@ -125,6 +127,14 @@ class AddEmployeeDialogFlow {
       }
     }
 
+    if (stepperState.currentStepIndex == 7) {
+      final documentsState = _ref.read(addEmployeeDocumentsProvider);
+      if (!documentsState.isStepValid) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
     _ref.read(addEmployeeStepperProvider.notifier).nextStep();
     logAddEmployeeState(_ref);
   }
@@ -150,6 +160,11 @@ class AddEmployeeDialogFlow {
       return;
     }
     if (!bankingState.isStepValid) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
+    final documentsState = _ref.read(addEmployeeDocumentsProvider);
+    if (!documentsState.isStepValid) {
       ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
       return;
     }
@@ -184,8 +199,16 @@ class AddEmployeeDialogFlow {
       otherKwd: _emptyToNull(compensationState.otherKwd),
       accountNumber: _emptyToNull(bankingState.accountNumber),
       iban: _emptyToNull(bankingState.iban),
+      civilIdExpiry: documentsState.civilIdExpiry,
+      passportExpiry: documentsState.passportExpiry,
+      visaNumber: _emptyToNull(documentsState.visaNumber),
+      visaExpiry: documentsState.visaExpiry,
+      workPermitNumber: _emptyToNull(documentsState.workPermitNumber),
+      workPermitExpiry: documentsState.workPermitExpiry,
     );
-    final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
+    final ok = await _ref
+        .read(addEmployeeBasicInfoProvider.notifier)
+        .submitWithRequest(request, document: documentsState.document);
     if (!context.mounted) return;
     if (ok) {
       ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);

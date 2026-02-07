@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 CreateEmployeeBasicInfoRequest _initialMockForm() {
@@ -123,10 +124,10 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
     return submitWithRequest(state.form);
   }
 
-  Future<bool> submitWithRequest(CreateEmployeeBasicInfoRequest request) async {
+  Future<bool> submitWithRequest(CreateEmployeeBasicInfoRequest request, {Document? document}) async {
     state = state.copyWith(isSubmitting: true, clearSubmitError: true);
     try {
-      await _repository.createEmployee(request);
+      await _repository.createEmployee(request, document: document);
       state = state.copyWith(isSubmitting: false);
       return true;
     } catch (e) {
