@@ -212,7 +212,9 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        Gap(10.h),
         Container(
           width: 40.w,
           height: 40.h,

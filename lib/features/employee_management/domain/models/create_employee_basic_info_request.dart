@@ -231,7 +231,18 @@ class CreateEmployeeBasicInfoRequest {
     );
   }
 
-  static String typeCodeToApiKey(String typeCode) => '${typeCode.toLowerCase()}_code';
+  static String typeCodeToApiKey(String typeCode) {
+    switch (typeCode.toUpperCase()) {
+      case 'NATIONALITY':
+        return 'nationality';
+      case 'BANK_NAME_CODE':
+      case 'BANK_NAME':
+      case 'BANK':
+        return 'bank_code';
+      default:
+        return '${typeCode.toLowerCase()}_code';
+    }
+  }
 
   static String formatDateOfBirth(DateTime d) {
     final y = d.year;
