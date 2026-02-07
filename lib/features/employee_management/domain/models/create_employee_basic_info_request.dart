@@ -39,6 +39,12 @@ class CreateEmployeeBasicInfoRequest {
   final String? otherKwd;
   final String? accountNumber;
   final String? iban;
+  final DateTime? civilIdExpiry;
+  final DateTime? passportExpiry;
+  final String? visaNumber;
+  final DateTime? visaExpiry;
+  final String? workPermitNumber;
+  final DateTime? workPermitExpiry;
 
   const CreateEmployeeBasicInfoRequest({
     this.firstNameEn,
@@ -79,6 +85,12 @@ class CreateEmployeeBasicInfoRequest {
     this.otherKwd,
     this.accountNumber,
     this.iban,
+    this.civilIdExpiry,
+    this.passportExpiry,
+    this.visaNumber,
+    this.visaExpiry,
+    this.workPermitNumber,
+    this.workPermitExpiry,
   });
 
   CreateEmployeeBasicInfoRequest copyWith({
@@ -158,6 +170,18 @@ class CreateEmployeeBasicInfoRequest {
     String? iban,
     bool clearAccountNumber = false,
     bool clearIban = false,
+    DateTime? civilIdExpiry,
+    DateTime? passportExpiry,
+    String? visaNumber,
+    DateTime? visaExpiry,
+    String? workPermitNumber,
+    DateTime? workPermitExpiry,
+    bool clearCivilIdExpiry = false,
+    bool clearPassportExpiry = false,
+    bool clearVisaNumber = false,
+    bool clearVisaExpiry = false,
+    bool clearWorkPermitNumber = false,
+    bool clearWorkPermitExpiry = false,
   }) {
     return CreateEmployeeBasicInfoRequest(
       firstNameEn: clearFirstNameEn ? null : (firstNameEn ?? this.firstNameEn),
@@ -198,6 +222,12 @@ class CreateEmployeeBasicInfoRequest {
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
       iban: clearIban ? null : (iban ?? this.iban),
+      civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),
+      passportExpiry: clearPassportExpiry ? null : (passportExpiry ?? this.passportExpiry),
+      visaNumber: clearVisaNumber ? null : (visaNumber ?? this.visaNumber),
+      visaExpiry: clearVisaExpiry ? null : (visaExpiry ?? this.visaExpiry),
+      workPermitNumber: clearWorkPermitNumber ? null : (workPermitNumber ?? this.workPermitNumber),
+      workPermitExpiry: clearWorkPermitExpiry ? null : (workPermitExpiry ?? this.workPermitExpiry),
     );
   }
 

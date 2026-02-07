@@ -4,11 +4,12 @@ import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_mock_data.dart';
 import 'package:digify_hr_system/features/employee_management/data/dto/employees_response_dto.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 
 abstract class ManageEmployeesRemoteDataSource {
   Future<EmployeesResponseDto> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10});
 
-  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request);
+  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document});
 }
 
 class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSource {
@@ -32,7 +33,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
   }
 
   @override
-  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request) async {
+  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document}) async {
     final map = <String, dynamic>{
       'first_name_en': request.firstNameEn?.trim() ?? '',
       'last_name_en': request.lastNameEn?.trim() ?? '',
@@ -85,9 +86,24 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
         'account_number': request.accountNumber!.trim(),
       if (request.iban != null && request.iban!.trim().isNotEmpty) 'iban': request.iban!.trim(),
+      if (request.civilIdExpiry != null)
+        'civil_id_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.civilIdExpiry!),
+      if (request.passportExpiry != null)
+        'passport_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.passportExpiry!),
+      if (request.visaNumber != null && request.visaNumber!.trim().isNotEmpty)
+        'visa_number': request.visaNumber!.trim(),
+      if (request.visaExpiry != null)
+        'visa_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.visaExpiry!),
+      if (request.workPermitNumber != null && request.workPermitNumber!.trim().isNotEmpty)
+        'work_permit_number': request.workPermitNumber!.trim(),
+      if (request.workPermitExpiry != null)
+        'work_permit_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.workPermitExpiry!),
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     final formData = FormData.fromMap(map);
+    if (document != null && (document.path.contains('/') || document.path.contains(r'\'))) {
+      formData.files.add(MapEntry('document', await MultipartFile.fromFile(document.path, filename: document.name)));
+    }
     return apiClient.postMultipart(ApiEndpoints.createEmployee, formData: formData);
   }
 

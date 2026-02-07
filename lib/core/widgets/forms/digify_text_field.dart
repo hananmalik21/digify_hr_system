@@ -477,6 +477,7 @@ class DigifyDateField extends StatefulWidget {
   final String? calendarIconPath;
   final DateTime? initialDate;
   final DateTime? firstDate;
+  final DateTime? lastDate;
   final ValueChanged<DateTime>? onDateSelected;
 
   const DigifyDateField({
@@ -487,6 +488,7 @@ class DigifyDateField extends StatefulWidget {
     this.calendarIconPath,
     this.initialDate,
     this.firstDate,
+    this.lastDate,
     this.onDateSelected,
   });
 
@@ -518,7 +520,7 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
       context: context,
       initialDate: _date ?? DateTime.now(),
       firstDate: widget.firstDate ?? DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: widget.lastDate ?? DateTime.now(),
     );
     if (picked != null && mounted) {
       setState(() {
