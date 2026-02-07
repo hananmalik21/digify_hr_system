@@ -25,6 +25,7 @@ class ManageEmployeesTable extends StatelessWidget {
   final Function(EmployeeListItem) onView;
   final Function(EmployeeListItem) onEdit;
   final VoidCallback? onMore;
+  final bool? paginationIsLoading;
 
   const ManageEmployeesTable({
     super.key,
@@ -40,6 +41,7 @@ class ManageEmployeesTable extends StatelessWidget {
     required this.onView,
     required this.onEdit,
     this.onMore,
+    this.paginationIsLoading,
   });
 
   @override
@@ -98,7 +100,7 @@ class ManageEmployeesTable extends StatelessWidget {
               pageSize: pageSize,
               onPrevious: onPrevious,
               onNext: onNext,
-              isLoading: isLoading,
+              isLoading: paginationIsLoading ?? isLoading,
               style: PaginationStyle.simple,
             ),
         ],

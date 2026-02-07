@@ -4,6 +4,7 @@ import 'package:digify_hr_system/features/employee_management/data/datasources/m
 import 'package:digify_hr_system/features/employee_management/data/repositories/manage_employees_list_repository_impl.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,8 +37,19 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
 
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10}) async {
     state = state.copyWith(isLoading: true, error: null, lastEnterpriseId: enterpriseId, currentPage: page);
+    final filters = ref.read(manageEmployeesFiltersProvider);
     final repository = ref.read(manageEmployeesListRepositoryProvider);
-    final result = await repository.getEmployees(enterpriseId: enterpriseId, page: page, pageSize: pageSize);
+    final result = await repository.getEmployees(
+      enterpriseId: enterpriseId,
+      page: page,
+      pageSize: pageSize,
+      positionId: filters.positionId,
+      jobFamilyId: filters.jobFamilyId,
+      jobLevelId: filters.jobLevelId,
+      gradeId: filters.gradeId,
+      orgUnitId: filters.orgUnitId,
+      levelCode: filters.levelCode,
+    );
     state = state.copyWith(items: result.items, pagination: result.pagination, isLoading: false, error: null);
   }
 

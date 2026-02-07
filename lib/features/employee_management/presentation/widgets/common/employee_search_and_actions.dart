@@ -6,9 +6,22 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_view_toggle_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filter_org_param_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -105,7 +118,11 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                   backgroundColor: AppColors.shiftUploadButton,
                 ),
                 Gap(12.w),
-                AppButton(label: localizations.refresh, onPressed: () {}, svgPath: Assets.icons.refreshGray.path),
+                AppButton(
+                  label: localizations.refresh,
+                  onPressed: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
+                  svgPath: Assets.icons.refreshGray.path,
+                ),
               ],
             ),
           ),
@@ -145,7 +162,24 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                         ],
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          ref.read(manageEmployeesFiltersProvider.notifier).clearAll();
+                          final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
+                          if (enterpriseId != null) {
+                            final param = ref.read(manageEmployeesFilterOrgParamProvider(enterpriseId));
+                            if (param != null) {
+                              ref
+                                  .read(
+                                    enterpriseSelectionNotifierProvider((
+                                      levels: param.levels,
+                                      structureId: param.structureId,
+                                    )).notifier,
+                                  )
+                                  .reset();
+                            }
+                          }
+                          ref.read(manageEmployeesListProvider.notifier).refresh();
+                        },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -168,22 +202,17 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                     ],
                   ),
                   Gap(16.h),
-                  Wrap(
-                    spacing: 12.w,
-                    runSpacing: 12.h,
-                    alignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      _filterDropdown(context, localizations.allStatuses, 140.w),
-                      _filterDropdown(context, localizations.allDepartments, 140.w),
-                      _filterDropdown(context, localizations.allCompanies, 140.w),
-                      _filterDropdown(context, localizations.allDivisions, 140.w),
-                      _filterDropdown(context, localizations.allPositions, 140.w),
-                      _filterDropdown(context, localizations.allWorkforceStructures, 160.w),
-                      _filterDropdown(context, localizations.allJobFamilies, 140.w),
-                      _filterDropdown(context, localizations.allJobLevels, 140.w),
-                      _filterDropdown(context, localizations.allGrades, 120.w),
-                    ],
+                  _FilterDropdownsSection(
+                    localizations: localizations,
+                    isDark: isDark,
+                    onEnsureOrgStructureLoaded: (int enterpriseId) {
+                      final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
+                      notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
+                      final state = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
+                      if (state.orgStructure == null && state.allStructures.isNotEmpty) {
+                        notifier.selectStructure(state.allStructures.first.structureId);
+                      }
+                    },
                   ),
                 ],
               ),
@@ -209,18 +238,242 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
       borderColor: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
     );
   }
+}
 
-  Widget _filterDropdown(BuildContext context, String hint, double width) {
-    return SizedBox(
-      width: width,
-      child: DigifySelectField<String?>(
-        label: '',
-        hint: hint,
-        value: null,
-        items: [null],
-        itemLabelBuilder: (v) => hint,
-        onChanged: (_) {},
-      ),
+class _FilterDropdownsSection extends ConsumerStatefulWidget {
+  const _FilterDropdownsSection({
+    required this.localizations,
+    required this.isDark,
+    required this.onEnsureOrgStructureLoaded,
+  });
+
+  final AppLocalizations localizations;
+  final bool isDark;
+  final void Function(int enterpriseId) onEnsureOrgStructureLoaded;
+
+  @override
+  ConsumerState<_FilterDropdownsSection> createState() => _FilterDropdownsSectionState();
+}
+
+class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection> {
+  bool _orgLoadTriggered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    final param = enterpriseId != null ? ref.watch(manageEmployeesFilterOrgParamProvider(enterpriseId)) : null;
+    final filters = ref.watch(manageEmployeesFiltersProvider);
+
+    if (enterpriseId != null && !_orgLoadTriggered) {
+      _orgLoadTriggered = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onEnsureOrgStructureLoaded(enterpriseId);
+      });
+    }
+
+    final jobFamilyState = ref.watch(jobFamilyNotifierProvider);
+    final jobLevelState = ref.watch(jobLevelNotifierProvider);
+    final gradeState = ref.watch(gradeNotifierProvider);
+    final positionState = ref.watch(positionNotifierProvider);
+
+    if (jobFamilyState.items.isEmpty && !jobFamilyState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
+      });
+    }
+    if (jobLevelState.items.isEmpty && !jobLevelState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
+      });
+    }
+    if (gradeState.items.isEmpty && !gradeState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(gradeNotifierProvider.notifier).loadFirstPage();
+      });
+    }
+    if (positionState.items.isEmpty && !positionState.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(positionNotifierProvider.notifier).loadFirstPage();
+      });
+    }
+
+    final positionItems = positionState.items;
+    final jobFamilyItems = jobFamilyState.items;
+    final jobLevelItems = jobLevelState.items;
+    final gradeItems = gradeState.items;
+
+    final listNotifier = ref.read(manageEmployeesListProvider.notifier);
+    final filtersNotifier = ref.read(manageEmployeesFiltersProvider.notifier);
+
+    void applyFiltersAndRefresh() {
+      listNotifier.refresh();
+    }
+
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      alignment: WrapAlignment.start,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        SizedBox(
+          width: 140.w,
+          child: DigifySelectField<String?>(
+            label: '',
+            hint: widget.localizations.allStatuses,
+            value: null,
+            items: [null],
+            itemLabelBuilder: (_) => widget.localizations.allStatuses,
+            onChanged: (_) {},
+          ),
+        ),
+        if (enterpriseId != null && param == null) ..._buildOrgFiltersLoadingPlaceholders(),
+        if (param != null) ..._buildOrgCascade(param, filtersNotifier, applyFiltersAndRefresh),
+        SizedBox(
+          width: 160.w,
+          child: DigifySelectField<String?>(
+            label: '',
+            hint: widget.localizations.allPositions,
+            value: filters.positionId,
+            items: [null, ...positionItems.map((p) => p.id)],
+            itemLabelBuilder: (id) {
+              if (id == null) return widget.localizations.allPositions;
+              final list = positionItems.where((p) => p.id == id);
+              return list.isEmpty ? id : list.first.titleEnglish;
+            },
+            onChanged: (id) {
+              filtersNotifier.setPositionId(id);
+              applyFiltersAndRefresh();
+            },
+          ),
+        ),
+        SizedBox(
+          width: 140.w,
+          child: DigifySelectField<int?>(
+            label: '',
+            hint: widget.localizations.allJobFamilies,
+            value: filters.jobFamilyId,
+            items: [null, ...jobFamilyItems.map((j) => j.id)],
+            itemLabelBuilder: (id) {
+              if (id == null) return widget.localizations.allJobFamilies;
+              final list = jobFamilyItems.where((j) => j.id == id);
+              return list.isEmpty ? '$id' : list.first.nameEnglish;
+            },
+            onChanged: (id) {
+              filtersNotifier.setJobFamilyId(id);
+              applyFiltersAndRefresh();
+            },
+          ),
+        ),
+        SizedBox(
+          width: 140.w,
+          child: DigifySelectField<int?>(
+            label: '',
+            hint: widget.localizations.allJobLevels,
+            value: filters.jobLevelId,
+            items: [null, ...jobLevelItems.map((j) => j.id)],
+            itemLabelBuilder: (id) {
+              if (id == null) return widget.localizations.allJobLevels;
+              final list = jobLevelItems.where((j) => j.id == id);
+              return list.isEmpty ? '$id' : list.first.nameEn;
+            },
+            onChanged: (id) {
+              filtersNotifier.setJobLevelId(id);
+              applyFiltersAndRefresh();
+            },
+          ),
+        ),
+        SizedBox(
+          width: 120.w,
+          child: DigifySelectField<int?>(
+            label: '',
+            hint: widget.localizations.allGrades,
+            value: filters.gradeId,
+            items: [null, ...gradeItems.map((g) => g.id)],
+            itemLabelBuilder: (id) {
+              if (id == null) return widget.localizations.allGrades;
+              final list = gradeItems.where((g) => g.id == id);
+              return list.isEmpty ? '$id' : list.first.gradeLabel;
+            },
+            onChanged: (id) {
+              filtersNotifier.setGradeId(id);
+              applyFiltersAndRefresh();
+            },
+          ),
+        ),
+      ],
     );
+  }
+
+  List<Widget> _buildOrgFiltersLoadingPlaceholders() {
+    return List.generate(4, (_) {
+      return Padding(
+        padding: EdgeInsets.only(right: 12.w),
+        child: SizedBox(
+          width: 140.w,
+          height: 48.h,
+          child: Skeletonizer(
+            enabled: true,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              decoration: BoxDecoration(
+                color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 14.h,
+                      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Container(
+                    width: 16.w,
+                    height: 16.h,
+                    decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  List<Widget> _buildOrgCascade(
+    ({List<OrgStructureLevel> levels, String structureId}) param,
+    ManageEmployeesFiltersNotifier filtersNotifier,
+    VoidCallback applyFiltersAndRefresh,
+  ) {
+    final selectionProvider = enterpriseSelectionNotifierProvider(param);
+    final selectionState = ref.watch(selectionProvider);
+    final levels = param.levels;
+
+    return levels.asMap().entries.map((entry) {
+      final index = entry.key;
+      final level = entry.value;
+      final isEnabled = index == 0 || selectionState.getSelection(levels[index - 1].levelCode) != null;
+      return Padding(
+        padding: EdgeInsets.only(right: 12.w),
+        child: SizedBox(
+          width: 140.w,
+          child: DigifyStyleOrgLevelField(
+            level: level,
+            selectionProvider: selectionProvider,
+            isEnabled: isEnabled,
+            showLabel: false,
+            onSelectionChanged: (levelCode, unit) {
+              if (unit != null) {
+                filtersNotifier.setOrgFilter(unit.orgUnitId, levelCode);
+                applyFiltersAndRefresh();
+              }
+            },
+          ),
+        ),
+      );
+    }).toList();
   }
 }

@@ -9,6 +9,7 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DigifyStyleOrgLevelField extends ConsumerWidget {
   const DigifyStyleOrgLevelField({
@@ -17,6 +18,7 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     required this.selectionProvider,
     required this.isEnabled,
     this.displayLabel,
+    this.showLabel = true,
     required this.onSelectionChanged,
   });
 
@@ -24,6 +26,7 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
   final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
   final bool isEnabled;
   final String? displayLabel;
+  final bool showLabel;
   final void Function(String levelCode, OrgUnit? unit) onSelectionChanged;
 
   @override
@@ -35,57 +38,89 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     final error = selectionState.getError(level.levelCode);
     final label = displayLabel ?? selectedUnit?.orgUnitNameEn ?? 'Select ${level.levelName}';
 
-    return PositionLabeledField(
-      label: level.getLabel(),
-      isRequired: true,
-      child: InkWell(
-        onTap: isEnabled
-            ? () async {
-                if (options.isEmpty && !isLoading && error == null) {
-                  ref.read(selectionProvider.notifier).loadOptionsForLevel(level.levelCode);
-                }
-                final selected = await OrgUnitSelectionDialog.show(
-                  context: context,
-                  level: level,
-                  selectionProvider: selectionProvider,
-                );
-                if (selected) {
-                  final newSelection = ref.read(selectionProvider).getSelection(level.levelCode);
-                  onSelectionChanged(level.levelCode, newSelection);
-                }
-              }
-            : null,
+    if (isLoading) {
+      return Skeletonizer(
+        enabled: true,
         child: Container(
           height: 48.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
-            color: isEnabled ? Colors.white : AppColors.inputBg.withValues(alpha: 0.5),
+            color: AppColors.inputBg,
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: error != null ? AppColors.error : AppColors.borderGrey),
+            border: Border.all(color: AppColors.borderGrey),
           ),
           child: Row(
             children: [
               Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: (displayLabel != null && displayLabel!.isNotEmpty) || selectedUnit != null
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary.withValues(alpha: 0.6),
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                child: Container(
+                  height: 14.h,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
                 ),
               ),
-              DigifyAsset(
-                assetPath: Assets.icons.workforce.chevronRight.path,
-                color: isEnabled ? AppColors.textSecondary : AppColors.textSecondary.withValues(alpha: 0.3),
-                height: 15,
+              SizedBox(width: 8.w),
+              Container(
+                width: 16.w,
+                height: 16.h,
+                decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
               ),
             ],
           ),
         ),
+      );
+    }
+
+    final content = InkWell(
+      onTap: isEnabled
+          ? () async {
+              if (options.isEmpty && !isLoading && error == null) {
+                ref.read(selectionProvider.notifier).loadOptionsForLevel(level.levelCode);
+              }
+              final selected = await OrgUnitSelectionDialog.show(
+                context: context,
+                level: level,
+                selectionProvider: selectionProvider,
+              );
+              if (selected) {
+                final newSelection = ref.read(selectionProvider).getSelection(level.levelCode);
+                onSelectionChanged(level.levelCode, newSelection);
+              }
+            }
+          : null,
+      child: Container(
+        height: 48.h,
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: isEnabled ? Colors.white : AppColors.inputBg.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(color: error != null ? AppColors.error : AppColors.borderGrey),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: (displayLabel != null && displayLabel!.isNotEmpty) || selectedUnit != null
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary.withValues(alpha: 0.6),
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            DigifyAsset(
+              assetPath: Assets.icons.workforce.chevronRight.path,
+              color: isEnabled ? AppColors.textSecondary : AppColors.textSecondary.withValues(alpha: 0.3),
+              height: 15,
+            ),
+          ],
+        ),
       ),
     );
+
+    if (showLabel) {
+      return PositionLabeledField(label: level.getLabel(), isRequired: true, child: content);
+    }
+    return content;
   }
 }

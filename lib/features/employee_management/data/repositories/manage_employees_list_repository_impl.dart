@@ -11,8 +11,28 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
   ManageEmployeesListRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<ManageEmployeesPageResult> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10}) async {
-    final dto = await remoteDataSource.getEmployees(enterpriseId: enterpriseId, page: page, pageSize: pageSize);
+  Future<ManageEmployeesPageResult> getEmployees({
+    required int enterpriseId,
+    int page = 1,
+    int pageSize = 10,
+    String? positionId,
+    int? jobFamilyId,
+    int? jobLevelId,
+    int? gradeId,
+    String? orgUnitId,
+    String? levelCode,
+  }) async {
+    final dto = await remoteDataSource.getEmployees(
+      enterpriseId: enterpriseId,
+      page: page,
+      pageSize: pageSize,
+      positionId: positionId,
+      jobFamilyId: jobFamilyId,
+      jobLevelId: jobLevelId,
+      gradeId: gradeId,
+      orgUnitId: orgUnitId,
+      levelCode: levelCode,
+    );
     return dto.toDomain();
   }
 

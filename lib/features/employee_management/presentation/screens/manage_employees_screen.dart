@@ -117,6 +117,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onEdit: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onMore: () {},
+                paginationIsLoading: false,
               ),
           ],
         ),

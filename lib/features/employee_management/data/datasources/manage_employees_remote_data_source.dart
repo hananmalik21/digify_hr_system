@@ -8,7 +8,17 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 
 abstract class ManageEmployeesRemoteDataSource {
-  Future<EmployeesResponseDto> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10});
+  Future<EmployeesResponseDto> getEmployees({
+    required int enterpriseId,
+    int page = 1,
+    int pageSize = 10,
+    String? positionId,
+    int? jobFamilyId,
+    int? jobLevelId,
+    int? gradeId,
+    String? orgUnitId,
+    String? levelCode,
+  });
 
   Future<EmployeeFullDetails?> getEmployeeFullDetails(String employeeGuid, {required int enterpriseId});
 
@@ -21,12 +31,28 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
   final ApiClient apiClient;
 
   @override
-  Future<EmployeesResponseDto> getEmployees({required int enterpriseId, int page = 1, int pageSize = 10}) async {
+  Future<EmployeesResponseDto> getEmployees({
+    required int enterpriseId,
+    int page = 1,
+    int pageSize = 10,
+    String? positionId,
+    int? jobFamilyId,
+    int? jobLevelId,
+    int? gradeId,
+    String? orgUnitId,
+    String? levelCode,
+  }) async {
     final queryParameters = <String, String>{
       'enterpriseId': enterpriseId.toString(),
       'page': page.toString(),
       'page_size': pageSize.toString(),
     };
+    if (positionId != null && positionId.isNotEmpty) queryParameters['position_id'] = positionId;
+    if (jobFamilyId != null) queryParameters['job_family_id'] = jobFamilyId.toString();
+    if (jobLevelId != null) queryParameters['job_level_id'] = jobLevelId.toString();
+    if (gradeId != null) queryParameters['grade_id'] = gradeId.toString();
+    if (orgUnitId != null && orgUnitId.isNotEmpty) queryParameters['org_unit_id'] = orgUnitId;
+    if (levelCode != null && levelCode.isNotEmpty) queryParameters['level_code'] = levelCode;
     final response = await apiClient.get(ApiEndpoints.employees, queryParameters: queryParameters);
     return EmployeesResponseDto.fromJson(response);
   }
