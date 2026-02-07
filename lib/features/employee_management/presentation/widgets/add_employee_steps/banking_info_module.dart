@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
@@ -33,17 +34,8 @@ class BankingInfoModule extends ConsumerWidget {
     final state = ref.watch(addEmployeeBankingProvider);
     final notifier = ref.read(addEmployeeBankingProvider.notifier);
     final em = Assets.icons.employeeManagement;
-    final bankIcon = _prefixIcon(context, em.banking.path, isDark);
     final cardIcon = _prefixIcon(context, em.card.path, isDark);
 
-    final bankCodeField = DigifyTextField(
-      labelText: localizations.bankName,
-      isRequired: true,
-      prefixIcon: bankIcon,
-      hintText: localizations.hintBankName,
-      initialValue: state.bankCode ?? '',
-      onChanged: notifier.setBankCode,
-    );
     final accountNumberField = DigifyTextField(
       labelText: localizations.accountNumber,
       isRequired: true,
@@ -52,7 +44,15 @@ class BankingInfoModule extends ConsumerWidget {
       initialValue: state.accountNumber ?? '',
       onChanged: notifier.setAccountNumber,
     );
-    final iban = DigifyTextField(labelText: localizations.iban, prefixIcon: cardIcon, hintText: localizations.hintIban);
+    final ibanField = DigifyTextField(
+      labelText: localizations.iban,
+      isRequired: true,
+      prefixIcon: cardIcon,
+      hintText: localizations.hintIban,
+      initialValue: state.iban ?? '',
+      onChanged: notifier.setIban,
+      validator: (v) => FormValidators.iban(v, errorMessage: localizations.invalidIban),
+    );
 
     return Container(
       padding: EdgeInsets.all(18.w),
@@ -65,26 +65,19 @@ class BankingInfoModule extends ConsumerWidget {
         builder: (context, constraints) {
           final useTwoColumns = constraints.maxWidth > 500;
           if (useTwoColumns) {
-            return Column(
+            return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16.h,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: bankCodeField),
-                    Gap(14.w),
-                    Expanded(child: accountNumberField),
-                  ],
-                ),
-                iban,
+                Expanded(child: accountNumberField),
+                Gap(14.w),
+                Expanded(child: ibanField),
               ],
             );
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,
-            children: [bankCodeField, accountNumberField, iban],
+            children: [accountNumberField, ibanField],
           );
         },
       ),

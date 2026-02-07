@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
@@ -29,6 +30,7 @@ class AddEmployeeDialogFlow {
     _ref.read(addEmployeeAssignmentProvider.notifier).reset();
     _ref.read(addEmployeeJobEmploymentProvider.notifier).reset();
     _ref.read(addEmployeeCompensationProvider.notifier).reset();
+    _ref.read(addEmployeeBankingProvider.notifier).reset();
   }
 
   void close(BuildContext context) {
@@ -111,6 +113,18 @@ class AddEmployeeDialogFlow {
       }
     }
 
+    if (stepperState.currentStepIndex == 6) {
+      final bankingState = _ref.read(addEmployeeBankingProvider);
+      if (FormValidators.iban(bankingState.iban) != null) {
+        ToastService.error(context, localizations.invalidIban);
+        return;
+      }
+      if (!bankingState.isStepValid) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
     _ref.read(addEmployeeStepperProvider.notifier).nextStep();
     logAddEmployeeState(_ref);
   }
@@ -127,6 +141,15 @@ class AddEmployeeDialogFlow {
     final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
 
     if (!compensationState.isStepValid) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
+    final bankingState = _ref.read(addEmployeeBankingProvider);
+    if (FormValidators.iban(bankingState.iban) != null) {
+      ToastService.error(context, localizations.invalidIban);
+      return;
+    }
+    if (!bankingState.isStepValid) {
       ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
       return;
     }
@@ -159,6 +182,8 @@ class AddEmployeeDialogFlow {
       foodKwd: _emptyToNull(compensationState.foodKwd),
       mobileKwd: _emptyToNull(compensationState.mobileKwd),
       otherKwd: _emptyToNull(compensationState.otherKwd),
+      accountNumber: _emptyToNull(bankingState.accountNumber),
+      iban: _emptyToNull(bankingState.iban),
     );
     final ok = await _ref.read(addEmployeeBasicInfoProvider.notifier).submitWithRequest(request);
     if (!context.mounted) return;

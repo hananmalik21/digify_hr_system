@@ -82,6 +82,9 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.foodKwd != null && request.foodKwd!.trim().isNotEmpty) 'food_kwd': request.foodKwd!.trim(),
       if (request.mobileKwd != null && request.mobileKwd!.trim().isNotEmpty) 'mobile_kwd': request.mobileKwd!.trim(),
       if (request.otherKwd != null && request.otherKwd!.trim().isNotEmpty) 'other_kwd': request.otherKwd!.trim(),
+      if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
+        'account_number': request.accountNumber!.trim(),
+      if (request.iban != null && request.iban!.trim().isNotEmpty) 'iban': request.iban!.trim(),
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     final formData = FormData.fromMap(map);

@@ -121,6 +121,20 @@ class FormValidators {
     return null;
   }
 
+  static String? iban(String? value, {String? errorMessage}) {
+    if (value == null || value.trim().isEmpty) {
+      return errorMessage ?? 'Required';
+    }
+    final cleaned = value.trim().replaceAll(RegExp(r'\s'), '');
+    if (cleaned.length < 10) {
+      return errorMessage ?? 'Please enter a valid IBAN';
+    }
+    if (!RegExp(r'^[A-Za-z0-9]+$').hasMatch(cleaned)) {
+      return errorMessage ?? 'Please enter a valid IBAN';
+    }
+    return null;
+  }
+
   static String? pattern(String? value, RegExp pattern, {String? errorMessage, String? requiredErrorMessage}) {
     if (value == null || value.trim().isEmpty) {
       return requiredErrorMessage ?? 'Required';

@@ -1727,10 +1727,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintBankName => 'أدخل اسم البنك';
 
   @override
+  String get hintSelectBank => 'اختر البنك';
+
+  @override
   String get hintAccountNumber => 'أدخل رقم الحساب';
 
   @override
-  String get hintIban => 'أدخل رقم الآيبان';
+  String get hintIban => 'مثال: KW81CBKU0000000000001234560101';
+
+  @override
+  String get invalidIban => 'يرجى إدخال رقم آيبان صحيح';
 
   @override
   String get documentsAndCompliance => 'المستندات والامتثال';
