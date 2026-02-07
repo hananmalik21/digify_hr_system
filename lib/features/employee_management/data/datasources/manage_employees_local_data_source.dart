@@ -13,7 +13,7 @@ class ManageEmployeesLocalDataSourceImpl implements ManageEmployeesLocalDataSour
       const EmployeeListItem(
         id: '1',
         fullName: 'Khurram K P Shahzad',
-        employeeId: 'EMP1765637069447',
+        employeeNumber: 'EMP1765637069447',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
@@ -21,7 +21,7 @@ class ManageEmployeesLocalDataSourceImpl implements ManageEmployeesLocalDataSour
       const EmployeeListItem(
         id: '2',
         fullName: 'Zahoor K Khan',
-        employeeId: 'EMP1765637069448',
+        employeeNumber: 'EMP1765637069448',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
@@ -29,7 +29,7 @@ class ManageEmployeesLocalDataSourceImpl implements ManageEmployeesLocalDataSour
       const EmployeeListItem(
         id: '3',
         fullName: 'Ali G H Shamkhani',
-        employeeId: 'EMP1765637069449',
+        employeeNumber: 'EMP1765637069449',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
@@ -37,7 +37,7 @@ class ManageEmployeesLocalDataSourceImpl implements ManageEmployeesLocalDataSour
       const EmployeeListItem(
         id: '4',
         fullName: 'Sara Ahmed',
-        employeeId: 'EMP1765637069450',
+        employeeNumber: 'EMP1765637069450',
         position: 'Finance Analyst',
         department: 'Finance',
         status: 'active',
@@ -45,7 +45,7 @@ class ManageEmployeesLocalDataSourceImpl implements ManageEmployeesLocalDataSour
       const EmployeeListItem(
         id: '5',
         fullName: 'Omar Hassan',
-        employeeId: 'EMP1765637069451',
+        employeeNumber: 'EMP1765637069451',
         position: 'IT Specialist',
         department: 'IT',
         status: 'active',

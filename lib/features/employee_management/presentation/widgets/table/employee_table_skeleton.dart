@@ -12,26 +12,26 @@ class EmployeeTableSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placeholderEmployees = [
-      EmployeeListItem(
+      const EmployeeListItem(
         id: '1',
         fullName: 'Khurram K P Shahzad',
-        employeeId: 'EMP1765637069447',
+        employeeNumber: 'EMP1765637069447',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
       ),
-      EmployeeListItem(
+      const EmployeeListItem(
         id: '2',
         fullName: 'Zahoor K Khan',
-        employeeId: 'EMP1765637069448',
+        employeeNumber: 'EMP1765637069448',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
       ),
-      EmployeeListItem(
+      const EmployeeListItem(
         id: '3',
         fullName: 'Ali G H Shamkhani',
-        employeeId: 'EMP1765637069449',
+        employeeNumber: 'EMP1765637069449',
         position: 'HR Manager',
         department: 'Purchasing',
         status: 'probation',
