@@ -96,11 +96,16 @@ class UpdateShiftFormState {
 
 /// StateNotifier for managing update shift form
 class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
+  final int _enterpriseId;
   final ShiftsNotifier? _shiftsNotifier;
 
-  UpdateShiftFormNotifier({ShiftsNotifier? shiftsNotifier, required ShiftOverview initialShift})
-    : _shiftsNotifier = shiftsNotifier,
-      super(_initializeFromShift(initialShift));
+  UpdateShiftFormNotifier({
+    required int enterpriseId,
+    ShiftsNotifier? shiftsNotifier,
+    required ShiftOverview initialShift,
+  }) : _enterpriseId = enterpriseId,
+       _shiftsNotifier = shiftsNotifier,
+       super(_initializeFromShift(initialShift));
 
   static UpdateShiftFormState _initializeFromShift(ShiftOverview shift) {
     TimeOfDay? parseTime(String timeStr) {
@@ -280,7 +285,7 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
       final breakDurationValue = state.breakDuration.isEmpty ? 0.0 : (double.tryParse(state.breakDuration) ?? 0.0);
 
       final shiftData = <String, dynamic>{
-        'tenant_id': 1001,
+        'tenant_id': _enterpriseId,
         'shift_name_en': state.nameEn.trim(),
         'shift_name_ar': state.nameAr.trim(),
         'shift_type': state.shiftType ?? 'REGULAR',
@@ -315,6 +320,7 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
 final updateShiftFormProvider = StateNotifierProvider.autoDispose
     .family<UpdateShiftFormNotifier, UpdateShiftFormState, ({ShiftOverview shift, int enterpriseId})>((ref, params) {
       return UpdateShiftFormNotifier(
+        enterpriseId: params.enterpriseId,
         shiftsNotifier: ref.read(shiftsNotifierProvider(params.enterpriseId).notifier),
         initialShift: params.shift,
       );

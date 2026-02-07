@@ -32,6 +32,7 @@ dependencies:
 
   # Utilities
   intl: any
+  url_launcher: ^6.3.2
   skeletonizer: ^2.1.2
   flutter_colorpicker: ^1.1.0
   pull_down_button: ^0.10.2

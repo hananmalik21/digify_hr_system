@@ -135,6 +135,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmail => 'Please enter a valid email';
 
   @override
+  String get invalidPhone => 'Please enter a valid phone number';
+
+  @override
   String get passwordTooShort => 'Password must be at least 6 characters';
 
   @override
@@ -1435,6 +1438,393 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addNewEmployee => 'Add New Employee';
 
   @override
+  String addEmployeeStepSubtitle(int step) {
+    return 'Step $step of 9';
+  }
+
+  @override
+  String get addEmployeeStepBasicInfo => 'Basic Info';
+
+  @override
+  String get addEmployeeStepDemographics => 'Demographics';
+
+  @override
+  String get addEmployeeStepAddress => 'Address';
+
+  @override
+  String get addEmployeeStepAssignmentInfo => 'Assignment Info';
+
+  @override
+  String get addEmployeeStepWorkSchedule => 'Work Schedule';
+
+  @override
+  String get addEmployeeStepCompensation => 'Compensation';
+
+  @override
+  String get addEmployeeStepBanking => 'Banking';
+
+  @override
+  String get addEmployeeStepDocuments => 'Documents';
+
+  @override
+  String get addEmployeeStepReview => 'Review';
+
+  @override
+  String get addEmployeeBasicInfoSubtitle => 'Name and primary contact details';
+
+  @override
+  String get addEmployeeNameFieldsConfigured =>
+      'Name fields are configured from Enterprise Structure → Name Structure Settings';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get middleName => 'Middle Name';
+
+  @override
+  String get middleNameArabic => 'Middle Name (Arabic)';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get mobileNumber => 'Mobile Number';
+
+  @override
+  String get firstNameArabic => 'First Name (Arabic)';
+
+  @override
+  String get lastNameArabic => 'Last Name (Arabic)';
+
+  @override
+  String get hintFirstName => 'e.g. John';
+
+  @override
+  String get hintLastName => 'e.g. Smith';
+
+  @override
+  String get hintMiddleName => 'e.g. Robert';
+
+  @override
+  String get hintMiddleNameArabic => 'e.g. محمد';
+
+  @override
+  String get hintMobileNumber => 'e.g. +965 5555 5555';
+
+  @override
+  String get hintDateOfBirth => 'e.g. 15/06/1990';
+
+  @override
+  String get hintFirstNameArabic => 'e.g. جون';
+
+  @override
+  String get hintLastNameArabic => 'e.g. سميث';
+
+  @override
+  String get demographicsAndIdentity => 'Demographics & Identity';
+
+  @override
+  String get demographicsAndIdentitySubtitle =>
+      'Personal demographics and identification documents.';
+
+  @override
+  String get demographics => 'Demographics';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get nationality => 'Nationality';
+
+  @override
+  String get maritalStatus => 'Marital Status';
+
+  @override
+  String get religion => 'Religion';
+
+  @override
+  String get identificationDocuments => 'Identification Documents';
+
+  @override
+  String get civilIdNumber => 'Civil ID Number';
+
+  @override
+  String get passportNumber => 'Passport Number';
+
+  @override
+  String get hintGender => 'Select gender';
+
+  @override
+  String get hintNationality => 'Select nationality';
+
+  @override
+  String get hintMaritalStatus => 'Select marital status';
+
+  @override
+  String get hintReligion => 'Enter religion';
+
+  @override
+  String get hintCivilIdNumber => 'e.g. 123456789012';
+
+  @override
+  String get hintPassportNumber => 'e.g. AB1234567';
+
+  @override
+  String get addressAndEmergencyContact => 'Address & Emergency Contact';
+
+  @override
+  String get addressAndEmergencyContactSubtitle =>
+      'Residential address and emergency contact information';
+
+  @override
+  String get residentialAddress => 'Residential Address';
+
+  @override
+  String get emergencyContact => 'Emergency Contact';
+
+  @override
+  String get contactName => 'Contact Name';
+
+  @override
+  String get relationship => 'Relationship';
+
+  @override
+  String get hintContactName => 'Enter contact name';
+
+  @override
+  String get hintRelationship => 'Enter relationship';
+
+  @override
+  String get assignmentInformation => 'Assignment Information';
+
+  @override
+  String get assignmentInformationSubtitle =>
+      'Organizational structure and job details.';
+
+  @override
+  String get organizationalStructure => 'Organizational Structure';
+
+  @override
+  String get jobAndEmploymentDetails => 'Job & Employment Details';
+
+  @override
+  String get workLocation => 'Work Location';
+
+  @override
+  String get gradeLevel => 'Grade Level';
+
+  @override
+  String get contractType => 'Contract Type';
+
+  @override
+  String get reportingTo => 'Reporting To';
+
+  @override
+  String get enterpriseHireDate => 'Enterprise Hire Date';
+
+  @override
+  String get probationPeriodDays => 'Probation Period (days)';
+
+  @override
+  String get employmentStatus => 'Employment Status';
+
+  @override
+  String get hintWorkLocation => 'Enter work location';
+
+  @override
+  String get hintEmployeeNumber => 'Enter employee number';
+
+  @override
+  String get hintGradeLevel => 'Select grade level';
+
+  @override
+  String get hintContractType => 'Select contract type';
+
+  @override
+  String get hintReportingTo => 'Enter reporting to';
+
+  @override
+  String get hintEnterpriseHireDate => 'Select hire date';
+
+  @override
+  String get hintProbationPeriodDays => 'Enter days';
+
+  @override
+  String get hintEmploymentStatus => 'Select employment status';
+
+  @override
+  String get timeManagementWorkSchedule => 'Time Management - Work Schedule';
+
+  @override
+  String get timeManagementWorkScheduleSubtitle =>
+      'Assign work schedule for attendance tracking';
+
+  @override
+  String get workScheduleAssignment => 'Work Schedule Assignment';
+
+  @override
+  String get workSchedule => 'Work Schedule';
+
+  @override
+  String get hintSelectWorkSchedule => 'Select work schedule';
+
+  @override
+  String get compensationAndBenefits => 'Compensation & Benefits';
+
+  @override
+  String get compensationAndBenefitsSubtitle =>
+      'Salary structure and allowances';
+
+  @override
+  String get basicSalaryKwd => 'Basic Salary (KWD)';
+
+  @override
+  String get allowances => 'Allowances';
+
+  @override
+  String get housingAllowanceKwd => 'Housing Allowance (KWD)';
+
+  @override
+  String get transportationKwd => 'Transportation (KWD)';
+
+  @override
+  String get foodAllowanceKwd => 'Food Allowance (KWD)';
+
+  @override
+  String get mobileAllowanceKwd => 'Mobile Allowance (KWD)';
+
+  @override
+  String get otherAllowancesKwd => 'Other Allowances (KWD)';
+
+  @override
+  String get totalMonthlyCompensation => 'Total Monthly Compensation';
+
+  @override
+  String annualKwd(String value) {
+    return 'Annual: $value KWD';
+  }
+
+  @override
+  String get hintEnterAmount => 'Enter amount';
+
+  @override
+  String get bankingInformation => 'Banking Information';
+
+  @override
+  String get bankingInformationSubtitle =>
+      'Bank account details for salary transfer';
+
+  @override
+  String get bankName => 'Bank Name';
+
+  @override
+  String get accountNumber => 'Account Number';
+
+  @override
+  String get iban => 'IBAN';
+
+  @override
+  String get hintBankName => 'Enter bank name';
+
+  @override
+  String get hintSelectBank => 'Select bank';
+
+  @override
+  String get hintAccountNumber => 'Enter account number';
+
+  @override
+  String get hintIban => 'e.g. KW81CBKU0000000000001234560101';
+
+  @override
+  String get invalidIban => 'Please enter a valid IBAN';
+
+  @override
+  String get documentsAndCompliance => 'Documents & Compliance';
+
+  @override
+  String get documentsAndComplianceSubtitle =>
+      'Document expiry dates and compliance tracking';
+
+  @override
+  String get documentExpiryDates => 'Document Expiry Dates';
+
+  @override
+  String get civilIdExpiry => 'Civil ID Expiry';
+
+  @override
+  String get passportExpiry => 'Passport Expiry';
+
+  @override
+  String get visaNumber => 'Visa Number';
+
+  @override
+  String get visaExpiry => 'Visa Expiry';
+
+  @override
+  String get workPermitNumber => 'Work Permit Number';
+
+  @override
+  String get workPermitExpiry => 'Work Permit Expiry';
+
+  @override
+  String get hintSelectDate => 'Select date';
+
+  @override
+  String get hintVisaNumber => 'Enter visa number';
+
+  @override
+  String get hintWorkPermitNumber => 'Enter work permit number';
+
+  @override
+  String get reviewAndConfirm => 'Review & Confirm';
+
+  @override
+  String get reviewAndConfirmSubtitle =>
+      'Review all information before creating the employee record';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get employmentDetails => 'Employment Details';
+
+  @override
+  String get reviewName => 'Name';
+
+  @override
+  String get reviewDob => 'DOB';
+
+  @override
+  String get reviewBank => 'Bank';
+
+  @override
+  String get reviewAccount => 'Account';
+
+  @override
+  String get reviewTotal => 'Total';
+
+  @override
+  String get reviewProbation => 'Probation';
+
+  @override
+  String get reviewPermanent => 'Permanent';
+
+  @override
+  String get addEmployeeStepContentPlaceholder =>
+      'Content for this step coming soon.';
+
+  @override
+  String get addEmployeeFillRequiredFields =>
+      'Please fill all required fields.';
+
+  @override
+  String get addEmployeeCreatedSuccess => 'Employee created successfully.';
+
+  @override
   String get newHiresThisMonth => 'New This Month';
 
   @override
@@ -2153,10 +2543,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintZipCode => 'Enter zip code';
 
   @override
-  String get hintPhone => 'Enter phone number';
+  String get hintPhone => 'e.g. +965 2222 2222';
 
   @override
-  String get hintEmail => 'Enter email address';
+  String get hintEmail => 'e.g. john.smith@company.com';
 
   @override
   String get hintWebsite => 'Enter website URL';

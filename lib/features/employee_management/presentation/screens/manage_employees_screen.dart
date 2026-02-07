@@ -7,14 +7,18 @@ import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_dialog_flow_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_management_stats_cards.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_search_and_actions.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employees_grid_view.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/manage_employees_table.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
@@ -28,19 +32,6 @@ class ManageEmployeesScreen extends ConsumerWidget {
     final effectiveEnterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final listState = ref.watch(manageEmployeesListProvider);
     final viewMode = ref.watch(manageEmployeesViewModeProvider);
-
-    ref.listen<int?>(manageEmployeesEnterpriseIdProvider, (previous, next) {
-      if (next != null) {
-        ref.read(manageEmployeesListProvider.notifier).loadPage(next, 1);
-      }
-    });
-
-    if (effectiveEnterpriseId != null && listState.lastEnterpriseId != effectiveEnterpriseId && !listState.isLoading) {
-      final id = effectiveEnterpriseId;
-      Future.microtask(() {
-        ref.read(manageEmployeesListProvider.notifier).loadPage(id, 1);
-      });
-    }
 
     return Container(
       color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
@@ -56,7 +47,10 @@ class ManageEmployeesScreen extends ConsumerWidget {
               trailing: AppButton.primary(
                 label: localizations.addNewEmployee,
                 svgPath: Assets.icons.addDivisionIcon.path,
-                onPressed: () {},
+                onPressed: () {
+                  ref.read(addEmployeeDialogFlowProvider).clearForm();
+                  AddEmployeeDialog.show(context);
+                },
               ),
             ),
             Gap(24.h),
@@ -86,7 +80,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 localizations: localizations,
                 isDark: isDark,
                 isLoading: listState.isLoading,
-                onView: (_) {},
+                onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onMore: () {},
               ),
               if (listState.pagination != null) ...[
@@ -120,8 +114,8 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 onNext: listState.pagination != null && listState.pagination!.hasNext
                     ? () => ref.read(manageEmployeesListProvider.notifier).goToPage(listState.currentPage + 1)
                     : null,
-                onView: (_) {},
-                onEdit: (_) {},
+                onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
+                onEdit: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
                 onMore: () {},
               ),
           ],

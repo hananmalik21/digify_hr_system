@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/navigation/app_layout.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
+import 'package:flutter/material.dart';
 import 'package:digify_hr_system/core/widgets/feedback/placeholder_screen.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/screens/login_screen.dart';
@@ -13,6 +14,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/scre
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/screens/employee_management_screens.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -138,6 +140,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.employees,
             name: 'employees',
             builder: (context, state) => const EmployeeManagementScreen(),
+            routes: [
+              GoRoute(
+                path: 'detail',
+                name: 'employee-detail',
+                builder: (context, state) {
+                  final employee = state.extra is EmployeeListItem ? state.extra! as EmployeeListItem : null;
+                  if (employee == null) {
+                    return Scaffold(body: Center(child: Text('Employee not found')));
+                  }
+                  return EmployeeDetailScreen(employee: employee);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutes.leaveManagement,
