@@ -32,6 +32,12 @@ class AddEmployeeWorkScheduleStep extends ConsumerWidget {
           selectedWorkSchedule: workScheduleState.selectedWorkSchedule,
           onWorkScheduleChanged: workScheduleNotifier.setSelectedWorkSchedule,
         ),
+        WorkScheduleStartEndModule(
+          wsStart: workScheduleState.wsStart,
+          wsEnd: workScheduleState.wsEnd,
+          onWsStartChanged: workScheduleNotifier.setWsStart,
+          onWsEndChanged: workScheduleNotifier.setWsEnd,
+        ),
       ],
     );
   }

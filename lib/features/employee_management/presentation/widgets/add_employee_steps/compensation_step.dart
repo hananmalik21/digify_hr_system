@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/section_header_card.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_allowances_module.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_basic_salary_module.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_start_end_module.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/compensation_total_summary_module.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class AddEmployeeCompensationStep extends StatelessWidget {
           subtitle: localizations.compensationAndBenefitsSubtitle,
         ),
         const CompensationBasicSalaryModule(),
+        const CompensationStartEndModule(),
         const CompensationAllowancesModule(),
         const CompensationTotalSummaryModule(),
       ],

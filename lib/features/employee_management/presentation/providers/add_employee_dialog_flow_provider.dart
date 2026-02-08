@@ -82,6 +82,10 @@ class AddEmployeeDialogFlow {
 
     if (stepperState.currentStepIndex == 2) {
       final addressState = _ref.read(addEmployeeAddressProvider);
+      if (FormValidators.phone(addressState.emergPhone) != null) {
+        ToastService.error(context, localizations.invalidPhone);
+        return;
+      }
       if (FormValidators.email(addressState.emergEmail) != null) {
         ToastService.error(context, localizations.invalidEmail);
         return;
@@ -102,6 +106,14 @@ class AddEmployeeDialogFlow {
                 .map((l) => l.levelCode)
           : <String>[];
       if (!assignmentState.isStepValid(requiredLevelCodes)) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+    }
+
+    if (stepperState.currentStepIndex == 4) {
+      final workScheduleState = _ref.read(addEmployeeWorkScheduleProvider);
+      if (!workScheduleState.isStepValid) {
         ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
         return;
       }
@@ -154,6 +166,17 @@ class AddEmployeeDialogFlow {
       ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
       return;
     }
+    if (!workScheduleState.isStepValid) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
+    final requiredLevelCodes = enterpriseId != null
+        ? _ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier).activeLevels.map((l) => l.levelCode)
+        : <String>[];
+    if (!assignmentState.isStepValid(requiredLevelCodes)) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
     final bankingState = _ref.read(addEmployeeBankingProvider);
     if (FormValidators.iban(bankingState.iban) != null) {
       ToastService.error(context, localizations.invalidIban);
@@ -175,8 +198,12 @@ class AddEmployeeDialogFlow {
       emergRelationship: _emptyToNull(addressState.emergRelationship),
       contactName: _emptyToNull(addressState.contactName),
       workScheduleId: workScheduleState.workScheduleId,
+      wsStart: workScheduleState.wsStart,
+      wsEnd: workScheduleState.wsEnd,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
       workLocation: _emptyToNull(assignmentState.workLocation),
+      asgStart: assignmentState.asgStart,
+      asgEnd: assignmentState.asgEnd,
       lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,
       civilIdNumber: _emptyToNull(demographicsState.civilIdNumber),
       passportNumber: _emptyToNull(demographicsState.passportNumber),
@@ -197,6 +224,9 @@ class AddEmployeeDialogFlow {
       foodKwd: _emptyToNull(compensationState.foodKwd),
       mobileKwd: _emptyToNull(compensationState.mobileKwd),
       otherKwd: _emptyToNull(compensationState.otherKwd),
+      compStart: compensationState.compStart,
+      compEnd: compensationState.compEnd,
+      bankName: _emptyToNull(bankingState.bankName),
       accountNumber: _emptyToNull(bankingState.accountNumber),
       iban: _emptyToNull(bankingState.iban),
       civilIdExpiry: documentsState.civilIdExpiry,

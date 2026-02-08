@@ -36,6 +36,14 @@ class BankingInfoModule extends ConsumerWidget {
     final em = Assets.icons.employeeManagement;
     final cardIcon = _prefixIcon(context, em.card.path, isDark);
 
+    final bankNameField = DigifyTextField(
+      labelText: localizations.bankName,
+      isRequired: true,
+      prefixIcon: cardIcon,
+      hintText: localizations.hintBankName,
+      initialValue: state.bankName ?? '',
+      onChanged: notifier.setBankName,
+    );
     final accountNumberField = DigifyTextField(
       labelText: localizations.accountNumber,
       isRequired: true,
@@ -65,19 +73,26 @@ class BankingInfoModule extends ConsumerWidget {
         builder: (context, constraints) {
           final useTwoColumns = constraints.maxWidth > 500;
           if (useTwoColumns) {
-            return Row(
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
               children: [
-                Expanded(child: accountNumberField),
-                Gap(14.w),
-                Expanded(child: ibanField),
+                bankNameField,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: accountNumberField),
+                    Gap(14.w),
+                    Expanded(child: ibanField),
+                  ],
+                ),
               ],
             );
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,
-            children: [accountNumberField, ibanField],
+            children: [bankNameField, accountNumberField, ibanField],
           );
         },
       ),

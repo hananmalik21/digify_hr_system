@@ -91,6 +91,7 @@ class AddEmployeeReviewStep extends ConsumerWidget {
           iconPath: em.banking.path,
           title: localizations.addEmployeeStepBanking,
           rows: [
+            ReviewSummaryRow(label: localizations.bankName, value: data.bankName),
             ReviewSummaryRow(label: localizations.accountNumber, value: data.accountNumber),
             ReviewSummaryRow(label: localizations.iban, value: data.iban),
           ],
