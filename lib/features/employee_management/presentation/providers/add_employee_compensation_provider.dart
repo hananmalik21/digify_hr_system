@@ -7,6 +7,8 @@ class AddEmployeeCompensationState {
   final String? foodKwd;
   final String? mobileKwd;
   final String? otherKwd;
+  final DateTime? compStart;
+  final DateTime? compEnd;
 
   const AddEmployeeCompensationState({
     this.basicSalaryKwd,
@@ -15,6 +17,8 @@ class AddEmployeeCompensationState {
     this.foodKwd,
     this.mobileKwd,
     this.otherKwd,
+    this.compStart,
+    this.compEnd,
   });
 
   static double _parse(String? value) {
@@ -47,7 +51,10 @@ class AddEmployeeCompensationState {
       _isFilled(transportKwd) &&
       _isFilled(foodKwd) &&
       _isFilled(mobileKwd) &&
-      _isFilled(otherKwd);
+      _isFilled(otherKwd) &&
+      compStart != null &&
+      compEnd != null &&
+      !compEnd!.isBefore(compStart!);
 
   AddEmployeeCompensationState copyWith({
     String? basicSalaryKwd,
@@ -56,12 +63,16 @@ class AddEmployeeCompensationState {
     String? foodKwd,
     String? mobileKwd,
     String? otherKwd,
+    DateTime? compStart,
+    DateTime? compEnd,
     bool clearBasicSalaryKwd = false,
     bool clearHousingKwd = false,
     bool clearTransportKwd = false,
     bool clearFoodKwd = false,
     bool clearMobileKwd = false,
     bool clearOtherKwd = false,
+    bool clearCompStart = false,
+    bool clearCompEnd = false,
   }) {
     return AddEmployeeCompensationState(
       basicSalaryKwd: clearBasicSalaryKwd ? null : (basicSalaryKwd ?? this.basicSalaryKwd),
@@ -70,6 +81,8 @@ class AddEmployeeCompensationState {
       foodKwd: clearFoodKwd ? null : (foodKwd ?? this.foodKwd),
       mobileKwd: clearMobileKwd ? null : (mobileKwd ?? this.mobileKwd),
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
+      compStart: clearCompStart ? null : (compStart ?? this.compStart),
+      compEnd: clearCompEnd ? null : (compEnd ?? this.compEnd),
     );
   }
 }
@@ -99,6 +112,14 @@ class AddEmployeeCompensationNotifier extends StateNotifier<AddEmployeeCompensat
 
   void setOtherKwd(String? value) {
     state = state.copyWith(otherKwd: value, clearOtherKwd: value == null || value.isEmpty);
+  }
+
+  void setCompStart(DateTime? value) {
+    state = state.copyWith(compStart: value, clearCompStart: value == null);
+  }
+
+  void setCompEnd(DateTime? value) {
+    state = state.copyWith(compEnd: value, clearCompEnd: value == null);
   }
 
   void reset() {

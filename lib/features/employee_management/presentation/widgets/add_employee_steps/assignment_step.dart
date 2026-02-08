@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/section_header_card.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_start_end_module.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_details_module.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/organizational_structure_module.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -24,6 +25,7 @@ class AddEmployeeAssignmentStep extends StatelessWidget {
           subtitle: localizations.assignmentInformationSubtitle,
         ),
         const OrganizationalStructureModule(),
+        const AssignmentStartEndModule(),
         const JobEmploymentDetailsModule(),
       ],
     );

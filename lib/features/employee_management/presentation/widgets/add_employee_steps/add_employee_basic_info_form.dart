@@ -67,15 +67,6 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (state.submitError != null) ...[
-              Padding(
-                padding: EdgeInsets.only(bottom: 12.h),
-                child: Text(
-                  state.submitError!,
-                  style: TextStyle(fontSize: 13.sp, color: AppColors.error),
-                ),
-              ),
-            ],
             if (useTwoColumns)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

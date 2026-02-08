@@ -70,6 +70,7 @@ class AddEmployeeReviewData {
   final String basicSalaryDisplay;
   final String allowancesDisplay;
   final String totalDisplay;
+  final String bankName;
   final String accountNumber;
   final String iban;
   final String civilIdExpiryFormatted;
@@ -102,6 +103,7 @@ class AddEmployeeReviewData {
     required this.basicSalaryDisplay,
     required this.allowancesDisplay,
     required this.totalDisplay,
+    required this.bankName,
     required this.accountNumber,
     required this.iban,
     required this.civilIdExpiryFormatted,
@@ -155,6 +157,7 @@ final addEmployeeReviewDataProvider = Provider<AddEmployeeReviewData>((ref) {
     basicSalaryDisplay: '${basicKwd.toStringAsFixed(3)} KWD',
     allowancesDisplay: '${allowancesKwd.toStringAsFixed(3)} KWD',
     totalDisplay: '${compensation.monthlyTotalFormatted} KWD',
+    bankName: _str(banking.bankName),
     accountNumber: _str(banking.accountNumber),
     iban: _str(banking.iban),
     civilIdExpiryFormatted: _formatDate(documents.civilIdExpiry),

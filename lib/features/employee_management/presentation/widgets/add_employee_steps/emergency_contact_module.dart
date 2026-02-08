@@ -2,6 +2,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/form_validators.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
@@ -89,12 +91,14 @@ class EmergencyContactModule extends ConsumerWidget {
               );
               final phoneNumber = DigifyTextField(
                 labelText: localizations.phoneNumber,
-                keyboardType: TextInputType.phone,
+                keyboardType: FieldFormat.phone,
+                inputFormatters: FieldFormat.phoneFormatters,
                 prefixIcon: phoneIcon,
                 hintText: localizations.hintPhone,
                 initialValue: addressState.emergPhone ?? '',
                 onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergPhone(value),
                 isRequired: true,
+                validator: (v) => FormValidators.phone(v, errorMessage: localizations.invalidPhone),
               );
               final emailAddress = DigifyTextField(
                 labelText: localizations.emailAddress,

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddEmployeeAddressState {
@@ -21,7 +22,12 @@ class AddEmployeeAddressState {
     final e = emergEmail?.trim() ?? '';
     final r = emergRelationship?.trim() ?? '';
     final c = contactName?.trim() ?? '';
-    return a.isNotEmpty && p.isNotEmpty && e.isNotEmpty && r.isNotEmpty && c.isNotEmpty;
+    return a.isNotEmpty &&
+        p.isNotEmpty &&
+        e.isNotEmpty &&
+        r.isNotEmpty &&
+        c.isNotEmpty &&
+        FormValidators.phone(emergPhone) == null;
   }
 
   AddEmployeeAddressState copyWith({

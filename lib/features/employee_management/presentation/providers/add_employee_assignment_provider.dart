@@ -11,8 +11,16 @@ class AddEmployeeAssignmentState {
   final Map<String, LevelSelection> levelSelections;
   final String? orgUnitIdHex;
   final String? workLocation;
+  final DateTime? asgStart;
+  final DateTime? asgEnd;
 
-  const AddEmployeeAssignmentState({this.levelSelections = const {}, this.orgUnitIdHex, this.workLocation});
+  const AddEmployeeAssignmentState({
+    this.levelSelections = const {},
+    this.orgUnitIdHex,
+    this.workLocation,
+    this.asgStart,
+    this.asgEnd,
+  });
 
   String? getSelectedUnitId(String levelCode) => levelSelections[levelCode]?.orgUnitId;
 
@@ -27,20 +35,26 @@ class AddEmployeeAssignmentState {
       if (id == null || id.trim().isEmpty) return false;
     }
     final loc = workLocation?.trim() ?? '';
-    return loc.isNotEmpty;
+    return loc.isNotEmpty && asgStart != null && asgEnd != null && !asgEnd!.isBefore(asgStart!);
   }
 
   AddEmployeeAssignmentState copyWith({
     Map<String, LevelSelection>? levelSelections,
     String? orgUnitIdHex,
     String? workLocation,
+    DateTime? asgStart,
+    DateTime? asgEnd,
     bool clearOrgUnitIdHex = false,
     bool clearWorkLocation = false,
+    bool clearAsgStart = false,
+    bool clearAsgEnd = false,
   }) {
     return AddEmployeeAssignmentState(
       levelSelections: levelSelections ?? this.levelSelections,
       orgUnitIdHex: clearOrgUnitIdHex ? null : (orgUnitIdHex ?? this.orgUnitIdHex),
       workLocation: clearWorkLocation ? null : (workLocation ?? this.workLocation),
+      asgStart: clearAsgStart ? null : (asgStart ?? this.asgStart),
+      asgEnd: clearAsgEnd ? null : (asgEnd ?? this.asgEnd),
     );
   }
 }
@@ -64,6 +78,14 @@ class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentS
 
   void setWorkLocation(String? value) {
     state = state.copyWith(workLocation: value, clearWorkLocation: value == null || value.isEmpty);
+  }
+
+  void setAsgStart(DateTime? value) {
+    state = state.copyWith(asgStart: value, clearAsgStart: value == null);
+  }
+
+  void setAsgEnd(DateTime? value) {
+    state = state.copyWith(asgEnd: value, clearAsgEnd: value == null);
   }
 
   void reset() {

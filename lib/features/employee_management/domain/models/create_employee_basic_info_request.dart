@@ -17,7 +17,11 @@ class CreateEmployeeBasicInfoRequest {
   final String? emergRelationship;
   final String? contactName;
   final int? workScheduleId;
+  final DateTime? wsStart;
+  final DateTime? wsEnd;
   final String? orgUnitIdHex;
+  final DateTime? asgStart;
+  final DateTime? asgEnd;
   final Map<String, String?>? lookupCodesByTypeCode;
   final String? civilIdNumber;
   final String? passportNumber;
@@ -37,6 +41,9 @@ class CreateEmployeeBasicInfoRequest {
   final String? foodKwd;
   final String? mobileKwd;
   final String? otherKwd;
+  final DateTime? compStart;
+  final DateTime? compEnd;
+  final String? bankName;
   final String? accountNumber;
   final String? iban;
   final DateTime? civilIdExpiry;
@@ -63,7 +70,11 @@ class CreateEmployeeBasicInfoRequest {
     this.emergRelationship,
     this.contactName,
     this.workScheduleId,
+    this.wsStart,
+    this.wsEnd,
     this.orgUnitIdHex,
+    this.asgStart,
+    this.asgEnd,
     this.lookupCodesByTypeCode,
     this.civilIdNumber,
     this.passportNumber,
@@ -83,6 +94,9 @@ class CreateEmployeeBasicInfoRequest {
     this.foodKwd,
     this.mobileKwd,
     this.otherKwd,
+    this.compStart,
+    this.compEnd,
+    this.bankName,
     this.accountNumber,
     this.iban,
     this.civilIdExpiry,
@@ -127,7 +141,15 @@ class CreateEmployeeBasicInfoRequest {
     bool clearEmergRelationship = false,
     bool clearContactName = false,
     bool clearWorkScheduleId = false,
+    DateTime? wsStart,
+    DateTime? wsEnd,
+    bool clearWsStart = false,
+    bool clearWsEnd = false,
     bool clearOrgUnitIdHex = false,
+    DateTime? asgStart,
+    DateTime? asgEnd,
+    bool clearAsgStart = false,
+    bool clearAsgEnd = false,
     Map<String, String?>? lookupCodesByTypeCode,
     String? civilIdNumber,
     String? passportNumber,
@@ -166,8 +188,14 @@ class CreateEmployeeBasicInfoRequest {
     bool clearFoodKwd = false,
     bool clearMobileKwd = false,
     bool clearOtherKwd = false,
+    DateTime? compStart,
+    DateTime? compEnd,
+    bool clearCompStart = false,
+    bool clearCompEnd = false,
+    String? bankName,
     String? accountNumber,
     String? iban,
+    bool clearBankName = false,
     bool clearAccountNumber = false,
     bool clearIban = false,
     DateTime? civilIdExpiry,
@@ -200,7 +228,11 @@ class CreateEmployeeBasicInfoRequest {
       emergRelationship: clearEmergRelationship ? null : (emergRelationship ?? this.emergRelationship),
       contactName: clearContactName ? null : (contactName ?? this.contactName),
       workScheduleId: clearWorkScheduleId ? null : (workScheduleId ?? this.workScheduleId),
+      wsStart: clearWsStart ? null : (wsStart ?? this.wsStart),
+      wsEnd: clearWsEnd ? null : (wsEnd ?? this.wsEnd),
       orgUnitIdHex: clearOrgUnitIdHex ? null : (orgUnitIdHex ?? this.orgUnitIdHex),
+      asgStart: clearAsgStart ? null : (asgStart ?? this.asgStart),
+      asgEnd: clearAsgEnd ? null : (asgEnd ?? this.asgEnd),
       lookupCodesByTypeCode: clearLookupCodesByTypeCode ? null : (lookupCodesByTypeCode ?? this.lookupCodesByTypeCode),
       civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
       passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
@@ -220,6 +252,9 @@ class CreateEmployeeBasicInfoRequest {
       foodKwd: clearFoodKwd ? null : (foodKwd ?? this.foodKwd),
       mobileKwd: clearMobileKwd ? null : (mobileKwd ?? this.mobileKwd),
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
+      compStart: clearCompStart ? null : (compStart ?? this.compStart),
+      compEnd: clearCompEnd ? null : (compEnd ?? this.compEnd),
+      bankName: clearBankName ? null : (bankName ?? this.bankName),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
       iban: clearIban ? null : (iban ?? this.iban),
       civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),

@@ -75,6 +75,8 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'middle_name_ar': request.middleNameAr?.trim() ?? '',
       'email': request.email?.trim() ?? '',
       'phone_number': request.phoneNumber?.trim() ?? '',
+      if (request.mobileNumber != null && request.mobileNumber!.trim().isNotEmpty)
+        'mobile_number': request.mobileNumber!.trim(),
       'date_of_birth': request.dateOfBirth != null
           ? CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.dateOfBirth!)
           : '',
@@ -84,9 +86,14 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'relationship': request.emergRelationship?.trim() ?? '',
       'contact_name': request.contactName?.trim() ?? '',
       if (request.workScheduleId != null) 'work_schedule_id': request.workScheduleId!,
+      if (request.wsStart != null) 'ws_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.wsStart!),
+      if (request.wsEnd != null) 'ws_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.wsEnd!),
       if (request.enterpriseId != null) 'enterprise_id': request.enterpriseId!,
       if (request.orgUnitIdHex != null && request.orgUnitIdHex!.isNotEmpty)
         'org_unit_id_hex': request.orgUnitIdHex!.trim(),
+      if (request.asgStart != null) 'asg_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.asgStart!),
+      if (request.asgEnd != null) 'asg_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.asgEnd!),
+      'actor': 'admin',
       'address_line1': request.workLocation?.trim() ?? '',
       'address_line2': request.workLocation?.trim() ?? '',
       'city': request.workLocation?.trim() ?? '',
@@ -115,6 +122,9 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.foodKwd != null && request.foodKwd!.trim().isNotEmpty) 'food_kwd': request.foodKwd!.trim(),
       if (request.mobileKwd != null && request.mobileKwd!.trim().isNotEmpty) 'mobile_kwd': request.mobileKwd!.trim(),
       if (request.otherKwd != null && request.otherKwd!.trim().isNotEmpty) 'other_kwd': request.otherKwd!.trim(),
+      if (request.compStart != null) 'comp_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compStart!),
+      if (request.compEnd != null) 'comp_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compEnd!),
+      if (request.bankName != null && request.bankName!.trim().isNotEmpty) 'bank_name': request.bankName!.trim(),
       if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
         'account_number': request.accountNumber!.trim(),
       if (request.iban != null && request.iban!.trim().isNotEmpty) 'iban': request.iban!.trim(),
