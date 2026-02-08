@@ -207,11 +207,12 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                     isDark: isDark,
                     onEnsureOrgStructureLoaded: (int enterpriseId) {
                       final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
-                      notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
-                      final state = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
-                      if (state.orgStructure == null && state.allStructures.isNotEmpty) {
-                        notifier.selectStructure(state.allStructures.first.structureId);
-                      }
+                      notifier.fetchOrgStructureByEnterpriseId(enterpriseId).then((_) {
+                        final state = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
+                        if (state.allStructures.isNotEmpty && state.orgStructure == null) {
+                          notifier.selectStructure(state.allStructures.first.structureId);
+                        }
+                      });
                     },
                   ),
                 ],

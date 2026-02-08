@@ -42,6 +42,17 @@ class EmployeeListItem {
 
   String get employeeId => employeeNumber;
 
+  static const String emptyPlaceholder = '—';
+
+  String get fullNameDisplay => fullName.trim().isEmpty ? emptyPlaceholder : fullName;
+  String get employeeNumberDisplay => employeeNumber.trim().isEmpty ? emptyPlaceholder : employeeNumber;
+  String get employeeIdDisplay => employeeNumberDisplay;
+  String get positionDisplay => position.trim().isEmpty ? emptyPlaceholder : position;
+  String get departmentDisplay => department.trim().isEmpty ? emptyPlaceholder : department;
+  String get statusDisplay => status.trim().isEmpty ? emptyPlaceholder : status;
+  String get emailDisplay => (email == null || email!.trim().isEmpty) ? emptyPlaceholder : email!;
+  String get phoneDisplay => (phone == null || phone!.trim().isEmpty) ? emptyPlaceholder : phone!;
+
   factory EmployeeListItem.empty() =>
       const EmployeeListItem(id: '', fullName: '', employeeNumber: '', position: '', department: '', status: '');
 

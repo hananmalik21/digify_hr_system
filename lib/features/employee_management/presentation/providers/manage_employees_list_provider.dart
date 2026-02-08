@@ -24,8 +24,8 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   @override
   ManageEmployeesListState build() {
     ref.listen<int?>(manageEmployeesEnterpriseIdProvider, (previous, next) {
-      if (next != null && previous != null) {
-        loadPage(next, 1);
+      if (next != null) {
+        Future.microtask(() => loadPage(next, 1));
       }
     });
     final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);

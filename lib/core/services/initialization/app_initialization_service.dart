@@ -11,6 +11,7 @@ class AppInitializationService {
   final Future<void> Function(int tenantId)? loadAbsLookups;
   final Future<void> Function(int tenantId)? loadAbsLookupValues;
   final void Function(int?)? onActiveEnterpriseReady;
+  final void Function(int enterpriseId)? preloadOrgStructureForEnterprise;
 
   List<Enterprise>? _enterprises;
   List<ActiveStructureLevel>? _activeLevels;
@@ -23,6 +24,7 @@ class AppInitializationService {
     this.loadAbsLookups,
     this.loadAbsLookupValues,
     this.onActiveEnterpriseReady,
+    this.preloadOrgStructureForEnterprise,
   });
 
   Future<void> initializeApp() async {}
@@ -31,6 +33,7 @@ class AppInitializationService {
     await _loadEnterprises();
     await _loadActiveLevels();
     onActiveEnterpriseReady?.call(_activeEnterpriseId);
+    preloadOrgStructureForEnterprise?.call(_activeEnterpriseId!);
     await _loadAbsLookups();
     await _loadAbsLookupValues();
   }

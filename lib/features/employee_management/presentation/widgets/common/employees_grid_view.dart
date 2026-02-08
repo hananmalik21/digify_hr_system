@@ -31,12 +31,15 @@ class EmployeesGridView extends StatelessWidget {
     return count.clamp(1, 4);
   }
 
+  static const double _cardHeight = 386;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = _crossAxisCount(constraints.maxWidth);
-        final childAspectRatio = 0.72;
+        final cellWidth = (constraints.maxWidth - (crossAxisCount - 1) * 16.w) / crossAxisCount;
+        final childAspectRatio = cellWidth / _cardHeight.h;
 
         if (isLoading && employees.isEmpty) {
           return _buildSkeletonGrid(context, crossAxisCount, childAspectRatio);
