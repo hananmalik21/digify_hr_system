@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 
 class EmployeeListItem {
   final String id;
+  final int? employeeIdNum;
   final String fullName;
   final String employeeNumber;
   final String position;
@@ -23,6 +24,7 @@ class EmployeeListItem {
 
   const EmployeeListItem({
     required this.id,
+    this.employeeIdNum,
     required this.fullName,
     required this.employeeNumber,
     required this.position,

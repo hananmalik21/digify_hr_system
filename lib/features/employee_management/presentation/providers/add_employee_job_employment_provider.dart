@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
@@ -13,6 +14,7 @@ class AddEmployeeJobEmploymentState {
   final int? probationDays;
   final String? contractTypeCode;
   final String? employmentStatusCode;
+  final EmployeeListItem? selectedReportingTo;
 
   const AddEmployeeJobEmploymentState({
     this.selectedPosition,
@@ -23,6 +25,7 @@ class AddEmployeeJobEmploymentState {
     this.probationDays,
     this.contractTypeCode,
     this.employmentStatusCode,
+    this.selectedReportingTo,
   });
 
   AddEmployeeJobEmploymentState copyWith({
@@ -42,6 +45,8 @@ class AddEmployeeJobEmploymentState {
     bool clearProbationDays = false,
     bool clearContractTypeCode = false,
     bool clearEmploymentStatusCode = false,
+    EmployeeListItem? selectedReportingTo,
+    bool clearSelectedReportingTo = false,
   }) {
     return AddEmployeeJobEmploymentState(
       selectedPosition: clearPosition ? null : (selectedPosition ?? this.selectedPosition),
@@ -52,6 +57,7 @@ class AddEmployeeJobEmploymentState {
       probationDays: clearProbationDays ? null : (probationDays ?? this.probationDays),
       contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
       employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
+      selectedReportingTo: clearSelectedReportingTo ? null : (selectedReportingTo ?? this.selectedReportingTo),
     );
   }
 }
@@ -89,6 +95,10 @@ class AddEmployeeJobEmploymentNotifier extends StateNotifier<AddEmployeeJobEmplo
 
   void setEmploymentStatusCode(String? value) {
     state = state.copyWith(employmentStatusCode: value, clearEmploymentStatusCode: value == null || value.isEmpty);
+  }
+
+  void setReportingTo(EmployeeListItem? value) {
+    state = state.copyWith(selectedReportingTo: value, clearSelectedReportingTo: value == null);
   }
 
   void reset() {

@@ -6,7 +6,11 @@ import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,10 +23,17 @@ class EmergencyContactModule extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final addressState = ref.watch(addEmployeeAddressProvider);
+    final addressNotifier = ref.read(addEmployeeAddressProvider.notifier);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final relationshipValuesAsync = ref.watch(
+      emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'CONTACT_RELATIONSHIP')),
+    );
+    final relationshipValues = relationshipValuesAsync.valueOrNull ?? [];
+    final relationshipLoading = relationshipValuesAsync.isLoading;
+    final selectedRelationship = _relationshipByCode(addressState.emergRelationship, relationshipValues);
     final personIcon = _prefixIcon(context, Assets.icons.userIcon.path, isDark);
-    final relationshipIcon = _prefixIcon(context, Assets.icons.employeeListIcon.path, isDark);
     final phoneIcon = Padding(
       padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
       child: DigifyAsset(
@@ -78,15 +89,16 @@ class EmergencyContactModule extends ConsumerWidget {
                 prefixIcon: personIcon,
                 hintText: localizations.hintContactName,
                 initialValue: addressState.contactName ?? '',
-                onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setContactName(value),
+                onChanged: (value) => addressNotifier.setContactName(value),
                 isRequired: true,
               );
-              final relationship = DigifyTextField(
-                labelText: localizations.relationship,
-                prefixIcon: relationshipIcon,
-                hintText: localizations.hintRelationship,
-                initialValue: addressState.emergRelationship ?? '',
-                onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergRelationship(value),
+              final relationship = DigifySelectFieldWithLabel<EmplLookupValue>(
+                label: localizations.relationship,
+                hint: relationshipLoading ? localizations.pleaseWait : localizations.hintRelationship,
+                items: relationshipValues,
+                itemLabelBuilder: (v) => v.meaningEn,
+                value: selectedRelationship,
+                onChanged: relationshipLoading ? null : (v) => addressNotifier.setEmergRelationship(v?.lookupCode),
                 isRequired: true,
               );
               final phoneNumber = DigifyTextField(
@@ -96,7 +108,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 prefixIcon: phoneIcon,
                 hintText: localizations.hintPhone,
                 initialValue: addressState.emergPhone ?? '',
-                onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergPhone(value),
+                onChanged: (value) => addressNotifier.setEmergPhone(value),
                 isRequired: true,
                 validator: (v) => FormValidators.phone(v, errorMessage: localizations.invalidPhone),
               );
@@ -106,7 +118,7 @@ class EmergencyContactModule extends ConsumerWidget {
                 prefixIcon: emailIcon,
                 hintText: localizations.hintEmail,
                 initialValue: addressState.emergEmail ?? '',
-                onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergEmail(value),
+                onChanged: (value) => addressNotifier.setEmergEmail(value),
                 isRequired: true,
               );
               if (useTwoColumns) {
@@ -143,6 +155,15 @@ class EmergencyContactModule extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  static EmplLookupValue? _relationshipByCode(String? code, List<EmplLookupValue> values) {
+    if (code == null || code.trim().isEmpty) return null;
+    try {
+      return values.firstWhere((v) => v.lookupCode == code.trim());
+    } catch (_) {
+      return null;
+    }
   }
 
   Widget _prefixIcon(BuildContext context, String path, bool isDark) {

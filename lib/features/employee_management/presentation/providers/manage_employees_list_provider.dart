@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_remote_data_source.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/data/repositories/manage_employees_list_repository_impl.dart';
 import 'package:digify_hr_system/features/employee_management/domain/repositories/manage_employees_list_repository.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
@@ -63,6 +64,10 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
     await loadPage(enterpriseId, state.currentPage);
+  }
+
+  void prependEmployee(EmployeeListItem item) {
+    state = state.copyWith(items: [item, ...state.items]);
   }
 }
 

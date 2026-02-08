@@ -12,6 +12,7 @@ abstract class ManageEmployeesRemoteDataSource {
     required int enterpriseId,
     int page = 1,
     int pageSize = 10,
+    String? search,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -35,6 +36,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     required int enterpriseId,
     int page = 1,
     int pageSize = 10,
+    String? search,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -47,6 +49,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'page': page.toString(),
       'page_size': pageSize.toString(),
     };
+    if (search != null && search.trim().isNotEmpty) queryParameters['search'] = search.trim();
     if (positionId != null && positionId.isNotEmpty) queryParameters['position_id'] = positionId;
     if (jobFamilyId != null) queryParameters['job_family_id'] = jobFamilyId.toString();
     if (jobLevelId != null) queryParameters['job_level_id'] = jobLevelId.toString();
@@ -113,6 +116,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
         'contract_type_code': request.contractTypeCode!.trim(),
       if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
+      if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
@@ -125,6 +129,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.compStart != null) 'comp_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compStart!),
       if (request.compEnd != null) 'comp_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compEnd!),
       if (request.bankName != null && request.bankName!.trim().isNotEmpty) 'bank_name': request.bankName!.trim(),
+      if (request.bankCode != null && request.bankCode!.trim().isNotEmpty) 'bank_code': request.bankCode!.trim(),
       if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
         'account_number': request.accountNumber!.trim(),
       if (request.iban != null && request.iban!.trim().isNotEmpty) 'iban': request.iban!.trim(),

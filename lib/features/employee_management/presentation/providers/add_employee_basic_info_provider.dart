@@ -4,20 +4,6 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-CreateEmployeeBasicInfoRequest _initialMockForm() {
-  return CreateEmployeeBasicInfoRequest(
-    firstNameEn: 'John',
-    lastNameEn: 'Smith',
-    middleNameEn: 'Robert',
-    firstNameAr: 'جون',
-    lastNameAr: 'سميث',
-    middleNameAr: 'محمد',
-    email: 'john.smith@example.com',
-    phoneNumber: '+965 2222 2222',
-    dateOfBirth: DateTime(1990, 6, 15),
-  );
-}
-
 class AddEmployeeBasicInfoState {
   final CreateEmployeeBasicInfoRequest form;
   final bool isSubmitting;
@@ -44,7 +30,7 @@ class AddEmployeeBasicInfoState {
 }
 
 class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoState> {
-  AddEmployeeBasicInfoNotifier(this._repository) : super(AddEmployeeBasicInfoState(form: _initialMockForm()));
+  AddEmployeeBasicInfoNotifier(this._repository) : super(const AddEmployeeBasicInfoState());
 
   final ManageEmployeesListRepository _repository;
 
@@ -113,7 +99,7 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
   }
 
   void reset() {
-    state = AddEmployeeBasicInfoState(form: _initialMockForm());
+    state = const AddEmployeeBasicInfoState();
   }
 
   Future<bool> submitStep1() async {
@@ -121,18 +107,24 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
       state = state.copyWith(clearSubmitError: true);
       return false;
     }
-    return submitWithRequest(state.form);
+    final (ok, _) = await submitWithRequest(state.form);
+    return ok;
   }
 
-  Future<bool> submitWithRequest(CreateEmployeeBasicInfoRequest request, {Document? document}) async {
+  Future<(bool, Map<String, dynamic>?)> submitWithRequest(
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+  }) async {
     state = state.copyWith(isSubmitting: true, clearSubmitError: true);
     try {
-      await _repository.createEmployee(request, document: document);
+      final response = await _repository.createEmployee(request, document: document);
+      final result = response as Map<String, dynamic>?;
+      final success = result?['success'] as bool? ?? false;
       state = state.copyWith(isSubmitting: false);
-      return true;
+      return (success, result);
     } catch (e) {
       state = state.copyWith(isSubmitting: false, submitError: e.toString().replaceFirst(RegExp(r'^Exception: '), ''));
-      return false;
+      return (false, null);
     }
   }
 }

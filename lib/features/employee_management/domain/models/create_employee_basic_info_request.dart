@@ -34,6 +34,7 @@ class CreateEmployeeBasicInfoRequest {
   final int? probationDays;
   final String? contractTypeCode;
   final String? employmentStatusCode;
+  final int? reportingToEmpId;
   final int? enterpriseId;
   final String? basicSalaryKwd;
   final String? housingKwd;
@@ -44,6 +45,7 @@ class CreateEmployeeBasicInfoRequest {
   final DateTime? compStart;
   final DateTime? compEnd;
   final String? bankName;
+  final String? bankCode;
   final String? accountNumber;
   final String? iban;
   final DateTime? civilIdExpiry;
@@ -87,6 +89,7 @@ class CreateEmployeeBasicInfoRequest {
     this.probationDays,
     this.contractTypeCode,
     this.employmentStatusCode,
+    this.reportingToEmpId,
     this.enterpriseId,
     this.basicSalaryKwd,
     this.housingKwd,
@@ -97,6 +100,7 @@ class CreateEmployeeBasicInfoRequest {
     this.compStart,
     this.compEnd,
     this.bankName,
+    this.bankCode,
     this.accountNumber,
     this.iban,
     this.civilIdExpiry,
@@ -174,6 +178,8 @@ class CreateEmployeeBasicInfoRequest {
     bool clearProbationDays = false,
     bool clearContractTypeCode = false,
     bool clearEmploymentStatusCode = false,
+    int? reportingToEmpId,
+    bool clearReportingToEmpId = false,
     int? enterpriseId,
     bool clearEnterpriseId = false,
     String? basicSalaryKwd,
@@ -193,9 +199,11 @@ class CreateEmployeeBasicInfoRequest {
     bool clearCompStart = false,
     bool clearCompEnd = false,
     String? bankName,
+    String? bankCode,
     String? accountNumber,
     String? iban,
     bool clearBankName = false,
+    bool clearBankCode = false,
     bool clearAccountNumber = false,
     bool clearIban = false,
     DateTime? civilIdExpiry,
@@ -245,6 +253,7 @@ class CreateEmployeeBasicInfoRequest {
       probationDays: clearProbationDays ? null : (probationDays ?? this.probationDays),
       contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
       employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
+      reportingToEmpId: clearReportingToEmpId ? null : (reportingToEmpId ?? this.reportingToEmpId),
       enterpriseId: clearEnterpriseId ? null : (enterpriseId ?? this.enterpriseId),
       basicSalaryKwd: clearBasicSalaryKwd ? null : (basicSalaryKwd ?? this.basicSalaryKwd),
       housingKwd: clearHousingKwd ? null : (housingKwd ?? this.housingKwd),
@@ -255,6 +264,7 @@ class CreateEmployeeBasicInfoRequest {
       compStart: clearCompStart ? null : (compStart ?? this.compStart),
       compEnd: clearCompEnd ? null : (compEnd ?? this.compEnd),
       bankName: clearBankName ? null : (bankName ?? this.bankName),
+      bankCode: clearBankCode ? null : (bankCode ?? this.bankCode),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
       iban: clearIban ? null : (iban ?? this.iban),
       civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),

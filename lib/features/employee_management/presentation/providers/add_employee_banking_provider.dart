@@ -2,11 +2,12 @@ import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddEmployeeBankingState {
+  final String? bankCode;
   final String? bankName;
   final String? accountNumber;
   final String? iban;
 
-  const AddEmployeeBankingState({this.bankName, this.accountNumber, this.iban});
+  const AddEmployeeBankingState({this.bankCode, this.bankName, this.accountNumber, this.iban});
 
   static bool _isFilled(String? value) {
     final t = value?.trim();
@@ -14,17 +15,20 @@ class AddEmployeeBankingState {
   }
 
   bool get isStepValid =>
-      _isFilled(bankName) && _isFilled(accountNumber) && _isFilled(iban) && FormValidators.iban(iban) == null;
+      _isFilled(bankCode) && _isFilled(accountNumber) && _isFilled(iban) && FormValidators.iban(iban) == null;
 
   AddEmployeeBankingState copyWith({
+    String? bankCode,
     String? bankName,
     String? accountNumber,
     String? iban,
+    bool clearBankCode = false,
     bool clearBankName = false,
     bool clearAccountNumber = false,
     bool clearIban = false,
   }) {
     return AddEmployeeBankingState(
+      bankCode: clearBankCode ? null : (bankCode ?? this.bankCode),
       bankName: clearBankName ? null : (bankName ?? this.bankName),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
       iban: clearIban ? null : (iban ?? this.iban),
@@ -35,8 +39,13 @@ class AddEmployeeBankingState {
 class AddEmployeeBankingNotifier extends StateNotifier<AddEmployeeBankingState> {
   AddEmployeeBankingNotifier() : super(const AddEmployeeBankingState());
 
-  void setBankName(String? value) {
-    state = state.copyWith(bankName: value, clearBankName: value == null || value.isEmpty);
+  void setBank(String? code, String? displayName) {
+    state = state.copyWith(
+      bankCode: code,
+      bankName: displayName,
+      clearBankCode: code == null || code.isEmpty,
+      clearBankName: displayName == null || displayName.isEmpty,
+    );
   }
 
   void setAccountNumber(String? value) {
