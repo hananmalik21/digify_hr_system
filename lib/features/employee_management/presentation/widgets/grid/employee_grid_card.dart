@@ -1,11 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -31,157 +31,150 @@ class EmployeeGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
-    final cardBg = isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground;
-    final borderColor = isDark ? AppColors.cardBorderDark : AppColors.cardBorder;
+    final borderColor = isDark ? AppColors.cardBorderDark : AppColors.dashboardCardBorder;
     final titleColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
     final secondaryColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
     final iconColor = AppColors.statIconBlue;
 
+    final cardBackgroundColor = isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground;
+
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: borderColor, width: 1.w),
-        boxShadow: AppShadows.primaryShadow,
+        color: cardBackgroundColor,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: borderColor, width: 2.w),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Row(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              AppAvatar(
-                image: null,
-                fallbackInitial: employee.fullName,
-                size: 48.w,
-                backgroundColor: AppColors.infoBg,
-                textColor: iconColor,
-                showStatusDot: false,
-              ),
-              Gap(12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      employee.fullName.toUpperCase(),
-                      style: textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: titleColor,
-                        fontSize: 14.sp,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppAvatar(
+                    image: null,
+                    fallbackInitial: employee.fullName,
+                    size: 80.w,
+                    backgroundColor: AppColors.infoBg,
+                    textColor: iconColor,
+                    showStatusDot: false,
+                  ),
+                  Gap(16.w),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 44.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            employee.fullNameDisplay.toUpperCase(),
+                            style: textTheme.headlineMedium?.copyWith(color: titleColor, fontSize: 16.sp),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Gap(4.h),
+                          Text(
+                            employee.employeeIdDisplay,
+                            style: textTheme.labelSmall?.copyWith(color: secondaryColor, fontSize: 12.sp),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    Gap(2.h),
-                    Text(
-                      employee.employeeId,
-                      style: textTheme.bodySmall?.copyWith(color: secondaryColor, fontSize: 12.sp),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              DigifyAssetButton(
-                assetPath: Assets.icons.employeeManagement.more.path,
-                onTap: onMore,
-                width: 20,
-                height: 20,
-                padding: 4.w,
-                color: secondaryColor,
+              Gap(24.h),
+              _LabelValueRow(
+                label: localizations.position,
+                value: employee.positionDisplay,
+                labelColor: secondaryColor,
+                valueColor: titleColor,
+                textTheme: textTheme,
+              ),
+              Gap(12.h),
+              _LabelValueRow(
+                label: localizations.department,
+                value: employee.departmentDisplay.toUpperCase(),
+                labelColor: secondaryColor,
+                valueColor: titleColor,
+                textTheme: textTheme,
+              ),
+              Gap(12.h),
+              _LabelValueRow(
+                label: localizations.email,
+                value: employee.emailDisplay,
+                labelColor: secondaryColor,
+                valueColor: titleColor,
+                textTheme: textTheme,
+              ),
+              Gap(12.h),
+              _LabelValueRow(
+                label: localizations.phone,
+                value: employee.phoneDisplay,
+                labelColor: secondaryColor,
+                valueColor: titleColor,
+                textTheme: textTheme,
+              ),
+              DigifyDivider.horizontal(
+                margin: EdgeInsets.symmetric(vertical: 24.h),
+                color: borderColor,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatusCapsule(),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onView,
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(color: AppColors.primary, width: 1.w),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              localizations.view,
+                              style: textTheme.headlineMedium?.copyWith(color: AppColors.primary, fontSize: 14.sp),
+                            ),
+                            Gap(6.w),
+                            DigifyAsset(
+                              assetPath: Assets.icons.employeeManagement.arrowRight.path,
+                              width: 16,
+                              height: 16,
+                              color: AppColors.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          Gap(16.h),
-          if (employee.position.isNotEmpty ||
-              employee.department.isNotEmpty ||
-              (employee.email != null && employee.email!.isNotEmpty) ||
-              (employee.phone != null && employee.phone!.isNotEmpty)) ...[
-            _DetailRow(
-              iconPath: Assets.icons.positionsIcon.path,
-              label: employee.position.isNotEmpty ? employee.position : '—',
-              iconColor: iconColor,
-              textColor: titleColor,
-              textTheme: textTheme,
+          Positioned(
+            top: 0,
+            right: 0,
+            child: DigifyAssetButton(
+              assetPath: Assets.icons.employeeManagement.more.path,
+              onTap: onMore,
+              width: 20,
+              height: 20,
+              padding: 8.w,
+              borderRadius: BorderRadius.circular(10.r),
+              color: secondaryColor,
             ),
-            Gap(8.h),
-            _DetailRow(
-              iconPath: Assets.icons.departmentsIcon.path,
-              label: employee.department.isNotEmpty ? employee.department.toUpperCase() : '—',
-              iconColor: iconColor,
-              textColor: titleColor,
-              textTheme: textTheme,
-            ),
-            if (employee.email != null && employee.email!.trim().isNotEmpty) ...[
-              Gap(8.h),
-              _DetailRow(
-                iconPath: Assets.icons.emailIcon.path,
-                label: employee.email!,
-                iconColor: iconColor,
-                textColor: titleColor,
-                textTheme: textTheme,
-              ),
-            ],
-            if (employee.phone != null && employee.phone!.trim().isNotEmpty) ...[
-              Gap(8.h),
-              _DetailRow(
-                iconPath: Assets.icons.phoneIcon.path,
-                label: employee.phone!,
-                iconColor: iconColor,
-                textColor: titleColor,
-                textTheme: textTheme,
-              ),
-            ],
-            Gap(16.h),
-          ] else
-            Gap(8.h),
-          Container(height: 1, color: borderColor),
-          Gap(16.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildStatusCapsule(),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: onView,
-                  borderRadius: BorderRadius.circular(10.r),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: AppColors.primary, width: 1.w),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          localizations.view,
-                          style: textTheme.labelMedium?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13.sp,
-                          ),
-                        ),
-                        Gap(6.w),
-                        DigifyAsset(
-                          assetPath: Assets.icons.arrowRightIcon.path,
-                          width: 16,
-                          height: 16,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -190,13 +183,9 @@ class EmployeeGridCard extends StatelessWidget {
 
   Widget _buildStatusCapsule() {
     final isProbation = employee.status.toLowerCase().contains('probation');
-    final label = employee.status.isEmpty
-        ? localizations.onProbation
-        : (employee.status.length > 1
-              ? employee.status[0].toUpperCase() + employee.status.substring(1)
-              : employee.status.toUpperCase());
+    final label = employee.statusDisplay.toUpperCase();
     return DigifyCapsule(
-      label: label.toUpperCase(),
+      label: label,
       iconPath: isProbation ? Assets.icons.clockIcon.path : null,
       backgroundColor: isProbation ? AppColors.warningBg : AppColors.activeStatusBg,
       textColor: isProbation ? AppColors.warningText : AppColors.successText,
@@ -205,33 +194,39 @@ class EmployeeGridCard extends StatelessWidget {
   }
 }
 
-class _DetailRow extends StatelessWidget {
-  final String iconPath;
+class _LabelValueRow extends StatelessWidget {
   final String label;
-  final Color iconColor;
-  final Color textColor;
+  final String value;
+  final Color labelColor;
+  final Color valueColor;
   final TextTheme textTheme;
 
-  const _DetailRow({
-    required this.iconPath,
+  const _LabelValueRow({
     required this.label,
-    required this.iconColor,
-    required this.textColor,
+    required this.value,
+    required this.labelColor,
+    required this.valueColor,
     required this.textTheme,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: iconColor),
+        SizedBox(
+          width: 90.w,
+          child: Text(
+            label,
+            style: textTheme.labelMedium?.copyWith(color: labelColor, fontSize: 12.sp),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         Gap(8.w),
         Expanded(
           child: Text(
-            label,
-            style: textTheme.bodySmall?.copyWith(color: textColor, fontSize: 13.sp),
-            maxLines: 1,
+            value,
+            style: textTheme.titleSmall?.copyWith(color: valueColor, fontSize: 12.sp),
             overflow: TextOverflow.ellipsis,
           ),
         ),

@@ -1124,6 +1124,9 @@ class $AssetsIconsGen {
 class $AssetsIconsEmployeeManagementGen {
   const $AssetsIconsEmployeeManagementGen();
 
+  /// File path: assets/icons/employee_management/arrow-right.svg
+  SvgGenImage get arrowRight => const SvgGenImage('assets/icons/employee_management/arrow-right.svg');
+
   /// File path: assets/icons/employee_management/assignment.svg
   SvgGenImage get assignment => const SvgGenImage('assets/icons/employee_management/assignment.svg');
 
@@ -1174,6 +1177,7 @@ class $AssetsIconsEmployeeManagementGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
+    arrowRight,
     assignment,
     backArrow,
     banking,

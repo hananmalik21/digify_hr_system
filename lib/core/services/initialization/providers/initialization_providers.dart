@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 
 final appInitializationServiceProvider = Provider<AppInitializationService>((ref) {
   final getEnterprisesUseCase = ref.watch(getEnterprisesUseCaseProvider);
@@ -19,6 +20,16 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
     }
   }
 
+  void preloadOrgStructureForEnterprise(int enterpriseId) {
+    final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
+    notifier.fetchOrgStructureByEnterpriseId(enterpriseId).then((_) {
+      final state = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
+      if (state.allStructures.isNotEmpty && state.orgStructure == null) {
+        notifier.selectStructure(state.allStructures.first.structureId);
+      }
+    });
+  }
+
   return AppInitializationService(
     getEnterprisesUseCase: getEnterprisesUseCase,
     getActiveLevelsUseCase: getActiveLevelsUseCase,
@@ -26,6 +37,7 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
     loadAbsLookups: loadAbsLookups,
     loadAbsLookupValues: loadAbsLookupValues,
     onActiveEnterpriseReady: onActiveEnterpriseReady,
+    preloadOrgStructureForEnterprise: preloadOrgStructureForEnterprise,
   );
 });
 

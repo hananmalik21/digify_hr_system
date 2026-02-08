@@ -57,7 +57,6 @@ class AppAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveBg = backgroundColor ?? AppColors.infoBg;
-    final effectiveTextColor = textColor ?? AppColors.statIconBlue;
     final effectiveDotColor = statusDotColor ?? AppColors.statIconBlue;
     final provider = _resolveImageProvider(image);
     final initial = _initialsFromName(fallbackInitial ?? '');
@@ -68,9 +67,9 @@ class AppAvatar extends StatelessWidget {
             fit: BoxFit.cover,
             width: size,
             height: size,
-            errorBuilder: (_, __, ___) => _buildInitial(context, initial, effectiveBg, effectiveTextColor),
+            errorBuilder: (_, __, ___) => _buildInitial(context, initial, effectiveBg),
           )
-        : _buildInitial(context, initial, effectiveBg, effectiveTextColor);
+        : _buildInitial(context, initial, effectiveBg);
 
     Widget avatar = ClipOval(
       child: SizedBox(width: size, height: size, child: content),
@@ -108,7 +107,7 @@ class AppAvatar extends StatelessWidget {
     return SizedBox(width: size, height: size, child: avatar);
   }
 
-  Widget _buildInitial(BuildContext context, String? initial, Color backgroundColor, Color textColor) {
+  Widget _buildInitial(BuildContext context, String? initial, Color backgroundColor) {
     return Container(
       width: size,
       height: size,
@@ -116,11 +115,7 @@ class AppAvatar extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         initial ?? '?',
-        style: context.textTheme.titleMedium?.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: (size * 0.45).sp,
-        ),
+        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: (size * 0.45).sp),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
@@ -61,14 +60,14 @@ class EmployeeTableRow extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              employee.fullName.toUpperCase(),
+                              employee.fullNameDisplay.toUpperCase(),
                               style: textStyle?.copyWith(fontWeight: FontWeight.w600),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Gap(2.h),
                             Text(
-                              employee.employeeId,
+                              employee.employeeIdDisplay,
                               style: secondaryStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -82,44 +81,16 @@ class EmployeeTableRow extends StatelessWidget {
                 ),
               if (ManageEmployeesTableConfig.showPosition)
                 _buildDataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DigifyAsset(
-                        assetPath: Assets.icons.positionsIcon.path,
-                        width: 16,
-                        height: 16,
-                        color: AppColors.statIconBlue,
-                      ),
-                      Gap(6.w),
-                      Flexible(
-                        child: Text(employee.position, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      ),
-                    ],
-                  ),
+                  Text(employee.positionDisplay, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
                   ManageEmployeesTableConfig.positionWidth.w,
                 ),
               if (ManageEmployeesTableConfig.showDepartment)
                 _buildDataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DigifyAsset(
-                        assetPath: Assets.icons.departmentsIcon.path,
-                        width: 16,
-                        height: 16,
-                        color: AppColors.statIconBlue,
-                      ),
-                      Gap(6.w),
-                      Flexible(
-                        child: Text(
-                          employee.department.toUpperCase(),
-                          style: textStyle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    employee.departmentDisplay.toUpperCase(),
+                    style: textStyle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   ManageEmployeesTableConfig.departmentWidth.w,
                 ),
@@ -148,7 +119,7 @@ class EmployeeTableRow extends StatelessWidget {
 
   Widget _buildStatusCapsule() {
     final isProbation = employee.status.toLowerCase().contains('probation');
-    final label = (employee.status.isEmpty ? localizations.onProbation : employee.status).toUpperCase();
+    final label = employee.statusDisplay.toUpperCase();
     return DigifyCapsule(
       label: label,
       backgroundColor: isProbation ? AppColors.warningBg : AppColors.activeStatusBg,
