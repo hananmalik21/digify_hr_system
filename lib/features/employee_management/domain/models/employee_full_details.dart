@@ -83,6 +83,80 @@ class EmployeeDetailSection {
       [firstNameAr, middleNameAr, lastNameAr].whereType<String>().where((s) => s.trim().isNotEmpty).join(' ').trim();
 }
 
+/// Minimal position info from assignment payload for prefill.
+class AssignmentPositionInfo {
+  const AssignmentPositionInfo({
+    required this.positionId,
+    required this.positionCode,
+    required this.positionNameEn,
+    required this.positionNameAr,
+  });
+
+  final String positionId;
+  final String positionCode;
+  final String positionNameEn;
+  final String positionNameAr;
+}
+
+/// Minimal job family info from assignment payload for prefill.
+class AssignmentJobFamilyInfo {
+  const AssignmentJobFamilyInfo({
+    required this.jobFamilyId,
+    required this.jobFamilyCode,
+    required this.jobFamilyNameEn,
+    required this.jobFamilyNameAr,
+  });
+
+  final int jobFamilyId;
+  final String jobFamilyCode;
+  final String jobFamilyNameEn;
+  final String jobFamilyNameAr;
+}
+
+/// Minimal job level info from assignment payload for prefill.
+class AssignmentJobLevelInfo {
+  const AssignmentJobLevelInfo({
+    required this.jobLevelId,
+    required this.jobLevelCode,
+    required this.jobLevelNameEn,
+    required this.minGradeId,
+    required this.maxGradeId,
+  });
+
+  final int jobLevelId;
+  final String jobLevelCode;
+  final String jobLevelNameEn;
+  final int minGradeId;
+  final int maxGradeId;
+}
+
+/// Minimal grade info from assignment payload for prefill.
+class AssignmentGradeInfo {
+  const AssignmentGradeInfo({
+    required this.gradeId,
+    required this.gradeNumber,
+    required this.gradeCategory,
+    required this.currencyCode,
+    required this.step1Salary,
+    required this.step2Salary,
+    required this.step3Salary,
+    required this.step4Salary,
+    required this.step5Salary,
+    required this.gradeStatus,
+  });
+
+  final int gradeId;
+  final String gradeNumber;
+  final String gradeCategory;
+  final String currencyCode;
+  final double step1Salary;
+  final double step2Salary;
+  final double step3Salary;
+  final double step4Salary;
+  final double step5Salary;
+  final String gradeStatus;
+}
+
 class AssignmentDetailSection {
   const AssignmentDetailSection({
     required this.assignmentId,
@@ -92,11 +166,24 @@ class AssignmentDetailSection {
     this.positionId,
     this.positionNameEn,
     this.positionCode,
+    this.jobFamilyId,
+    this.jobLevelId,
+    this.gradeId,
+    this.probationDays,
+    this.reportingToEmpId,
+    this.workLocationId,
+    this.employeeNumber,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
     this.enterpriseHireDate,
     this.contractTypeCode,
     this.employmentStatus,
     this.assignmentStatus,
     this.assignmentIsActive,
+    this.position,
+    this.jobFamily,
+    this.jobLevel,
+    this.grade,
   });
 
   final int assignmentId;
@@ -106,11 +193,24 @@ class AssignmentDetailSection {
   final String? positionId;
   final String? positionNameEn;
   final String? positionCode;
+  final int? jobFamilyId;
+  final int? jobLevelId;
+  final int? gradeId;
+  final int? probationDays;
+  final int? reportingToEmpId;
+  final int? workLocationId;
+  final String? employeeNumber;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
   final String? enterpriseHireDate;
   final String? contractTypeCode;
   final String? employmentStatus;
   final String? assignmentStatus;
   final String? assignmentIsActive;
+  final AssignmentPositionInfo? position;
+  final AssignmentJobFamilyInfo? jobFamily;
+  final AssignmentJobLevelInfo? jobLevel;
+  final AssignmentGradeInfo? grade;
 }
 
 class OrgStructureItem {

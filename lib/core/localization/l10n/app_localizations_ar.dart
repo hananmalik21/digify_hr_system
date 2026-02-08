@@ -63,7 +63,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcomeBack => 'مرحباً بعودتك';
 
   @override
-  String get signInToAccessDashboard => 'قم بتسجيل الدخول للوصول إلى لوحة تحكم الموارد البشرية';
+  String get signInToAccessDashboard =>
+      'قم بتسجيل الدخول للوصول إلى لوحة تحكم الموارد البشرية';
 
   @override
   String get demoCredentials => 'بيانات تجريبية:';
@@ -72,7 +73,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resetDemoUsers => 'إعادة تعيين المستخدمين التجريبيين';
 
   @override
-  String get copyrightText => '© 2024 ديجيفاي للموارد البشرية. متوافق مع قانون العمل الكويتي.';
+  String get copyrightText =>
+      '© 2024 ديجيفاي للموارد البشرية. متوافق مع قانون العمل الكويتي.';
 
   @override
   String get kuwaitLaborLawCompliant => 'متوافق مع قانون العمل الكويتي';
@@ -81,25 +83,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get digifyHrTitle => 'ديجيفاي للموارد البشرية';
 
   @override
-  String get systemDescription => 'نظام شامل لإدارة الموارد البشرية مع ميزات\nأمان وامتثال متقدمة.';
+  String get systemDescription =>
+      'نظام شامل لإدارة الموارد البشرية مع ميزات\nأمان وامتثال متقدمة.';
 
   @override
   String get completeHrSuite => 'مجموعة الموارد البشرية الكاملة';
 
   @override
-  String get completeHrSuiteDescription => '19 وحدة متكاملة تدير جميع جوانب الموارد البشرية';
+  String get completeHrSuiteDescription =>
+      '19 وحدة متكاملة تدير جميع جوانب الموارد البشرية';
 
   @override
   String get advancedSecurity => 'الأمان المتقدم';
 
   @override
-  String get advancedSecurityDescription => 'التحكم في الوصول القائم على الأدوار مع أكثر من 60 وظيفة أمان';
+  String get advancedSecurityDescription =>
+      'التحكم في الوصول القائم على الأدوار مع أكثر من 60 وظيفة أمان';
 
   @override
   String get kuwaitCompliance => 'الامتثال الكويتي';
 
   @override
-  String get kuwaitComplianceDescription => 'متوافق بالكامل مع قانون العمل الكويتي رقم 6/2010';
+  String get kuwaitComplianceDescription =>
+      'متوافق بالكامل مع قانون العمل الكويتي رقم 6/2010';
 
   @override
   String get realTimeAnalytics => 'التحليلات في الوقت الفعلي';
@@ -108,7 +114,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get realTimeAnalyticsDescription => 'لوحة تقارير وتحليلات شاملة';
 
   @override
-  String get invalidCredentials => 'البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.';
+  String get invalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.';
 
   @override
   String get fullNameHint => 'أدخل اسمك الكامل';
@@ -616,7 +623,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noRecentActivity => 'لا يوجد نشاط حديث';
 
   @override
-  String get userRoleAssignmentSubtitle => 'تعيين وإدارة أدوار الأمان للمستخدمين';
+  String get userRoleAssignmentSubtitle =>
+      'تعيين وإدارة أدوار الأمان للمستخدمين';
 
   @override
   String get usersWithRoles => 'المستخدمون بأدوار';
@@ -649,7 +657,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get actions => 'الإجراءات';
 
   @override
-  String get roleManagementSubtitle => 'إدارة الأدوار والأذونات ومستويات الوصول';
+  String get roleManagementSubtitle =>
+      'إدارة الأدوار والأذونات ومستويات الوصول';
 
   @override
   String get dutyRolesOnly => 'أدوار الواجبات';
@@ -904,7 +913,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get creatingTemplate => 'جاري إنشاء القالب';
 
   @override
-  String get templateInstructions => 'إنشاء قالب دور قابل لإعادة الاستخدام مع الأذونات وإعدادات الوصول المُعدة مسبقاً';
+  String get templateInstructions =>
+      'إنشاء قالب دور قابل لإعادة الاستخدام مع الأذونات وإعدادات الوصول المُعدة مسبقاً';
 
   @override
   String get templateName => 'اسم القالب';
@@ -998,7 +1008,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get creatingPolicy => 'جاري إنشاء السياسة';
 
   @override
-  String get policyInstructions => 'تحديد سياسات الأمان لفرض التحكم في الوصول والامتثال';
+  String get policyInstructions =>
+      'تحديد سياسات الأمان لفرض التحكم في الوصول والامتثال';
 
   @override
   String get policyName => 'اسم السياسة';
@@ -1055,7 +1066,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createPolicyButton => 'إنشاء السياسة';
 
   @override
-  String get dataAccessSetsSubtitle => 'إدارة مجموعات الوصول للبيانات والأذونات';
+  String get dataAccessSetsSubtitle =>
+      'إدارة مجموعات الوصول للبيانات والأذونات';
 
   @override
   String get totalDataAccessSets => 'إجمالي مجموعات الوصول';
@@ -1159,7 +1171,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noPrivilegesFound => 'لم يتم العثور على صلاحيات';
 
   @override
-  String get functionPrivilegesSubtitle => 'إدارة صلاحيات الأمان على مستوى الوظائف';
+  String get functionPrivilegesSubtitle =>
+      'إدارة صلاحيات الأمان على مستوى الوظائف';
 
   @override
   String get createPrivilege => 'إنشاء صلاحية';
@@ -1422,6 +1435,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addNewEmployee => 'إضافة موظف جديد';
 
   @override
+  String get editEmployee => 'تعديل الموظف';
+
+  @override
   String addEmployeeStepSubtitle(int step) {
     return 'الخطوة $step من 9';
   }
@@ -1457,7 +1473,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addEmployeeBasicInfoSubtitle => 'الاسم وتفاصيل الاتصال الأساسية';
 
   @override
-  String get addEmployeeNameFieldsConfigured => 'يتم تكوين حقول الاسم من هيكل المؤسسة → إعدادات هيكل الاسم';
+  String get addEmployeeNameFieldsConfigured =>
+      'يتم تكوين حقول الاسم من هيكل المؤسسة → إعدادات هيكل الاسم';
 
   @override
   String get firstName => 'الاسم الأول';
@@ -1511,7 +1528,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get demographicsAndIdentity => 'البيانات الديموغرافية والهوية';
 
   @override
-  String get demographicsAndIdentitySubtitle => 'البيانات الديموغرافية الشخصية ووثائق الهوية.';
+  String get demographicsAndIdentitySubtitle =>
+      'البيانات الديموغرافية الشخصية ووثائق الهوية.';
 
   @override
   String get demographics => 'البيانات الديموغرافية';
@@ -1556,10 +1574,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintPassportNumber => 'مثال: AB1234567';
 
   @override
-  String get addressAndEmergencyContact => 'العنوان وجهة الاتصال في حالات الطوارئ';
+  String get addressAndEmergencyContact =>
+      'العنوان وجهة الاتصال في حالات الطوارئ';
 
   @override
-  String get addressAndEmergencyContactSubtitle => 'العنوان السكني ومعلومات جهة الاتصال في حالات الطوارئ';
+  String get addressAndEmergencyContactSubtitle =>
+      'العنوان السكني ومعلومات جهة الاتصال في حالات الطوارئ';
 
   @override
   String get residentialAddress => 'العنوان السكني';
@@ -1583,7 +1603,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get assignmentInformation => 'معلومات التعيين';
 
   @override
-  String get assignmentInformationSubtitle => 'الهيكل التنظيمي وتفاصيل الوظيفة.';
+  String get assignmentInformationSubtitle =>
+      'الهيكل التنظيمي وتفاصيل الوظيفة.';
 
   @override
   String get assignmentStartDate => 'تاريخ بداية التعيين';
@@ -1649,7 +1670,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get timeManagementWorkSchedule => 'إدارة الوقت - جدول العمل';
 
   @override
-  String get timeManagementWorkScheduleSubtitle => 'تعيين جدول العمل لتتبع الحضور';
+  String get timeManagementWorkScheduleSubtitle =>
+      'تعيين جدول العمل لتتبع الحضور';
 
   @override
   String get workScheduleAssignment => 'تعيين جدول العمل';
@@ -1750,7 +1772,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get documentsAndCompliance => 'المستندات والامتثال';
 
   @override
-  String get documentsAndComplianceSubtitle => 'تواريخ انتهاء المستندات وتتبع الامتثال';
+  String get documentsAndComplianceSubtitle =>
+      'تواريخ انتهاء المستندات وتتبع الامتثال';
 
   @override
   String get documentExpiryDates => 'تواريخ انتهاء المستندات';
@@ -1789,7 +1812,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reviewAndConfirm => 'المراجعة والتأكيد';
 
   @override
-  String get reviewAndConfirmSubtitle => 'راجع جميع المعلومات قبل إنشاء سجل الموظف';
+  String get reviewAndConfirmSubtitle =>
+      'راجع جميع المعلومات قبل إنشاء سجل الموظف';
 
   @override
   String get personalInformation => 'المعلومات الشخصية';
@@ -1885,19 +1909,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manageEnterpriseStructure => 'إدارة هيكل المؤسسة';
 
   @override
-  String get configureManageHierarchy => 'تكوين وإدارة هياكل التسلسل الهرمي للمؤسسة';
+  String get configureManageHierarchy =>
+      'تكوين وإدارة هياكل التسلسل الهرمي للمؤسسة';
 
   @override
-  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+  String get configureManageHierarchyAr =>
+      'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
 
   @override
   String get currentlyActiveStructure => 'الهيكل النشط حاليًا';
 
   @override
-  String get standardKuwaitCorporateStructure => 'الهيكل المؤسسي الكويتي القياسي';
+  String get standardKuwaitCorporateStructure =>
+      'الهيكل المؤسسي الكويتي القياسي';
 
   @override
-  String get traditionalHierarchicalStructure => 'هيكل هرمي تقليدي بجميع المستويات الخمسة للإدارة التنظيمية الشاملة';
+  String get traditionalHierarchicalStructure =>
+      'هيكل هرمي تقليدي بجميع المستويات الخمسة للإدارة التنظيمية الشاملة';
 
   @override
   String get activeLevels => 'المستويات النشطة';
@@ -1958,13 +1986,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get simplifiedStructure => 'هيكل مبسط';
 
   @override
-  String get streamlinedStructure => 'هيكل مبسط للمؤسسات الصغيرة - الشركة والقسم والإدارة فقط';
+  String get streamlinedStructure =>
+      'هيكل مبسط للمؤسسات الصغيرة - الشركة والقسم والإدارة فقط';
 
   @override
   String get flatOrganizationStructure => 'هيكل تنظيمي مسطح';
 
   @override
-  String get minimalHierarchy => 'تسلسل هرمي minimal للشركات الناشئة والفرق الرشيقة - الشركة والإدارة فقط';
+  String get minimalHierarchy =>
+      'تسلسل هرمي minimal للشركات الناشئة والفرق الرشيقة - الشركة والإدارة فقط';
 
   @override
   String get currentlyActiveStructureMessage =>
@@ -2046,7 +2076,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get viewEnterpriseStructureConfiguration => 'عرض تكوين هيكل المؤسسة';
 
   @override
-  String get reviewOrganizationalHierarchy => 'مراجعة مستويات التسلسل الهرمي التنظيمي والتسلسل';
+  String get reviewOrganizationalHierarchy =>
+      'مراجعة مستويات التسلسل الهرمي التنظيمي والتسلسل';
 
   @override
   String get structureConfigurationActive => 'تكوين الهيكل نشط';
@@ -2063,16 +2094,20 @@ class AppLocalizationsAr extends AppLocalizations {
       'الشركة إلزامية ويجب أن تكون المستوى الأعلى - لا يمكن تعطيلها أو إعادة ترتيبها';
 
   @override
-  String get enableDisableLevelsInstruction => 'تمكين أو تعطيل المستويات حسب احتياجاتك التنظيمية';
+  String get enableDisableLevelsInstruction =>
+      'تمكين أو تعطيل المستويات حسب احتياجاتك التنظيمية';
 
   @override
-  String get useArrowsInstruction => 'استخدم الأسهم لأعلى/لأسفل لتغيير تسلسل التسلسل الهرمي';
+  String get useArrowsInstruction =>
+      'استخدم الأسهم لأعلى/لأسفل لتغيير تسلسل التسلسل الهرمي';
 
   @override
-  String get orderDeterminesRelationshipsInstruction => 'يحدد الترتيب العلاقات بين الوالدين والطفل في هيكلك التنظيمي';
+  String get orderDeterminesRelationshipsInstruction =>
+      'يحدد الترتيب العلاقات بين الوالدين والطفل في هيكلك التنظيمي';
 
   @override
-  String get changesAffectComponentsInstruction => 'ستؤثر التغييرات على كيفية إنشاء المكونات وعرضها في عرض الشجرة';
+  String get changesAffectComponentsInstruction =>
+      'ستؤثر التغييرات على كيفية إنشاء المكونات وعرضها في عرض الشجرة';
 
   @override
   String get previewStructure => 'معاينة الهيكل';
@@ -2115,16 +2150,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editEnterpriseStructureConfiguration => 'تعديل تكوين هيكل المؤسسة';
 
   @override
-  String get defineOrganizationalHierarchy => 'حدد مستويات التسلسل الهرمي التنظيمي وتسلسلها';
+  String get defineOrganizationalHierarchy =>
+      'حدد مستويات التسلسل الهرمي التنظيمي وتسلسلها';
 
   @override
-  String get createEnterpriseStructureConfiguration => 'إنشاء تكوين هيكل المؤسسة';
+  String get createEnterpriseStructureConfiguration =>
+      'إنشاء تكوين هيكل المؤسسة';
 
   @override
   String get noConfigurationFound => 'لم يتم العثور على تكوين';
 
   @override
-  String get pleaseConfigureEnterpriseStructure => 'يرجى تكوين التسلسل الهرمي لهيكل مؤسستك قبل إنشاء المكونات.';
+  String get pleaseConfigureEnterpriseStructure =>
+      'يرجى تكوين التسلسل الهرمي لهيكل مؤسستك قبل إنشاء المكونات.';
 
   @override
   String get structureName => 'اسم الهيكل';
@@ -2133,19 +2171,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get structureNamePlaceholder => 'مثال: هيكل الشركة القياسي، هيكل مبسط';
 
   @override
-  String get descriptionPlaceholder => 'اوصف تكوين هذا الهيكل ومتى يجب استخدامه...';
+  String get descriptionPlaceholder =>
+      'اوصف تكوين هذا الهيكل ومتى يجب استخدامه...';
 
   @override
   String get manageComponentValues => 'إدارة قيم المكونات';
 
   @override
-  String get componentValuesSubtitle => 'إنشاء وإدارة المكونات التنظيمية (الشركة، القسم، وحدة الأعمال، الإدارة، القسم)';
+  String get componentValuesSubtitle =>
+      'إنشاء وإدارة المكونات التنظيمية (الشركة، القسم، وحدة الأعمال، الإدارة، القسم)';
 
   @override
   String get manageOrganizationalHierarchy => 'إدارة الهيكل التنظيمي والهيكل';
 
   @override
-  String get manageOrganizationalHierarchyAr => 'إدارة الهيكل التنظيمي والتسلسل الإداري';
+  String get manageOrganizationalHierarchyAr =>
+      'إدارة الهيكل التنظيمي والتسلسل الإداري';
 
   @override
   String get structureConfiguration => 'تكوين الهيكل';
@@ -2166,20 +2207,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bulkUploadInstructionsTitle => 'تعليمات التحميل';
 
   @override
-  String get bulkUploadInstructionDownloadTemplate => 'قم بتنزيل ملف القالب لمعرفة التنسيق المطلوب';
+  String get bulkUploadInstructionDownloadTemplate =>
+      'قم بتنزيل ملف القالب لمعرفة التنسيق المطلوب';
 
   @override
   String get bulkUploadInstructionRequiredFields =>
       'املأ كافة الحقول الإلزامية: النوع، الرمز، الاسم، الاسم العربي، رمز الأب (إن وجد)';
 
   @override
-  String get bulkUploadInstructionOptionalFields => 'الحقول الاختيارية: معرف المدير، مركز التكلفة، الموقع، الوصف';
+  String get bulkUploadInstructionOptionalFields =>
+      'الحقول الاختيارية: معرف المدير، مركز التكلفة، الموقع، الوصف';
 
   @override
-  String get bulkUploadInstructionParentCode => 'يجب أن يطابق رمز الأب رمز مكون موجود';
+  String get bulkUploadInstructionParentCode =>
+      'يجب أن يطابق رمز الأب رمز مكون موجود';
 
   @override
-  String get bulkUploadInstructionFileFormat => 'تنسيق الملف: Excel (.xlsx) أو CSV (.csv)';
+  String get bulkUploadInstructionFileFormat =>
+      'تنسيق الملف: Excel (.xlsx) أو CSV (.csv)';
 
   @override
   String get bulkUploadInstructionRowLimit => 'الحد الأقصى 1000 صف لكل تحميل';
@@ -2197,7 +2242,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bulkUploadDropHint => 'قم بسحب وإفلات ملفك هنا، أو انقر للتصفح';
 
   @override
-  String get bulkUploadSupportedFormats => 'يدعم: .xlsx، .csv (الحد الأقصى: 10 ميغابايت)';
+  String get bulkUploadSupportedFormats =>
+      'يدعم: .xlsx، .csv (الحد الأقصى: 10 ميغابايت)';
 
   @override
   String get bulkUploadTemplatePreview => 'معاينة تنسيق القالب';
@@ -2447,7 +2493,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get companyManagement => 'إدارة الشركات';
 
   @override
-  String get manageCompanyInformation => 'إدارة معلومات الشركة والكيانات التنظيمية';
+  String get manageCompanyInformation =>
+      'إدارة معلومات الشركة والكيانات التنظيمية';
 
   @override
   String get addCompany => 'إضافة شركة';
@@ -2465,7 +2512,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get compliant => 'متوافق';
 
   @override
-  String get searchCompaniesPlaceholder => 'ابحث باسم الشركة أو الكود أو رقم التسجيل...';
+  String get searchCompaniesPlaceholder =>
+      'ابحث باسم الشركة أو الكود أو رقم التسجيل...';
 
   @override
   String get editCompany => 'تعديل الشركة';
@@ -2561,7 +2609,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totalBudget => 'إجمالي الميزانية';
 
   @override
-  String get searchDivisionsPlaceholder => 'البحث حسب اسم القسم أو الرمز أو رئيس القسم...';
+  String get searchDivisionsPlaceholder =>
+      'البحث حسب اسم القسم أو الرمز أو رئيس القسم...';
 
   @override
   String get allCompanies => 'جميع الشركات';
@@ -2681,7 +2730,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get activeUnits => 'الوحدات النشطة';
 
   @override
-  String get searchBusinessUnitsPlaceholder => 'البحث حسب اسم الوحدة أو الرمز أو الرئيس...';
+  String get searchBusinessUnitsPlaceholder =>
+      'البحث حسب اسم الوحدة أو الرمز أو الرئيس...';
 
   @override
   String get allDivisions => 'جميع الأقسام';
@@ -2759,7 +2809,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totalBudgetDept => 'إجمالي الميزانية';
 
   @override
-  String get searchDepartmentsPlaceholder => 'البحث حسب اسم القسم أو الرمز أو الرئيس...';
+  String get searchDepartmentsPlaceholder =>
+      'البحث حسب اسم القسم أو الرمز أو الرئيس...';
 
   @override
   String get allBusinessUnits => 'جميع وحدات الأعمال';
@@ -2852,10 +2903,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchSectionsPlaceholder => 'بحث الأقسام...';
 
   @override
-  String get managePositionsJobFamilies => 'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
+  String get managePositionsJobFamilies =>
+      'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
 
   @override
-  String get managePositionsJobFamiliesAr => 'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
+  String get managePositionsJobFamiliesAr =>
+      'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
 
   @override
   String get totalPositions => 'إجمالي الوظائف';
@@ -3092,7 +3145,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get amount => 'المبلغ';
 
   @override
-  String get searchPositionsPlaceholder => 'البحث عن الوظائف بالمسمى أو الرمز أو الاسم العربي...';
+  String get searchPositionsPlaceholder =>
+      'البحث عن الوظائف بالمسمى أو الرمز أو الاسم العربي...';
 
   @override
   String get allDepartments => 'جميع الأقسام';
@@ -3134,10 +3188,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get titleArabic => 'المسمى (عربي)';
 
   @override
-  String get reportingStructureDescription => 'عرض جدولي لعلاقات الإبلاغ والتسلسل الهرمي للوظائف';
+  String get reportingStructureDescription =>
+      'عرض جدولي لعلاقات الإبلاغ والتسلسل الهرمي للوظائف';
 
   @override
-  String get reportingStructureDescriptionAr => 'عرض جدولي لهيكل التقارير والتسلسل الوظيفي';
+  String get reportingStructureDescriptionAr =>
+      'عرض جدولي لهيكل التقارير والتسلسل الوظيفي';
 
   @override
   String get exportTable => 'تصدير الجدول';
@@ -3309,10 +3365,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tmFilterRejected => 'Rejected';
 
   @override
-  String get manageShiftsWorkPatterns => 'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+  String get manageShiftsWorkPatterns =>
+      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
 
   @override
-  String get manageShiftsWorkPatternsAr => 'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+  String get manageShiftsWorkPatternsAr =>
+      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
 
   @override
   String get shifts => 'الورديات';
@@ -3360,7 +3418,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deleteStructureMessage => 'هل أنت متأكد أنك تريد المتابعة؟';
 
   @override
-  String get structureReferencedError => 'لا يمكن حذف هيكل المؤسسة: هذا الهيكل مستخدم في سجلات أخرى في قاعدة البيانات.';
+  String get structureReferencedError =>
+      'لا يمكن حذف هيكل المؤسسة: هذا الهيكل مستخدم في سجلات أخرى في قاعدة البيانات.';
 
   @override
   String get structureDeletedSuccess => 'تم حذف هيكل المؤسسة بنجاح.';
@@ -3389,13 +3448,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveBalance => 'رصيد الإجازة';
 
   @override
-  String get leaveBalanceDescription => 'عرض وإدارة أرصدة إجازات الموظفين والاستحقاقات';
+  String get leaveBalanceDescription =>
+      'عرض وإدارة أرصدة إجازات الموظفين والاستحقاقات';
 
   @override
   String get myLeaveBalance => 'رصيد إجازتي';
 
   @override
-  String get myLeaveBalanceDescription => 'عرض أرصدة إجازاتك ونقلها وقواعد الإسقاط';
+  String get myLeaveBalanceDescription =>
+      'عرض أرصدة إجازاتك ونقلها وقواعد الإسقاط';
 
   @override
   String get applyLeave => 'تقديم طلب إجازة';
@@ -3440,7 +3501,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestEncashmentButton => 'طلب →';
 
   @override
-  String get encashmentDescription => 'يمكنك طلب صرف أيام الإجازة غير المستخدمة مقابل تعويض مالي';
+  String get encashmentDescription =>
+      'يمكنك طلب صرف أيام الإجازة غير المستخدمة مقابل تعويض مالي';
 
   @override
   String atRiskDescription(String date) {
@@ -3466,7 +3528,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sickLeaveArabic => 'الإجازة المرضية';
 
   @override
-  String get kuwaitLaborLawLeavePolicy => 'سياسة الإجازة بموجب قانون العمل الكويتي';
+  String get kuwaitLaborLawLeavePolicy =>
+      'سياسة الإجازة بموجب قانون العمل الكويتي';
 
   @override
   String get carryForwardPolicy => 'النقل';
@@ -3479,13 +3542,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forfeitRules => 'قواعد الإسقاط';
 
   @override
-  String get forfeitRulesDescription => 'سيتم إسقاط أيام الإجازة التي تتجاوز حدود النقل في نهاية فترة السماح';
+  String get forfeitRulesDescription =>
+      'سيتم إسقاط أيام الإجازة التي تتجاوز حدود النقل في نهاية فترة السماح';
 
   @override
   String get encashmentPolicy => 'الصرف النقدي';
 
   @override
-  String get encashmentPolicyDescription => 'يمكن صرف أنواع الإجازات المؤهلة بموافقة المدير وسياسة الشركة';
+  String get encashmentPolicyDescription =>
+      'يمكن صرف أنواع الإجازات المؤهلة بموافقة المدير وسياسة الشركة';
 
   @override
   String get teamLeaveRiskDescription => 'تحليل مخاطر غياب الفريق';
@@ -3515,7 +3580,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forfeitProcessing => 'معالجة إسقاط الإجازات';
 
   @override
-  String get forfeitProcessingDescription => 'معالجة إسقاط الإجازات التلقائي للموظفين الذين يتجاوزون حدود التحويل';
+  String get forfeitProcessingDescription =>
+      'معالجة إسقاط الإجازات التلقائي للموظفين الذين يتجاوزون حدود التحويل';
 
   @override
   String get forfeitReports => 'تقارير الإسقاط';
@@ -3530,22 +3596,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveCalendarDescription => 'تقويم غياب الفريق';
 
   @override
-  String get manageEmployeeLeaveRequests => 'إدارة طلبات إجازة الموظفين وفقًا لقانون العمل الكويتي';
+  String get manageEmployeeLeaveRequests =>
+      'إدارة طلبات إجازة الموظفين وفقًا لقانون العمل الكويتي';
 
   @override
   String get newLeaveRequest => 'طلب إجازة جديد';
 
   @override
-  String get kuwaitLaborLawLeaveEntitlements => 'استحقاقات الإجازة بموجب قانون العمل الكويتي';
+  String get kuwaitLaborLawLeaveEntitlements =>
+      'استحقاقات الإجازة بموجب قانون العمل الكويتي';
 
   @override
-  String get annualLeaveEntitlement => '30 يومًا سنويًا بعد سنة واحدة من الخدمة';
+  String get annualLeaveEntitlement =>
+      '30 يومًا سنويًا بعد سنة واحدة من الخدمة';
 
   @override
-  String get sickLeaveEntitlement => '15 يومًا براتب كامل + 10 أيام بنصف راتب + 10 أيام بدون راتب';
+  String get sickLeaveEntitlement =>
+      '15 يومًا براتب كامل + 10 أيام بنصف راتب + 10 أيام بدون راتب';
 
   @override
-  String get maternityLeaveEntitlement => '70 يومًا إجمالي (30 قبل الولادة، 40 بعد الولادة)';
+  String get maternityLeaveEntitlement =>
+      '70 يومًا إجمالي (30 قبل الولادة، 40 بعد الولادة)';
 
   @override
   String get emergencyLeaveEntitlement => '5 أيام سنويًا للطوارئ';
@@ -3590,13 +3661,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';
 
   @override
-  String get submitRequests3DaysAdvance => '• تقديم الطلبات قبل 3 أيام على الأقل للإجازة السنوية';
+  String get submitRequests3DaysAdvance =>
+      '• تقديم الطلبات قبل 3 أيام على الأقل للإجازة السنوية';
 
   @override
-  String get sickLeaveRequiresCertificate => '• إجازة المرض تتطلب شهادة طبية إذا كانت أكثر من 3 أيام';
+  String get sickLeaveRequiresCertificate =>
+      '• إجازة المرض تتطلب شهادة طبية إذا كانت أكثر من 3 أيام';
 
   @override
-  String get ensureWorkHandover => '• التأكد من اكتمال تسليم العمل قبل بدء الإجازة';
+  String get ensureWorkHandover =>
+      '• التأكد من اكتمال تسليم العمل قبل بدء الإجازة';
 
   @override
   String get typeToSearchEmployees => 'اكتب للبحث عن الموظفين...';
@@ -3644,7 +3718,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reasonForLeave => 'سبب الإجازة';
 
   @override
-  String get pleaseProvideDetailedReason => 'يرجى تقديم سبب مفصل لطلب الإجازة...';
+  String get pleaseProvideDetailedReason =>
+      'يرجى تقديم سبب مفصل لطلب الإجازة...';
 
   @override
   String charactersCount(int count) {
@@ -3658,7 +3733,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectColleagueToHandleWork => 'اختر زميلًا للتعامل مع عملك...';
 
   @override
-  String get selectColleagueWhoWillHandle => 'اختر زميلًا سيتعامل مع مسؤولياتك أثناء غيابك';
+  String get selectColleagueWhoWillHandle =>
+      'اختر زميلًا سيتعامل مع مسؤولياتك أثناء غيابك';
 
   @override
   String get contactInformationDuringLeave => 'معلومات الاتصال أثناء الإجازة';
@@ -3685,7 +3761,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get additionalNotes => 'ملاحظات إضافية';
 
   @override
-  String get anyAdditionalInformation => 'أي معلومات إضافية أو اعتبارات خاصة...';
+  String get anyAdditionalInformation =>
+      'أي معلومات إضافية أو اعتبارات خاصة...';
 
   @override
   String get supportingDocuments => 'المستندات الداعمة';
@@ -3694,7 +3771,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get clickToUploadOrDragDrop => 'انقر للتحميل أو السحب والإفلات';
 
   @override
-  String get pdfDocDocxJpgPngUpTo10MB => 'PDF، DOC، DOCX، JPG، PNG حتى 10 ميجابايت لكل منها';
+  String get pdfDocDocxJpgPngUpTo10MB =>
+      'PDF، DOC، DOCX، JPG، PNG حتى 10 ميجابايت لكل منها';
 
   @override
   String get requiredDocuments => 'المستندات المطلوبة:';
@@ -3739,7 +3817,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get teamLeaveRiskDashboard => 'لوحة تحكم مخاطر إجازة الفريق';
 
   @override
-  String get monitorAndManageTeamMembersAtRisk => 'مراقبة وإدارة أعضاء الفريق المعرضين لخطر فقدان الإجازة';
+  String get monitorAndManageTeamMembersAtRisk =>
+      'مراقبة وإدارة أعضاء الفريق المعرضين لخطر فقدان الإجازة';
 
   @override
   String get teamMembers => 'أعضاء الفريق';
@@ -3818,5 +3897,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get encashmentOption => 'خيار التحصيل';
 
   @override
-  String get encashmentOptionDescription => 'النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة';
+  String get encashmentOptionDescription =>
+      'النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة';
 }

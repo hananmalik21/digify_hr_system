@@ -556,6 +556,7 @@
   "manageEmployees": "Manage Employees",
   "manageEmployeesDescription": "View and manage employees",
   "addNewEmployee": "Add New Employee",
+  "editEmployee": "Edit Employee",
   "addEmployeeStepSubtitle": "Step {step} of 9",
   "@addEmployeeStepSubtitle": {
     "placeholders": {

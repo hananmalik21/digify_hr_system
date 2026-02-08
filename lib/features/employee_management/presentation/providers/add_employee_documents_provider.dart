@@ -9,6 +9,7 @@ class AddEmployeeDocumentsState {
   final String? workPermitNumber;
   final DateTime? workPermitExpiry;
   final Document? document;
+  final String? documentTypeCode;
 
   const AddEmployeeDocumentsState({
     this.civilIdExpiry,
@@ -18,6 +19,7 @@ class AddEmployeeDocumentsState {
     this.workPermitNumber,
     this.workPermitExpiry,
     this.document,
+    this.documentTypeCode,
   });
 
   static bool _isFilled(String? value) {
@@ -41,6 +43,7 @@ class AddEmployeeDocumentsState {
     String? workPermitNumber,
     DateTime? workPermitExpiry,
     Document? document,
+    String? documentTypeCode,
     bool clearCivilIdExpiry = false,
     bool clearPassportExpiry = false,
     bool clearVisaNumber = false,
@@ -48,6 +51,7 @@ class AddEmployeeDocumentsState {
     bool clearWorkPermitNumber = false,
     bool clearWorkPermitExpiry = false,
     bool clearDocument = false,
+    bool clearDocumentTypeCode = false,
   }) {
     return AddEmployeeDocumentsState(
       civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),
@@ -57,9 +61,12 @@ class AddEmployeeDocumentsState {
       workPermitNumber: clearWorkPermitNumber ? null : (workPermitNumber ?? this.workPermitNumber),
       workPermitExpiry: clearWorkPermitExpiry ? null : (workPermitExpiry ?? this.workPermitExpiry),
       document: clearDocument ? null : (document ?? this.document),
+      documentTypeCode: clearDocumentTypeCode ? null : (documentTypeCode ?? this.documentTypeCode),
     );
   }
 }
+
+const List<String> documentTypeCodeOptions = ['PASSPORT', 'CIVIL_ID', 'VISA', 'WORK_PERMIT'];
 
 class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsState> {
   AddEmployeeDocumentsNotifier() : super(const AddEmployeeDocumentsState());
@@ -89,7 +96,38 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
   }
 
   void setDocument(Document? value) {
-    state = state.copyWith(document: value, clearDocument: value == null);
+    state = state.copyWith(
+      document: value,
+      clearDocument: value == null,
+      clearDocumentTypeCode: value == null,
+      documentTypeCode: value != null && (state.documentTypeCode == null || state.documentTypeCode!.isEmpty)
+          ? 'PASSPORT'
+          : state.documentTypeCode,
+    );
+  }
+
+  void setDocumentTypeCode(String? value) {
+    state = state.copyWith(documentTypeCode: value, clearDocumentTypeCode: value == null || value.isEmpty);
+  }
+
+  void setFromFullDetails({
+    DateTime? civilIdExpiry,
+    DateTime? passportExpiry,
+    String? visaNumber,
+    DateTime? visaExpiry,
+    String? workPermitNumber,
+    DateTime? workPermitExpiry,
+    String? documentTypeCode,
+  }) {
+    state = state.copyWith(
+      civilIdExpiry: civilIdExpiry ?? state.civilIdExpiry,
+      passportExpiry: passportExpiry ?? state.passportExpiry,
+      visaNumber: visaNumber ?? state.visaNumber,
+      visaExpiry: visaExpiry ?? state.visaExpiry,
+      workPermitNumber: workPermitNumber ?? state.workPermitNumber,
+      workPermitExpiry: workPermitExpiry ?? state.workPermitExpiry,
+      documentTypeCode: documentTypeCode ?? state.documentTypeCode,
+    );
   }
 
   void reset() {

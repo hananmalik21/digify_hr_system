@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LevelSelection {
@@ -86,6 +87,31 @@ class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentS
 
   void setAsgEnd(DateTime? value) {
     state = state.copyWith(asgEnd: value, clearAsgEnd: value == null);
+  }
+
+  void setFromFullDetails({
+    String? orgUnitIdHex,
+    List<OrgStructureItem>? orgStructureList,
+    DateTime? asgStart,
+    DateTime? asgEnd,
+    String? workLocation,
+  }) {
+    final levelSelections = <String, LevelSelection>{};
+    if (orgStructureList != null) {
+      for (final item in orgStructureList) {
+        final code = item.levelCode ?? '';
+        if (code.isNotEmpty) {
+          levelSelections[code] = LevelSelection(orgUnitId: item.orgUnitId, displayNameEn: item.orgUnitNameEn ?? '');
+        }
+      }
+    }
+    state = state.copyWith(
+      levelSelections: levelSelections,
+      orgUnitIdHex: orgUnitIdHex ?? state.orgUnitIdHex,
+      asgStart: asgStart,
+      asgEnd: asgEnd,
+      workLocation: workLocation,
+    );
   }
 
   void reset() {

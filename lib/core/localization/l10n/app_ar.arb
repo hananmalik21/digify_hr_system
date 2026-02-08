@@ -462,6 +462,7 @@
   "manageEmployees": "إدارة الموظفين",
   "manageEmployeesDescription": "عرض وإدارة الموظفين",
   "addNewEmployee": "إضافة موظف جديد",
+  "editEmployee": "تعديل الموظف",
   "addEmployeeStepSubtitle": "الخطوة {step} من 9",
   "@addEmployeeStepSubtitle": {
     "placeholders": {

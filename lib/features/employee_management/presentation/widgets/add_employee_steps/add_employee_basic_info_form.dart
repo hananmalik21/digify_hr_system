@@ -53,30 +53,34 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
     );
 
     final form = state.form;
+    final formKey = ValueKey<int>(state.formGenerationId);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final useTwoColumns = constraints.maxWidth > 500;
-        final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, form, notifier);
-        final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon, form, notifier);
+    return KeyedSubtree(
+      key: formKey,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final useTwoColumns = constraints.maxWidth > 500;
+          final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, form, notifier);
+          final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon, form, notifier);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (useTwoColumns)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: Column(children: leftFields)),
-                  Gap(24.w),
-                  Expanded(child: Column(children: rightFields)),
-                ],
-              )
-            else
-              Column(children: [...leftFields, ...rightFields]),
-          ],
-        );
-      },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (useTwoColumns)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Column(children: leftFields)),
+                    Gap(24.w),
+                    Expanded(child: Column(children: rightFields)),
+                  ],
+                )
+              else
+                Column(children: [...leftFields, ...rightFields]),
+            ],
+          );
+        },
+      ),
     );
   }
 

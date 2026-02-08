@@ -9,6 +9,7 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart';
@@ -16,22 +17,43 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/reporting_to_employee_search_field.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class JobEmploymentDetailsModule extends ConsumerWidget {
+class JobEmploymentDetailsModule extends ConsumerStatefulWidget {
   const JobEmploymentDetailsModule({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JobEmploymentDetailsModule> createState() => _JobEmploymentDetailsModuleState();
+}
+
+class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetailsModule> {
+  bool _prefillLoadsTriggered = false;
+
+  @override
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
     final jobState = ref.watch(addEmployeeJobEmploymentProvider);
     final jobNotifier = ref.read(addEmployeeJobEmploymentProvider.notifier);
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+
+    _resolvePrefillIds(ref, jobState, jobNotifier, enterpriseId);
+    ref.listen(jobFamilyNotifierProvider, (prev, next) => _tryResolveJobFamily(ref, next));
+    ref.listen(positionNotifierProvider, (prev, next) => _tryResolvePosition(ref, next));
+    ref.listen(jobLevelNotifierProvider, (prev, next) => _tryResolveJobLevel(ref, next));
+    ref.listen(gradeNotifierProvider, (prev, next) => _tryResolveGrade(ref, next));
     final contractTypeValuesAsync = ref.watch(
       emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'CONTRACT_TYPE')),
     );
@@ -192,6 +214,108 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
     );
   }
 
+  void _resolvePrefillIds(
+    WidgetRef ref,
+    AddEmployeeJobEmploymentState jobState,
+    AddEmployeeJobEmploymentNotifier jobNotifier,
+    int enterpriseId,
+  ) {
+    if (_prefillLoadsTriggered) return;
+    final hasPrefill =
+        jobState.prefillJobFamilyId != null ||
+        (jobState.prefillPositionId != null && jobState.prefillPositionId!.isNotEmpty) ||
+        jobState.prefillJobLevelId != null ||
+        jobState.prefillGradeId != null ||
+        jobState.prefillReportingToEmpId != null;
+    if (!hasPrefill) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _prefillLoadsTriggered) return;
+      setState(() => _prefillLoadsTriggered = true);
+
+      if (jobState.prefillJobFamilyId != null && jobState.selectedJobFamily == null) {
+        ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
+      }
+      if (jobState.prefillPositionId != null &&
+          jobState.prefillPositionId!.isNotEmpty &&
+          jobState.selectedPosition == null) {
+        ref.read(positionNotifierProvider.notifier).loadFirstPage();
+      }
+      if (jobState.prefillJobLevelId != null && jobState.selectedJobLevel == null) {
+        ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
+      }
+      if (jobState.prefillGradeId != null && jobState.selectedGrade == null) {
+        ref.read(gradeNotifierProvider.notifier).loadFirstPage();
+      }
+      if (jobState.prefillReportingToEmpId != null && jobState.selectedReportingTo == null) {
+        _resolveReportingTo(ref, enterpriseId, jobState.prefillReportingToEmpId!);
+      }
+    });
+  }
+
+  void _tryResolveJobFamily(WidgetRef ref, dynamic state) {
+    final jobState = ref.read(addEmployeeJobEmploymentProvider);
+    if (jobState.prefillJobFamilyId == null || jobState.selectedJobFamily != null) return;
+    final items = state.items;
+    if (items == null || items.isEmpty) return;
+    final list = items is List<JobFamily> ? items : List<JobFamily>.from(items as List);
+    final found = list.cast<JobFamily>().where((j) => j.id == jobState.prefillJobFamilyId).firstOrNull;
+    if (found != null) {
+      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobFamily(found);
+    }
+  }
+
+  void _tryResolvePosition(WidgetRef ref, dynamic state) {
+    final jobState = ref.read(addEmployeeJobEmploymentProvider);
+    if (jobState.prefillPositionId == null ||
+        jobState.prefillPositionId!.isEmpty ||
+        jobState.selectedPosition != null) {
+      return;
+    }
+    final items = state.items;
+    if (items == null || items.isEmpty) return;
+    final list = items is List<Position> ? items : List<Position>.from(items as List);
+    final found = list.cast<Position>().where((p) => p.id == jobState.prefillPositionId).firstOrNull;
+    if (found != null) {
+      ref.read(addEmployeeJobEmploymentProvider.notifier).setPosition(found);
+    }
+  }
+
+  void _tryResolveJobLevel(WidgetRef ref, dynamic state) {
+    final jobState = ref.read(addEmployeeJobEmploymentProvider);
+    if (jobState.prefillJobLevelId == null || jobState.selectedJobLevel != null) return;
+    final items = state.items;
+    if (items == null || items.isEmpty) return;
+    final list = items is List<JobLevel> ? items : List<JobLevel>.from(items as List);
+    final found = list.cast<JobLevel>().where((j) => j.id == jobState.prefillJobLevelId).firstOrNull;
+    if (found != null) {
+      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobLevel(found);
+    }
+  }
+
+  void _tryResolveGrade(WidgetRef ref, dynamic state) {
+    final jobState = ref.read(addEmployeeJobEmploymentProvider);
+    if (jobState.prefillGradeId == null || jobState.selectedGrade != null) return;
+    final items = state.items;
+    if (items == null || items.isEmpty) return;
+    final list = items is List<Grade> ? items : List<Grade>.from(items as List);
+    final found = list.cast<Grade>().where((g) => g.id == jobState.prefillGradeId).firstOrNull;
+    if (found != null) {
+      ref.read(addEmployeeJobEmploymentProvider.notifier).setGrade(found);
+    }
+  }
+
+  Future<void> _resolveReportingTo(WidgetRef ref, int enterpriseId, int reportingToEmpId) async {
+    final repository = ref.read(manageEmployeesListRepositoryProvider);
+    try {
+      final result = await repository.getEmployees(enterpriseId: enterpriseId, page: 1, pageSize: 200);
+      final match = result.items.where((e) => e.employeeIdNum == reportingToEmpId).firstOrNull;
+      if (match != null && mounted) {
+        ref.read(addEmployeeJobEmploymentProvider.notifier).setReportingTo(match);
+      }
+    } catch (_) {}
+  }
+
   static EmplLookupValue? _contractTypeByCode(String? code, List<EmplLookupValue> values) {
     if (code == null || code.trim().isEmpty) return null;
     try {
@@ -211,5 +335,14 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
         color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
       ),
     );
+  }
+}
+
+extension _FirstWhereOrNull<E> on Iterable<E> {
+  E? get firstOrNull {
+    for (final e in this) {
+      return e;
+    }
+    return null;
   }
 }

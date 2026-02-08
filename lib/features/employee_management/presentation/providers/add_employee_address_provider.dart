@@ -75,6 +75,22 @@ class AddEmployeeAddressNotifier extends StateNotifier<AddEmployeeAddressState> 
     state = state.copyWith(contactName: value, clearContactName: value == null || value.isEmpty);
   }
 
+  void setFromFullDetails({
+    String? emergAddress,
+    String? emergPhone,
+    String? emergEmail,
+    String? emergRelationship,
+    String? contactName,
+  }) {
+    state = state.copyWith(
+      emergAddress: emergAddress ?? state.emergAddress,
+      emergPhone: emergPhone ?? state.emergPhone,
+      emergEmail: emergEmail ?? state.emergEmail,
+      emergRelationship: emergRelationship ?? state.emergRelationship,
+      contactName: contactName ?? state.contactName,
+    );
+  }
+
   void reset() {
     state = const AddEmployeeAddressState();
   }

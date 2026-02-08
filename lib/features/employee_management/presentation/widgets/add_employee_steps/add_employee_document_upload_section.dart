@@ -104,9 +104,38 @@ class _AddEmployeeDocumentUploadSectionState extends ConsumerState<AddEmployeeDo
         ),
         if (state.document != null) ...[
           Gap(16.h),
+          _DocumentTypeDropdown(
+            value: state.documentTypeCode ?? 'PASSPORT',
+            onChanged: (v) => notifier.setDocumentTypeCode(v),
+            isDark: isDark,
+          ),
+          Gap(12.h),
           _UploadedDocumentItem(document: state.document!, onRemove: () => notifier.setDocument(null)),
         ],
       ],
+    );
+  }
+}
+
+class _DocumentTypeDropdown extends StatelessWidget {
+  const _DocumentTypeDropdown({required this.value, required this.onChanged, required this.isDark});
+
+  final String value;
+  final ValueChanged<String?> onChanged;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      initialValue: documentTypeCodeOptions.contains(value) ? value : documentTypeCodeOptions.first,
+      decoration: InputDecoration(
+        labelText: 'Document type',
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      ),
+      dropdownColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+      items: documentTypeCodeOptions.map((e) => DropdownMenuItem<String>(value: e, child: Text(e))).toList(),
+      onChanged: onChanged,
     );
   }
 }

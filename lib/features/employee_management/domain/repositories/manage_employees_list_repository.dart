@@ -19,5 +19,16 @@ abstract class ManageEmployeesListRepository {
 
   Future<EmployeeFullDetails?> getEmployeeFullDetails(String employeeGuid, {required int enterpriseId});
 
-  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document});
+  Future<Map<String, dynamic>> createEmployee(
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+    String? documentTypeCode,
+  });
+
+  Future<Map<String, dynamic>> updateEmployee(
+    String employeeGuid,
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+    String? documentTypeCode,
+  });
 }

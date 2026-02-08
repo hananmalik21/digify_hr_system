@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_display_data.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_full_details_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/edit_employee_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_header.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_tab_bar.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/tabs/compensation_benefits_tab_content.dart';
@@ -62,7 +63,11 @@ class _EmployeeDetailScreenState extends ConsumerState<EmployeeDetailScreen> wit
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                  child: EmployeeDetailHeader(displayData: displayData, isDark: isDark),
+                  child: EmployeeDetailHeader(
+                    displayData: displayData,
+                    isDark: isDark,
+                    onEditPressed: () => EditEmployeeDialog.show(context, widget.employee.id),
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 24.w),

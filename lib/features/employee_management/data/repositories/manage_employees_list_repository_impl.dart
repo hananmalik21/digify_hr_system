@@ -44,7 +44,26 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
   }
 
   @override
-  Future<Map<String, dynamic>> createEmployee(CreateEmployeeBasicInfoRequest request, {Document? document}) async {
-    return remoteDataSource.createEmployee(request, document: document);
+  Future<Map<String, dynamic>> createEmployee(
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+    String? documentTypeCode,
+  }) async {
+    return remoteDataSource.createEmployee(request, document: document, documentTypeCode: documentTypeCode);
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateEmployee(
+    String employeeGuid,
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+    String? documentTypeCode,
+  }) async {
+    return remoteDataSource.updateEmployee(
+      employeeGuid,
+      request,
+      document: document,
+      documentTypeCode: documentTypeCode,
+    );
   }
 }

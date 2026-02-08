@@ -122,6 +122,28 @@ class AddEmployeeCompensationNotifier extends StateNotifier<AddEmployeeCompensat
     state = state.copyWith(compEnd: value, clearCompEnd: value == null);
   }
 
+  void setFromFullDetails({
+    String? basicSalaryKwd,
+    String? housingKwd,
+    String? transportKwd,
+    String? foodKwd,
+    String? mobileKwd,
+    String? otherKwd,
+    DateTime? compStart,
+    DateTime? compEnd,
+  }) {
+    state = state.copyWith(
+      basicSalaryKwd: basicSalaryKwd ?? state.basicSalaryKwd,
+      housingKwd: housingKwd ?? state.housingKwd,
+      transportKwd: transportKwd ?? state.transportKwd,
+      foodKwd: foodKwd ?? state.foodKwd,
+      mobileKwd: mobileKwd ?? state.mobileKwd,
+      otherKwd: otherKwd ?? state.otherKwd,
+      compStart: compStart ?? state.compStart,
+      compEnd: compEnd ?? state.compEnd,
+    );
+  }
+
   void reset() {
     state = const AddEmployeeCompensationState();
   }

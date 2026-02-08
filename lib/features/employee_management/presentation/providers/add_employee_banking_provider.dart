@@ -56,6 +56,15 @@ class AddEmployeeBankingNotifier extends StateNotifier<AddEmployeeBankingState> 
     state = state.copyWith(iban: value, clearIban: value == null || value.isEmpty);
   }
 
+  void setFromFullDetails({String? bankCode, String? bankName, String? accountNumber, String? iban}) {
+    state = state.copyWith(
+      bankCode: bankCode ?? state.bankCode,
+      bankName: bankName ?? state.bankName,
+      accountNumber: accountNumber ?? state.accountNumber,
+      iban: iban ?? state.iban,
+    );
+  }
+
   void reset() {
     state = const AddEmployeeBankingState();
   }
