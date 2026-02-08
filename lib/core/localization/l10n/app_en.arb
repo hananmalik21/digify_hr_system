@@ -680,6 +680,7 @@
   "documentsAndCompliance": "Documents & Compliance",
   "documentsAndComplianceSubtitle": "Document expiry dates and compliance tracking",
   "documentExpiryDates": "Document Expiry Dates",
+  "noDocumentsAvailable": "No document available",
   "civilIdExpiry": "Civil ID Expiry",
   "passportExpiry": "Passport Expiry",
   "visaNumber": "Visa Number",

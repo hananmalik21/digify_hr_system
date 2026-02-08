@@ -56,7 +56,7 @@ class EmployeeDetailHeader extends StatelessWidget {
               Gap(18.w),
               EmployeeDetailChip(path: Assets.icons.deiDashboardIcon.path, label: 'HR Manager', isDark: isDark),
               EmployeeDetailChip(
-                path: Assets.icons.departmentIcon.path,
+                path: Assets.icons.departmentCardIcon.path,
                 label: displayData.departmentLabel,
                 isDark: isDark,
               ),

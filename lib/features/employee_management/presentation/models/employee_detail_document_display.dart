@@ -58,43 +58,9 @@ class EmployeeDetailDocumentDisplay {
     );
   }
 
-  /// Returns display items from API documents, or fallback items from demographics/documentCompliance when empty.
   static List<EmployeeDetailDocumentDisplay> fromFullDetails(EmployeeFullDetails? fullDetails) {
     final documents = fullDetails?.documents ?? [];
-    if (documents.isNotEmpty) {
-      return documents.map((d) => fromDocument(d, fullDetails)).toList();
-    }
-    final docComp = fullDetails?.documentCompliance;
-    final demo = fullDetails?.demographics;
-    return [
-      EmployeeDetailDocumentDisplay(
-        title: 'Civil ID',
-        fileName: displayValue(demo?.civilIdNumber),
-        status: '—',
-        expiryDate: formatIsoDateToDisplay(docComp?.civilIdExpiry),
-        firstFieldLabel: 'Number',
-      ),
-      EmployeeDetailDocumentDisplay(
-        title: 'Passport',
-        fileName: displayValue(demo?.passportNumber),
-        status: '—',
-        expiryDate: formatIsoDateToDisplay(docComp?.passportExpiry),
-        firstFieldLabel: 'Number',
-      ),
-      EmployeeDetailDocumentDisplay(
-        title: 'Visa',
-        fileName: displayValue(demo?.visaNumber),
-        status: '—',
-        expiryDate: formatIsoDateToDisplay(demo?.visaExpiry),
-        firstFieldLabel: 'Number',
-      ),
-      EmployeeDetailDocumentDisplay(
-        title: 'Work Permit',
-        fileName: displayValue(demo?.workPermitNumber),
-        status: '—',
-        expiryDate: formatIsoDateToDisplay(demo?.workPermitExpiry),
-        firstFieldLabel: 'Number',
-      ),
-    ];
+    if (documents.isEmpty) return [];
+    return documents.map((d) => fromDocument(d, fullDetails)).toList();
   }
 }
