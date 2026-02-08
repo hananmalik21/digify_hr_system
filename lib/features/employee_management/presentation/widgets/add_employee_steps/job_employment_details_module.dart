@@ -5,12 +5,16 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_level_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/reporting_to_employee_search_field.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +30,14 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
     final isDark = context.isDark;
     final em = Assets.icons.employeeManagement;
     final jobState = ref.watch(addEmployeeJobEmploymentProvider);
-    final personIcon = _prefixIcon(context, Assets.icons.userIcon.path, isDark);
+    final jobNotifier = ref.read(addEmployeeJobEmploymentProvider.notifier);
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final contractTypeValuesAsync = ref.watch(
+      emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'CONTRACT_TYPE')),
+    );
+    final contractTypeValues = contractTypeValuesAsync.valueOrNull ?? [];
+    final contractTypeLoading = contractTypeValuesAsync.isLoading;
+    final selectedContractType = _contractTypeByCode(jobState.contractTypeCode, contractTypeValues);
     final clockIcon = _prefixIcon(context, Assets.icons.clockIcon.path, isDark);
 
     return Container(
@@ -69,7 +80,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   onTap: () async {
                     final selected = await JobFamilySelectionDialog.show(context);
                     if (selected != null && context.mounted) {
-                      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobFamily(selected);
+                      jobNotifier.setJobFamily(selected);
                     }
                   },
                 ),
@@ -81,23 +92,24 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   onTap: () async {
                     final selected = await GradeSelectionDialog.show(context);
                     if (selected != null && context.mounted) {
-                      ref.read(addEmployeeJobEmploymentProvider.notifier).setGrade(selected);
+                      jobNotifier.setGrade(selected);
                     }
                   },
                 ),
-                DigifySelectFieldWithLabel<String>(
+                DigifySelectFieldWithLabel<EmplLookupValue>(
                   label: localizations.contractType,
                   isRequired: true,
-                  hint: localizations.hintContractType,
-                  items: const ['PERMANENT', 'TEMPORARY'],
-                  itemLabelBuilder: (code) => code == 'PERMANENT' ? 'Permanent' : 'Temporary',
-                  value: jobState.contractTypeCode,
-                  onChanged: (v) => ref.read(addEmployeeJobEmploymentProvider.notifier).setContractTypeCode(v),
+                  hint: contractTypeLoading ? localizations.pleaseWait : localizations.hintContractType,
+                  items: contractTypeValues,
+                  itemLabelBuilder: (v) => v.meaningEn,
+                  value: selectedContractType,
+                  onChanged: contractTypeLoading ? null : (v) => jobNotifier.setContractTypeCode(v?.lookupCode),
                 ),
-                DigifyTextField(
-                  labelText: localizations.reportingTo,
-                  prefixIcon: personIcon,
+                ReportingToEmployeeSearchField(
+                  label: localizations.reportingTo,
                   hintText: localizations.hintReportingTo,
+                  selectedEmployee: jobState.selectedReportingTo,
+                  onEmployeeSelected: jobNotifier.setReportingTo,
                 ),
                 DigifySelectFieldWithLabel<String>(
                   label: localizations.employmentStatus,
@@ -106,7 +118,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   items: const ['ACTIVE', 'INACTIVE'],
                   itemLabelBuilder: (code) => code == 'ACTIVE' ? 'Active' : 'Inactive',
                   value: jobState.employmentStatusCode,
-                  onChanged: (v) => ref.read(addEmployeeJobEmploymentProvider.notifier).setEmploymentStatusCode(v),
+                  onChanged: (v) => jobNotifier.setEmploymentStatusCode(v),
                 ),
               ];
               final rightColumn = [
@@ -118,7 +130,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   onTap: () async {
                     final selected = await PositionSelectionDialog.show(context);
                     if (selected != null && context.mounted) {
-                      ref.read(addEmployeeJobEmploymentProvider.notifier).setPosition(selected);
+                      jobNotifier.setPosition(selected);
                     }
                   },
                 ),
@@ -130,7 +142,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   onTap: () async {
                     final selected = await JobLevelSelectionDialog.show(context);
                     if (selected != null && context.mounted) {
-                      ref.read(addEmployeeJobEmploymentProvider.notifier).setJobLevel(selected);
+                      jobNotifier.setJobLevel(selected);
                     }
                   },
                 ),
@@ -139,7 +151,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   isRequired: true,
                   hintText: localizations.hintEnterpriseHireDate,
                   initialDate: jobState.enterpriseHireDate,
-                  onDateSelected: (d) => ref.read(addEmployeeJobEmploymentProvider.notifier).setEnterpriseHireDate(d),
+                  onDateSelected: (d) => jobNotifier.setEnterpriseHireDate(d),
                 ),
                 DigifyTextField(
                   labelText: localizations.probationPeriodDays,
@@ -150,7 +162,7 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
                   initialValue: jobState.probationDays?.toString(),
                   onChanged: (v) {
                     final n = int.tryParse(v);
-                    ref.read(addEmployeeJobEmploymentProvider.notifier).setProbationDays(n);
+                    jobNotifier.setProbationDays(n);
                   },
                 ),
               ];
@@ -178,6 +190,15 @@ class JobEmploymentDetailsModule extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  static EmplLookupValue? _contractTypeByCode(String? code, List<EmplLookupValue> values) {
+    if (code == null || code.trim().isEmpty) return null;
+    try {
+      return values.firstWhere((v) => v.lookupCode == code.trim());
+    } catch (_) {
+      return null;
+    }
   }
 
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {

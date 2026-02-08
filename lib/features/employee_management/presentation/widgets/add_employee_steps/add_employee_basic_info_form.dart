@@ -4,19 +4,15 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-
-final _arabicOnlyFormatter = [FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF\u0750-\u077F\s]'))];
-
-final _phoneFormatter = [FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s]'))];
 
 class AddEmployeeBasicInfoForm extends ConsumerWidget {
   const AddEmployeeBasicInfoForm({super.key});
@@ -164,7 +160,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         textDirection: ui.TextDirection.rtl,
         initialValue: form.firstNameAr,
         onChanged: notifier.setFirstNameAr,
-        inputFormatters: _arabicOnlyFormatter,
+        inputFormatters: FieldFormat.arabicOnlyFormatters,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -174,7 +170,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         textDirection: ui.TextDirection.rtl,
         initialValue: form.lastNameAr,
         onChanged: notifier.setLastNameAr,
-        inputFormatters: _arabicOnlyFormatter,
+        inputFormatters: FieldFormat.arabicOnlyFormatters,
         isRequired: true,
       ),
       Gap(16.h),
@@ -185,7 +181,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         initialValue: form.middleNameAr,
         onChanged: notifier.setMiddleNameAr,
         textDirection: ui.TextDirection.rtl,
-        inputFormatters: _arabicOnlyFormatter,
+        inputFormatters: FieldFormat.arabicOnlyFormatters,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -196,7 +192,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         hintText: l10n.hintPhone,
         initialValue: form.phoneNumber,
         onChanged: notifier.setPhoneNumber,
-        inputFormatters: _phoneFormatter,
+        inputFormatters: FieldFormat.phoneFormatters,
       ),
     ];
   }

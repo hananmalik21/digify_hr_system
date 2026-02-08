@@ -23,7 +23,7 @@ class AddEmployeeDemographicsStep extends StatelessWidget {
           title: localizations.demographicsAndIdentity,
           subtitle: localizations.demographicsAndIdentitySubtitle,
         ),
-        const DemographicsModule(),
+        const DemographicsModule(demographicsStepOnly: true),
         const IdentificationDocumentsModule(),
       ],
     );

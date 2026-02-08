@@ -8,6 +8,9 @@ class AppInputFormatters {
   static final TextInputFormatter nameAr = FilteringTextInputFormatter.allow(RegExp(r"[\u0600-\u06FF\s\.\-']"));
   static final TextInputFormatter nameAny = FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\u0600-\u06FF\s\.\-']"));
   static final TextInputFormatter arabicOnly = FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF\s]'));
+  static final TextInputFormatter arabicOnlyExtended = FilteringTextInputFormatter.allow(
+    RegExp(r'[\u0600-\u06FF\u0750-\u077F\s]'),
+  );
 
   static final TextInputFormatter orgUnitCode = FilteringTextInputFormatter.allow(RegExp(r"[A-Za-z0-9\-_]"));
   static final TextInputFormatter codeOrSlug = FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9\-_]'));
@@ -42,6 +45,7 @@ class FieldFormat {
   static List<TextInputFormatter> get codeOrSlug => [AppInputFormatters.codeOrSlug];
   static List<TextInputFormatter> get nameEn => [AppInputFormatters.nameEn];
   static List<TextInputFormatter> get nameAr => [AppInputFormatters.nameAr];
+  static List<TextInputFormatter> get arabicOnlyFormatters => [AppInputFormatters.arabicOnlyExtended];
   static List<TextInputFormatter> get phoneFormatters => [AppInputFormatters.phone];
   static List<TextInputFormatter> get emailFormatters => [AppInputFormatters.email];
 }

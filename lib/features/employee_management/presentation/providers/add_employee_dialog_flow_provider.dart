@@ -8,10 +8,12 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_documents_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/data/dto/employees_response_dto.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:flutter/material.dart';
@@ -70,10 +72,7 @@ class AddEmployeeDialogFlow {
 
     if (stepperState.currentStepIndex == 1) {
       final demographics = _ref.read(addEmployeeDemographicsProvider);
-      final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider) ?? 0;
-      final typesAsync = _ref.read(emplLookupTypesProvider(enterpriseId));
-      final orderedTypes = typesAsync.valueOrNull ?? [];
-      final requiredTypeCodes = orderedTypes.map((t) => t.typeCode);
+      final requiredTypeCodes = demographicsStepTypeCodes;
       if (!demographics.isStepValid(requiredTypeCodes)) {
         ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
         return;
@@ -217,6 +216,7 @@ class AddEmployeeDialogFlow {
       probationDays: jobState.probationDays,
       contractTypeCode: _emptyToNull(jobState.contractTypeCode),
       employmentStatusCode: _emptyToNull(jobState.employmentStatusCode),
+      reportingToEmpId: jobState.selectedReportingTo?.employeeIdNum,
       enterpriseId: enterpriseId,
       basicSalaryKwd: _emptyToNull(compensationState.basicSalaryKwd),
       housingKwd: _emptyToNull(compensationState.housingKwd),
@@ -227,6 +227,7 @@ class AddEmployeeDialogFlow {
       compStart: compensationState.compStart,
       compEnd: compensationState.compEnd,
       bankName: _emptyToNull(bankingState.bankName),
+      bankCode: _emptyToNull(bankingState.bankCode),
       accountNumber: _emptyToNull(bankingState.accountNumber),
       iban: _emptyToNull(bankingState.iban),
       civilIdExpiry: documentsState.civilIdExpiry,
@@ -236,17 +237,34 @@ class AddEmployeeDialogFlow {
       workPermitNumber: _emptyToNull(documentsState.workPermitNumber),
       workPermitExpiry: documentsState.workPermitExpiry,
     );
-    final ok = await _ref
+    final (ok, response) = await _ref
         .read(addEmployeeBasicInfoProvider.notifier)
         .submitWithRequest(request, document: documentsState.document);
     if (!context.mounted) return;
     if (ok) {
+      _prependNewEmployeeFromResponse(response);
       ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);
       close(context);
     } else {
       final error = _ref.read(addEmployeeBasicInfoProvider).submitError;
       ToastService.error(context, error ?? AppLocalizations.of(context)!.addEmployeeFillRequiredFields);
     }
+  }
+
+  void _prependNewEmployeeFromResponse(Map<String, dynamic>? response) {
+    if (response == null) return;
+    final data = response['data'];
+    if (data is! Map<String, dynamic>) return;
+    try {
+      final dto = EmployeeListItemDto.fromJson(data);
+      final item = dto.toDomain();
+      final listNotifier = _ref.read(manageEmployeesListProvider.notifier);
+      final listState = _ref.read(manageEmployeesListProvider);
+      if (listState.lastEnterpriseId == null ||
+          (data['enterprise_id'] as num?)?.toInt() == listState.lastEnterpriseId) {
+        listNotifier.prependEmployee(item);
+      }
+    } catch (_) {}
   }
 }
 

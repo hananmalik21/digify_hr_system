@@ -5,7 +5,11 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +18,15 @@ import 'package:gap/gap.dart';
 
 class BankingInfoModule extends ConsumerWidget {
   const BankingInfoModule({super.key});
+
+  static EmplLookupValue? _bankByCode(String? code, List<EmplLookupValue> values) {
+    if (code == null || code.trim().isEmpty) return null;
+    try {
+      return values.firstWhere((v) => v.lookupCode == code.trim());
+    } catch (_) {
+      return null;
+    }
+  }
 
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
     return Padding(
@@ -35,14 +48,22 @@ class BankingInfoModule extends ConsumerWidget {
     final notifier = ref.read(addEmployeeBankingProvider.notifier);
     final em = Assets.icons.employeeManagement;
     final cardIcon = _prefixIcon(context, em.card.path, isDark);
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final bankValuesAsync = ref.watch(
+      emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'BANK_NAME')),
+    );
+    final bankValues = bankValuesAsync.valueOrNull ?? [];
+    final bankLoading = bankValuesAsync.isLoading;
+    final selectedBank = _bankByCode(state.bankCode, bankValues);
 
-    final bankNameField = DigifyTextField(
-      labelText: localizations.bankName,
+    final bankNameField = DigifySelectFieldWithLabel<EmplLookupValue>(
+      label: localizations.bankName,
       isRequired: true,
-      prefixIcon: cardIcon,
-      hintText: localizations.hintBankName,
-      initialValue: state.bankName ?? '',
-      onChanged: notifier.setBankName,
+      hint: bankLoading ? localizations.pleaseWait : localizations.hintBankName,
+      items: bankValues,
+      itemLabelBuilder: (v) => v.meaningEn,
+      value: selectedBank,
+      onChanged: bankLoading ? null : (v) => notifier.setBank(v?.lookupCode, v?.meaningEn),
     );
     final accountNumberField = DigifyTextField(
       labelText: localizations.accountNumber,

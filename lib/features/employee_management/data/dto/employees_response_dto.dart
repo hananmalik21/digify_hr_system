@@ -109,6 +109,26 @@ class OrgStructureItemDto {
   }
 }
 
+class PositionObjDto {
+  final String? positionId;
+  final String? positionCode;
+  final String? positionTitleEn;
+  final String? positionTitleAr;
+  final String? status;
+
+  const PositionObjDto({this.positionId, this.positionCode, this.positionTitleEn, this.positionTitleAr, this.status});
+
+  factory PositionObjDto.fromJson(Map<String, dynamic> json) {
+    return PositionObjDto(
+      positionId: json['position_id'] as String?,
+      positionCode: json['position_code'] as String?,
+      positionTitleEn: json['position_title_en'] as String?,
+      positionTitleAr: json['position_title_ar'] as String?,
+      status: json['status'] as String?,
+    );
+  }
+}
+
 class EmployeeListItemDto {
   final int enterpriseId;
   final int employeeId;
@@ -135,6 +155,7 @@ class EmployeeListItemDto {
   final List<OrgStructureItemDto> orgStructureList;
   final int? workLocationId;
   final String? positionId;
+  final PositionObjDto? positionObj;
   final int? jobFamilyId;
   final int? jobLevelId;
   final int? gradeId;
@@ -175,6 +196,7 @@ class EmployeeListItemDto {
     this.orgStructureList = const [],
     this.workLocationId,
     this.positionId,
+    this.positionObj,
     this.jobFamilyId,
     this.jobLevelId,
     this.gradeId,
@@ -192,6 +214,7 @@ class EmployeeListItemDto {
 
   factory EmployeeListItemDto.fromJson(Map<String, dynamic> json) {
     final orgList = json['org_structure_list'] as List<dynamic>? ?? [];
+    final positionObjJson = json['position_obj'] as Map<String, dynamic>?;
     return EmployeeListItemDto(
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
@@ -218,6 +241,7 @@ class EmployeeListItemDto {
       orgStructureList: orgList.map((e) => OrgStructureItemDto.fromJson(e as Map<String, dynamic>)).toList(),
       workLocationId: (json['work_location_id'] as num?)?.toInt(),
       positionId: json['position_id'] as String?,
+      positionObj: positionObjJson != null ? PositionObjDto.fromJson(positionObjJson) : null,
       jobFamilyId: (json['job_family_id'] as num?)?.toInt(),
       jobLevelId: (json['job_level_id'] as num?)?.toInt(),
       gradeId: (json['grade_id'] as num?)?.toInt(),
@@ -239,11 +263,13 @@ class EmployeeListItemDto {
     final fullName = nameParts.join(' ').trim();
     final status = EmployeeStatus.fromRaw(employeeStatus ?? employmentStatus);
     final department = _departmentFromOrgStructure();
+    final position = positionObj?.positionTitleEn?.trim() ?? '';
     return EmployeeListItem(
       id: employeeGuid.isNotEmpty ? employeeGuid : '$employeeId',
+      employeeIdNum: employeeId,
       fullName: fullName.isEmpty ? 'Employee $employeeId' : fullName,
       employeeNumber: employeeNumber ?? 'EMP-$employeeId',
-      position: '',
+      position: position,
       positionId: positionId,
       department: department,
       status: status.raw.isEmpty ? (employeeStatus ?? employmentStatus ?? '') : status.raw,

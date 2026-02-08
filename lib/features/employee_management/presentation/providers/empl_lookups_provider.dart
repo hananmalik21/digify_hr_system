@@ -7,6 +7,8 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 import 'package:digify_hr_system/features/employee_management/domain/repositories/empl_lookup_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+const List<String> demographicsStepTypeCodes = ['GENDER', 'NATIONALITY', 'MARITAL_STATUS', 'RELIGION'];
+
 final _emplLookupApiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(baseUrl: ApiConfig.baseUrl);
 });
@@ -23,6 +25,15 @@ final emplLookupTypesProvider = FutureProvider.family<List<EmplLookupType>, int>
   if (enterpriseId <= 0) return [];
   final repo = ref.watch(emplLookupRepositoryProvider);
   return repo.getLookupTypes(enterpriseId);
+});
+
+final emplLookupTypesForDemographicsStepProvider = FutureProvider.family<List<EmplLookupType>, int>((
+  ref,
+  enterpriseId,
+) async {
+  final all = await ref.watch(emplLookupTypesProvider(enterpriseId).future);
+  final allowed = demographicsStepTypeCodes.map((c) => c.toUpperCase()).toSet();
+  return all.where((t) => allowed.contains(t.typeCode.toUpperCase())).toList();
 });
 
 final emplLookupValuesForTypeProvider =

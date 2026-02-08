@@ -8,6 +8,7 @@ abstract class ManageEmployeesListRepository {
     required int enterpriseId,
     int page = 1,
     int pageSize = 10,
+    String? search,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,

@@ -15,7 +15,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class DemographicsModule extends ConsumerWidget {
-  const DemographicsModule({super.key});
+  const DemographicsModule({super.key, this.demographicsStepOnly = false});
+
+  final bool demographicsStepOnly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +28,9 @@ class DemographicsModule extends ConsumerWidget {
     final demographicsNotifier = ref.read(addEmployeeDemographicsProvider.notifier);
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
 
-    final typesAsync = ref.watch(emplLookupTypesProvider(enterpriseId));
+    final typesAsync = demographicsStepOnly
+        ? ref.watch(emplLookupTypesForDemographicsStepProvider(enterpriseId))
+        : ref.watch(emplLookupTypesProvider(enterpriseId));
     final orderedTypes = typesAsync.valueOrNull ?? [];
     final isLoadingTypes = typesAsync.isLoading;
 
