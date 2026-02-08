@@ -571,6 +571,7 @@
   "documentsAndCompliance": "المستندات والامتثال",
   "documentsAndComplianceSubtitle": "تواريخ انتهاء المستندات وتتبع الامتثال",
   "documentExpiryDates": "تواريخ انتهاء المستندات",
+  "noDocumentsAvailable": "لا توجد مستندات متاحة",
   "civilIdExpiry": "انتهاء البطاقة المدنية",
   "passportExpiry": "انتهاء جواز السفر",
   "visaNumber": "رقم التأشيرة",

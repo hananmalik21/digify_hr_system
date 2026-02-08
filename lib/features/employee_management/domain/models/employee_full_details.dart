@@ -90,6 +90,8 @@ class AssignmentDetailSection {
     this.orgUnitId,
     this.orgStructureList = const [],
     this.positionId,
+    this.positionNameEn,
+    this.positionCode,
     this.enterpriseHireDate,
     this.contractTypeCode,
     this.employmentStatus,
@@ -102,6 +104,8 @@ class AssignmentDetailSection {
   final String? orgUnitId;
   final List<OrgStructureItem> orgStructureList;
   final String? positionId;
+  final String? positionNameEn;
+  final String? positionCode;
   final String? enterpriseHireDate;
   final String? contractTypeCode;
   final String? employmentStatus;

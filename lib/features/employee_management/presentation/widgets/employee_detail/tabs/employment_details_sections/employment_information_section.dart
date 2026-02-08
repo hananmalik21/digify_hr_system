@@ -38,7 +38,7 @@ class EmploymentInformationSection extends StatelessWidget {
     }
     return [
       EmployeeDetailBorderedField(label: 'Employee Number', value: displayValue(e.employeeNumber)),
-      EmployeeDetailBorderedField(label: 'Position ID', value: displayValue(a?.positionId)),
+      EmployeeDetailBorderedField(label: 'Position', value: displayValue(a?.positionNameEn ?? a?.positionId)),
       EmployeeDetailBorderedField(label: 'Grade Level', value: e.gradeId != null ? '${e.gradeId}' : '—'),
       EmployeeDetailBorderedField(label: 'Enterprise Hire Date', value: formatIsoDateToDisplay(a?.enterpriseHireDate)),
       EmployeeDetailBorderedField(label: 'Service Period', value: _servicePeriod(fullDetails)),

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_document_display.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_document_card.dart';
@@ -17,6 +18,28 @@ class DocumentsBankingTabContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = EmployeeDetailDocumentDisplay.fromFullDetails(fullDetails);
     final documentIconPath = Assets.icons.employeeManagement.document.path;
+
+    if (items.isEmpty) {
+      final content = Padding(
+        padding: EdgeInsets.all(24.w),
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context)!.noDocumentsAvailable,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          ),
+        ),
+      );
+      if (wrapInScrollView) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+          child: content,
+        );
+      }
+      return content;
+    }
 
     final List<Widget> cardRows = [];
     for (var i = 0; i < items.length; i += 2) {

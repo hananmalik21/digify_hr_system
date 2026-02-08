@@ -190,6 +190,32 @@ class EmployeeDetailSectionDto {
   );
 }
 
+class AssignmentPositionDto {
+  AssignmentPositionDto({
+    this.positionId,
+    this.positionCode,
+    this.positionNameEn,
+    this.positionNameAr,
+    this.positionStatus,
+  });
+
+  factory AssignmentPositionDto.fromJson(Map<String, dynamic> json) {
+    return AssignmentPositionDto(
+      positionId: json['position_id'] as String?,
+      positionCode: json['position_code'] as String?,
+      positionNameEn: json['position_name_en'] as String?,
+      positionNameAr: json['position_name_ar'] as String?,
+      positionStatus: json['position_status'] as String?,
+    );
+  }
+
+  final String? positionId;
+  final String? positionCode;
+  final String? positionNameEn;
+  final String? positionNameAr;
+  final String? positionStatus;
+}
+
 class AssignmentDetailSectionDto {
   AssignmentDetailSectionDto({
     required this.assignmentId,
@@ -197,6 +223,7 @@ class AssignmentDetailSectionDto {
     this.orgUnitId,
     this.orgStructureList = const [],
     this.positionId,
+    this.position,
     this.enterpriseHireDate,
     this.contractTypeCode,
     this.employmentStatus,
@@ -206,6 +233,7 @@ class AssignmentDetailSectionDto {
 
   factory AssignmentDetailSectionDto.fromJson(Map<String, dynamic> json) {
     final list = json['org_structure_list'];
+    final positionJson = json['position'] as Map<String, dynamic>?;
     return AssignmentDetailSectionDto(
       assignmentId: (json['assignment_id'] as num?)?.toInt() ?? 0,
       assignmentGuid: json['assignment_guid'] as String?,
@@ -214,6 +242,7 @@ class AssignmentDetailSectionDto {
           ? (list).whereType<Map<String, dynamic>>().map(OrgStructureItemDto.fromJson).toList()
           : const [],
       positionId: json['position_id'] as String?,
+      position: positionJson != null ? AssignmentPositionDto.fromJson(positionJson) : null,
       enterpriseHireDate: json['enterprise_hire_date'] as String?,
       contractTypeCode: json['contract_type_code'] as String?,
       employmentStatus: json['employment_status'] as String?,
@@ -227,6 +256,7 @@ class AssignmentDetailSectionDto {
   final String? orgUnitId;
   final List<OrgStructureItemDto> orgStructureList;
   final String? positionId;
+  final AssignmentPositionDto? position;
   final String? enterpriseHireDate;
   final String? contractTypeCode;
   final String? employmentStatus;
@@ -239,6 +269,8 @@ class AssignmentDetailSectionDto {
     orgUnitId: orgUnitId,
     orgStructureList: orgStructureList.map((e) => e.toDomain()).toList(),
     positionId: positionId,
+    positionNameEn: position?.positionNameEn,
+    positionCode: position?.positionCode,
     enterpriseHireDate: enterpriseHireDate,
     contractTypeCode: contractTypeCode,
     employmentStatus: employmentStatus,
