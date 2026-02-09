@@ -73,6 +73,7 @@ class AddEmployeeDialog extends ConsumerWidget {
       content: _buildStepContent(stepperState.currentStepIndex),
       stepperSteps: stepperSteps,
       contentPadding: EdgeInsets.all(20.w),
+      stepperPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
       currentStepIndex: stepperState.currentStepIndex,
       maxWidth: 1200.w,
       onClose: () => flow.close(context),

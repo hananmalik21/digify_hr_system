@@ -133,6 +133,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
@@ -238,6 +239,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)

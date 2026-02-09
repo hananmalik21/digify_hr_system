@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_view_toggle_button.dart';
@@ -38,7 +39,6 @@ class EmployeeSearchAndActions extends ConsumerStatefulWidget {
 
 class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActions> {
   late final TextEditingController _searchController;
-  String? _filterValue;
 
   @override
   void initState() {
@@ -52,10 +52,6 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
     super.dispose();
   }
 
-  void _runSearch() {
-    ref.read(manageEmployeesListProvider.notifier).search(_searchController.text);
-  }
-
   @override
   Widget build(BuildContext context) {
     final localizations = widget.localizations;
@@ -66,7 +62,7 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
@@ -76,8 +72,8 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
           DigifyTextField.search(
             controller: _searchController,
             hintText: localizations.searchByNameOrEmployeeNumber,
-            onChanged: (_) {},
-            onSubmitted: (_) => _runSearch(),
+            onChanged: (value) => ref.read(manageEmployeesListProvider.notifier).setSearchQueryInput(value),
+            onSubmitted: (value) => ref.read(manageEmployeesListProvider.notifier).search(value),
           ),
           Gap(16.h),
           SingleChildScrollView(
@@ -87,20 +83,6 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 144.w,
-                  child: DigifySelectField<String?>(
-                    label: '',
-                    hint: localizations.allStatus,
-                    value: _filterValue,
-                    items: [null],
-                    itemLabelBuilder: (v) => localizations.allStatus,
-                    onChanged: (value) {
-                      setState(() => _filterValue = value);
-                    },
-                  ),
-                ),
-                Gap(12.w),
                 AppButton.outline(
                   label: localizations.filters,
                   onPressed: () => ref.read(manageEmployeesShowFiltersProvider.notifier).state = !showFilters,
@@ -151,17 +133,16 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           DigifyAsset(
-                            assetPath: Assets.icons.employeeManagement.filterMain.path,
+                            assetPath: Assets.icons.employeeManagement.filterSecondary.path,
                             width: 20,
                             height: 20,
-                            color: AppColors.statIconPurple,
                           ),
                           Gap(8.w),
                           Text(
                             localizations.advancedFilters,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                              fontWeight: FontWeight.w600,
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],
@@ -239,7 +220,7 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
       onPressed: () {
         ref.read(manageEmployeesViewModeProvider.notifier).state = nextMode;
       },
-      backgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
+      backgroundColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
       foregroundColor: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
       borderColor: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
     );
@@ -322,7 +303,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         SizedBox(
-          width: 140.w,
+          width: 180.w,
           child: DigifySelectField<String?>(
             label: '',
             hint: widget.localizations.allStatuses,
@@ -330,12 +311,13 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
             items: [null],
             itemLabelBuilder: (_) => widget.localizations.allStatuses,
             onChanged: (_) {},
+            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         if (enterpriseId != null && param == null) ..._buildOrgFiltersLoadingPlaceholders(),
         if (param != null) ..._buildOrgCascade(param, filtersNotifier, applyFiltersAndRefresh),
         SizedBox(
-          width: 160.w,
+          width: 180.w,
           child: DigifySelectField<String?>(
             label: '',
             hint: widget.localizations.allPositions,
@@ -350,10 +332,11 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
               filtersNotifier.setPositionId(id);
               applyFiltersAndRefresh();
             },
+            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
-          width: 140.w,
+          width: 180.w,
           child: DigifySelectField<int?>(
             label: '',
             hint: widget.localizations.allJobFamilies,
@@ -368,10 +351,11 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
               filtersNotifier.setJobFamilyId(id);
               applyFiltersAndRefresh();
             },
+            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
-          width: 140.w,
+          width: 180.w,
           child: DigifySelectField<int?>(
             label: '',
             hint: widget.localizations.allJobLevels,
@@ -386,10 +370,11 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
               filtersNotifier.setJobLevelId(id);
               applyFiltersAndRefresh();
             },
+            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
-          width: 120.w,
+          width: 180.w,
           child: DigifySelectField<int?>(
             label: '',
             hint: widget.localizations.allGrades,
@@ -404,6 +389,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
               filtersNotifier.setGradeId(id);
               applyFiltersAndRefresh();
             },
+            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
       ],
@@ -415,7 +401,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
       return Padding(
         padding: EdgeInsets.only(right: 12.w),
         child: SizedBox(
-          width: 140.w,
+          width: 180.w,
           height: 48.h,
           child: Skeletonizer(
             enabled: true,
@@ -462,22 +448,19 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
       final index = entry.key;
       final level = entry.value;
       final isEnabled = index == 0 || selectionState.getSelection(levels[index - 1].levelCode) != null;
-      return Padding(
-        padding: EdgeInsets.only(right: 12.w),
-        child: SizedBox(
-          width: 140.w,
-          child: DigifyStyleOrgLevelField(
-            level: level,
-            selectionProvider: selectionProvider,
-            isEnabled: isEnabled,
-            showLabel: false,
-            onSelectionChanged: (levelCode, unit) {
-              if (unit != null) {
-                filtersNotifier.setOrgFilter(unit.orgUnitId, levelCode);
-                applyFiltersAndRefresh();
-              }
-            },
-          ),
+      return SizedBox(
+        width: 180.w,
+        child: DigifyStyleOrgLevelField(
+          level: level,
+          selectionProvider: selectionProvider,
+          isEnabled: isEnabled,
+          showLabel: false,
+          onSelectionChanged: (levelCode, unit) {
+            if (unit != null) {
+              filtersNotifier.setOrgFilter(unit.orgUnitId, levelCode);
+              applyFiltersAndRefresh();
+            }
+          },
         ),
       );
     }).toList();

@@ -24,6 +24,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
   final double? maxWidth;
   final double? maxHeight;
   final EdgeInsets? contentPadding;
+  final EdgeInsets? stepperPadding;
   final bool barrierDismissible;
   final bool isLoading;
 
@@ -40,6 +41,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
     this.maxWidth,
     this.maxHeight,
     this.contentPadding,
+    this.stepperPadding,
     this.barrierDismissible = false,
     this.isLoading = false,
   });
@@ -145,9 +147,10 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
   Widget _buildStepperSection(BuildContext context, bool isDark) {
     final effectiveStepIndex = currentStepIndex ?? 0;
     final bgColor = isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground;
+    final effectiveStepperPadding = stepperPadding ?? EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      padding: effectiveStepperPadding,
       decoration: BoxDecoration(
         color: bgColor,
         border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
