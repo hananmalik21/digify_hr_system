@@ -608,6 +608,7 @@
   "hintEnterpriseHireDate": "اختر تاريخ التعيين",
   "hintProbationPeriodDays": "أدخل الأيام",
   "hintEmploymentStatus": "اختر حالة التوظيف",
+  "hintJobLevel": "اختر مستوى الوظيفة",
   "addEmployeeStepContentPlaceholder": "محتوى هذه الخطوة قريبًا.",
   "addEmployeeFillRequiredFields": "يرجى ملء جميع الحقول المطلوبة.",
   "addEmployeeCreatedSuccess": "تم إنشاء الموظف بنجاح.",

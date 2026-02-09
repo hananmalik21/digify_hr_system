@@ -1667,6 +1667,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintEmploymentStatus => 'اختر حالة التوظيف';
 
   @override
+  String get hintJobLevel => 'اختر مستوى الوظيفة';
+
+  @override
   String get timeManagementWorkSchedule => 'إدارة الوقت - جدول العمل';
 
   @override

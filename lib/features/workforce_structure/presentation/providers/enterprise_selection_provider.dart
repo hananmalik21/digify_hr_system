@@ -72,12 +72,25 @@ class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState
   final GetOrgUnitsByLevelUseCase getOrgUnitsByLevelUseCase;
   final List<OrgStructureLevel> levels;
   final _debouncer = Debouncer();
+  bool _didPreloadFirstLevel = false;
 
   EnterpriseSelectionNotifier({
     required this.getOrgUnitsByLevelUseCase,
     required this.levels,
     required String structureId,
   }) : super(EnterpriseSelectionState(structureId: structureId));
+
+  void ensureFirstLevelOptionsLoaded() {
+    if (_didPreloadFirstLevel || levels.isEmpty) return;
+    _didPreloadFirstLevel = true;
+    loadOptionsForLevel(levels.first.levelCode);
+  }
+
+  void preloadNextLevelAfter(String selectedLevelCode) {
+    final index = levels.indexWhere((l) => l.levelCode == selectedLevelCode);
+    if (index < 0 || index >= levels.length - 1) return;
+    loadOptionsForLevel(levels[index + 1].levelCode);
+  }
 
   Future<void> loadOptionsForLevel(String levelCode) async {
     if (state.structureId == null) return;
@@ -97,11 +110,6 @@ class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState
         final parentLevel = levels[levelIndex - 1];
         final parentSelection = state.getSelection(parentLevel.levelCode);
         parentOrgUnitId = parentSelection?.orgUnitId;
-
-        if (parentOrgUnitId == null) {
-          _updateStateAfterSuccess(levelCode, [], false);
-          return;
-        }
       }
 
       final response = await getOrgUnitsByLevelUseCase(

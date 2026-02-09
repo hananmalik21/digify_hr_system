@@ -5,7 +5,10 @@ import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog_label_
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_dialog_flow_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_editing_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_selection_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
@@ -27,6 +30,10 @@ class AddEmployeeDialog extends ConsumerWidget {
     final container = ProviderScope.containerOf(context);
     container.read(addEmployeeDialogFlowProvider).clearForm();
     container.read(addEmployeeEditingEmployeeIdProvider.notifier).state = null;
+    final enterpriseId = container.read(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId != null) {
+      container.read(workSchedulesNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
+    }
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -36,6 +43,9 @@ class AddEmployeeDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final key = ref.watch(addEmployeeOrgSelectionKeyProvider);
+    if (key != null) ref.watch(addEmployeeOrgSelectionProvider(key));
+
     final localizations = AppLocalizations.of(context)!;
     final stepperState = ref.watch(addEmployeeStepperProvider);
     final basicInfoState = ref.watch(addEmployeeBasicInfoProvider);

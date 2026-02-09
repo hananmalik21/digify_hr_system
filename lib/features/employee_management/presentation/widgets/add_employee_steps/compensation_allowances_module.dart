@@ -15,6 +15,9 @@ import 'package:gap/gap.dart';
 class CompensationAllowancesModule extends ConsumerWidget {
   const CompensationAllowancesModule({super.key});
 
+  static final DateTime _firstDate = DateTime(2000);
+  static final DateTime _lastDate = DateTime(2030, 12, 31);
+
   static Widget _prefixIcon(BuildContext context, String path, bool isDark) {
     return Padding(
       padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
@@ -129,13 +132,65 @@ class CompensationAllowancesModule extends ConsumerWidget {
                       ],
                     ),
                     other,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: DigifyDateField(
+                            label: localizations.startDate,
+                            isRequired: true,
+                            hintText: localizations.hintSelectDate,
+                            initialDate: state.allowStart,
+                            firstDate: _firstDate,
+                            lastDate: _lastDate,
+                            onDateSelected: notifier.setAllowStart,
+                          ),
+                        ),
+                        Gap(16.w),
+                        Expanded(
+                          child: DigifyDateField(
+                            label: localizations.endDate,
+                            isRequired: true,
+                            hintText: localizations.hintSelectDate,
+                            initialDate: state.allowEnd,
+                            firstDate: _firstDate,
+                            lastDate: _lastDate,
+                            onDateSelected: notifier.setAllowEnd,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 );
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16.h,
-                children: [housing, transportation, food, mobile, other],
+                children: [
+                  housing,
+                  transportation,
+                  food,
+                  mobile,
+                  other,
+                  DigifyDateField(
+                    label: localizations.startDate,
+                    isRequired: true,
+                    hintText: localizations.hintSelectDate,
+                    initialDate: state.allowStart,
+                    firstDate: _firstDate,
+                    lastDate: _lastDate,
+                    onDateSelected: notifier.setAllowStart,
+                  ),
+                  DigifyDateField(
+                    label: localizations.endDate,
+                    isRequired: true,
+                    hintText: localizations.hintSelectDate,
+                    initialDate: state.allowEnd,
+                    firstDate: _firstDate,
+                    lastDate: _lastDate,
+                    onDateSelected: notifier.setAllowEnd,
+                  ),
+                ],
               );
             },
           ),

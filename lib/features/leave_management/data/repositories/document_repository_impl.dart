@@ -1,4 +1,5 @@
 import 'dart:io' show File;
+import 'dart:typed_data' show Uint8List;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
@@ -32,6 +33,19 @@ class DocumentRepositoryImpl implements DocumentRepository {
         }
         fileSize = platformFile.bytes!.length;
         filePath = platformFile.name;
+        final maxSize = maxSizeInBytes ?? maxFileSizeBytes;
+        if (fileSize > maxSize) {
+          throw Exception('File size exceeds the maximum allowed size of ${maxSize ~/ (1024 * 1024)} MB');
+        }
+        return Document(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          name: platformFile.name,
+          path: filePath,
+          size: fileSize,
+          extension: platformFile.extension?.toLowerCase(),
+          uploadedAt: DateTime.now(),
+          bytes: Uint8List.fromList(platformFile.bytes!),
+        );
       } else {
         if (platformFile.path == null) {
           return null;
@@ -115,6 +129,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
             size: fileSize,
             extension: extension,
             uploadedAt: DateTime.now(),
+            bytes: kIsWeb ? Uint8List.fromList(platformFile.bytes!) : null,
           ),
         );
       }

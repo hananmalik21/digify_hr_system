@@ -4,7 +4,9 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_documents_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_document_card.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/document_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -102,100 +104,68 @@ class _AddEmployeeDocumentUploadSectionState extends ConsumerState<AddEmployeeDo
             ),
           ),
         ),
-        if (state.document != null) ...[
+        if (state.document != null || state.existingDocumentFileName != null) ...[
           Gap(16.h),
-          _DocumentTypeDropdown(
-            value: state.documentTypeCode ?? 'PASSPORT',
-            onChanged: (v) => notifier.setDocumentTypeCode(v),
-            isDark: isDark,
+          _buildDocumentTypeField(
+            context,
+            state.documentTypeCode ?? 'PASSPORT',
+            (v) => notifier.setDocumentTypeCode(v),
           ),
           Gap(12.h),
-          _UploadedDocumentItem(document: state.document!, onRemove: () => notifier.setDocument(null)),
+          if (state.document != null)
+            _buildUploadedDocumentItem(context, state.document!, () => notifier.setDocument(null))
+          else
+            _buildExistingDocumentItem(
+              context,
+              state.documentTypeCode ?? 'PASSPORT',
+              state.existingDocumentFileName!,
+              onReplace: _pickFile,
+            ),
         ],
       ],
     );
   }
 }
 
-class _DocumentTypeDropdown extends StatelessWidget {
-  const _DocumentTypeDropdown({required this.value, required this.onChanged, required this.isDark});
+Widget _buildDocumentTypeField(BuildContext context, String value, ValueChanged<String?> onChanged) {
+  final displayValue = documentTypeCodeOptions.contains(value) ? value : documentTypeCodeOptions.first;
 
-  final String value;
-  final ValueChanged<String?> onChanged;
-  final bool isDark;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      initialValue: documentTypeCodeOptions.contains(value) ? value : documentTypeCodeOptions.first,
-      decoration: InputDecoration(
-        labelText: 'Document type',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      ),
-      dropdownColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-      items: documentTypeCodeOptions.map((e) => DropdownMenuItem<String>(value: e, child: Text(e))).toList(),
-      onChanged: onChanged,
-    );
-  }
+  return DigifySelectFieldWithLabel<String>(
+    label: 'Document type',
+    isRequired: true,
+    hint: null,
+    items: documentTypeCodeOptions,
+    itemLabelBuilder: (code) => code,
+    value: displayValue,
+    onChanged: onChanged,
+  );
 }
 
-class _UploadedDocumentItem extends StatelessWidget {
-  const _UploadedDocumentItem({required this.document, required this.onRemove});
+Widget _buildUploadedDocumentItem(BuildContext context, Document document, VoidCallback onRemove) {
+  return EmployeeDocumentCard(
+    title: document.name,
+    subtitle: document.formattedSize,
+    icon: Icons.close,
+    iconBackgroundColor: AppColors.errorBg,
+    iconColor: AppColors.error,
+    onTap: onRemove,
+  );
+}
 
-  final Document document;
-  final VoidCallback onRemove;
+Widget _buildExistingDocumentItem(
+  BuildContext context,
+  String documentTypeCode,
+  String fileName, {
+  required VoidCallback onReplace,
+}) {
+  final isDark = context.isDark;
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = context.isDark;
-
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  document.name,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Gap(4.h),
-                Text(
-                  document.formattedSize,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: onRemove,
-            borderRadius: BorderRadius.circular(8.r),
-            child: Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(color: AppColors.errorBg, borderRadius: BorderRadius.circular(8.r)),
-              child: Icon(Icons.close, size: 18.sp, color: AppColors.error),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  return EmployeeDocumentCard(
+    title: fileName,
+    subtitle: documentTypeCode,
+    icon: Icons.upload_file,
+    iconBackgroundColor: isDark ? AppColors.primary.withValues(alpha: 0.2) : AppColors.infoBg,
+    iconColor: AppColors.primary,
+    onTap: onReplace,
+  );
 }

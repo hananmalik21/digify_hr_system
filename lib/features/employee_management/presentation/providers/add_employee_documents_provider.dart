@@ -10,6 +10,7 @@ class AddEmployeeDocumentsState {
   final DateTime? workPermitExpiry;
   final Document? document;
   final String? documentTypeCode;
+  final String? existingDocumentFileName;
 
   const AddEmployeeDocumentsState({
     this.civilIdExpiry,
@@ -20,6 +21,7 @@ class AddEmployeeDocumentsState {
     this.workPermitExpiry,
     this.document,
     this.documentTypeCode,
+    this.existingDocumentFileName,
   });
 
   static bool _isFilled(String? value) {
@@ -44,6 +46,7 @@ class AddEmployeeDocumentsState {
     DateTime? workPermitExpiry,
     Document? document,
     String? documentTypeCode,
+    String? existingDocumentFileName,
     bool clearCivilIdExpiry = false,
     bool clearPassportExpiry = false,
     bool clearVisaNumber = false,
@@ -52,6 +55,7 @@ class AddEmployeeDocumentsState {
     bool clearWorkPermitExpiry = false,
     bool clearDocument = false,
     bool clearDocumentTypeCode = false,
+    bool clearExistingDocumentFileName = false,
   }) {
     return AddEmployeeDocumentsState(
       civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),
@@ -62,6 +66,9 @@ class AddEmployeeDocumentsState {
       workPermitExpiry: clearWorkPermitExpiry ? null : (workPermitExpiry ?? this.workPermitExpiry),
       document: clearDocument ? null : (document ?? this.document),
       documentTypeCode: clearDocumentTypeCode ? null : (documentTypeCode ?? this.documentTypeCode),
+      existingDocumentFileName: clearExistingDocumentFileName
+          ? null
+          : (existingDocumentFileName ?? this.existingDocumentFileName),
     );
   }
 }
@@ -100,6 +107,7 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
       document: value,
       clearDocument: value == null,
       clearDocumentTypeCode: value == null,
+      clearExistingDocumentFileName: value != null,
       documentTypeCode: value != null && (state.documentTypeCode == null || state.documentTypeCode!.isEmpty)
           ? 'PASSPORT'
           : state.documentTypeCode,
@@ -118,6 +126,7 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
     String? workPermitNumber,
     DateTime? workPermitExpiry,
     String? documentTypeCode,
+    String? existingDocumentFileName,
   }) {
     state = state.copyWith(
       civilIdExpiry: civilIdExpiry ?? state.civilIdExpiry,
@@ -127,6 +136,7 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
       workPermitNumber: workPermitNumber ?? state.workPermitNumber,
       workPermitExpiry: workPermitExpiry ?? state.workPermitExpiry,
       documentTypeCode: documentTypeCode ?? state.documentTypeCode,
+      existingDocumentFileName: existingDocumentFileName ?? state.existingDocumentFileName,
     );
   }
 

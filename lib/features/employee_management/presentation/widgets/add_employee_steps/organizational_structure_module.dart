@@ -6,13 +6,13 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_selection_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,9 +27,7 @@ class OrganizationalStructureModule extends ConsumerStatefulWidget {
 }
 
 class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalStructureModule> {
-  StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState>? _cachedSelectionProvider;
-  String? _cachedStructureId;
-  bool _restorationInProgress = false;
+  int? _ensureLoadScheduledForEnterpriseId;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +36,7 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
     final orgState = enterpriseId != null ? ref.watch(enterpriseOrgStructureNotifierProvider(enterpriseId)) : null;
 
     if (enterpriseId == null) {
+      _ensureLoadScheduledForEnterpriseId = null;
       return _AssignmentCard(
         isDark: theme.isDark,
         child: _MessageContent(
@@ -122,24 +121,10 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
     }
 
     final structureId = orgState!.orgStructure!.structureId;
-    if (_cachedSelectionProvider == null || _cachedStructureId != structureId) {
-      _cachedStructureId = structureId;
-      _cachedSelectionProvider = enterpriseSelectionNotifierProvider((levels: activeLevels, structureId: structureId));
-    }
-
-    final selectionProvider = _cachedSelectionProvider!;
+    final selectionProvider = addEmployeeOrgSelectionProvider((structureId: structureId, levels: activeLevels));
     final selectionState = ref.watch(selectionProvider);
     final assignmentState = ref.watch(addEmployeeAssignmentProvider);
     final workLocation = assignmentState.workLocation;
-
-    _restoreSelectionFromAssignmentIfNeeded(
-      ref: ref,
-      assignmentState: assignmentState,
-      selectionState: selectionState,
-      selectionProvider: selectionProvider,
-      activeLevels: activeLevels,
-    );
-
     final orderedLevelCodes = activeLevels.map((l) => l.levelCode).toList();
 
     return _AssignmentCard(
@@ -155,6 +140,7 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
             selectionState: selectionState,
             assignmentState: assignmentState,
             orderedLevelCodes: orderedLevelCodes,
+            getPreselectedUnitId: assignmentState.getSelectedUnitId,
             onSelectionChanged: (levelCode, unit) {
               if (unit != null) {
                 ref
@@ -175,80 +161,24 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
   }
 
   void _ensureOrgStructureLoaded(int enterpriseId, dynamic orgState) {
+    if (orgState?.error != null) _ensureLoadScheduledForEnterpriseId = null;
+    final needsLoad =
+        orgState?.isLoading != true &&
+        ((orgState?.allStructures.isEmpty ?? true) ||
+            (orgState?.orgStructure == null && (orgState?.allStructures.isNotEmpty ?? false)));
+    if (!needsLoad || _ensureLoadScheduledForEnterpriseId == enterpriseId) return;
+    _ensureLoadScheduledForEnterpriseId = enterpriseId;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
-      if (orgState?.isLoading != true) {
-        if (orgState?.allStructures.isEmpty ?? true) {
-          notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
-        } else if (orgState?.orgStructure == null && (orgState?.allStructures.isNotEmpty ?? false)) {
-          notifier.selectStructure(orgState!.allStructures.first.structureId);
-        }
+      final currentState = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
+      if (currentState.isLoading) return;
+      if (currentState.allStructures.isEmpty) {
+        notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
+      } else if (currentState.orgStructure == null && currentState.allStructures.isNotEmpty) {
+        notifier.selectStructure(currentState.allStructures.first.structureId);
       }
     });
-  }
-
-  void _restoreSelectionFromAssignmentIfNeeded({
-    required WidgetRef ref,
-    required AddEmployeeAssignmentState assignmentState,
-    required EnterpriseSelectionState selectionState,
-    required StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider,
-    required List<OrgStructureLevel> activeLevels,
-  }) {
-    final savedIds = assignmentState.selectedUnitIds;
-    final hasSavedSelection = savedIds.values.any((id) => id != null && id.toString().trim().isNotEmpty);
-    if (!hasSavedSelection || _restorationInProgress) return;
-
-    final needsRestore = activeLevels.any((level) {
-      final savedId = savedIds[level.levelCode]?.trim();
-      if (savedId == null || savedId.isEmpty) return false;
-      final current = selectionState.getSelection(level.levelCode);
-      return current == null || current.orgUnitId != savedId;
-    });
-    if (!needsRestore) return;
-
-    _restorationInProgress = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _runRestoreSelection(
-        ref: ref,
-        assignmentState: assignmentState,
-        selectionProvider: selectionProvider,
-        activeLevels: activeLevels,
-      ).whenComplete(() {
-        if (mounted) setState(() => _restorationInProgress = false);
-      });
-    });
-  }
-
-  Future<void> _runRestoreSelection({
-    required WidgetRef ref,
-    required AddEmployeeAssignmentState assignmentState,
-    required StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider,
-    required List<OrgStructureLevel> activeLevels,
-  }) async {
-    final notifier = ref.read(selectionProvider.notifier);
-    final savedIds = assignmentState.selectedUnitIds;
-
-    for (final level in activeLevels) {
-      final savedUnitId = savedIds[level.levelCode]?.trim();
-      if (savedUnitId == null || savedUnitId.isEmpty) continue;
-
-      await notifier.loadOptionsForLevel(level.levelCode);
-      if (!mounted) return;
-
-      final state = ref.read(selectionProvider);
-      final options = state.getOptions(level.levelCode);
-      OrgUnit? unit;
-      for (final u in options) {
-        if (u.orgUnitId == savedUnitId) {
-          unit = u;
-          break;
-        }
-      }
-      if (unit != null) {
-        notifier.selectUnit(level.levelCode, unit);
-      }
-      if (!mounted) return;
-    }
   }
 }
 
@@ -355,14 +285,16 @@ class _OrgLevelsSection extends StatelessWidget {
     required this.selectionState,
     required this.assignmentState,
     required this.orderedLevelCodes,
+    required this.getPreselectedUnitId,
     required this.onSelectionChanged,
   });
 
   final List<OrgStructureLevel> activeLevels;
-  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
+  final dynamic selectionProvider;
   final EnterpriseSelectionState selectionState;
   final AddEmployeeAssignmentState assignmentState;
   final List<String> orderedLevelCodes;
+  final String? Function(String levelCode) getPreselectedUnitId;
   final void Function(String levelCode, OrgUnit? unit) onSelectionChanged;
 
   @override
@@ -373,7 +305,7 @@ class _OrgLevelsSection extends StatelessWidget {
         ...activeLevels.asMap().entries.map((entry) {
           final index = entry.key;
           final level = entry.value;
-          final isEnabled = index == 0 || selectionState.getSelection(activeLevels[index - 1].levelCode) != null;
+          final isEnabled = index == 0 || assignmentState.getSelectedUnitId(activeLevels[index - 1].levelCode) != null;
           return Padding(
             padding: EdgeInsets.only(bottom: index < activeLevels.length - 1 ? 16.h : 0),
             child: DigifyStyleOrgLevelField(
@@ -381,6 +313,7 @@ class _OrgLevelsSection extends StatelessWidget {
               selectionProvider: selectionProvider,
               isEnabled: isEnabled,
               displayLabel: assignmentState.getDisplayName(level.levelCode),
+              preselectedUnitId: getPreselectedUnitId(level.levelCode),
               onSelectionChanged: onSelectionChanged,
             ),
           );

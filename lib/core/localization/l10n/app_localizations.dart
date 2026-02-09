@@ -3320,6 +3320,12 @@ abstract class AppLocalizations {
   /// **'Select employment status'**
   String get hintEmploymentStatus;
 
+  /// No description provided for @hintJobLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select job level'**
+  String get hintJobLevel;
+
   /// No description provided for @timeManagementWorkSchedule.
   ///
   /// In en, this message translates to:

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/features/employee_management/data/dto/employee_full_details_dto.dart';
@@ -143,6 +144,9 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.otherKwd != null && request.otherKwd!.trim().isNotEmpty) 'other_kwd': request.otherKwd!.trim(),
       if (request.compStart != null) 'comp_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compStart!),
       if (request.compEnd != null) 'comp_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compEnd!),
+      if (request.allowStart != null)
+        'allow_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.allowStart!),
+      if (request.allowEnd != null) 'allow_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.allowEnd!),
       if (request.bankName != null && request.bankName!.trim().isNotEmpty) 'bank_name': request.bankName!.trim(),
       if (request.bankCode != null && request.bankCode!.trim().isNotEmpty) 'bank_code': request.bankCode!.trim(),
       if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
@@ -166,8 +170,15 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       map['document_type_code'] = documentTypeCode.trim();
     }
     final formData = FormData.fromMap(map);
-    if (document != null && (document.path.contains('/') || document.path.contains(r'\'))) {
-      formData.files.add(MapEntry('document', await MultipartFile.fromFile(document.path, filename: document.name)));
+    if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+      if (document.bytes != null) {
+        formData.files.add(MapEntry('document', MultipartFile.fromBytes(document.bytes!, filename: document.name)));
+      } else if (!kIsWeb && document.path.trim().isNotEmpty) {
+        try {
+          final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
+          formData.files.add(MapEntry('document', multipartFile));
+        } catch (_) {}
+      }
     }
     return apiClient.postMultipart(ApiEndpoints.createEmployee, formData: formData);
   }
@@ -238,6 +249,9 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.otherKwd != null && request.otherKwd!.trim().isNotEmpty) 'other_kwd': request.otherKwd!.trim(),
       if (request.compStart != null) 'comp_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compStart!),
       if (request.compEnd != null) 'comp_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.compEnd!),
+      if (request.allowStart != null)
+        'allow_start': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.allowStart!),
+      if (request.allowEnd != null) 'allow_end': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.allowEnd!),
       if (request.bankName != null && request.bankName!.trim().isNotEmpty) 'bank_name': request.bankName!.trim(),
       if (request.bankCode != null && request.bankCode!.trim().isNotEmpty) 'bank_code': request.bankCode!.trim(),
       if (request.accountNumber != null && request.accountNumber!.trim().isNotEmpty)
@@ -261,8 +275,15 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       map['document_type_code'] = documentTypeCode.trim();
     }
     final formData = FormData.fromMap(map);
-    if (document != null && (document.path.contains('/') || document.path.contains(r'\'))) {
-      formData.files.add(MapEntry('document', await MultipartFile.fromFile(document.path, filename: document.name)));
+    if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+      if (document.bytes != null) {
+        formData.files.add(MapEntry('document', MultipartFile.fromBytes(document.bytes!, filename: document.name)));
+      } else if (!kIsWeb && document.path.trim().isNotEmpty) {
+        try {
+          final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
+          formData.files.add(MapEntry('document', multipartFile));
+        } catch (_) {}
+      }
     }
     return apiClient.putMultipart(ApiEndpoints.updateEmployee(employeeGuid), formData: formData);
   }

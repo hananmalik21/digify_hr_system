@@ -112,6 +112,8 @@ class AddEmployeeDialogFlow {
       foodKwd: allow?.foodKwd?.toString(),
       mobileKwd: allow?.mobileKwd?.toString(),
       otherKwd: allow?.otherKwd?.toString(),
+      allowStart: _parseDate(allow?.allowStart),
+      allowEnd: _parseDate(allow?.allowEnd),
       compStart: _parseDate(comp?.compStart),
       compEnd: _parseDate(comp?.compEnd),
       bankCode: bank?.bankCode,
@@ -189,6 +191,8 @@ class AddEmployeeDialogFlow {
           otherKwd: request.otherKwd,
           compStart: request.compStart,
           compEnd: request.compEnd,
+          allowStart: request.allowStart,
+          allowEnd: request.allowEnd,
         );
     _ref
         .read(addEmployeeBankingProvider.notifier)
@@ -208,6 +212,7 @@ class AddEmployeeDialogFlow {
           workPermitNumber: request.workPermitNumber,
           workPermitExpiry: request.workPermitExpiry,
           documentTypeCode: d.documents.isNotEmpty ? d.documents.first.documentTypeCode : null,
+          existingDocumentFileName: d.documents.isNotEmpty ? d.documents.first.fileName : null,
         );
   }
 
@@ -482,6 +487,8 @@ class AddEmployeeDialogFlow {
       otherKwd: _emptyToNull(compensationState.otherKwd),
       compStart: compensationState.compStart,
       compEnd: compensationState.compEnd,
+      allowStart: compensationState.allowStart,
+      allowEnd: compensationState.allowEnd,
       bankName: _emptyToNull(bankingState.bankName),
       bankCode: _emptyToNull(bankingState.bankCode),
       accountNumber: _emptyToNull(bankingState.accountNumber),

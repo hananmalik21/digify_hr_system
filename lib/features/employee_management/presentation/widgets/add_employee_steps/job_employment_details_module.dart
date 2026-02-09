@@ -98,7 +98,7 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   label: localizations.jobFamily,
                   isRequired: true,
                   value: jobState.selectedJobFamily?.nameEnglish,
-                  hint: localizations.hintGradeLevel,
+                  hint: localizations.hintSelectDivision,
                   onTap: () async {
                     final selected = await JobFamilySelectionDialog.show(context);
                     if (selected != null && context.mounted) {
@@ -148,7 +148,7 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   label: localizations.position,
                   isRequired: true,
                   value: jobState.selectedPosition?.titleEnglish,
-                  hint: localizations.hintGradeLevel,
+                  hint: localizations.hintSelectDivision,
                   onTap: () async {
                     final selected = await PositionSelectionDialog.show(context);
                     if (selected != null && context.mounted) {
@@ -160,7 +160,7 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   label: localizations.jobLevels,
                   isRequired: true,
                   value: jobState.selectedJobLevel?.nameEn,
-                  hint: localizations.hintGradeLevel,
+                  hint: localizations.hintJobLevel,
                   onTap: () async {
                     final selected = await JobLevelSelectionDialog.show(context);
                     if (selected != null && context.mounted) {

@@ -54,9 +54,13 @@ class EmployeeDetailHeader extends StatelessWidget {
             spacing: 16.w,
             children: [
               Gap(18.w),
-              EmployeeDetailChip(path: Assets.icons.deiDashboardIcon.path, label: 'HR Manager', isDark: isDark),
               EmployeeDetailChip(
-                path: Assets.icons.departmentCardIcon.path,
+                path: Assets.icons.deiDashboardIcon.path,
+                label: displayData.positionLabel,
+                isDark: isDark,
+              ),
+              EmployeeDetailChip(
+                path: Assets.icons.departmentsIcon.path,
                 label: displayData.departmentLabel,
                 isDark: isDark,
               ),

@@ -1,3 +1,5 @@
+import 'dart:typed_data' show Uint8List;
+
 class Document {
   final String id;
   final String name;
@@ -6,6 +8,8 @@ class Document {
   final String? extension;
   final DateTime uploadedAt;
 
+  final Uint8List? bytes;
+
   const Document({
     required this.id,
     required this.name,
@@ -13,6 +17,7 @@ class Document {
     required this.size,
     this.extension,
     required this.uploadedAt,
+    this.bytes,
   });
 
   String get formattedSize {
@@ -25,7 +30,15 @@ class Document {
     }
   }
 
-  Document copyWith({String? id, String? name, String? path, int? size, String? extension, DateTime? uploadedAt}) {
+  Document copyWith({
+    String? id,
+    String? name,
+    String? path,
+    int? size,
+    String? extension,
+    DateTime? uploadedAt,
+    Uint8List? bytes,
+  }) {
     return Document(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -33,6 +46,7 @@ class Document {
       size: size ?? this.size,
       extension: extension ?? this.extension,
       uploadedAt: uploadedAt ?? this.uploadedAt,
+      bytes: bytes ?? this.bytes,
     );
   }
 }

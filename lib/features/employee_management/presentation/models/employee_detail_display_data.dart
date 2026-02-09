@@ -11,8 +11,9 @@ class EmployeeDetailDisplayData {
 
   String get displayName {
     final name = fullDetails?.employee.fullNameEn;
-    if (name != null && name.isNotEmpty) return name.toUpperCase();
-    return employee.fullName.toUpperCase();
+    if (name != null && name.trim().isNotEmpty) return name.trim().toUpperCase();
+    if (employee.fullName.trim().isNotEmpty) return employee.fullName.trim().toUpperCase();
+    return '—';
   }
 
   String get departmentLabel {
@@ -20,18 +21,26 @@ class EmployeeDetailDisplayData {
     final deptList = list.where((e) => e.levelCode == 'DEPARTMENT').toList();
     final dept = deptList.isEmpty ? null : deptList.first;
     if (dept != null && (dept.orgUnitNameEn ?? '').trim().isNotEmpty) {
-      return (dept.orgUnitNameEn ?? '').toUpperCase();
+      return (dept.orgUnitNameEn ?? '').trim().toUpperCase();
     }
     if (list.isNotEmpty) {
       final last = list.last;
-      return (last.orgUnitNameEn ?? '').trim().isEmpty
-          ? employee.department
-          : (last.orgUnitNameEn ?? employee.department).toUpperCase();
+      final name = (last.orgUnitNameEn ?? '').trim();
+      if (name.isNotEmpty) return name.toUpperCase();
     }
-    return employee.department;
+    if (employee.department.trim().isNotEmpty) return employee.department.trim();
+    return '—';
   }
 
-  String get employeeNumber => fullDetails?.employee.employeeNumber ?? employee.employeeId;
+  String get employeeNumber => fullDetails?.employee.employeeNumber?.trim().isNotEmpty == true
+      ? fullDetails!.employee.employeeNumber!
+      : (employee.employeeNumber.trim().isNotEmpty ? employee.employeeNumber : '—');
+
+  String get positionLabel {
+    final pos = fullDetails?.assignment.position?.positionNameEn ?? fullDetails?.assignment.positionNameEn;
+    if (pos != null && pos.trim().isNotEmpty) return pos.trim();
+    return employee.position.trim().isNotEmpty ? employee.position : '—';
+  }
 
   String get servicePeriod {
     final hireDate = fullDetails?.assignment.enterpriseHireDate;
@@ -51,7 +60,16 @@ class EmployeeDetailDisplayData {
     }
   }
 
-  String get gradeLevel => fullDetails?.employee.gradeId != null ? 'Grade ${fullDetails!.employee.gradeId}' : '—';
+  String get gradeLevel {
+    final grade = fullDetails?.assignment.grade;
+    if (grade != null) {
+      if ((grade.gradeNumber).trim().isNotEmpty) return grade.gradeNumber;
+      if ((grade.gradeCategory).trim().isNotEmpty) return grade.gradeCategory;
+    }
+    final gradeId = fullDetails?.employee.gradeId;
+    if (gradeId != null) return 'Grade $gradeId';
+    return '—';
+  }
 
   String get totalSalary {
     if (fullDetails == null) return '—';
@@ -67,5 +85,9 @@ class EmployeeDetailDisplayData {
     return total == 0 ? '—' : '${total.toStringAsFixed(3)} KWD';
   }
 
-  String get nationality => fullDetails?.demographics?.nationalityCode ?? '—';
+  String get nationality {
+    final code = fullDetails?.demographics?.nationalityCode;
+    if (code != null && code.trim().isNotEmpty) return code.trim();
+    return '—';
+  }
 }

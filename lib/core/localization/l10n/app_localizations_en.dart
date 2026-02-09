@@ -1669,6 +1669,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintEmploymentStatus => 'Select employment status';
 
   @override
+  String get hintJobLevel => 'Select job level';
+
+  @override
   String get timeManagementWorkSchedule => 'Time Management - Work Schedule';
 
   @override

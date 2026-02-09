@@ -10,43 +10,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddEmployeeWorkScheduleStep extends ConsumerStatefulWidget {
+class AddEmployeeWorkScheduleStep extends ConsumerWidget {
   const AddEmployeeWorkScheduleStep({super.key});
 
   @override
-  ConsumerState<AddEmployeeWorkScheduleStep> createState() => _AddEmployeeWorkScheduleStepState();
-}
-
-class _AddEmployeeWorkScheduleStepState extends ConsumerState<AddEmployeeWorkScheduleStep> {
-  bool _prefillLoadTriggered = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final workScheduleState = ref.watch(addEmployeeWorkScheduleProvider);
     final workScheduleNotifier = ref.read(addEmployeeWorkScheduleProvider.notifier);
+    final schedulesState = enterpriseId != null ? ref.watch(workSchedulesNotifierProvider(enterpriseId)) : null;
 
-    if (enterpriseId != null &&
-        workScheduleState.prefillWorkScheduleId != null &&
-        workScheduleState.selectedWorkSchedule == null &&
-        !_prefillLoadTriggered) {
+    final items = schedulesState?.items ?? [];
+    final prefillMatch = workScheduleState.prefillWorkScheduleId != null
+        ? items.where((s) => s.workScheduleId == workScheduleState.prefillWorkScheduleId).firstOrNull
+        : null;
+    final selectedWorkSchedule = workScheduleState.selectedWorkSchedule ?? prefillMatch;
+
+    if (prefillMatch != null && workScheduleState.selectedWorkSchedule == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted || _prefillLoadTriggered) return;
-        setState(() => _prefillLoadTriggered = true);
-        ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).loadFirstPage();
-      });
-    }
-    if (enterpriseId != null) {
-      ref.listen<WorkScheduleState>(workSchedulesNotifierProvider(enterpriseId), (prev, next) {
-        final state = ref.read(addEmployeeWorkScheduleProvider);
-        if (state.prefillWorkScheduleId == null || state.selectedWorkSchedule != null) return;
-        final items = next.items;
-        if (items.isEmpty) return;
-        final match = items.where((s) => s.workScheduleId == state.prefillWorkScheduleId).firstOrNull;
-        if (match != null) {
-          ref.read(addEmployeeWorkScheduleProvider.notifier).setSelectedWorkScheduleFromPrefill(match);
-        }
+        if (ref.read(addEmployeeWorkScheduleProvider).selectedWorkSchedule != null) return;
+        ref.read(addEmployeeWorkScheduleProvider.notifier).setSelectedWorkScheduleFromPrefill(prefillMatch);
       });
     }
 
@@ -61,7 +45,7 @@ class _AddEmployeeWorkScheduleStepState extends ConsumerState<AddEmployeeWorkSch
         ),
         WorkScheduleAssignmentModule(
           enterpriseId: enterpriseId,
-          selectedWorkSchedule: workScheduleState.selectedWorkSchedule,
+          selectedWorkSchedule: selectedWorkSchedule,
           onWorkScheduleChanged: workScheduleNotifier.setSelectedWorkSchedule,
         ),
         WorkScheduleStartEndModule(

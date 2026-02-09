@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_list_item.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_empty_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_error_state.dart';
@@ -16,19 +15,34 @@ import 'dart:ui';
 
 class OrgUnitSelectionDialog extends ConsumerStatefulWidget {
   final OrgStructureLevel level;
-  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
+  final dynamic selectionProvider;
+  final String? preselectedUnitId;
+  final void Function(OrgUnit unit)? onUnitSelected;
 
-  const OrgUnitSelectionDialog({super.key, required this.level, required this.selectionProvider});
+  const OrgUnitSelectionDialog({
+    super.key,
+    required this.level,
+    required this.selectionProvider,
+    this.preselectedUnitId,
+    this.onUnitSelected,
+  });
 
   static Future<bool> show({
     required BuildContext context,
     required OrgStructureLevel level,
-    required StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider,
+    required dynamic selectionProvider,
+    String? preselectedUnitId,
+    void Function(OrgUnit unit)? onUnitSelected,
   }) async {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => OrgUnitSelectionDialog(level: level, selectionProvider: selectionProvider),
+      builder: (context) => OrgUnitSelectionDialog(
+        level: level,
+        selectionProvider: selectionProvider,
+        preselectedUnitId: preselectedUnitId,
+        onUnitSelected: onUnitSelected,
+      ),
     );
     return result ?? false;
   }
@@ -39,11 +53,22 @@ class OrgUnitSelectionDialog extends ConsumerStatefulWidget {
 
 class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
+  bool _didApplyPreselection = false;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    final initialState = ref.read(widget.selectionProvider);
+    final hasOptions = initialState.getOptions(widget.level.levelCode).isNotEmpty;
+    final isLoading = initialState.isLoading(widget.level.levelCode);
+    if (!hasOptions && !isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(widget.selectionProvider.notifier).loadOptionsForLevel(widget.level.levelCode);
+      });
+    }
   }
 
   @override
@@ -59,6 +84,24 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
     }
   }
 
+  void _applyPreselectionIfNeeded(WidgetRef ref, List<OrgUnit> options) {
+    final pid = widget.preselectedUnitId;
+    if (pid == null || pid.isEmpty || _didApplyPreselection || options.isEmpty) return;
+    OrgUnit? unit;
+    for (final u in options) {
+      if (u.orgUnitId == pid) {
+        unit = u;
+        break;
+      }
+    }
+    if (unit == null) return;
+    _didApplyPreselection = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(widget.selectionProvider.notifier).selectUnit(widget.level.levelCode, unit);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectionState = ref.watch(widget.selectionProvider);
@@ -66,6 +109,10 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
     final isLoading = selectionState.isLoading(widget.level.levelCode);
     final isFetchingMore = selectionState.isFetchingMore(widget.level.levelCode);
     final error = selectionState.getError(widget.level.levelCode);
+
+    if (!isLoading && options.isNotEmpty) {
+      _applyPreselectionIfNeeded(ref, options);
+    }
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -145,6 +192,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
           isSelected: isSelected,
           onTap: () {
             ref.read(widget.selectionProvider.notifier).selectUnit(widget.level.levelCode, unit);
+            widget.onUnitSelected?.call(unit);
             context.pop(true);
           },
         );

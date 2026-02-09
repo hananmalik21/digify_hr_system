@@ -44,6 +44,8 @@ class CreateEmployeeBasicInfoRequest {
   final String? otherKwd;
   final DateTime? compStart;
   final DateTime? compEnd;
+  final DateTime? allowStart;
+  final DateTime? allowEnd;
   final String? bankName;
   final String? bankCode;
   final String? accountNumber;
@@ -99,6 +101,8 @@ class CreateEmployeeBasicInfoRequest {
     this.otherKwd,
     this.compStart,
     this.compEnd,
+    this.allowStart,
+    this.allowEnd,
     this.bankName,
     this.bankCode,
     this.accountNumber,
@@ -198,6 +202,10 @@ class CreateEmployeeBasicInfoRequest {
     DateTime? compEnd,
     bool clearCompStart = false,
     bool clearCompEnd = false,
+    DateTime? allowStart,
+    DateTime? allowEnd,
+    bool clearAllowStart = false,
+    bool clearAllowEnd = false,
     String? bankName,
     String? bankCode,
     String? accountNumber,
@@ -263,6 +271,8 @@ class CreateEmployeeBasicInfoRequest {
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
       compStart: clearCompStart ? null : (compStart ?? this.compStart),
       compEnd: clearCompEnd ? null : (compEnd ?? this.compEnd),
+      allowStart: clearAllowStart ? null : (allowStart ?? this.allowStart),
+      allowEnd: clearAllowEnd ? null : (allowEnd ?? this.allowEnd),
       bankName: clearBankName ? null : (bankName ?? this.bankName),
       bankCode: clearBankCode ? null : (bankCode ?? this.bankCode),
       accountNumber: clearAccountNumber ? null : (accountNumber ?? this.accountNumber),
