@@ -100,20 +100,21 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
         ),
         borderRadius: BorderRadius.only(topLeft: Radius.circular(16.r), topRight: Radius.circular(16.r)),
       ),
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: context.textTheme.titleLarge?.copyWith(color: AppColors.buttonTextLight, fontSize: 22.9.sp),
+                  style: context.textTheme.titleLarge?.copyWith(color: AppColors.buttonTextLight, fontSize: 20.sp),
                 ),
                 if (subtitle != null) ...[
-                  Gap(4.h),
+                  Gap(2.h),
                   Text(subtitle!, style: context.textTheme.bodyMedium?.copyWith(color: AppColors.jobRoleBg)),
                 ],
               ],
@@ -125,11 +126,11 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
               onTap: onClose ?? () => Navigator.of(context).pop(),
               borderRadius: BorderRadius.circular(100.r),
               child: Padding(
-                padding: EdgeInsets.all(8.w),
+                padding: EdgeInsets.all(6.w),
                 child: DigifyAsset(
                   assetPath: Assets.icons.closeIcon.path,
-                  width: 24,
-                  height: 24,
+                  width: 22,
+                  height: 22,
                   color: AppColors.buttonTextLight,
                 ),
               ),
@@ -146,7 +147,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
     final bgColor = isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 11.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: bgColor,
         border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
@@ -180,8 +181,8 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
           if (i < stepperSteps!.length - 1)
             Expanded(
               child: DigifyDivider.horizontal(
-                thickness: 3.h,
-                margin: EdgeInsets.symmetric(horizontal: 4.w),
+                thickness: 2.h,
+                margin: EdgeInsets.symmetric(horizontal: 2.w),
                 color: currentStepIndex > i ? connectorActiveColor : connectorInactiveColor,
                 borderRadius: 2.r,
               ),
@@ -208,28 +209,28 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
         ? AppColors.buttonTextLight
         : (isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon);
     final circleFill = isHighlighted ? AppColors.primary : AppColors.dashboardCardBorder;
-    const double labelAreaHeight = 36;
+    const double labelAreaHeight = 28;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Gap(10.h),
+        Gap(4.h),
         Container(
-          width: 40.w,
-          height: 40.h,
+          width: 32.w,
+          height: 32.h,
           decoration: BoxDecoration(color: circleFill, shape: BoxShape.circle),
           alignment: Alignment.center,
-          child: DigifyAsset(assetPath: assetPath, width: 20, height: 20, color: iconColor),
+          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: iconColor),
         ),
-        Gap(8.h),
+        Gap(4.h),
         SizedBox(
           height: labelAreaHeight.h,
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(
               label,
-              style: context.textTheme.titleSmall?.copyWith(color: textColor),
+              style: context.textTheme.titleSmall?.copyWith(color: textColor, fontSize: 12.sp),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -242,7 +243,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
 
   Widget _buildFooter(BuildContext context, bool isDark) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 25.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16.r), bottomRight: Radius.circular(16.r)),

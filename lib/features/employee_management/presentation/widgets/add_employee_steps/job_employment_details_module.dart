@@ -10,10 +10,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_level_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/reporting_to_employee_search_field.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -50,8 +47,8 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
 
     _resolvePrefillIds(ref, jobState, jobNotifier, enterpriseId);
-    ref.listen(jobFamilyNotifierProvider, (prev, next) => _tryResolveJobFamily(ref, next));
     ref.listen(positionNotifierProvider, (prev, next) => _tryResolvePosition(ref, next));
+    ref.listen(jobFamilyNotifierProvider, (prev, next) => _tryResolveJobFamily(ref, next));
     ref.listen(jobLevelNotifierProvider, (prev, next) => _tryResolveJobLevel(ref, next));
     ref.listen(gradeNotifierProvider, (prev, next) => _tryResolveGrade(ref, next));
     final contractTypeValuesAsync = ref.watch(
@@ -95,26 +92,14 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
               final useTwoColumns = constraints.maxWidth > 500;
               final leftColumn = [
                 JobEmploymentPickerField(
-                  label: localizations.jobFamily,
+                  label: localizations.position,
                   isRequired: true,
-                  value: jobState.selectedJobFamily?.nameEnglish,
+                  value: jobState.selectedPosition?.titleEnglish,
                   hint: localizations.hintSelectDivision,
                   onTap: () async {
-                    final selected = await JobFamilySelectionDialog.show(context);
+                    final selected = await PositionSelectionDialog.show(context);
                     if (selected != null && context.mounted) {
-                      jobNotifier.setJobFamily(selected);
-                    }
-                  },
-                ),
-                JobEmploymentPickerField(
-                  label: localizations.gradeLevel,
-                  isRequired: true,
-                  value: jobState.selectedGrade?.gradeLabel,
-                  hint: localizations.hintGradeLevel,
-                  onTap: () async {
-                    final selected = await GradeSelectionDialog.show(context);
-                    if (selected != null && context.mounted) {
-                      jobNotifier.setGrade(selected);
+                      jobNotifier.setPosition(selected);
                     }
                   },
                 ),
@@ -144,30 +129,6 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                 ),
               ];
               final rightColumn = [
-                JobEmploymentPickerField(
-                  label: localizations.position,
-                  isRequired: true,
-                  value: jobState.selectedPosition?.titleEnglish,
-                  hint: localizations.hintSelectDivision,
-                  onTap: () async {
-                    final selected = await PositionSelectionDialog.show(context);
-                    if (selected != null && context.mounted) {
-                      jobNotifier.setPosition(selected);
-                    }
-                  },
-                ),
-                JobEmploymentPickerField(
-                  label: localizations.jobLevels,
-                  isRequired: true,
-                  value: jobState.selectedJobLevel?.nameEn,
-                  hint: localizations.hintJobLevel,
-                  onTap: () async {
-                    final selected = await JobLevelSelectionDialog.show(context);
-                    if (selected != null && context.mounted) {
-                      jobNotifier.setJobLevel(selected);
-                    }
-                  },
-                ),
                 DigifyDateField(
                   label: localizations.enterpriseHireDate,
                   isRequired: true,

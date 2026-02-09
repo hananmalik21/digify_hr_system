@@ -95,8 +95,17 @@ class AddEmployeeJobEmploymentNotifier extends StateNotifier<AddEmployeeJobEmplo
   void setPosition(Position? value) {
     state = state.copyWith(
       selectedPosition: value,
+      selectedJobFamily: value?.jobFamilyRef,
+      selectedJobLevel: value?.jobLevelRef,
+      selectedGrade: value?.gradeRef,
       clearPosition: value == null,
+      clearJobFamily: value == null,
+      clearJobLevel: value == null,
+      clearGrade: value == null,
       clearPrefillPositionId: value != null,
+      clearPrefillJobFamilyId: value?.jobFamilyRef != null,
+      clearPrefillJobLevelId: value?.jobLevelRef != null,
+      clearPrefillGradeId: value?.gradeRef != null,
     );
   }
 

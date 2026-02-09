@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/section_header_card.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/add_employee_basic_info_form.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/add_employee_name_fields_info_banner.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,11 +25,6 @@ class AddEmployeeBasicInfoStep extends StatelessWidget {
           iconAssetPath: em.basicInfo.path,
           title: localizations.basicInformation,
           subtitle: localizations.addEmployeeBasicInfoSubtitle,
-        ),
-        AddEmployeeNameFieldsInfoBanner(
-          message: localizations.addEmployeeNameFieldsConfigured,
-          boldPhrases: const ['Enterprise Structure', 'Name Structure Settings'],
-          iconAssetPath: em.document.path,
         ),
         Container(
           padding: EdgeInsets.all(18.w),

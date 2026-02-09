@@ -25,25 +25,32 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   @override
   ManageEmployeesListState build() {
     ref.listen<int?>(manageEmployeesEnterpriseIdProvider, (previous, next) {
-      if (next != null) {
-        Future.microtask(() => loadPage(next, 1));
+      if (previous != null && next != previous) {
+        state = state.copyWith(items: [], pagination: null, searchQuery: null, lastEnterpriseId: next);
+      } else if (next != null) {
+        state = state.copyWith(lastEnterpriseId: next);
       }
     });
     final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
-    if (enterpriseId != null) {
-      Future.microtask(() => loadPage(enterpriseId, 1));
-    }
-    return const ManageEmployeesListState();
+    return ManageEmployeesListState(lastEnterpriseId: enterpriseId);
   }
 
-  Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10}) async {
-    state = state.copyWith(isLoading: true, error: null, lastEnterpriseId: enterpriseId, currentPage: page);
+  Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10, String? search}) async {
+    final effectiveSearch = search ?? state.searchQuery;
+    state = state.copyWith(
+      isLoading: true,
+      error: null,
+      lastEnterpriseId: enterpriseId,
+      currentPage: page,
+      searchQuery: effectiveSearch,
+    );
     final filters = ref.read(manageEmployeesFiltersProvider);
     final repository = ref.read(manageEmployeesListRepositoryProvider);
     final result = await repository.getEmployees(
       enterpriseId: enterpriseId,
       page: page,
       pageSize: pageSize,
+      search: effectiveSearch,
       positionId: filters.positionId,
       jobFamilyId: filters.jobFamilyId,
       jobLevelId: filters.jobLevelId,
@@ -51,7 +58,24 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
       orgUnitId: filters.orgUnitId,
       levelCode: filters.levelCode,
     );
-    state = state.copyWith(items: result.items, pagination: result.pagination, isLoading: false, error: null);
+    state = state.copyWith(
+      items: result.items,
+      pagination: result.pagination,
+      isLoading: false,
+      error: null,
+      searchQuery: effectiveSearch,
+    );
+  }
+
+  void search(String query) {
+    final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) return;
+    final q = query.trim();
+    if (q.isEmpty) {
+      state = state.copyWith(items: [], pagination: null, searchQuery: null, isLoading: false, error: null);
+      return;
+    }
+    loadPage(enterpriseId, 1, search: q);
   }
 
   Future<void> goToPage(int page, {int pageSize = 10}) async {

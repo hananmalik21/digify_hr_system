@@ -8,6 +8,7 @@ class ManageEmployeesListState {
   final Object? error;
   final int? lastEnterpriseId;
   final int currentPage;
+  final String? searchQuery;
 
   const ManageEmployeesListState({
     this.items = const [],
@@ -16,6 +17,7 @@ class ManageEmployeesListState {
     this.error,
     this.lastEnterpriseId,
     this.currentPage = 1,
+    this.searchQuery,
   });
 
   ManageEmployeesListState copyWith({
@@ -25,6 +27,7 @@ class ManageEmployeesListState {
     Object? error,
     int? lastEnterpriseId,
     int? currentPage,
+    String? searchQuery,
   }) {
     return ManageEmployeesListState(
       items: items ?? this.items,
@@ -33,6 +36,7 @@ class ManageEmployeesListState {
       error: error,
       lastEnterpriseId: lastEnterpriseId ?? this.lastEnterpriseId,
       currentPage: currentPage ?? this.currentPage,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }

@@ -52,6 +52,10 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
     super.dispose();
   }
 
+  void _runSearch() {
+    ref.read(manageEmployeesListProvider.notifier).search(_searchController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = widget.localizations;
@@ -71,8 +75,9 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
         children: [
           DigifyTextField.search(
             controller: _searchController,
-            hintText: localizations.typeToSearchEmployees,
+            hintText: localizations.searchByNameOrEmployeeNumber,
             onChanged: (_) {},
+            onSubmitted: (_) => _runSearch(),
           ),
           Gap(16.h),
           SingleChildScrollView(
