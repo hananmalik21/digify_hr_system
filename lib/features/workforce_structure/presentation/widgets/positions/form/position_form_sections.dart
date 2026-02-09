@@ -1,11 +1,14 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
+import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_fields.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_helpers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/grade_selection_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/job_family_selection_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/job_level_selection_field.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/grade_selection_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,6 +77,7 @@ class BasicInfoSection extends StatelessWidget {
                 controller: titleArabicController,
                 hint: 'مثال: مدير مالي',
                 textDirection: TextDirection.rtl,
+                inputFormatters: FieldFormat.arabicOnlyFormatters,
               ),
             ),
           ],
@@ -133,15 +137,8 @@ class OrganizationalSection extends ConsumerWidget {
 
 class JobClassificationSection extends StatelessWidget {
   final AppLocalizations localizations;
-  final String? selectedStep;
-  final ValueChanged<String?> onStepChanged;
 
-  const JobClassificationSection({
-    super.key,
-    required this.localizations,
-    required this.selectedStep,
-    required this.onStepChanged,
-  });
+  const JobClassificationSection({super.key, required this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -152,21 +149,7 @@ class JobClassificationSection extends StatelessWidget {
           children: [
             JobFamilySelectionField(label: localizations.jobFamily),
             JobLevelSelectionField(label: localizations.jobLevel),
-          ],
-        ),
-        PositionFormRow(
-          children: [
             GradeSelectionField(label: localizations.gradeStep),
-            PositionLabeledField(
-              label: localizations.step,
-              isRequired: true,
-              child: PositionFormHelpers.buildDropdownField<String>(
-                value: selectedStep,
-                items: const ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'],
-                onChanged: onStepChanged,
-                hint: 'Select Step',
-              ),
-            ),
           ],
         ),
       ],
@@ -270,14 +253,16 @@ class SalarySection extends StatelessWidget {
 
 class ReportingSection extends StatelessWidget {
   final AppLocalizations localizations;
-  final TextEditingController reportsTitleController;
-  final TextEditingController reportsCodeController;
+  final int enterpriseId;
+  final Employee? selectedReportsToEmployee;
+  final ValueChanged<Employee> onReportsToEmployeeSelected;
 
   const ReportingSection({
     super.key,
     required this.localizations,
-    required this.reportsTitleController,
-    required this.reportsCodeController,
+    required this.enterpriseId,
+    required this.onReportsToEmployeeSelected,
+    this.selectedReportsToEmployee,
   });
 
   @override
@@ -287,15 +272,15 @@ class ReportingSection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            PositionLabeledField(
-              label: '${localizations.reportsTo} (Position Title)',
-              isRequired: false,
-              child: PositionFormHelpers.buildFormField(controller: reportsTitleController, hint: 'e.g, CFO'),
-            ),
-            PositionLabeledField(
-              label: '${localizations.reportsTo} (Position Code)',
-              isRequired: false,
-              child: PositionFormHelpers.buildFormField(controller: reportsCodeController, hint: 'e.g, POS-CFO-001'),
+            Expanded(
+              child: EmployeeSearchField(
+                label: localizations.reportsTo,
+                isRequired: true,
+                enterpriseId: enterpriseId,
+                selectedEmployee: selectedReportsToEmployee,
+                onEmployeeSelected: onReportsToEmployeeSelected,
+                hintText: localizations.typeToSearchEmployees,
+              ),
             ),
           ],
         ),

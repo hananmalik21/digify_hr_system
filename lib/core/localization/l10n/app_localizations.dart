@@ -5714,6 +5714,12 @@ abstract class AppLocalizations {
   /// **'Search sections...'**
   String get searchSectionsPlaceholder;
 
+  /// No description provided for @managePositions.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Positions'**
+  String get managePositions;
+
   /// No description provided for @managePositionsJobFamilies.
   ///
   /// In en, this message translates to:
