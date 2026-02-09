@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PositionStatusBadge extends StatelessWidget {
   final String label;
@@ -11,18 +10,10 @@ class PositionStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(8.w, 3.h, 8.w, 3.h),
-      decoration: BoxDecoration(
-        color: isActive ? AppColors.shiftActiveStatusBg : AppColors.inactiveStatusBg,
-        borderRadius: BorderRadius.circular(100.r),
-      ),
-      child: Text(
-        label,
-        style: context.textTheme.labelSmall?.copyWith(
-          color: isActive ? AppColors.shiftActiveStatusText : AppColors.inactiveStatusText,
-        ),
-      ),
+    return DigifyCapsule(
+      label: label,
+      backgroundColor: isActive ? AppColors.shiftActiveStatusBg : AppColors.inactiveStatusBg,
+      textColor: isActive ? AppColors.shiftActiveStatusText : AppColors.inactiveStatusText,
     );
   }
 }
@@ -37,20 +28,12 @@ class PositionVacancyBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasVacancy = vacancy > 0;
+    final label = hasVacancy ? '$vacancy $vacantLabel' : fullLabel;
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(8.w, 3.h, 8.w, 3.h),
-      decoration: BoxDecoration(
-        color: hasVacancy ? AppColors.vacancyBg : AppColors.shiftActiveStatusBg,
-        borderRadius: BorderRadius.circular(100.r),
-      ),
-      child: Text(
-        textAlign: TextAlign.center,
-        hasVacancy ? '$vacancy $vacantLabel' : fullLabel,
-        style: context.textTheme.labelSmall?.copyWith(
-          color: hasVacancy ? AppColors.vacancyText : AppColors.shiftActiveStatusText,
-        ),
-      ),
+    return DigifyCapsule(
+      label: label,
+      backgroundColor: hasVacancy ? AppColors.vacancyBg : AppColors.shiftActiveStatusBg,
+      textColor: hasVacancy ? AppColors.vacancyText : AppColors.shiftActiveStatusText,
     );
   }
 }

@@ -111,6 +111,7 @@ class DigifyTextField extends StatefulWidget {
     TextDirection? textDirection,
     TextAlign textAlign = TextAlign.start,
     FocusNode? focusNode,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return DigifyTextField(
       controller: controller,
@@ -125,6 +126,7 @@ class DigifyTextField extends StatefulWidget {
       textDirection: textDirection,
       textAlign: textAlign,
       focusNode: focusNode,
+      inputFormatters: inputFormatters,
       filled: true,
       fillColor: Colors.transparent,
     );

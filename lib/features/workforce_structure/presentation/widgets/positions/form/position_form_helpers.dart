@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PositionFormHelpers {
@@ -27,6 +28,7 @@ class PositionFormHelpers {
     required TextEditingController controller,
     String? hint,
     TextDirection? textDirection,
+    List<TextInputFormatter>? inputFormatters,
     bool readOnly = false,
     bool enabled = true,
   }) {
@@ -34,6 +36,7 @@ class PositionFormHelpers {
       controller: controller,
       hintText: hint,
       textDirection: textDirection,
+      inputFormatters: inputFormatters,
       readOnly: readOnly,
       enabled: enabled,
       textAlign: textDirection == TextDirection.rtl ? TextAlign.right : TextAlign.left,

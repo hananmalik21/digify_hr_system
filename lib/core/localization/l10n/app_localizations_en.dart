@@ -2924,6 +2924,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchSectionsPlaceholder => 'Search sections...';
 
   @override
+  String get managePositions => 'Manage Positions';
+
+  @override
   String get managePositionsJobFamilies =>
       'Manage positions, job families, levels, and organizational structure';
 

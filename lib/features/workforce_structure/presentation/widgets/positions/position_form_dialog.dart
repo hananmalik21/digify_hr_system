@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
@@ -37,6 +39,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
   late final Map<String, TextEditingController> _formControllers;
   late final Map<String, String?> _selectedUnitIds;
   bool _isSaving = false;
+  Employee? _selectedReportsToEmployee;
 
   @override
   void initState() {
@@ -55,8 +58,6 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       'budgetedMin': TextEditingController(text: position.budgetedMin),
       'budgetedMax': TextEditingController(text: position.budgetedMax),
       'actualAverage': TextEditingController(text: position.actualAverage),
-      'reportsTitle': TextEditingController(text: position.reportsTo ?? ''),
-      'reportsCode': TextEditingController(text: position.reportsTo ?? ''),
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -87,16 +88,44 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
     });
   }
 
+  bool _hasOrgUnitSelected() {
+    final orgStructureState = ref.read(orgStructureNotifierProvider);
+    final levels = orgStructureState.orgStructure?.activeLevels ?? [];
+    for (final level in levels) {
+      if (_selectedUnitIds[level.levelCode] != null) return true;
+    }
+    return false;
+  }
+
   Future<void> _handleSave() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    final formState = ref.read(positionFormNotifierProvider);
-    final orgStructureState = ref.read(orgStructureNotifierProvider);
-
-    if (formState.jobFamily == null || formState.jobLevel == null || formState.grade == null) {
-      ToastService.error(context, 'Please select Job Family, Level and Grade', title: 'Selection Required');
+    final localizations = AppLocalizations.of(context)!;
+    final validationError = ref
+        .read(positionFormNotifierProvider.notifier)
+        .validateForm(
+          positionCode: _formControllers['code']!.text,
+          titleEnglish: _formControllers['titleEnglish']!.text,
+          titleArabic: _formControllers['titleArabic']!.text,
+          costCenter: _formControllers['costCenter']!.text,
+          location: _formControllers['location']!.text,
+          numberOfPositionsStr: _formControllers['positions']!.text,
+          filledPositionsStr: _formControllers['filled']!.text,
+          budgetedMinStr: _formControllers['budgetedMin']!.text,
+          budgetedMaxStr: _formControllers['budgetedMax']!.text,
+          actualAverageStr: _formControllers['actualAverage']!.text,
+          hasOrgUnitSelected: _hasOrgUnitSelected(),
+          hasReportsToEmployeeSelected: _selectedReportsToEmployee != null,
+          isEdit: widget.isEdit,
+          l: localizations,
+        );
+    if (validationError != null) {
+      ToastService.error(context, validationError, title: localizations.fieldRequired);
       return;
     }
+
+    final formState = ref.read(positionFormNotifierProvider);
+    final orgStructureState = ref.read(orgStructureNotifierProvider);
 
     // Get the deepest selected org unit
     String? lastUnitId;
@@ -106,11 +135,6 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       if (id != null) {
         lastUnitId = id;
       }
-    }
-
-    if (lastUnitId == null) {
-      ToastService.error(context, 'Please select at least one organizational unit', title: 'Structure Required');
-      return;
     }
 
     final payload = {
@@ -125,7 +149,6 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       "job_family_id": formState.jobFamily!.id,
       "job_level_id": formState.jobLevel!.id,
       "grade_id": formState.grade!.id,
-      "step_no": int.tryParse(formState.step?.replaceAll('Step ', '') ?? '') ?? 1,
       "number_of_positions": int.tryParse(_formControllers['positions']!.text) ?? 0,
       "filled_positions": int.tryParse(_formControllers['filled']!.text) ?? 0,
       "employment_type": formState.employmentType,
@@ -133,6 +156,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       "budgeted_max_kd": double.tryParse(_formControllers['budgetedMax']!.text) ?? 0.0,
       "actual_avg_kd": double.tryParse(_formControllers['actualAverage']!.text) ?? 0.0,
       "last_update_login": "HR_ADMIN",
+      if (_selectedReportsToEmployee != null) "reports_to_user_guid": _selectedReportsToEmployee!.guid,
     };
 
     setState(() => _isSaving = true);
@@ -200,11 +224,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
               initialSelections: widget.initialPosition.orgPathRefs,
             ),
             Gap(24.h),
-            JobClassificationSection(
-              localizations: localizations,
-              selectedStep: formState.step,
-              onStepChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setStep(val),
-            ),
+            JobClassificationSection(localizations: localizations),
             Gap(24.h),
             HeadcountSection(
               localizations: localizations,
@@ -223,8 +243,11 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
             Gap(24.h),
             ReportingSection(
               localizations: localizations,
-              reportsTitleController: _formControllers['reportsTitle']!,
-              reportsCodeController: _formControllers['reportsCode']!,
+              enterpriseId: ref.watch(activeEnterpriseIdProvider) ?? 0,
+              selectedReportsToEmployee: _selectedReportsToEmployee,
+              onReportsToEmployeeSelected: (employee) {
+                setState(() => _selectedReportsToEmployee = employee);
+              },
             ),
           ],
         ),

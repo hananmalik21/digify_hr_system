@@ -16,6 +16,7 @@ class Position {
   final String grade;
   final String step;
   final String? reportsTo;
+  final String? reportsToPositionId;
   final String division;
   final String costCenter;
   final String location;
@@ -48,6 +49,7 @@ class Position {
     required this.grade,
     required this.step,
     this.reportsTo,
+    this.reportsToPositionId,
     required this.division,
     required this.costCenter,
     required this.location,
@@ -79,6 +81,7 @@ class Position {
     grade: '',
     step: '',
     reportsTo: '',
+    reportsToPositionId: null,
     division: '',
     costCenter: '',
     location: '',
@@ -111,6 +114,7 @@ class Position {
     String? grade,
     String? step,
     String? reportsTo,
+    String? reportsToPositionId,
     String? division,
     String? costCenter,
     String? location,
@@ -141,6 +145,7 @@ class Position {
       grade: grade ?? this.grade,
       step: step ?? this.step,
       reportsTo: reportsTo ?? this.reportsTo,
+      reportsToPositionId: reportsToPositionId ?? this.reportsToPositionId,
       division: division ?? this.division,
       costCenter: costCenter ?? this.costCenter,
       location: location ?? this.location,
