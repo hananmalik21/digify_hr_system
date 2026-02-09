@@ -69,6 +69,13 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   void prependEmployee(EmployeeListItem item) {
     state = state.copyWith(items: [item, ...state.items]);
   }
+
+  void replaceEmployee(EmployeeListItem updatedItem) {
+    final id = updatedItem.id;
+    if (id.isEmpty) return;
+    final items = state.items.map((e) => e.id == id ? updatedItem : e).toList();
+    state = state.copyWith(items: items);
+  }
 }
 
 final manageEmployeesListProvider = NotifierProvider<ManageEmployeesListNotifier, ManageEmployeesListState>(

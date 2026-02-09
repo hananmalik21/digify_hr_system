@@ -55,6 +55,18 @@ class AddEmployeeDemographicsNotifier extends StateNotifier<AddEmployeeDemograph
     state = state.copyWith(passportNumber: value, clearPassportNumber: value == null || value.isEmpty);
   }
 
+  void setFromFullDetails({
+    Map<String, String?>? lookupCodesByTypeCode,
+    String? civilIdNumber,
+    String? passportNumber,
+  }) {
+    state = state.copyWith(
+      lookupCodesByTypeCode: lookupCodesByTypeCode ?? state.lookupCodesByTypeCode,
+      civilIdNumber: civilIdNumber ?? state.civilIdNumber,
+      passportNumber: passportNumber ?? state.passportNumber,
+    );
+  }
+
   void reset() {
     state = const AddEmployeeDemographicsState();
   }

@@ -9,6 +9,8 @@ class AddEmployeeCompensationState {
   final String? otherKwd;
   final DateTime? compStart;
   final DateTime? compEnd;
+  final DateTime? allowStart;
+  final DateTime? allowEnd;
 
   const AddEmployeeCompensationState({
     this.basicSalaryKwd,
@@ -19,6 +21,8 @@ class AddEmployeeCompensationState {
     this.otherKwd,
     this.compStart,
     this.compEnd,
+    this.allowStart,
+    this.allowEnd,
   });
 
   static double _parse(String? value) {
@@ -54,7 +58,10 @@ class AddEmployeeCompensationState {
       _isFilled(otherKwd) &&
       compStart != null &&
       compEnd != null &&
-      !compEnd!.isBefore(compStart!);
+      !compEnd!.isBefore(compStart!) &&
+      allowStart != null &&
+      allowEnd != null &&
+      !allowEnd!.isBefore(allowStart!);
 
   AddEmployeeCompensationState copyWith({
     String? basicSalaryKwd,
@@ -65,6 +72,8 @@ class AddEmployeeCompensationState {
     String? otherKwd,
     DateTime? compStart,
     DateTime? compEnd,
+    DateTime? allowStart,
+    DateTime? allowEnd,
     bool clearBasicSalaryKwd = false,
     bool clearHousingKwd = false,
     bool clearTransportKwd = false,
@@ -73,6 +82,8 @@ class AddEmployeeCompensationState {
     bool clearOtherKwd = false,
     bool clearCompStart = false,
     bool clearCompEnd = false,
+    bool clearAllowStart = false,
+    bool clearAllowEnd = false,
   }) {
     return AddEmployeeCompensationState(
       basicSalaryKwd: clearBasicSalaryKwd ? null : (basicSalaryKwd ?? this.basicSalaryKwd),
@@ -83,6 +94,8 @@ class AddEmployeeCompensationState {
       otherKwd: clearOtherKwd ? null : (otherKwd ?? this.otherKwd),
       compStart: clearCompStart ? null : (compStart ?? this.compStart),
       compEnd: clearCompEnd ? null : (compEnd ?? this.compEnd),
+      allowStart: clearAllowStart ? null : (allowStart ?? this.allowStart),
+      allowEnd: clearAllowEnd ? null : (allowEnd ?? this.allowEnd),
     );
   }
 }
@@ -120,6 +133,40 @@ class AddEmployeeCompensationNotifier extends StateNotifier<AddEmployeeCompensat
 
   void setCompEnd(DateTime? value) {
     state = state.copyWith(compEnd: value, clearCompEnd: value == null);
+  }
+
+  void setAllowStart(DateTime? value) {
+    state = state.copyWith(allowStart: value, clearAllowStart: value == null);
+  }
+
+  void setAllowEnd(DateTime? value) {
+    state = state.copyWith(allowEnd: value, clearAllowEnd: value == null);
+  }
+
+  void setFromFullDetails({
+    String? basicSalaryKwd,
+    String? housingKwd,
+    String? transportKwd,
+    String? foodKwd,
+    String? mobileKwd,
+    String? otherKwd,
+    DateTime? compStart,
+    DateTime? compEnd,
+    DateTime? allowStart,
+    DateTime? allowEnd,
+  }) {
+    state = state.copyWith(
+      basicSalaryKwd: basicSalaryKwd ?? state.basicSalaryKwd,
+      housingKwd: housingKwd ?? state.housingKwd,
+      transportKwd: transportKwd ?? state.transportKwd,
+      foodKwd: foodKwd ?? state.foodKwd,
+      mobileKwd: mobileKwd ?? state.mobileKwd,
+      otherKwd: otherKwd ?? state.otherKwd,
+      compStart: compStart ?? state.compStart,
+      compEnd: compEnd ?? state.compEnd,
+      allowStart: allowStart ?? state.allowStart,
+      allowEnd: allowEnd ?? state.allowEnd,
+    );
   }
 
   void reset() {

@@ -39,6 +39,7 @@ class EnterpriseOrgStructureNotifier extends StateNotifier<EnterpriseOrgStructur
     : super(const EnterpriseOrgStructureState());
 
   Future<void> fetchOrgStructureByEnterpriseId(int enterpriseId) async {
+    if (state.isLoading) return;
     if (_currentEnterpriseId == enterpriseId && state.allStructures.isNotEmpty) {
       return;
     }

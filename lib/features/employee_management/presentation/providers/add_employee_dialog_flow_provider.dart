@@ -1,19 +1,27 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_banking_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_documents_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_demographics_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_editing_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
 import 'package:digify_hr_system/features/employee_management/data/dto/employees_response_dto.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_full_details_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +47,260 @@ class AddEmployeeDialogFlow {
 
   void close(BuildContext context) {
     clearForm();
+    _ref.read(addEmployeeEditingEmployeeIdProvider.notifier).state = null;
     if (context.mounted) Navigator.of(context).pop(context);
+  }
+
+  void prefillFromFullDetails(EmployeeFullDetails d, int enterpriseId) {
+    final emp = d.employee;
+    final asg = d.assignment;
+    final demo = d.demographics;
+    final ws = d.workSchedule;
+    final comp = d.compensation;
+    final allow = d.allowances;
+    final docComp = d.documentCompliance;
+    final emerg = d.emergencyContacts.isNotEmpty ? d.emergencyContacts.first : null;
+    final addr = d.addresses.isNotEmpty ? d.addresses.first : null;
+    final bank = d.bankAccounts.isNotEmpty ? d.bankAccounts.first : null;
+
+    final request = CreateEmployeeBasicInfoRequest(
+      firstNameEn: emp.firstNameEn,
+      middleNameEn: emp.middleNameEn,
+      lastNameEn: emp.lastNameEn,
+      firstNameAr: emp.firstNameAr,
+      middleNameAr: emp.middleNameAr,
+      lastNameAr: emp.lastNameAr,
+      email: emp.email,
+      phoneNumber: emp.phoneNumber,
+      mobileNumber: emp.mobileNumber,
+      dateOfBirth: _parseDate(emp.dateOfBirth),
+      enterpriseId: enterpriseId,
+      emergAddress: emerg?.address ?? addr?.addressLine1,
+      emergPhone: emerg?.phoneNumber,
+      emergEmail: emerg?.email,
+      emergRelationship: emerg?.relationshipCode,
+      contactName: emerg?.contactName,
+      workScheduleId: ws?.workScheduleId,
+      wsStart: _parseDate(ws?.wsStart),
+      wsEnd: _parseDate(ws?.wsEnd),
+      orgUnitIdHex: asg.orgUnitId,
+      asgStart: _parseDate(asg.enterpriseHireDate),
+      asgEnd: _parseDate(asg.effectiveEndDate),
+      workLocation: addr?.addressLine1,
+      lookupCodesByTypeCode: demo != null
+          ? {
+              'GENDER': demo.genderCode,
+              'NATIONALITY': demo.nationalityCode,
+              'MARITAL_STATUS': demo.maritalStatusCode,
+              'RELIGION': demo.religionCode,
+            }
+          : null,
+      civilIdNumber: demo?.civilIdNumber,
+      passportNumber: demo?.passportNumber,
+      positionIdHex: asg.positionId,
+      enterpriseHireDate: _parseDate(asg.enterpriseHireDate),
+      jobFamilyId: asg.jobFamilyId ?? emp.jobFamilyId,
+      jobLevelId: asg.jobLevelId ?? emp.jobLevelId,
+      gradeId: asg.gradeId ?? emp.gradeId,
+      probationDays: asg.probationDays ?? emp.probationDays,
+      contractTypeCode: asg.contractTypeCode,
+      employmentStatusCode: asg.employmentStatus,
+      reportingToEmpId: asg.reportingToEmpId ?? emp.reportingToEmpId,
+      basicSalaryKwd: comp?.basicSalaryKwd?.toString(),
+      housingKwd: allow?.housingKwd?.toString(),
+      transportKwd: allow?.transportKwd?.toString(),
+      foodKwd: allow?.foodKwd?.toString(),
+      mobileKwd: allow?.mobileKwd?.toString(),
+      otherKwd: allow?.otherKwd?.toString(),
+      allowStart: _parseDate(allow?.allowStart),
+      allowEnd: _parseDate(allow?.allowEnd),
+      compStart: _parseDate(comp?.compStart),
+      compEnd: _parseDate(comp?.compEnd),
+      bankCode: bank?.bankCode,
+      bankName: bank?.bankName,
+      accountNumber: bank?.accountNumber,
+      iban: bank?.iban,
+      civilIdExpiry: _parseDate(docComp?.civilIdExpiry),
+      passportExpiry: _parseDate(docComp?.passportExpiry),
+      visaNumber: demo?.visaNumber,
+      visaExpiry: _parseDate(demo?.visaExpiry),
+      workPermitNumber: demo?.workPermitNumber,
+      workPermitExpiry: _parseDate(demo?.workPermitExpiry),
+    );
+
+    _ref.read(addEmployeeBasicInfoProvider.notifier).setForm(request);
+    _ref
+        .read(addEmployeeDemographicsProvider.notifier)
+        .setFromFullDetails(
+          lookupCodesByTypeCode: request.lookupCodesByTypeCode,
+          civilIdNumber: request.civilIdNumber,
+          passportNumber: request.passportNumber,
+        );
+    _ref
+        .read(addEmployeeAddressProvider.notifier)
+        .setFromFullDetails(
+          emergAddress: request.emergAddress,
+          emergPhone: request.emergPhone,
+          emergEmail: request.emergEmail,
+          emergRelationship: request.emergRelationship,
+          contactName: request.contactName,
+        );
+    _ref
+        .read(addEmployeeAssignmentProvider.notifier)
+        .setFromFullDetails(
+          orgUnitIdHex: asg.orgUnitId,
+          orgStructureList: asg.orgStructureList,
+          asgStart: request.asgStart,
+          asgEnd: request.asgEnd,
+          workLocation: request.workLocation,
+        );
+    _ref
+        .read(addEmployeeWorkScheduleProvider.notifier)
+        .setFromFullDetails(wsStart: request.wsStart, wsEnd: request.wsEnd, workScheduleId: ws?.workScheduleId);
+
+    final positionFromApi = _positionFromAssignment(asg);
+    final jobFamilyFromApi = _jobFamilyFromAssignment(asg);
+    final jobLevelFromApi = _jobLevelFromAssignment(asg);
+    final gradeFromApi = _gradeFromAssignment(asg);
+
+    _ref
+        .read(addEmployeeJobEmploymentProvider.notifier)
+        .setFromFullDetails(
+          enterpriseHireDate: request.enterpriseHireDate,
+          probationDays: request.probationDays,
+          contractTypeCode: request.contractTypeCode,
+          employmentStatusCode: request.employmentStatusCode,
+          positionIdHex: asg.positionId,
+          jobFamilyId: asg.jobFamilyId ?? emp.jobFamilyId,
+          jobLevelId: asg.jobLevelId ?? emp.jobLevelId,
+          gradeId: asg.gradeId ?? emp.gradeId,
+          reportingToEmpId: asg.reportingToEmpId ?? emp.reportingToEmpId,
+          selectedPosition: positionFromApi,
+          selectedJobFamily: jobFamilyFromApi,
+          selectedJobLevel: jobLevelFromApi,
+          selectedGrade: gradeFromApi,
+        );
+    _ref
+        .read(addEmployeeCompensationProvider.notifier)
+        .setFromFullDetails(
+          basicSalaryKwd: request.basicSalaryKwd,
+          housingKwd: request.housingKwd,
+          transportKwd: request.transportKwd,
+          foodKwd: request.foodKwd,
+          mobileKwd: request.mobileKwd,
+          otherKwd: request.otherKwd,
+          compStart: request.compStart,
+          compEnd: request.compEnd,
+          allowStart: request.allowStart,
+          allowEnd: request.allowEnd,
+        );
+    _ref
+        .read(addEmployeeBankingProvider.notifier)
+        .setFromFullDetails(
+          bankCode: request.bankCode,
+          bankName: request.bankName,
+          accountNumber: request.accountNumber,
+          iban: request.iban,
+        );
+    _ref
+        .read(addEmployeeDocumentsProvider.notifier)
+        .setFromFullDetails(
+          civilIdExpiry: request.civilIdExpiry,
+          passportExpiry: request.passportExpiry,
+          visaNumber: request.visaNumber,
+          visaExpiry: request.visaExpiry,
+          workPermitNumber: request.workPermitNumber,
+          workPermitExpiry: request.workPermitExpiry,
+          documentTypeCode: d.documents.isNotEmpty ? d.documents.first.documentTypeCode : null,
+          existingDocumentFileName: d.documents.isNotEmpty ? d.documents.first.fileName : null,
+        );
+  }
+
+  static DateTime? _parseDate(String? s) {
+    if (s == null || s.trim().isEmpty) return null;
+    return DateTime.tryParse(s);
+  }
+
+  static Position? _positionFromAssignment(AssignmentDetailSection asg) {
+    final p = asg.position;
+    if (p == null || (p.positionId.isEmpty && p.positionNameEn.isEmpty)) return null;
+    return Position(
+      id: p.positionId,
+      code: p.positionCode,
+      titleEnglish: p.positionNameEn,
+      titleArabic: p.positionNameAr,
+      department: '',
+      jobFamily: '',
+      level: '',
+      grade: '',
+      step: '',
+      reportsTo: null,
+      division: '',
+      costCenter: '',
+      location: '',
+      budgetedMin: '',
+      budgetedMax: '',
+      actualAverage: '',
+      headcount: 0,
+      filled: 0,
+      vacant: 0,
+      isActive: true,
+    );
+  }
+
+  static JobFamily? _jobFamilyFromAssignment(AssignmentDetailSection asg) {
+    final jf = asg.jobFamily;
+    if (jf == null) return null;
+    return JobFamily(
+      id: jf.jobFamilyId,
+      code: jf.jobFamilyCode,
+      nameEnglish: jf.jobFamilyNameEn,
+      nameArabic: jf.jobFamilyNameAr,
+      description: '',
+      totalPositions: 0,
+      filledPositions: 0,
+      fillRate: 0,
+      isActive: true,
+    );
+  }
+
+  static JobLevel? _jobLevelFromAssignment(AssignmentDetailSection asg) {
+    final jl = asg.jobLevel;
+    if (jl == null) return null;
+    return JobLevel(
+      id: jl.jobLevelId,
+      nameEn: jl.jobLevelNameEn,
+      code: jl.jobLevelCode,
+      description: '',
+      minGradeId: jl.minGradeId,
+      maxGradeId: jl.maxGradeId,
+      status: 'ACTIVE',
+    );
+  }
+
+  static final DateTime _dummyDate = DateTime(1970, 1, 1);
+
+  static Grade? _gradeFromAssignment(AssignmentDetailSection asg) {
+    final g = asg.grade;
+    if (g == null) return null;
+    return Grade(
+      id: g.gradeId,
+      gradeNumber: g.gradeNumber,
+      gradeCategory: g.gradeCategory,
+      currencyCode: g.currencyCode,
+      step1Salary: g.step1Salary,
+      step2Salary: g.step2Salary,
+      step3Salary: g.step3Salary,
+      step4Salary: g.step4Salary,
+      step5Salary: g.step5Salary,
+      description: '',
+      status: g.gradeStatus,
+      createdBy: '',
+      createdDate: _dummyDate,
+      lastUpdatedBy: '',
+      lastUpdatedDate: _dummyDate,
+      lastUpdateLogin: '',
+    );
   }
 
   void goPrevious() {
@@ -226,6 +487,8 @@ class AddEmployeeDialogFlow {
       otherKwd: _emptyToNull(compensationState.otherKwd),
       compStart: compensationState.compStart,
       compEnd: compensationState.compEnd,
+      allowStart: compensationState.allowStart,
+      allowEnd: compensationState.allowEnd,
       bankName: _emptyToNull(bankingState.bankName),
       bankCode: _emptyToNull(bankingState.bankCode),
       accountNumber: _emptyToNull(bankingState.accountNumber),
@@ -237,18 +500,49 @@ class AddEmployeeDialogFlow {
       workPermitNumber: _emptyToNull(documentsState.workPermitNumber),
       workPermitExpiry: documentsState.workPermitExpiry,
     );
-    final (ok, response) = await _ref
-        .read(addEmployeeBasicInfoProvider.notifier)
-        .submitWithRequest(request, document: documentsState.document);
+    final editingId = _ref.read(addEmployeeEditingEmployeeIdProvider);
+    final (ok, response) = editingId != null && editingId.isNotEmpty
+        ? await _ref
+              .read(addEmployeeBasicInfoProvider.notifier)
+              .submitUpdate(
+                editingId,
+                request,
+                document: documentsState.document,
+                documentTypeCode: documentsState.documentTypeCode,
+              )
+        : await _ref
+              .read(addEmployeeBasicInfoProvider.notifier)
+              .submitWithRequest(
+                request,
+                document: documentsState.document,
+                documentTypeCode: documentsState.documentTypeCode,
+              );
     if (!context.mounted) return;
     if (ok) {
-      _prependNewEmployeeFromResponse(response);
-      ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);
+      if (editingId != null && editingId.isNotEmpty) {
+        _replaceEmployeeFromResponse(response, editingId);
+        ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);
+      } else {
+        _prependNewEmployeeFromResponse(response);
+        ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);
+      }
       close(context);
     } else {
       final error = _ref.read(addEmployeeBasicInfoProvider).submitError;
       ToastService.error(context, error ?? AppLocalizations.of(context)!.addEmployeeFillRequiredFields);
     }
+  }
+
+  void _replaceEmployeeFromResponse(Map<String, dynamic>? response, String editingId) {
+    if (response == null) return;
+    final data = response['data'];
+    if (data is! Map<String, dynamic>) return;
+    try {
+      final dto = EmployeeListItemDto.fromJson(data);
+      final item = dto.toDomain();
+      _ref.read(manageEmployeesListProvider.notifier).replaceEmployee(item);
+      _ref.invalidate(employeeFullDetailsProvider(editingId));
+    } catch (_) {}
   }
 
   void _prependNewEmployeeFromResponse(Map<String, dynamic>? response) {

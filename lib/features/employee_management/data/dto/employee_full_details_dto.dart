@@ -216,6 +216,102 @@ class AssignmentPositionDto {
   final String? positionStatus;
 }
 
+class AssignmentJobFamilyDto {
+  AssignmentJobFamilyDto({
+    this.jobFamilyId,
+    this.jobFamilyCode,
+    this.jobFamilyNameEn,
+    this.jobFamilyNameAr,
+    this.jobFamilyStatus,
+  });
+
+  factory AssignmentJobFamilyDto.fromJson(Map<String, dynamic> json) {
+    return AssignmentJobFamilyDto(
+      jobFamilyId: (json['job_family_id'] as num?)?.toInt(),
+      jobFamilyCode: json['job_family_code'] as String?,
+      jobFamilyNameEn: json['job_family_name_en'] as String?,
+      jobFamilyNameAr: json['job_family_name_ar'] as String?,
+      jobFamilyStatus: json['job_family_status'] as String?,
+    );
+  }
+
+  final int? jobFamilyId;
+  final String? jobFamilyCode;
+  final String? jobFamilyNameEn;
+  final String? jobFamilyNameAr;
+  final String? jobFamilyStatus;
+}
+
+class AssignmentJobLevelDto {
+  AssignmentJobLevelDto({
+    this.jobLevelId,
+    this.jobLevelCode,
+    this.jobLevelNameEn,
+    this.minGradeId,
+    this.maxGradeId,
+    this.jobLevelStatus,
+  });
+
+  factory AssignmentJobLevelDto.fromJson(Map<String, dynamic> json) {
+    return AssignmentJobLevelDto(
+      jobLevelId: (json['job_level_id'] as num?)?.toInt(),
+      jobLevelCode: json['job_level_code'] as String?,
+      jobLevelNameEn: json['job_level_name_en'] as String?,
+      minGradeId: (json['min_grade_id'] as num?)?.toInt(),
+      maxGradeId: (json['max_grade_id'] as num?)?.toInt(),
+      jobLevelStatus: json['job_level_status'] as String?,
+    );
+  }
+
+  final int? jobLevelId;
+  final String? jobLevelCode;
+  final String? jobLevelNameEn;
+  final int? minGradeId;
+  final int? maxGradeId;
+  final String? jobLevelStatus;
+}
+
+class AssignmentGradeDto {
+  AssignmentGradeDto({
+    this.gradeId,
+    this.gradeNumber,
+    this.gradeCategory,
+    this.currencyCode,
+    this.step1Salary,
+    this.step2Salary,
+    this.step3Salary,
+    this.step4Salary,
+    this.step5Salary,
+    this.gradeStatus,
+  });
+
+  factory AssignmentGradeDto.fromJson(Map<String, dynamic> json) {
+    return AssignmentGradeDto(
+      gradeId: (json['grade_id'] as num?)?.toInt(),
+      gradeNumber: json['grade_number'] as String?,
+      gradeCategory: json['grade_category'] as String?,
+      currencyCode: json['currency_code'] as String?,
+      step1Salary: (json['step_1_salary'] as num?)?.toDouble(),
+      step2Salary: (json['step_2_salary'] as num?)?.toDouble(),
+      step3Salary: (json['step_3_salary'] as num?)?.toDouble(),
+      step4Salary: (json['step_4_salary'] as num?)?.toDouble(),
+      step5Salary: (json['step_5_salary'] as num?)?.toDouble(),
+      gradeStatus: json['grade_status'] as String?,
+    );
+  }
+
+  final int? gradeId;
+  final String? gradeNumber;
+  final String? gradeCategory;
+  final String? currencyCode;
+  final double? step1Salary;
+  final double? step2Salary;
+  final double? step3Salary;
+  final double? step4Salary;
+  final double? step5Salary;
+  final String? gradeStatus;
+}
+
 class AssignmentDetailSectionDto {
   AssignmentDetailSectionDto({
     required this.assignmentId,
@@ -224,16 +320,31 @@ class AssignmentDetailSectionDto {
     this.orgStructureList = const [],
     this.positionId,
     this.position,
+    this.jobFamilyId,
+    this.jobLevelId,
+    this.gradeId,
+    this.probationDays,
+    this.reportingToEmpId,
+    this.workLocationId,
+    this.employeeNumber,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
     this.enterpriseHireDate,
     this.contractTypeCode,
     this.employmentStatus,
     this.assignmentStatus,
     this.assignmentIsActive,
+    this.jobFamily,
+    this.jobLevel,
+    this.grade,
   });
 
   factory AssignmentDetailSectionDto.fromJson(Map<String, dynamic> json) {
     final list = json['org_structure_list'];
     final positionJson = json['position'] as Map<String, dynamic>?;
+    final jobFamilyJson = json['job_family'] as Map<String, dynamic>?;
+    final jobLevelJson = json['job_level'] as Map<String, dynamic>?;
+    final gradeJson = json['grade'] as Map<String, dynamic>?;
     return AssignmentDetailSectionDto(
       assignmentId: (json['assignment_id'] as num?)?.toInt() ?? 0,
       assignmentGuid: json['assignment_guid'] as String?,
@@ -243,11 +354,23 @@ class AssignmentDetailSectionDto {
           : const [],
       positionId: json['position_id'] as String?,
       position: positionJson != null ? AssignmentPositionDto.fromJson(positionJson) : null,
+      jobFamilyId: (json['job_family_id'] as num?)?.toInt(),
+      jobLevelId: (json['job_level_id'] as num?)?.toInt(),
+      gradeId: (json['grade_id'] as num?)?.toInt(),
+      probationDays: (json['probation_days'] as num?)?.toInt(),
+      reportingToEmpId: (json['reporting_to_emp_id'] as num?)?.toInt(),
+      workLocationId: (json['work_location_id'] as num?)?.toInt(),
+      employeeNumber: json['employee_number'] as String?,
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
       enterpriseHireDate: json['enterprise_hire_date'] as String?,
       contractTypeCode: json['contract_type_code'] as String?,
       employmentStatus: json['employment_status'] as String?,
       assignmentStatus: json['assignment_status'] as String?,
       assignmentIsActive: json['assignment_is_active'] as String?,
+      jobFamily: jobFamilyJson != null ? AssignmentJobFamilyDto.fromJson(jobFamilyJson) : null,
+      jobLevel: jobLevelJson != null ? AssignmentJobLevelDto.fromJson(jobLevelJson) : null,
+      grade: gradeJson != null ? AssignmentGradeDto.fromJson(gradeJson) : null,
     );
   }
 
@@ -257,11 +380,23 @@ class AssignmentDetailSectionDto {
   final List<OrgStructureItemDto> orgStructureList;
   final String? positionId;
   final AssignmentPositionDto? position;
+  final int? jobFamilyId;
+  final int? jobLevelId;
+  final int? gradeId;
+  final int? probationDays;
+  final int? reportingToEmpId;
+  final int? workLocationId;
+  final String? employeeNumber;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
   final String? enterpriseHireDate;
   final String? contractTypeCode;
   final String? employmentStatus;
   final String? assignmentStatus;
   final String? assignmentIsActive;
+  final AssignmentJobFamilyDto? jobFamily;
+  final AssignmentJobLevelDto? jobLevel;
+  final AssignmentGradeDto? grade;
 
   AssignmentDetailSection toDomain() => AssignmentDetailSection(
     assignmentId: assignmentId,
@@ -271,11 +406,59 @@ class AssignmentDetailSectionDto {
     positionId: positionId,
     positionNameEn: position?.positionNameEn,
     positionCode: position?.positionCode,
+    jobFamilyId: jobFamilyId,
+    jobLevelId: jobLevelId,
+    gradeId: gradeId,
+    probationDays: probationDays,
+    reportingToEmpId: reportingToEmpId,
+    workLocationId: workLocationId,
+    employeeNumber: employeeNumber,
+    effectiveStartDate: effectiveStartDate,
+    effectiveEndDate: effectiveEndDate,
     enterpriseHireDate: enterpriseHireDate,
     contractTypeCode: contractTypeCode,
     employmentStatus: employmentStatus,
     assignmentStatus: assignmentStatus,
     assignmentIsActive: assignmentIsActive,
+    position: position != null
+        ? AssignmentPositionInfo(
+            positionId: position!.positionId ?? '',
+            positionCode: position!.positionCode ?? '',
+            positionNameEn: position!.positionNameEn ?? '',
+            positionNameAr: position!.positionNameAr ?? '',
+          )
+        : null,
+    jobFamily: jobFamily != null
+        ? AssignmentJobFamilyInfo(
+            jobFamilyId: jobFamily!.jobFamilyId ?? 0,
+            jobFamilyCode: jobFamily!.jobFamilyCode ?? '',
+            jobFamilyNameEn: jobFamily!.jobFamilyNameEn ?? '',
+            jobFamilyNameAr: jobFamily!.jobFamilyNameAr ?? '',
+          )
+        : null,
+    jobLevel: jobLevel != null
+        ? AssignmentJobLevelInfo(
+            jobLevelId: jobLevel!.jobLevelId ?? 0,
+            jobLevelCode: jobLevel!.jobLevelCode ?? '',
+            jobLevelNameEn: jobLevel!.jobLevelNameEn ?? '',
+            minGradeId: jobLevel!.minGradeId ?? 0,
+            maxGradeId: jobLevel!.maxGradeId ?? 0,
+          )
+        : null,
+    grade: grade != null
+        ? AssignmentGradeInfo(
+            gradeId: grade!.gradeId ?? 0,
+            gradeNumber: grade!.gradeNumber ?? '',
+            gradeCategory: grade!.gradeCategory ?? '',
+            currencyCode: grade!.currencyCode ?? '',
+            step1Salary: grade!.step1Salary ?? 0,
+            step2Salary: grade!.step2Salary ?? 0,
+            step3Salary: grade!.step3Salary ?? 0,
+            step4Salary: grade!.step4Salary ?? 0,
+            step5Salary: grade!.step5Salary ?? 0,
+            gradeStatus: grade!.gradeStatus ?? '',
+          )
+        : null,
   );
 }
 

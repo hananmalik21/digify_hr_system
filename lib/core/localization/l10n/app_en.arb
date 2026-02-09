@@ -556,6 +556,7 @@
   "manageEmployees": "Manage Employees",
   "manageEmployeesDescription": "View and manage employees",
   "addNewEmployee": "Add New Employee",
+  "editEmployee": "Edit Employee",
   "addEmployeeStepSubtitle": "Step {step} of 9",
   "@addEmployeeStepSubtitle": {
     "placeholders": {
@@ -637,6 +638,7 @@
   "hintEnterpriseHireDate": "Select hire date",
   "hintProbationPeriodDays": "Enter days",
   "hintEmploymentStatus": "Select employment status",
+  "hintJobLevel": "Select job level",
   "timeManagementWorkSchedule": "Time Management - Work Schedule",
   "timeManagementWorkScheduleSubtitle": "Assign work schedule for attendance tracking",
   "workScheduleAssignment": "Work Schedule Assignment",

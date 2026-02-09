@@ -69,7 +69,7 @@ class ApiClient {
       final response = await _dio.post(
         endpoint,
         data: formData,
-        options: Options(headers: {...?headers, 'Content-Type': 'multipart/form-data'}),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);
@@ -89,7 +89,7 @@ class ApiClient {
       final response = await _dio.put(
         endpoint,
         data: formData,
-        options: Options(headers: {...?headers, 'Content-Type': 'multipart/form-data'}),
+        options: Options(headers: headers),
       );
 
       return _handleResponse(response);

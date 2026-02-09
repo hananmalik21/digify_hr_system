@@ -13,12 +13,12 @@ import 'package:go_router/go_router.dart';
 
 import 'employee_detail_summary_cards.dart';
 
-/// Header section of the employee detail screen: back, name, actions, and meta chips.
 class EmployeeDetailHeader extends StatelessWidget {
-  const EmployeeDetailHeader({super.key, required this.displayData, required this.isDark});
+  const EmployeeDetailHeader({super.key, required this.displayData, required this.isDark, this.onEditPressed});
 
   final EmployeeDetailDisplayData displayData;
   final bool isDark;
+  final VoidCallback? onEditPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class EmployeeDetailHeader extends StatelessWidget {
               ),
               AppButton.outline(label: 'Download PDF', svgPath: Assets.icons.downloadIcon.path, onPressed: () {}),
               Gap(8.w),
-              AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: () {}),
+              AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: onEditPressed),
             ],
           ),
           Gap(8.h),
@@ -54,9 +54,13 @@ class EmployeeDetailHeader extends StatelessWidget {
             spacing: 16.w,
             children: [
               Gap(18.w),
-              EmployeeDetailChip(path: Assets.icons.deiDashboardIcon.path, label: 'HR Manager', isDark: isDark),
               EmployeeDetailChip(
-                path: Assets.icons.departmentCardIcon.path,
+                path: Assets.icons.deiDashboardIcon.path,
+                label: displayData.positionLabel,
+                isDark: isDark,
+              ),
+              EmployeeDetailChip(
+                path: Assets.icons.departmentsIcon.path,
                 label: displayData.departmentLabel,
                 isDark: isDark,
               ),

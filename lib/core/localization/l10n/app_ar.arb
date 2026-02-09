@@ -462,6 +462,7 @@
   "manageEmployees": "إدارة الموظفين",
   "manageEmployeesDescription": "عرض وإدارة الموظفين",
   "addNewEmployee": "إضافة موظف جديد",
+  "editEmployee": "تعديل الموظف",
   "addEmployeeStepSubtitle": "الخطوة {step} من 9",
   "@addEmployeeStepSubtitle": {
     "placeholders": {
@@ -607,6 +608,7 @@
   "hintEnterpriseHireDate": "اختر تاريخ التعيين",
   "hintProbationPeriodDays": "أدخل الأيام",
   "hintEmploymentStatus": "اختر حالة التوظيف",
+  "hintJobLevel": "اختر مستوى الوظيفة",
   "addEmployeeStepContentPlaceholder": "محتوى هذه الخطوة قريبًا.",
   "addEmployeeFillRequiredFields": "يرجى ملء جميع الحقول المطلوبة.",
   "addEmployeeCreatedSuccess": "تم إنشاء الموظف بنجاح.",

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog.dart';
@@ -23,13 +24,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddEmployeeDialog extends ConsumerWidget {
-  const AddEmployeeDialog({super.key});
+class EditEmployeeDialog extends ConsumerWidget {
+  const EditEmployeeDialog({super.key});
 
-  static Future<void> show(BuildContext context) {
+  static Future<void> show(BuildContext context, String employeeGuid) {
     final container = ProviderScope.containerOf(context);
     container.read(addEmployeeDialogFlowProvider).clearForm();
-    container.read(addEmployeeEditingEmployeeIdProvider.notifier).state = null;
+    container.read(addEmployeeEditingEmployeeIdProvider.notifier).state = employeeGuid;
     final enterpriseId = container.read(manageEmployeesEnterpriseIdProvider);
     if (enterpriseId != null) {
       container.read(workSchedulesNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
@@ -37,7 +38,7 @@ class AddEmployeeDialog extends ConsumerWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const AddEmployeeDialog(),
+      builder: (context) => const EditEmployeeDialog(),
     );
   }
 
@@ -47,9 +48,12 @@ class AddEmployeeDialog extends ConsumerWidget {
     if (key != null) ref.watch(addEmployeeOrgSelectionProvider(key));
 
     final localizations = AppLocalizations.of(context)!;
+    final preloadAsync = ref.watch(addEmployeeEditPreloadProvider);
     final stepperState = ref.watch(addEmployeeStepperProvider);
     final basicInfoState = ref.watch(addEmployeeBasicInfoProvider);
     final flow = ref.watch(addEmployeeDialogFlowProvider);
+    final isPreloadLoading = preloadAsync.isLoading;
+    final preloadError = preloadAsync.hasError ? preloadAsync.error : null;
 
     final em = Assets.icons.employeeManagement;
     final stepperSteps = [
@@ -67,14 +71,15 @@ class AddEmployeeDialog extends ConsumerWidget {
       StepperStepConfig(assetPath: Assets.icons.checkIconGreen.path, label: localizations.addEmployeeStepReview),
     ];
 
-    return AppStepperDialogLabelBelow(
-      title: localizations.addNewEmployee,
+    Widget content = AppStepperDialogLabelBelow(
+      title: localizations.editEmployee,
       subtitle: localizations.addEmployeeStepSubtitle(stepperState.currentStepIndex + 1),
       content: _buildStepContent(stepperState.currentStepIndex),
       stepperSteps: stepperSteps,
       contentPadding: EdgeInsets.all(20.w),
       currentStepIndex: stepperState.currentStepIndex,
       maxWidth: 1200.w,
+      isLoading: isPreloadLoading,
       onClose: () => flow.close(context),
       footerLeftActions: stepperState.canGoPrevious
           ? [AppButton.outline(label: localizations.previous, onPressed: flow.goPrevious)]
@@ -89,6 +94,31 @@ class AddEmployeeDialog extends ConsumerWidget {
             ]
           : [AppButton.primary(label: localizations.next, onPressed: () => flow.goNext(context))],
     );
+
+    if (preloadError != null) {
+      content = Stack(
+        children: [
+          content,
+          Positioned.fill(
+            child: Container(
+              color: Colors.black26,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24.r),
+                  child: Text(
+                    preloadError.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.error),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return content;
   }
 
   static Widget _buildStepContent(int stepIndex) {

@@ -9,10 +9,13 @@ class AddEmployeeBasicInfoState {
   final bool isSubmitting;
   final String? submitError;
 
+  final int formGenerationId;
+
   const AddEmployeeBasicInfoState({
     this.form = const CreateEmployeeBasicInfoRequest(),
     this.isSubmitting = false,
     this.submitError,
+    this.formGenerationId = 0,
   });
 
   AddEmployeeBasicInfoState copyWith({
@@ -20,11 +23,13 @@ class AddEmployeeBasicInfoState {
     bool? isSubmitting,
     String? submitError,
     bool clearSubmitError = false,
+    int? formGenerationId,
   }) {
     return AddEmployeeBasicInfoState(
       form: form ?? this.form,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       submitError: clearSubmitError ? null : (submitError ?? this.submitError),
+      formGenerationId: formGenerationId ?? this.formGenerationId,
     );
   }
 }
@@ -99,7 +104,7 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
   }
 
   void reset() {
-    state = const AddEmployeeBasicInfoState();
+    state = const AddEmployeeBasicInfoState(formGenerationId: 0);
   }
 
   Future<bool> submitStep1() async {
@@ -114,10 +119,43 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
   Future<(bool, Map<String, dynamic>?)> submitWithRequest(
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
+    String? documentTypeCode,
   }) async {
     state = state.copyWith(isSubmitting: true, clearSubmitError: true);
     try {
-      final response = await _repository.createEmployee(request, document: document);
+      final response = await _repository.createEmployee(
+        request,
+        document: document,
+        documentTypeCode: documentTypeCode,
+      );
+      final result = response as Map<String, dynamic>?;
+      final success = result?['success'] as bool? ?? false;
+      state = state.copyWith(isSubmitting: false);
+      return (success, result);
+    } catch (e) {
+      state = state.copyWith(isSubmitting: false, submitError: e.toString().replaceFirst(RegExp(r'^Exception: '), ''));
+      return (false, null);
+    }
+  }
+
+  void setForm(CreateEmployeeBasicInfoRequest form) {
+    state = state.copyWith(form: form, formGenerationId: state.formGenerationId + 1);
+  }
+
+  Future<(bool, Map<String, dynamic>?)> submitUpdate(
+    String employeeGuid,
+    CreateEmployeeBasicInfoRequest request, {
+    Document? document,
+    String? documentTypeCode,
+  }) async {
+    state = state.copyWith(isSubmitting: true, clearSubmitError: true);
+    try {
+      final response = await _repository.updateEmployee(
+        employeeGuid,
+        request,
+        document: document,
+        documentTypeCode: documentTypeCode,
+      );
       final result = response as Map<String, dynamic>?;
       final success = result?['success'] as bool? ?? false;
       state = state.copyWith(isSubmitting: false);

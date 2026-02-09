@@ -5,8 +5,9 @@ class AddEmployeeWorkScheduleState {
   final WorkSchedule? selectedWorkSchedule;
   final DateTime? wsStart;
   final DateTime? wsEnd;
+  final int? prefillWorkScheduleId;
 
-  const AddEmployeeWorkScheduleState({this.selectedWorkSchedule, this.wsStart, this.wsEnd});
+  const AddEmployeeWorkScheduleState({this.selectedWorkSchedule, this.wsStart, this.wsEnd, this.prefillWorkScheduleId});
 
   int? get workScheduleId => selectedWorkSchedule?.workScheduleId;
 
@@ -34,6 +35,25 @@ class AddEmployeeWorkScheduleNotifier extends StateNotifier<AddEmployeeWorkSched
       selectedWorkSchedule: state.selectedWorkSchedule,
       wsStart: state.wsStart,
       wsEnd: value,
+    );
+  }
+
+  void setFromFullDetails({DateTime? wsStart, DateTime? wsEnd, int? workScheduleId}) {
+    state = AddEmployeeWorkScheduleState(
+      selectedWorkSchedule: state.selectedWorkSchedule,
+      wsStart: wsStart ?? state.wsStart,
+      wsEnd: wsEnd ?? state.wsEnd,
+      prefillWorkScheduleId: workScheduleId ?? state.prefillWorkScheduleId,
+    );
+  }
+
+  void setSelectedWorkScheduleFromPrefill(WorkSchedule? value) {
+    if (value == null) return;
+    state = AddEmployeeWorkScheduleState(
+      selectedWorkSchedule: value,
+      wsStart: state.wsStart,
+      wsEnd: state.wsEnd,
+      prefillWorkScheduleId: null,
     );
   }
 

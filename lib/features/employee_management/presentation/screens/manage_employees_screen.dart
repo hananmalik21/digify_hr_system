@@ -15,6 +15,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/widge
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employees_grid_view.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/manage_employees_table.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/edit_employee_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -117,7 +118,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                     ? () => ref.read(manageEmployeesListProvider.notifier).goToPage(listState.currentPage + 1)
                     : null,
                 onView: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
-                onEdit: (employee) => context.push(AppRoutes.employeeDetail, extra: employee),
+                onEdit: (employee) => EditEmployeeDialog.show(context, employee.id),
                 onMore: () {},
                 paginationIsLoading: false,
               ),

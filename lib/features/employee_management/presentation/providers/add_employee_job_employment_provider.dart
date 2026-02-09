@@ -15,6 +15,11 @@ class AddEmployeeJobEmploymentState {
   final String? contractTypeCode;
   final String? employmentStatusCode;
   final EmployeeListItem? selectedReportingTo;
+  final int? prefillJobFamilyId;
+  final String? prefillPositionId;
+  final int? prefillJobLevelId;
+  final int? prefillGradeId;
+  final int? prefillReportingToEmpId;
 
   const AddEmployeeJobEmploymentState({
     this.selectedPosition,
@@ -26,6 +31,11 @@ class AddEmployeeJobEmploymentState {
     this.contractTypeCode,
     this.employmentStatusCode,
     this.selectedReportingTo,
+    this.prefillJobFamilyId,
+    this.prefillPositionId,
+    this.prefillJobLevelId,
+    this.prefillGradeId,
+    this.prefillReportingToEmpId,
   });
 
   AddEmployeeJobEmploymentState copyWith({
@@ -47,6 +57,16 @@ class AddEmployeeJobEmploymentState {
     bool clearEmploymentStatusCode = false,
     EmployeeListItem? selectedReportingTo,
     bool clearSelectedReportingTo = false,
+    int? prefillJobFamilyId,
+    String? prefillPositionId,
+    int? prefillJobLevelId,
+    int? prefillGradeId,
+    int? prefillReportingToEmpId,
+    bool clearPrefillJobFamilyId = false,
+    bool clearPrefillPositionId = false,
+    bool clearPrefillJobLevelId = false,
+    bool clearPrefillGradeId = false,
+    bool clearPrefillReportingToEmpId = false,
   }) {
     return AddEmployeeJobEmploymentState(
       selectedPosition: clearPosition ? null : (selectedPosition ?? this.selectedPosition),
@@ -58,6 +78,13 @@ class AddEmployeeJobEmploymentState {
       contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
       employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
       selectedReportingTo: clearSelectedReportingTo ? null : (selectedReportingTo ?? this.selectedReportingTo),
+      prefillJobFamilyId: clearPrefillJobFamilyId ? null : (prefillJobFamilyId ?? this.prefillJobFamilyId),
+      prefillPositionId: clearPrefillPositionId ? null : (prefillPositionId ?? this.prefillPositionId),
+      prefillJobLevelId: clearPrefillJobLevelId ? null : (prefillJobLevelId ?? this.prefillJobLevelId),
+      prefillGradeId: clearPrefillGradeId ? null : (prefillGradeId ?? this.prefillGradeId),
+      prefillReportingToEmpId: clearPrefillReportingToEmpId
+          ? null
+          : (prefillReportingToEmpId ?? this.prefillReportingToEmpId),
     );
   }
 }
@@ -66,19 +93,31 @@ class AddEmployeeJobEmploymentNotifier extends StateNotifier<AddEmployeeJobEmplo
   AddEmployeeJobEmploymentNotifier() : super(const AddEmployeeJobEmploymentState());
 
   void setPosition(Position? value) {
-    state = state.copyWith(selectedPosition: value, clearPosition: value == null);
+    state = state.copyWith(
+      selectedPosition: value,
+      clearPosition: value == null,
+      clearPrefillPositionId: value != null,
+    );
   }
 
   void setJobFamily(JobFamily? value) {
-    state = state.copyWith(selectedJobFamily: value, clearJobFamily: value == null);
+    state = state.copyWith(
+      selectedJobFamily: value,
+      clearJobFamily: value == null,
+      clearPrefillJobFamilyId: value != null,
+    );
   }
 
   void setJobLevel(JobLevel? value) {
-    state = state.copyWith(selectedJobLevel: value, clearJobLevel: value == null);
+    state = state.copyWith(
+      selectedJobLevel: value,
+      clearJobLevel: value == null,
+      clearPrefillJobLevelId: value != null,
+    );
   }
 
   void setGrade(Grade? value) {
-    state = state.copyWith(selectedGrade: value, clearGrade: value == null);
+    state = state.copyWith(selectedGrade: value, clearGrade: value == null, clearPrefillGradeId: value != null);
   }
 
   void setEnterpriseHireDate(DateTime? value) {
@@ -98,7 +137,55 @@ class AddEmployeeJobEmploymentNotifier extends StateNotifier<AddEmployeeJobEmplo
   }
 
   void setReportingTo(EmployeeListItem? value) {
-    state = state.copyWith(selectedReportingTo: value, clearSelectedReportingTo: value == null);
+    state = state.copyWith(
+      selectedReportingTo: value,
+      clearSelectedReportingTo: value == null,
+      clearPrefillReportingToEmpId: value != null,
+    );
+  }
+
+  void setFromFullDetails({
+    DateTime? enterpriseHireDate,
+    int? probationDays,
+    String? contractTypeCode,
+    String? employmentStatusCode,
+    String? positionIdHex,
+    int? jobFamilyId,
+    int? jobLevelId,
+    int? gradeId,
+    int? reportingToEmpId,
+    Position? selectedPosition,
+    JobFamily? selectedJobFamily,
+    JobLevel? selectedJobLevel,
+    Grade? selectedGrade,
+  }) {
+    final usePositionFromApi = selectedPosition != null;
+    final useJobFamilyFromApi = selectedJobFamily != null;
+    final useJobLevelFromApi = selectedJobLevel != null;
+    final useGradeFromApi = selectedGrade != null;
+    state = state.copyWith(
+      enterpriseHireDate: enterpriseHireDate ?? state.enterpriseHireDate,
+      probationDays: probationDays ?? state.probationDays,
+      contractTypeCode: contractTypeCode ?? state.contractTypeCode,
+      employmentStatusCode: employmentStatusCode ?? state.employmentStatusCode,
+      prefillPositionId: usePositionFromApi ? null : (positionIdHex ?? state.prefillPositionId),
+      prefillJobFamilyId: useJobFamilyFromApi ? null : (jobFamilyId ?? state.prefillJobFamilyId),
+      prefillJobLevelId: useJobLevelFromApi ? null : (jobLevelId ?? state.prefillJobLevelId),
+      prefillGradeId: useGradeFromApi ? null : (gradeId ?? state.prefillGradeId),
+      prefillReportingToEmpId: reportingToEmpId ?? state.prefillReportingToEmpId,
+      selectedPosition: usePositionFromApi ? selectedPosition : state.selectedPosition,
+      clearPosition: false,
+      selectedJobFamily: useJobFamilyFromApi ? selectedJobFamily : state.selectedJobFamily,
+      clearJobFamily: false,
+      selectedJobLevel: useJobLevelFromApi ? selectedJobLevel : state.selectedJobLevel,
+      clearJobLevel: false,
+      selectedGrade: useGradeFromApi ? selectedGrade : state.selectedGrade,
+      clearGrade: false,
+      clearPrefillPositionId: usePositionFromApi,
+      clearPrefillJobFamilyId: useJobFamilyFromApi,
+      clearPrefillJobLevelId: useJobLevelFromApi,
+      clearPrefillGradeId: useGradeFromApi,
+    );
   }
 
   void reset() {

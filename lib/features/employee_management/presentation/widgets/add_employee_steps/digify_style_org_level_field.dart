@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -19,14 +18,16 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     required this.isEnabled,
     this.displayLabel,
     this.showLabel = true,
+    this.preselectedUnitId,
     required this.onSelectionChanged,
   });
 
   final OrgStructureLevel level;
-  final StateNotifierProvider<EnterpriseSelectionNotifier, EnterpriseSelectionState> selectionProvider;
+  final dynamic selectionProvider;
   final bool isEnabled;
   final String? displayLabel;
   final bool showLabel;
+  final String? preselectedUnitId;
   final void Function(String levelCode, OrgUnit? unit) onSelectionChanged;
 
   @override
@@ -75,15 +76,13 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
               if (options.isEmpty && !isLoading && error == null) {
                 ref.read(selectionProvider.notifier).loadOptionsForLevel(level.levelCode);
               }
-              final selected = await OrgUnitSelectionDialog.show(
+              await OrgUnitSelectionDialog.show(
                 context: context,
                 level: level,
                 selectionProvider: selectionProvider,
+                preselectedUnitId: preselectedUnitId,
+                onUnitSelected: (unit) => onSelectionChanged(level.levelCode, unit),
               );
-              if (selected) {
-                final newSelection = ref.read(selectionProvider).getSelection(level.levelCode);
-                onSelectionChanged(level.levelCode, newSelection);
-              }
             }
           : null,
       child: Container(
