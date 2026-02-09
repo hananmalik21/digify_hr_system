@@ -7196,6 +7196,36 @@ abstract class AppLocalizations {
   /// **'Type to search employees...'**
   String get typeToSearchEmployees;
 
+  /// No description provided for @searchByNameOrEmployeeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or employee number'**
+  String get searchByNameOrEmployeeNumber;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @searchToFindEmployeesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Search to find employees'**
+  String get searchToFindEmployeesTitle;
+
+  /// No description provided for @searchEmployeeEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name or employee number in the search field above and press Enter to find employees.'**
+  String get searchEmployeeEmptyMessage;
+
+  /// No description provided for @noEmployeesMatchSearchMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No employees match your search. Try a different name or employee number.'**
+  String get noEmployeesMatchSearchMessage;
+
   /// No description provided for @leaveTypeRequired.
   ///
   /// In en, this message translates to:

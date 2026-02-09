@@ -94,6 +94,16 @@ class EmployeeTableRow extends StatelessWidget {
                   ),
                   ManageEmployeesTableConfig.departmentWidth.w,
                 ),
+              if (ManageEmployeesTableConfig.showEmail)
+                _buildDataCell(
+                  Text(employee.emailDisplay, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ManageEmployeesTableConfig.emailWidth.w,
+                ),
+              if (ManageEmployeesTableConfig.showPhone)
+                _buildDataCell(
+                  Text(employee.phoneDisplay, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ManageEmployeesTableConfig.phoneWidth.w,
+                ),
               if (ManageEmployeesTableConfig.showStatus)
                 _buildDataCell(_buildStatusCapsule(), ManageEmployeesTableConfig.statusWidth.w),
               if (ManageEmployeesTableConfig.showActions)
@@ -132,7 +142,10 @@ class EmployeeTableRow extends StatelessWidget {
     return Container(
       width: width,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: ManageEmployeesTableConfig.cellPaddingHorizontal.w,
+        vertical: 16.h,
+      ),
       child: child,
     );
   }

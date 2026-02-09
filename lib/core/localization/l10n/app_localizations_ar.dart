@@ -3679,6 +3679,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get typeToSearchEmployees => 'اكتب للبحث عن الموظفين...';
 
   @override
+  String get searchByNameOrEmployeeNumber => 'البحث بالاسم أو رقم الموظف';
+
+  @override
+  String get search => 'بحث';
+
+  @override
+  String get searchToFindEmployeesTitle => 'ابحث للعثور على الموظفين';
+
+  @override
+  String get searchEmployeeEmptyMessage =>
+      'أدخل الاسم أو رقم الموظف في حقل البحث أعلاه واضغط Enter للعثور على الموظفين.';
+
+  @override
+  String get noEmployeesMatchSearchMessage =>
+      'لا يوجد موظفون يطابقون بحثك. جرب اسمًا أو رقم موظف مختلفًا.';
+
+  @override
   String get leaveTypeRequired => 'نوع الإجازة';
 
   @override

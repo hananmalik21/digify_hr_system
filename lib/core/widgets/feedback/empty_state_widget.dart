@@ -9,7 +9,7 @@ class EmptyStateWidget extends StatelessWidget {
   final String? iconPath;
   final IconData? icon;
   final String title;
-  final String message;
+  final String? message;
   final String? actionLabel;
   final VoidCallback? onAction;
   final Color? iconColor;
@@ -19,7 +19,7 @@ class EmptyStateWidget extends StatelessWidget {
     this.iconPath,
     this.icon,
     required this.title,
-    required this.message,
+    this.message,
     this.actionLabel,
     this.onAction,
     this.iconColor,
@@ -60,18 +60,20 @@ class EmptyStateWidget extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                height: 20 / 14,
-                letterSpacing: 0,
+            if (message != null && message!.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              Text(
+                message!,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  height: 20 / 14,
+                  letterSpacing: 0,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
+            ],
             if (actionLabel != null && onAction != null) ...[
               SizedBox(height: 24.h),
               ElevatedButton(

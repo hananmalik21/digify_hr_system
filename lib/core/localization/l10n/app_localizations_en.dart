@@ -3700,6 +3700,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeToSearchEmployees => 'Type to search employees...';
 
   @override
+  String get searchByNameOrEmployeeNumber =>
+      'Search by name or employee number';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchToFindEmployeesTitle => 'Search to find employees';
+
+  @override
+  String get searchEmployeeEmptyMessage =>
+      'Enter a name or employee number in the search field above and press Enter to find employees.';
+
+  @override
+  String get noEmployeesMatchSearchMessage =>
+      'No employees match your search. Try a different name or employee number.';
+
+  @override
   String get leaveTypeRequired => 'Leave Type';
 
   @override

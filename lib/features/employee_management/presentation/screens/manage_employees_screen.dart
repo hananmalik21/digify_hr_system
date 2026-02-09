@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
@@ -76,6 +77,19 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 message: localizations.somethingWentWrong,
                 retryLabel: localizations.retry,
                 onRetry: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
+              )
+            else if (effectiveEnterpriseId != null &&
+                listState.searchQuery == null &&
+                listState.items.isEmpty &&
+                !listState.isLoading)
+              SizedBox(
+                height: 320.h,
+                child: EmptyStateWidget(icon: Icons.search_rounded, title: localizations.searchToFindEmployeesTitle),
+              )
+            else if (listState.items.isEmpty && !listState.isLoading)
+              SizedBox(
+                height: 320.h,
+                child: EmptyStateWidget(icon: Icons.person_search_rounded, title: localizations.noResultsFound),
               )
             else if (viewMode == EmployeeViewMode.grid) ...[
               EmployeesGridView(

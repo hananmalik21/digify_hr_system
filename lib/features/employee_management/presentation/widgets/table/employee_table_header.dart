@@ -31,6 +31,12 @@ class EmployeeTableHeader extends StatelessWidget {
         _buildHeaderCell(context, localizations.department, ManageEmployeesTableConfig.departmentWidth.w),
       );
     }
+    if (ManageEmployeesTableConfig.showEmail) {
+      headerCells.add(_buildHeaderCell(context, localizations.email, ManageEmployeesTableConfig.emailWidth.w));
+    }
+    if (ManageEmployeesTableConfig.showPhone) {
+      headerCells.add(_buildHeaderCell(context, localizations.phoneNumber, ManageEmployeesTableConfig.phoneWidth.w));
+    }
     if (ManageEmployeesTableConfig.showStatus) {
       headerCells.add(_buildHeaderCell(context, localizations.status, ManageEmployeesTableConfig.statusWidth.w));
     }
@@ -47,7 +53,10 @@ class EmployeeTableHeader extends StatelessWidget {
   Widget _buildHeaderCell(BuildContext context, String text, double width) {
     return Container(
       width: width,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 12.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: ManageEmployeesTableConfig.cellPaddingHorizontal.w,
+        vertical: 14.h,
+      ),
       alignment: Alignment.centerLeft,
       child: Text(text.toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: AppColors.tableHeaderText)),
     );
