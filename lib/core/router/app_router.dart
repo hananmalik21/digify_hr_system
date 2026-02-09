@@ -16,9 +16,11 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/scree
 import 'package:digify_hr_system/features/time_management/presentation/screens/time_management_screen.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/screens/employee_management_screens.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
+import 'package:digify_hr_system/features/attendance/presentation/screens/attendance_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/leave_management/presentation/screens/leave_management_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -162,7 +164,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: AppRoutes.attendance,
             name: 'attendance',
-            builder: (context, state) => const PlaceholderScreen(title: 'Attendance'),
+            builder: (context, state) => const AttendanceScreen(),
           ),
           GoRoute(
             path: AppRoutes.payroll,

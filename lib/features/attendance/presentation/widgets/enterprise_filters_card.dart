@@ -1,0 +1,150 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+
+class EnterpriseFiltersCard extends StatelessWidget {
+  final bool isDark;
+
+  const EnterpriseFiltersCard({
+    super.key,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(
+          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(6.r),
+                ),
+                child: DigifyAsset(
+                  assetPath: Assets.icons.enterpriseStructureIcon.path,
+                  width: 20,
+                  height: 20,
+                  color: AppColors.primary,
+                ),
+              ),
+              Gap(12.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Enterprise Structure Filters',
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
+                    ),
+                  ),
+                  Text(
+                    'Filter attendance by organizational hierarchy',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: isDark ? AppColors.textTertiaryDark : const Color(0xFF717182),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Gap(24.h),
+          Wrap(
+            spacing: 16.w,
+            runSpacing: 16.h,
+            children: [
+              SizedBox(
+                width: context.isMobile ? (context.screenWidth - 112.w) : (context.screenWidth - 160.w) / 4,
+                child: DigifySelectFieldWithLabel<String>(
+                  label: 'Company',
+                  items: const ['All Companies'],
+                  itemLabelBuilder: (item) => item,
+                  hint: 'Select Company',
+                  value: 'All Companies',
+                  onChanged: (value) {},
+                ),
+              ),
+              SizedBox(
+                width: context.isMobile ? (context.screenWidth - 112.w) : (context.screenWidth - 160.w) / 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DigifySelectFieldWithLabel<String>(
+                      label: 'Division',
+                      items: const ['All Divisions'],
+                      itemLabelBuilder: (item) => item,
+                      hint: 'Select Division',
+                      value: 'All Divisions',
+                      onChanged: (value) {},
+                    ),
+                    Gap(4.h),
+                    Text(
+                      'Select a company first',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontSize: 11.sp,
+                        color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: context.isMobile ? (context.screenWidth - 112.w) : (context.screenWidth - 160.w) / 4,
+                child: DigifySelectFieldWithLabel<String>(
+                  label: 'Department',
+                  items: const ['All Departments'],
+                  itemLabelBuilder: (item) => item,
+                  hint: 'Select Department',
+                  value: 'All Departments',
+                  onChanged: (value) {},
+                ),
+              ),
+              SizedBox(
+                width: context.isMobile ? (context.screenWidth - 112.w) : (context.screenWidth - 160.w) / 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DigifySelectFieldWithLabel<String>(
+                      label: 'Section',
+                      items: const ['All Sections'],
+                      itemLabelBuilder: (item) => item,
+                      hint: 'Select Section',
+                      value: 'All Sections',
+                      onChanged: (value) {},
+                    ),
+                    Gap(4.h),
+                    Text(
+                      'Select a division first',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontSize: 11.sp,
+                        color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
