@@ -1121,6 +1121,16 @@ class $AssetsIconsGen {
   ];
 }
 
+class $AssetsLogoGen {
+  const $AssetsLogoGen();
+
+  /// File path: assets/logo/digify-logo.png
+  AssetGenImage get digifyLogo => const AssetGenImage('assets/logo/digify-logo.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [digifyLogo];
+}
+
 class $AssetsIconsEmployeeManagementGen {
   const $AssetsIconsEmployeeManagementGen();
 
@@ -1395,6 +1405,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsLogoGen logo = $AssetsLogoGen();
 }
 
 class AssetGenImage {

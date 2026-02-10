@@ -1,8 +1,7 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/utils/employee_detail_formatters.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_bordered_section_card.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_employment_status_capsule.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,21 +12,10 @@ class EmploymentInformationSection extends StatelessWidget {
   final EmployeeFullDetails? fullDetails;
 
   static String _servicePeriod(EmployeeFullDetails? d) {
-    final hireDate = d?.assignment.enterpriseHireDate;
-    if (hireDate == null || hireDate.isEmpty) return '—';
-    try {
-      final start = DateTime.parse(hireDate);
-      final now = DateTime.now();
-      var years = now.year - start.year;
-      var months = now.month - start.month;
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
-      return '${years}y ${months}m';
-    } catch (_) {
-      return '—';
-    }
+    final period = d?.assignment.servicePeriod;
+    if (period == null) return '—';
+    final (years, months, days) = period;
+    return '${years}Y ${months}M ${days}D';
   }
 
   List<EmployeeDetailBorderedField> _leftColumnFields() {
@@ -55,7 +43,7 @@ class EmploymentInformationSection extends StatelessWidget {
     final a = fullDetails?.assignment;
     final e = fullDetails?.employee;
     final ws = fullDetails?.workSchedule;
-    final status = a?.assignmentStatus ?? a?.employmentStatus ?? e?.employeeStatus ?? '—';
+    final rawStatus = a?.assignmentStatus ?? a?.employmentStatus ?? e?.employeeStatus;
     final contractEnd = a?.effectiveEndDate != null && a!.effectiveEndDate!.isNotEmpty
         ? formatIsoDateToDisplay(a.effectiveEndDate)
         : 'Ongoing';
@@ -75,14 +63,8 @@ class EmploymentInformationSection extends StatelessWidget {
       EmployeeDetailBorderedField(label: 'Work Location ID', value: workLocationId != null ? '$workLocationId' : '—'),
       EmployeeDetailBorderedField(
         label: 'Employment Status',
-        value: status,
-        valueWidget: DigifyCapsule(
-          label: status,
-          icon: Icons.schedule,
-          backgroundColor: isDark ? AppColors.warningBgDark : AppColors.warningBg,
-          textColor: isDark ? AppColors.warningTextDark : AppColors.warningText,
-          borderColor: isDark ? AppColors.warningBorderDark : AppColors.warningBorder,
-        ),
+        value: rawStatus ?? '—',
+        valueWidget: EmployeeEmploymentStatusCapsule(status: rawStatus, isDark: isDark),
       ),
       EmployeeDetailBorderedField(
         label: 'Work Schedule',

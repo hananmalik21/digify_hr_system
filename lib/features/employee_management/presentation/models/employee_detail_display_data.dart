@@ -43,21 +43,10 @@ class EmployeeDetailDisplayData {
   }
 
   String get servicePeriod {
-    final hireDate = fullDetails?.assignment.enterpriseHireDate;
-    if (hireDate == null || hireDate.isEmpty) return '—';
-    try {
-      final start = DateTime.parse(hireDate);
-      final now = DateTime.now();
-      var years = now.year - start.year;
-      var months = now.month - start.month;
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
-      return '${years}y ${months}m';
-    } catch (_) {
-      return '—';
-    }
+    final period = fullDetails?.assignment.servicePeriod;
+    if (period == null) return '—';
+    final (years, months, days) = period;
+    return '${years}Y ${months}M ${days}D';
   }
 
   String get gradeLevel {
