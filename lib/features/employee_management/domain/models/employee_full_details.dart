@@ -83,7 +83,6 @@ class EmployeeDetailSection {
       [firstNameAr, middleNameAr, lastNameAr].whereType<String>().where((s) => s.trim().isNotEmpty).join(' ').trim();
 }
 
-/// Minimal position info from assignment payload for prefill.
 class AssignmentPositionInfo {
   const AssignmentPositionInfo({
     required this.positionId,
@@ -98,7 +97,6 @@ class AssignmentPositionInfo {
   final String positionNameAr;
 }
 
-/// Minimal job family info from assignment payload for prefill.
 class AssignmentJobFamilyInfo {
   const AssignmentJobFamilyInfo({
     required this.jobFamilyId,
@@ -113,7 +111,6 @@ class AssignmentJobFamilyInfo {
   final String jobFamilyNameAr;
 }
 
-/// Minimal job level info from assignment payload for prefill.
 class AssignmentJobLevelInfo {
   const AssignmentJobLevelInfo({
     required this.jobLevelId,
@@ -130,7 +127,6 @@ class AssignmentJobLevelInfo {
   final int maxGradeId;
 }
 
-/// Minimal grade info from assignment payload for prefill.
 class AssignmentGradeInfo {
   const AssignmentGradeInfo({
     required this.gradeId,
@@ -211,6 +207,44 @@ class AssignmentDetailSection {
   final AssignmentJobFamilyInfo? jobFamily;
   final AssignmentJobLevelInfo? jobLevel;
   final AssignmentGradeInfo? grade;
+
+  (int years, int months, int days)? get servicePeriod {
+    if (enterpriseHireDate == null || enterpriseHireDate!.trim().isEmpty) {
+      return null;
+    }
+    try {
+      final start = DateTime.parse(enterpriseHireDate!.trim());
+      final now = DateTime.now();
+      var years = now.year - start.year;
+      var months = now.month - start.month;
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      if (years < 0) {
+        return null;
+      }
+
+      final monthAdjustedStart = DateTime(start.year + years, start.month + months, start.day);
+      var days = now.difference(monthAdjustedStart).inDays;
+
+      if (days < 0) {
+        if (months > 0) {
+          months -= 1;
+          final prevMonthStart = DateTime(start.year + years, start.month + months, start.day);
+          days = now.difference(prevMonthStart).inDays;
+        } else {
+          return null;
+        }
+      }
+
+      return (years, months, days);
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 class OrgStructureItem {

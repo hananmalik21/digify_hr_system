@@ -23,10 +23,6 @@ class WorkforceStructureSection extends StatelessWidget {
         label: 'Work Schedule ID',
         value: ws?.workScheduleId != null ? '${ws!.workScheduleId}' : '—',
       ),
-      EmployeeDetailBorderedField(
-        label: 'Direct Manager',
-        value: fullDetails?.employee.reportingToEmpId != null ? '${fullDetails!.employee.reportingToEmpId}' : '—',
-      ),
     ];
     return EmployeeDetailBorderedSectionCard(
       title: 'Workforce Structure',
