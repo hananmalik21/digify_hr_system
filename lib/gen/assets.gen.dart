@@ -1157,6 +1157,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/filter-main.svg
   SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
 
+  /// File path: assets/icons/employee_management/filter-secondary.svg
+  SvgGenImage get filterSecondary => const SvgGenImage('assets/icons/employee_management/filter-secondary.svg');
+
   /// File path: assets/icons/employee_management/grid-view.svg
   SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
 
@@ -1188,6 +1191,7 @@ class $AssetsIconsEmployeeManagementGen {
     document,
     enterprise,
     filterMain,
+    filterSecondary,
     gridView,
     hash,
     mail,

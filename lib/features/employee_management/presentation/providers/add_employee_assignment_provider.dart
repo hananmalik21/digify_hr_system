@@ -12,6 +12,7 @@ class AddEmployeeAssignmentState {
   final Map<String, LevelSelection> levelSelections;
   final String? orgUnitIdHex;
   final String? workLocation;
+  final int? workLocationId;
   final DateTime? asgStart;
   final DateTime? asgEnd;
 
@@ -19,6 +20,7 @@ class AddEmployeeAssignmentState {
     this.levelSelections = const {},
     this.orgUnitIdHex,
     this.workLocation,
+    this.workLocationId,
     this.asgStart,
     this.asgEnd,
   });
@@ -43,10 +45,12 @@ class AddEmployeeAssignmentState {
     Map<String, LevelSelection>? levelSelections,
     String? orgUnitIdHex,
     String? workLocation,
+    int? workLocationId,
     DateTime? asgStart,
     DateTime? asgEnd,
     bool clearOrgUnitIdHex = false,
     bool clearWorkLocation = false,
+    bool clearWorkLocationId = false,
     bool clearAsgStart = false,
     bool clearAsgEnd = false,
   }) {
@@ -54,6 +58,7 @@ class AddEmployeeAssignmentState {
       levelSelections: levelSelections ?? this.levelSelections,
       orgUnitIdHex: clearOrgUnitIdHex ? null : (orgUnitIdHex ?? this.orgUnitIdHex),
       workLocation: clearWorkLocation ? null : (workLocation ?? this.workLocation),
+      workLocationId: clearWorkLocationId ? null : (workLocationId ?? this.workLocationId),
       asgStart: clearAsgStart ? null : (asgStart ?? this.asgStart),
       asgEnd: clearAsgEnd ? null : (asgEnd ?? this.asgEnd),
     );
@@ -95,6 +100,7 @@ class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentS
     DateTime? asgStart,
     DateTime? asgEnd,
     String? workLocation,
+    int? workLocationId,
   }) {
     final levelSelections = <String, LevelSelection>{};
     if (orgStructureList != null) {
@@ -111,6 +117,7 @@ class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentS
       asgStart: asgStart,
       asgEnd: asgEnd,
       workLocation: workLocation,
+      workLocationId: workLocationId,
     );
   }
 

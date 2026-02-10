@@ -35,40 +35,46 @@ class EmployeeDetailHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DigifyAssetButton(onTap: () => context.pop(), assetPath: Assets.icons.employeeManagement.backArrow.path),
               Gap(24.w),
               Expanded(
-                child: Text(
-                  displayData.displayName,
-                  style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      displayData.displayName,
+                      style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
+                    ),
+                    Gap(8.h),
+                    Row(
+                      spacing: 16.w,
+                      children: [
+                        EmployeeDetailChip(
+                          path: Assets.icons.deiDashboardIcon.path,
+                          label: displayData.positionLabel,
+                          isDark: isDark,
+                        ),
+                        EmployeeDetailChip(
+                          path: Assets.icons.departmentsIcon.path,
+                          label: displayData.departmentLabel,
+                          isDark: isDark,
+                        ),
+                        EmployeeDetailChip(
+                          path: Assets.icons.employeeManagement.hash.path,
+                          label: displayData.employeeNumber,
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               AppButton.outline(label: 'Download PDF', svgPath: Assets.icons.downloadIcon.path, onPressed: () {}),
               Gap(8.w),
               AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: onEditPressed),
-            ],
-          ),
-          Gap(8.h),
-          Row(
-            spacing: 16.w,
-            children: [
-              Gap(18.w),
-              EmployeeDetailChip(
-                path: Assets.icons.deiDashboardIcon.path,
-                label: displayData.positionLabel,
-                isDark: isDark,
-              ),
-              EmployeeDetailChip(
-                path: Assets.icons.departmentsIcon.path,
-                label: displayData.departmentLabel,
-                isDark: isDark,
-              ),
-              EmployeeDetailChip(
-                path: Assets.icons.employeeManagement.hash.path,
-                label: displayData.employeeNumber,
-                isDark: isDark,
-              ),
             ],
           ),
           Gap(24.h),
