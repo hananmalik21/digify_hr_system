@@ -15,7 +15,6 @@ class PositionFormHelpers {
     String? hint,
   }) {
     return DigifySelectField<T>(
-      label: '',
       value: value,
       items: items,
       onChanged: onChanged,

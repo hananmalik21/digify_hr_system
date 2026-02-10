@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DigifySelectField<T> extends StatelessWidget {
-  final String label;
+  final String? label;
   final String? hint;
   final T? value;
   final List<T> items;
@@ -21,7 +21,7 @@ class DigifySelectField<T> extends StatelessWidget {
 
   const DigifySelectField({
     super.key,
-    required this.label,
+    this.label,
     required this.items,
     required this.itemLabelBuilder,
     this.hint,

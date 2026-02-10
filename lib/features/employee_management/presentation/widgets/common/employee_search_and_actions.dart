@@ -9,6 +9,7 @@ import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filter_org_param_provider.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
@@ -244,7 +245,6 @@ class _FilterDropdownsSection extends ConsumerStatefulWidget {
 
 class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection> {
   bool _orgLoadTriggered = false;
-
   @override
   Widget build(BuildContext context) {
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
@@ -304,13 +304,25 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
       children: [
         SizedBox(
           width: 180.w,
-          child: DigifySelectField<String?>(
-            label: '',
+          child: DigifySelectField<AssignmentStatus?>(
             hint: widget.localizations.allStatuses,
-            value: null,
-            items: [null],
-            itemLabelBuilder: (_) => widget.localizations.allStatuses,
-            onChanged: (_) {},
+            value: filters.assignmentStatus,
+            items: [null, AssignmentStatus.active, AssignmentStatus.inactive],
+            itemLabelBuilder: (status) {
+              if (status == null) return widget.localizations.allStatuses;
+              switch (status) {
+                case AssignmentStatus.active:
+                  return widget.localizations.active;
+                case AssignmentStatus.inactive:
+                  return widget.localizations.inactive;
+                default:
+                  return status.raw;
+              }
+            },
+            onChanged: (status) {
+              filtersNotifier.setAssignmentStatus(status);
+              applyFiltersAndRefresh();
+            },
             fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
@@ -319,7 +331,6 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         SizedBox(
           width: 180.w,
           child: DigifySelectField<String?>(
-            label: '',
             hint: widget.localizations.allPositions,
             value: filters.positionId,
             items: [null, ...positionItems.map((p) => p.id)],
@@ -338,7 +349,6 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         SizedBox(
           width: 180.w,
           child: DigifySelectField<int?>(
-            label: '',
             hint: widget.localizations.allJobFamilies,
             value: filters.jobFamilyId,
             items: [null, ...jobFamilyItems.map((j) => j.id)],
@@ -357,7 +367,6 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         SizedBox(
           width: 180.w,
           child: DigifySelectField<int?>(
-            label: '',
             hint: widget.localizations.allJobLevels,
             value: filters.jobLevelId,
             items: [null, ...jobLevelItems.map((j) => j.id)],
@@ -376,7 +385,6 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         SizedBox(
           width: 180.w,
           child: DigifySelectField<int?>(
-            label: '',
             hint: widget.localizations.allGrades,
             value: filters.gradeId,
             items: [null, ...gradeItems.map((g) => g.id)],

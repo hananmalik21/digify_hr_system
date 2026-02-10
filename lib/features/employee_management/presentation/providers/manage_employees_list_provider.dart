@@ -66,6 +66,7 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
       page: page,
       pageSize: pageSize,
       search: effectiveSearch,
+      assignmentStatus: filters.assignmentStatus?.raw,
       positionId: filters.positionId,
       jobFamilyId: filters.jobFamilyId,
       jobLevelId: filters.jobLevelId,
