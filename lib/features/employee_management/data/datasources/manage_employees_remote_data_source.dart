@@ -14,6 +14,7 @@ abstract class ManageEmployeesRemoteDataSource {
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -49,6 +50,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -62,6 +64,9 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'page_size': pageSize.toString(),
     };
     if (search != null && search.trim().isNotEmpty) queryParameters['search'] = search.trim();
+    if (assignmentStatus != null && assignmentStatus.trim().isNotEmpty) {
+      queryParameters['status'] = assignmentStatus.trim();
+    }
     if (positionId != null && positionId.isNotEmpty) queryParameters['position_id'] = positionId;
     if (jobFamilyId != null) queryParameters['job_family_id'] = jobFamilyId.toString();
     if (jobLevelId != null) queryParameters['job_level_id'] = jobLevelId.toString();

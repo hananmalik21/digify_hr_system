@@ -9,6 +9,7 @@ abstract class ManageEmployeesListRepository {
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,

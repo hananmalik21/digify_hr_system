@@ -76,7 +76,6 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
               SizedBox(
                 width: 144.w,
                 child: DigifySelectField<PositionStatus?>(
-                  label: '',
                   hint: 'All Status',
                   value: _getStatusFromString(widget.selectedStatus),
                   items: [null, ...PositionStatus.values],
