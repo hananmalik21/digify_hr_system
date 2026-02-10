@@ -29,11 +29,10 @@ class AppHeader extends ConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        height: 55.h,
+        height: 60.h,
         decoration: BoxDecoration(
           color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-          // border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
-          boxShadow: AppShadows.primaryShadow,
+          boxShadow: AppShadows.headerShadow(isDark),
         ),
         child: Padding(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w),

@@ -43,12 +43,16 @@ class EmploymentInformationSection extends StatelessWidget {
     final a = fullDetails?.assignment;
     final e = fullDetails?.employee;
     final ws = fullDetails?.workSchedule;
-    final rawStatus = a?.assignmentStatus ?? a?.employmentStatus ?? e?.employeeStatus;
+    final rawStatus = e?.employeeStatus ?? a?.assignmentStatus ?? a?.employmentStatus;
     final contractEnd = a?.effectiveEndDate != null && a!.effectiveEndDate!.isNotEmpty
         ? formatIsoDateToDisplay(a.effectiveEndDate)
         : 'Ongoing';
     final probationDays = a?.probationDays ?? e?.probationDays;
     final workLocationId = a?.workLocationId ?? e?.workLocationId;
+    final workLocationName = a?.workLocationName;
+    final workLocationDisplay = (workLocationName != null && workLocationName.trim().isNotEmpty)
+        ? workLocationName
+        : (workLocationId != null ? '$workLocationId' : null);
     return [
       EmployeeDetailBorderedField(label: 'Contract Type', value: displayValue(a?.contractTypeCode)),
       EmployeeDetailBorderedField(
@@ -60,7 +64,7 @@ class EmploymentInformationSection extends StatelessWidget {
         label: 'Probation Period',
         value: probationDays != null ? '$probationDays days' : '—',
       ),
-      EmployeeDetailBorderedField(label: 'Work Location ID', value: workLocationId != null ? '$workLocationId' : '—'),
+      EmployeeDetailBorderedField(label: 'Work Location', value: workLocationDisplay ?? '—'),
       EmployeeDetailBorderedField(
         label: 'Employment Status',
         value: rawStatus ?? '—',

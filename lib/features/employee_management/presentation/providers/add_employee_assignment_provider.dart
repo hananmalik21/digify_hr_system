@@ -86,6 +86,16 @@ class AddEmployeeAssignmentNotifier extends StateNotifier<AddEmployeeAssignmentS
     state = state.copyWith(workLocation: value, clearWorkLocation: value == null || value.isEmpty);
   }
 
+  void setWorkLocationFromLookup(String? code, int? id) {
+    final clear = code == null || code.isEmpty;
+    state = state.copyWith(
+      workLocation: clear ? null : code,
+      workLocationId: clear ? null : id,
+      clearWorkLocation: clear,
+      clearWorkLocationId: clear,
+    );
+  }
+
   void setAsgStart(DateTime? value) {
     state = state.copyWith(asgStart: value, clearAsgStart: value == null);
   }

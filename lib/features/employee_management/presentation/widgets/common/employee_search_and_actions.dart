@@ -307,7 +307,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
           child: DigifySelectField<AssignmentStatus?>(
             hint: widget.localizations.allStatuses,
             value: filters.assignmentStatus,
-            items: [null, AssignmentStatus.active, AssignmentStatus.inactive],
+            items: [null, AssignmentStatus.inactive, AssignmentStatus.active, AssignmentStatus.probation],
             itemLabelBuilder: (status) {
               if (status == null) return widget.localizations.allStatuses;
               switch (status) {
@@ -315,6 +315,8 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
                   return widget.localizations.active;
                 case AssignmentStatus.inactive:
                   return widget.localizations.inactive;
+                case AssignmentStatus.probation:
+                  return widget.localizations.reviewProbation;
                 default:
                   return status.raw;
               }

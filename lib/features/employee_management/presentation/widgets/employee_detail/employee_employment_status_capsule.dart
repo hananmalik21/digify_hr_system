@@ -17,6 +17,7 @@ class EmployeeEmploymentStatusCapsule extends StatelessWidget {
     final backgroundColor = switch (assignmentStatus) {
       AssignmentStatus.active => isDark ? AppColors.successBgDark : AppColors.successBg,
       AssignmentStatus.inactive => isDark ? AppColors.grayBgDark : AppColors.grayBg,
+      AssignmentStatus.probation => isDark ? AppColors.warningBgDark : AppColors.warningBg,
       AssignmentStatus.ended => isDark ? AppColors.errorBgDark : AppColors.errorBg,
       _ => isDark ? AppColors.infoBgDark : AppColors.infoBg,
     };
@@ -24,6 +25,7 @@ class EmployeeEmploymentStatusCapsule extends StatelessWidget {
     final borderColor = switch (assignmentStatus) {
       AssignmentStatus.active => isDark ? AppColors.successBorderDark : AppColors.successBorder,
       AssignmentStatus.inactive => isDark ? AppColors.grayBorderDark : AppColors.grayBorder,
+      AssignmentStatus.probation => isDark ? AppColors.warningBorderDark : AppColors.warningBorder,
       AssignmentStatus.ended => isDark ? AppColors.errorBorderDark : AppColors.errorBorder,
       _ => isDark ? AppColors.infoBorderDark : AppColors.infoBorder,
     };
@@ -31,6 +33,7 @@ class EmployeeEmploymentStatusCapsule extends StatelessWidget {
     final textColor = switch (assignmentStatus) {
       AssignmentStatus.active => isDark ? AppColors.successTextDark : AppColors.successText,
       AssignmentStatus.inactive => isDark ? AppColors.grayTextDark : AppColors.grayText,
+      AssignmentStatus.probation => isDark ? AppColors.warningTextDark : AppColors.warningText,
       AssignmentStatus.ended => isDark ? AppColors.errorTextDark : AppColors.errorText,
       _ => isDark ? AppColors.infoTextDark : AppColors.infoText,
     };

@@ -1,6 +1,7 @@
 enum AssignmentStatus {
   active('ACTIVE'),
   inactive('INACTIVE'),
+  probation('PROBATION'),
   ended('ENDED'),
   unknown('');
 

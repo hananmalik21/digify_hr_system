@@ -334,6 +334,7 @@ class AssignmentDetailSectionDto {
     this.probationDays,
     this.reportingToEmpId,
     this.workLocationId,
+    this.workLocationName,
     this.employeeNumber,
     this.effectiveStartDate,
     this.effectiveEndDate,
@@ -353,6 +354,7 @@ class AssignmentDetailSectionDto {
     final jobFamilyJson = json['job_family'] as Map<String, dynamic>?;
     final jobLevelJson = json['job_level'] as Map<String, dynamic>?;
     final gradeJson = json['grade'] as Map<String, dynamic>?;
+    final workLocationObjJson = json['workLocationObj'] as Map<String, dynamic>?;
     return AssignmentDetailSectionDto(
       assignmentId: (json['assignment_id'] as num?)?.toInt() ?? 0,
       assignmentGuid: json['assignment_guid'] as String?,
@@ -368,6 +370,7 @@ class AssignmentDetailSectionDto {
       probationDays: EmployeeFullDetailsDataDto._optionalInt(json['probation_days']),
       reportingToEmpId: EmployeeFullDetailsDataDto._optionalInt(json['reporting_to_emp_id']),
       workLocationId: EmployeeFullDetailsDataDto._optionalInt(json['work_location_id']),
+      workLocationName: workLocationObjJson != null ? workLocationObjJson['meaning_en'] as String? : null,
       employeeNumber: json['employee_number'] as String?,
       effectiveStartDate: json['effective_start_date'] as String?,
       effectiveEndDate: json['effective_end_date'] as String?,
@@ -394,6 +397,7 @@ class AssignmentDetailSectionDto {
   final int? probationDays;
   final int? reportingToEmpId;
   final int? workLocationId;
+  final String? workLocationName;
   final String? employeeNumber;
   final String? effectiveStartDate;
   final String? effectiveEndDate;
@@ -420,6 +424,7 @@ class AssignmentDetailSectionDto {
     probationDays: probationDays,
     reportingToEmpId: reportingToEmpId,
     workLocationId: workLocationId,
+    workLocationName: workLocationName,
     employeeNumber: employeeNumber,
     effectiveStartDate: effectiveStartDate,
     effectiveEndDate: effectiveEndDate,
