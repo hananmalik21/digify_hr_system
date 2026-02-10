@@ -60,7 +60,6 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
         ),
         Gap(8.h),
         DigifySelectField<T>(
-          label: '',
           hint: hint,
           items: items,
           itemLabelBuilder: itemLabelBuilder,

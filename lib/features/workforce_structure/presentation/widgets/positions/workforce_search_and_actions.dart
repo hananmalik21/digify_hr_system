@@ -13,14 +13,8 @@ import 'package:gap/gap.dart';
 class WorkforceSearchAndActions extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final VoidCallback onAddPosition;
 
-  const WorkforceSearchAndActions({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-    required this.onAddPosition,
-  });
+  const WorkforceSearchAndActions({super.key, required this.localizations, required this.isDark});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,11 +41,6 @@ class WorkforceSearchAndActions extends ConsumerWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               WorkforceStatusDropdown(label: localizations.allStatus, isDark: isDark),
-              AppButton(
-                label: localizations.addPosition,
-                onPressed: onAddPosition,
-                svgPath: Assets.icons.addDivisionIcon.path,
-              ),
               AppButton(
                 label: localizations.import,
                 onPressed: () {},

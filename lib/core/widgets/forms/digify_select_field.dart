@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DigifySelectField<T> extends StatelessWidget {
-  final String label;
+  final String? label;
   final String? hint;
   final T? value;
   final List<T> items;
@@ -17,9 +17,11 @@ class DigifySelectField<T> extends StatelessWidget {
   final bool isRequired;
   final String? Function(T?)? validator;
 
+  final Color? fillColor;
+
   const DigifySelectField({
     super.key,
-    required this.label,
+    this.label,
     required this.items,
     required this.itemLabelBuilder,
     this.hint,
@@ -27,13 +29,14 @@ class DigifySelectField<T> extends StatelessWidget {
     this.onChanged,
     this.isRequired = false,
     this.validator,
+    this.fillColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final effectiveFillColor = isDark ? AppColors.inputBgDark : Colors.transparent;
+    final effectiveFillColor = fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent);
     final effectiveBorderColor = isDark ? AppColors.inputBorderDark : AppColors.inputBorder;
     final effectiveTextColor = isDark ? context.themeTextPrimary : AppColors.textPrimary;
     final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);

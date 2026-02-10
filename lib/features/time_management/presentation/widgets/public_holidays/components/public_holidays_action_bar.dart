@@ -66,7 +66,6 @@ class PublicHolidaysActionBar extends StatelessWidget {
               SizedBox(
                 width: 144.w,
                 child: DigifySelectField<String>(
-                  label: '',
                   hint: 'Year',
                   value: selectedYear,
                   items: availableYears,
@@ -77,7 +76,6 @@ class PublicHolidaysActionBar extends StatelessWidget {
               SizedBox(
                 width: 144.w,
                 child: DigifySelectField<String>(
-                  label: '',
                   hint: 'Type',
                   value: selectedType,
                   items: availableTypes,

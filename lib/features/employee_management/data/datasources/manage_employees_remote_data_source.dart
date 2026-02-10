@@ -14,6 +14,7 @@ abstract class ManageEmployeesRemoteDataSource {
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -49,6 +50,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -61,7 +63,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'page': page.toString(),
       'page_size': pageSize.toString(),
     };
-    if (search != null && search.trim().isNotEmpty) queryParameters['search'] = search.trim();
+    if (search != null && search.trim().isNotEmpty) {
+      queryParameters['search'] = search.trim();
+    }
+    if (assignmentStatus != null && assignmentStatus.trim().isNotEmpty) {
+      queryParameters['employee_status'] = assignmentStatus.trim();
+    }
     if (positionId != null && positionId.isNotEmpty) queryParameters['position_id'] = positionId;
     if (jobFamilyId != null) queryParameters['job_family_id'] = jobFamilyId.toString();
     if (jobLevelId != null) queryParameters['job_level_id'] = jobLevelId.toString();
@@ -130,9 +137,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
         'employment_status': request.employmentStatusCode!.trim(),
+        'employee_status': request.employmentStatusCode!.trim(),
+      },
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
@@ -235,9 +245,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
         'employment_status': request.employmentStatusCode!.trim(),
+        'employee_status': request.employmentStatusCode!.trim(),
+      },
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)

@@ -60,7 +60,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final useTwoColumns = constraints.maxWidth > 500;
-          final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, form, notifier);
+          final leftFields = _buildLeftColumn(context, localizations, personIcon, emailIcon, phoneIcon, form, notifier);
           final rightFields = _buildRightColumn(context, localizations, personIcon, phoneIcon, form, notifier);
 
           return Column(
@@ -96,6 +96,7 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
     AppLocalizations l10n,
     Widget personIcon,
     Widget emailIcon,
+    Widget phoneIcon,
     CreateEmployeeBasicInfoRequest form,
     AddEmployeeBasicInfoNotifier notifier,
   ) {
@@ -136,13 +137,15 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         onChanged: notifier.setEmail,
       ),
       Gap(16.h),
-      DigifyDateField(
-        label: l10n.dateOfBirth,
-        hintText: l10n.hintDateOfBirth,
+      DigifyTextField(
+        labelText: l10n.mobileNumber,
         isRequired: true,
-        firstDate: DateTime(1900),
-        initialDate: form.dateOfBirth,
-        onDateSelected: notifier.setDateOfBirth,
+        keyboardType: TextInputType.phone,
+        prefixIcon: phoneIcon,
+        hintText: l10n.hintMobileNumber,
+        initialValue: form.mobileNumber,
+        onChanged: notifier.setMobileNumber,
+        inputFormatters: FieldFormat.phoneFormatters,
       ),
     ];
   }
@@ -197,6 +200,15 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         initialValue: form.phoneNumber,
         onChanged: notifier.setPhoneNumber,
         inputFormatters: FieldFormat.phoneFormatters,
+      ),
+      Gap(16.h),
+      DigifyDateField(
+        label: l10n.dateOfBirth,
+        hintText: l10n.hintDateOfBirth,
+        isRequired: true,
+        firstDate: DateTime(1900),
+        initialDate: form.dateOfBirth,
+        onDateSelected: notifier.setDateOfBirth,
       ),
     ];
   }

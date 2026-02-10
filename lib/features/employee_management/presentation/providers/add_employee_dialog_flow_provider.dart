@@ -87,6 +87,7 @@ class AddEmployeeDialogFlow {
       asgStart: _parseDate(asg.enterpriseHireDate),
       asgEnd: _parseDate(asg.effectiveEndDate),
       workLocation: addr?.addressLine1,
+      workLocationId: asg.workLocationId ?? emp.workLocationId,
       lookupCodesByTypeCode: demo != null
           ? {
               'GENDER': demo.genderCode,
@@ -153,6 +154,7 @@ class AddEmployeeDialogFlow {
           asgStart: request.asgStart,
           asgEnd: request.asgEnd,
           workLocation: request.workLocation,
+          workLocationId: request.workLocationId,
         );
     _ref
         .read(addEmployeeWorkScheduleProvider.notifier)
@@ -462,6 +464,7 @@ class AddEmployeeDialogFlow {
       wsEnd: workScheduleState.wsEnd,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
       workLocation: _emptyToNull(assignmentState.workLocation),
+      workLocationId: assignmentState.workLocationId,
       asgStart: assignmentState.asgStart,
       asgEnd: assignmentState.asgEnd,
       lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,

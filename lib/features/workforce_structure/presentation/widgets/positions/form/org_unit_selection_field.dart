@@ -54,7 +54,7 @@ class OrgUnitSelectionField extends ConsumerWidget {
               }
             : null,
         child: Container(
-          height: 40.h,
+          height: 48.h,
           padding: EdgeInsets.symmetric(horizontal: 14.w),
           decoration: BoxDecoration(
             color: isEnabled ? Colors.white : AppColors.inputBg.withValues(alpha: 0.5),

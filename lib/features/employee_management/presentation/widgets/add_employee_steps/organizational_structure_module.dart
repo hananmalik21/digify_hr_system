@@ -4,9 +4,11 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_selection_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
@@ -124,7 +126,12 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
     final selectionProvider = addEmployeeOrgSelectionProvider((structureId: structureId, levels: activeLevels));
     final selectionState = ref.watch(selectionProvider);
     final assignmentState = ref.watch(addEmployeeAssignmentProvider);
-    final workLocation = assignmentState.workLocation;
+    final assignmentNotifier = ref.read(addEmployeeAssignmentProvider.notifier);
+    final workLocationValuesAsync = ref.watch(
+      emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'WORK_LOCATION')),
+    );
+    final workLocationValues = workLocationValuesAsync.valueOrNull ?? [];
+    final workLocationLoading = workLocationValuesAsync.isLoading;
     final orderedLevelCodes = activeLevels.map((l) => l.levelCode).toList();
 
     return _AssignmentCard(
@@ -152,8 +159,11 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
           Gap(24.h),
           _WorkLocationSection(
             theme: theme,
-            initialValue: workLocation ?? '',
-            onChanged: (value) => ref.read(addEmployeeAssignmentProvider.notifier).setWorkLocation(value),
+            workLocation: assignmentState.workLocation,
+            workLocationId: assignmentState.workLocationId,
+            lookupValues: workLocationValues,
+            isLoading: workLocationLoading,
+            onSelected: (v) => assignmentNotifier.setWorkLocationFromLookup(v?.lookupCode, v?.lookupId),
           ),
         ],
       ),
@@ -248,32 +258,49 @@ class _MessageContent extends StatelessWidget {
 }
 
 class _WorkLocationSection extends StatelessWidget {
-  const _WorkLocationSection({required this.theme, required this.initialValue, required this.onChanged});
+  const _WorkLocationSection({
+    required this.theme,
+    required this.workLocation,
+    required this.workLocationId,
+    required this.lookupValues,
+    required this.isLoading,
+    required this.onSelected,
+  });
 
   final BuildContext theme;
-  final String initialValue;
-  final ValueChanged<String> onChanged;
+  final String? workLocation;
+  final int? workLocationId;
+  final List<EmplLookupValue> lookupValues;
+  final bool isLoading;
+  final ValueChanged<EmplLookupValue?> onSelected;
+
+  static EmplLookupValue? _valueByCodeOrId(String? code, int? id, List<EmplLookupValue> values) {
+    if (values.isEmpty) return null;
+    if (id != null) {
+      try {
+        return values.firstWhere((v) => v.lookupId == id);
+      } catch (_) {}
+    }
+    if (code != null && code.trim().isNotEmpty) {
+      try {
+        return values.firstWhere((v) => v.lookupCode == code.trim());
+      } catch (_) {}
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = theme.isDark;
     final l10n = AppLocalizations.of(theme)!;
-    final locationIcon = Padding(
-      padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-      child: DigifyAsset(
-        assetPath: Assets.icons.locationPinIcon.path,
-        width: 20,
-        height: 20,
-        color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
-      ),
-    );
-    return DigifyTextField(
-      labelText: l10n.workLocation,
-      prefixIcon: locationIcon,
-      hintText: l10n.hintWorkLocation,
-      initialValue: initialValue,
-      onChanged: onChanged,
+    final selected = _valueByCodeOrId(workLocation, workLocationId, lookupValues);
+    return DigifySelectFieldWithLabel<EmplLookupValue>(
+      label: l10n.workLocation,
       isRequired: true,
+      hint: isLoading ? l10n.pleaseWait : l10n.hintWorkLocation,
+      items: lookupValues,
+      itemLabelBuilder: (v) => v.meaningEn,
+      value: selected,
+      onChanged: isLoading ? null : onSelected,
     );
   }
 }

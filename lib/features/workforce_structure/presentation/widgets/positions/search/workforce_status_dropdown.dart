@@ -19,7 +19,6 @@ class WorkforceStatusDropdown extends ConsumerWidget {
     return SizedBox(
       width: width ?? 144.w,
       child: DigifySelectField<PositionStatus?>(
-        label: '',
         hint: label,
         value: currentStatus,
         items: [null, ...PositionStatus.values],

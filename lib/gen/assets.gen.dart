@@ -503,6 +503,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/head_phone_icon.svg
   SvgGenImage get headPhoneIcon => const SvgGenImage('assets/icons/head_phone_icon.svg');
 
+  /// Directory path: assets/icons/header
+  $AssetsIconsHeaderGen get header => const $AssetsIconsHeaderGen();
+
   /// File path: assets/icons/hierarchy_icon.svg
   SvgGenImage get hierarchyIcon => const SvgGenImage('assets/icons/hierarchy_icon.svg');
 
@@ -1121,6 +1124,16 @@ class $AssetsIconsGen {
   ];
 }
 
+class $AssetsLogoGen {
+  const $AssetsLogoGen();
+
+  /// File path: assets/logo/digify-logo.png
+  AssetGenImage get digifyLogo => const AssetGenImage('assets/logo/digify-logo.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [digifyLogo];
+}
+
 class $AssetsIconsEmployeeManagementGen {
   const $AssetsIconsEmployeeManagementGen();
 
@@ -1157,6 +1170,9 @@ class $AssetsIconsEmployeeManagementGen {
   /// File path: assets/icons/employee_management/filter-main.svg
   SvgGenImage get filterMain => const SvgGenImage('assets/icons/employee_management/filter-main.svg');
 
+  /// File path: assets/icons/employee_management/filter-secondary.svg
+  SvgGenImage get filterSecondary => const SvgGenImage('assets/icons/employee_management/filter-secondary.svg');
+
   /// File path: assets/icons/employee_management/grid-view.svg
   SvgGenImage get gridView => const SvgGenImage('assets/icons/employee_management/grid-view.svg');
 
@@ -1188,6 +1204,7 @@ class $AssetsIconsEmployeeManagementGen {
     document,
     enterprise,
     filterMain,
+    filterSecondary,
     gridView,
     hash,
     mail,
@@ -1195,6 +1212,28 @@ class $AssetsIconsEmployeeManagementGen {
     passport,
     user,
   ];
+}
+
+class $AssetsIconsHeaderGen {
+  const $AssetsIconsHeaderGen();
+
+  /// File path: assets/icons/header/chevron-down.svg
+  SvgGenImage get chevronDown => const SvgGenImage('assets/icons/header/chevron-down.svg');
+
+  /// File path: assets/icons/header/favourite.svg
+  SvgGenImage get favourite => const SvgGenImage('assets/icons/header/favourite.svg');
+
+  /// File path: assets/icons/header/help.svg
+  SvgGenImage get help => const SvgGenImage('assets/icons/header/help.svg');
+
+  /// File path: assets/icons/header/language.svg
+  SvgGenImage get language => const SvgGenImage('assets/icons/header/language.svg');
+
+  /// File path: assets/icons/header/notification-bell.svg
+  SvgGenImage get notificationBell => const SvgGenImage('assets/icons/header/notification-bell.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [chevronDown, favourite, help, language, notificationBell];
 }
 
 class $AssetsIconsLeaveManagementGen {
@@ -1391,6 +1430,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsLogoGen logo = $AssetsLogoGen();
 }
 
 class AssetGenImage {

@@ -46,7 +46,9 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.selectedEmployee?.fullName ?? '');
+    _controller = TextEditingController(
+      text: widget.selectedEmployee != null ? _employeeDisplayName(widget.selectedEmployee!) : '',
+    );
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
   }
@@ -55,7 +57,7 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
   void didUpdateWidget(EmployeeSearchField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedEmployee != oldWidget.selectedEmployee) {
-      _controller.text = widget.selectedEmployee?.fullName ?? '';
+      _controller.text = widget.selectedEmployee != null ? _employeeDisplayName(widget.selectedEmployee!) : '';
     }
   }
 
@@ -123,10 +125,27 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
+  String _employeeDisplayName(Employee employee) {
+    final name = employee.fullName.trim();
+    if (name.isNotEmpty) return name;
+    if (employee.email.isNotEmpty) return employee.email;
+    return 'Employee #${employee.id}';
+  }
+
   OverlayEntry _createOverlayEntry() {
     final isDark = context.isDark;
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final media = MediaQuery.of(context);
+    final screenHeight = media.size.height;
+    final paddingTop = media.padding.top;
+    final paddingBottom = media.padding.bottom;
+    final spaceBelow = screenHeight - paddingBottom - (position.dy + size.height + 4.h);
+    final spaceAbove = position.dy - paddingTop - 4.h;
+    final showAbove = spaceBelow < 150 && spaceAbove > spaceBelow;
+    final maxHeight = showAbove ? (300.h).clamp(0.0, spaceAbove) : (300.h).clamp(0.0, spaceBelow);
+    final offset = showAbove ? Offset(0, -(maxHeight + 4.h)) : Offset(0, size.height + 4.h);
 
     return OverlayEntry(
       builder: (context) => Consumer(
@@ -138,13 +157,13 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
             child: CompositedTransformFollower(
               link: _layerLink,
               showWhenUnlinked: false,
-              offset: Offset(0, size.height + 4.h),
+              offset: offset,
               child: Material(
                 elevation: 0,
                 borderRadius: BorderRadius.circular(12.r),
                 color: Colors.transparent,
                 child: Container(
-                  constraints: BoxConstraints(maxHeight: 300.h),
+                  constraints: BoxConstraints(maxHeight: maxHeight),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
@@ -250,7 +269,7 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () {
-                                    _controller.text = employee.fullName;
+                                    _controller.text = _employeeDisplayName(employee);
                                     widget.onEmployeeSelected(employee);
                                     _focusNode.unfocus();
                                     _removeOverlay();
@@ -292,17 +311,18 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                employee.fullName,
+                                                _employeeDisplayName(employee),
                                                 style: TextStyle(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w500,
                                                   color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                                                 ),
                                               ),
-                                              if (employee.email.isNotEmpty) ...[
+                                              if (employee.employeeNumber != null &&
+                                                  employee.employeeNumber!.isNotEmpty) ...[
                                                 Gap(2.h),
                                                 Text(
-                                                  employee.email,
+                                                  employee.employeeNumber!,
                                                   style: TextStyle(
                                                     fontSize: 12.sp,
                                                     color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,

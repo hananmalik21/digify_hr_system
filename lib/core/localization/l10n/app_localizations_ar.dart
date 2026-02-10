@@ -2906,6 +2906,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchSectionsPlaceholder => 'بحث الأقسام...';
 
   @override
+  String get managePositions => 'إدارة الوظائف';
+
+  @override
   String get managePositionsJobFamilies =>
       'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
 
