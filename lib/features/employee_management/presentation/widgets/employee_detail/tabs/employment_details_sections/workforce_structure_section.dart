@@ -13,10 +13,11 @@ class WorkforceStructureSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final a = fullDetails?.assignment;
+    final e = fullDetails?.employee;
     final ws = fullDetails?.workSchedule;
     final left = [
       EmployeeDetailBorderedField(label: 'Worker Type', value: displayValue(a?.contractTypeCode)),
-      EmployeeDetailBorderedField(label: 'Assignment Category', value: displayValue(a?.employmentStatus)),
+      EmployeeDetailBorderedField(label: 'Assignment Category', value: displayValue(e?.employeeStatus)),
     ];
     final right = [
       EmployeeDetailBorderedField(

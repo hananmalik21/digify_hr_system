@@ -503,6 +503,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/head_phone_icon.svg
   SvgGenImage get headPhoneIcon => const SvgGenImage('assets/icons/head_phone_icon.svg');
 
+  /// Directory path: assets/icons/header
+  $AssetsIconsHeaderGen get header => const $AssetsIconsHeaderGen();
+
   /// File path: assets/icons/hierarchy_icon.svg
   SvgGenImage get hierarchyIcon => const SvgGenImage('assets/icons/hierarchy_icon.svg');
 
@@ -1209,6 +1212,28 @@ class $AssetsIconsEmployeeManagementGen {
     passport,
     user,
   ];
+}
+
+class $AssetsIconsHeaderGen {
+  const $AssetsIconsHeaderGen();
+
+  /// File path: assets/icons/header/chevron-down.svg
+  SvgGenImage get chevronDown => const SvgGenImage('assets/icons/header/chevron-down.svg');
+
+  /// File path: assets/icons/header/favourite.svg
+  SvgGenImage get favourite => const SvgGenImage('assets/icons/header/favourite.svg');
+
+  /// File path: assets/icons/header/help.svg
+  SvgGenImage get help => const SvgGenImage('assets/icons/header/help.svg');
+
+  /// File path: assets/icons/header/language.svg
+  SvgGenImage get language => const SvgGenImage('assets/icons/header/language.svg');
+
+  /// File path: assets/icons/header/notification-bell.svg
+  SvgGenImage get notificationBell => const SvgGenImage('assets/icons/header/notification-bell.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [chevronDown, favourite, help, language, notificationBell];
 }
 
 class $AssetsIconsLeaveManagementGen {

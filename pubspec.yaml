@@ -66,6 +66,7 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
+    - assets/icons/header/
     - assets/logo/
     - assets/icons/
     - assets/icons/workforce/

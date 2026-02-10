@@ -168,6 +168,7 @@ class AssignmentDetailSection {
     this.probationDays,
     this.reportingToEmpId,
     this.workLocationId,
+    this.workLocationName,
     this.employeeNumber,
     this.effectiveStartDate,
     this.effectiveEndDate,
@@ -195,6 +196,7 @@ class AssignmentDetailSection {
   final int? probationDays;
   final int? reportingToEmpId;
   final int? workLocationId;
+  final String? workLocationName;
   final String? employeeNumber;
   final String? effectiveStartDate;
   final String? effectiveEndDate;
