@@ -30,8 +30,8 @@ class HeaderNotificationIcon extends StatelessWidget {
             right: 0,
             top: 0,
             child: Container(
-              padding: EdgeInsets.all(2.r),
-              constraints: BoxConstraints(minWidth: 18.w, minHeight: 18.h),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+              constraints: BoxConstraints(minWidth: 20.w, minHeight: 20.h),
               decoration: BoxDecoration(
                 color: AppColors.deleteIconRed,
                 shape: BoxShape.circle,
@@ -40,7 +40,7 @@ class HeaderNotificationIcon extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 count > 99 ? '99+' : count.toString(),
-                style: context.textTheme.headlineMedium?.copyWith(fontSize: 10.sp, color: AppColors.cardBackground),
+                style: context.textTheme.headlineMedium?.copyWith(fontSize: 12.sp, color: AppColors.cardBackground),
               ),
             ),
           ),
