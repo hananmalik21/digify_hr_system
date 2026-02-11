@@ -30,8 +30,8 @@ class HeaderLeftSection extends StatelessWidget {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
             child: DigifyAsset(
               assetPath: Assets.icons.menuToggleIcon.path,
-              width: isMobile ? 18 : 20,
-              height: isMobile ? 18 : 20,
+              width: 20.w,
+              height: 20.h,
               color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
             ),
           ),

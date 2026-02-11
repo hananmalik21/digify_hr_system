@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/employee_providers.dart';
@@ -82,6 +83,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
+    final enterpriseId = ref.watch(leaveManagementEnterpriseIdProvider) ?? 0;
     final employeesState = ref.watch(employeeNotifierProvider);
     Employee? delegatedToEmployee;
     if (state.delegatedToEmployeeId != null) {
@@ -95,7 +97,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       children: [
         EmployeeSearchField(
           label: localizations.workDelegatedTo,
-          enterpriseId: 1001,
+          enterpriseId: enterpriseId,
           selectedEmployee: delegatedToEmployee,
           onEmployeeSelected: (employee) {
             notifier.setDelegatedTo(employee.id, employee.fullName);

@@ -128,14 +128,14 @@ class HeaderProfileSection extends StatelessWidget {
           children: [
             // Icon Container matching image
             Container(
-              width: 35.w,
+              width: 30.w,
               height: 30.h,
               decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10.r)),
               alignment: Alignment.center,
               child: DigifyAsset(
                 assetPath: Assets.icons.employeeManagement.user.path,
-                width: 18.sp,
-                height: 18.sp,
+                width: 18.w,
+                height: 18.h,
                 color: AppColors.cardBackground,
               ),
             ),

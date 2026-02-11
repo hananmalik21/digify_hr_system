@@ -73,7 +73,7 @@ class OrgUnitTreeNodeDto {
       'org_unit_name_en': orgUnitNameEn,
       'org_unit_name_ar': orgUnitNameAr,
       'level_code': levelCode,
-      if (parentOrgUnitId != null) 'parent_org_unit_id': parentOrgUnitId,
+      if (parentOrgUnitId != null) 'parentId': parentOrgUnitId,
       'is_active': isActive,
       'children': children.map((child) => child.toJson()).toList(),
     };

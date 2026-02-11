@@ -7,6 +7,7 @@ import 'package:digify_hr_system/core/widgets/forms/leave_type_search_field.dart
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_time_options_config.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -24,13 +25,14 @@ class LeaveDetailsStep extends ConsumerWidget {
     final isDark = context.isDark;
     final state = ref.watch(newLeaveRequestProvider);
     final notifier = ref.read(newLeaveRequestProvider.notifier);
+    final enterpriseId = ref.watch(leaveManagementEnterpriseIdProvider) ?? 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildGuidelinesBox(context, localizations, isDark),
         Gap(24.h),
-        _buildEmployeeField(context, localizations, isDark, state, notifier),
+        _buildEmployeeField(context, localizations, isDark, state, notifier, enterpriseId),
         Gap(24.h),
         _buildLeaveTypeField(context, localizations, isDark, state, notifier, ref),
         Gap(24.h),
@@ -91,11 +93,12 @@ class LeaveDetailsStep extends ConsumerWidget {
     bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
+    int enterpriseId,
   ) {
     return EmployeeSearchField(
       label: localizations.employee,
       isRequired: true,
-      enterpriseId: 1001,
+      enterpriseId: enterpriseId,
       selectedEmployee: state.selectedEmployee,
       onEmployeeSelected: (employee) {
         notifier.updateEmployee(employee);

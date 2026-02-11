@@ -49,8 +49,8 @@ class HeaderRightSection extends StatelessWidget {
                 children: [
                   DigifyAsset(
                     assetPath: Assets.icons.header.language.path,
-                    width: 30.sp,
-                    height: 30.sp,
+                    width: 20.w,
+                    height: 20.h,
                     color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
                   ),
                   Gap(8.w),
@@ -73,16 +73,16 @@ class HeaderRightSection extends StatelessWidget {
         DigifyAssetButton(
           onTap: () {},
           assetPath: Assets.icons.header.help.path,
-          width: 30.sp,
-          height: 30.sp,
+          width: 20.w,
+          height: 20.h,
           color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
         ),
         Gap(16.w),
         DigifyAssetButton(
           onTap: () {},
           assetPath: Assets.icons.header.favourite.path,
-          width: 30.sp,
-          height: 30.sp,
+          width: 20.w,
+          height: 20.h,
           color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
         ),
         Gap(16.w),
