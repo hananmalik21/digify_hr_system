@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/localization/locale_provider.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_provider.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
@@ -49,6 +50,7 @@ class AppHeader extends ConsumerWidget {
                     ref.read(sidebarProvider.notifier).toggle();
                   }
                 },
+                onLogoTap: () => context.go(AppRoutes.dashboard),
               ),
               if (!isMobile)
                 Expanded(
@@ -62,7 +64,6 @@ class AppHeader extends ConsumerWidget {
                 localizations: localizations,
                 onToggleTheme: () => ref.read(themeModeProvider.notifier).toggleTheme(),
                 onToggleLocale: () => ref.read(localeProvider.notifier).toggleLocale(),
-                onGoHome: () => context.go('/dashboard'),
               ),
             ],
           ),
