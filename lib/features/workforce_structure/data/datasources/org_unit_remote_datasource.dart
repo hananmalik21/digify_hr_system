@@ -27,24 +27,17 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     int page = 1,
     int pageSize = 100,
   }) async {
-    final queryParams = {
-      'level': levelCode,
-      'page': page.toString(),
-      'page_size': pageSize.toString(),
-    };
+    final queryParams = {'level': levelCode, 'page': page.toString(), 'page_size': pageSize.toString()};
 
     if (parentOrgUnitId != null) {
-      queryParams['parent_org_unit_id'] = parentOrgUnitId.toString();
+      queryParams['parentId'] = parentOrgUnitId.toString();
     }
 
     if (search != null && search.isNotEmpty) {
       queryParams['search'] = search;
     }
 
-    final response = await apiClient.get(
-      '/api/hr-org-structures/$structureId/org-units',
-      queryParameters: queryParams,
-    );
+    final response = await apiClient.get('/api/hr-org-structures/$structureId/org-units', queryParameters: queryParams);
 
     return OrgUnitsResponseDto.fromJson(response).toDomain();
   }

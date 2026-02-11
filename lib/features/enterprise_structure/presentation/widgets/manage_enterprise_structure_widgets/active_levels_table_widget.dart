@@ -41,12 +41,7 @@ class ActiveLevelsTableWidget extends StatelessWidget {
         child: Center(
           child: Text(
             localizations.noResultsFound,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
           ),
         ),
       );
@@ -61,7 +56,7 @@ class ActiveLevelsTableWidget extends StatelessWidget {
         'org_unit_code': level.orgUnitCode,
         'org_unit_name_en': level.orgUnitNameEn,
         'org_unit_name_ar': level.orgUnitNameAr,
-        'parent_org_unit_id': level.parentOrgUnitId ?? '',
+        'parentId': level.parentOrgUnitId ?? '',
         'is_active': level.isActive ? 'Y' : 'N',
         'manager_name': level.managerName,
         'manager_email': level.managerEmail,
@@ -75,17 +70,13 @@ class ActiveLevelsTableWidget extends StatelessWidget {
 
     final columns = [
       TableColumn(key: 'org_unit_id', label: 'Org Unit ID', width: 120.w),
-      TableColumn(
-        key: 'org_structure_id',
-        label: 'Org Structure',
-        width: 140.w,
-      ),
+      TableColumn(key: 'org_structure_id', label: 'Org Structure', width: 140.w),
       TableColumn(key: 'enterprise_id', label: 'Enterprise ID', width: 120.w),
       TableColumn(key: 'level_code', label: 'Level Code', width: 120.w),
       TableColumn(key: 'org_unit_code', label: 'Org Unit Code', width: 140.w),
       TableColumn(key: 'org_unit_name_en', label: 'Name (EN)', width: 180.w),
       TableColumn(key: 'org_unit_name_ar', label: 'Name (AR)', width: 180.w),
-      TableColumn(key: 'parent_org_unit_id', label: 'Parent ID', width: 120.w),
+      TableColumn(key: 'parentId', label: 'Parent ID', width: 120.w),
       TableColumn(
         key: 'is_active',
         label: 'Active',
@@ -96,12 +87,8 @@ class ActiveLevelsTableWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
               color: isActive
-                  ? (isDark
-                        ? AppColors.success.withValues(alpha: 0.2)
-                        : AppColors.successBg)
-                  : (isDark
-                        ? AppColors.error.withValues(alpha: 0.2)
-                        : const Color(0xFFFEE2E2)),
+                  ? (isDark ? AppColors.success.withValues(alpha: 0.2) : AppColors.successBg)
+                  : (isDark ? AppColors.error.withValues(alpha: 0.2) : const Color(0xFFFEE2E2)),
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
@@ -133,12 +120,8 @@ class ActiveLevelsTableWidget extends StatelessWidget {
         data: tableData,
         isLoading: isLoading,
         showHeader: true,
-        headerBackgroundColor: isDark
-            ? AppColors.cardBackgroundGreyDark
-            : AppColors.grayBg,
-        rowBackgroundColor: isDark
-            ? AppColors.cardBackgroundDark
-            : Colors.white,
+        headerBackgroundColor: isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg,
+        rowBackgroundColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
       ),
     );
   }

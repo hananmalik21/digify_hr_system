@@ -3496,7 +3496,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employeeName => 'Employee Name';
 
   @override
-  String get employeeNumber => 'Employee Number';
+  String get employeeNumber => 'Employee #';
 
   @override
   String get joinDate => 'Join Date';
@@ -3815,6 +3815,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportingDocuments => 'Supporting Documents';
+
+  @override
+  String get documentType => 'Document type';
+
+  @override
+  String get replaceDocument => 'Replace';
 
   @override
   String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';

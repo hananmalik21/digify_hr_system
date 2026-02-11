@@ -20,27 +20,27 @@ class HeaderNotificationIcon extends StatelessWidget {
         DigifyAssetButton(
           onTap: onTap,
           assetPath: Assets.icons.header.notificationBell.path,
-          width: 30.sp,
-          height: 30.sp,
+          width: 20.w,
+          height: 20.h,
           color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
           padding: 6.r,
         ),
         if (count > 0)
           Positioned(
-            right: 0,
-            top: 0,
+            right: 3,
+            top: 1,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-              constraints: BoxConstraints(minWidth: 20.w, minHeight: 20.h),
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+              constraints: BoxConstraints(minWidth: 14.w, minHeight: 14.h),
               decoration: BoxDecoration(
                 color: AppColors.deleteIconRed,
                 shape: BoxShape.circle,
-                border: Border.all(color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground, width: 2.w),
+                border: Border.all(color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground, width: 1.w),
               ),
               alignment: Alignment.center,
               child: Text(
                 count > 99 ? '99+' : count.toString(),
-                style: context.textTheme.headlineMedium?.copyWith(fontSize: 12.sp, color: AppColors.cardBackground),
+                style: context.textTheme.headlineMedium?.copyWith(fontSize: 10.sp, color: AppColors.cardBackground),
               ),
             ),
           ),

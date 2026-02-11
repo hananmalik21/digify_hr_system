@@ -8,7 +8,6 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class DigifyStyleOrgLevelField extends ConsumerWidget {
   const DigifyStyleOrgLevelField({
@@ -38,37 +37,6 @@ class DigifyStyleOrgLevelField extends ConsumerWidget {
     final isLoading = selectionState.isLoading(level.levelCode);
     final error = selectionState.getError(level.levelCode);
     final label = displayLabel ?? selectedUnit?.orgUnitNameEn ?? 'Select ${level.levelName}';
-
-    if (isLoading) {
-      return Skeletonizer(
-        enabled: true,
-        child: Container(
-          height: 48.h,
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: AppColors.inputBg,
-            borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: AppColors.borderGrey),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 14.h,
-                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
-                ),
-              ),
-              SizedBox(width: 8.w),
-              Container(
-                width: 16.w,
-                height: 16.h,
-                decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
 
     final content = InkWell(
       onTap: isEnabled

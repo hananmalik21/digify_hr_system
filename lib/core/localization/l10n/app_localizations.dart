@@ -6821,7 +6821,7 @@ abstract class AppLocalizations {
   /// No description provided for @employeeNumber.
   ///
   /// In en, this message translates to:
-  /// **'Employee Number'**
+  /// **'Employee #'**
   String get employeeNumber;
 
   /// No description provided for @joinDate.
@@ -7405,6 +7405,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Supporting Documents'**
   String get supportingDocuments;
+
+  /// No description provided for @documentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Document type'**
+  String get documentType;
+
+  /// No description provided for @replaceDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replaceDocument;
 
   /// No description provided for @clickToUploadOrDragDrop.
   ///

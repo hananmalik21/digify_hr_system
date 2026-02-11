@@ -1259,6 +1259,8 @@
   "additionalNotes": "ملاحظات إضافية",
   "anyAdditionalInformation": "أي معلومات إضافية أو اعتبارات خاصة...",
   "supportingDocuments": "المستندات الداعمة",
+  "documentType": "نوع المستند",
+  "replaceDocument": "استبدال",
   "clickToUploadOrDragDrop": "انقر للتحميل أو السحب والإفلات",
   "pdfDocDocxJpgPngUpTo10MB": "PDF، DOC، DOCX، JPG، PNG حتى 10 ميجابايت لكل منها",
   "requiredDocuments": "المستندات المطلوبة:",
