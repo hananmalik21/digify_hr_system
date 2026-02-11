@@ -3817,6 +3817,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportingDocuments => 'Supporting Documents';
 
   @override
+  String get documentType => 'Document type';
+
+  @override
+  String get replaceDocument => 'Replace';
+
+  @override
   String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';
 
   @override

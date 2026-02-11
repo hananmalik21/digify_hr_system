@@ -147,6 +147,8 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   }) async {
     state = state.copyWith(isSubmitting: true, clearSubmitError: true);
     try {
@@ -155,6 +157,8 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
         request,
         document: document,
         documentTypeCode: documentTypeCode,
+        docAction: docAction,
+        replaceDocumentId: replaceDocumentId,
       );
       final result = response as Map<String, dynamic>?;
       final success = result?['success'] as bool? ?? false;

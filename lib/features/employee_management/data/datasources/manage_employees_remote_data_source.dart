@@ -36,6 +36,8 @@ abstract class ManageEmployeesRemoteDataSource {
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   });
 }
 
@@ -177,6 +179,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+      map['doc_action'] = 'ADD';
       map['document_type_code'] = documentTypeCode.trim();
     }
     final formData = FormData.fromMap(map);
@@ -199,6 +202,8 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   }) async {
     final map = <String, dynamic>{
       'first_name_en': request.firstNameEn?.trim() ?? '',
@@ -284,8 +289,16 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
         'work_permit_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.workPermitExpiry!),
       ...ManageEmployeesRemoteDataSourceImpl._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
-    if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+    if (document != null &&
+        documentTypeCode != null &&
+        documentTypeCode.trim().isNotEmpty &&
+        docAction != null &&
+        docAction.trim().isNotEmpty) {
+      map['doc_action'] = docAction.trim();
       map['document_type_code'] = documentTypeCode.trim();
+      if (replaceDocumentId != null && docAction.trim().toUpperCase() == 'REPLACE') {
+        map['replace_document_id'] = replaceDocumentId;
+      }
     }
     final formData = FormData.fromMap(map);
     if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {

@@ -122,8 +122,10 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
       );
     }
 
-    final structureId = orgState!.orgStructure!.structureId;
-    final selectionProvider = addEmployeeOrgSelectionProvider((structureId: structureId, levels: activeLevels));
+    final selectionKey = ref.watch(addEmployeeOrgSelectionKeyProvider);
+    if (selectionKey == null) return const SizedBox.shrink();
+    ref.watch(addEmployeeOrgSelectionSyncProvider);
+    final selectionProvider = addEmployeeOrgSelectionProvider(selectionKey);
     final selectionState = ref.watch(selectionProvider);
     final assignmentState = ref.watch(addEmployeeAssignmentProvider);
     final assignmentNotifier = ref.read(addEmployeeAssignmentProvider.notifier);

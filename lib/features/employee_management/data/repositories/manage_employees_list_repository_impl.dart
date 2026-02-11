@@ -60,12 +60,16 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   }) async {
     return remoteDataSource.updateEmployee(
       employeeGuid,
       request,
       document: document,
       documentTypeCode: documentTypeCode,
+      docAction: docAction,
+      replaceDocumentId: replaceDocumentId,
     );
   }
 }
