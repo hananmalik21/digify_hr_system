@@ -3791,6 +3791,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get supportingDocuments => 'المستندات الداعمة';
 
   @override
+  String get documentType => 'نوع المستند';
+
+  @override
+  String get replaceDocument => 'استبدال';
+
+  @override
   String get clickToUploadOrDragDrop => 'انقر للتحميل أو السحب والإفلات';
 
   @override

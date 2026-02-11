@@ -1378,6 +1378,8 @@
   "additionalNotes": "Additional Notes",
   "anyAdditionalInformation": "Any additional information or special considerations...",
   "supportingDocuments": "Supporting Documents",
+  "documentType": "Document type",
+  "replaceDocument": "Replace",
   "clickToUploadOrDragDrop": "Click to upload or drag and drop",
   "pdfDocDocxJpgPngUpTo10MB": "PDF, DOC, DOCX, JPG, PNG up to 10MB each",
   "requiredDocuments": "Required Documents:",

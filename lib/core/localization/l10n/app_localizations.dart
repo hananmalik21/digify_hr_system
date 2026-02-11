@@ -7406,6 +7406,18 @@ abstract class AppLocalizations {
   /// **'Supporting Documents'**
   String get supportingDocuments;
 
+  /// No description provided for @documentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Document type'**
+  String get documentType;
+
+  /// No description provided for @replaceDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replaceDocument;
+
   /// No description provided for @clickToUploadOrDragDrop.
   ///
   /// In en, this message translates to:

@@ -31,5 +31,7 @@ abstract class ManageEmployeesListRepository {
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   });
 }
