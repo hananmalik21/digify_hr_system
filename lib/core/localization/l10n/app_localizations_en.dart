@@ -3496,7 +3496,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employeeName => 'Employee Name';
 
   @override
-  String get employeeNumber => 'Employee Number';
+  String get employeeNumber => 'Employee #';
 
   @override
   String get joinDate => 'Join Date';

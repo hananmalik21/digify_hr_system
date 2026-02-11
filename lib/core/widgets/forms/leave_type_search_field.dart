@@ -19,6 +19,7 @@ class LeaveTypeSearchField extends ConsumerStatefulWidget {
   final ApiLeaveType? selectedLeaveType;
   final ValueChanged<ApiLeaveType> onLeaveTypeSelected;
   final String? hintText;
+  final Color? fillColor;
 
   const LeaveTypeSearchField({
     super.key,
@@ -27,6 +28,7 @@ class LeaveTypeSearchField extends ConsumerStatefulWidget {
     this.isRequired = false,
     this.selectedLeaveType,
     this.hintText,
+    this.fillColor,
   });
 
   @override
@@ -389,7 +391,7 @@ class _LeaveTypeSearchFieldState extends ConsumerState<LeaveTypeSearchField> {
               }
             },
             filled: true,
-            fillColor: Colors.transparent,
+            fillColor: widget.fillColor ?? Colors.transparent,
           ),
         ),
       ],

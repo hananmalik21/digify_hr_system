@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/leave_management/data/dto/paginated_leave_requests_dto.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -182,17 +183,7 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
 
       formData.fields.add(MapEntry('submit', submit.toString()));
 
-      for (final document in state.documents) {
-        if (kIsWeb) {
-          continue;
-        } else {
-          final file = File(document.path);
-          if (await file.exists()) {
-            final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
-            formData.files.add(MapEntry('documents', multipartFile));
-          }
-        }
-      }
+      await _addDocumentsToFormData(formData, state.documents);
 
       final response = await apiClient.postMultipart(
         ApiEndpoints.absLeaveRequests,
@@ -232,6 +223,21 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
     }
 
     return 'FULL_DAY';
+  }
+
+  Future<void> _addDocumentsToFormData(FormData formData, List<Document> documents) async {
+    for (final document in documents) {
+      if (document.bytes != null) {
+        final multipartFile = MultipartFile.fromBytes(document.bytes!, filename: document.name);
+        formData.files.add(MapEntry('documents', multipartFile));
+      } else if (!kIsWeb) {
+        final file = File(document.path);
+        if (await file.exists()) {
+          final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
+          formData.files.add(MapEntry('documents', multipartFile));
+        }
+      }
+    }
   }
 
   @override
@@ -323,17 +329,7 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
 
       formData.fields.add(MapEntry('submit', submit.toString()));
 
-      for (final document in state.documents) {
-        if (kIsWeb) {
-          continue;
-        } else {
-          final file = File(document.path);
-          if (await file.exists()) {
-            final multipartFile = await MultipartFile.fromFile(document.path, filename: document.name);
-            formData.files.add(MapEntry('documents', multipartFile));
-          }
-        }
-      }
+      await _addDocumentsToFormData(formData, state.documents);
 
       final response = await apiClient.putMultipart(
         ApiEndpoints.absLeaveRequestUpdate(guid),

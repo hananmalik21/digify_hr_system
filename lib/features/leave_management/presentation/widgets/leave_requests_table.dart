@@ -37,70 +37,73 @@ class LeaveRequestsTable extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScrollableSingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LeaveRequestsTableHeader(isDark: isDark, localizations: localizations),
-                requestsAsync.when(
-                  data: (paginatedResponse) {
-                    final filtered = _filterRequests(paginatedResponse.requests, filter);
-                    if (filtered.isEmpty) {
-                      return _buildEmptyState(localizations);
-                    }
-                    final approveLoading = ref.watch(leaveRequestsApproveLoadingProvider);
-                    final rejectLoading = ref.watch(leaveRequestsRejectLoadingProvider);
-                    final deleteLoading = ref.watch(leaveRequestsDeleteLoadingProvider);
-                    return Column(
-                      children: filtered
-                          .map(
-                            (request) => LeaveRequestsTableRow(
-                              request: request,
-                              localizations: localizations,
-                              isDark: isDark,
-                              isApproveLoading: approveLoading.contains(request.guid),
-                              isRejectLoading: rejectLoading.contains(request.guid),
-                              isDeleteLoading: deleteLoading.contains(request.guid),
-                              onView: () {
-                                LeaveRequestDetailsDialog.show(
-                                  context,
-                                  request: request,
-                                  onApprove: request.status == RequestStatus.pending
-                                      ? () => LeaveRequestsActions.approveLeaveRequest(
-                                          context,
-                                          ref,
-                                          request,
-                                          localizations,
-                                        )
-                                      : null,
-                                  onReject: request.status == RequestStatus.pending
-                                      ? () => LeaveRequestsActions.rejectLeaveRequest(
-                                          context,
-                                          ref,
-                                          request,
-                                          localizations,
-                                        )
-                                      : null,
-                                );
-                              },
-                              onApprove: () =>
-                                  LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
-                              onReject: () =>
-                                  LeaveRequestsActions.rejectLeaveRequest(context, ref, request, localizations),
-                              onDelete: () =>
-                                  LeaveRequestsActions.deleteLeaveRequest(context, ref, request, localizations),
-                              onUpdate: () =>
-                                  LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
-                            ),
-                          )
-                          .toList(),
-                    );
-                  },
-                  loading: () => _buildLoadingRows(),
-                  error: (error, stack) => _buildErrorState(localizations, error.toString()),
-                ),
-              ],
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LeaveRequestsTableHeader(isDark: isDark, localizations: localizations),
+                  requestsAsync.when(
+                    data: (paginatedResponse) {
+                      final filtered = _filterRequests(paginatedResponse.requests, filter);
+                      if (filtered.isEmpty) {
+                        return _buildEmptyState(localizations);
+                      }
+                      final approveLoading = ref.watch(leaveRequestsApproveLoadingProvider);
+                      final rejectLoading = ref.watch(leaveRequestsRejectLoadingProvider);
+                      final deleteLoading = ref.watch(leaveRequestsDeleteLoadingProvider);
+                      return Column(
+                        children: filtered
+                            .map(
+                              (request) => LeaveRequestsTableRow(
+                                request: request,
+                                localizations: localizations,
+                                isDark: isDark,
+                                isApproveLoading: approveLoading.contains(request.guid),
+                                isRejectLoading: rejectLoading.contains(request.guid),
+                                isDeleteLoading: deleteLoading.contains(request.guid),
+                                onView: () {
+                                  LeaveRequestDetailsDialog.show(
+                                    context,
+                                    request: request,
+                                    onApprove: request.status == RequestStatus.pending
+                                        ? () => LeaveRequestsActions.approveLeaveRequest(
+                                            context,
+                                            ref,
+                                            request,
+                                            localizations,
+                                          )
+                                        : null,
+                                    onReject: request.status == RequestStatus.pending
+                                        ? () => LeaveRequestsActions.rejectLeaveRequest(
+                                            context,
+                                            ref,
+                                            request,
+                                            localizations,
+                                          )
+                                        : null,
+                                  );
+                                },
+                                onApprove: () =>
+                                    LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
+                                onReject: () =>
+                                    LeaveRequestsActions.rejectLeaveRequest(context, ref, request, localizations),
+                                onDelete: () =>
+                                    LeaveRequestsActions.deleteLeaveRequest(context, ref, request, localizations),
+                                onUpdate: () =>
+                                    LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                    loading: () => _buildLoadingRows(),
+                    error: (error, stack) => _buildErrorState(localizations, error.toString()),
+                  ),
+                ],
+              ),
             ),
           ),
           if (notifierState.data != null)

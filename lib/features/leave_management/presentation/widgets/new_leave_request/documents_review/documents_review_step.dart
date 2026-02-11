@@ -21,7 +21,7 @@ class _DocumentsReviewStepState extends ConsumerState<DocumentsReviewStep> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 24.h,
+      spacing: 16.h,
       children: [
         DocumentsSection(state: state, notifier: notifier),
         RequestSummarySection(state: state),

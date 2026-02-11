@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/leave_type_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
@@ -29,13 +29,11 @@ class LeaveDetailsStep extends ConsumerWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16.h,
       children: [
         _buildGuidelinesBox(context, localizations, isDark),
-        Gap(24.h),
         _buildEmployeeField(context, localizations, isDark, state, notifier, enterpriseId),
-        Gap(24.h),
         _buildLeaveTypeField(context, localizations, isDark, state, notifier, ref),
-        Gap(24.h),
         _buildDateFields(context, localizations, isDark, state, notifier),
       ],
     );
@@ -103,6 +101,7 @@ class LeaveDetailsStep extends ConsumerWidget {
       onEmployeeSelected: (employee) {
         notifier.updateEmployee(employee);
       },
+      fillColor: AppColors.cardBackground,
     );
   }
 
@@ -144,6 +143,7 @@ class LeaveDetailsStep extends ConsumerWidget {
           onLeaveTypeSelected: (leaveType) {
             notifier.setLeaveTypeFromApi(leaveType.id, leaveType.code);
           },
+          fillColor: AppColors.cardBackground,
         ),
         if (state.leaveType == TimeOffType.annualLeave || (selectedApiLeaveType?.code.toUpperCase() == 'ANNUAL')) ...[
           Gap(8.h),
@@ -220,17 +220,26 @@ class LeaveDetailsStep extends ConsumerWidget {
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
   ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final lastSelectable = today.add(const Duration(days: 365));
+
     return Row(
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DateSelectionField(
+              DigifyDateField(
+                key: ValueKey<String>(state.startDate?.toIso8601String() ?? 'start'),
                 label: localizations.startDate,
+                hintText: localizations.hintSelectDate,
                 isRequired: true,
-                date: state.startDate,
+                initialDate: state.startDate,
+                firstDate: today,
+                lastDate: lastSelectable,
                 onDateSelected: notifier.setStartDate,
+                fillColor: AppColors.cardBackground,
               ),
               Gap(24.h),
               DigifySelectFieldWithLabel<String>(
@@ -245,6 +254,7 @@ class LeaveDetailsStep extends ConsumerWidget {
                   }
                 },
                 isRequired: true,
+                fillColor: AppColors.cardBackground,
               ),
             ],
           ),
@@ -254,11 +264,16 @@ class LeaveDetailsStep extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DateSelectionField(
+              DigifyDateField(
+                key: ValueKey<String>(state.endDate?.toIso8601String() ?? 'end'),
                 label: localizations.endDate,
+                hintText: localizations.hintSelectDate,
                 isRequired: true,
-                date: state.endDate,
+                initialDate: state.endDate,
+                firstDate: today,
+                lastDate: lastSelectable,
                 onDateSelected: notifier.setEndDate,
+                fillColor: AppColors.cardBackground,
               ),
               Gap(24.h),
               DigifySelectFieldWithLabel<String>(
@@ -273,6 +288,7 @@ class LeaveDetailsStep extends ConsumerWidget {
                   }
                 },
                 isRequired: true,
+                fillColor: AppColors.cardBackground,
               ),
             ],
           ),

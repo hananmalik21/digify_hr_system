@@ -1259,7 +1259,7 @@
   "applyLeave": "Apply Leave",
   "requestEncashment": "Request Encashment",
   "employeeName": "Employee Name",
-  "employeeNumber": "Employee Number",
+  "employeeNumber": "Employee #",
   "joinDate": "Join Date",
   "totalBalance": "Total Balance",
   "daysAvailable": "days available",

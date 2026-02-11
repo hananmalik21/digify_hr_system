@@ -6821,7 +6821,7 @@ abstract class AppLocalizations {
   /// No description provided for @employeeNumber.
   ///
   /// In en, this message translates to:
-  /// **'Employee Number'**
+  /// **'Employee #'**
   String get employeeNumber;
 
   /// No description provided for @joinDate.
