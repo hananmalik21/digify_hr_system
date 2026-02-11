@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
@@ -31,6 +32,19 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
   final _additionalNotesController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    final state = ref.read(newLeaveRequestProvider);
+
+    _reasonController.text = state.reason ?? '';
+    _addressController.text = state.addressDuringLeave ?? '';
+    _contactPhoneController.text = state.contactPhoneNumber ?? '';
+    _emergencyContactNameController.text = state.emergencyContactName ?? '';
+    _emergencyContactPhoneController.text = state.emergencyContactPhone ?? '';
+    _additionalNotesController.text = state.additionalNotes ?? '';
+  }
+
+  @override
   void dispose() {
     _reasonController.dispose();
     _addressController.dispose();
@@ -49,7 +63,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 24.h,
+      spacing: 16.h,
       children: [
         _buildReasonField(localizations, state, notifier),
         _buildDelegatedToField(localizations, state, notifier),
@@ -75,6 +89,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       isRequired: true,
       characterCountFormatter: (count) => localizations.charactersCount(count),
       onChanged: (value) => notifier.setReason(value),
+      fillColor: AppColors.cardBackground,
     );
   }
 
@@ -102,6 +117,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
           onEmployeeSelected: (employee) {
             notifier.setDelegatedTo(employee.id, employee.fullName);
           },
+          fillColor: AppColors.cardBackground,
         ),
         Gap(8.h),
         Text(
@@ -165,6 +181,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       minLines: 6,
       isRequired: true,
       onChanged: (value) => notifier.setAddressDuringLeave(value),
+      fillColor: AppColors.cardBackground,
     );
   }
 
@@ -180,6 +197,9 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       keyboardType: TextInputType.phone,
       isRequired: true,
       onChanged: (value) => notifier.setContactPhoneNumber(value),
+      filled: true,
+      fillColor: AppColors.cardBackground,
+      inputFormatters: FieldFormat.phoneFormatters,
     );
   }
 
@@ -194,6 +214,8 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       hintText: localizations.enterEmergencyContactName,
       isRequired: true,
       onChanged: (value) => notifier.setEmergencyContactName(value),
+      filled: true,
+      fillColor: AppColors.cardBackground,
     );
   }
 
@@ -209,6 +231,9 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       keyboardType: TextInputType.phone,
       isRequired: true,
       onChanged: (value) => notifier.setEmergencyContactPhone(value),
+      filled: true,
+      fillColor: AppColors.cardBackground,
+      inputFormatters: FieldFormat.phoneFormatters,
     );
   }
 
@@ -224,6 +249,7 @@ class _ContactNotesStepState extends ConsumerState<ContactNotesStep> {
       maxLines: 6,
       minLines: 6,
       onChanged: (value) => notifier.setAdditionalNotes(value),
+      fillColor: AppColors.cardBackground,
     );
   }
 }

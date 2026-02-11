@@ -20,6 +20,7 @@ class EmployeeSearchField extends ConsumerStatefulWidget {
   final ValueChanged<Employee> onEmployeeSelected;
   final String? hintText;
   final int enterpriseId;
+  final Color? fillColor;
 
   const EmployeeSearchField({
     super.key,
@@ -29,6 +30,7 @@ class EmployeeSearchField extends ConsumerStatefulWidget {
     this.isRequired = false,
     this.selectedEmployee,
     this.hintText,
+    this.fillColor,
   });
 
   @override
@@ -412,7 +414,7 @@ class _EmployeeSearchFieldState extends ConsumerState<EmployeeSearchField> {
               }
             },
             filled: true,
-            fillColor: Colors.transparent,
+            fillColor: widget.fillColor ?? Colors.transparent,
           ),
         ),
       ],

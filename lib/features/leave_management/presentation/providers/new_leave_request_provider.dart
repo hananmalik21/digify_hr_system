@@ -7,6 +7,14 @@ import 'package:digify_hr_system/features/time_management/domain/models/time_off
 import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class LeaveRequestActionResult {
+  const LeaveRequestActionResult._(this.isSuccess, this.errorMessage);
+  final bool isSuccess;
+  final String? errorMessage;
+  factory LeaveRequestActionResult.success() => const LeaveRequestActionResult._(true, null);
+  factory LeaveRequestActionResult.failure(String message) => LeaveRequestActionResult._(false, message);
+}
+
 enum LeaveRequestStep { leaveDetails, contactNotes, documentsReview }
 
 class NewLeaveRequestState {
@@ -111,7 +119,16 @@ class NewLeaveRequestState {
       case LeaveRequestStep.leaveDetails:
         return selectedEmployee != null && leaveType != null && startDate != null && endDate != null;
       case LeaveRequestStep.contactNotes:
-        return reason != null && reason!.isNotEmpty;
+        return reason != null &&
+            reason!.trim().isNotEmpty &&
+            addressDuringLeave != null &&
+            addressDuringLeave!.trim().isNotEmpty &&
+            contactPhoneNumber != null &&
+            contactPhoneNumber!.trim().isNotEmpty &&
+            emergencyContactName != null &&
+            emergencyContactName!.trim().isNotEmpty &&
+            emergencyContactPhone != null &&
+            emergencyContactPhone!.trim().isNotEmpty;
       case LeaveRequestStep.documentsReview:
         return true; // Documents are optional
     }
@@ -324,43 +341,55 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     );
   }
 
-  Future<Map<String, dynamic>> submit() async {
-    if (_repository == null) {
-      throw Exception('Repository not provided');
+  Future<LeaveRequestActionResult> submit() async {
+    if (_repository == null || _ref == null) {
+      return LeaveRequestActionResult.failure('Repository not provided');
     }
-
-    final tenantId = _ref?.read(leaveManagementEnterpriseIdProvider);
-
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     state = state.copyWith(isSubmitting: true);
     try {
       final response = state.editingRequestGuid != null
           ? await _repository.updateLeaveRequest(state.editingRequestGuid!, state, true, tenantId: tenantId)
           : await _repository.createLeaveRequest(state, true, tenantId: tenantId);
       state = state.copyWith(isSubmitting: false);
-      return response;
+      final leaveRequestsNotifier = _ref.read(leaveRequestsNotifierProvider.notifier);
+      if (state.editingRequestGuid != null) {
+        await leaveRequestsNotifier.updateLeaveRequest(state.editingRequestGuid!, state, true, response);
+      } else {
+        final employeeName = state.selectedEmployee?.fullName ?? '';
+        final leaveType = state.leaveType!;
+        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
+      }
+      return LeaveRequestActionResult.success();
     } catch (e) {
       state = state.copyWith(isSubmitting: false);
-      rethrow;
+      return LeaveRequestActionResult.failure(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
-  Future<Map<String, dynamic>> saveAsDraft() async {
-    if (_repository == null) {
-      throw Exception('Repository not provided');
+  Future<LeaveRequestActionResult> saveAsDraft() async {
+    if (_repository == null || _ref == null) {
+      return LeaveRequestActionResult.failure('Repository not provided');
     }
-
-    final tenantId = _ref?.read(leaveManagementEnterpriseIdProvider);
-
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     state = state.copyWith(isSavingDraft: true);
     try {
       final response = state.editingRequestGuid != null
           ? await _repository.updateLeaveRequest(state.editingRequestGuid!, state, false, tenantId: tenantId)
           : await _repository.createLeaveRequest(state, false, tenantId: tenantId);
       state = state.copyWith(isSavingDraft: false);
-      return response;
+      final leaveRequestsNotifier = _ref.read(leaveRequestsNotifierProvider.notifier);
+      if (state.editingRequestGuid != null) {
+        await leaveRequestsNotifier.updateLeaveRequest(state.editingRequestGuid!, state, false, response);
+      } else {
+        final employeeName = state.selectedEmployee?.fullName ?? '';
+        final leaveType = state.leaveType!;
+        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
+      }
+      return LeaveRequestActionResult.success();
     } catch (e) {
       state = state.copyWith(isSavingDraft: false);
-      rethrow;
+      return LeaveRequestActionResult.failure(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 }
