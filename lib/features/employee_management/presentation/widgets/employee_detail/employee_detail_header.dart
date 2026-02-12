@@ -1,19 +1,22 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_display_data.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_chip.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_leave_stats_cards.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import 'employee_detail_summary_cards.dart';
 
-class EmployeeDetailHeader extends StatelessWidget {
+class EmployeeDetailHeader extends ConsumerWidget {
   const EmployeeDetailHeader({
     super.key,
     required this.displayData,
@@ -30,8 +33,9 @@ class EmployeeDetailHeader extends StatelessWidget {
   final bool isDownloadingDocuments;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textPrimary = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       padding: EdgeInsets.all(24.w),
@@ -93,6 +97,12 @@ class EmployeeDetailHeader extends StatelessWidget {
           ),
           Gap(24.h),
           EmployeeDetailSummaryCards(displayData: displayData, isDark: isDark),
+          Gap(24.h),
+          EmployeeDetailLeaveStatsCards(
+            employeeGuid: displayData.employee.id,
+            isDark: isDark,
+            localizations: localizations,
+          ),
         ],
       ),
     );

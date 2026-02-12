@@ -6,6 +6,9 @@ class TimeOffRequest {
   final String guid;
   final int employeeId;
   final String employeeName;
+  final String? employeeGuid;
+  final String? department;
+  final String? position;
   final TimeOffType type;
   final DateTime startDate;
   final DateTime endDate;
@@ -24,6 +27,9 @@ class TimeOffRequest {
     required this.guid,
     required this.employeeId,
     required this.employeeName,
+    this.employeeGuid,
+    this.department,
+    this.position,
     required this.type,
     required this.startDate,
     required this.endDate,

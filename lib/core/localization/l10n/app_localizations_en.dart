@@ -3673,7 +3673,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get days => 'Days';
 
   @override
+  String get leaveBalanceTotal => 'Total:';
+
+  @override
+  String get leaveBalanceUsed => 'Used:';
+
+  @override
+  String get leaveBalanceRemaining => 'Remaining:';
+
+  @override
   String get reason => 'Reason';
+
+  @override
+  String get submittedAt => 'Submitted at';
+
+  @override
+  String get processedAt => 'Processed at';
 
   @override
   String get maternityLeave => 'Maternity Leave';
@@ -3683,6 +3698,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reject => 'Reject';
+
+  @override
+  String get totalRequests => 'Total Requests';
 
   @override
   String get leaveRequestGuidelines => 'Leave Request Guidelines';

@@ -49,6 +49,9 @@ class AppRoutes {
   // Other routes
   static const String leaveManagement = '/leave-management';
   static const String leaveManagementLeaveRequests = '$leaveManagement/leave-requests';
+  static const String leaveManagementEmployeeLeaveHistorySegment = 'employee-leave-history';
+  static const String leaveManagementEmployeeLeaveHistory =
+      '$leaveManagement/$leaveManagementEmployeeLeaveHistorySegment';
   static const String leaveManagementLeaveBalance = '$leaveManagement/leave-balance';
   static const String leaveManagementMyLeaveBalance = '$leaveManagement/my-leave-balance';
   static const String attendance = '/attendance';

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/leave_management/data/dto/leave_request_stats_dto.dart';
 import 'package:digify_hr_system/features/leave_management/data/dto/paginated_leave_requests_dto.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
@@ -11,6 +12,15 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 abstract class LeaveRequestsRemoteDataSource {
   Future<PaginatedLeaveRequestsDto> getLeaveRequests({int page = 1, int pageSize = 10, String? status, int? tenantId});
+
+  Future<PaginatedLeaveRequestsDto> getEmployeeLeaveRequests({
+    required String employeeGuid,
+    int page = 1,
+    int pageSize = 10,
+    int? tenantId,
+  });
+
+  Future<EmployeeLeaveStatsDto> getEmployeeLeaveRequestStats({required String employeeGuid, int? tenantId});
 
   Future<Map<String, dynamic>> getLeaveRequestById(String guid, {int? tenantId});
 
@@ -64,6 +74,49 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to fetch leave requests: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<PaginatedLeaveRequestsDto> getEmployeeLeaveRequests({
+    required String employeeGuid,
+    int page = 1,
+    int pageSize = 10,
+    int? tenantId,
+  }) async {
+    try {
+      final queryParameters = <String, String>{'page': page.toString(), 'page_size': pageSize.toString()};
+
+      final response = await apiClient.get(
+        ApiEndpoints.absEmployeeLeaveRequests(employeeGuid),
+        queryParameters: queryParameters,
+        headers: _buildHeaders(tenantId: tenantId),
+      );
+
+      return PaginatedLeaveRequestsDto.fromJson(response);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to fetch employee leave requests: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<EmployeeLeaveStatsDto> getEmployeeLeaveRequestStats({required String employeeGuid, int? tenantId}) async {
+    try {
+      final response = await apiClient.get(
+        ApiEndpoints.absEmployeeLeaveRequestStats(employeeGuid),
+        headers: _buildHeaders(tenantId: tenantId),
+      );
+      final data = response['data'];
+      if (data is List && data.isNotEmpty && data.first is Map<String, dynamic>) {
+        return EmployeeLeaveStatsDto.fromJson(data.first as Map<String, dynamic>);
+      }
+      return EmployeeLeaveStatsDto.fromJson({});
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to fetch employee leave request stats: ${e.toString()}', originalError: e);
     }
   }
 
@@ -204,25 +257,8 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   String _mapTimeToPortion(String? time) {
-    if (time == null || time.isEmpty) {
-      return 'FULL_DAY';
-    }
-
-    final timeLower = time.toLowerCase().trim();
-
-    if (timeLower == 'full time' || timeLower == 'full day' || timeLower == 'full') {
-      return 'FULL_DAY';
-    }
-
-    if (timeLower == 'half time' || timeLower == 'half') {
-      return 'HALF_AM';
-    }
-
-    if (time == 'FULL_DAY' || time == 'HALF_AM' || time == 'HALF_PM' || time == 'HOURS') {
-      return time;
-    }
-
-    return 'FULL_DAY';
+    if (time == null || time.isEmpty) return 'FULL_DAY';
+    return time.trim().toUpperCase();
   }
 
   Future<void> _addDocumentsToFormData(FormData formData, List<Document> documents) async {

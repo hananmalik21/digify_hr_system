@@ -8,11 +8,13 @@ import 'package:digify_hr_system/features/leave_management/data/config/leave_req
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_filter_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_actions_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_request_details_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_row.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -68,6 +70,8 @@ class LeaveRequestsTable extends ConsumerWidget {
                                   LeaveRequestDetailsDialog.show(
                                     context,
                                     request: request,
+                                    department: request.department,
+                                    position: request.position,
                                     onApprove: request.status == RequestStatus.pending
                                         ? () => LeaveRequestsActions.approveLeaveRequest(
                                             context,
@@ -86,6 +90,12 @@ class LeaveRequestsTable extends ConsumerWidget {
                                         : null,
                                   );
                                 },
+                                onViewEmployeeHistory: request.employeeGuid != null
+                                    ? () => context.push(
+                                        AppRoutes.leaveManagementEmployeeLeaveHistory,
+                                        extra: request.employeeGuid,
+                                      )
+                                    : null,
                                 onApprove: () =>
                                     LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
                                 onReject: () =>
