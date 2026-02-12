@@ -204,25 +204,8 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }
 
   String _mapTimeToPortion(String? time) {
-    if (time == null || time.isEmpty) {
-      return 'FULL_DAY';
-    }
-
-    final timeLower = time.toLowerCase().trim();
-
-    if (timeLower == 'full time' || timeLower == 'full day' || timeLower == 'full') {
-      return 'FULL_DAY';
-    }
-
-    if (timeLower == 'half time' || timeLower == 'half') {
-      return 'HALF_AM';
-    }
-
-    if (time == 'FULL_DAY' || time == 'HALF_AM' || time == 'HALF_PM' || time == 'HOURS') {
-      return time;
-    }
-
-    return 'FULL_DAY';
+    if (time == null || time.isEmpty) return 'FULL_DAY';
+    return time.trim().toUpperCase();
   }
 
   Future<void> _addDocumentsToFormData(FormData formData, List<Document> documents) async {
