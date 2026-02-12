@@ -1,5 +1,4 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/theme/app_text_theme.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
@@ -124,9 +123,17 @@ class _AttendanceTableState extends State<AttendanceTable> {
           Expanded(flex: 2, child: Text('Date', style: headerStyle)),
           Expanded(flex: 2, child: Text('Check In', style: headerStyle)),
           Expanded(flex: 2, child: Text('Check Out', style: headerStyle)),
-          Expanded(flex: 2, child: Text('Status', style: headerStyle)),
-          Padding(
-            padding: EdgeInsetsGeometry.only(left: 21.w, right: 42.w),
+
+          SizedBox(
+            width: 150.w,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Text('Status', style: headerStyle),
+            ),
+          ),
+
+          SizedBox(
+            width: 50.w,
             child: Text('Actions', style: headerStyle, textAlign: TextAlign.center),
           ),
         ],
@@ -140,6 +147,8 @@ class _AttendanceTableState extends State<AttendanceTable> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Expand Icon
             SizedBox(
@@ -212,16 +221,20 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 ],
               ),
             ),
+
             // Status
-            Expanded(flex: 2, child: _buildStatusChip(record.status)),
+            SizedBox(
+              width: 150.w,
+              child: Row(mainAxisSize: MainAxisSize.min, children: [Gap(10.w), _buildStatusChip(record.status)]),
+            ),
+
             // Actions
             SizedBox(
-              width: 80.w,
+              width: 50.w,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
-                  Gap(12.w),
                   Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
                 ],
               ),
@@ -270,7 +283,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
         textColor = const Color(0xFF4B5563);
     }
 
-    return IntrinsicWidth(child: DigifyCapsule(label: status, backgroundColor: bgColor, textColor: textColor));
+    return DigifyCapsule(label: status, backgroundColor: bgColor, textColor: textColor);
   }
 
   Widget _buildExpandedContent(BuildContext context, Attendance attendance) {
