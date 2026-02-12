@@ -72,3 +72,6 @@ Update API URL in `lib/core/network/api_config.dart`:
 ---
 
 **Built with Flutter** 🚀
+
+### After Adding new icons
+- dart run build_runner build --delete-conflicting-outputs && flutter clean && flutter pub get

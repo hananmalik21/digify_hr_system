@@ -1,6 +1,11 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../gen/assets.gen.dart';
+import '../../constants/app_colors.dart';
 
 class ImportButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -11,16 +16,7 @@ class ImportButton extends StatelessWidget {
   final double? fontSize;
   final EdgeInsetsGeometry? padding;
 
-  const ImportButton({
-    super.key,
-    required this.onTap,
-    this.customLabel,
-    this.backgroundColor,
-    this.textColor,
-    this.iconSize,
-    this.fontSize,
-    this.padding,
-  });
+  const ImportButton({super.key, required this.onTap, this.customLabel, this.backgroundColor, this.textColor, this.iconSize, this.fontSize, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +24,16 @@ class ImportButton extends StatelessWidget {
 
     return CustomButton(
       label: customLabel ?? localizations.import,
-      svgIcon: 'assets/icons/bulk_upload_icon_figma.svg',
+      svgIcon: Assets.icons.bulkUploadIconFigma.path,
       onPressed: onTap,
-      backgroundColor: backgroundColor ?? const Color(0xFFE7F2FF),
-      foregroundColor: textColor ?? const Color(0xFF155DFC),
-      iconSize: iconSize,
-      fontSize: fontSize,
-      padding: padding,
+      backgroundColor: backgroundColor ?? Colors.transparent,
+      foregroundColor: textColor ??
+          (context.isDark ? Colors.white : AppColors.sidebarMenuItemText),
+      iconSize: 14,
+      fontSize: 14.h,
+      borderColor: AppColors.inputBorder,
+      borderRadius: 7,
+      padding: EdgeInsets.symmetric(horizontal: 14.w,vertical: 7.h),
     );
   }
 }

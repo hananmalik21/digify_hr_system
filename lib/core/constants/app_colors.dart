@@ -202,6 +202,7 @@ class AppColors {
 
   // Role Assignment Colors
   static const Color roleBadgeBg = Color(0xFFEFF6FF);
+  static const Color roleBadgeColor = Color(0xFFECFEFF);
   static const Color roleBadgeBorder = Color(0xFFBFDBFE);
   static const Color roleBadgeText = Color(0xFF1E40AF);
 

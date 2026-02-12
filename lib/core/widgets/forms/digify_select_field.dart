@@ -15,6 +15,7 @@ class DigifySelectField<T> extends StatelessWidget {
   final String Function(T) itemLabelBuilder;
   final ValueChanged<T?>? onChanged;
   final bool isRequired;
+  final Color? color;
   final String? Function(T?)? validator;
 
   final Color? fillColor;
@@ -28,6 +29,7 @@ class DigifySelectField<T> extends StatelessWidget {
     this.value,
     this.onChanged,
     this.isRequired = false,
+    this.color,
     this.validator,
     this.fillColor,
   });
@@ -35,11 +37,17 @@ class DigifySelectField<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final effectiveFillColor = fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent);
-    final effectiveBorderColor = isDark ? AppColors.inputBorderDark : AppColors.inputBorder;
-    final effectiveTextColor = isDark ? context.themeTextPrimary : AppColors.textPrimary;
-    final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
+    final effectiveFillColor =
+        fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent);
+    final effectiveBorderColor = isDark
+        ? AppColors.inputBorderDark
+        : AppColors.inputBorder;
+    final effectiveTextColor = isDark
+        ? context.themeTextPrimary
+        : AppColors.textPrimary;
+    final effectiveHintColor = isDark
+        ? context.themeTextMuted
+        : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
 
     return SizedBox(
       height: 48.h,
@@ -48,7 +56,9 @@ class DigifySelectField<T> extends StatelessWidget {
           isExpanded: true,
           hint: Text(
             hint ?? 'Select an option',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveHintColor),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: effectiveHintColor),
           ),
           items: items
               .map(
@@ -56,7 +66,9 @@ class DigifySelectField<T> extends StatelessWidget {
                   value: item,
                   child: Text(
                     itemLabelBuilder(item),
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveTextColor),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyLarge?.copyWith(color: effectiveTextColor),
                   ),
                 ),
               )
@@ -77,7 +89,9 @@ class DigifySelectField<T> extends StatelessWidget {
             icon: DigifyAsset(
               assetPath: Assets.icons.workforce.chevronDown.path,
               height: 20,
-              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
+              color: isDark
+                  ? AppColors.textPlaceholderDark
+                  : AppColors.textPlaceholder,
             ),
             iconSize: 24.sp,
           ),
