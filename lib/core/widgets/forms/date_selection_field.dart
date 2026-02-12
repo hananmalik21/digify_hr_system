@@ -174,7 +174,7 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
               InkWell(
                 onTap: enabled ? () => _selectDate(context) : null,
                 child: Container(
-                  height: 37.h,
+                  height: 36.h,
                   padding: EdgeInsets.symmetric(horizontal: 14.w),
                   decoration: BoxDecoration(
                     color: enabled ? AppColors.cardBackground : AppColors.cardBackground.withValues(alpha: 0.5),

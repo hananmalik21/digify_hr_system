@@ -92,19 +92,45 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                         ),
                         Gap(16.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: AppColors.dialogCloseIcon),
+                            DigifyAsset(
+                              assetPath: Assets.icons.sidebar.scheduleAssignments.path,
+                              width: 16.w,
+                              height: 16.h,
+                              color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
+                            ),
                             Gap(4.w),
                             Expanded(
-                              child: DigifyTextField(
-                                labelText: 'Employee Number',
-                                hintText: 'Enter employee number...',
-                                controller: _employeeNumberController,
-                                fillColor: AppColors.cardBackground,
-                                filled: true,
-                                onChanged: (value) => notifier.setEmployeeNumber(value),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'Employee Number',
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
+                                            fontFamily: 'Inter',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Gap(4.h),
+                                  DigifyTextField(
+                                    hintText: 'Enter employee number...',
+                                    controller: _employeeNumberController,
+                                    fillColor: AppColors.cardBackground,
+                                    filled: true,
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                    onChanged: (value) => notifier.setEmployeeNumber(value),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -133,19 +159,45 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                         Gap(14.w),
                         Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: AppColors.dialogCloseIcon),
-                              Gap(11.w),
+                              DigifyAsset(
+                                assetPath: Assets.icons.sidebar.scheduleAssignments.path,
+                                width: 16.w,
+                                height: 16.h,
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
+                              ),
+                              Gap(4.w),
                               Expanded(
-                                child: DigifyTextField(
-                                  labelText: 'Employee Number',
-                                  hintText: 'Enter employee number...',
-                                  controller: _employeeNumberController,
-                                  fillColor: AppColors.cardBackground,
-                                  filled: true,
-                                  onChanged: (value) => notifier.setEmployeeNumber(value),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Employee Number',
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
+                                              fontFamily: 'Inter',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Gap(4.h),
+                                    DigifyTextField(
+                                      hintText: 'Enter employee number...',
+                                      controller: _employeeNumberController,
+                                      fillColor: AppColors.cardBackground,
+                                      filled: true,
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                                      onChanged: (value) => notifier.setEmployeeNumber(value),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -154,7 +206,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                       ],
                     ),
             ),
-            Gap(24.h),
+            Gap(21.h),
 
             // Statistics Grid
             Builder(
