@@ -13,6 +13,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
   final String Function(T) itemLabelBuilder;
   final ValueChanged<T?>? onChanged;
   final bool isRequired;
+  final Color? bgColor;
 
   const DigifySelectFieldWithLabel({
     super.key,
@@ -22,6 +23,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
     this.hint,
     this.value,
     this.onChanged,
+    this.bgColor,
     this.isRequired = false,
   });
 
@@ -66,6 +68,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
           itemLabelBuilder: itemLabelBuilder,
           value: value,
           onChanged: onChanged,
+          color: bgColor,
           isRequired: false,
         ),
       ],

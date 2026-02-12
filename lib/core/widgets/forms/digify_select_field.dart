@@ -15,6 +15,7 @@ class DigifySelectField<T> extends StatelessWidget {
   final String Function(T) itemLabelBuilder;
   final ValueChanged<T?>? onChanged;
   final bool isRequired;
+  final Color? color;
   final String? Function(T?)? validator;
 
   const DigifySelectField({
@@ -26,6 +27,7 @@ class DigifySelectField<T> extends StatelessWidget {
     this.value,
     this.onChanged,
     this.isRequired = false,
+    this.color,
     this.validator,
   });
 
@@ -33,7 +35,7 @@ class DigifySelectField<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final effectiveFillColor = isDark ? AppColors.inputBgDark : Colors.transparent;
+    final effectiveFillColor = isDark ? AppColors.inputBgDark : color ?? Colors.transparent;
     final effectiveBorderColor = isDark ? AppColors.inputBorderDark : AppColors.inputBorder;
     final effectiveTextColor = isDark ? context.themeTextPrimary : AppColors.textPrimary;
     final effectiveHintColor = isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5);
@@ -43,18 +45,12 @@ class DigifySelectField<T> extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<T>(
           isExpanded: true,
-          hint: Text(
-            hint ?? 'Select an option',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveHintColor),
-          ),
+          hint: Text(hint ?? 'Select an option', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveHintColor)),
           items: items
               .map(
                 (item) => DropdownMenuItem<T>(
                   value: item,
-                  child: Text(
-                    itemLabelBuilder(item),
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveTextColor),
-                  ),
+                  child: Text(itemLabelBuilder(item), style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: effectiveTextColor)),
                 ),
               )
               .toList(),
@@ -71,25 +67,13 @@ class DigifySelectField<T> extends StatelessWidget {
           ),
 
           iconStyleData: IconStyleData(
-            icon: DigifyAsset(
-              assetPath: Assets.icons.workforce.chevronDown.path,
-              height: 20,
-              color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-            ),
+            icon: DigifyAsset(assetPath: Assets.icons.workforce.chevronDown.path, height: 20, color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder),
             iconSize: 24.sp,
           ),
           dropdownStyleData: DropdownStyleData(
             maxHeight: 300.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.r),
-              color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-              boxShadow: AppShadows.primaryShadow,
-            ),
-            scrollbarTheme: ScrollbarThemeData(
-              radius: Radius.circular(10.r),
-              thickness: WidgetStateProperty.all(6),
-              thumbVisibility: WidgetStateProperty.all(true),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: isDark ? AppColors.cardBackgroundDark : Colors.white, boxShadow: AppShadows.primaryShadow),
+            scrollbarTheme: ScrollbarThemeData(radius: Radius.circular(10.r), thickness: WidgetStateProperty.all(6), thumbVisibility: WidgetStateProperty.all(true)),
           ),
           menuItemStyleData: MenuItemStyleData(
             height: 48.h,

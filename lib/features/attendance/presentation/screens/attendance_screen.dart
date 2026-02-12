@@ -207,7 +207,6 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                     ),
             ),
             Gap(21.h),
-
             // Statistics Grid
             Builder(
               builder: (context) {
@@ -216,48 +215,48 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                   AttendanceStatCard(
                     label: 'Total Staff',
                     value: state.totalStaff.toString(),
-                    iconPath: Assets.icons.workforceStructureIcon.path,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.staff.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
                   AttendanceStatCard(
                     label: 'Present',
                     value: state.present.toString(),
-                    icon: Icons.check_circle_outline,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.present.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
                   AttendanceStatCard(
                     label: 'Late',
                     value: state.lateCount.toString(),
-                    icon: Icons.access_time,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.late.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
                   AttendanceStatCard(
                     label: 'Absent',
                     value: state.absent.toString(),
-                    icon: Icons.cancel_outlined,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.absent.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
                   AttendanceStatCard(
                     label: 'Half Day',
                     value: state.halfDay.toString(),
-                    icon: Icons.timer_outlined,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.halfDay.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
                   AttendanceStatCard(
                     label: 'On Leave',
                     value: state.onLeave.toString(),
-                    iconPath: Assets.icons.leaveManagementIcon.path,
-                    iconBackgroundColor: const Color(0xFFEFF6FF),
+                    iconPath: Assets.icons.attendance.leave.path,
+                    iconBackgroundColor: AppColors.jobRoleBg,
                     iconColor: AppColors.primary,
                     isDark: isDark,
                   ),
@@ -292,11 +291,11 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                 );
               },
             ),
-            Gap(24.h),
+            Gap(21.h),
 
             // Enterprise Structure Filters Section
             EnterpriseFiltersCard(isDark: isDark),
-            Gap(24.h),
+            Gap(21.h),
 
             // Attendance Records Table
             AttendanceTable(records: state.records, isDark: isDark),

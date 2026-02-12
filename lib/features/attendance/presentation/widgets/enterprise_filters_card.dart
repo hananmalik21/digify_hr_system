@@ -10,10 +10,7 @@ import 'package:gap/gap.dart';
 class EnterpriseFiltersCard extends StatelessWidget {
   final bool isDark;
 
-  const EnterpriseFiltersCard({
-    super.key,
-    required this.isDark,
-  });
+  const EnterpriseFiltersCard({super.key, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +19,7 @@ class EnterpriseFiltersCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,16 +28,8 @@ class EnterpriseFiltersCard extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: DigifyAsset(
-                  assetPath: Assets.icons.enterpriseStructureIcon.path,
-                  width: 20,
-                  height: 20,
-                  color: AppColors.primary,
-                ),
+                decoration: BoxDecoration(color: const Color(0xFFEFF6FF), borderRadius: BorderRadius.circular(6.r)),
+                child: DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 20, height: 20, color: AppColors.primary),
               ),
               Gap(12.w),
               Column(
@@ -51,16 +37,11 @@ class EnterpriseFiltersCard extends StatelessWidget {
                 children: [
                   Text(
                     'Enterprise Structure Filters',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                    ),
+                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
                   ),
                   Text(
                     'Filter attendance by organizational hierarchy',
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: isDark ? AppColors.textTertiaryDark : const Color(0xFF717182),
-                    ),
+                    style: context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: isDark ? AppColors.textTertiaryDark : AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -68,8 +49,8 @@ class EnterpriseFiltersCard extends StatelessWidget {
           ),
           Gap(24.h),
           Wrap(
-            spacing: 16.w,
-            runSpacing: 16.h,
+            spacing: 14.w,
+            runSpacing: 14.h,
             children: [
               SizedBox(
                 width: context.isMobile ? (context.screenWidth - 112.w) : (context.screenWidth - 160.w) / 4,
@@ -79,6 +60,7 @@ class EnterpriseFiltersCard extends StatelessWidget {
                   itemLabelBuilder: (item) => item,
                   hint: 'Select Company',
                   value: 'All Companies',
+
                   onChanged: (value) {},
                 ),
               ),
@@ -94,14 +76,12 @@ class EnterpriseFiltersCard extends StatelessWidget {
                       hint: 'Select Division',
                       value: 'All Divisions',
                       onChanged: (value) {},
+                      bgColor: AppColors.cardBackgroundGrey,
                     ),
                     Gap(4.h),
                     Text(
                       'Select a company first',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        fontSize: 11.sp,
-                        color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
-                      ),
+                      style: context.textTheme.labelSmall?.copyWith(fontSize: 10.sp, color: isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText),
                     ),
                   ],
                 ),
@@ -128,15 +108,13 @@ class EnterpriseFiltersCard extends StatelessWidget {
                       itemLabelBuilder: (item) => item,
                       hint: 'Select Section',
                       value: 'All Sections',
+                      bgColor: AppColors.cardBackgroundGrey,
                       onChanged: (value) {},
                     ),
                     Gap(4.h),
                     Text(
                       'Select a division first',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        fontSize: 11.sp,
-                        color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
-                      ),
+                      style: context.textTheme.labelSmall?.copyWith(fontSize: 10.sp, color: isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText),
                     ),
                   ],
                 ),

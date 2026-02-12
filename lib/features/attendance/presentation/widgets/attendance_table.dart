@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_text_theme.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
@@ -9,15 +10,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/widgets/assets/digify_asset.dart';
+import '../../../../gen/assets.gen.dart';
+
 class AttendanceTable extends StatefulWidget {
   final List<AttendanceRecord> records;
   final bool isDark;
 
-  const AttendanceTable({
-    super.key,
-    required this.records,
-    required this.isDark,
-  });
+  const AttendanceTable({super.key, required this.records, required this.isDark});
 
   @override
   State<AttendanceTable> createState() => _AttendanceTableState();
@@ -40,42 +40,30 @@ class _AttendanceTableState extends State<AttendanceTable> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+        color: widget.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Table Header Info
-          Padding(
-            padding: EdgeInsets.all(24.w),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+            color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Attendance Records - ${DateFormat('d/M/yyyy').format(widget.records.isNotEmpty ? widget.records.first.date : DateTime.now())}',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                  ),
+                  style: context.textTheme.titleSmall?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
                 ),
                 Gap(4.h),
                 Text(
                   'Showing ${widget.records.length} employees',
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-                  ),
+                  style: context.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w400, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
                 ),
               ],
             ),
@@ -86,34 +74,27 @@ class _AttendanceTableState extends State<AttendanceTable> {
               return ScrollableSingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: constraints.maxWidth,
-                  ),
+                  constraints: BoxConstraints(minWidth: constraints.maxWidth),
                   child: SizedBox(
                     width: 1000.w > constraints.maxWidth ? 1000.w : constraints.maxWidth,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Table Header Row
+                        Container(width: double.infinity, height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
                         _buildTableHeader(context),
+                        Container(width: double.infinity, height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
                         // Table Data Rows
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: widget.records.length,
-                          separatorBuilder: (context, index) => Divider(
-                            height: 1,
-                            color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-                          ),
+                          separatorBuilder: (context, index) => Divider(height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
                           itemBuilder: (context, index) {
                             final record = widget.records[index];
                             final isExpanded = _expandedIndex == index;
                             return Column(
-                              children: [
-                                _buildTableRow(context, record, index, isExpanded),
-                                if (isExpanded && record.attendance != null)
-                                  _buildExpandedContent(context, record.attendance!),
-                              ],
+                              children: [_buildTableRow(context, record, index, isExpanded), if (isExpanded && record.attendance != null) _buildExpandedContent(context, record.attendance!)],
                             );
                           },
                         ),
@@ -130,24 +111,24 @@ class _AttendanceTableState extends State<AttendanceTable> {
   }
 
   Widget _buildTableHeader(BuildContext context) {
-    final headerStyle = context.textTheme.labelMedium?.copyWith(
-      fontWeight: FontWeight.w600,
-      color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-    );
+    final headerStyle = context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700, color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF364153));
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-      color: widget.isDark ? AppColors.cardBackgroundGreyDark.withValues(alpha: 0.5) : const Color(0xFFF9FAFB),
+      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 11.h),
+      color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
       child: Row(
         children: [
-          SizedBox(width: 40.w), // Space for expand icon
+          SizedBox(width: 43.w), // Space for expand icon
           Expanded(flex: 3, child: Text('Employee', style: headerStyle)),
           Expanded(flex: 2, child: Text('Department', style: headerStyle)),
           Expanded(flex: 2, child: Text('Date', style: headerStyle)),
           Expanded(flex: 2, child: Text('Check In', style: headerStyle)),
           Expanded(flex: 2, child: Text('Check Out', style: headerStyle)),
           Expanded(flex: 2, child: Text('Status', style: headerStyle)),
-          SizedBox(width: 80.w, child: Text('Actions', style: headerStyle, textAlign: TextAlign.center)),
+          Padding(
+            padding: EdgeInsetsGeometry.only(left: 21.w, right: 42.w),
+            child: Text('Actions', style: headerStyle, textAlign: TextAlign.center),
+          ),
         ],
       ),
     );
@@ -157,146 +138,96 @@ class _AttendanceTableState extends State<AttendanceTable> {
     return InkWell(
       onTap: () => _toggleExpansion(index),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         child: Row(
           children: [
             // Expand Icon
             SizedBox(
               width: 40.w,
-              child: Icon(
-                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                color: widget.isDark ? AppColors.textTertiaryDark : const Color(0xFF9CA3AF),
-                size: 20.r,
+              child: Icon(isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: widget.isDark ? AppColors.textTertiaryDark : AppColors.dialogCloseIcon, size: 20.r),
+            ),
+            // Employee
+            Expanded(
+              flex: 3,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18.r,
+                    backgroundColor: AppColors.jobRoleBg,
+                    child: Text(
+                      record.avatarInitials,
+                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.statIconBlue, fontFamily: 'Inter'),
+                    ),
+                  ),
+                  Gap(6.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(record.employeeName, style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle)),
+                      Gap(2.h),
+                      Text(
+                        record.employeeId,
+                        style: context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: widget.isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          // Employee
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 18.r,
-                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                  child: Text(
-                    record.avatarInitials,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                Gap(12.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      record.employeeName,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                      ),
-                    ),
-                    Text(
-                      record.employeeId,
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: widget.isDark ? AppColors.textTertiaryDark : const Color(0xFF717182),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Department
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.business_outlined,
-                  size: 16.r,
-                  color: AppColors.primary,
-                ),
-                Gap(8.w),
-                Text(
-                  record.departmentName,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Date
-          Expanded(
-            flex: 2,
-            child: Text(
-              DateFormat('MMM d, yyyy').format(record.date),
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
+            // Department
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 10, height: 10, color: AppColors.primary),
+                  Gap(7.w),
+                  Text(record.departmentName, style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                ],
               ),
             ),
-          ),
-          // Check In
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  size: 16.r,
-                  color: AppColors.primary,
-                ),
-                Gap(8.w),
-                Text(
-                  record.checkIn ?? '-',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                  ),
-                ),
-              ],
+            // Date
+            Expanded(
+              flex: 2,
+              child: Text(DateFormat('MMM d, yyyy').format(record.date), style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
             ),
-          ),
-          // Check Out
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  size: 16.r,
-                  color: AppColors.primary,
-                ),
-                Gap(8.w),
-                Text(
-                  record.checkOut ?? '-',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                  ),
-                ),
-              ],
+            // Check In
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
+                  Gap(4.w),
+                  Text(record.checkIn ?? '-', style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                ],
+              ),
             ),
-          ),
-          // Status
-          Expanded(
-            flex: 2,
-            child: _buildStatusChip(record.status),
-          ),
-          // Actions
-          SizedBox(
-            width: 80.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
-                Gap(12.w),
-                Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
-              ],
+            // Check Out
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
+                  Gap(4.w),
+                  Text(record.checkOut ?? '-', style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+            // Status
+            Expanded(flex: 2, child: _buildStatusChip(record.status)),
+            // Actions
+            SizedBox(
+              width: 80.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
+                  Gap(12.w),
+                  Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -339,11 +270,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
         textColor = const Color(0xFF4B5563);
     }
 
-    return DigifyCapsule(
-      label: status,
-      backgroundColor: bgColor,
-      textColor: textColor,
-    );
+    return IntrinsicWidth(child: DigifyCapsule(label: status, backgroundColor: bgColor, textColor: textColor));
   }
 
   Widget _buildExpandedContent(BuildContext context, Attendance attendance) {
@@ -387,7 +314,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
   Widget _buildActualAttendanceCard(BuildContext context, Attendance attendance) {
     final checkInTime = attendance.clockIn != null ? DateFormat('HH:mm').format(attendance.clockIn!) : '-';
     final checkOutTime = attendance.clockOut != null ? DateFormat('HH:mm').format(attendance.clockOut!) : '-';
-    
+
     // Calculate hours worked
     String hoursWorked = '-';
     int? overtimeHours;
@@ -397,7 +324,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
       final hours = totalMinutes ~/ 60;
       final minutes = totalMinutes % 60;
       hoursWorked = '${hours}h ${minutes}m';
-      
+
       // Calculate overtime (assuming 8 hours is standard)
       final standardHours = 8;
       if (hours > standardHours) {
@@ -415,10 +342,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
         _buildDetailRow(context, 'Check Out Time', checkOutTime, icon: Icons.access_time),
         Gap(12.h),
         _buildDetailRow(context, 'Hours Worked', hoursWorked, highlight: true),
-        if (overtimeHours != null && overtimeHours > 0) ...[
-          Gap(12.h),
-          _buildDetailRow(context, 'Overtime Hours', '${overtimeHours}h', icon: Icons.access_time, highlight: true),
-        ],
+        if (overtimeHours != null && overtimeHours > 0) ...[Gap(12.h), _buildDetailRow(context, 'Overtime Hours', '${overtimeHours}h', icon: Icons.access_time, highlight: true)],
       ],
     );
   }
@@ -427,7 +351,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
     final checkInLocation = attendance.checkInLocation;
     final checkOutLocation = attendance.checkOutLocation;
     final locationName = checkInLocation?.city ?? 'Kuwait City HQ';
-    
+
     return _buildDetailCard(
       context,
       title: 'Location & Notes',
@@ -459,30 +383,18 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 : null,
           ),
         ],
-        if (attendance.notes != null && attendance.notes!.isNotEmpty) ...[
-          Gap(12.h),
-          _buildDetailRow(context, 'Notes', attendance.notes!),
-        ],
+        if (attendance.notes != null && attendance.notes!.isNotEmpty) ...[Gap(12.h), _buildDetailRow(context, 'Notes', attendance.notes!)],
       ],
     );
   }
 
-  Widget _buildDetailCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required List<Widget> children,
-    bool showViewMapButton = false,
-  }) {
+  Widget _buildDetailCard(BuildContext context, {required String title, required IconData icon, required List<Widget> children, bool showViewMapButton = false}) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: widget.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,10 +408,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
                   Gap(8.w),
                   Text(
                     title,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
-                    ),
+                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B)),
                   ),
                 ],
               ),
@@ -510,11 +419,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
                   },
                   child: Text(
                     'View on Map',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.primary, fontWeight: FontWeight.w500),
                   ),
                 ),
             ],
@@ -526,15 +431,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
     );
   }
 
-  Widget _buildDetailRow(
-    BuildContext context,
-    String label,
-    String value, {
-    IconData? icon,
-    bool highlight = false,
-    bool showCoordinates = false,
-    String? coordinates,
-  }) {
+  Widget _buildDetailRow(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool showCoordinates = false, String? coordinates}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -557,19 +454,14 @@ class _AttendanceTableState extends State<AttendanceTable> {
                     children: [
                       Text(
                         '$label: ',
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565), fontWeight: FontWeight.w400),
                       ),
                       Expanded(
                         child: Text(
                           value,
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
-                            color: highlight
-                                ? AppColors.primary
-                                : (widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B)),
+                            color: highlight ? AppColors.primary : (widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B)),
                           ),
                         ),
                       ),
@@ -583,10 +475,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
                         Gap(4.w),
                         Text(
                           coordinates,
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF717182),
-                            fontFamily: 'monospace',
-                          ),
+                          style: context.textTheme.labelSmall?.copyWith(color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF717182), fontFamily: 'monospace'),
                         ),
                       ],
                     ),
