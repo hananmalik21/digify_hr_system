@@ -1299,6 +1299,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/prohibited.svg
   SvgGenImage get prohibited => const SvgGenImage('assets/icons/leave_management/prohibited.svg');
 
+  /// File path: assets/icons/leave_management/rejected.svg
+  SvgGenImage get rejected => const SvgGenImage('assets/icons/leave_management/rejected.svg');
+
   /// File path: assets/icons/leave_management/request.svg
   SvgGenImage get request => const SvgGenImage('assets/icons/leave_management/request.svg');
 
@@ -1333,6 +1336,7 @@ class $AssetsIconsLeaveManagementGen {
     play,
     policyConfiguration,
     prohibited,
+    rejected,
     request,
     shield,
     teamLevel,

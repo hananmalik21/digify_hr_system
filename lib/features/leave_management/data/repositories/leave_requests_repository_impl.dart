@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/leave_management/data/datasources/leave_requests_remote_data_source.dart';
 import 'package:digify_hr_system/features/leave_management/data/dto/paginated_leave_requests_dto.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/employee_leave_stats.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_requests_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 
@@ -28,6 +29,46 @@ class LeaveRequestsRepositoryImpl implements LeaveRequestsRepository {
       rethrow;
     } catch (e) {
       throw UnknownException('Repository error: Failed to fetch leave requests: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<PaginatedLeaveRequests> getEmployeeLeaveRequests({
+    required String employeeGuid,
+    int page = 1,
+    int pageSize = 10,
+    int? tenantId,
+  }) async {
+    try {
+      final dto = await remoteDataSource.getEmployeeLeaveRequests(
+        employeeGuid: employeeGuid,
+        page: page,
+        pageSize: pageSize,
+        tenantId: tenantId,
+      );
+      return dto.toDomain();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Repository error: Failed to fetch employee leave requests: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
+
+  @override
+  Future<EmployeeLeaveStats> getEmployeeLeaveRequestStats({required String employeeGuid, int? tenantId}) async {
+    try {
+      final dto = await remoteDataSource.getEmployeeLeaveRequestStats(employeeGuid: employeeGuid, tenantId: tenantId);
+      return dto.toDomain();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Repository error: Failed to fetch employee leave request stats: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
