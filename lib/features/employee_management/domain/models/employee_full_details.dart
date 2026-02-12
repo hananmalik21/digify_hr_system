@@ -413,6 +413,18 @@ class DocumentItem {
   final String? status;
   final String? isActive;
   final String? accessUrl;
+
+  String? fullAccessUrl(String baseUrl) {
+    final url = accessUrl;
+    if (url == null || url.trim().isEmpty) return null;
+    final trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    final base = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
+    final path = trimmed.startsWith('/') ? trimmed.substring(1) : trimmed;
+    return base + path;
+  }
 }
 
 class EmergencyContactItem {

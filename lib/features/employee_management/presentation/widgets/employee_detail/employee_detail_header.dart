@@ -14,11 +14,20 @@ import 'package:go_router/go_router.dart';
 import 'employee_detail_summary_cards.dart';
 
 class EmployeeDetailHeader extends StatelessWidget {
-  const EmployeeDetailHeader({super.key, required this.displayData, required this.isDark, this.onEditPressed});
+  const EmployeeDetailHeader({
+    super.key,
+    required this.displayData,
+    required this.isDark,
+    this.onEditPressed,
+    this.onDownloadDocuments,
+    this.isDownloadingDocuments = false,
+  });
 
   final EmployeeDetailDisplayData displayData;
   final bool isDark;
   final VoidCallback? onEditPressed;
+  final Future<void> Function(BuildContext context)? onDownloadDocuments;
+  final bool isDownloadingDocuments;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +81,12 @@ class EmployeeDetailHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              AppButton.outline(label: 'Download PDF', svgPath: Assets.icons.downloadIcon.path, onPressed: () {}),
+              AppButton.outline(
+                label: 'Download documents',
+                svgPath: Assets.icons.downloadIcon.path,
+                isLoading: isDownloadingDocuments,
+                onPressed: onDownloadDocuments != null ? () => onDownloadDocuments!(context) : null,
+              ),
               Gap(8.w),
               AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: onEditPressed),
             ],

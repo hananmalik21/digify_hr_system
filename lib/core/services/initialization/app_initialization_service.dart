@@ -27,8 +27,6 @@ class AppInitializationService {
     this.preloadOrgStructureForEnterprise,
   });
 
-  Future<void> initializeApp() async {}
-
   Future<void> initializeAfterAuth() async {
     await _loadEnterprises();
     await _loadActiveLevels();

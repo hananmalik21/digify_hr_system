@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
@@ -43,6 +44,8 @@ class ApiClient {
       throw UnknownException('Unexpected error: ${e.toString()}', originalError: e);
     }
   }
+
+  Dio get dio => _dio;
 
   Future<Map<String, dynamic>> post(String endpoint, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
     try {
