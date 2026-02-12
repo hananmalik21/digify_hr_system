@@ -324,7 +324,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
       ExportButton(onTap: () {}, customLabel: 'Export'),
       Gap(11.w),
       AppButton(
-        fontSize: 14,
+        fontSize: 14.sp,
         label: 'Mark Attendance',
         onPressed: () {
           MarkAttendanceDialog.show(context);

@@ -11,6 +11,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/widgets/assets/digify_asset.dart';
+import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../gen/assets.gen.dart';
 
 class AttendanceTable extends StatefulWidget {
@@ -145,7 +146,8 @@ class _AttendanceTableState extends State<AttendanceTable> {
   Widget _buildTableRow(BuildContext context, AttendanceRecord record, int index, bool isExpanded) {
     return InkWell(
       onTap: () => _toggleExpansion(index),
-      child: Padding(
+      child: Container(
+        color: isExpanded ? AppColors.roleBadgeBg : null,
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -300,18 +302,36 @@ class _AttendanceTableState extends State<AttendanceTable> {
   }
 
   Widget _buildExpandedContent(BuildContext context, Attendance attendance) {
+    final isMobile = context.isMobile;
+
     return Container(
-      color: widget.isDark ? AppColors.cardBackgroundGreyDark.withValues(alpha: 0.3) : const Color(0xFFF9FAFB),
-      padding: EdgeInsets.all(24.w),
-      child: Row(
-        children: [
-          Expanded(child: _buildScheduleCard(context, attendance)),
-          Gap(16.w),
-          Expanded(child: _buildActualAttendanceCard(context, attendance)),
-          Gap(16.w),
-          Expanded(child: _buildLocationNotesCard(context, attendance)),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 14.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            AppColors.roleBadgeBg, // #EFF6FF
+            AppColors.roleBadgeColor, // #EFF6FF
+          ],
+        ),
+        border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
       ),
+      child: isMobile
+          ? Column(children: [_buildScheduleCard(context, attendance), Gap(16.h), _buildActualAttendanceCard(context, attendance), Gap(16.h), _buildLocationNotesCard(context, attendance)])
+          : Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: _buildScheduleCard(context, attendance)),
+                    Gap(16.w),
+                    Expanded(child: _buildActualAttendanceCard(context, attendance)),
+                  ],
+                ),
+                Gap(16.h),
+                _buildLocationNotesCard(context, attendance),
+              ],
+            ),
     );
   }
 
@@ -323,15 +343,19 @@ class _AttendanceTableState extends State<AttendanceTable> {
     return _buildDetailCard(
       context,
       title: 'Schedule Information',
-      icon: Icons.calendar_today_outlined,
+      icon: Assets.icons.attendance.emptyCalander.path,
       children: [
-        _buildDetailRow(context, 'Schedule Date', DateFormat('EEE, MMM d, yyyy').format(attendance.date)),
+        Gap(14.h),
+        _buildDetailRow(context, 'Schedule Date', DateFormat('EEE, MMM d, yyyy').format(attendance.date), highlight: true, highlightBlack: true),
         Gap(12.h),
-        _buildDetailRow(context, 'Schedule Start', DateFormat('MMM d @ HH:mm').format(scheduleStart), icon: Icons.access_time),
+        _buildDetailRow(context, 'Schedule Start', DateFormat('MMM d @ HH:mm').format(scheduleStart), icon: Icons.access_time, highlight: true, highlightBlack: true),
         Gap(12.h),
-        _buildDetailRow(context, 'Schedule End', DateFormat('MMM d @ HH:mm').format(scheduleEnd), icon: Icons.access_time),
+        _buildDetailRow(context, 'Schedule End', DateFormat('MMM d @ HH:mm').format(scheduleEnd), icon: Icons.access_time, highlight: true, highlightBlack: true),
         Gap(12.h),
+        Divider(thickness: 1, color: AppColors.cardBorder),
+        Gap(7.h),
         _buildDetailRow(context, 'Duration', '$duration hours'),
+        Gap(3.h),
       ],
     );
   }
@@ -360,12 +384,15 @@ class _AttendanceTableState extends State<AttendanceTable> {
     return _buildDetailCard(
       context,
       title: 'Actual Attendance',
-      icon: Icons.show_chart_outlined,
+      icon: Assets.icons.priceUpItem.path,
       children: [
-        _buildDetailRow(context, 'Check In Time', checkInTime, icon: Icons.access_time),
-        Gap(12.h),
-        _buildDetailRow(context, 'Check Out Time', checkOutTime, icon: Icons.access_time),
-        Gap(12.h),
+        Gap(14.h),
+        _buildDetailRow(context, 'Check In Time', checkInTime, icon: Icons.access_time, highlightBlack: true, highlight: true),
+        Gap(14.h),
+        _buildDetailRow(context, 'Check Out Time', checkOutTime, icon: Icons.access_time, highlightBlack: true, highlight: true),
+        Gap(10.h),
+        Divider(thickness: 1, color: AppColors.cardBorder),
+        Gap(10.h),
         _buildDetailRow(context, 'Hours Worked', hoursWorked, highlight: true),
         if (overtimeHours != null && overtimeHours > 0) ...[Gap(12.h), _buildDetailRow(context, 'Overtime Hours', '${overtimeHours}h', icon: Icons.access_time, highlight: true)],
       ],
@@ -380,46 +407,46 @@ class _AttendanceTableState extends State<AttendanceTable> {
     return _buildDetailCard(
       context,
       title: 'Location & Notes',
-      icon: Icons.location_on_outlined,
+      icon: Assets.icons.locationIcon.path,
       showViewMapButton: checkInLocation != null || checkOutLocation != null,
       children: [
-        _buildDetailRow(context, 'Location', locationName),
+        Gap(14.h),
+        _buildDetailRowMultiLine(context, 'Location', locationName, highlight: true, highlightBlack: true),
         if (checkInLocation != null) ...[
-          Gap(12.h),
-          _buildDetailRow(
+          Gap(11.h),
+          _buildDetailRowMultiLine(
             context,
             'Check-In GPS',
             '${checkInLocation.address ?? locationName}${checkInLocation.city != null ? ' - ${checkInLocation.city}' : ''}',
-            showCoordinates: checkInLocation.latitude != null && checkInLocation.longitude != null,
             coordinates: checkInLocation.latitude != null && checkInLocation.longitude != null
                 ? '${checkInLocation.latitude!.toStringAsFixed(6)}, ${checkInLocation.longitude!.toStringAsFixed(6)}'
                 : null,
           ),
         ],
         if (checkOutLocation != null) ...[
-          Gap(12.h),
-          _buildDetailRow(
+          Gap(11.h),
+          _buildDetailRowMultiLine(
             context,
             'Check-Out GPS',
             '${checkOutLocation.address ?? locationName}${checkOutLocation.city != null ? ' - ${checkOutLocation.city}' : ''}',
-            showCoordinates: checkOutLocation.latitude != null && checkOutLocation.longitude != null,
             coordinates: checkOutLocation.latitude != null && checkOutLocation.longitude != null
                 ? '${checkOutLocation.latitude!.toStringAsFixed(6)}, ${checkOutLocation.longitude!.toStringAsFixed(6)}'
                 : null,
           ),
         ],
-        if (attendance.notes != null && attendance.notes!.isNotEmpty) ...[Gap(12.h), _buildDetailRow(context, 'Notes', attendance.notes!)],
+        Gap(11.h),
+        _buildDetailRowMultiLine(context, 'Notes', 'Regular day with 1 hour overtime', highlight: true, highlightBlack: true),
       ],
     );
   }
 
-  Widget _buildDetailCard(BuildContext context, {required String title, required IconData icon, required List<Widget> children, bool showViewMapButton = false}) {
+  Widget _buildDetailCard(BuildContext context, {required String title, required String icon, required List<Widget> children, bool showViewMapButton = false}) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: widget.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.infoBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,23 +456,27 @@ class _AttendanceTableState extends State<AttendanceTable> {
             children: [
               Row(
                 children: [
-                  Icon(icon, size: 18.r, color: AppColors.primary),
-                  Gap(8.w),
+                  DigifyAsset(assetPath: icon, width: 16.w, height: 16.h, color: AppColors.primary),
+                  Gap(4.w),
                   Text(
                     title,
-                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B)),
+                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w400, color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
                   ),
                 ],
               ),
               if (showViewMapButton)
-                TextButton(
+                AppButton(
+                  fontSize: 11.sp,
+                  label: 'View on Map',
                   onPressed: () {
-                    // TODO: Implement map view
+                    MarkAttendanceDialog.show(context);
                   },
-                  child: Text(
-                    'View on Map',
-                    style: TextStyle(fontSize: 12.sp, color: AppColors.primary, fontWeight: FontWeight.w500),
-                  ),
+                  svgPath: Assets.icons.locationIcon.path,
+                  height: 25,
+                  iconSize: 11,
+                  padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 3.h),
+                  type: AppButtonType.primary,
+                  borderRadius: BorderRadius.circular(7.0),
                 ),
             ],
           ),
@@ -456,59 +487,90 @@ class _AttendanceTableState extends State<AttendanceTable> {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool showCoordinates = false, String? coordinates}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildDetailRow(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool highlightBlack = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Text(
+          '$label: ',
+          style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary, fontWeight: FontWeight.w400),
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (icon != null) ...[
               Padding(
                 padding: EdgeInsets.only(top: 2.h),
-                child: Icon(icon, size: 14.r, color: AppColors.textSecondary),
+                child: Icon(icon, size: 14.r, color: AppColors.primary),
               ),
               Gap(6.w),
             ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$label: ',
-                        style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565), fontWeight: FontWeight.w400),
-                      ),
-                      Expanded(
-                        child: Text(
-                          value,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: highlight ? FontWeight.w600 : FontWeight.w400,
-                            color: highlight ? AppColors.primary : (widget.isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (showCoordinates && coordinates != null) ...[
-                    Gap(4.h),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on, size: 12.r, color: Colors.red),
-                        Gap(4.w),
-                        Text(
-                          coordinates,
-                          style: context.textTheme.labelSmall?.copyWith(color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF717182), fontFamily: 'monospace'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
+            Text(
+              value,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontSize: 14.sp,
+                fontWeight: highlight ? FontWeight.w500 : FontWeight.w400,
+                color: highlight
+                    ? highlightBlack
+                          ? AppColors.dialogTitle
+                          : AppColors.primary
+                    : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailRowMultiLine(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool highlightBlack = false, String? coordinates}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 100.w,
+          child: Text(
+            '$label: ',
+            style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary, fontWeight: FontWeight.w400),
+          ),
+        ),
+        Gap(10.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontSize: coordinates != null ? 12.sp : 14.sp,
+                  fontWeight: highlight && coordinates != null ? FontWeight.w500 : FontWeight.w400,
+                  color: highlight
+                      ? highlightBlack
+                            ? AppColors.dialogTitle
+                            : AppColors.primary
+                      : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
+                ),
+              ),
+              if (coordinates != null)
+                Gap(2.h),
+              if (coordinates != null)
+                Text(
+                  '📍 $coordinates',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
+                    color: highlight
+                        ? highlightBlack
+                              ? AppColors.dialogTitle
+                              : AppColors.primary
+                        : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
+                  ),
+                ),
+            ],
+          ),
         ),
       ],
     );

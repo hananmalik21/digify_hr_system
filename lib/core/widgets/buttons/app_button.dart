@@ -20,6 +20,7 @@ class AppButton extends StatelessWidget {
   final String? svgPath;
   final Color? svgAssetColor;
   final double? width;
+  final double? iconSize;
   final double? height;
   final double? fontSize;
   final EdgeInsetsGeometry? padding;
@@ -31,6 +32,7 @@ class AppButton extends StatelessWidget {
     super.key,
     required this.label,
     this.onPressed,
+    this.iconSize,
     this.isLoading = false,
     this.type = AppButtonType.primary,
     this.icon,
@@ -45,96 +47,20 @@ class AppButton extends StatelessWidget {
     this.foregroundColor,
   }) : height = height ?? 40.h;
 
-  factory AppButton.primary({
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    IconData? icon,
-    String? svgPath,
-    Color? svgAssetColor,
-    double? width,
-    double? height,
-  }) {
-    return AppButton(
-      label: label,
-      onPressed: onPressed,
-      isLoading: isLoading,
-      type: AppButtonType.primary,
-      icon: icon,
-      svgPath: svgPath,
-      svgAssetColor: svgAssetColor,
-      width: width,
-      height: height,
-    );
+  factory AppButton.primary({required String label, VoidCallback? onPressed, bool isLoading = false, IconData? icon, String? svgPath, Color? svgAssetColor, double? width, double? height}) {
+    return AppButton(label: label, onPressed: onPressed, isLoading: isLoading, type: AppButtonType.primary, icon: icon, svgPath: svgPath, svgAssetColor: svgAssetColor, width: width, height: height);
   }
 
-  factory AppButton.secondary({
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    IconData? icon,
-    String? svgPath,
-    Color? svgAssetColor,
-    double? width,
-    double? height,
-  }) {
-    return AppButton(
-      label: label,
-      onPressed: onPressed,
-      isLoading: isLoading,
-      type: AppButtonType.secondary,
-      icon: icon,
-      svgPath: svgPath,
-      svgAssetColor: svgAssetColor,
-      width: width,
-      height: height,
-    );
+  factory AppButton.secondary({required String label, VoidCallback? onPressed, bool isLoading = false, IconData? icon, String? svgPath, Color? svgAssetColor, double? width, double? height}) {
+    return AppButton(label: label, onPressed: onPressed, isLoading: isLoading, type: AppButtonType.secondary, icon: icon, svgPath: svgPath, svgAssetColor: svgAssetColor, width: width, height: height);
   }
 
-  factory AppButton.outline({
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    IconData? icon,
-    String? svgPath,
-    Color? svgAssetColor,
-    double? width,
-    double? height,
-  }) {
-    return AppButton(
-      label: label,
-      onPressed: onPressed,
-      isLoading: isLoading,
-      type: AppButtonType.outline,
-      icon: icon,
-      svgPath: svgPath,
-      svgAssetColor: svgAssetColor,
-      width: width,
-      height: height,
-    );
+  factory AppButton.outline({required String label, VoidCallback? onPressed, bool isLoading = false, IconData? icon, String? svgPath, Color? svgAssetColor, double? width, double? height}) {
+    return AppButton(label: label, onPressed: onPressed, isLoading: isLoading, type: AppButtonType.outline, icon: icon, svgPath: svgPath, svgAssetColor: svgAssetColor, width: width, height: height);
   }
 
-  factory AppButton.danger({
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    IconData? icon,
-    String? svgPath,
-    Color? svgAssetColor,
-    double? width,
-    double? height,
-  }) {
-    return AppButton(
-      label: label,
-      onPressed: onPressed,
-      isLoading: isLoading,
-      type: AppButtonType.danger,
-      icon: icon,
-      svgPath: svgPath,
-      svgAssetColor: svgAssetColor,
-      width: width,
-      height: height,
-    );
+  factory AppButton.danger({required String label, VoidCallback? onPressed, bool isLoading = false, IconData? icon, String? svgPath, Color? svgAssetColor, double? width, double? height}) {
+    return AppButton(label: label, onPressed: onPressed, isLoading: isLoading, type: AppButtonType.danger, icon: icon, svgPath: svgPath, svgAssetColor: svgAssetColor, width: width, height: height);
   }
 
   Color _getBackgroundColor() {
@@ -196,9 +122,7 @@ class AppButton extends StatelessWidget {
 
     final isDisabled = isLoading || onPressed == null;
     final bgColor = _getBackgroundColor();
-    final contentColor = isDisabled
-        ? (type == AppButtonType.outline ? AppColors.textMuted : Colors.white70)
-        : _getTextColor();
+    final contentColor = isDisabled ? (type == AppButtonType.outline ? AppColors.textMuted : Colors.white70) : _getTextColor();
     final borderProp = _getBorder();
 
     final List<Widget> children = [];
@@ -206,19 +130,14 @@ class AppButton extends StatelessWidget {
       children.add(Icon(icon, size: 20.sp, color: contentColor));
       children.add(SizedBox(width: 8.w));
     } else if (svgPath != null) {
-      children.add(DigifyAsset(assetPath: svgPath!, width: 20, height: 20, color: svgAssetColor ?? contentColor));
+      children.add(DigifyAsset(assetPath: svgPath!, width: iconSize ?? 20, height: iconSize ?? 20, color: svgAssetColor ?? contentColor));
       children.add(SizedBox(width: 8.w));
     }
     if (label.isNotEmpty) {
       children.add(
         Text(
           label,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontSize: effectiveFontSize,
-            fontWeight: FontWeight.w400,
-            color: contentColor,
-            height: 1.0,
-          ),
+          style: context.textTheme.bodyMedium?.copyWith(fontSize: effectiveFontSize, fontWeight: FontWeight.w400, color: contentColor, height: 1.0),
         ),
       );
     }
@@ -230,11 +149,7 @@ class AppButton extends StatelessWidget {
               width: effectiveWidth,
               height: effectiveHeight,
               child: Ink(
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: effectiveBorderRadius,
-                  border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
-                ),
+                decoration: BoxDecoration(color: bgColor, borderRadius: effectiveBorderRadius, border: borderProp != null ? Border.fromBorderSide(borderProp) : null),
                 child: InkWell(
                   onTap: isDisabled ? null : onPressed,
                   borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
@@ -246,12 +161,7 @@ class AppButton extends StatelessWidget {
                       children: [
                         Opacity(
                           opacity: isLoading ? 0.0 : 1.0,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: children,
-                          ),
+                          child: Row(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: children),
                         ),
                         if (isLoading) AppLoadingIndicator(type: LoadingType.circle, color: contentColor, size: 20.sp),
                       ],
@@ -261,11 +171,7 @@ class AppButton extends StatelessWidget {
               ),
             )
           : Ink(
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: effectiveBorderRadius,
-                border: borderProp != null ? Border.fromBorderSide(borderProp) : null,
-              ),
+              decoration: BoxDecoration(color: bgColor, borderRadius: effectiveBorderRadius, border: borderProp != null ? Border.fromBorderSide(borderProp) : null),
               child: InkWell(
                 onTap: isDisabled ? null : onPressed,
                 borderRadius: effectiveBorderRadius.resolve(TextDirection.ltr),
@@ -276,9 +182,7 @@ class AppButton extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: isLoading
-                        ? [AppLoadingIndicator(type: LoadingType.circle, color: contentColor, size: 20.sp)]
-                        : children,
+                    children: isLoading ? [AppLoadingIndicator(type: LoadingType.circle, color: contentColor, size: 20.sp)] : children,
                   ),
                 ),
               ),
