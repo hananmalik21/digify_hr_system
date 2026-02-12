@@ -7148,11 +7148,41 @@ abstract class AppLocalizations {
   /// **'Days'**
   String get days;
 
+  /// No description provided for @leaveBalanceTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total:'**
+  String get leaveBalanceTotal;
+
+  /// No description provided for @leaveBalanceUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Used:'**
+  String get leaveBalanceUsed;
+
+  /// No description provided for @leaveBalanceRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining:'**
+  String get leaveBalanceRemaining;
+
   /// No description provided for @reason.
   ///
   /// In en, this message translates to:
   /// **'Reason'**
   String get reason;
+
+  /// No description provided for @submittedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted at'**
+  String get submittedAt;
+
+  /// No description provided for @processedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Processed at'**
+  String get processedAt;
 
   /// No description provided for @maternityLeave.
   ///
@@ -7171,6 +7201,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reject'**
   String get reject;
+
+  /// No description provided for @totalRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Requests'**
+  String get totalRequests;
 
   /// No description provided for @leaveRequestGuidelines.
   ///

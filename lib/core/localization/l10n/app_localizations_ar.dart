@@ -3652,7 +3652,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get days => 'الأيام';
 
   @override
+  String get leaveBalanceTotal => 'الإجمالي:';
+
+  @override
+  String get leaveBalanceUsed => 'المستخدم:';
+
+  @override
+  String get leaveBalanceRemaining => 'المتبقي:';
+
+  @override
   String get reason => 'السبب';
+
+  @override
+  String get submittedAt => 'تاريخ التقديم';
+
+  @override
+  String get processedAt => 'تاريخ المعالجة';
 
   @override
   String get maternityLeave => 'إجازة أمومة';
@@ -3662,6 +3677,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reject => 'رفض';
+
+  @override
+  String get totalRequests => 'إجمالي الطلبات';
 
   @override
   String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';

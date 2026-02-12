@@ -126,6 +126,9 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
               guid: request.guid,
               employeeId: request.employeeId,
               employeeName: request.employeeName,
+              employeeGuid: request.employeeGuid,
+              department: request.department,
+              position: request.position,
               type: request.type,
               startDate: request.startDate,
               endDate: request.endDate,
@@ -172,6 +175,9 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
               guid: request.guid,
               employeeId: request.employeeId,
               employeeName: request.employeeName,
+              employeeGuid: request.employeeGuid,
+              department: request.department,
+              position: request.position,
               type: request.type,
               startDate: request.startDate,
               endDate: request.endDate,
@@ -316,11 +322,26 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
                   }
                 }
 
+                final position =
+                    employeeInfo?['position_name_en'] as String? ?? employeeInfo?['position_name'] as String?;
+                String? department;
+                final orgList = employeeInfo?['org_structure_list'] as List<dynamic>?;
+                if (orgList != null) {
+                  for (final e in orgList) {
+                    if (e is Map<String, dynamic> && e['level_code'] == 'DEPARTMENT') {
+                      department = e['org_unit_name_en'] as String? ?? e['org_unit_name'] as String?;
+                      break;
+                    }
+                  }
+                }
                 return TimeOffRequest(
                   id: (leaveDetails['leave_request_id'] as num?)?.toInt() ?? request.id,
                   guid: updatedGuid,
                   employeeId: (leaveDetails['employee_id'] as num?)?.toInt() ?? request.employeeId,
                   employeeName: employeeName,
+                  employeeGuid: request.employeeGuid,
+                  department: department ?? request.department,
+                  position: position ?? request.position,
                   type: leaveType,
                   startDate: parseDateTime(leaveDetails['start_date']),
                   endDate: parseDateTime(leaveDetails['end_date']),
@@ -396,6 +417,9 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
       guid: leaveRequest['leave_request_guid'] as String? ?? '',
       employeeId: (leaveRequest['employee_id'] as num?)?.toInt() ?? 0,
       employeeName: employeeName,
+      employeeGuid: null,
+      department: null,
+      position: null,
       type: leaveType,
       startDate: parseDateTime(leaveRequest['start_date']),
       endDate: parseDateTime(leaveRequest['end_date']),

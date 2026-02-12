@@ -21,6 +21,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
   final bool isRejectLoading;
   final bool isDeleteLoading;
   final VoidCallback? onView;
+  final VoidCallback? onViewEmployeeHistory;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
   final VoidCallback? onDelete;
@@ -35,6 +36,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
     this.isRejectLoading = false,
     this.isDeleteLoading = false,
     this.onView,
+    this.onViewEmployeeHistory,
     this.onApprove,
     this.onReject,
     this.onDelete,
@@ -65,9 +67,20 @@ class LeaveRequestsTableRow extends StatelessWidget {
             ),
           if (LeaveRequestsTableConfig.showEmployee)
             _buildDataCell(
-              _buildClickableText(context, request.employeeName.isEmpty ? '-' : request.employeeName, onView),
+              _buildClickableText(
+                context,
+                request.employeeName.isEmpty ? '-' : request.employeeName,
+                onViewEmployeeHistory ?? onView,
+              ),
               LeaveRequestsTableConfig.employeeWidth.w,
             ),
+          if (LeaveRequestsTableConfig.showDepartment)
+            _buildDataCell(
+              Text(request.department ?? '-', style: textStyle),
+              LeaveRequestsTableConfig.departmentWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showPosition)
+            _buildDataCell(Text(request.position ?? '-', style: textStyle), LeaveRequestsTableConfig.positionWidth.w),
           if (LeaveRequestsTableConfig.showLeaveType)
             _buildDataCell(_buildTypeCell(context), LeaveRequestsTableConfig.leaveTypeWidth.w),
           if (LeaveRequestsTableConfig.showStartDate)

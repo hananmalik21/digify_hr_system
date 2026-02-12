@@ -17,6 +17,7 @@ import 'package:digify_hr_system/features/time_management/presentation/screens/t
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/screens/employee_management_screens.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_request_employee_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -158,6 +159,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.leaveManagement,
             name: 'leave-management',
             builder: (context, state) => const LeaveManagementScreen(),
+            routes: [
+              GoRoute(
+                path: AppRoutes.leaveManagementEmployeeLeaveHistorySegment,
+                name: 'leave-management-employee-leave-history',
+                builder: (context, state) {
+                  final employeeGuid = state.extra is String ? state.extra! as String : null;
+                  if (employeeGuid == null || employeeGuid.isEmpty) {
+                    return Scaffold(body: Center(child: Text('Invalid navigation state')));
+                  }
+                  return LeaveRequestEmployeeDetailScreen(employeeGuid: employeeGuid);
+                },
+              ),
+            ],
           ),
           GoRoute(
             path: AppRoutes.attendance,

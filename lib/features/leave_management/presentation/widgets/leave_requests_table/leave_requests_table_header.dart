@@ -28,6 +28,12 @@ class LeaveRequestsTableHeader extends StatelessWidget {
     if (LeaveRequestsTableConfig.showEmployee) {
       headerCells.add(_buildHeaderCell(context, localizations.employeeName, LeaveRequestsTableConfig.employeeWidth.w));
     }
+    if (LeaveRequestsTableConfig.showDepartment) {
+      headerCells.add(_buildHeaderCell(context, localizations.department, LeaveRequestsTableConfig.departmentWidth.w));
+    }
+    if (LeaveRequestsTableConfig.showPosition) {
+      headerCells.add(_buildHeaderCell(context, localizations.position, LeaveRequestsTableConfig.positionWidth.w));
+    }
     if (LeaveRequestsTableConfig.showLeaveType) {
       headerCells.add(_buildHeaderCell(context, localizations.tmType, LeaveRequestsTableConfig.leaveTypeWidth.w));
     }
