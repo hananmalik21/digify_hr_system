@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/attendance/domain/models/attendance.dart';
 import 'package:digify_hr_system/features/attendance/domain/models/attendance_record.dart';
+import 'package:digify_hr_system/features/attendance/presentation/widgets/mark_attendance_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -234,8 +235,20 @@ class _AttendanceTableState extends State<AttendanceTable> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
-                  Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
+                  InkWell(
+                    onTap: () {
+                      if (record.attendance != null) {
+                        MarkAttendanceDialog.show(context, attendance: record.attendance);
+                      }
+                    },
+                    child: Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      // TODO: Implement location view
+                    },
+                    child: Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
+                  ),
                 ],
               ),
             ),
@@ -303,7 +316,6 @@ class _AttendanceTableState extends State<AttendanceTable> {
   }
 
   Widget _buildScheduleCard(BuildContext context, Attendance attendance) {
-    // Default schedule: 8:00 AM to 4:00 PM (8 hours)
     final scheduleStart = DateTime(attendance.date.year, attendance.date.month, attendance.date.day, 8, 0);
     final scheduleEnd = DateTime(attendance.date.year, attendance.date.month, attendance.date.day, 16, 0);
     final duration = 8; // hours

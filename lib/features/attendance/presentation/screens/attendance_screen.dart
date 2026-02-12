@@ -17,6 +17,7 @@ import '../../../../core/widgets/buttons/export_button.dart';
 import '../../../../core/widgets/buttons/import_button.dart';
 import '../../../../core/widgets/forms/date_selection_field.dart';
 import '../../../../core/widgets/forms/digify_text_field.dart';
+import '../widgets/mark_attendance_dialog.dart';
 
 class AttendanceScreen extends ConsumerStatefulWidget {
   const AttendanceScreen({super.key});
@@ -342,7 +343,9 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
       Gap(11.w),
       ExportButton(onTap: () {}, customLabel: 'Export'),
       Gap(11.w),
-      AppButton(fontSize: 14, label: 'Mark Attendance', onPressed: () {}, icon: Icons.add, height: 35.h, type: AppButtonType.primary, borderRadius: BorderRadius.circular(7.0)),
+      AppButton(fontSize: 14, label: 'Mark Attendance', onPressed: () {
+        MarkAttendanceDialog.show(context);
+      }, icon: Icons.add, height: 35.h, type: AppButtonType.primary, borderRadius: BorderRadius.circular(7.0)),
     ];
 
     if (isMobile) {
