@@ -1,5 +1,22 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/attendance/data/repositories/attendance_repository_impl.dart';
+import 'package:digify_hr_system/features/attendance/domain/models/attendance.dart';
 import 'package:digify_hr_system/features/attendance/domain/models/attendance_record.dart';
+import 'package:digify_hr_system/features/attendance/domain/repositories/attendance_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Dependency Injection Providers
+final apiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient(baseUrl: ApiConfig.baseUrl);
+});
+
+// Repository provider
+// TODO: Replace with real implementation when API is ready
+final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
+  return AttendanceRepositoryImpl();
+});
 
 class AttendanceState {
   final DateTime fromDate;
@@ -7,11 +24,12 @@ class AttendanceState {
   final String employeeNumber;
   final int totalStaff;
   final int present;
-  final int late_count;
+  final int lateCount;
   final int absent;
   final int halfDay;
   final int onLeave;
   final bool isLoading;
+  final String? error;
   final List<AttendanceRecord> records;
   final int currentPage;
   final int pageSize;
@@ -21,13 +39,14 @@ class AttendanceState {
     required this.fromDate,
     required this.toDate,
     this.employeeNumber = '',
-    this.totalStaff = 3,
-    this.present = 3,
-    this.late_count = 1,
-    this.absent = 1,
+    this.totalStaff = 0,
+    this.present = 0,
+    this.lateCount = 0,
+    this.absent = 0,
     this.halfDay = 0,
-    required this.onLeave,
+    this.onLeave = 0,
     this.isLoading = false,
+    this.error,
     this.records = const [],
     this.currentPage = 1,
     this.pageSize = 10,
@@ -40,15 +59,17 @@ class AttendanceState {
     String? employeeNumber,
     int? totalStaff,
     int? present,
-    int? late_count,
+    int? lateCount,
     int? absent,
     int? halfDay,
     int? onLeave,
     bool? isLoading,
+    String? error,
     List<AttendanceRecord>? records,
     int? currentPage,
     int? pageSize,
     int? totalItems,
+    bool clearError = false,
   }) {
     return AttendanceState(
       fromDate: fromDate ?? this.fromDate,
@@ -56,11 +77,12 @@ class AttendanceState {
       employeeNumber: employeeNumber ?? this.employeeNumber,
       totalStaff: totalStaff ?? this.totalStaff,
       present: present ?? this.present,
-      late_count: late_count ?? this.late_count,
+      lateCount: lateCount ?? this.lateCount,
       absent: absent ?? this.absent,
       halfDay: halfDay ?? this.halfDay,
       onLeave: onLeave ?? this.onLeave,
       isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : (error ?? this.error),
       records: records ?? this.records,
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,
@@ -70,112 +92,105 @@ class AttendanceState {
 }
 
 class AttendanceNotifier extends StateNotifier<AttendanceState> {
-  AttendanceNotifier()
+  final AttendanceRepository _repository;
+
+  AttendanceNotifier(this._repository)
       : super(AttendanceState(
           fromDate: DateTime(2026, 2, 2),
           toDate: DateTime(2026, 2, 2),
-          totalStaff: 9,
-          present: 3,
-          late_count: 1,
-          absent: 1,
-          halfDay: 0,
-          onLeave: 1,
-          records: _mockRecords,
-          totalItems: 9,
-        ));
+        )) {
+    // Load initial data
+    loadAttendance();
+  }
 
-  static final List<AttendanceRecord> _mockRecords = [
-    AttendanceRecord(
-      employeeName: 'Ahmed Al-Mutairi',
-      employeeId: 'EMP-001',
-      departmentName: 'IT',
-      date: DateTime(2026, 2, 2),
-      checkIn: '08:05',
-      checkOut: '17:10',
-      status: 'Present',
-      avatarInitials: 'AA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Fatima Al-Sabah',
-      employeeId: 'EMP-002',
-      departmentName: 'HR',
-      date: DateTime(2026, 2, 2),
-      checkIn: '08:30',
-      checkOut: '16:45',
-      status: 'Late',
-      avatarInitials: 'FA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Mohammed Al-Rashid',
-      employeeId: 'EMP-003',
-      departmentName: 'Finance',
-      date: DateTime(2026, 2, 2),
-      checkIn: '-',
-      checkOut: '-',
-      status: 'Absent',
-      avatarInitials: 'MA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Sara Al-Kandari',
-      employeeId: 'EMP-004',
-      departmentName: 'IT',
-      date: DateTime(2026, 2, 2),
-      checkIn: '07:55',
-      checkOut: '15:30',
-      status: 'Early',
-      avatarInitials: 'SA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Ali Al-Ajmi',
-      employeeId: 'EMP-005',
-      departmentName: 'Operations',
-      date: DateTime(2026, 2, 2),
-      checkIn: '-',
-      checkOut: '-',
-      status: 'On Leave',
-      avatarInitials: 'AA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Noor Al-Shammari',
-      employeeId: 'EMP-006',
-      departmentName: 'Sales',
-      date: DateTime(2026, 2, 2),
-      checkIn: '09:00',
-      checkOut: '17:00',
-      status: 'Official Work',
-      avatarInitials: 'NA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Khaled Al-Ibrahim',
-      employeeId: 'EMP-007',
-      departmentName: 'IT',
-      date: DateTime(2026, 2, 2),
-      checkIn: '06:00',
-      checkOut: '14:00',
-      status: 'Business Trip',
-      avatarInitials: 'KA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Yousef Al-Mutawa',
-      employeeId: 'EMP-008',
-      departmentName: 'Security',
-      date: DateTime(2026, 2, 2),
-      checkIn: '22:10',
-      checkOut: '06:05',
-      status: 'Present',
-      avatarInitials: 'YA',
-    ),
-    AttendanceRecord(
-      employeeName: 'Layla Al-Fahad',
-      employeeId: 'EMP-009',
-      departmentName: 'Operations',
-      date: DateTime(2026, 2, 2),
-      checkIn: '22:55',
-      checkOut: '07:10',
-      status: 'Present',
-      avatarInitials: 'LA',
-    ),
-  ];
+  /// Loads attendance records from repository
+  Future<void> loadAttendance() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+
+    try {
+      final attendances = await _repository.getAttendance(
+        fromDate: state.fromDate,
+        toDate: state.toDate,
+        employeeNumber: state.employeeNumber.isEmpty ? null : state.employeeNumber,
+      );
+
+      // Convert Attendance domain models to AttendanceRecord for UI
+      final records = attendances.map((a) => AttendanceRecord.fromAttendance(a)).toList();
+
+      // Calculate statistics
+      final stats = _calculateStatistics(attendances);
+
+      state = state.copyWith(
+        records: records,
+        totalItems: records.length,
+        totalStaff: stats['totalStaff']!,
+        present: stats['present']!,
+        lateCount: stats['late']!,
+        absent: stats['absent']!,
+        halfDay: stats['halfDay']!,
+        onLeave: stats['onLeave']!,
+        isLoading: false,
+        clearError: true,
+      );
+    } on AppException catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.message,
+        clearError: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load attendance: ${e.toString()}',
+        clearError: false,
+      );
+    }
+  }
+
+  /// Calculates attendance statistics from list of attendances
+  Map<String, int> _calculateStatistics(List<Attendance> attendances) {
+    final stats = <String, int>{
+      'totalStaff': attendances.length,
+      'present': 0,
+      'late': 0,
+      'absent': 0,
+      'halfDay': 0,
+      'onLeave': 0,
+    };
+
+    for (final attendance in attendances) {
+      switch (attendance.status) {
+        case AttendanceStatus.present:
+          stats['present'] = (stats['present'] ?? 0) + 1;
+          break;
+        case AttendanceStatus.late:
+          stats['late'] = (stats['late'] ?? 0) + 1;
+          break;
+        case AttendanceStatus.absent:
+          stats['absent'] = (stats['absent'] ?? 0) + 1;
+          break;
+        case AttendanceStatus.halfDay:
+          stats['halfDay'] = (stats['halfDay'] ?? 0) + 1;
+          break;
+        case AttendanceStatus.onLeave:
+          stats['onLeave'] = (stats['onLeave'] ?? 0) + 1;
+          break;
+        case AttendanceStatus.early:
+        case AttendanceStatus.officialWork:
+        case AttendanceStatus.businessTrip:
+          // These can be counted as present for statistics
+          stats['present'] = (stats['present'] ?? 0) + 1;
+          break;
+      }
+    }
+
+    return stats;
+  }
+
+  /// Refreshes attendance data
+  Future<void> refresh() async {
+    await loadAttendance();
+  }
 
   void setPage(int page) {
     state = state.copyWith(currentPage: page);
@@ -183,21 +198,56 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
 
   void setPageSize(int size) {
     state = state.copyWith(pageSize: size, currentPage: 1);
+    loadAttendance();
   }
 
   void setFromDate(DateTime date) {
     state = state.copyWith(fromDate: date);
+    loadAttendance();
   }
 
   void setToDate(DateTime date) {
     state = state.copyWith(toDate: date);
+    loadAttendance();
   }
 
   void setEmployeeNumber(String number) {
     state = state.copyWith(employeeNumber: number);
+    loadAttendance();
   }
 }
 
-final attendanceProvider = StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
-  return AttendanceNotifier();
+// State Notifier Provider
+final attendanceNotifierProvider = StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
+  final repository = ref.watch(attendanceRepositoryProvider);
+  return AttendanceNotifier(repository);
+});
+
+// Convenience Providers
+final attendanceProvider = Provider<AttendanceState>((ref) {
+  return ref.watch(attendanceNotifierProvider);
+});
+
+final attendanceRecordsProvider = Provider<List<AttendanceRecord>>((ref) {
+  return ref.watch(attendanceNotifierProvider).records;
+});
+
+final attendanceLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(attendanceNotifierProvider).isLoading;
+});
+
+final attendanceErrorProvider = Provider<String?>((ref) {
+  return ref.watch(attendanceNotifierProvider).error;
+});
+
+final attendanceStatsProvider = Provider<Map<String, int>>((ref) {
+  final state = ref.watch(attendanceNotifierProvider);
+  return {
+    'totalStaff': state.totalStaff,
+    'present': state.present,
+    'late': state.lateCount,
+    'absent': state.absent,
+    'halfDay': state.halfDay,
+    'onLeave': state.onLeave,
+  };
 });

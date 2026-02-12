@@ -219,7 +219,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         filled: widget.filled,
         fillColor: effectiveFillColor,
         isDense: true,
-        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         hintStyle: TextStyle(
           fontSize: widget.fontSize ?? 15.sp,
           height: 1.0,
@@ -241,6 +241,9 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
       );
     }
 
+    // Apply height constraint only for single-line fields
+    final shouldConstrainHeight = (widget.maxLines == null || widget.maxLines == 1) && widget.minLines == null;
+    
     if (widget.labelText != null) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -271,13 +274,17 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
               ],
             ),
           ),
-          SizedBox(height: 8.h),
-          field,
+          SizedBox(height: 6.h),
+          shouldConstrainHeight
+              ? SizedBox(height: 36.h, child: field)
+              : field,
         ],
       );
     }
 
-    return field;
+    return shouldConstrainHeight
+        ? SizedBox(height: 36.h, child: field)
+        : field;
   }
 
   InputBorder _buildBorder(double radius, Color color, {double width = 1.0}) {

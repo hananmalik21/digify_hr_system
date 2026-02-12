@@ -48,6 +48,14 @@
       "problemMatcher": [],
       "group": "none",
       "detail": "Generates localization files using fvm"
+    },
+    {
+      "label": "fvm generate assets",
+      "type": "shell",
+      "command": "fvm flutter pub run build_runner build --delete-conflicting-outputs",
+      "problemMatcher": [],
+      "group": "build",
+      "detail": "Regenerates FlutterGen assets (icons, images, etc.)"
     }
   ]
 }
