@@ -187,7 +187,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
         'org_unit_name_en': _controllers['nameEn']!.text.trim(),
         'org_unit_name_ar': _controllers['nameAr']!.text.trim(),
         // For COMPANY level, send null; for other levels, send the selected parent ID
-        'parent_org_unit_id': widget.levelCode.toUpperCase() == 'COMPANY' ? null : _selectedParentId,
+        'parentId': widget.levelCode.toUpperCase() == 'COMPANY' ? null : _selectedParentId,
         'is_active': _selectedStatus == 'Active' ? 'Y' : 'N',
         'manager_name': _controllers['managerName']!.text.trim(),
         'manager_email': _controllers['managerEmail']!.text.trim(),

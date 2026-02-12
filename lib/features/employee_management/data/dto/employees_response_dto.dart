@@ -214,7 +214,7 @@ class EmployeeListItemDto {
 
   factory EmployeeListItemDto.fromJson(Map<String, dynamic> json) {
     final orgList = json['org_structure_list'] as List<dynamic>? ?? [];
-    final positionObjJson = json['position_obj'] as Map<String, dynamic>?;
+    final positionObjJson = json['position'] as Map<String, dynamic>?;
     return EmployeeListItemDto(
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,

@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_address_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
@@ -87,6 +88,7 @@ class AddEmployeeDialogFlow {
       asgStart: _parseDate(asg.enterpriseHireDate),
       asgEnd: _parseDate(asg.effectiveEndDate),
       workLocation: addr?.addressLine1,
+      workLocationId: asg.workLocationId ?? emp.workLocationId,
       lookupCodesByTypeCode: demo != null
           ? {
               'GENDER': demo.genderCode,
@@ -153,6 +155,7 @@ class AddEmployeeDialogFlow {
           asgStart: request.asgStart,
           asgEnd: request.asgEnd,
           workLocation: request.workLocation,
+          workLocationId: request.workLocationId,
         );
     _ref
         .read(addEmployeeWorkScheduleProvider.notifier)
@@ -213,6 +216,7 @@ class AddEmployeeDialogFlow {
           workPermitExpiry: request.workPermitExpiry,
           documentTypeCode: d.documents.isNotEmpty ? d.documents.first.documentTypeCode : null,
           existingDocumentFileName: d.documents.isNotEmpty ? d.documents.first.fileName : null,
+          documents: d.documents,
         );
   }
 
@@ -462,6 +466,7 @@ class AddEmployeeDialogFlow {
       wsEnd: workScheduleState.wsEnd,
       orgUnitIdHex: _emptyToNull(assignmentState.orgUnitIdHex),
       workLocation: _emptyToNull(assignmentState.workLocation),
+      workLocationId: assignmentState.workLocationId,
       asgStart: assignmentState.asgStart,
       asgEnd: assignmentState.asgEnd,
       lookupCodesByTypeCode: demographicsState.lookupCodesByTypeCode,
@@ -501,25 +506,40 @@ class AddEmployeeDialogFlow {
       workPermitExpiry: documentsState.workPermitExpiry,
     );
     final editingId = _ref.read(addEmployeeEditingEmployeeIdProvider);
+    final pendingDocOp = documentsState.pendingDocOp;
+    final (
+      Document? docToSend,
+      String? docTypeCode,
+      String? docAction,
+      int? replaceDocId,
+    ) = editingId != null && editingId.isNotEmpty && pendingDocOp != null
+        ? (
+            pendingDocOp.file,
+            pendingDocOp.documentTypeCode,
+            pendingDocOp.isAdd ? 'ADD' : 'REPLACE',
+            pendingDocOp.replaceDocumentId,
+          )
+        : (documentsState.document, documentsState.documentTypeCode, null, null);
     final (ok, response) = editingId != null && editingId.isNotEmpty
         ? await _ref
               .read(addEmployeeBasicInfoProvider.notifier)
               .submitUpdate(
                 editingId,
                 request,
-                document: documentsState.document,
-                documentTypeCode: documentsState.documentTypeCode,
+                document: docToSend,
+                documentTypeCode: docTypeCode,
+                docAction: docAction,
+                replaceDocumentId: replaceDocId,
               )
         : await _ref
               .read(addEmployeeBasicInfoProvider.notifier)
-              .submitWithRequest(
-                request,
-                document: documentsState.document,
-                documentTypeCode: documentsState.documentTypeCode,
-              );
+              .submitWithRequest(request, document: docToSend, documentTypeCode: docTypeCode);
     if (!context.mounted) return;
     if (ok) {
       if (editingId != null && editingId.isNotEmpty) {
+        if (pendingDocOp != null) {
+          _ref.read(addEmployeeDocumentsProvider.notifier).clearPendingDocOp();
+        }
         _replaceEmployeeFromResponse(response, editingId);
         ToastService.success(context, AppLocalizations.of(context)!.addEmployeeCreatedSuccess);
       } else {

@@ -55,45 +55,48 @@ class ManageEmployeesTable extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScrollableSingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Skeletonizer(
-              enabled: isLoading,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EmployeeTableHeader(isDark: isDark, localizations: localizations),
-                  if (isLoading && employees.isEmpty)
-                    EmployeeTableSkeleton(localizations: localizations)
-                  else if (employees.isEmpty && !isLoading)
-                    SizedBox(
-                      width: 900.w,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 48.h),
-                        child: Center(
-                          child: Text(
-                            localizations.noResultsFound,
-                            style: TextStyle(fontSize: 16.sp, color: AppColors.textMuted),
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Skeletonizer(
+                enabled: isLoading,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    EmployeeTableHeader(isDark: isDark, localizations: localizations),
+                    if (isLoading && employees.isEmpty)
+                      EmployeeTableSkeleton(localizations: localizations)
+                    else if (employees.isEmpty && !isLoading)
+                      SizedBox(
+                        width: 900.w,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 48.h),
+                          child: Center(
+                            child: Text(
+                              localizations.noResultsFound,
+                              style: TextStyle(fontSize: 16.sp, color: AppColors.textMuted),
+                            ),
                           ),
                         ),
+                      )
+                    else
+                      ...employees.asMap().entries.map(
+                        (entry) => EmployeeTableRow(
+                          employee: entry.value,
+                          index: entry.key + 1,
+                          localizations: localizations,
+                          onView: onView,
+                          onEdit: onEdit,
+                          onMore: onMore,
+                        ),
                       ),
-                    )
-                  else
-                    ...employees.asMap().entries.map(
-                      (entry) => EmployeeTableRow(
-                        employee: entry.value,
-                        index: entry.key + 1,
-                        localizations: localizations,
-                        onView: onView,
-                        onEdit: onEdit,
-                        onMore: onMore,
-                      ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          if (paginationInfo != null)
+          if (paginationInfo != null) ...[
             PaginationControls.fromPaginationInfo(
               paginationInfo: paginationInfo!,
               currentPage: currentPage,
@@ -103,6 +106,7 @@ class ManageEmployeesTable extends StatelessWidget {
               isLoading: paginationIsLoading ?? isLoading,
               style: PaginationStyle.simple,
             ),
+          ],
         ],
       ),
     );

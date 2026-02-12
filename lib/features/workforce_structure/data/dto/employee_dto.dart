@@ -11,6 +11,7 @@ class EmployeeDto {
   final String? middleNameAr;
   final String? lastNameAr;
   final String email;
+  final String? employeeNumber;
   final String? phoneNumber;
   final String? mobileNumber;
   final DateTime? dateOfBirth;
@@ -32,6 +33,7 @@ class EmployeeDto {
     this.middleNameAr,
     this.lastNameAr,
     required this.email,
+    this.employeeNumber,
     this.phoneNumber,
     this.mobileNumber,
     this.dateOfBirth,
@@ -45,29 +47,32 @@ class EmployeeDto {
 
   factory EmployeeDto.fromJson(Map<String, dynamic> json) {
     return EmployeeDto(
-      employeeId: (json['employee_id'] as num).toInt(),
-      employeeGuid: json['employee_guid'] as String,
-      enterpriseId: (json['enterprise_id'] as num).toInt(),
-      firstName: json['first_name'] as String? ?? '',
-      middleName: json['middle_name'] as String?,
-      lastName: json['last_name'] as String? ?? '',
+      employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
+      employeeGuid: json['employee_guid'] as String? ?? '',
+      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
+      firstName: (json['first_name_en'] ?? json['first_name']) as String? ?? '',
+      middleName: (json['middle_name_en'] ?? json['middle_name']) as String?,
+      lastName: (json['last_name_en'] ?? json['last_name']) as String? ?? '',
       firstNameAr: json['first_name_ar'] as String?,
       middleNameAr: json['middle_name_ar'] as String?,
       lastNameAr: json['last_name_ar'] as String?,
       email: json['email'] as String? ?? '',
+      employeeNumber: json['employee_number'] as String?,
       phoneNumber: json['phone_number'] as String?,
       mobileNumber: json['mobile_number'] as String?,
-      dateOfBirth: json['date_of_birth'] != null ? DateTime.parse(json['date_of_birth'] as String) : null,
-      status: json['status'] as String? ?? '',
-      isActive: json['is_active'] as String? ?? 'N',
+      dateOfBirth: json['date_of_birth'] != null ? DateTime.tryParse(json['date_of_birth'] as String) : null,
+      status: (json['employee_status'] ?? json['status']) as String? ?? '',
+      isActive: (json['employee_is_active'] ?? json['is_active']) as String? ?? 'N',
       createdAt: json['creation_date'] != null
-          ? DateTime.parse(json['creation_date'] as String)
-          : (json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now()),
+          ? (DateTime.tryParse(json['creation_date'] as String) ?? DateTime.now())
+          : (json['created_at'] != null
+                ? DateTime.tryParse(json['created_at'] as String) ?? DateTime.now()
+                : DateTime.now()),
       createdBy: json['created_by'] as String?,
       updatedAt: json['last_update_date'] != null
-          ? (DateTime.tryParse(json['last_update_date'] as String))
+          ? DateTime.tryParse(json['last_update_date'] as String)
           : (json['updated_at'] != null ? DateTime.tryParse(json['updated_at'] as String) : null),
-      updatedBy: json['last_updated_by'] as String? ?? json['updated_by'] as String?,
+      updatedBy: (json['last_updated_by'] ?? json['updated_by']) as String?,
     );
   }
 
@@ -83,6 +88,7 @@ class EmployeeDto {
       middleNameAr: middleNameAr,
       lastNameAr: lastNameAr,
       email: email,
+      employeeNumber: employeeNumber,
       phoneNumber: phoneNumber,
       mobileNumber: mobileNumber,
       dateOfBirth: dateOfBirth,

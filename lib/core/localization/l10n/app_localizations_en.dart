@@ -2924,6 +2924,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchSectionsPlaceholder => 'Search sections...';
 
   @override
+  String get managePositions => 'Manage Positions';
+
+  @override
   String get managePositionsJobFamilies =>
       'Manage positions, job families, levels, and organizational structure';
 
@@ -3493,7 +3496,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get employeeName => 'Employee Name';
 
   @override
-  String get employeeNumber => 'Employee Number';
+  String get employeeNumber => 'Employee #';
 
   @override
   String get joinDate => 'Join Date';
@@ -3670,7 +3673,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get days => 'Days';
 
   @override
+  String get leaveBalanceTotal => 'Total:';
+
+  @override
+  String get leaveBalanceUsed => 'Used:';
+
+  @override
+  String get leaveBalanceRemaining => 'Remaining:';
+
+  @override
   String get reason => 'Reason';
+
+  @override
+  String get submittedAt => 'Submitted at';
+
+  @override
+  String get processedAt => 'Processed at';
 
   @override
   String get maternityLeave => 'Maternity Leave';
@@ -3680,6 +3698,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reject => 'Reject';
+
+  @override
+  String get totalRequests => 'Total Requests';
 
   @override
   String get leaveRequestGuidelines => 'Leave Request Guidelines';
@@ -3812,6 +3833,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportingDocuments => 'Supporting Documents';
+
+  @override
+  String get documentType => 'Document type';
+
+  @override
+  String get replaceDocument => 'Replace';
 
   @override
   String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';

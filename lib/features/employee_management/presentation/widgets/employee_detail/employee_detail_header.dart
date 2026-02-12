@@ -1,28 +1,41 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_display_data.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_chip.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_leave_stats_cards.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import 'employee_detail_summary_cards.dart';
 
-class EmployeeDetailHeader extends StatelessWidget {
-  const EmployeeDetailHeader({super.key, required this.displayData, required this.isDark, this.onEditPressed});
+class EmployeeDetailHeader extends ConsumerWidget {
+  const EmployeeDetailHeader({
+    super.key,
+    required this.displayData,
+    required this.isDark,
+    this.onEditPressed,
+    this.onDownloadDocuments,
+    this.isDownloadingDocuments = false,
+  });
 
   final EmployeeDetailDisplayData displayData;
   final bool isDark;
   final VoidCallback? onEditPressed;
+  final Future<void> Function(BuildContext context)? onDownloadDocuments;
+  final bool isDownloadingDocuments;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textPrimary = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       padding: EdgeInsets.all(24.w),
@@ -35,44 +48,61 @@ class EmployeeDetailHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DigifyAssetButton(onTap: () => context.pop(), assetPath: Assets.icons.employeeManagement.backArrow.path),
               Gap(24.w),
               Expanded(
-                child: Text(
-                  displayData.displayName,
-                  style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      displayData.displayName,
+                      style: context.textTheme.titleLarge?.copyWith(fontSize: 24.sp, color: textPrimary),
+                    ),
+                    Gap(8.h),
+                    Row(
+                      spacing: 16.w,
+                      children: [
+                        EmployeeDetailChip(
+                          path: Assets.icons.deiDashboardIcon.path,
+                          label: displayData.positionLabel,
+                          isDark: isDark,
+                        ),
+                        EmployeeDetailChip(
+                          path: Assets.icons.departmentsIcon.path,
+                          label: displayData.departmentLabel,
+                          isDark: isDark,
+                        ),
+                        EmployeeDetailChip(
+                          path: Assets.icons.employeeManagement.hash.path,
+                          label: displayData.employeeNumber,
+                          isDark: isDark,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              AppButton.outline(label: 'Download PDF', svgPath: Assets.icons.downloadIcon.path, onPressed: () {}),
+              AppButton.outline(
+                label: 'Download documents',
+                svgPath: Assets.icons.downloadIcon.path,
+                isLoading: isDownloadingDocuments,
+                onPressed: onDownloadDocuments != null ? () => onDownloadDocuments!(context) : null,
+              ),
               Gap(8.w),
               AppButton.primary(label: 'Edit Profile', svgPath: Assets.icons.editIcon.path, onPressed: onEditPressed),
             ],
           ),
-          Gap(8.h),
-          Row(
-            spacing: 16.w,
-            children: [
-              Gap(18.w),
-              EmployeeDetailChip(
-                path: Assets.icons.deiDashboardIcon.path,
-                label: displayData.positionLabel,
-                isDark: isDark,
-              ),
-              EmployeeDetailChip(
-                path: Assets.icons.departmentsIcon.path,
-                label: displayData.departmentLabel,
-                isDark: isDark,
-              ),
-              EmployeeDetailChip(
-                path: Assets.icons.employeeManagement.hash.path,
-                label: displayData.employeeNumber,
-                isDark: isDark,
-              ),
-            ],
-          ),
           Gap(24.h),
           EmployeeDetailSummaryCards(displayData: displayData, isDark: isDark),
+          Gap(24.h),
+          EmployeeDetailLeaveStatsCards(
+            employeeGuid: displayData.employee.id,
+            isDark: isDark,
+            localizations: localizations,
+          ),
         ],
       ),
     );

@@ -16,6 +16,7 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -28,6 +29,7 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
       page: page,
       pageSize: pageSize,
       search: search,
+      assignmentStatus: assignmentStatus,
       positionId: positionId,
       jobFamilyId: jobFamilyId,
       jobLevelId: jobLevelId,
@@ -58,12 +60,16 @@ class ManageEmployeesListRepositoryImpl implements ManageEmployeesListRepository
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   }) async {
     return remoteDataSource.updateEmployee(
       employeeGuid,
       request,
       document: document,
       documentTypeCode: documentTypeCode,
+      docAction: docAction,
+      replaceDocumentId: replaceDocumentId,
     );
   }
 }

@@ -215,6 +215,7 @@ class PositionModel {
       grade: grade?.gradeNumber ?? '',
       step: stepNo != null ? 'Step $stepNo' : '',
       reportsTo: reportsTo?.positionTitleEn,
+      reportsToPositionId: reportsToPositionId,
       division: division,
       costCenter: costCenter ?? '',
       location: location ?? '',
@@ -254,9 +255,7 @@ class OrgStructureModel {
 
   factory OrgStructureModel.fromJson(Map<String, dynamic> json) {
     return OrgStructureModel(
-      structureId: (json['structure_id'] as String?) ??
-          (json['structure_id'] as num?)?.toString() ??
-          '',
+      structureId: (json['structure_id'] as String?) ?? (json['structure_id'] as num?)?.toString() ?? '',
       structureCode: json['structure_code'] as String? ?? '',
       structureName: json['structure_name'] as String? ?? '',
     );
@@ -273,9 +272,7 @@ class OrgUnitModel {
 
   factory OrgUnitModel.fromJson(Map<String, dynamic> json) {
     return OrgUnitModel(
-      orgUnitId: (json['org_unit_id'] as String?) ??
-          (json['org_unit_id'] as num?)?.toString() ??
-          '',
+      orgUnitId: (json['org_unit_id'] as String?) ?? (json['org_unit_id'] as num?)?.toString() ?? '',
       nameEn: json['name_en'] as String? ?? '',
       nameAr: json['name_ar'] as String? ?? '',
       levelCode: json['level_code'] as String? ?? '',
@@ -399,9 +396,7 @@ class ReportsToModel {
 
   factory ReportsToModel.fromJson(Map<String, dynamic> json) {
     return ReportsToModel(
-      positionId: (json['position_id'] as String?) ??
-          (json['position_id'] as num?)?.toString() ??
-          '',
+      positionId: (json['position_id'] as String?) ?? (json['position_id'] as num?)?.toString() ?? '',
       positionCode: json['position_code'] as String? ?? '',
       positionTitleEn: json['position_title_en'] as String? ?? '',
     );

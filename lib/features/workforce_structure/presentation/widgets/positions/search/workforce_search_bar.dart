@@ -33,16 +33,19 @@ class _WorkforceSearchBarState extends ConsumerState<WorkforceSearchBar> {
   Widget build(BuildContext context) {
     final searchQuery = ref.watch(positionNotifierProvider.select((s) => s.searchQuery));
 
-    if (searchQuery != null && _controller.text != searchQuery) {
-      _controller.text = searchQuery;
-    } else if (searchQuery == null && _controller.text.isNotEmpty) {
+    if (searchQuery == null && _controller.text.isNotEmpty) {
       _controller.clear();
+    } else if (searchQuery != null && _controller.text.isEmpty) {
+      _controller.text = searchQuery;
     }
 
     return DigifyTextField.search(
       controller: _controller,
       hintText: widget.hintText,
-      onChanged: (value) => ref.read(positionNotifierProvider.notifier).search(value),
+      onSubmitted: (value) {
+        final query = value.trim();
+        ref.read(positionNotifierProvider.notifier).search(query.isEmpty ? '' : query);
+      },
     );
   }
 }

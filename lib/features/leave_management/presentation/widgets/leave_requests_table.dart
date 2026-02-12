@@ -8,11 +8,13 @@ import 'package:digify_hr_system/features/leave_management/data/config/leave_req
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_filter_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_actions_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_request_details_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_requests_table/leave_requests_table_row.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,70 +39,81 @@ class LeaveRequestsTable extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScrollableSingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LeaveRequestsTableHeader(isDark: isDark, localizations: localizations),
-                requestsAsync.when(
-                  data: (paginatedResponse) {
-                    final filtered = _filterRequests(paginatedResponse.requests, filter);
-                    if (filtered.isEmpty) {
-                      return _buildEmptyState(localizations);
-                    }
-                    final approveLoading = ref.watch(leaveRequestsApproveLoadingProvider);
-                    final rejectLoading = ref.watch(leaveRequestsRejectLoadingProvider);
-                    final deleteLoading = ref.watch(leaveRequestsDeleteLoadingProvider);
-                    return Column(
-                      children: filtered
-                          .map(
-                            (request) => LeaveRequestsTableRow(
-                              request: request,
-                              localizations: localizations,
-                              isDark: isDark,
-                              isApproveLoading: approveLoading.contains(request.guid),
-                              isRejectLoading: rejectLoading.contains(request.guid),
-                              isDeleteLoading: deleteLoading.contains(request.guid),
-                              onView: () {
-                                LeaveRequestDetailsDialog.show(
-                                  context,
-                                  request: request,
-                                  onApprove: request.status == RequestStatus.pending
-                                      ? () => LeaveRequestsActions.approveLeaveRequest(
-                                          context,
-                                          ref,
-                                          request,
-                                          localizations,
-                                        )
-                                      : null,
-                                  onReject: request.status == RequestStatus.pending
-                                      ? () => LeaveRequestsActions.rejectLeaveRequest(
-                                          context,
-                                          ref,
-                                          request,
-                                          localizations,
-                                        )
-                                      : null,
-                                );
-                              },
-                              onApprove: () =>
-                                  LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
-                              onReject: () =>
-                                  LeaveRequestsActions.rejectLeaveRequest(context, ref, request, localizations),
-                              onDelete: () =>
-                                  LeaveRequestsActions.deleteLeaveRequest(context, ref, request, localizations),
-                              onUpdate: () =>
-                                  LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
-                            ),
-                          )
-                          .toList(),
-                    );
-                  },
-                  loading: () => _buildLoadingRows(),
-                  error: (error, stack) => _buildErrorState(localizations, error.toString()),
-                ),
-              ],
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LeaveRequestsTableHeader(isDark: isDark, localizations: localizations),
+                  requestsAsync.when(
+                    data: (paginatedResponse) {
+                      final filtered = _filterRequests(paginatedResponse.requests, filter);
+                      if (filtered.isEmpty) {
+                        return _buildEmptyState(localizations);
+                      }
+                      final approveLoading = ref.watch(leaveRequestsApproveLoadingProvider);
+                      final rejectLoading = ref.watch(leaveRequestsRejectLoadingProvider);
+                      final deleteLoading = ref.watch(leaveRequestsDeleteLoadingProvider);
+                      return Column(
+                        children: filtered
+                            .map(
+                              (request) => LeaveRequestsTableRow(
+                                request: request,
+                                localizations: localizations,
+                                isDark: isDark,
+                                isApproveLoading: approveLoading.contains(request.guid),
+                                isRejectLoading: rejectLoading.contains(request.guid),
+                                isDeleteLoading: deleteLoading.contains(request.guid),
+                                onView: () {
+                                  LeaveRequestDetailsDialog.show(
+                                    context,
+                                    request: request,
+                                    department: request.department,
+                                    position: request.position,
+                                    onApprove: request.status == RequestStatus.pending
+                                        ? () => LeaveRequestsActions.approveLeaveRequest(
+                                            context,
+                                            ref,
+                                            request,
+                                            localizations,
+                                          )
+                                        : null,
+                                    onReject: request.status == RequestStatus.pending
+                                        ? () => LeaveRequestsActions.rejectLeaveRequest(
+                                            context,
+                                            ref,
+                                            request,
+                                            localizations,
+                                          )
+                                        : null,
+                                  );
+                                },
+                                onViewEmployeeHistory: request.employeeGuid != null
+                                    ? () => context.push(
+                                        AppRoutes.leaveManagementEmployeeLeaveHistory,
+                                        extra: request.employeeGuid,
+                                      )
+                                    : null,
+                                onApprove: () =>
+                                    LeaveRequestsActions.approveLeaveRequest(context, ref, request, localizations),
+                                onReject: () =>
+                                    LeaveRequestsActions.rejectLeaveRequest(context, ref, request, localizations),
+                                onDelete: () =>
+                                    LeaveRequestsActions.deleteLeaveRequest(context, ref, request, localizations),
+                                onUpdate: () =>
+                                    LeaveRequestsActions.updateLeaveRequest(context, ref, request, localizations),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                    loading: () => _buildLoadingRows(),
+                    error: (error, stack) => _buildErrorState(localizations, error.toString()),
+                  ),
+                ],
+              ),
             ),
           ),
           if (notifierState.data != null)

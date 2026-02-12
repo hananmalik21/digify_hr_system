@@ -6,6 +6,7 @@ import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart'
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/models/employee_detail_display_data.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_documents_download_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_full_details_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/edit_employee_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_header.dart';
@@ -67,6 +68,10 @@ class _EmployeeDetailScreenState extends ConsumerState<EmployeeDetailScreen> wit
                     displayData: displayData,
                     isDark: isDark,
                     onEditPressed: () => EditEmployeeDialog.show(context, widget.employee.id),
+                    isDownloadingDocuments: ref.watch(employeeDocumentsDownloadNotifierProvider),
+                    onDownloadDocuments: (ctx) => ref
+                        .read(employeeDocumentsDownloadNotifierProvider.notifier)
+                        .downloadAllDocuments(ctx, fullDetails, widget.employee.id),
                   ),
                 ),
                 Container(

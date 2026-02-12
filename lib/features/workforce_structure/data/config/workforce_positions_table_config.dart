@@ -4,7 +4,7 @@ class WorkforcePositionsTableConfig {
   static const bool showPositionCode = false;
   static const bool showTitle = true;
   static const bool showDepartment = true;
-  static const bool showJobFamily = false;
+  static const bool showJobFamily = true;
   static const bool showJobLevel = false;
   static const bool showGradeStep = true;
   static const bool showReportsTo = false;
@@ -21,7 +21,7 @@ class WorkforcePositionsTableConfig {
   static const double gradeStepWidth = 233.29;
   static const double reportsToWidth = 140.07;
   static const double headcountWidth = 125.12;
-  static const double vacancyWidth = 108.22;
+  static const double vacancyWidth = 140.0;
   static const double statusWidth = 107.02;
   static const double actionsWidth = 150.0;
 }

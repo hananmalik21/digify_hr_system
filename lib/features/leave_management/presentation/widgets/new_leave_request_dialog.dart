@@ -1,18 +1,14 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
+import 'package:digify_hr_system/core/widgets/feedback/app_stepper_dialog_label_below.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/config/new_leave_request_stepper_config.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/contact_notes_step.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/documents_review/documents_review_step.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/leave_details_step.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/new_leave_request_dialog_footer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class NewLeaveRequestDialog extends ConsumerWidget {
   const NewLeaveRequestDialog({super.key});
@@ -26,14 +22,9 @@ class NewLeaveRequestDialog extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final state = ref.watch(newLeaveRequestProvider);
     final notifier = ref.read(newLeaveRequestProvider.notifier);
+    final stepperSteps = newLeaveRequestStepperSteps(localizations);
 
-    final stepperSteps = [
-      StepperStepConfig(assetPath: Assets.icons.leaveManagement.emptyLeave.path, label: localizations.leaveDetails),
-      StepperStepConfig(assetPath: Assets.icons.leaveManagement.forfeitReports.path, label: localizations.contactNotes),
-      StepperStepConfig(assetPath: Assets.icons.leaveManagement.attachment.path, label: localizations.documentsReview),
-    ];
-
-    return AppStepperDialog(
+    return AppStepperDialogLabelBelow(
       title: localizations.newLeaveRequest,
       subtitle: localizations.completeAllStepsToSubmit,
       content: _buildStepContent(state.currentStep),
@@ -41,102 +32,10 @@ class NewLeaveRequestDialog extends ConsumerWidget {
       currentStepIndex: state.currentStep.index,
       onClose: () {
         notifier.reset();
-        Navigator.of(context).pop();
+        context.pop();
       },
-      footerLeftActions: state.currentStep != LeaveRequestStep.leaveDetails
-          ? [AppButton.outline(label: localizations.previous, onPressed: () => notifier.previousStep())]
-          : null,
-      footerActions: [
-        AppButton.outline(
-          label: localizations.cancel,
-          onPressed: () {
-            notifier.reset();
-            Navigator.of(context).pop();
-          },
-        ),
-        Gap(8.w),
-        AppButton.outline(
-          label: localizations.saveAsDraft,
-          isLoading: state.isSavingDraft,
-          onPressed: state.isSavingDraft || state.isSubmitting
-              ? null
-              : () async {
-                  try {
-                    final response = await notifier.saveAsDraft();
-                    if (!context.mounted) return;
-                    final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
-                    final currentState = ref.read(newLeaveRequestProvider);
-                    if (currentState.editingRequestGuid != null) {
-                      await leaveRequestsNotifier.updateLeaveRequest(
-                        currentState.editingRequestGuid!,
-                        currentState,
-                        false,
-                        response,
-                      );
-                    } else {
-                      final employeeName = currentState.selectedEmployee?.fullName ?? '';
-                      final leaveType = currentState.leaveType!;
-                      leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-                    }
-                    if (!context.mounted) return;
-                    ToastService.success(context, localizations.draftSaved);
-                    notifier.reset();
-                    if (!context.mounted) return;
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    if (!context.mounted) return;
-                    final errorMessage = e.toString().replaceFirst('Exception: ', '');
-                    ToastService.error(context, errorMessage);
-                  }
-                },
-        ),
-        Gap(8.w),
-        if (state.currentStep != LeaveRequestStep.documentsReview)
-          AppButton(
-            label: localizations.next,
-            onPressed: (state.isSavingDraft || !state.canProceedToNextStep()) ? null : () => notifier.nextStep(),
-            type: AppButtonType.primary,
-          )
-        else
-          AppButton(
-            label: localizations.submitRequest,
-            isLoading: state.isSubmitting,
-            onPressed: (state.isSubmitting || state.isSavingDraft)
-                ? null
-                : () async {
-                    try {
-                      final response = await notifier.submit();
-                      if (!context.mounted) return;
-                      final leaveRequestsNotifier = ref.read(leaveRequestsNotifierProvider.notifier);
-                      final currentState = ref.read(newLeaveRequestProvider);
-                      if (currentState.editingRequestGuid != null) {
-                        await leaveRequestsNotifier.updateLeaveRequest(
-                          currentState.editingRequestGuid!,
-                          currentState,
-                          true,
-                          response,
-                        );
-                      } else {
-                        final employeeName = currentState.selectedEmployee?.fullName ?? '';
-                        final leaveType = currentState.leaveType!;
-                        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-                      }
-                      if (!context.mounted) return;
-                      ToastService.success(context, localizations.submitRequest);
-                      notifier.reset();
-                      if (!context.mounted) return;
-                      Navigator.of(context).pop();
-                    } catch (e) {
-                      if (!context.mounted) return;
-                      final errorMessage = e.toString().replaceFirst('Exception: ', '');
-                      ToastService.error(context, errorMessage);
-                    }
-                  },
-            type: AppButtonType.primary,
-            backgroundColor: AppColors.greenButton,
-            icon: Icons.check,
-          ),
-      ],
+      footerLeftActions: buildNewLeaveRequestFooterLeftActions(context, state, notifier),
+      footerActions: buildNewLeaveRequestFooterRightActions(context, state, notifier),
       isLoading: state.isLoadingDraft,
     );
   }

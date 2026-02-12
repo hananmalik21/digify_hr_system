@@ -111,6 +111,7 @@ class DigifyTextField extends StatefulWidget {
     TextDirection? textDirection,
     TextAlign textAlign = TextAlign.start,
     FocusNode? focusNode,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return DigifyTextField(
       controller: controller,
@@ -125,6 +126,7 @@ class DigifyTextField extends StatefulWidget {
       textDirection: textDirection,
       textAlign: textAlign,
       focusNode: focusNode,
+      inputFormatters: inputFormatters,
       filled: true,
       fillColor: Colors.transparent,
     );
@@ -313,6 +315,7 @@ class DigifyTextArea extends StatefulWidget {
   final bool showCharacterCount;
   final int? maxLength;
   final String Function(int)? characterCountFormatter;
+  final Color? fillColor;
 
   const DigifyTextArea({
     super.key,
@@ -332,6 +335,7 @@ class DigifyTextArea extends StatefulWidget {
     this.showCharacterCount = false,
     this.maxLength,
     this.characterCountFormatter,
+    this.fillColor,
   });
 
   @override
@@ -431,7 +435,7 @@ class _DigifyTextAreaState extends State<DigifyTextArea> {
           decoration: InputDecoration(
             hintText: widget.hintText,
             filled: true,
-            fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
+            fillColor: widget.fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent),
             isDense: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             hintStyle: TextStyle(
@@ -486,6 +490,7 @@ class DigifyDateField extends StatefulWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final ValueChanged<DateTime>? onDateSelected;
+  final Color? fillColor;
 
   const DigifyDateField({
     super.key,
@@ -497,6 +502,7 @@ class DigifyDateField extends StatefulWidget {
     this.firstDate,
     this.lastDate,
     this.onDateSelected,
+    this.fillColor,
   });
 
   @override
@@ -550,6 +556,8 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
       hintText: widget.hintText,
       readOnly: true,
       onTap: _openDatePicker,
+      filled: widget.fillColor != null,
+      fillColor: widget.fillColor,
       prefixIcon: Padding(
         padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
         child: DigifyAsset(

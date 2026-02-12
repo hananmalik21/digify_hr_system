@@ -11,6 +11,8 @@ class EmployeeInfoDto {
   final String? middleNameAr;
   final String? lastNameAr;
   final String? email;
+  final String? positionName;
+  final String? departmentName;
 
   const EmployeeInfoDto({
     required this.employeeId,
@@ -22,9 +24,25 @@ class EmployeeInfoDto {
     this.middleNameAr,
     this.lastNameAr,
     this.email,
+    this.positionName,
+    this.departmentName,
   });
 
   factory EmployeeInfoDto.fromJson(Map<String, dynamic> json) {
+    final positionName = json['position_name_en'] as String? ?? json['position_name'] as String? ?? '';
+    final orgList = json['org_structure_list'] as List<dynamic>?;
+    String? departmentName;
+    if (orgList != null) {
+      for (final e in orgList) {
+        if (e is Map<String, dynamic>) {
+          final levelCode = e['level_code'] as String?;
+          if (levelCode == 'DEPARTMENT') {
+            departmentName = e['org_unit_name_en'] as String? ?? e['org_unit_name'] as String? ?? '';
+            break;
+          }
+        }
+      }
+    }
     return EmployeeInfoDto(
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
       employeeGuid: json['employee_guid'] as String? ?? '',
@@ -35,6 +53,8 @@ class EmployeeInfoDto {
       middleNameAr: json['middle_name_ar'] as String?,
       lastNameAr: json['last_name_ar'] as String? ?? json['family_name_ar'] as String?,
       email: json['email'] as String?,
+      positionName: positionName.isNotEmpty ? positionName : null,
+      departmentName: (departmentName != null && departmentName.trim().isNotEmpty) ? departmentName.trim() : null,
     );
   }
 }
@@ -84,6 +104,7 @@ class LeaveRequestDto {
   final String createdBy;
   final DateTime lastUpdateDate;
   final String lastUpdatedBy;
+  final String reason;
   final EmployeeInfoDto? employeeInfo;
   final LeaveTypeInfoDto? leaveTypeInfo;
 
@@ -106,6 +127,7 @@ class LeaveRequestDto {
     required this.createdBy,
     required this.lastUpdateDate,
     required this.lastUpdatedBy,
+    this.reason = '',
     this.employeeInfo,
     this.leaveTypeInfo,
   });
@@ -165,6 +187,7 @@ class LeaveRequestDto {
       createdBy: leaveDetails['created_by'] as String? ?? '',
       lastUpdateDate: parseDateTime(leaveDetails['last_update_date']),
       lastUpdatedBy: leaveDetails['last_updated_by'] as String? ?? '',
+      reason: leaveDetails['reason_for_leave'] as String? ?? '',
       employeeInfo: employeeInfoJson != null ? EmployeeInfoDto.fromJson(employeeInfoJson) : null,
       leaveTypeInfo: leaveTypeInfoJson != null ? LeaveTypeInfoDto.fromJson(leaveTypeInfoJson) : null,
     );
@@ -198,12 +221,15 @@ class LeaveRequestDto {
       guid: leaveRequestGuid,
       employeeId: employeeId,
       employeeName: employeeName,
+      employeeGuid: employeeInfo?.employeeGuid,
+      department: employeeInfo?.departmentName,
+      position: employeeInfo?.positionName,
       type: leaveType,
       startDate: startDate,
       endDate: endDate,
       totalDays: totalDays,
       status: _mapStatus(requestStatus),
-      reason: '',
+      reason: reason,
       rejectionReason: null,
       approvedBy: null,
       approvedByName: null,

@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/utils/employee_detail_formatters.dart';
 
@@ -48,19 +49,24 @@ class EmployeeDetailDocumentDisplay {
     }
   }
 
-  static EmployeeDetailDocumentDisplay fromDocument(DocumentItem doc, EmployeeFullDetails? fullDetails) {
+  static EmployeeDetailDocumentDisplay fromDocument(
+    DocumentItem doc,
+    EmployeeFullDetails? fullDetails,
+    String baseUrl,
+  ) {
     return EmployeeDetailDocumentDisplay(
       title: documentTypeTitle(doc.documentTypeCode),
       fileName: displayValue(doc.fileName),
       status: doc.status ?? '—',
       expiryDate: _expiryForDocumentType(doc.documentTypeCode, fullDetails),
-      accessUrl: doc.accessUrl,
+      accessUrl: doc.fullAccessUrl(baseUrl),
     );
   }
 
   static List<EmployeeDetailDocumentDisplay> fromFullDetails(EmployeeFullDetails? fullDetails) {
     final documents = fullDetails?.documents ?? [];
     if (documents.isEmpty) return [];
-    return documents.map((d) => fromDocument(d, fullDetails)).toList();
+    final baseUrl = ApiConfig.baseUrl;
+    return documents.map((d) => fromDocument(d, fullDetails, baseUrl)).toList();
   }
 }

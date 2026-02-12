@@ -1,10 +1,13 @@
+import 'dart:ui';
+
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui';
+import 'package:gap/gap.dart';
 
 class AppDialog extends StatelessWidget {
   final String title;
@@ -38,28 +41,28 @@ class AppDialog extends StatelessWidget {
         child: Container(
           constraints: BoxConstraints(maxWidth: width ?? 500.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-            borderRadius: BorderRadius.circular(10.r),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
-            ],
+            color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: AppShadows.primaryShadow,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header
               Container(
-                padding: EdgeInsetsDirectional.all(24.w),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+                    colors: [AppColors.primary, AppColors.primaryLight],
                   ),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(16.r), topRight: Radius.circular(16.r)),
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: subtitle != null ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                   children: [
-                    if (icon != null) ...[icon!, SizedBox(width: 16.w)],
+                    if (icon != null) ...[icon!, Gap(12.w)],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,17 +71,13 @@ class AppDialog extends StatelessWidget {
                           Text(
                             title,
                             style: context.textTheme.titleMedium?.copyWith(
-                              color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                              color: AppColors.buttonTextLight,
+                              fontSize: 18.sp,
                             ),
                           ),
                           if (subtitle != null) ...[
-                            SizedBox(height: 4.h),
-                            Text(
-                              subtitle!,
-                              style: context.textTheme.bodySmall?.copyWith(
-                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                              ),
-                            ),
+                            Gap(2.h),
+                            Text(subtitle!, style: context.textTheme.bodySmall?.copyWith(color: AppColors.jobRoleBg)),
                           ],
                         ],
                       ),
@@ -87,14 +86,14 @@ class AppDialog extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: onClose ?? () => Navigator.of(context).pop(),
-                        borderRadius: BorderRadius.circular(20.r),
+                        borderRadius: BorderRadius.circular(100.r),
                         child: Padding(
                           padding: EdgeInsets.all(6.w),
                           child: DigifyAsset(
                             assetPath: Assets.icons.closeIcon.path,
                             width: 24,
                             height: 24,
-                            color: AppColors.dialogCloseIcon,
+                            color: AppColors.buttonTextLight,
                           ),
                         ),
                       ),
@@ -102,16 +101,15 @@ class AppDialog extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Content
               Flexible(
-                child: SingleChildScrollView(padding: EdgeInsets.all(24.w), child: content),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                  child: content,
+                ),
               ),
-
-              // Footer
               if (actions != null)
                 Container(
-                  padding: EdgeInsetsDirectional.only(start: 24.w, end: 24.w, top: 20.h, bottom: 24.h),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),

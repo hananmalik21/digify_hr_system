@@ -19,14 +19,10 @@ class ParentUnitDto {
     final idString = idValue is String
         ? idValue
         : idValue is num
-            ? idValue.toString()
-            : idValue?.toString() ?? '';
-    
-    return ParentUnitDto(
-      id: idString,
-      name: json['name'] as String? ?? '',
-      level: json['level'] as String? ?? "",
-    );
+        ? idValue.toString()
+        : idValue?.toString() ?? '';
+
+    return ParentUnitDto(id: idString, name: json['name'] as String? ?? '', level: json['level'] as String? ?? "");
   }
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name, if (level != null) 'level': level};
@@ -117,7 +113,6 @@ class OrgStructureLevelDto {
 
   /// Creates DTO from JSON
   factory OrgStructureLevelDto.fromJson(Map<String, dynamic> json) {
-    // parent_org_unit_id (FK)
     final parentId = _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId']);
 
     // ✅ parent_unit object (preferred)
@@ -204,7 +199,7 @@ class OrgStructureLevelDto {
       'org_unit_name_ar': orgUnitNameAr,
 
       // keep FK if present
-      if (parentOrgUnitId != null) 'parent_org_unit_id': parentOrgUnitId,
+      if (parentOrgUnitId != null) 'parentId': parentOrgUnitId,
 
       // ✅ send parent object if present (optional)
       if (parentUnit != null) 'parent_unit': parentUnit!.toJson(),

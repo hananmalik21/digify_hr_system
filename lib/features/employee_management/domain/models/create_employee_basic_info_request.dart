@@ -26,6 +26,7 @@ class CreateEmployeeBasicInfoRequest {
   final String? civilIdNumber;
   final String? passportNumber;
   final String? workLocation;
+  final int? workLocationId;
   final String? positionIdHex;
   final DateTime? enterpriseHireDate;
   final int? jobFamilyId;
@@ -83,6 +84,7 @@ class CreateEmployeeBasicInfoRequest {
     this.civilIdNumber,
     this.passportNumber,
     this.workLocation,
+    this.workLocationId,
     this.positionIdHex,
     this.enterpriseHireDate,
     this.jobFamilyId,
@@ -166,6 +168,8 @@ class CreateEmployeeBasicInfoRequest {
     bool clearPassportNumber = false,
     String? workLocation,
     bool clearWorkLocation = false,
+    int? workLocationId,
+    bool clearWorkLocationId = false,
     String? positionIdHex,
     DateTime? enterpriseHireDate,
     int? jobFamilyId,
@@ -253,6 +257,7 @@ class CreateEmployeeBasicInfoRequest {
       civilIdNumber: clearCivilIdNumber ? null : (civilIdNumber ?? this.civilIdNumber),
       passportNumber: clearPassportNumber ? null : (passportNumber ?? this.passportNumber),
       workLocation: clearWorkLocation ? null : (workLocation ?? this.workLocation),
+      workLocationId: clearWorkLocationId ? null : (workLocationId ?? this.workLocationId),
       positionIdHex: clearPositionIdHex ? null : (positionIdHex ?? this.positionIdHex),
       enterpriseHireDate: clearEnterpriseHireDate ? null : (enterpriseHireDate ?? this.enterpriseHireDate),
       jobFamilyId: clearJobFamilyId ? null : (jobFamilyId ?? this.jobFamilyId),
@@ -310,6 +315,8 @@ class CreateEmployeeBasicInfoRequest {
 
   bool get isPhoneValid => FormValidators.phone(phoneNumber) == null;
 
+  bool get isMobileValid => FormValidators.phone(mobileNumber) == null;
+
   bool get isStep1Valid =>
       (firstNameEn?.trim().isNotEmpty ?? false) &&
       (lastNameEn?.trim().isNotEmpty ?? false) &&
@@ -317,5 +324,6 @@ class CreateEmployeeBasicInfoRequest {
       (lastNameAr?.trim().isNotEmpty ?? false) &&
       isEmailValid &&
       isPhoneValid &&
+      isMobileValid &&
       dateOfBirth != null;
 }

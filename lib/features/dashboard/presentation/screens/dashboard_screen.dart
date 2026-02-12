@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/attendance_leaves_card.dart';
@@ -26,14 +25,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(appInitializationServiceProvider).initializeAfterAuth();
-    });
-  }
 
   void _handleModuleTap(DashboardButton btn) {
     if (btn.id == 'dashboard') {

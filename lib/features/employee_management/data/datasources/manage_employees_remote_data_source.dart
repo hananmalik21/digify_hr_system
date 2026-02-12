@@ -14,6 +14,7 @@ abstract class ManageEmployeesRemoteDataSource {
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -35,6 +36,8 @@ abstract class ManageEmployeesRemoteDataSource {
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   });
 }
 
@@ -49,6 +52,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     int page = 1,
     int pageSize = 10,
     String? search,
+    String? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
@@ -61,7 +65,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       'page': page.toString(),
       'page_size': pageSize.toString(),
     };
-    if (search != null && search.trim().isNotEmpty) queryParameters['search'] = search.trim();
+    if (search != null && search.trim().isNotEmpty) {
+      queryParameters['search'] = search.trim();
+    }
+    if (assignmentStatus != null && assignmentStatus.trim().isNotEmpty) {
+      queryParameters['employee_status'] = assignmentStatus.trim();
+    }
     if (positionId != null && positionId.isNotEmpty) queryParameters['position_id'] = positionId;
     if (jobFamilyId != null) queryParameters['job_family_id'] = jobFamilyId.toString();
     if (jobLevelId != null) queryParameters['job_level_id'] = jobLevelId.toString();
@@ -130,9 +139,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
         'employment_status': request.employmentStatusCode!.trim(),
+        'employee_status': request.employmentStatusCode!.trim(),
+      },
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
@@ -167,6 +179,7 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       ..._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
     if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+      map['doc_action'] = 'ADD';
       map['document_type_code'] = documentTypeCode.trim();
     }
     final formData = FormData.fromMap(map);
@@ -189,6 +202,8 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
     CreateEmployeeBasicInfoRequest request, {
     Document? document,
     String? documentTypeCode,
+    String? docAction,
+    int? replaceDocumentId,
   }) async {
     final map = <String, dynamic>{
       'first_name_en': request.firstNameEn?.trim() ?? '',
@@ -235,9 +250,12 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
         'employment_status': request.employmentStatusCode!.trim(),
+        'employee_status': request.employmentStatusCode!.trim(),
+      },
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
+      'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
         'basic_salary_kwd': request.basicSalaryKwd!.trim(),
       if (request.housingKwd != null && request.housingKwd!.trim().isNotEmpty)
@@ -271,8 +289,16 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
         'work_permit_expiry': CreateEmployeeBasicInfoRequest.formatDateOfBirth(request.workPermitExpiry!),
       ...ManageEmployeesRemoteDataSourceImpl._lookupCodesToFormFields(request.lookupCodesByTypeCode),
     };
-    if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {
+    if (document != null &&
+        documentTypeCode != null &&
+        documentTypeCode.trim().isNotEmpty &&
+        docAction != null &&
+        docAction.trim().isNotEmpty) {
+      map['doc_action'] = docAction.trim();
       map['document_type_code'] = documentTypeCode.trim();
+      if (replaceDocumentId != null && docAction.trim().toUpperCase() == 'REPLACE') {
+        map['replace_document_id'] = replaceDocumentId;
+      }
     }
     final formData = FormData.fromMap(map);
     if (document != null && documentTypeCode != null && documentTypeCode.trim().isNotEmpty) {

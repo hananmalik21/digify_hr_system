@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/navigation/app_header.dart';
 import 'package:digify_hr_system/core/navigation/sidebar.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/keyboard_scroll_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppLayout extends ConsumerWidget {
   final Widget child;
 
-  const AppLayout({
-    super.key,
-    required this.child,
-  });
+  const AppLayout({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(appInitializationAfterAuthProvider);
     final isMobile = ResponsiveHelper.isMobile(context);
     final sidebarExpanded = ref.watch(sidebarProvider);
 
@@ -27,26 +26,19 @@ class AppLayout extends ConsumerWidget {
           Expanded(
             child: Row(
               children: [
-                // Sidebar - visible on desktop/tablet, drawer on mobile
                 if (!isMobile)
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     width: sidebarExpanded ? 288.w : 0,
-                    child: sidebarExpanded
-                        ? const Sidebar()
-                        : const SizedBox.shrink(),
+                    child: sidebarExpanded ? const Sidebar() : const SizedBox.shrink(),
                   ),
-                Expanded(
-                  child: AppKeyboardScroller(child: child),
-                ),
+                Expanded(child: AppKeyboardScroller(child: child)),
               ],
             ),
           ),
         ],
       ),
-      // Drawer for mobile
       drawer: isMobile ? const Sidebar() : null,
     );
   }
 }
-

@@ -24,6 +24,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
   final double? maxWidth;
   final double? maxHeight;
   final EdgeInsets? contentPadding;
+  final EdgeInsets? stepperPadding;
   final bool barrierDismissible;
   final bool isLoading;
 
@@ -40,6 +41,7 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
     this.maxWidth,
     this.maxHeight,
     this.contentPadding,
+    this.stepperPadding,
     this.barrierDismissible = false,
     this.isLoading = false,
   });
@@ -145,9 +147,10 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
   Widget _buildStepperSection(BuildContext context, bool isDark) {
     final effectiveStepIndex = currentStepIndex ?? 0;
     final bgColor = isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground;
+    final effectiveStepperPadding = stepperPadding ?? EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h);
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      padding: effectiveStepperPadding,
       decoration: BoxDecoration(
         color: bgColor,
         border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
@@ -165,9 +168,11 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
     final connectorActiveColor = AppColors.primary;
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int i = 0; i < stepperSteps!.length; i++) ...[
           Expanded(
+            flex: 2,
             child: _buildStepItem(
               context: context,
               assetPath: stepperSteps![i].assetPath,
@@ -180,11 +185,22 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
           ),
           if (i < stepperSteps!.length - 1)
             Expanded(
-              child: DigifyDivider.horizontal(
-                thickness: 2.h,
-                margin: EdgeInsets.symmetric(horizontal: 2.w),
-                color: currentStepIndex > i ? connectorActiveColor : connectorInactiveColor,
-                borderRadius: 2.r,
+              flex: 1,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Gap(4.h),
+                  Container(
+                    height: 32.h,
+                    alignment: Alignment.bottomCenter,
+                    child: DigifyDivider.horizontal(
+                      thickness: 3.h,
+                      margin: EdgeInsets.symmetric(horizontal: 2.w),
+                      color: currentStepIndex > i ? connectorActiveColor : connectorInactiveColor,
+                      borderRadius: 2.r,
+                    ),
+                  ),
+                ],
               ),
             ),
         ],
@@ -209,11 +225,10 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
         ? AppColors.buttonTextLight
         : (isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon);
     final circleFill = isHighlighted ? AppColors.primary : AppColors.dashboardCardBorder;
-    const double labelAreaHeight = 28;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Gap(4.h),
         Container(
@@ -221,20 +236,17 @@ class AppStepperDialogLabelBelow extends StatelessWidget {
           height: 32.h,
           decoration: BoxDecoration(color: circleFill, shape: BoxShape.circle),
           alignment: Alignment.center,
-          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: iconColor),
+          child: DigifyAsset(assetPath: assetPath, width: 16.w, height: 16.h, color: iconColor),
         ),
         Gap(4.h),
-        SizedBox(
-          height: labelAreaHeight.h,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Text(
-              label,
-              style: context.textTheme.titleSmall?.copyWith(color: textColor, fontSize: 12.sp),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            label,
+            style: context.textTheme.titleSmall?.copyWith(color: textColor, fontSize: 12.sp),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
         ),
       ],

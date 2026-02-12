@@ -1,9 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/string_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_requests_table_config.dart';
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -21,6 +21,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
   final bool isRejectLoading;
   final bool isDeleteLoading;
   final VoidCallback? onView;
+  final VoidCallback? onViewEmployeeHistory;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
   final VoidCallback? onDelete;
@@ -35,6 +36,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
     this.isRejectLoading = false,
     this.isDeleteLoading = false,
     this.onView,
+    this.onViewEmployeeHistory,
     this.onApprove,
     this.onReject,
     this.onDelete,
@@ -65,9 +67,20 @@ class LeaveRequestsTableRow extends StatelessWidget {
             ),
           if (LeaveRequestsTableConfig.showEmployee)
             _buildDataCell(
-              _buildClickableText(context, request.employeeName.isEmpty ? '-' : request.employeeName, onView),
+              _buildClickableText(
+                context,
+                request.employeeName.isEmpty ? '-' : request.employeeName,
+                onViewEmployeeHistory ?? onView,
+              ),
               LeaveRequestsTableConfig.employeeWidth.w,
             ),
+          if (LeaveRequestsTableConfig.showDepartment)
+            _buildDataCell(
+              Text(request.department ?? '-', style: textStyle),
+              LeaveRequestsTableConfig.departmentWidth.w,
+            ),
+          if (LeaveRequestsTableConfig.showPosition)
+            _buildDataCell(Text(request.position ?? '-', style: textStyle), LeaveRequestsTableConfig.positionWidth.w),
           if (LeaveRequestsTableConfig.showLeaveType)
             _buildDataCell(_buildTypeCell(context), LeaveRequestsTableConfig.leaveTypeWidth.w),
           if (LeaveRequestsTableConfig.showStartDate)
@@ -157,16 +170,12 @@ class LeaveRequestsTableRow extends StatelessWidget {
   Widget _buildStatusCell(BuildContext context) {
     Color backgroundColor;
     Color textColor;
-    Color? iconColor;
     String label;
-    String? iconPath;
 
     switch (request.status) {
       case RequestStatus.pending:
         backgroundColor = AppColors.pendingStatusBackground;
         textColor = AppColors.pendingStatucColor;
-        iconColor = AppColors.pendingStatucColor;
-        iconPath = Assets.icons.clockIcon.path;
         label = localizations.leaveFilterPending;
         break;
       case RequestStatus.draft:
@@ -177,8 +186,6 @@ class LeaveRequestsTableRow extends StatelessWidget {
       case RequestStatus.approved:
         backgroundColor = AppColors.holidayIslamicPaidBg;
         textColor = AppColors.holidayIslamicPaidText;
-        iconPath = Assets.icons.checkIconGreen.path;
-        iconColor = AppColors.holidayIslamicPaidText;
         label = localizations.leaveFilterApproved;
         break;
       case RequestStatus.rejected:
@@ -193,20 +200,7 @@ class LeaveRequestsTableRow extends StatelessWidget {
         break;
     }
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(100.r)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (iconPath != null) ...[
-            DigifyAsset(assetPath: iconPath, width: 14.w, height: 14.h, color: iconColor),
-            Gap(6.w),
-          ],
-          Text(label.capitalizeFirst, style: context.textTheme.bodyLarge?.copyWith(color: textColor)),
-        ],
-      ),
-    );
+    return DigifyCapsule(label: label.capitalizeFirst, backgroundColor: backgroundColor, textColor: textColor);
   }
 
   Widget _buildActionsCell() {

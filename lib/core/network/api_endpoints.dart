@@ -61,6 +61,9 @@ class ApiEndpoints {
 
   // Leave Management (ABS) endpoints
   static const String absLeaveRequests = '$api/abs/leave-requests';
+  static String absEmployeeLeaveRequests(String employeeGuid) => '$api/abs/employees/$employeeGuid/leave-requests';
+  static String absEmployeeLeaveRequestStats(String employeeGuid) =>
+      '$api/abs/employees/$employeeGuid/leave-requests/stats';
   static String absLeaveRequestById(String guid) => '$absLeaveRequests/$guid';
   static String absLeaveRequestApprove(String guid) => '$absLeaveRequests/$guid/approve';
   static String absLeaveRequestReject(String guid) => '$absLeaveRequests/$guid/reject';

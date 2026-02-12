@@ -169,7 +169,6 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DigifySelectField<String>(
-                  label: '',
                   hint: localizations.selectCategory,
                   value: selectedGradeCategory,
                   items: GradeConfig.gradeCategories.keys.toList(),

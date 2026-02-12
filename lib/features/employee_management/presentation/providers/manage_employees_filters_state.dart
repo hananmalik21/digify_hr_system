@@ -1,7 +1,9 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Holds filter values for the manage employees list API.
 class ManageEmployeesFiltersState {
+  final AssignmentStatus? assignmentStatus;
   final String? positionId;
   final int? jobFamilyId;
   final int? jobLevelId;
@@ -10,6 +12,7 @@ class ManageEmployeesFiltersState {
   final String? levelCode;
 
   const ManageEmployeesFiltersState({
+    this.assignmentStatus,
     this.positionId,
     this.jobFamilyId,
     this.jobLevelId,
@@ -19,6 +22,7 @@ class ManageEmployeesFiltersState {
   });
 
   bool get hasAnyFilter =>
+      assignmentStatus != null ||
       positionId != null ||
       jobFamilyId != null ||
       jobLevelId != null ||
@@ -27,12 +31,14 @@ class ManageEmployeesFiltersState {
       levelCode != null;
 
   ManageEmployeesFiltersState copyWith({
+    AssignmentStatus? assignmentStatus,
     String? positionId,
     int? jobFamilyId,
     int? jobLevelId,
     int? gradeId,
     String? orgUnitId,
     String? levelCode,
+    bool clearAssignmentStatus = false,
     bool clearPositionId = false,
     bool clearJobFamilyId = false,
     bool clearJobLevelId = false,
@@ -41,6 +47,7 @@ class ManageEmployeesFiltersState {
     bool clearLevelCode = false,
   }) {
     return ManageEmployeesFiltersState(
+      assignmentStatus: clearAssignmentStatus ? null : (assignmentStatus ?? this.assignmentStatus),
       positionId: clearPositionId ? null : (positionId ?? this.positionId),
       jobFamilyId: clearJobFamilyId ? null : (jobFamilyId ?? this.jobFamilyId),
       jobLevelId: clearJobLevelId ? null : (jobLevelId ?? this.jobLevelId),
@@ -69,6 +76,10 @@ class ManageEmployeesFiltersNotifier extends Notifier<ManageEmployeesFiltersStat
 
   void setGradeId(int? value) {
     state = state.copyWith(gradeId: value, clearGradeId: value == null);
+  }
+
+  void setAssignmentStatus(AssignmentStatus? value) {
+    state = state.copyWith(assignmentStatus: value, clearAssignmentStatus: value == null);
   }
 
   void setOrgFilter(String? orgUnitId, String? levelCode) {

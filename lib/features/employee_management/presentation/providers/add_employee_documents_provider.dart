@@ -1,5 +1,18 @@
+import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class PendingDocOp {
+  const PendingDocOp.add({required this.documentTypeCode, required this.file}) : replaceDocumentId = null;
+  const PendingDocOp.replace({required int this.replaceDocumentId, required this.documentTypeCode, required this.file});
+
+  final int? replaceDocumentId;
+  final String documentTypeCode;
+  final Document file;
+
+  bool get isAdd => replaceDocumentId == null;
+  bool get isReplace => replaceDocumentId != null;
+}
 
 class AddEmployeeDocumentsState {
   final DateTime? civilIdExpiry;
@@ -11,6 +24,8 @@ class AddEmployeeDocumentsState {
   final Document? document;
   final String? documentTypeCode;
   final String? existingDocumentFileName;
+  final List<DocumentItem> existingDocuments;
+  final PendingDocOp? pendingDocOp;
 
   const AddEmployeeDocumentsState({
     this.civilIdExpiry,
@@ -22,6 +37,8 @@ class AddEmployeeDocumentsState {
     this.document,
     this.documentTypeCode,
     this.existingDocumentFileName,
+    this.existingDocuments = const [],
+    this.pendingDocOp,
   });
 
   static bool _isFilled(String? value) {
@@ -47,6 +64,8 @@ class AddEmployeeDocumentsState {
     Document? document,
     String? documentTypeCode,
     String? existingDocumentFileName,
+    List<DocumentItem>? existingDocuments,
+    PendingDocOp? pendingDocOp,
     bool clearCivilIdExpiry = false,
     bool clearPassportExpiry = false,
     bool clearVisaNumber = false,
@@ -56,6 +75,7 @@ class AddEmployeeDocumentsState {
     bool clearDocument = false,
     bool clearDocumentTypeCode = false,
     bool clearExistingDocumentFileName = false,
+    bool clearPendingDocOp = false,
   }) {
     return AddEmployeeDocumentsState(
       civilIdExpiry: clearCivilIdExpiry ? null : (civilIdExpiry ?? this.civilIdExpiry),
@@ -69,11 +89,11 @@ class AddEmployeeDocumentsState {
       existingDocumentFileName: clearExistingDocumentFileName
           ? null
           : (existingDocumentFileName ?? this.existingDocumentFileName),
+      existingDocuments: existingDocuments ?? this.existingDocuments,
+      pendingDocOp: clearPendingDocOp ? null : (pendingDocOp ?? this.pendingDocOp),
     );
   }
 }
-
-const List<String> documentTypeCodeOptions = ['PASSPORT', 'CIVIL_ID', 'VISA', 'WORK_PERMIT'];
 
 class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsState> {
   AddEmployeeDocumentsNotifier() : super(const AddEmployeeDocumentsState());
@@ -108,9 +128,6 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
       clearDocument: value == null,
       clearDocumentTypeCode: value == null,
       clearExistingDocumentFileName: value != null,
-      documentTypeCode: value != null && (state.documentTypeCode == null || state.documentTypeCode!.isEmpty)
-          ? 'PASSPORT'
-          : state.documentTypeCode,
     );
   }
 
@@ -127,6 +144,7 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
     DateTime? workPermitExpiry,
     String? documentTypeCode,
     String? existingDocumentFileName,
+    List<DocumentItem>? documents,
   }) {
     state = state.copyWith(
       civilIdExpiry: civilIdExpiry ?? state.civilIdExpiry,
@@ -137,7 +155,30 @@ class AddEmployeeDocumentsNotifier extends StateNotifier<AddEmployeeDocumentsSta
       workPermitExpiry: workPermitExpiry ?? state.workPermitExpiry,
       documentTypeCode: documentTypeCode ?? state.documentTypeCode,
       existingDocumentFileName: existingDocumentFileName ?? state.existingDocumentFileName,
+      existingDocuments: documents ?? state.existingDocuments,
     );
+  }
+
+  void setPendingAdd({required String documentTypeCode, required Document file}) {
+    state = state.copyWith(
+      pendingDocOp: PendingDocOp.add(documentTypeCode: documentTypeCode, file: file),
+      clearPendingDocOp: false,
+    );
+  }
+
+  void setPendingReplace({required int replaceDocumentId, required String documentTypeCode, required Document file}) {
+    state = state.copyWith(
+      pendingDocOp: PendingDocOp.replace(
+        replaceDocumentId: replaceDocumentId,
+        documentTypeCode: documentTypeCode,
+        file: file,
+      ),
+      clearPendingDocOp: false,
+    );
+  }
+
+  void clearPendingDocOp() {
+    state = state.copyWith(clearPendingDocOp: true);
   }
 
   void reset() {

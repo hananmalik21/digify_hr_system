@@ -71,7 +71,6 @@ class _TeamLeaveRiskFiltersSectionState extends State<TeamLeaveRiskFiltersSectio
               SizedBox(
                 width: 144.w,
                 child: DigifySelectField<String?>(
-                  label: '',
                   hint: widget.localizations.allLeaveTypes,
                   value: _selectedLeaveType,
                   items: [null, ...leaveTypes],

@@ -72,7 +72,6 @@ class _LeavePoliciesFiltersSectionState extends ConsumerState<LeavePoliciesFilte
           SizedBox(
             width: 144.w,
             child: DigifySelectField<String?>(
-              label: '',
               hint: 'Kuwait Labor Compliant',
               value: filter.type,
               items: _typeValues,
@@ -84,7 +83,6 @@ class _LeavePoliciesFiltersSectionState extends ConsumerState<LeavePoliciesFilte
           SizedBox(
             width: 144.w,
             child: DigifySelectField<String?>(
-              label: '',
               hint: 'Status',
               value: filter.status,
               items: _statusItems,

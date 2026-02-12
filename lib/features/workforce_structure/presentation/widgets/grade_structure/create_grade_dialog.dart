@@ -163,7 +163,6 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DigifySelectField<String>(
-                  label: '',
                   hint: localizations.selectGrade,
                   value: selectedGradeNumber,
                   items: GradeConfig.gradeNumbers,
@@ -211,7 +210,6 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DigifySelectField<String>(
-                  label: '',
                   hint: localizations.selectCategory,
                   value: selectedGradeCategory,
                   items: GradeConfig.gradeCategories.keys.toList(),

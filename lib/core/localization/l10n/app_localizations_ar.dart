@@ -2906,6 +2906,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchSectionsPlaceholder => 'بحث الأقسام...';
 
   @override
+  String get managePositions => 'إدارة الوظائف';
+
+  @override
   String get managePositionsJobFamilies =>
       'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
 
@@ -3649,7 +3652,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get days => 'الأيام';
 
   @override
+  String get leaveBalanceTotal => 'الإجمالي:';
+
+  @override
+  String get leaveBalanceUsed => 'المستخدم:';
+
+  @override
+  String get leaveBalanceRemaining => 'المتبقي:';
+
+  @override
   String get reason => 'السبب';
+
+  @override
+  String get submittedAt => 'تاريخ التقديم';
+
+  @override
+  String get processedAt => 'تاريخ المعالجة';
 
   @override
   String get maternityLeave => 'إجازة أمومة';
@@ -3659,6 +3677,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reject => 'رفض';
+
+  @override
+  String get totalRequests => 'إجمالي الطلبات';
 
   @override
   String get leaveRequestGuidelines => 'إرشادات طلب الإجازة';
@@ -3786,6 +3807,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get supportingDocuments => 'المستندات الداعمة';
+
+  @override
+  String get documentType => 'نوع المستند';
+
+  @override
+  String get replaceDocument => 'استبدال';
 
   @override
   String get clickToUploadOrDragDrop => 'انقر للتحميل أو السحب والإفلات';

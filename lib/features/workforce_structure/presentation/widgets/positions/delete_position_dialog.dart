@@ -13,9 +13,12 @@ class DeletePositionDialog extends ConsumerStatefulWidget {
   const DeletePositionDialog({super.key, required this.position});
 
   static Future<void> show(BuildContext context, {required Position position}) {
-    return showDialog(
+    return showGeneralDialog<void>(
       context: context,
-      builder: (_) => DeletePositionDialog(position: position),
+      barrierDismissible: true,
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      barrierLabel: 'Delete position',
+      pageBuilder: (_, __, ___) => DeletePositionDialog(position: position),
     );
   }
 

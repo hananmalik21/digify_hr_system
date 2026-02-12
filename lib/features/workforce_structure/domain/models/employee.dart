@@ -9,6 +9,7 @@ class Employee {
   final String? middleNameAr;
   final String? lastNameAr;
   final String email;
+  final String? employeeNumber;
   final String? phoneNumber;
   final String? mobileNumber;
   final DateTime? dateOfBirth;
@@ -30,6 +31,7 @@ class Employee {
     this.middleNameAr,
     this.lastNameAr,
     required this.email,
+    this.employeeNumber,
     this.phoneNumber,
     this.mobileNumber,
     this.dateOfBirth,
