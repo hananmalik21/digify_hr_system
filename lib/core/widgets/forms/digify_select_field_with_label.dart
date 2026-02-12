@@ -13,6 +13,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
   final String Function(T) itemLabelBuilder;
   final ValueChanged<T?>? onChanged;
   final bool isRequired;
+  final Color? bgColor;
   final Color? fillColor;
 
   const DigifySelectFieldWithLabel({
@@ -23,6 +24,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
     this.hint,
     this.value,
     this.onChanged,
+    this.bgColor,
     this.isRequired = false,
     this.fillColor,
   });
@@ -43,7 +45,9 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                  color: isDark
+                      ? context.themeTextPrimary
+                      : AppColors.inputLabel,
                   fontFamily: 'Inter',
                 ),
               ),
@@ -67,6 +71,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
           itemLabelBuilder: itemLabelBuilder,
           value: value,
           onChanged: onChanged,
+          color: bgColor,
           isRequired: false,
           fillColor: fillColor,
         ),

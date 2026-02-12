@@ -1,6 +1,11 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../gen/assets.gen.dart';
+import '../../constants/app_colors.dart';
+import '../../theme/theme_extensions.dart';
 
 class ExportButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -11,16 +16,7 @@ class ExportButton extends StatelessWidget {
   final double? fontSize;
   final EdgeInsetsGeometry? padding;
 
-  const ExportButton({
-    super.key,
-    required this.onTap,
-    this.customLabel,
-    this.backgroundColor,
-    this.textColor,
-    this.iconSize,
-    this.fontSize,
-    this.padding,
-  });
+  const ExportButton({super.key, required this.onTap, this.customLabel, this.backgroundColor, this.textColor, this.iconSize, this.fontSize, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +24,16 @@ class ExportButton extends StatelessWidget {
 
     return CustomButton(
       label: customLabel ?? localizations.export,
-      svgIcon: 'assets/icons/download_icon.svg',
+      svgIcon: Assets.icons.downloadIcon.path,
       onPressed: onTap,
-      backgroundColor: backgroundColor ?? const Color(0xFF4A5565),
-      foregroundColor: textColor ?? Colors.white,
-      iconSize: iconSize,
-      fontSize: fontSize,
-      padding: padding,
+      backgroundColor: backgroundColor ?? Colors.transparent,
+      foregroundColor: textColor ??
+          (context.isDark ? Colors.white : AppColors.sidebarMenuItemText),
+      iconSize: 14,
+      fontSize: 14.h,
+      borderColor: AppColors.inputBorder,
+      borderRadius: 7,
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
     );
   }
 }

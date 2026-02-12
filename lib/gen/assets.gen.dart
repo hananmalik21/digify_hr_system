@@ -65,6 +65,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow_up.svg
   SvgGenImage get arrowUp => const SvgGenImage('assets/icons/arrow_up.svg');
 
+  /// Directory path: assets/icons/attendance
+  $AssetsIconsAttendanceGen get attendance => const $AssetsIconsAttendanceGen();
+
   /// File path: assets/icons/attendance_icon.svg
   SvgGenImage get attendanceIcon => const SvgGenImage('assets/icons/attendance_icon.svg');
 
@@ -1132,6 +1135,37 @@ class $AssetsLogoGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [digifyLogo];
+}
+
+class $AssetsIconsAttendanceGen {
+  const $AssetsIconsAttendanceGen();
+
+  /// File path: assets/icons/attendance/absent.svg
+  SvgGenImage get absent => const SvgGenImage('assets/icons/attendance/absent.svg');
+
+  /// File path: assets/icons/attendance/empty_calander.svg
+  SvgGenImage get emptyCalander => const SvgGenImage('assets/icons/attendance/empty_calander.svg');
+
+  /// File path: assets/icons/attendance/enterprise.svg
+  SvgGenImage get enterprise => const SvgGenImage('assets/icons/attendance/enterprise.svg');
+
+  /// File path: assets/icons/attendance/half-day.svg
+  SvgGenImage get halfDay => const SvgGenImage('assets/icons/attendance/half-day.svg');
+
+  /// File path: assets/icons/attendance/late.svg
+  SvgGenImage get late => const SvgGenImage('assets/icons/attendance/late.svg');
+
+  /// File path: assets/icons/attendance/leave.svg
+  SvgGenImage get leave => const SvgGenImage('assets/icons/attendance/leave.svg');
+
+  /// File path: assets/icons/attendance/present.svg
+  SvgGenImage get present => const SvgGenImage('assets/icons/attendance/present.svg');
+
+  /// File path: assets/icons/attendance/staff.svg
+  SvgGenImage get staff => const SvgGenImage('assets/icons/attendance/staff.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [absent, emptyCalander, enterprise, halfDay, late, leave, present, staff];
 }
 
 class $AssetsIconsEmployeeManagementGen {
