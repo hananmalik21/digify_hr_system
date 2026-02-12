@@ -5,8 +5,10 @@ import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/leave_type_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
-import 'package:digify_hr_system/features/leave_management/data/config/leave_time_options_config.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
@@ -34,7 +36,7 @@ class LeaveDetailsStep extends ConsumerWidget {
         _buildGuidelinesBox(context, localizations, isDark),
         _buildEmployeeField(context, localizations, isDark, state, notifier, enterpriseId),
         _buildLeaveTypeField(context, localizations, isDark, state, notifier, ref),
-        _buildDateFields(context, localizations, isDark, state, notifier),
+        _buildDateFields(context, localizations, isDark, state, notifier, ref),
       ],
     );
   }
@@ -219,6 +221,7 @@ class LeaveDetailsStep extends ConsumerWidget {
     bool isDark,
     NewLeaveRequestState state,
     NewLeaveRequestNotifier notifier,
+    WidgetRef ref,
   ) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -242,19 +245,37 @@ class LeaveDetailsStep extends ConsumerWidget {
                 fillColor: AppColors.cardBackground,
               ),
               Gap(24.h),
-              DigifySelectFieldWithLabel<String>(
-                label: localizations.startTime,
-                hint: 'Select Time',
-                value: LeaveTimeOptionsConfig.isValidTimeOption(state.startTime) ? state.startTime : null,
-                items: LeaveTimeOptionsConfig.timeOptions,
-                itemLabelBuilder: (time) => time,
-                onChanged: (time) {
-                  if (time != null) {
-                    notifier.setStartTime(time);
+              Builder(
+                builder: (context) {
+                  final List<AbsLookupValue> shiftOptions = ref.watch(
+                    absLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
+                  );
+
+                  AbsLookupValue? selectedStart;
+                  if (state.startTime != null) {
+                    for (final v in shiftOptions) {
+                      if (v.lookupValueCode == state.startTime) {
+                        selectedStart = v;
+                        break;
+                      }
+                    }
                   }
+
+                  return DigifySelectFieldWithLabel<AbsLookupValue>(
+                    label: localizations.startTime,
+                    hint: 'Select Time',
+                    value: selectedStart,
+                    items: shiftOptions,
+                    itemLabelBuilder: (v) => v.lookupValueName,
+                    onChanged: (v) {
+                      if (v != null) {
+                        notifier.setStartTime(v.lookupValueCode);
+                      }
+                    },
+                    isRequired: true,
+                    fillColor: AppColors.cardBackground,
+                  );
                 },
-                isRequired: true,
-                fillColor: AppColors.cardBackground,
               ),
             ],
           ),
@@ -276,19 +297,37 @@ class LeaveDetailsStep extends ConsumerWidget {
                 fillColor: AppColors.cardBackground,
               ),
               Gap(24.h),
-              DigifySelectFieldWithLabel<String>(
-                label: localizations.endTime,
-                hint: 'Select Time',
-                value: LeaveTimeOptionsConfig.isValidTimeOption(state.endTime) ? state.endTime : null,
-                items: LeaveTimeOptionsConfig.timeOptions,
-                itemLabelBuilder: (time) => time,
-                onChanged: (time) {
-                  if (time != null) {
-                    notifier.setEndTime(time);
+              Builder(
+                builder: (context) {
+                  final List<AbsLookupValue> shiftOptions = ref.watch(
+                    absLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
+                  );
+
+                  AbsLookupValue? selectedEnd;
+                  if (state.endTime != null) {
+                    for (final v in shiftOptions) {
+                      if (v.lookupValueCode == state.endTime) {
+                        selectedEnd = v;
+                        break;
+                      }
+                    }
                   }
+
+                  return DigifySelectFieldWithLabel<AbsLookupValue>(
+                    label: localizations.endTime,
+                    hint: 'Select Time',
+                    value: selectedEnd,
+                    items: shiftOptions,
+                    itemLabelBuilder: (v) => v.lookupValueName,
+                    onChanged: (v) {
+                      if (v != null) {
+                        notifier.setEndTime(v.lookupValueCode);
+                      }
+                    },
+                    isRequired: true,
+                    fillColor: AppColors.cardBackground,
+                  );
                 },
-                isRequired: true,
-                fillColor: AppColors.cardBackground,
               ),
             ],
           ),

@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/utils/employee_detail_formatters.dart';
-import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_icon_label_section_card.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_detail/employee_detail_row_section_card.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -35,28 +34,6 @@ class CompensationBenefitsTabContent extends StatelessWidget {
       EmployeeDetailRowItem(label: 'Food Allowance', value: formatKwd(allow?.foodKwd)),
       EmployeeDetailRowItem(label: 'Mobile Allowance', value: formatKwd(allow?.mobileKwd)),
       EmployeeDetailRowItem(label: 'Other Allowances', value: formatKwd(allow?.otherKwd)),
-    ];
-  }
-
-  List<EmployeeDetailIconLabelRow> _bankingInfoRows() {
-    final bank = fullDetails?.bankAccounts;
-    final first = bank?.isNotEmpty == true ? bank!.first : null;
-    return [
-      EmployeeDetailIconLabelRow(
-        iconPath: Assets.icons.buildingSmallIcon.path,
-        label: 'Bank Name',
-        value: displayValue(first?.bankName),
-      ),
-      EmployeeDetailIconLabelRow(
-        iconPath: Assets.icons.employeeManagement.hash.path,
-        label: 'Account Number',
-        value: displayValue(first?.accountNumber),
-      ),
-      EmployeeDetailIconLabelRow(
-        iconPath: Assets.icons.employeeManagement.card.path,
-        label: 'IBAN',
-        value: displayValue(first?.iban),
-      ),
     ];
   }
 
@@ -151,14 +128,6 @@ class CompensationBenefitsTabContent extends StatelessWidget {
             rows: _salaryComponentsRows(),
             footer: salaryFooter,
             isDark: isDark,
-          ),
-          Gap(24.h),
-          EmployeeDetailIconLabelSectionCard(
-            title: 'Banking Information',
-            titleIconAssetPath: Assets.icons.employeeManagement.banking.path,
-            rows: _bankingInfoRows(),
-            isDark: isDark,
-            borderColor: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
           ),
         ],
       ),
