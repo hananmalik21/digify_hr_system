@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/network/url_bytes_fetcher.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/employee_management/data/datasources/manage_employees_remote_data_source.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_list_item.dart';
@@ -8,10 +9,19 @@ import 'package:digify_hr_system/features/employee_management/domain/repositorie
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_state.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/services/employee_documents_download_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(baseUrl: ApiConfig.baseUrl);
+});
+
+final _urlBytesFetcherProvider = Provider<UrlBytesFetcher>((ref) {
+  return UrlBytesFetcher(dio: ref.watch(_apiClientProvider).dio);
+});
+
+final employeeDocumentsDownloadServiceProvider = Provider<EmployeeDocumentsDownloadService>((ref) {
+  return EmployeeDocumentsDownloadService(urlBytesFetcher: ref.watch(_urlBytesFetcherProvider));
 });
 
 final manageEmployeesRemoteDataSourceProvider = Provider<ManageEmployeesRemoteDataSource>((ref) {
