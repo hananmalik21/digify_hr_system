@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/core/services/initialization/app_initialization_service.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 
@@ -42,8 +42,7 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
 });
 
 final enterprisesCacheProvider = Provider<List<Enterprise>?>((ref) {
-  final service = ref.watch(appInitializationServiceProvider);
-  return service.enterprises;
+  return ref.watch(appInitializationServiceProvider).enterprises;
 });
 
 final enterprisesCacheStateProvider = Provider<EnterprisesState>((ref) {
@@ -52,8 +51,7 @@ final enterprisesCacheStateProvider = Provider<EnterprisesState>((ref) {
 });
 
 final activeLevelsCacheProvider = Provider<List<ActiveStructureLevel>?>((ref) {
-  final service = ref.watch(appInitializationServiceProvider);
-  return service.activeLevels;
+  return ref.watch(appInitializationServiceProvider).activeLevels;
 });
 
 class ActiveEnterpriseIdNotifier extends StateNotifier<int?> {
@@ -70,4 +68,9 @@ final activeEnterpriseIdNotifierProvider = StateNotifierProvider<ActiveEnterpris
 
 final activeEnterpriseIdProvider = Provider<int?>((ref) {
   return ref.watch(activeEnterpriseIdNotifierProvider);
+});
+
+final appInitializationAfterAuthProvider = FutureProvider<void>((ref) async {
+  await ref.read(appInitializationServiceProvider).initializeAfterAuth();
+  ref.invalidate(enterprisesCacheProvider);
 });

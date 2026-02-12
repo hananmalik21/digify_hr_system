@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/navigation/app_header.dart';
 import 'package:digify_hr_system/core/navigation/sidebar.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/keyboard_scroll_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class AppLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(appInitializationAfterAuthProvider);
     final isMobile = ResponsiveHelper.isMobile(context);
     final sidebarExpanded = ref.watch(sidebarProvider);
 
