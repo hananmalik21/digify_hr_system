@@ -95,12 +95,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DigifyAsset(
-                              assetPath: Assets.icons.sidebar.scheduleAssignments.path,
-                              width: 16.w,
-                              height: 16.h,
-                              color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
-                            ),
+                            DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
                             Gap(4.w),
                             Expanded(
                               child: Column(
@@ -112,12 +107,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                       children: [
                                         TextSpan(
                                           text: 'Employee Number',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
-                                            fontFamily: 'Inter',
-                                          ),
+                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: isDark ? context.themeTextSecondary : AppColors.inputLabel, fontFamily: 'Inter'),
                                         ),
                                       ],
                                     ),
@@ -162,12 +152,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DigifyAsset(
-                                assetPath: Assets.icons.sidebar.scheduleAssignments.path,
-                                width: 16.w,
-                                height: 16.h,
-                                color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
-                              ),
+                              DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
                               Gap(4.w),
                               Expanded(
                                 child: Column(
@@ -179,12 +164,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                         children: [
                                           TextSpan(
                                             text: 'Employee Number',
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
-                                              fontFamily: 'Inter',
-                                            ),
+                                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: isDark ? context.themeTextSecondary : AppColors.inputLabel, fontFamily: 'Inter'),
                                           ),
                                         ],
                                       ),
@@ -343,9 +323,17 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
       Gap(11.w),
       ExportButton(onTap: () {}, customLabel: 'Export'),
       Gap(11.w),
-      AppButton(fontSize: 14, label: 'Mark Attendance', onPressed: () {
-        MarkAttendanceDialog.show(context);
-      }, icon: Icons.add, height: 35.h, type: AppButtonType.primary, borderRadius: BorderRadius.circular(7.0)),
+      AppButton(
+        fontSize: 14,
+        label: 'Mark Attendance',
+        onPressed: () {
+          MarkAttendanceDialog.show(context);
+        },
+        icon: Icons.add,
+        height: 35.h,
+        type: AppButtonType.primary,
+        borderRadius: BorderRadius.circular(7.0),
+      ),
     ];
 
     if (isMobile) {

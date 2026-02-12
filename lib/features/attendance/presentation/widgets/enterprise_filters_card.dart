@@ -32,18 +32,22 @@ class EnterpriseFiltersCard extends StatelessWidget {
                 child: DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 20, height: 20, color: AppColors.primary),
               ),
               Gap(12.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Enterprise Structure Filters',
-                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
-                  ),
-                  Text(
-                    'Filter attendance by organizational hierarchy',
-                    style: context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: isDark ? AppColors.textTertiaryDark : AppColors.textSecondary),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Enterprise Structure Filters',
+                      style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
+                    ),
+                    Text(
+                      'Filter attendance by organizational hierarchy',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: isDark ? AppColors.textTertiaryDark : AppColors.textSecondary),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
