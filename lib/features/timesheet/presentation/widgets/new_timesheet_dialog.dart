@@ -10,15 +10,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/theme/app_text_theme.dart';
+import '../../../../core/widgets/assets/digify_asset.dart';
+
 class NewTimesheetDialog extends StatefulWidget {
   const NewTimesheetDialog({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => const NewTimesheetDialog(),
-    );
+    return showDialog(context: context, barrierDismissible: true, builder: (context) => const NewTimesheetDialog());
   }
 
   @override
@@ -33,7 +32,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
   final _positionController = TextEditingController();
   final _departmentController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   final List<TextEditingController> _taskControllers = [];
   final List<TextEditingController> _regularHoursControllers = [];
   final List<TextEditingController> _otHoursControllers = [];
@@ -48,7 +47,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
     final now = DateTime.now();
     _weekStartDate = _getWeekStart(now);
     _weekEndDate = _getWeekEnd(now);
-    
+
     // Initialize controllers for 7 days
     for (int i = 0; i < 7; i++) {
       _taskControllers.add(TextEditingController());
@@ -131,22 +130,13 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        insetPadding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 14.h),
         child: Container(
-          constraints: BoxConstraints(
-            maxWidth: 900.w,
-            maxHeight: MediaQuery.of(context).size.height * 0.95,
-          ),
+          constraints: BoxConstraints(maxWidth: 600.w, maxHeight: MediaQuery.of(context).size.height * 0.9),
           decoration: BoxDecoration(
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12))],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -167,14 +157,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                         _buildDateSelection(context, isDark),
                         Gap(24.h),
                         // Daily Time Entries Table
-                        _buildDailyTimeEntriesTable(
-                          context,
-                          isDark,
-                          weekDates,
-                          dayNames,
-                          totalRegularHours,
-                          totalOTHours,
-                        ),
+                        _buildDailyTimeEntriesTable(context, isDark, weekDates, dayNames, totalRegularHours, totalOTHours),
                       ],
                     ),
                   ),
@@ -190,41 +173,27 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
 
   Widget _buildHeader(BuildContext context, bool isDark) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.r),
-          topRight: Radius.circular(16.r),
-        ),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(12.r), topRight: Radius.circular(12.r)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Icon(Icons.menu, color: Colors.white, size: 20.r),
-              Gap(12.w),
-              Text(
-                'New Weekly Timesheet',
-                style: context.textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18.sp,
-                ),
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Icon(Icons.close, color: Colors.white, size: 18.r),
+          DigifyAsset(assetPath: Assets.icons.viewIconBlueFigma.path, width: 18.w, height: 18.h, color: Colors.white),
+          Gap(4.w),
+          Expanded(
+            child: Text(
+              'New Weekly Timesheet',
+              style: AppTextTheme.lightTextTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
             ),
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints.tight(Size(32.w, 32.h)),
+            icon: Icon(Icons.cancel_outlined, size: 20.r, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ],
       ),
@@ -244,21 +213,11 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   TextSpan(
                     text: 'Select Employee',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
                   ),
                   TextSpan(
                     text: ' *',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.error,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.error, fontFamily: 'Inter'),
                   ),
                 ],
               ),
@@ -288,20 +247,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   Text(
                     'Employee Name',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
                   ),
                   Gap(6.h),
-                  DigifyTextField(
-                    hintText: 'Employee Name',
-                    controller: _employeeNameController,
-                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                    filled: true,
-                  ),
+                  DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
                 ],
               ),
             ),
@@ -312,20 +261,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   Text(
                     'Project Name',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
                   ),
                   Gap(6.h),
-                  DigifyTextField(
-                    hintText: 'Project Name',
-                    controller: _projectNameController,
-                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                    filled: true,
-                  ),
+                  DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
                 ],
               ),
             ),
@@ -342,20 +281,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   Text(
                     'Position',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
                   ),
                   Gap(6.h),
-                  DigifyTextField(
-                    hintText: 'Position',
-                    controller: _positionController,
-                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                    filled: true,
-                  ),
+                  DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
                 ],
               ),
             ),
@@ -366,12 +295,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   Text(
                     'Department',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
                   ),
                   Gap(6.h),
                   DigifyTextField(
@@ -393,21 +317,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           children: [
             Text(
               'Description',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
-                fontFamily: 'Inter',
-              ),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
             ),
             Gap(6.h),
-            DigifyTextField(
-              hintText: 'Write...',
-              controller: _descriptionController,
-              maxLines: 3,
-              fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-              filled: true,
-            ),
+            DigifyTextField(hintText: 'Write...', controller: _descriptionController, maxLines: 3, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
           ],
         ),
       ],
@@ -446,14 +359,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
     );
   }
 
-  Widget _buildDailyTimeEntriesTable(
-    BuildContext context,
-    bool isDark,
-    List<DateTime> weekDates,
-    List<String> dayNames,
-    double totalRegularHours,
-    double totalOTHours,
-  ) {
+  Widget _buildDailyTimeEntriesTable(BuildContext context, bool isDark, List<DateTime> weekDates, List<String> dayNames, double totalRegularHours, double totalOTHours) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -461,10 +367,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           children: [
             Text(
               'Daily Time Entries',
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
-              ),
+              style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
             ),
             Gap(4.w),
             Text(
@@ -478,10 +381,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           decoration: BoxDecoration(
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(
-              color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-              width: 1,
-            ),
+            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
           ),
           child: Column(
             children: [
@@ -490,10 +390,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.r),
-                    topRight: Radius.circular(10.r),
-                  ),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
                 ),
                 child: Row(
                   children: [
@@ -514,15 +411,12 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 final date = weekDates.isNotEmpty ? weekDates[index] : DateTime.now().add(Duration(days: index));
                 final dayName = dayNames[index];
                 final isRestDay = index >= 5; // Friday and Saturday
-                
+
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                   decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(
-                        color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-                        width: index < 6 ? 1 : 0,
-                      ),
+                      bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: index < 6 ? 1 : 0),
                     ),
                   ),
                   child: Row(
@@ -531,10 +425,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                         flex: 2,
                         child: Text(
                           isRestDay ? '$dayName (Rest)' : dayName,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                            fontSize: 14.sp,
-                          ),
+                          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, fontSize: 14.sp),
                         ),
                       ),
                       Gap(16.w),
@@ -542,10 +433,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                         flex: 2,
                         child: Text(
                           DateFormat('MMM d').format(date),
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                            fontSize: 14.sp,
-                          ),
+                          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, fontSize: 14.sp),
                         ),
                       ),
                       Gap(16.w),
@@ -597,10 +485,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10.r),
-                    bottomRight: Radius.circular(10.r),
-                  ),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r)),
                 ),
                 child: Row(
                   children: [
@@ -610,21 +495,9 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                     Gap(16.w),
                     Expanded(flex: 3, child: SizedBox()), // Spacer for Project/Task column
                     Gap(16.w),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        '${totalRegularHours.toInt()}h',
-                        style: _getHeaderStyle(context, isDark),
-                      ),
-                    ),
+                    Expanded(flex: 2, child: Text('${totalRegularHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
                     Gap(16.w),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        '${totalOTHours.toInt()}h',
-                        style: _getHeaderStyle(context, isDark),
-                      ),
-                    ),
+                    Expanded(flex: 2, child: Text('${totalOTHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
                   ],
                 ),
               ),
@@ -636,22 +509,14 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
   }
 
   TextStyle? _getHeaderStyle(BuildContext context, bool isDark) {
-    return context.textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w700,
-      color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
-    );
+    return context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700, color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153));
   }
 
   Widget _buildFooter(BuildContext context, bool isDark) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
+        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -702,4 +567,3 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
     );
   }
 }
-
