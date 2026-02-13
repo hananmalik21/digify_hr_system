@@ -132,7 +132,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
         backgroundColor: Colors.transparent,
         insetPadding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 14.h),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 600.w, maxHeight: MediaQuery.of(context).size.height * 0.9),
+          constraints: BoxConstraints(maxWidth: 700.w, maxHeight: MediaQuery.of(context).size.height * 0.9),
           decoration: BoxDecoration(
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(12.r),
@@ -144,7 +144,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
               _buildHeader(context, isDark),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(32.w),
+                  padding: EdgeInsets.all(context.isMobile ? 20.w : 32.w),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -237,79 +237,143 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           ],
         ),
         Gap(16.h),
-        // Employee Name and Project Name - One row
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
+        // Employee Name and Project Name - One row on desktop, stacked on mobile
+        context.isMobile
+            ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Employee Name',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Employee Name',
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                      ),
+                      Gap(6.h),
+                      DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                    ],
                   ),
-                  Gap(6.h),
-                  DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                  Gap(16.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Project Name',
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                      ),
+                      Gap(6.h),
+                      DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                    ],
+                  ),
                 ],
-              ),
-            ),
-            Gap(16.w),
-            Expanded(
-              child: Column(
+              )
+            : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Project Name',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Employee Name',
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        ),
+                        Gap(6.h),
+                        DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      ],
+                    ),
                   ),
-                  Gap(6.h),
-                  DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                  Gap(16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Project Name',
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        ),
+                        Gap(6.h),
+                        DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
         Gap(16.h),
-        // Position and Department - One row
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
+        // Position and Department - One row on desktop, stacked on mobile
+        context.isMobile
+            ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Position',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Position',
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                      ),
+                      Gap(6.h),
+                      DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                    ],
                   ),
-                  Gap(6.h),
-                  DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                  Gap(16.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Department',
+                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                      ),
+                      Gap(6.h),
+                      DigifyTextField(
+                        hintText: 'Department',
+                        controller: _departmentController,
+                        suffixIcon: Icon(Icons.arrow_drop_down, size: 24.r, color: AppColors.textSecondary),
+                        fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                        filled: true,
+                      ),
+                    ],
+                  ),
                 ],
-              ),
-            ),
-            Gap(16.w),
-            Expanded(
-              child: Column(
+              )
+            : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Department',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Position',
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        ),
+                        Gap(6.h),
+                        DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      ],
+                    ),
                   ),
-                  Gap(6.h),
-                  DigifyTextField(
-                    hintText: 'Department',
-                    controller: _departmentController,
-                    suffixIcon: Icon(Icons.arrow_drop_down, size: 24.r, color: AppColors.textSecondary),
-                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                    filled: true,
+                  Gap(16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Department',
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        ),
+                        Gap(6.h),
+                        DigifyTextField(
+                          hintText: 'Department',
+                          controller: _departmentController,
+                          suffixIcon: Icon(Icons.arrow_drop_down, size: 24.r, color: AppColors.textSecondary),
+                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                          filled: true,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
         Gap(16.h),
         // Description - Full width
         Column(
@@ -328,35 +392,57 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
   }
 
   Widget _buildDateSelection(BuildContext context, bool isDark) {
-    return Row(
-      children: [
-        Expanded(
-          child: DateSelectionFieldHorizontal(
-            label: 'Week Starting',
-            date: _weekStartDate,
-            onDateSelected: _updateWeekEndDate,
-            isRequired: true,
-            labelIconPath: Assets.icons.attendance.emptyCalander.path,
-            colorApplied: true,
-          ),
-        ),
-        Gap(16.w),
-        Expanded(
-          child: DateSelectionFieldHorizontal(
-            label: 'Week Ending',
-            date: _weekEndDate,
-            onDateSelected: (date) {
-              setState(() {
-                _weekEndDate = date;
-                _weekStartDate = date.subtract(const Duration(days: 6));
-              });
-            },
-            labelIconPath: Assets.icons.attendance.emptyCalander.path,
-            colorApplied: true,
-          ),
-        ),
-      ],
-    );
+    return context.isMobile
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DateSelectionField(
+                label: 'Week Starting',
+                date: _weekStartDate,
+                onDateSelected: _updateWeekEndDate,
+                isRequired: true,
+                labelIconPath: Assets.icons.attendance.emptyCalander.path,
+              ),
+              Gap(16.h),
+              DateSelectionField(
+                label: 'Week Ending',
+                date: _weekEndDate,
+                onDateSelected: (date) {
+                  setState(() {
+                    _weekEndDate = date;
+                    _weekStartDate = date.subtract(const Duration(days: 6));
+                  });
+                },
+                labelIconPath: Assets.icons.attendance.emptyCalander.path,
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(
+                child: DateSelectionField(
+                  label: 'Week Starting',
+                  date: _weekStartDate,
+                  onDateSelected: _updateWeekEndDate,
+                  isRequired: true,
+                ),
+              ),
+              Gap(16.w),
+              Expanded(
+                child: DateSelectionField(
+                  label: 'Week Ending',
+                  date: _weekEndDate,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _weekEndDate = date;
+                      _weekStartDate = date.subtract(const Duration(days: 6));
+                    });
+                  },
+
+                ),
+              ),
+            ],
+          );
   }
 
   Widget _buildDailyTimeEntriesTable(BuildContext context, bool isDark, List<DateTime> weekDates, List<String> dayNames, double totalRegularHours, double totalOTHours) {
@@ -383,31 +469,46 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
             borderRadius: BorderRadius.circular(10.r),
             border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
           ),
-          child: Column(
+          child: context.isMobile
+              ? SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 600.w),
+                    child: _buildTableContent(context, isDark, weekDates, dayNames, totalRegularHours, totalOTHours),
+                  ),
+                )
+              : _buildTableContent(context, isDark, weekDates, dayNames, totalRegularHours, totalOTHours),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTableContent(BuildContext context, bool isDark, List<DateTime> weekDates, List<String> dayNames, double totalRegularHours, double totalOTHours) {
+    return Column(
+      children: [
+        // Table Header
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
+          ),
+          child: Row(
             children: [
-              // Table Header
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), topRight: Radius.circular(10.r)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(flex: 2, child: Text('Day', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 2, child: Text('Date', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 3, child: Text('Project/Task', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 2, child: Text('Regular Hrs', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 2, child: Text('OT Hrs', style: _getHeaderStyle(context, isDark))),
-                  ],
-                ),
-              ),
-              // Table Rows
-              ...List.generate(7, (index) {
+              Expanded(flex: 2, child: Text('Day', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 2, child: Text('Date', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 3, child: Text('Project/Task', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 2, child: Text('Regular Hrs', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 2, child: Text('OT Hrs', style: _getHeaderStyle(context, isDark))),
+            ],
+          ),
+        ),
+        // Table Rows
+        ...List.generate(7, (index) {
                 final date = weekDates.isNotEmpty ? weekDates[index] : DateTime.now().add(Duration(days: index));
                 final dayName = dayNames[index];
                 final isRestDay = index >= 5; // Friday and Saturday
@@ -445,6 +546,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                           fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
                           filled: true,
                           enabled: !isRestDay,
+                          border: 4.r,
                           contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                         ),
                       ),
@@ -457,6 +559,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                           fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
                           filled: true,
                           enabled: !isRestDay,
+                          border: 4.r,
                           keyboardType: TextInputType.number,
                           contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                           onChanged: (_) => setState(() {}),
@@ -471,6 +574,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                           fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
                           filled: true,
                           enabled: !isRestDay,
+                          border: 4.r,
                           keyboardType: TextInputType.number,
                           contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                           onChanged: (_) => setState(() {}),
@@ -480,27 +584,24 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                   ),
                 );
               }),
-              // Weekly Total Row
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(flex: 2, child: Text('Weekly Total', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 2, child: SizedBox()), // Spacer for Date column
-                    Gap(16.w),
-                    Expanded(flex: 3, child: SizedBox()), // Spacer for Project/Task column
-                    Gap(16.w),
-                    Expanded(flex: 2, child: Text('${totalRegularHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
-                    Gap(16.w),
-                    Expanded(flex: 2, child: Text('${totalOTHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
-                  ],
-                ),
-              ),
+        // Weekly Total Row
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r)),
+          ),
+          child: Row(
+            children: [
+              Expanded(flex: 2, child: Text('Weekly Total', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 2, child: SizedBox()), // Spacer for Date column
+              Gap(16.w),
+              Expanded(flex: 3, child: SizedBox()), // Spacer for Project/Task column
+              Gap(16.w),
+              Expanded(flex: 2, child: Text('${totalRegularHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
+              Gap(16.w),
+              Expanded(flex: 2, child: Text('${totalOTHours.toInt()}h', style: _getHeaderStyle(context, isDark))),
             ],
           ),
         ),
@@ -513,57 +614,109 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
   }
 
   Widget _buildFooter(BuildContext context, bool isDark) {
+    final isMobile = context.isMobile;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          AppButton(
-            label: 'Cancel',
-            onPressed: () => Navigator.of(context).pop(),
-            type: AppButtonType.outline,
-            backgroundColor: Colors.white,
-            foregroundColor: AppColors.textSecondary,
-            height: 40.h,
-            borderRadius: BorderRadius.circular(7.0),
-            fontSize: 14.sp,
-          ),
-          Gap(12.w),
-          AppButton(
-            label: 'Save as Draft',
-            onPressed: () {
-              // TODO: Implement save as draft
-              Navigator.of(context).pop();
-            },
-            type: AppButtonType.secondary,
-            icon: Icons.description_outlined,
-            backgroundColor: const Color(0xFFEFF6FF),
-            foregroundColor: AppColors.primary,
-            height: 40.h,
-            borderRadius: BorderRadius.circular(7.0),
-            fontSize: 14.sp,
-          ),
-          Gap(12.w),
-          AppButton(
-            label: 'Submit for Approval',
-            onPressed: () {
-              final formState = _formKey.currentState;
-              if (formState != null && formState.validate()) {
-                // TODO: Implement submit for approval
-                Navigator.of(context).pop();
-              }
-            },
-            type: AppButtonType.primary,
-            icon: Icons.send_outlined,
-            height: 40.h,
-            borderRadius: BorderRadius.circular(7.0),
-            fontSize: 14.sp,
-          ),
-        ],
-      ),
+      child: isMobile
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppButton(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.of(context).pop(),
+                  type: AppButtonType.outline,
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.textSecondary,
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                  width: double.infinity,
+                ),
+                Gap(12.h),
+                AppButton(
+                  label: 'Save as Draft',
+                  onPressed: () {
+                    // TODO: Implement save as draft
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icons.description_outlined,
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.primary,
+                  type: AppButtonType.outline,
+
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                  width: double.infinity,
+                ),
+                Gap(12.h),
+                AppButton(
+                  label: 'Submit for Approval',
+                  onPressed: () {
+                    final formState = _formKey.currentState;
+                    if (formState != null && formState.validate()) {
+                      // TODO: Implement submit for approval
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  type: AppButtonType.primary,
+                  icon: Icons.send_outlined,
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                  width: double.infinity,
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                AppButton(
+                  label: 'Cancel',
+                  onPressed: () => Navigator.of(context).pop(),
+                  type: AppButtonType.outline,
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.textSecondary,
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                ),
+                Gap(12.w),
+                AppButton(
+                  label: 'Save as Draft',
+                  onPressed: () {
+                    // TODO: Implement save as draft
+                    Navigator.of(context).pop();
+                  },
+                  type: AppButtonType.outline,
+                  icon: Icons.description_outlined,
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.primary,
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                ),
+                Gap(12.w),
+                AppButton(
+                  label: 'Submit for Approval',
+                  onPressed: () {
+                    final formState = _formKey.currentState;
+                    if (formState != null && formState.validate()) {
+                      // TODO: Implement submit for approval
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  type: AppButtonType.primary,
+                  icon: Icons.send_outlined,
+                  height: 40.h,
+                  borderRadius: BorderRadius.circular(7.0),
+                  fontSize: 14.sp,
+                ),
+              ],
+            ),
     );
   }
 }
