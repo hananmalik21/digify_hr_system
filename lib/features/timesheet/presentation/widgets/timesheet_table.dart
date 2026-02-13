@@ -39,14 +39,11 @@ class TimesheetTable extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Timesheet Records',
-                  style: context.textTheme.titleSmall?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
-                ),
+                Text('Timesheet Records', style: context.textTheme.titleSmall?.copyWith(color: context.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle)),
                 Gap(4.h),
                 Text(
                   'Showing ${records.length} of ${records.length} timesheets',
-                  style: context.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w400, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                  style: context.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w400, color: context.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
                 ),
               ],
             ),
@@ -58,7 +55,7 @@ class TimesheetTable extends ConsumerWidget {
               final minTableWidth = 1000.w;
               final availableWidth = constraints.maxWidth;
               final tableWidth = minTableWidth > availableWidth ? minTableWidth : availableWidth;
-              
+
               return ScrollableSingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: ConstrainedBox(
@@ -165,8 +162,8 @@ class TimesheetTable extends ConsumerWidget {
             flex: 2,
             child: Row(
               children: [
-                DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 10, height: 10, color: AppColors.primary),
-                Gap(7.w),
+                DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 10.w, height: 10.h, color: AppColors.primary),
+                Gap(4.w),
                 Text(timesheet.departmentName, style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
               ],
             ),
@@ -176,7 +173,7 @@ class TimesheetTable extends ConsumerWidget {
             flex: 2,
             child: Row(
               children: [
-                Icon(Icons.calendar_today, size: 16.r, color: AppColors.primary),
+                DigifyAsset(assetPath: Assets.icons.attendance.emptyCalander.path, width: 13.w, height: 13.h, color: AppColors.primary),
                 Gap(4.w),
                 Flexible(
                   child: Text(
@@ -194,7 +191,7 @@ class TimesheetTable extends ConsumerWidget {
             flex: 2,
             child: Row(
               children: [
-                Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
+                DigifyAsset(assetPath: Assets.icons.clockIcon.path, width: 14.w, height: 14.h, color: AppColors.primary),
                 Gap(4.w),
                 Text('${timesheet.regularHours.toInt()}h', style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
               ],
@@ -205,7 +202,7 @@ class TimesheetTable extends ConsumerWidget {
             flex: 2,
             child: Row(
               children: [
-                Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
+                DigifyAsset(assetPath: Assets.icons.attendance.halfDay.path, width: 14.w, height: 14.h, color: AppColors.primary),
                 Gap(4.w),
                 Text('${timesheet.overtimeHours.toInt()}h', style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
               ],
@@ -261,23 +258,25 @@ class TimesheetTable extends ConsumerWidget {
   Widget _buildStatusChip(TimesheetStatus status) {
     Color bgColor;
     Color textColor;
-    IconData icon;
+    String? path;
+    IconData? icon;
 
     switch (status) {
       case TimesheetStatus.draft:
         bgColor = const Color(0xFFF3F4F6);
         textColor = const Color(0xFF4B5563);
-        icon = Icons.edit_outlined;
+        path = Assets.icons.headIcon.path;
+
         break;
       case TimesheetStatus.submitted:
         bgColor = const Color(0xFFEFF6FF);
         textColor = AppColors.primary;
-        icon = Icons.send_outlined;
+        path = Assets.icons.submitted.path;
         break;
       case TimesheetStatus.approved:
         bgColor = const Color(0xFFF0FDF4);
         textColor = const Color(0xFF166534);
-        icon = Icons.check_circle_outline;
+        path = Assets.icons.activeUnitsIcon.path;
         break;
       case TimesheetStatus.rejected:
         bgColor = const Color(0xFFFEF2F2);
@@ -286,12 +285,8 @@ class TimesheetTable extends ConsumerWidget {
         break;
     }
 
-    return DigifyCapsule(
-      label: status.displayName,
-      backgroundColor: bgColor,
-      textColor: textColor,
-      icon: icon,
-    );
+    return path != null
+        ? DigifyCapsule(label: status.displayName, backgroundColor: bgColor, textColor: textColor, iconPath: path)
+        : DigifyCapsule(label: status.displayName, backgroundColor: bgColor, textColor: textColor, icon: icon);
   }
 }
-
