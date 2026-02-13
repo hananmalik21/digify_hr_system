@@ -321,6 +321,12 @@ class SidebarConfig {
         labelKey: 'attendance',
         route: '/attendance',
       ),
+      SidebarItem(
+        id: 'timesheet',
+        svgPath: Assets.icons.attendanceIcon.path,
+        labelKey: 'timesheet',
+        route: '/timesheet',
+      ),
       SidebarItem(id: 'payroll', svgPath: Assets.icons.payrollIcon.path, labelKey: 'payroll', route: '/payroll'),
       SidebarItem(
         id: 'compliance',
@@ -376,6 +382,7 @@ class SidebarConfig {
       case 'positions':
       case 'leaveManagement':
       case 'attendance':
+      case 'timesheet':
       case 'payroll':
       case 'reports':
       case 'settingsConfig':
@@ -493,6 +500,8 @@ class SidebarConfig {
         return localizations.leaveCalendar;
       case 'attendance':
         return localizations.attendance;
+      case 'timesheet':
+        return 'Time Sheets';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':
