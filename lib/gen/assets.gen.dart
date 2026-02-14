@@ -767,6 +767,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/structure_configuration_icon.svg
   SvgGenImage get structureConfigurationIcon => const SvgGenImage('assets/icons/structure_configuration_icon.svg');
 
+  /// File path: assets/icons/submitted.svg
+  SvgGenImage get submitted => const SvgGenImage('assets/icons/submitted.svg');
+
   /// File path: assets/icons/tasks_events_icon.svg
   SvgGenImage get tasksEventsIcon => const SvgGenImage('assets/icons/tasks_events_icon.svg');
 
@@ -1098,6 +1101,7 @@ class $AssetsIconsGen {
     settingsIcon,
     settingsMainIcon,
     structureConfigurationIcon,
+    submitted,
     tasksEventsIcon,
     tasksIcon,
     teamLeaveRiskIconFigma,

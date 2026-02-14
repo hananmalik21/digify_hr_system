@@ -55,6 +55,7 @@ class AppRoutes {
   static const String leaveManagementLeaveBalance = '$leaveManagement/leave-balance';
   static const String leaveManagementMyLeaveBalance = '$leaveManagement/my-leave-balance';
   static const String attendance = '/attendance';
+  static const String timesheet = '/timesheet';
   static const String payroll = '/payroll';
   static const String compliance = '/compliance';
   static const String eosCalculator = '/eos-calculator';
