@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table/leave_balances_table_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table/leave_balances_table_row.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table/leave_balances_table_skeleton.dart';
@@ -8,43 +9,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Presentational table section: header + rows / loading / empty / error.
-/// Does not include outer container; caller wraps with container and optional pagination.
 class LeaveBalancesTableSection extends StatelessWidget {
   final AppLocalizations localizations;
-  final List<Map<String, dynamic>> employees;
+  final List<LeaveBalanceSummaryItem> items;
   final bool isDark;
   final bool isLoading;
   final String? error;
+  final OnAdjustRequested? onAdjustRequested;
 
   const LeaveBalancesTableSection({
     super.key,
     required this.localizations,
-    required this.employees,
+    required this.items,
     required this.isDark,
     this.isLoading = false,
     this.error,
+    this.onAdjustRequested,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ScrollableSingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Skeletonizer(
-        enabled: isLoading,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LeaveBalancesTableHeader(isDark: isDark, localizations: localizations),
-            if (error != null)
-              _buildMessageState(16.sp, error!, AppColors.error)
-            else if (isLoading && employees.isEmpty)
-              LeaveBalancesTableSkeleton(localizations: localizations)
-            else if (employees.isEmpty)
-              _buildMessageState(16.sp, localizations.noResultsFound, AppColors.textMuted)
-            else
-              ...employees.map((e) => LeaveBalancesTableRow(employeeData: e)),
-          ],
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 500.h),
+      child: ScrollableSingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Skeletonizer(
+          enabled: isLoading,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              LeaveBalancesTableHeader(isDark: isDark, localizations: localizations),
+              if (error != null)
+                _buildMessageState(16.sp, error!, AppColors.error)
+              else if (isLoading && items.isEmpty)
+                LeaveBalancesTableSkeleton(localizations: localizations)
+              else if (items.isEmpty)
+                _buildMessageState(16.sp, localizations.noResultsFound, AppColors.textMuted)
+              else
+                ...items.map((e) => LeaveBalancesTableRow(item: e, onAdjustRequested: onAdjustRequested)),
+            ],
+          ),
         ),
       ),
     );
