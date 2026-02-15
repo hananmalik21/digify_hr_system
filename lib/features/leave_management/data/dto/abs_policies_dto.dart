@@ -15,8 +15,8 @@ class AbsPoliciesResponseDto {
   const AbsPoliciesResponseDto({required this.success, required this.message, required this.data, this.meta});
 
   factory AbsPoliciesResponseDto.fromJson(Map<String, dynamic> json) {
-    final dataList = json['data'] as List<dynamic>? ?? [];
-    final metaJson = json['meta'] as Map<String, dynamic>?;
+    final dataList = _extractPolicyList(json);
+    final metaJson = _extractMetaJson(json);
 
     return AbsPoliciesResponseDto(
       success: json['success'] as bool? ?? false,
@@ -24,6 +24,28 @@ class AbsPoliciesResponseDto {
       data: dataList.map((e) => AbsPolicyItemDto.fromJson(e as Map<String, dynamic>)).toList(),
       meta: metaJson != null ? AbsPoliciesMetaDto.fromJson(metaJson) : null,
     );
+  }
+
+  static List<dynamic> _extractPolicyList(Map<String, dynamic> json) {
+    final raw = json['data'];
+    if (raw == null) return [];
+    if (raw is List<dynamic>) return raw;
+    if (raw is Map<String, dynamic>) {
+      final list =
+          raw['items'] as List<dynamic>? ??
+          raw['list'] as List<dynamic>? ??
+          raw['data'] as List<dynamic>? ??
+          raw['policies'] as List<dynamic>?;
+      return list ?? [];
+    }
+    return [];
+  }
+
+  static Map<String, dynamic>? _extractMetaJson(Map<String, dynamic> json) {
+    final meta = json['meta'] as Map<String, dynamic>?;
+    if (meta != null) return meta;
+    final data = json['data'] as Map<String, dynamic>?;
+    return data?['meta'] as Map<String, dynamic>?;
   }
 
   PaginatedPolicies toDomain() {
@@ -72,6 +94,7 @@ class AbsPolicyItemDto {
   final int? minNoticeDays;
   final int? maxConsecutiveDays;
   final String? requiresDocument;
+  final String? countWeekendsAsLeave;
   final String? rulesAllowCarryForward;
   final String? rulesAllowEncashment;
 
@@ -122,6 +145,7 @@ class AbsPolicyItemDto {
     this.minNoticeDays,
     this.maxConsecutiveDays,
     this.requiresDocument,
+    this.countWeekendsAsLeave,
     this.rulesAllowCarryForward,
     this.rulesAllowEncashment,
     this.cfRuleId,
@@ -140,6 +164,13 @@ class AbsPolicyItemDto {
     this.enableProRata,
     this.gradeRows = const [],
   });
+
+  static int? _parseOptionalInt(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
 
   factory AbsPolicyItemDto.fromJson(Map<String, dynamic> json) {
     final gradeRowsList = json['grade_rows'] as List<dynamic>? ?? [];
@@ -172,19 +203,20 @@ class AbsPolicyItemDto {
       minNoticeDays: (json['min_notice_days'] as num?)?.toInt(),
       maxConsecutiveDays: (json['max_consecutive_days'] as num?)?.toInt(),
       requiresDocument: json['requires_document'] as String?,
+      countWeekendsAsLeave: json['count_weekends_as_leave'] as String?,
       rulesAllowCarryForward: json['rules_allow_carry_forward'] as String?,
       rulesAllowEncashment: json['rules_allow_encashment'] as String?,
       cfRuleId: (json['cf_rule_id'] as num?)?.toInt(),
       cfAllowCarryForward: json['cf_allow_carry_forward'] as String?,
       carryForwardLimitDays: (json['carry_forward_limit_days'] as num?)?.toInt(),
-      gracePeriodDays: (json['grace_period_days'] as num?)?.toInt(),
+      gracePeriodDays: _parseOptionalInt(json['grace_period_days'] ?? json['gracePeriodDays']),
       autoForfeitFlag: json['auto_forfeit_flag'] as String?,
       forfeitTriggerCode: json['forfeit_trigger_code'] as String?,
       notifyBeforeDays: (json['notify_before_days'] as num?)?.toInt(),
       encashRuleId: (json['encash_rule_id'] as num?)?.toInt(),
       encashAllowEncashment: json['encash_allow_encashment'] as String?,
-      encashmentLimitDays: (json['encashment_limit_days'] as num?)?.toInt(),
-      encashmentRatePct: (json['encashment_rate_pct'] as num?)?.toInt(),
+      encashmentLimitDays: _parseOptionalInt(json['encashment_limit_days'] ?? json['encashmentLimitDays']),
+      encashmentRatePct: _parseOptionalInt(json['encashment_rate_pct'] ?? json['encashmentRatePct']),
       effectiveStartDate: json['effective_start_date'] as String?,
       effectiveEndDate: json['effective_end_date'] as String?,
       enableProRata: json['enable_pro_rata'] as String?,
@@ -245,6 +277,7 @@ class AbsPolicyItemDto {
       minNoticeDays: minNoticeDays,
       maxConsecutiveDays: maxConsecutiveDays,
       requiresDocument: _isYes(requiresDocument),
+      countWeekendsAsLeave: _isYes(countWeekendsAsLeave),
       allowCarryForward: _isYes(cfAllowCarryForward),
       carryForwardLimitDays: carryForwardLimitDays,
       gracePeriodDays: gracePeriodDays,
@@ -309,6 +342,7 @@ class GradeRowDto {
     );
   }
 
+  /// Uses only the grade row's accrual_method_code from the API (no policy-level fallback).
   GradeEntitlement toDomain() {
     return GradeEntitlement(
       entitlementId: entitlementId,
@@ -342,6 +376,7 @@ class UpdatePolicyRequestDto {
   final int? minNoticeDays;
   final int? maxConsecutiveDays;
   final String requiresDocument;
+  final String countWeekendsAsLeave;
   final String allowCarryForward;
   final String allowEncashment;
   final int? carryForwardLimit;
@@ -376,6 +411,7 @@ class UpdatePolicyRequestDto {
     this.minNoticeDays,
     this.maxConsecutiveDays,
     required this.requiresDocument,
+    required this.countWeekendsAsLeave,
     required this.allowCarryForward,
     required this.allowEncashment,
     this.carryForwardLimit,
@@ -412,6 +448,7 @@ class UpdatePolicyRequestDto {
       minNoticeDays: detail.minNoticeDays,
       maxConsecutiveDays: detail.maxConsecutiveDays,
       requiresDocument: detail.requiresDocument ? 'Y' : 'N',
+      countWeekendsAsLeave: detail.countWeekendsAsLeave ? 'Y' : 'N',
       allowCarryForward: detail.allowCarryForward ? 'Y' : 'N',
       allowEncashment: detail.allowEncashment ? 'Y' : 'N',
       carryForwardLimit: detail.carryForwardLimitDays,
@@ -464,6 +501,7 @@ class UpdatePolicyRequestDto {
       'min_notice_days': minNoticeDays,
       'max_consecutive_days': maxConsecutiveDays,
       'requires_document': requiresDocument,
+      'count_weekends_as_leave': countWeekendsAsLeave,
       'allow_carry_forward': allowCarryForward,
       'allow_encashment': allowEncashment,
       'carry_forward_limit': carryForwardLimit,
@@ -552,6 +590,7 @@ class CreatePolicyRequestDto {
   final int? minNoticeDays;
   final int? maxConsecutiveDays;
   final String requiresDocument;
+  final String countWeekendsAsLeave;
   final String allowCarryForward;
   final String allowEncashment;
   final int? carryForwardLimit;
@@ -584,6 +623,7 @@ class CreatePolicyRequestDto {
     this.minNoticeDays,
     this.maxConsecutiveDays,
     required this.requiresDocument,
+    required this.countWeekendsAsLeave,
     required this.allowCarryForward,
     required this.allowEncashment,
     this.carryForwardLimit,
@@ -620,6 +660,7 @@ class CreatePolicyRequestDto {
       minNoticeDays: detail.minNoticeDays,
       maxConsecutiveDays: detail.maxConsecutiveDays,
       requiresDocument: detail.requiresDocument ? 'Y' : 'N',
+      countWeekendsAsLeave: detail.countWeekendsAsLeave ? 'Y' : 'N',
       allowCarryForward: detail.allowCarryForward ? 'Y' : 'N',
       allowEncashment: detail.allowEncashment ? 'Y' : 'N',
       carryForwardLimit: detail.carryForwardLimitDays,
@@ -643,6 +684,7 @@ class CreatePolicyRequestDto {
               entitlementDays: g.entitlementDays,
               accrualRate: g.accrualRate,
               status: g.isActive ? 'ACTIVE' : 'INACTIVE',
+              accrualMethodCode: g.accrualMethodCode,
             ),
           )
           .toList(),
@@ -669,6 +711,7 @@ class CreatePolicyRequestDto {
       'min_notice_days': minNoticeDays,
       'max_consecutive_days': maxConsecutiveDays,
       'requires_document': requiresDocument,
+      'count_weekends_as_leave': countWeekendsAsLeave,
       'allow_carry_forward': allowCarryForward,
       'allow_encashment': allowEncashment,
       'carry_forward_limit': carryForwardLimit,
@@ -691,6 +734,7 @@ class CreatePolicyGradeRowDto {
   final int entitlementDays;
   final double? accrualRate;
   final String status;
+  final String? accrualMethodCode;
 
   const CreatePolicyGradeRowDto({
     required this.gradeFrom,
@@ -698,16 +742,21 @@ class CreatePolicyGradeRowDto {
     required this.entitlementDays,
     this.accrualRate,
     required this.status,
+    this.accrualMethodCode,
   });
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    final map = <String, dynamic>{
       'grade_from': gradeFrom,
       'grade_to': gradeTo,
       'entitlement_days': entitlementDays,
       'accrual_rate': accrualRate,
       'status': status,
     };
+    if (accrualMethodCode != null) {
+      map['accrual_method_code'] = accrualMethodCode;
+    }
+    return map;
   }
 }
 

@@ -1,8 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/features/leave_management/data/dto/abs_policies_dto.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 
 class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
   PolicyDraftNotifier() : super(null);
+
+  PolicyDetail? get currentDraft => state;
 
   void setDraft(PolicyDetail detail) {
     state = detail;
@@ -68,13 +75,15 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
   }
 
   void addGradeRow() {
-    const newRow = GradeEntitlement(
+    final policyCode = state?.accrualMethod.code;
+    final newRow = GradeEntitlement(
       entitlementId: 0,
       gradeFrom: 1,
       gradeTo: null,
       entitlementDays: 0,
       accrualRate: null,
       isActive: true,
+      accrualMethodCode: policyCode,
     );
     final List<GradeEntitlement> list = [...(state?.gradeRows ?? <GradeEntitlement>[]), newRow];
     state = state?.copyWith(gradeRows: list);
@@ -115,10 +124,6 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
     state = state?.copyWith(countWeekendsAsLeave: value);
   }
 
-  void updateCountPublicHolidaysAsLeave(bool value) {
-    state = state?.copyWith(countPublicHolidaysAsLeave: value);
-  }
-
   void updateAllowCarryForward(bool value) {
     state = state?.copyWith(allowCarryForward: value);
   }
@@ -150,4 +155,94 @@ class PolicyDraftNotifier extends StateNotifier<PolicyDetail?> {
 
 final policyDraftProvider = StateNotifierProvider<PolicyDraftNotifier, PolicyDetail?>((ref) {
   return PolicyDraftNotifier();
+});
+
+final addPolicyDialogDraftProvider = StateNotifierProvider<PolicyDraftNotifier, PolicyDetail?>((ref) {
+  return PolicyDraftNotifier();
+});
+
+class AddPolicyDialogUiState {
+  final bool isLoading;
+
+  const AddPolicyDialogUiState({this.isLoading = false});
+
+  AddPolicyDialogUiState copyWith({bool? isLoading}) {
+    return AddPolicyDialogUiState(isLoading: isLoading ?? this.isLoading);
+  }
+}
+
+class AddPolicyDialogUiNotifier extends StateNotifier<AddPolicyDialogUiState> {
+  AddPolicyDialogUiNotifier() : super(const AddPolicyDialogUiState());
+
+  void setLoading(bool value) {
+    state = state.copyWith(isLoading: value);
+  }
+
+  void reset() {
+    state = const AddPolicyDialogUiState();
+  }
+}
+
+final addPolicyDialogUiStateProvider = StateNotifierProvider<AddPolicyDialogUiNotifier, AddPolicyDialogUiState>((ref) {
+  return AddPolicyDialogUiNotifier();
+});
+
+const String _kAddPolicyCreatedBy = 'ADMIN';
+
+class AddPolicyCreateNotifier {
+  AddPolicyCreateNotifier(this._ref);
+
+  final Ref _ref;
+
+  Future<bool> create(PolicyDetail? draft, BuildContext context) async {
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
+    if (tenantId == null) {
+      ToastService.warning(context, 'Select an enterprise first');
+      return false;
+    }
+    if (draft == null) {
+      ToastService.error(context, 'Form data is missing');
+      return false;
+    }
+    final policyName = (draft.policyName ?? draft.leaveTypeEn).trim();
+    if (policyName.isEmpty) {
+      ToastService.warning(context, 'Enter policy name');
+      return false;
+    }
+    if (draft.leaveTypeId == 0) {
+      ToastService.warning(context, 'Select a leave type');
+      return false;
+    }
+
+    _ref.read(addPolicyDialogUiStateProvider.notifier).setLoading(true);
+    try {
+      final repo = _ref.read(absPoliciesRepositoryProvider);
+      final request = CreatePolicyRequestDto.fromDetail(draft, tenantId: tenantId, createdBy: _kAddPolicyCreatedBy);
+      final created = await repo.createPolicy(request);
+      if (created != null) {
+        _ref.read(absPoliciesNotifierProvider.notifier).addPolicy(created);
+        _ref.read(selectedPolicyGuidProvider.notifier).setSelectedPolicyGuid(created.policyGuid);
+        if (context.mounted) {
+          ToastService.success(context, 'Policy created successfully');
+        }
+        _ref.read(addPolicyDialogUiStateProvider.notifier).reset();
+        return true;
+      }
+      if (context.mounted) {
+        ToastService.error(context, 'Failed to create policy');
+      }
+      return false;
+    } catch (_) {
+      if (context.mounted) {
+        ToastService.error(context, 'Failed to create policy');
+      }
+      return false;
+    } finally {
+      _ref.read(addPolicyDialogUiStateProvider.notifier).setLoading(false);
+    }
+  }
+}
+
+final addPolicyCreateProvider = Provider<AddPolicyCreateNotifier>((ref) {
+  return AddPolicyCreateNotifier(ref);
 });

@@ -5,11 +5,13 @@ import 'package:digify_hr_system/features/leave_management/data/datasources/abs_
 import 'package:digify_hr_system/features/leave_management/data/repositories/abs_policies_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/paginated_policies.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_policy.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/abs_policies_repository.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_filter_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AbsPoliciesState {
@@ -50,14 +52,14 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
     _ref.listen(absPoliciesPaginationProvider, (previous, next) {
       if (previous != next) _load();
     });
-    _ref.listen(leaveManagementEnterpriseIdProvider, (previous, next) {
+    _ref.listen<int?>(leaveManagementSelectedEnterpriseProvider, (previous, next) {
       if (previous != next) {
+        state = const AbsPoliciesState(data: null, isLoading: true, error: null);
         final pagination = _ref.read(absPoliciesPaginationProvider);
         if (pagination.page != 1) {
           _ref.read(absPoliciesPaginationProvider.notifier).state = (page: 1, pageSize: pagination.pageSize);
-        } else {
-          _load();
         }
+        _load();
       }
     });
     _load();
@@ -139,6 +141,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
 }
 
 final absPoliciesNotifierProvider = StateNotifierProvider<AbsPoliciesNotifier, AbsPoliciesState>((ref) {
+  ref.watch(leaveManagementEnterpriseIdProvider);
   final repository = ref.watch(absPoliciesRepositoryProvider);
   return AbsPoliciesNotifier(repository, ref);
 });
@@ -211,4 +214,10 @@ final selectedPolicyConfigurationProvider = Provider<PolicyListItem?>((ref) {
   final guid = ref.watch(selectedPolicyGuidProvider);
   if (guid == null || policies.isEmpty) return null;
   return policies.where((p) => p.policyGuid == guid).firstOrNull;
+});
+
+final currentPolicyDisplayDetailProvider = Provider<PolicyDetail?>((ref) {
+  final draft = ref.watch(policyDraftProvider);
+  final policy = ref.watch(selectedPolicyConfigurationProvider);
+  return draft ?? policy?.detail;
 });
