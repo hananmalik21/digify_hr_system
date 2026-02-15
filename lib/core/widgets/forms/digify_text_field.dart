@@ -37,7 +37,6 @@ class DigifyTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final String? initialValue;
   final double? fontSize;
-  final double? border;
   final EdgeInsetsGeometry? contentPadding;
 
   const DigifyTextField({
@@ -63,7 +62,6 @@ class DigifyTextField extends StatefulWidget {
     this.onSubmitted,
     this.readOnly = false,
     this.onTap,
-    this.border,
     this.enabled = true,
     this.textAlign = TextAlign.start,
     this.textDirection,
@@ -223,18 +221,18 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         filled: widget.filled,
         fillColor: effectiveFillColor,
         isDense: true,
-        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         hintStyle: TextStyle(
           fontSize: widget.fontSize ?? 15.sp,
           height: 1.0,
           color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
         ),
         errorStyle: TextStyle(fontSize: 12.sp, color: AppColors.error, height: 1.2),
-        border: _buildBorder(widget.border ?? 10.r, effectiveBorderColor),
-        enabledBorder: _buildBorder(widget.border ?? 10.r, effectiveBorderColor),
-        focusedBorder: _buildBorder(widget.border ?? 10.r, effectiveFocusedColor, width: 1.5),
-        errorBorder: _buildBorder(widget.border ?? 10.r, AppColors.error),
-        focusedErrorBorder: _buildBorder(widget.border ?? 10.r, AppColors.error, width: 1.5),
+        border: _buildBorder(10.r, effectiveBorderColor),
+        enabledBorder: _buildBorder(10.r, effectiveBorderColor),
+        focusedBorder: _buildBorder(10.r, effectiveFocusedColor, width: 1.5),
+        errorBorder: _buildBorder(10.r, AppColors.error),
+        focusedErrorBorder: _buildBorder(10.r, AppColors.error, width: 1.5),
       ),
     );
 
@@ -244,9 +242,6 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         child: AbsorbPointer(child: field),
       );
     }
-
-    // Apply height constraint only for single-line fields
-    final shouldConstrainHeight = (widget.maxLines == null || widget.maxLines == 1) && widget.minLines == null;
 
     if (widget.labelText != null) {
       return Column(
@@ -278,13 +273,13 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
               ],
             ),
           ),
-          SizedBox(height: 6.h),
-          shouldConstrainHeight ? SizedBox(height: 36.h, child: field) : field,
+          SizedBox(height: 8.h),
+          field,
         ],
       );
     }
 
-    return shouldConstrainHeight ? SizedBox(height: 36.h, child: field) : field;
+    return field;
   }
 
   InputBorder _buildBorder(double radius, Color color, {double width = 1.0}) {

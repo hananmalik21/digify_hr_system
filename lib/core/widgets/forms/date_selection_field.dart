@@ -42,18 +42,36 @@ class DateSelectionField extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (labelIconPath != null) ...[DigifyAsset(assetPath: labelIconPath!, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.primary), Gap(8.w)],
+            if (labelIconPath != null) ...[
+              DigifyAsset(
+                assetPath: labelIconPath!,
+                width: 16.w,
+                height: 16.h,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.primary,
+              ),
+              Gap(8.w),
+            ],
             RichText(
               text: TextSpan(
                 children: [
                   TextSpan(
                     text: label,
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                   if (isRequired)
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.error, fontFamily: 'Inter'),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.error,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                 ],
               ),
@@ -76,11 +94,20 @@ class DateSelectionField extends StatelessWidget {
                 Expanded(
                   child: Text(
                     date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
-                    style: TextStyle(fontSize: 14.sp, color: date != null ? (enabled ? AppColors.textPrimary : AppColors.textSecondary) : AppColors.textSecondary.withValues(alpha: 0.6)),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: date != null
+                          ? (enabled ? AppColors.textPrimary : AppColors.textSecondary)
+                          : AppColors.textSecondary.withValues(alpha: 0.6),
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                DigifyAsset(assetPath: Assets.icons.leaveManagement.emptyLeave.path, color: AppColors.textSecondary, height: 15),
+                DigifyAsset(
+                  assetPath: Assets.icons.leaveManagement.emptyLeave.path,
+                  color: AppColors.textSecondary,
+                  height: 15,
+                ),
               ],
             ),
           ),
@@ -90,11 +117,17 @@ class DateSelectionField extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final now = DateTime.now();
+    final effectiveFirst = firstDate ?? now;
+    final effectiveLast = lastDate ?? now.add(const Duration(days: 365));
+    var initial = date ?? now;
+    if (initial.isBefore(effectiveFirst)) initial = effectiveFirst;
+    if (initial.isAfter(effectiveLast)) initial = effectiveLast;
     final picked = await showDatePicker(
       context: context,
-      initialDate: date ?? DateTime.now(),
-      firstDate: firstDate ?? DateTime.now(),
-      lastDate: lastDate ?? DateTime.now().add(const Duration(days: 365)),
+      initialDate: initial,
+      firstDate: effectiveFirst,
+      lastDate: effectiveLast,
     );
     if (picked != null) {
       onDateSelected(picked);
@@ -160,12 +193,22 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: label,
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: isDark ? context.themeTextSecondary : AppColors.inputLabel, fontFamily: 'Inter'),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                     if (isRequired)
                       TextSpan(
                         text: ' *',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: AppColors.error, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.error,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                   ],
                 ),
@@ -186,11 +229,20 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
                       Expanded(
                         child: Text(
                           date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
-                          style: TextStyle(fontSize: 14.sp, color: date != null ? (enabled ? AppColors.textPrimary : AppColors.textSecondary) : AppColors.textSecondary.withValues(alpha: 0.6)),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: date != null
+                                ? (enabled ? AppColors.textPrimary : AppColors.textSecondary)
+                                : AppColors.textSecondary.withValues(alpha: 0.6),
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      DigifyAsset(assetPath: Assets.icons.leaveManagement.emptyLeave.path, color: AppColors.textSecondary, height: 15),
+                      DigifyAsset(
+                        assetPath: Assets.icons.leaveManagement.emptyLeave.path,
+                        color: AppColors.textSecondary,
+                        height: 15,
+                      ),
                     ],
                   ),
                 ),
@@ -203,11 +255,17 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final now = DateTime.now();
+    final effectiveFirst = firstDate ?? now;
+    final effectiveLast = lastDate ?? now.add(const Duration(days: 365));
+    var initial = date ?? now;
+    if (initial.isBefore(effectiveFirst)) initial = effectiveFirst;
+    if (initial.isAfter(effectiveLast)) initial = effectiveLast;
     final picked = await showDatePicker(
       context: context,
-      initialDate: date ?? DateTime.now(),
-      firstDate: firstDate ?? DateTime.now(),
-      lastDate: lastDate ?? DateTime.now().add(const Duration(days: 365)),
+      initialDate: initial,
+      firstDate: effectiveFirst,
+      lastDate: effectiveLast,
     );
     if (picked != null) {
       onDateSelected(picked);

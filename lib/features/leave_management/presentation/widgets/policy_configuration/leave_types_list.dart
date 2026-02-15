@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -164,23 +163,23 @@ class _PolicyListItemWidget extends StatelessWidget {
                         color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText,
                       ),
                     ),
-                    if (policy.tags.isNotEmpty) ...[
-                      Wrap(
-                        spacing: 7.w,
-                        runSpacing: 4.h,
-                        children: policy.tags.map((tag) {
-                          return DigifySquareCapsule(
-                            label: tag,
-                            backgroundColor: isSelected
-                                ? AppColors.jobRoleBg
-                                : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
-                            textColor: isSelected
-                                ? AppColors.primary
-                                : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
-                          );
-                        }).toList(),
-                      ),
-                    ],
+                    // if (policy.tags.isNotEmpty) ...[
+                    //   Wrap(
+                    //     spacing: 7.w,
+                    //     runSpacing: 4.h,
+                    //     children: policy.tags.map((tag) {
+                    //       return DigifySquareCapsule(
+                    //         label: tag,
+                    //         backgroundColor: isSelected
+                    //             ? AppColors.jobRoleBg
+                    //             : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.grayBg),
+                    //         textColor: isSelected
+                    //             ? AppColors.primary
+                    //             : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                    //       );
+                    //     }).toList(),
+                    //   ),
+                    // ],
                   ],
                 ),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/leave_management/data/dto/abs_policies_dto.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
@@ -232,7 +233,12 @@ class AddPolicyCreateNotifier {
         ToastService.error(context, 'Failed to create policy');
       }
       return false;
-    } catch (_) {
+    } on AppException catch (e) {
+      if (context.mounted) {
+        ToastService.error(context, e.message.isNotEmpty ? e.message : 'Failed to create policy');
+      }
+      return false;
+    } catch (e) {
       if (context.mounted) {
         ToastService.error(context, 'Failed to create policy');
       }

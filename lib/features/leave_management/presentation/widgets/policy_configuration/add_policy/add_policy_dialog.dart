@@ -51,42 +51,36 @@ class _AddPolicyDialogState extends ConsumerState<AddPolicyDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return AppDialog(
-      title: localizations.addNewPolicy,
-      subtitle: localizations.policyConfigurationDescription,
-      width: 850.w,
-      content: ProviderScope(
-        overrides: <Override>[policyDraftProvider.overrideWith((ref) => PolicyDraftNotifier())],
-        child: Consumer(
-          builder: (context, formRef, _) {
-            final draft = formRef.watch(policyDraftProvider);
-            final uiState = formRef.watch(addPolicyDialogUiStateProvider);
-            final isLoading = uiState.isLoading;
-
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const AddPolicyFormContent(),
-                Gap(24.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AppButton.outline(label: localizations.cancel, onPressed: isLoading ? null : _closeDialog),
-                    Gap(12.w),
-                    AppButton.primary(
-                      label: localizations.createNewPolicy,
-                      onPressed: isLoading ? null : () => _onCreate(draft),
-                      isLoading: isLoading,
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
+    return ProviderScope(
+      overrides: <Override>[policyDraftProvider.overrideWith((ref) => PolicyDraftNotifier())],
+      child: AppDialog(
+        title: localizations.addNewPolicy,
+        subtitle: localizations.policyConfigurationDescription,
+        width: 850.w,
+        content: const AddPolicyFormContent(),
+        actions: [
+          Consumer(
+            builder: (context, formRef, _) {
+              final draft = formRef.watch(policyDraftProvider);
+              final uiState = formRef.watch(addPolicyDialogUiStateProvider);
+              final isLoading = uiState.isLoading;
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppButton.outline(label: localizations.cancel, onPressed: isLoading ? null : _closeDialog),
+                  Gap(12.w),
+                  AppButton.primary(
+                    label: localizations.createNewPolicy,
+                    onPressed: isLoading ? null : () => _onCreate(draft),
+                    isLoading: isLoading,
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+        onClose: _closeDialog,
       ),
-      onClose: _closeDialog,
     );
   }
 }

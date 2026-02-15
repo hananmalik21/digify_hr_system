@@ -26,22 +26,11 @@ class _AddPolicyEncashmentSectionState extends State<AddPolicyEncashmentSection>
   late TextEditingController _limitController;
   late TextEditingController _rateController;
 
-  static String _display(String v) => (v.isEmpty || v == '-') ? '' : v;
-
   @override
   void initState() {
     super.initState();
-    _limitController = TextEditingController(text: _display(widget.encashment.encashmentLimit));
-    _rateController = TextEditingController(text: _display(widget.encashment.encashmentRate));
-  }
-
-  @override
-  void didUpdateWidget(AddPolicyEncashmentSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.encashment != widget.encashment) {
-      _limitController.text = _display(widget.encashment.encashmentLimit);
-      _rateController.text = _display(widget.encashment.encashmentRate);
-    }
+    _limitController = TextEditingController();
+    _rateController = TextEditingController();
   }
 
   @override

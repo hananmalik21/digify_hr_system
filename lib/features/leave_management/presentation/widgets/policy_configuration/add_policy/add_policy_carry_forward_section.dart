@@ -31,22 +31,11 @@ class _AddPolicyCarryForwardSectionState extends State<AddPolicyCarryForwardSect
   late TextEditingController _limitController;
   late TextEditingController _graceController;
 
-  static String _display(String v) => (v.isEmpty || v == '-') ? '' : v;
-
   @override
   void initState() {
     super.initState();
-    _limitController = TextEditingController(text: _display(widget.carryForward.carryForwardLimit));
-    _graceController = TextEditingController(text: _display(widget.carryForward.gracePeriod));
-  }
-
-  @override
-  void didUpdateWidget(AddPolicyCarryForwardSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.carryForward != widget.carryForward) {
-      _limitController.text = _display(widget.carryForward.carryForwardLimit);
-      _graceController.text = _display(widget.carryForward.gracePeriod);
-    }
+    _limitController = TextEditingController();
+    _graceController = TextEditingController();
   }
 
   @override

@@ -70,7 +70,7 @@ class GradeBasedEntitlementsSection extends ConsumerWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: AppButton.primary(
                 label: 'Add Grade',
-                svgPath: Assets.icons.addIcon.path,
+                svgPath: Assets.icons.addDivisionIcon.path,
                 onPressed: () => draftNotifier.addGradeRow(),
               ),
             ),
