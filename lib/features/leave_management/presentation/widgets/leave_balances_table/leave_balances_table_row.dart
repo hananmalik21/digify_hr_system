@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_balances_table_config.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balance_badge.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_details_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_details_dialog/leave_details_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -23,6 +23,30 @@ class LeaveBalanceSummaryItem {
     this.totalAvailable = 0,
   });
 
+  LeaveBalanceSummaryItem copyWith({
+    int? employeeId,
+    String? employeeGuid,
+    String? employeeNumber,
+    String? employeeName,
+    String? department,
+    DateTime? joinDate,
+    double? annualLeave,
+    double? sickLeave,
+    double? totalAvailable,
+  }) {
+    return LeaveBalanceSummaryItem(
+      employeeId: employeeId ?? this.employeeId,
+      employeeGuid: employeeGuid ?? this.employeeGuid,
+      employeeNumber: employeeNumber ?? this.employeeNumber,
+      employeeName: employeeName ?? this.employeeName,
+      department: department ?? this.department,
+      joinDate: joinDate ?? this.joinDate,
+      annualLeave: annualLeave ?? this.annualLeave,
+      sickLeave: sickLeave ?? this.sickLeave,
+      totalAvailable: totalAvailable ?? this.totalAvailable,
+    );
+  }
+
   static LeaveBalanceSummaryItem placeholder() => const LeaveBalanceSummaryItem(
     employeeId: 0,
     employeeGuid: '',

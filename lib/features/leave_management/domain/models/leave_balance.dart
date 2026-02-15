@@ -121,6 +121,20 @@ class AdjustLeaveBalanceResult {
   );
 }
 
+class AdjustLeaveBalancePayload {
+  final int employeeId;
+  final String reason;
+  final double annualDays;
+  final double sickDays;
+
+  const AdjustLeaveBalancePayload({
+    required this.employeeId,
+    required this.reason,
+    required this.annualDays,
+    required this.sickDays,
+  });
+}
+
 /// Params for updating a leave balance via PUT.
 class UpdateLeaveBalanceParams {
   final double openingBalanceDays;

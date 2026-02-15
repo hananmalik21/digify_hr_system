@@ -147,6 +147,32 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
       _ref.read(leaveBalanceSummaryListProvider.notifier).refresh();
     }
   }
+
+  Future<void> submitAdjustment(AdjustLeaveBalancePayload payload) async {
+    state = state.copyWith(isUpdating: true, updateError: null);
+    final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
+    if (tenantId == null) {
+      state = state.copyWith(isUpdating: false, updateError: 'No tenant selected.');
+      return;
+    }
+    try {
+      await _repository.adjustLeaveBalances(
+        tenantId: tenantId,
+        employeeId: payload.employeeId,
+        reason: payload.reason,
+        annualDays: payload.annualDays,
+        sickDays: payload.sickDays,
+      );
+      state = state.copyWith(isUpdating: false);
+      _ref
+          .read(leaveBalanceSummaryListProvider.notifier)
+          .updateItemBalances(payload.employeeId, annualLeave: payload.annualDays, sickLeave: payload.sickDays);
+    } on AppException catch (e) {
+      state = state.copyWith(isUpdating: false, updateError: e.message);
+    } catch (e) {
+      state = state.copyWith(isUpdating: false, updateError: e.toString().replaceFirst('Exception: ', ''));
+    }
+  }
 }
 
 final leaveBalancesNotifierProvider = StateNotifierProvider<LeaveBalancesNotifier, LeaveBalancesState>((ref) {

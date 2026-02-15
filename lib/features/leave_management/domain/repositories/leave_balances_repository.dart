@@ -14,4 +14,12 @@ abstract class LeaveBalancesRepository {
   });
 
   Future<void> updateLeaveBalance(String employeeLeaveBalanceGuid, UpdateLeaveBalanceParams params, {int? tenantId});
+
+  Future<void> adjustLeaveBalances({
+    required int tenantId,
+    required int employeeId,
+    required String reason,
+    required double annualDays,
+    required double sickDays,
+  });
 }

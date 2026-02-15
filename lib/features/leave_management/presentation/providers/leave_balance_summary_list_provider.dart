@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/services/debouncer.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_state.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balances_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
@@ -86,6 +87,19 @@ class LeaveBalanceSummaryListNotifier extends Notifier<LeaveBalanceSummaryListSt
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
     await loadPage(enterpriseId, state.currentPage);
+  }
+
+  void updateItemBalances(int employeeId, {required double annualLeave, required double sickLeave}) {
+    final index = state.items.indexWhere((e) => e.employeeId == employeeId);
+    if (index < 0) return;
+    final item = state.items[index];
+    final updated = item.copyWith(
+      annualLeave: annualLeave,
+      sickLeave: sickLeave,
+      totalAvailable: annualLeave + sickLeave,
+    );
+    final newItems = List<LeaveBalanceSummaryItem>.from(state.items)..[index] = updated;
+    state = state.copyWith(items: newItems);
   }
 }
 

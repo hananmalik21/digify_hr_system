@@ -100,4 +100,31 @@ class LeaveBalancesRepositoryImpl implements LeaveBalancesRepository {
       throw UnknownException('Repository error: Failed to update leave balance: ${e.toString()}', originalError: e);
     }
   }
+
+  @override
+  Future<void> adjustLeaveBalances({
+    required int tenantId,
+    required int employeeId,
+    required String reason,
+    required double annualDays,
+    required double sickDays,
+  }) async {
+    try {
+      final body = <String, dynamic>{
+        'tenant_id': tenantId,
+        'employee_id': employeeId,
+        'reason': reason,
+        'source': 'MANUAL',
+        'leave_items': <Map<String, dynamic>>[
+          {'leave_code': 'ANNUAL_LEAVE', 'new_days': annualDays},
+          {'leave_code': 'SICK_LEAVE', 'new_days': sickDays},
+        ],
+      };
+      await remoteDataSource.adjustLeaveBalances(body, tenantId: tenantId);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Repository error: Failed to adjust leave balances: ${e.toString()}', originalError: e);
+    }
+  }
 }

@@ -7,7 +7,7 @@ class LeaveBalancesTableConfig {
   static const bool showJoinDate = true;
   static const bool showAnnualLeave = true;
   static const bool showSickLeave = true;
-  static const bool showUnpaidLeave = true;
+  static const bool showUnpaidLeave = false;
   static const bool showTotalAvailable = true;
   static const bool showActions = true;
 

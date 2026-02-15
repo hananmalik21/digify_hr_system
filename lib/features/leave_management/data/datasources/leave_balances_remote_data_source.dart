@@ -24,6 +24,8 @@ abstract class LeaveBalancesRemoteDataSource {
     Map<String, dynamic> body, {
     int? tenantId,
   });
+
+  Future<Map<String, dynamic>> adjustLeaveBalances(Map<String, dynamic> body, {int? tenantId});
 }
 
 class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource {
@@ -105,6 +107,21 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to update leave balance: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> adjustLeaveBalances(Map<String, dynamic> body, {int? tenantId}) async {
+    try {
+      return await apiClient.post(
+        ApiEndpoints.absLeaveBalancesAdjust,
+        body: body,
+        headers: _buildHeaders(tenantId: tenantId),
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to adjust leave balances: ${e.toString()}', originalError: e);
     }
   }
 }

@@ -12,6 +12,8 @@ class MenuFeatureConfig {
     'section': false,
     'reportingStructure': false,
     'forfeitPolicy': false,
+    'myLeaveBalance': false,
+    'teamLeaveRisk': false,
   };
 
   /// Returns true if the menu item with [id] should be shown. Defaults to true when not listed.
