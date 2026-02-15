@@ -89,6 +89,38 @@ class LeaveBalance {
   }
 }
 
+class AdjustLeaveBalanceResult {
+  final String employeeLeaveBalanceGuid;
+  final double openingBalanceDays;
+  final double accruedDays;
+  final double takenDays;
+  final double adjustedDays;
+  final double availableDays;
+  final String status;
+  final String comments;
+
+  const AdjustLeaveBalanceResult({
+    required this.employeeLeaveBalanceGuid,
+    required this.openingBalanceDays,
+    required this.accruedDays,
+    required this.takenDays,
+    required this.adjustedDays,
+    required this.availableDays,
+    required this.status,
+    required this.comments,
+  });
+
+  UpdateLeaveBalanceParams toUpdateParams() => UpdateLeaveBalanceParams(
+    openingBalanceDays: openingBalanceDays,
+    accruedDays: accruedDays,
+    takenDays: takenDays,
+    adjustedDays: adjustedDays,
+    availableDays: availableDays,
+    status: status,
+    comments: comments,
+  );
+}
+
 /// Params for updating a leave balance via PUT.
 class UpdateLeaveBalanceParams {
   final double openingBalanceDays;

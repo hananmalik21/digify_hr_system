@@ -1,35 +1,37 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/leave_management/data/config/leave_balances_table_config.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/adjust_leave_balance_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balance_badge.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_details_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-class LeaveBalancesTableRow extends StatelessWidget {
-  final Map<String, dynamic> employeeData;
+typedef OnAdjustRequested = void Function(BuildContext context, LeaveBalanceSummaryItem item);
 
-  const LeaveBalancesTableRow({super.key, required this.employeeData});
+class LeaveBalancesTableRow extends StatelessWidget {
+  final LeaveBalanceSummaryItem item;
+  final OnAdjustRequested? onAdjustRequested;
+
+  const LeaveBalancesTableRow({super.key, required this.item, this.onAdjustRequested});
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final isDark = context.theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final textStyle = _buildTextStyle(context, isDark);
-    final secondaryTextStyle = _buildSecondaryTextStyle(context, isDark, textStyle);
 
     final rowCells = <Widget>[];
 
     if (LeaveBalancesTableConfig.showEmployee) {
-      rowCells.add(_buildEmployeeCell(context, textStyle, secondaryTextStyle));
+      rowCells.add(_buildEmployeeNameCell(context, textStyle));
+    }
+    if (LeaveBalancesTableConfig.showEmployeeNumber) {
+      rowCells.add(_buildEmployeeNumberCell(context, textStyle));
     }
     if (LeaveBalancesTableConfig.showDepartment) {
       rowCells.add(_buildDepartmentCell(context, textStyle));
@@ -41,7 +43,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
       rowCells.add(
         _buildLeaveBalanceCell(
           context,
-          employeeData['annualLeave'] ?? 0,
+          item.annualLeave,
           LeaveBadgeType.annualLeave,
           LeaveBalancesTableConfig.annualLeaveWidth.w,
           center: true,
@@ -52,7 +54,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
       rowCells.add(
         _buildLeaveBalanceCell(
           context,
-          employeeData['sickLeave'] ?? 0,
+          item.sickLeave,
           LeaveBadgeType.sickLeave,
           LeaveBalancesTableConfig.sickLeaveWidth.w,
           center: true,
@@ -63,7 +65,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
       rowCells.add(
         _buildLeaveBalanceCell(
           context,
-          employeeData['unpaidLeave'] ?? 0,
+          0,
           LeaveBadgeType.unpaidLeave,
           LeaveBalancesTableConfig.unpaidLeaveWidth.w,
           center: true,
@@ -74,7 +76,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
       rowCells.add(
         _buildLeaveBalanceCell(
           context,
-          employeeData['totalAvailable'] ?? 0,
+          item.totalAvailable,
           LeaveBadgeType.totalAvailable,
           LeaveBalancesTableConfig.totalAvailableWidth.w,
           center: true,
@@ -103,48 +105,40 @@ class LeaveBalancesTableRow extends StatelessWidget {
     return context.textTheme.titleSmall?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary);
   }
 
-  TextStyle? _buildSecondaryTextStyle(BuildContext context, bool isDark, TextStyle? baseStyle) {
-    return baseStyle?.copyWith(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary);
+  Widget _buildEmployeeNameCell(BuildContext context, TextStyle? textStyle) {
+    final name = item.employeeName.trim().isEmpty ? '-' : item.employeeName;
+    return _buildDataCell(Text(name, style: textStyle), LeaveBalancesTableConfig.employeeWidth.w);
   }
 
-  Widget _buildEmployeeCell(BuildContext context, TextStyle? textStyle, TextStyle? secondaryTextStyle) {
+  Widget _buildEmployeeNumberCell(BuildContext context, TextStyle? textStyle) {
     return _buildDataCell(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(employeeData['name'] ?? '-', style: textStyle),
-          Gap(2.h),
-          Text(employeeData['id'] ?? '-', style: secondaryTextStyle),
-        ],
-      ),
-      LeaveBalancesTableConfig.employeeWidth.w,
+      Text(item.employeeNumber.isEmpty ? '-' : item.employeeNumber, style: textStyle),
+      LeaveBalancesTableConfig.employeeNumberWidth.w,
     );
   }
 
   Widget _buildDepartmentCell(BuildContext context, TextStyle? textStyle) {
     return _buildDataCell(
-      Text(employeeData['department'] ?? '-', style: textStyle),
+      Text(item.department.isEmpty ? '-' : item.department, style: textStyle),
       LeaveBalancesTableConfig.departmentWidth.w,
     );
   }
 
   Widget _buildJoinDateCell(BuildContext context, TextStyle? textStyle) {
-    return _buildDataCell(
-      Text(_formatDate(employeeData['joinDate']), style: textStyle),
-      LeaveBalancesTableConfig.joinDateWidth.w,
-    );
+    final text = item.joinDate != null ? DateFormat('yyyy-MM-dd').format(item.joinDate!) : '-';
+    return _buildDataCell(Text(text, style: textStyle), LeaveBalancesTableConfig.joinDateWidth.w);
   }
 
   Widget _buildLeaveBalanceCell(
     BuildContext context,
-    dynamic balance,
+    double value,
     LeaveBadgeType type,
     double width, {
     bool center = false,
   }) {
     final localizations = AppLocalizations.of(context)!;
     return _buildDataCell(
-      LeaveBalanceBadge(text: '${balance ?? 0} ${localizations.days.toLowerCase()}', type: type),
+      LeaveBalanceBadge(text: '$value ${localizations.days.toLowerCase()}', type: type),
       width,
       center: center,
     );
@@ -165,39 +159,17 @@ class LeaveBalancesTableRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: 8.w,
       children: [
-        DigifyAssetButton(
-          assetPath: Assets.icons.blueEyeIcon.path,
-          onTap: () => _handleDetails(context),
-          width: 20,
-          height: 20,
-        ),
-        DigifyAssetButton(
-          assetPath: Assets.icons.editIcon.path,
-          onTap: () => _handleAdjust(context),
-          width: 20,
-          height: 20,
-        ),
+        DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => _handleDetails(context)),
+        DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => _handleAdjust(context)),
       ],
     );
   }
 
   void _handleAdjust(BuildContext context) {
-    final balance = employeeData['balance'] as LeaveBalance?;
-    if (balance == null) return;
-    AdjustLeaveBalanceDialog.show(context, balance: balance);
+    onAdjustRequested?.call(context, item);
   }
 
   void _handleDetails(BuildContext context) {
-    LeaveDetailsDialog.show(context, employeeName: employeeData['name'] ?? '', employeeId: employeeData['id'] ?? '');
-  }
-
-  String _formatDate(String? dateString) {
-    if (dateString == null || dateString.isEmpty) return '-';
-    try {
-      final date = DateTime.parse(dateString);
-      return DateFormat('yyyy-MM-dd').format(date);
-    } catch (e) {
-      return dateString;
-    }
+    LeaveDetailsDialog.show(context, employeeName: item.employeeName, employeeId: item.employeeNumber);
   }
 }

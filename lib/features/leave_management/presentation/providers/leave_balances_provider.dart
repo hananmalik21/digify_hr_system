@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/leave_management/data/datasources/leav
 import 'package:digify_hr_system/features/leave_management/data/repositories/leave_balances_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_balances_repository.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,11 +13,25 @@ class LeaveBalancesState {
   final PaginatedLeaveBalances? data;
   final bool isLoading;
   final String? error;
+  final bool isUpdating;
+  final String? updateError;
 
-  const LeaveBalancesState({this.data, this.isLoading = false, this.error});
+  const LeaveBalancesState({this.data, this.isLoading = false, this.error, this.isUpdating = false, this.updateError});
 
-  LeaveBalancesState copyWith({PaginatedLeaveBalances? data, bool? isLoading, String? error}) {
-    return LeaveBalancesState(data: data ?? this.data, isLoading: isLoading ?? this.isLoading, error: error);
+  LeaveBalancesState copyWith({
+    PaginatedLeaveBalances? data,
+    bool? isLoading,
+    String? error,
+    bool? isUpdating,
+    String? updateError,
+  }) {
+    return LeaveBalancesState(
+      data: data ?? this.data,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+      isUpdating: isUpdating ?? this.isUpdating,
+      updateError: updateError,
+    );
   }
 }
 
@@ -92,27 +107,45 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
   }
 
   Future<void> updateLeaveBalance(String employeeLeaveBalanceGuid, UpdateLeaveBalanceParams params) async {
+    state = state.copyWith(isUpdating: true, updateError: null);
     final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
-    await _repository.updateLeaveBalance(employeeLeaveBalanceGuid, params, tenantId: tenantId);
 
-    final current = state.data;
-    if (current == null) return;
+    try {
+      await _repository.updateLeaveBalance(employeeLeaveBalanceGuid, params, tenantId: tenantId);
 
-    final updated = current.balances.map((b) {
-      if (b.employeeLeaveBalanceGuid != employeeLeaveBalanceGuid) return b;
-      return b.copyWith(
-        openingBalanceDays: params.openingBalanceDays,
-        accruedDays: params.accruedDays,
-        takenDays: params.takenDays,
-        adjustedDays: params.adjustedDays,
-        availableDays: params.availableDays,
-        status: params.status,
-      );
-    }).toList();
+      final current = state.data;
+      if (current != null) {
+        final updated = current.balances.map((b) {
+          if (b.employeeLeaveBalanceGuid != employeeLeaveBalanceGuid) return b;
+          return b.copyWith(
+            openingBalanceDays: params.openingBalanceDays,
+            accruedDays: params.accruedDays,
+            takenDays: params.takenDays,
+            adjustedDays: params.adjustedDays,
+            availableDays: params.availableDays,
+            status: params.status,
+          );
+        }).toList();
+        state = state.copyWith(
+          isUpdating: false,
+          data: PaginatedLeaveBalances(balances: updated, pagination: current.pagination),
+        );
+      } else {
+        state = state.copyWith(isUpdating: false);
+      }
+    } on AppException catch (e) {
+      state = state.copyWith(isUpdating: false, updateError: e.message);
+    } catch (e) {
+      state = state.copyWith(isUpdating: false, updateError: e.toString().replaceFirst('Exception: ', ''));
+    }
+  }
 
-    state = state.copyWith(
-      data: PaginatedLeaveBalances(balances: updated, pagination: current.pagination),
-    );
+  Future<void> submitAdjustmentFromDialog(AdjustLeaveBalanceResult result) async {
+    state = state.copyWith(updateError: null);
+    await updateLeaveBalance(result.employeeLeaveBalanceGuid, result.toUpdateParams());
+    if (state.updateError == null) {
+      _ref.read(leaveBalanceSummaryListProvider.notifier).refresh();
+    }
   }
 }
 

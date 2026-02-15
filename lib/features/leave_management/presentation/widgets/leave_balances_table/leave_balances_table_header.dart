@@ -18,21 +18,28 @@ class LeaveBalancesTableHeader extends StatelessWidget {
     final headerCells = <Widget>[];
 
     if (LeaveBalancesTableConfig.showEmployee) {
-      headerCells.add(_buildHeaderCell(context, localizations.employee, LeaveBalancesTableConfig.employeeWidth.w));
+      headerCells.add(_buildHeaderCell(context, localizations.employeeName, LeaveBalancesTableConfig.employeeWidth.w));
+    }
+    if (LeaveBalancesTableConfig.showEmployeeNumber) {
+      headerCells.add(
+        _buildHeaderCell(context, localizations.employeeNumber, LeaveBalancesTableConfig.employeeNumberWidth.w),
+      );
     }
     if (LeaveBalancesTableConfig.showDepartment) {
-      headerCells.add(_buildHeaderCell(context, 'Department', LeaveBalancesTableConfig.departmentWidth.w));
+      headerCells.add(_buildHeaderCell(context, localizations.department, LeaveBalancesTableConfig.departmentWidth.w));
     }
     if (LeaveBalancesTableConfig.showJoinDate) {
-      headerCells.add(_buildHeaderCell(context, 'Join Date', LeaveBalancesTableConfig.joinDateWidth.w));
+      headerCells.add(_buildHeaderCell(context, localizations.joinDate, LeaveBalancesTableConfig.joinDateWidth.w));
     }
     if (LeaveBalancesTableConfig.showAnnualLeave) {
       headerCells.add(
-        _buildHeaderCell(context, 'Annual Leave', LeaveBalancesTableConfig.annualLeaveWidth.w, center: true),
+        _buildHeaderCell(context, localizations.annualLeave, LeaveBalancesTableConfig.annualLeaveWidth.w, center: true),
       );
     }
     if (LeaveBalancesTableConfig.showSickLeave) {
-      headerCells.add(_buildHeaderCell(context, 'Sick Leave', LeaveBalancesTableConfig.sickLeaveWidth.w, center: true));
+      headerCells.add(
+        _buildHeaderCell(context, localizations.sickLeave, LeaveBalancesTableConfig.sickLeaveWidth.w, center: true),
+      );
     }
     if (LeaveBalancesTableConfig.showUnpaidLeave) {
       headerCells.add(
