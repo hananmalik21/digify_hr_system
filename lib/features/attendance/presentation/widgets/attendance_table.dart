@@ -18,7 +18,11 @@ class AttendanceTable extends StatefulWidget {
   final List<AttendanceRecord> records;
   final bool isDark;
 
-  const AttendanceTable({super.key, required this.records, required this.isDark});
+  const AttendanceTable({
+    super.key,
+    required this.records,
+    required this.isDark,
+  });
 
   @override
   State<AttendanceTable> createState() => _AttendanceTableState();
@@ -43,8 +47,19 @@ class _AttendanceTableState extends State<AttendanceTable> {
       decoration: BoxDecoration(
         color: widget.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(
+          color: widget.isDark
+              ? AppColors.cardBorderDark
+              : AppColors.cardBorder,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,18 +68,29 @@ class _AttendanceTableState extends State<AttendanceTable> {
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-            color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+            color: widget.isDark
+                ? AppColors.cardBackgroundGreyDark
+                : AppColors.tableHeaderBackground,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Attendance Records - ${DateFormat('d/M/yyyy').format(widget.records.isNotEmpty ? widget.records.first.date : DateTime.now())}',
-                  style: context.textTheme.titleSmall?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: widget.isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.dialogTitle,
+                  ),
                 ),
                 Gap(4.h),
                 Text(
                   'Showing ${widget.records.length} employees',
-                  style: context.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w400, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                  style: context.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: widget.isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -77,25 +103,56 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minWidth: constraints.maxWidth),
                   child: SizedBox(
-                    width: 1000.w > constraints.maxWidth ? 1000.w : constraints.maxWidth,
+                    width: 1000.w > constraints.maxWidth
+                        ? 1000.w
+                        : constraints.maxWidth,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Table Header Row
-                        Container(width: double.infinity, height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: widget.isDark
+                              ? AppColors.cardBorderDark
+                              : AppColors.cardBorder,
+                        ),
                         _buildTableHeader(context),
-                        Container(width: double.infinity, height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: widget.isDark
+                              ? AppColors.cardBorderDark
+                              : AppColors.cardBorder,
+                        ),
                         // Table Data Rows
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: widget.records.length,
-                          separatorBuilder: (context, index) => Divider(height: 1, color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
+                            color: widget.isDark
+                                ? AppColors.cardBorderDark
+                                : AppColors.cardBorder,
+                          ),
                           itemBuilder: (context, index) {
                             final record = widget.records[index];
                             final isExpanded = _expandedIndex == index;
                             return Column(
-                              children: [_buildTableRow(context, record, index, isExpanded), if (isExpanded && record.attendance != null) _buildExpandedContent(context, record.attendance!)],
+                              children: [
+                                _buildTableRow(
+                                  context,
+                                  record,
+                                  index,
+                                  isExpanded,
+                                ),
+                                if (isExpanded && record.attendance != null)
+                                  _buildExpandedContent(
+                                    context,
+                                    record.attendance!,
+                                  ),
+                              ],
                             );
                           },
                         ),
@@ -112,11 +169,18 @@ class _AttendanceTableState extends State<AttendanceTable> {
   }
 
   Widget _buildTableHeader(BuildContext context) {
-    final headerStyle = context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700, color: widget.isDark ? AppColors.textSecondaryDark : const Color(0xFF364153));
+    final headerStyle = context.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: widget.isDark
+          ? AppColors.textSecondaryDark
+          : const Color(0xFF364153),
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 11.h),
-      color: widget.isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+      color: widget.isDark
+          ? AppColors.cardBackgroundGreyDark
+          : AppColors.tableHeaderBackground,
       child: Row(
         children: [
           SizedBox(width: 43.w), // Space for expand icon
@@ -136,14 +200,23 @@ class _AttendanceTableState extends State<AttendanceTable> {
 
           SizedBox(
             width: 50.w,
-            child: Text('Actions', style: headerStyle, textAlign: TextAlign.center),
+            child: Text(
+              'Actions',
+              style: headerStyle,
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTableRow(BuildContext context, AttendanceRecord record, int index, bool isExpanded) {
+  Widget _buildTableRow(
+    BuildContext context,
+    AttendanceRecord record,
+    int index,
+    bool isExpanded,
+  ) {
     return InkWell(
       onTap: () => _toggleExpansion(index),
       child: Container(
@@ -156,7 +229,15 @@ class _AttendanceTableState extends State<AttendanceTable> {
             // Expand Icon
             SizedBox(
               width: 40.w,
-              child: Icon(isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: widget.isDark ? AppColors.textTertiaryDark : AppColors.dialogCloseIcon, size: 20.r),
+              child: Icon(
+                isExpanded
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+                color: widget.isDark
+                    ? AppColors.textTertiaryDark
+                    : AppColors.dialogCloseIcon,
+                size: 20.r,
+              ),
             ),
             // Employee
             Expanded(
@@ -168,18 +249,35 @@ class _AttendanceTableState extends State<AttendanceTable> {
                     backgroundColor: AppColors.jobRoleBg,
                     child: Text(
                       record.avatarInitials,
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.statIconBlue, fontFamily: 'Inter'),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.statIconBlue,
+                        fontFamily: 'Inter',
+                      ),
                     ),
                   ),
                   Gap(6.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(record.employeeName, style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle)),
+                      Text(
+                        record.employeeName,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: widget.isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.dialogTitle,
+                        ),
+                      ),
                       Gap(2.h),
                       Text(
                         record.employeeId,
-                        style: context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: widget.isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText),
+                        style: context.textTheme.labelSmall?.copyWith(
+                          fontSize: 12.sp,
+                          color: widget.isDark
+                              ? AppColors.textTertiaryDark
+                              : AppColors.tableHeaderText,
+                        ),
                       ),
                     ],
                   ),
@@ -191,16 +289,35 @@ class _AttendanceTableState extends State<AttendanceTable> {
               flex: 2,
               child: Row(
                 children: [
-                  DigifyAsset(assetPath: Assets.icons.attendance.enterprise.path, width: 10, height: 10, color: AppColors.primary),
+                  DigifyAsset(
+                    assetPath: Assets.icons.attendance.enterprise.path,
+                    width: 10,
+                    height: 10,
+                    color: AppColors.primary,
+                  ),
                   Gap(7.w),
-                  Text(record.departmentName, style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                  Text(
+                    record.departmentName,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: widget.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.inputLabel,
+                    ),
+                  ),
                 ],
               ),
             ),
             // Date
             Expanded(
               flex: 2,
-              child: Text(DateFormat('MMM d, yyyy').format(record.date), style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+              child: Text(
+                DateFormat('MMM d, yyyy').format(record.date),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: widget.isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                ),
+              ),
             ),
             // Check In
             Expanded(
@@ -209,7 +326,14 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 children: [
                   Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
                   Gap(4.w),
-                  Text(record.checkIn ?? '-', style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                  Text(
+                    record.checkIn ?? '-',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: widget.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.inputLabel,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -220,7 +344,14 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 children: [
                   Icon(Icons.access_time, size: 16.r, color: AppColors.primary),
                   Gap(4.w),
-                  Text(record.checkOut ?? '-', style: context.textTheme.bodyMedium?.copyWith(color: widget.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel)),
+                  Text(
+                    record.checkOut ?? '-',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: widget.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.inputLabel,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -228,7 +359,10 @@ class _AttendanceTableState extends State<AttendanceTable> {
             // Status
             SizedBox(
               width: 150.w,
-              child: Row(mainAxisSize: MainAxisSize.min, children: [Gap(10.w), _buildStatusChip(record.status)]),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [Gap(10.w), _buildStatusChip(record.status)],
+              ),
             ),
 
             // Actions
@@ -240,16 +374,25 @@ class _AttendanceTableState extends State<AttendanceTable> {
                   InkWell(
                     onTap: () {
                       if (record.attendance != null) {
-                        MarkAttendanceDialog.show(context, attendance: record.attendance);
+                        MarkAttendanceDialog.show(
+                          context,
+                          attendance: record.attendance,
+                        );
                       }
                     },
-                    child: Icon(Icons.edit_outlined, size: 18.r, color: Colors.grey),
+                    child: Icon(
+                      Icons.edit_outlined,
+                      size: 18.r,
+                      color: Colors.grey,
+                    ),
                   ),
                   InkWell(
-                    onTap: () {
-                      // TODO: Implement location view
-                    },
-                    child: Icon(Icons.location_on_outlined, size: 18.r, color: AppColors.primary),
+                    onTap: () {},
+                    child: Icon(
+                      Icons.location_on_outlined,
+                      size: 18.r,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ],
               ),
@@ -298,7 +441,11 @@ class _AttendanceTableState extends State<AttendanceTable> {
         textColor = const Color(0xFF4B5563);
     }
 
-    return DigifyCapsule(label: status, backgroundColor: bgColor, textColor: textColor);
+    return DigifyCapsule(
+      label: status,
+      backgroundColor: bgColor,
+      textColor: textColor,
+    );
   }
 
   Widget _buildExpandedContent(BuildContext context, Attendance attendance) {
@@ -315,17 +462,29 @@ class _AttendanceTableState extends State<AttendanceTable> {
             AppColors.roleBadgeColor, // #EFF6FF
           ],
         ),
-        border: Border(bottom: BorderSide(color: AppColors.cardBorder, width: 1)),
+        border: Border(
+          bottom: BorderSide(color: AppColors.cardBorder, width: 1),
+        ),
       ),
       child: isMobile
-          ? Column(children: [_buildScheduleCard(context, attendance), Gap(16.h), _buildActualAttendanceCard(context, attendance), Gap(16.h), _buildLocationNotesCard(context, attendance)])
+          ? Column(
+              children: [
+                _buildScheduleCard(context, attendance),
+                Gap(16.h),
+                _buildActualAttendanceCard(context, attendance),
+                Gap(16.h),
+                _buildLocationNotesCard(context, attendance),
+              ],
+            )
           : Column(
               children: [
                 Row(
                   children: [
                     Expanded(child: _buildScheduleCard(context, attendance)),
                     Gap(16.w),
-                    Expanded(child: _buildActualAttendanceCard(context, attendance)),
+                    Expanded(
+                      child: _buildActualAttendanceCard(context, attendance),
+                    ),
                   ],
                 ),
                 Gap(16.h),
@@ -336,8 +495,20 @@ class _AttendanceTableState extends State<AttendanceTable> {
   }
 
   Widget _buildScheduleCard(BuildContext context, Attendance attendance) {
-    final scheduleStart = DateTime(attendance.date.year, attendance.date.month, attendance.date.day, 8, 0);
-    final scheduleEnd = DateTime(attendance.date.year, attendance.date.month, attendance.date.day, 16, 0);
+    final scheduleStart = DateTime(
+      attendance.date.year,
+      attendance.date.month,
+      attendance.date.day,
+      8,
+      0,
+    );
+    final scheduleEnd = DateTime(
+      attendance.date.year,
+      attendance.date.month,
+      attendance.date.day,
+      16,
+      0,
+    );
     final duration = 8; // hours
 
     return _buildDetailCard(
@@ -346,11 +517,31 @@ class _AttendanceTableState extends State<AttendanceTable> {
       icon: Assets.icons.attendance.emptyCalander.path,
       children: [
         Gap(14.h),
-        _buildDetailRow(context, 'Schedule Date', DateFormat('EEE, MMM d, yyyy').format(attendance.date), highlight: true, highlightBlack: true),
+        _buildDetailRow(
+          context,
+          'Schedule Date',
+          DateFormat('EEE, MMM d, yyyy').format(attendance.date),
+          highlight: true,
+          highlightBlack: true,
+        ),
         Gap(12.h),
-        _buildDetailRow(context, 'Schedule Start', DateFormat('MMM d @ HH:mm').format(scheduleStart), icon: Icons.access_time, highlight: true, highlightBlack: true),
+        _buildDetailRow(
+          context,
+          'Schedule Start',
+          DateFormat('MMM d @ HH:mm').format(scheduleStart),
+          icon: Icons.access_time,
+          highlight: true,
+          highlightBlack: true,
+        ),
         Gap(12.h),
-        _buildDetailRow(context, 'Schedule End', DateFormat('MMM d @ HH:mm').format(scheduleEnd), icon: Icons.access_time, highlight: true, highlightBlack: true),
+        _buildDetailRow(
+          context,
+          'Schedule End',
+          DateFormat('MMM d @ HH:mm').format(scheduleEnd),
+          icon: Icons.access_time,
+          highlight: true,
+          highlightBlack: true,
+        ),
         Gap(12.h),
         Divider(thickness: 1, color: AppColors.cardBorder),
         Gap(7.h),
@@ -360,9 +551,16 @@ class _AttendanceTableState extends State<AttendanceTable> {
     );
   }
 
-  Widget _buildActualAttendanceCard(BuildContext context, Attendance attendance) {
-    final checkInTime = attendance.clockIn != null ? DateFormat('HH:mm').format(attendance.clockIn!) : '-';
-    final checkOutTime = attendance.clockOut != null ? DateFormat('HH:mm').format(attendance.clockOut!) : '-';
+  Widget _buildActualAttendanceCard(
+    BuildContext context,
+    Attendance attendance,
+  ) {
+    final checkInTime = attendance.clockIn != null
+        ? DateFormat('HH:mm').format(attendance.clockIn!)
+        : '-';
+    final checkOutTime = attendance.clockOut != null
+        ? DateFormat('HH:mm').format(attendance.clockOut!)
+        : '-';
 
     // Calculate hours worked
     String hoursWorked = '-';
@@ -387,14 +585,37 @@ class _AttendanceTableState extends State<AttendanceTable> {
       icon: Assets.icons.priceUpItem.path,
       children: [
         Gap(14.h),
-        _buildDetailRow(context, 'Check In Time', checkInTime, icon: Icons.access_time, highlightBlack: true, highlight: true),
+        _buildDetailRow(
+          context,
+          'Check In Time',
+          checkInTime,
+          icon: Icons.access_time,
+          highlightBlack: true,
+          highlight: true,
+        ),
         Gap(14.h),
-        _buildDetailRow(context, 'Check Out Time', checkOutTime, icon: Icons.access_time, highlightBlack: true, highlight: true),
+        _buildDetailRow(
+          context,
+          'Check Out Time',
+          checkOutTime,
+          icon: Icons.access_time,
+          highlightBlack: true,
+          highlight: true,
+        ),
         Gap(10.h),
         Divider(thickness: 1, color: AppColors.cardBorder),
         Gap(10.h),
         _buildDetailRow(context, 'Hours Worked', hoursWorked, highlight: true),
-        if (overtimeHours != null && overtimeHours > 0) ...[Gap(12.h), _buildDetailRow(context, 'Overtime Hours', '${overtimeHours}h', icon: Icons.access_time, highlight: true)],
+        if (overtimeHours != null && overtimeHours > 0) ...[
+          Gap(12.h),
+          _buildDetailRow(
+            context,
+            'Overtime Hours',
+            '${overtimeHours}h',
+            icon: Icons.access_time,
+            highlight: true,
+          ),
+        ],
       ],
     );
   }
@@ -411,14 +632,22 @@ class _AttendanceTableState extends State<AttendanceTable> {
       showViewMapButton: checkInLocation != null || checkOutLocation != null,
       children: [
         Gap(14.h),
-        _buildDetailRowMultiLine(context, 'Location', locationName, highlight: true, highlightBlack: true),
+        _buildDetailRowMultiLine(
+          context,
+          'Location',
+          locationName,
+          highlight: true,
+          highlightBlack: true,
+        ),
         if (checkInLocation != null) ...[
           Gap(11.h),
           _buildDetailRowMultiLine(
             context,
             'Check-In GPS',
             '${checkInLocation.address ?? locationName}${checkInLocation.city != null ? ' - ${checkInLocation.city}' : ''}',
-            coordinates: checkInLocation.latitude != null && checkInLocation.longitude != null
+            coordinates:
+                checkInLocation.latitude != null &&
+                    checkInLocation.longitude != null
                 ? '${checkInLocation.latitude!.toStringAsFixed(6)}, ${checkInLocation.longitude!.toStringAsFixed(6)}'
                 : null,
           ),
@@ -429,24 +658,43 @@ class _AttendanceTableState extends State<AttendanceTable> {
             context,
             'Check-Out GPS',
             '${checkOutLocation.address ?? locationName}${checkOutLocation.city != null ? ' - ${checkOutLocation.city}' : ''}',
-            coordinates: checkOutLocation.latitude != null && checkOutLocation.longitude != null
+            coordinates:
+                checkOutLocation.latitude != null &&
+                    checkOutLocation.longitude != null
                 ? '${checkOutLocation.latitude!.toStringAsFixed(6)}, ${checkOutLocation.longitude!.toStringAsFixed(6)}'
                 : null,
           ),
         ],
         Gap(11.h),
-        _buildDetailRowMultiLine(context, 'Notes', 'Regular day with 1 hour overtime', highlight: true, highlightBlack: true),
+        _buildDetailRowMultiLine(
+          context,
+          'Notes',
+          'Regular day with 1 hour overtime',
+          highlight: true,
+          highlightBlack: true,
+        ),
       ],
     );
   }
 
-  Widget _buildDetailCard(BuildContext context, {required String title, required String icon, required List<Widget> children, bool showViewMapButton = false}) {
+  Widget _buildDetailCard(
+    BuildContext context, {
+    required String title,
+    required String icon,
+    required List<Widget> children,
+    bool showViewMapButton = false,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: widget.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.infoBorder, width: 1),
+        border: Border.all(
+          color: widget.isDark
+              ? AppColors.cardBorderDark
+              : AppColors.infoBorder,
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -456,11 +704,21 @@ class _AttendanceTableState extends State<AttendanceTable> {
             children: [
               Row(
                 children: [
-                  DigifyAsset(assetPath: icon, width: 16.w, height: 16.h, color: AppColors.primary),
+                  DigifyAsset(
+                    assetPath: icon,
+                    width: 16.w,
+                    height: 16.h,
+                    color: AppColors.primary,
+                  ),
                   Gap(4.w),
                   Text(
                     title,
-                    style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w400, color: widget.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: widget.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.dialogTitle,
+                    ),
                   ),
                 ],
               ),
@@ -487,14 +745,27 @@ class _AttendanceTableState extends State<AttendanceTable> {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool highlightBlack = false}) {
+  Widget _buildDetailRow(
+    BuildContext context,
+    String label,
+    String value, {
+    IconData? icon,
+    bool highlight = false,
+    bool highlightBlack = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           '$label: ',
-          style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary, fontWeight: FontWeight.w400),
+          style: context.textTheme.bodyMedium?.copyWith(
+            fontSize: 14.sp,
+            color: widget.isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,7 +786,9 @@ class _AttendanceTableState extends State<AttendanceTable> {
                     ? highlightBlack
                           ? AppColors.dialogTitle
                           : AppColors.primary
-                    : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
+                    : (widget.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textSecondary),
               ),
             ),
           ],
@@ -524,7 +797,14 @@ class _AttendanceTableState extends State<AttendanceTable> {
     );
   }
 
-  Widget _buildDetailRowMultiLine(BuildContext context, String label, String value, {IconData? icon, bool highlight = false, bool highlightBlack = false, String? coordinates}) {
+  Widget _buildDetailRowMultiLine(
+    BuildContext context,
+    String label,
+    String value, {
+    bool highlight = false,
+    bool highlightBlack = false,
+    String? coordinates,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -533,7 +813,13 @@ class _AttendanceTableState extends State<AttendanceTable> {
           width: 100.w,
           child: Text(
             '$label: ',
-            style: context.textTheme.bodyMedium?.copyWith(fontSize: 14.sp, color: widget.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary, fontWeight: FontWeight.w400),
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontSize: 14.sp,
+              color: widget.isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
         Gap(10.w),
@@ -546,16 +832,19 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 value,
                 style: context.textTheme.bodyMedium?.copyWith(
                   fontSize: coordinates != null ? 12.sp : 14.sp,
-                  fontWeight: highlight && coordinates != null ? FontWeight.w500 : FontWeight.w400,
+                  fontWeight: highlight && coordinates != null
+                      ? FontWeight.w500
+                      : FontWeight.w400,
                   color: highlight
                       ? highlightBlack
                             ? AppColors.dialogTitle
                             : AppColors.primary
-                      : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
+                      : (widget.isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textSecondary),
                 ),
               ),
-              if (coordinates != null)
-                Gap(2.h),
+              if (coordinates != null) Gap(2.h),
               if (coordinates != null)
                 Text(
                   '📍 $coordinates',
@@ -566,7 +855,9 @@ class _AttendanceTableState extends State<AttendanceTable> {
                         ? highlightBlack
                               ? AppColors.dialogTitle
                               : AppColors.primary
-                        : (widget.isDark ? AppColors.textPrimaryDark : AppColors.textSecondary),
+                        : (widget.isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textSecondary),
                   ),
                 ),
             ],

@@ -21,7 +21,10 @@ class MarkAttendanceDialog extends ConsumerStatefulWidget {
 
   const MarkAttendanceDialog({super.key, this.attendance});
 
-  static Future<void> show(BuildContext context, {Attendance? attendance}) async {
+  static Future<void> show(
+    BuildContext context, {
+    Attendance? attendance,
+  }) async {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -32,7 +35,8 @@ class MarkAttendanceDialog extends ConsumerStatefulWidget {
   bool get isEditMode => attendance != null;
 
   @override
-  ConsumerState<MarkAttendanceDialog> createState() => _MarkAttendanceDialogState();
+  ConsumerState<MarkAttendanceDialog> createState() =>
+      _MarkAttendanceDialogState();
 }
 
 class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
@@ -48,7 +52,9 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.attendance != null) {
-        ref.read(markAttendanceFormProvider.notifier).initializeFromAttendance(widget.attendance!);
+        ref
+            .read(markAttendanceFormProvider.notifier)
+            .initializeFromAttendance(widget.attendance!);
       }
       _syncControllersWithState();
     });
@@ -59,7 +65,8 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     if (_employeeSearchController.text != (state.employeeName ?? '')) {
       _employeeSearchController.text = state.employeeName ?? '';
     }
-    if (_durationController.text != (state.scheduleDuration?.toString() ?? '8')) {
+    if (_durationController.text !=
+        (state.scheduleDuration?.toString() ?? '8')) {
       _durationController.text = state.scheduleDuration?.toString() ?? '8';
     }
     if (_overtimeController.text != (state.overtimeHours?.toString() ?? '0')) {
@@ -95,11 +102,20 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
         backgroundColor: Colors.transparent,
         insetPadding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 14.h),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 600.w, maxHeight: MediaQuery.of(context).size.height * 0.9),
+          constraints: BoxConstraints(
+            maxWidth: 600.w,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
           decoration: BoxDecoration(
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(12.r),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12))],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 25,
+                offset: const Offset(0, 12),
+              ),
+            ],
           ),
           child: Form(
             key: _formKey,
@@ -118,33 +134,101 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
                         _buildDateField(context, isDark, state, notifier),
                         Gap(14.h),
                         context.isMobile
-                            ? Column(children: [_buildScheduleStartTimeField(context, isDark, state, notifier), Gap(14.h), _buildScheduleDurationField(context, isDark, state, notifier)])
+                            ? Column(
+                                children: [
+                                  _buildScheduleStartTimeField(
+                                    context,
+                                    isDark,
+                                    state,
+                                    notifier,
+                                  ),
+                                  Gap(14.h),
+                                  _buildScheduleDurationField(
+                                    context,
+                                    isDark,
+                                    state,
+                                    notifier,
+                                  ),
+                                ],
+                              )
                             : Row(
                                 children: [
-                                  Expanded(child: _buildScheduleStartTimeField(context, isDark, state, notifier)),
+                                  Expanded(
+                                    child: _buildScheduleStartTimeField(
+                                      context,
+                                      isDark,
+                                      state,
+                                      notifier,
+                                    ),
+                                  ),
                                   Gap(16.w),
-                                  Expanded(child: _buildScheduleDurationField(context, isDark, state, notifier)),
+                                  Expanded(
+                                    child: _buildScheduleDurationField(
+                                      context,
+                                      isDark,
+                                      state,
+                                      notifier,
+                                    ),
+                                  ),
                                 ],
                               ),
                         Gap(14.h),
                         _buildStatusField(context, isDark, state, notifier),
                         Gap(14.h),
                         context.isMobile
-                            ? Column(children: [_buildCheckInTimeField(context, isDark, state, notifier), Gap(14.h), _buildCheckOutTimeField(context, isDark, state, notifier)])
+                            ? Column(
+                                children: [
+                                  _buildCheckInTimeField(
+                                    context,
+                                    isDark,
+                                    state,
+                                    notifier,
+                                  ),
+                                  Gap(14.h),
+                                  _buildCheckOutTimeField(
+                                    context,
+                                    isDark,
+                                    state,
+                                    notifier,
+                                  ),
+                                ],
+                              )
                             : Row(
                                 children: [
-                                  Expanded(child: _buildCheckInTimeField(context, isDark, state, notifier)),
+                                  Expanded(
+                                    child: _buildCheckInTimeField(
+                                      context,
+                                      isDark,
+                                      state,
+                                      notifier,
+                                    ),
+                                  ),
                                   Gap(16.w),
-                                  Expanded(child: _buildCheckOutTimeField(context, isDark, state, notifier)),
+                                  Expanded(
+                                    child: _buildCheckOutTimeField(
+                                      context,
+                                      isDark,
+                                      state,
+                                      notifier,
+                                    ),
+                                  ),
                                 ],
                               ),
                         Gap(14.h),
-                        _buildOvertimeHoursField(context, isDark, state, notifier),
+                        _buildOvertimeHoursField(
+                          context,
+                          isDark,
+                          state,
+                          notifier,
+                        ),
                         Gap(14.h),
                         _buildLocationField(context, isDark, state, notifier),
                         Gap(14.h),
                         // if (state.checkInTime != null && state.checkOutTime != null) ...[
-                        if (!widget.isEditMode) ...[_buildHoursWorkedCard(context, isDark, state), Gap(14.h)],
+                        if (!widget.isEditMode) ...[
+                          _buildHoursWorkedCard(context, isDark, state),
+                          Gap(14.h),
+                        ],
                         _buildNotesField(context, isDark, state, notifier),
                       ],
                     ),
@@ -165,16 +249,27 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(12.r), topRight: Radius.circular(12.r)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12.r),
+          topRight: Radius.circular(12.r),
+        ),
       ),
       child: Row(
         children: [
-          DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 18.w, height: 18.h, color: Colors.white),
+          DigifyAsset(
+            assetPath: Assets.icons.sidebar.scheduleAssignments.path,
+            width: 18.w,
+            height: 18.h,
+            color: Colors.white,
+          ),
           Gap(4.w),
           Expanded(
             child: Text(
               title,
-              style: AppTextTheme.lightTextTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+              style: AppTextTheme.lightTextTheme.headlineMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           IconButton(
@@ -188,7 +283,12 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildEmployeeField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildEmployeeField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,11 +297,19 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             children: [
               TextSpan(
                 text: 'Select Employee',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               TextSpan(
                 text: ' *',
-                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -211,12 +319,27 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
           controller: _employeeSearchController,
           hintText: 'Type to search employees...',
           prefixIcon: Padding(
-            padding: EdgeInsets.only(right: 3.w, top: 9.h, bottom: 9.h, left: 14.w),
-            child: DigifyAsset(assetPath: Assets.icons.searchIcon.path, width: 18.w, height: 18.h, color: AppColors.dialogCloseIcon),
+            padding: EdgeInsets.only(
+              right: 3.w,
+              top: 9.h,
+              bottom: 9.h,
+              left: 14.w,
+            ),
+            child: DigifyAsset(
+              assetPath: Assets.icons.searchIcon.path,
+              width: 18.w,
+              height: 18.h,
+              color: AppColors.dialogCloseIcon,
+            ),
           ),
           suffixIcon: Padding(
             padding: EdgeInsets.all(12.w),
-            child: DigifyAsset(assetPath: Assets.icons.workforce.chevronDown.path, width: 10.w, height: 10.h, color: AppColors.textSecondary),
+            child: DigifyAsset(
+              assetPath: Assets.icons.workforce.chevronDown.path,
+              width: 10.w,
+              height: 10.h,
+              color: AppColors.textSecondary,
+            ),
           ),
           fillColor: AppColors.cardBackground,
           filled: true,
@@ -227,7 +350,12 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildDateField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildDateField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -236,11 +364,19 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             children: [
               TextSpan(
                 text: 'Date',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextSpan(
                 text: ' *',
-                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -248,7 +384,12 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
         Gap(7.h),
         InkWell(
           onTap: () async {
-            final picked = await showDatePicker(context: context, initialDate: state.date ?? DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: state.date ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2100),
+            );
             if (picked != null) {
               notifier.setDate(picked);
             }
@@ -265,9 +406,15 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
               children: [
                 Expanded(
                   child: Text(
-                    state.date != null ? DateFormat('dd/MM/yyyy').format(state.date!) : 'Select Date',
+                    state.date != null
+                        ? DateFormat('dd/MM/yyyy').format(state.date!)
+                        : 'Select Date',
                     style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
-                      color: state.date != null ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary) : AppColors.textSecondary.withValues(alpha: 0.6),
+                      color: state.date != null
+                          ? (isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimary)
+                          : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -279,18 +426,31 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildScheduleStartTimeField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildScheduleStartTimeField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Schedule Start Time',
-          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         Gap(7.h),
         InkWell(
           onTap: () async {
-            final picked = await DigifyTimePickerDialog.show(context, initialTime: state.scheduleStartTime ?? const TimeOfDay(hour: 8, minute: 0));
+            final picked = await DigifyTimePickerDialog.show(
+              context,
+              initialTime:
+                  state.scheduleStartTime ??
+                  const TimeOfDay(hour: 8, minute: 0),
+            );
             if (picked != null) {
               notifier.setScheduleStartTime(picked);
             }
@@ -307,8 +467,14 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
               children: [
                 Expanded(
                   child: Text(
-                    state.scheduleStartTime != null ? _formatTimeOfDay(state.scheduleStartTime!) : '08:00 AM',
-                    style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.blackTextColor),
+                    state.scheduleStartTime != null
+                        ? _formatTimeOfDay(state.scheduleStartTime!)
+                        : '08:00 AM',
+                    style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.blackTextColor,
+                    ),
                   ),
                 ),
                 Icon(Icons.access_time, color: Colors.black),
@@ -320,20 +486,31 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildScheduleDurationField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildScheduleDurationField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Schedule Duration (hours)',
-          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         Gap(6.h),
         DigifyTextField(
           controller: _durationController,
           keyboardType: TextInputType.number,
           fillColor: AppColors.cardBackground,
-          contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 14.w),
+          contentPadding: EdgeInsets.symmetric(
+            vertical: 12.h,
+            horizontal: 14.w,
+          ),
           filled: true,
           onChanged: (value) {
             final duration = int.tryParse(value);
@@ -344,7 +521,12 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildStatusField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildStatusField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     final statusOptions = [
       AttendanceStatus.present,
       AttendanceStatus.late,
@@ -364,11 +546,19 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             children: [
               TextSpan(
                 text: 'Status',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextSpan(
                 text: ' *',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -386,7 +576,12 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildCheckInTimeField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildCheckInTimeField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -395,11 +590,19 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             children: [
               TextSpan(
                 text: 'Check In Time',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextSpan(
                 text: ' *',
-                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -407,7 +610,11 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
         Gap(6.h),
         InkWell(
           onTap: () async {
-            final picked = await DigifyTimePickerDialog.show(context, initialTime: state.checkInTime ?? const TimeOfDay(hour: 8, minute: 0));
+            final picked = await DigifyTimePickerDialog.show(
+              context,
+              initialTime:
+                  state.checkInTime ?? const TimeOfDay(hour: 8, minute: 0),
+            );
             if (picked != null) {
               notifier.setCheckInTime(picked);
             }
@@ -424,9 +631,15 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
               children: [
                 Expanded(
                   child: Text(
-                    state.checkInTime != null ? _formatTimeOfDay(state.checkInTime!) : '-- : --',
+                    state.checkInTime != null
+                        ? _formatTimeOfDay(state.checkInTime!)
+                        : '-- : --',
                     style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
-                      color: state.checkInTime != null ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary) : AppColors.textSecondary.withValues(alpha: 0.6),
+                      color: state.checkInTime != null
+                          ? (isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimary)
+                          : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -439,18 +652,30 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildCheckOutTimeField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildCheckOutTimeField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Check Out Time',
-          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w500),
+          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         Gap(6.h),
         InkWell(
           onTap: () async {
-            final picked = await DigifyTimePickerDialog.show(context, initialTime: state.checkOutTime ?? const TimeOfDay(hour: 17, minute: 0));
+            final picked = await DigifyTimePickerDialog.show(
+              context,
+              initialTime:
+                  state.checkOutTime ?? const TimeOfDay(hour: 17, minute: 0),
+            );
             if (picked != null) {
               notifier.setCheckOutTime(picked);
             }
@@ -467,9 +692,15 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
               children: [
                 Expanded(
                   child: Text(
-                    state.checkOutTime != null ? _formatTimeOfDay(state.checkOutTime!) : '-- : --',
+                    state.checkOutTime != null
+                        ? _formatTimeOfDay(state.checkOutTime!)
+                        : '-- : --',
                     style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
-                      color: state.checkOutTime != null ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary) : AppColors.textSecondary.withValues(alpha: 0.6),
+                      color: state.checkOutTime != null
+                          ? (isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimary)
+                          : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -482,13 +713,21 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildOvertimeHoursField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildOvertimeHoursField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Overtime Hours',
-          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         Gap(7.h),
         DigifyTextField(
@@ -505,13 +744,23 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
         Gap(4.h),
         Text(
           'Kuwait Labor Law: Max 2 hours/day',
-          style: AppTextTheme.lightTextTheme.labelSmall?.copyWith(fontSize: 12.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.tableHeaderText),
+          style: AppTextTheme.lightTextTheme.labelSmall?.copyWith(
+            fontSize: 12.sp,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.tableHeaderText,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildLocationField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildLocationField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -520,22 +769,39 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             children: [
               TextSpan(
                 text: 'Location',
-                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+                style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.inputLabel,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextSpan(
                 text: ' *',
-                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: AppColors.error, fontWeight: FontWeight.w500),
+                style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
         ),
         Gap(7.h),
-        DigifyTextField(controller: _locationController, fillColor: AppColors.cardBackground, filled: true, onChanged: notifier.setLocation),
+        DigifyTextField(
+          controller: _locationController,
+          fillColor: AppColors.cardBackground,
+          filled: true,
+          onChanged: notifier.setLocation,
+        ),
       ],
     );
   }
 
-  Widget _buildHoursWorkedCard(BuildContext context, bool isDark, MarkAttendanceFormState state) {
+  Widget _buildHoursWorkedCard(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+  ) {
     // if (state.checkInTime == null || state.checkOutTime == null) {
     //   return const SizedBox.shrink();
     // }
@@ -578,25 +844,41 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DigifyAsset(assetPath: Assets.icons.priceUpItem.path, width: 18.w, height: 18.h, color: AppColors.infoText),
+          DigifyAsset(
+            assetPath: Assets.icons.priceUpItem.path,
+            width: 18.w,
+            height: 18.h,
+            color: AppColors.infoText,
+          ),
           Gap(8.w),
           Text(
             'Hours Worked: 8h 15m',
             // 'Hours Worked: $hoursWorkedText',
-            style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(color: AppColors.infoText, fontWeight: FontWeight.w600),
+            style: AppTextTheme.lightTextTheme.bodyMedium?.copyWith(
+              color: AppColors.infoText,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNotesField(BuildContext context, bool isDark, MarkAttendanceFormState state, MarkAttendanceFormNotifier notifier) {
+  Widget _buildNotesField(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormState state,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Notes',
-          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel, fontWeight: FontWeight.w400),
+          style: AppTextTheme.lightTextTheme.titleMedium?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         Gap(7.h),
         DigifyTextField(
@@ -612,18 +894,31 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
     );
   }
 
-  Widget _buildFooter(BuildContext context, bool isDark, MarkAttendanceFormNotifier notifier) {
-    final isMobile = context.isMobile;
-
+  Widget _buildFooter(
+    BuildContext context,
+    bool isDark,
+    MarkAttendanceFormNotifier notifier,
+  ) {
     return Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1)),
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+            width: 1,
+          ),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (!context.isMobile) AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: () => Navigator.of(context).pop(), height: 40.h),
+          if (!context.isMobile)
+            AppButton(
+              label: 'Cancel',
+              type: AppButtonType.outline,
+              onPressed: () => Navigator.of(context).pop(),
+              height: 40.h,
+            ),
           Gap(12.w),
           AppButton(
             label: 'Save Attendance',
@@ -631,7 +926,6 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
             svgPath: Assets.icons.activeDepartmentsIcon.path,
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // TODO: Implement save logic
                 Navigator.of(context).pop();
               }
             },
@@ -643,7 +937,9 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
   }
 
   String _formatTimeOfDay(TimeOfDay time) {
-    final hour = time.hour == 0 ? 12 : (time.hour > 12 ? time.hour - 12 : time.hour);
+    final hour = time.hour == 0
+        ? 12
+        : (time.hour > 12 ? time.hour - 12 : time.hour);
     final minute = time.minute.toString().padLeft(2, '0');
     final period = time.hour < 12 ? 'AM' : 'PM';
     return '$hour:$minute $period';
