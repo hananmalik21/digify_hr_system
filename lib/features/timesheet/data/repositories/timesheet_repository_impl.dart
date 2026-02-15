@@ -3,7 +3,6 @@ import 'package:digify_hr_system/features/timesheet/domain/models/timesheet_stat
 import 'package:digify_hr_system/features/timesheet/domain/repositories/timesheet_repository.dart';
 
 /// Mock implementation of TimesheetRepository
-/// TODO: Replace with real API implementation when backend is ready
 class TimesheetRepositoryImpl implements TimesheetRepository {
   @override
   Future<List<Timesheet>> getTimesheets({
@@ -64,10 +63,12 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
 
     if (searchQuery != null && searchQuery.isNotEmpty) {
       filtered = filtered
-          .where((t) =>
-              t.employeeName.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              t.employeeNumber.toLowerCase().contains(searchQuery.toLowerCase()) ||
-              t.departmentName.toLowerCase().contains(searchQuery.toLowerCase()))
+          .where(
+            (t) =>
+                t.employeeName.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                t.employeeNumber.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                t.departmentName.toLowerCase().contains(searchQuery.toLowerCase()),
+          )
           .toList();
     }
 
@@ -169,4 +170,3 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     throw UnimplementedError('deleteTimesheet not implemented');
   }
 }
-

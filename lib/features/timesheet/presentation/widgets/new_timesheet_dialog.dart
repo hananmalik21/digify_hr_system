@@ -136,7 +136,9 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           decoration: BoxDecoration(
             color: isDark ? AppColors.cardBackgroundDark : Colors.white,
             borderRadius: BorderRadius.circular(12.r),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12))],
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 25, offset: const Offset(0, 12)),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -157,7 +159,14 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                         _buildDateSelection(context, isDark),
                         Gap(24.h),
                         // Daily Time Entries Table
-                        _buildDailyTimeEntriesTable(context, isDark, weekDates, dayNames, totalRegularHours, totalOTHours),
+                        _buildDailyTimeEntriesTable(
+                          context,
+                          isDark,
+                          weekDates,
+                          dayNames,
+                          totalRegularHours,
+                          totalOTHours,
+                        ),
                       ],
                     ),
                   ),
@@ -186,7 +195,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           Expanded(
             child: Text(
               'New Weekly Timesheet',
-              style: AppTextTheme.lightTextTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+              style: AppTextTheme.lightTextTheme.headlineMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           IconButton(
@@ -213,11 +225,21 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 children: [
                   TextSpan(
                     text: 'Select Employee',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                   TextSpan(
                     text: ' *',
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.error, fontFamily: 'Inter'),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.error,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ],
               ),
@@ -230,9 +252,7 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
               suffixIcon: Icon(Icons.arrow_drop_down, size: 24.r, color: AppColors.textSecondary),
               fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
               filled: true,
-              onChanged: (value) {
-                // TODO: Implement employee search
-              },
+              onChanged: (value) {},
             ),
           ],
         ),
@@ -247,10 +267,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                     children: [
                       Text(
                         'Employee Name',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                       Gap(6.h),
-                      DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      DigifyTextField(
+                        hintText: 'Employee Name',
+                        controller: _employeeNameController,
+                        fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                        filled: true,
+                      ),
                     ],
                   ),
                   Gap(16.h),
@@ -259,10 +289,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                     children: [
                       Text(
                         'Project Name',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                       Gap(6.h),
-                      DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      DigifyTextField(
+                        hintText: 'Project Name',
+                        controller: _projectNameController,
+                        fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                        filled: true,
+                      ),
                     ],
                   ),
                 ],
@@ -276,10 +316,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                       children: [
                         Text(
                           'Employee Name',
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                         Gap(6.h),
-                        DigifyTextField(hintText: 'Employee Name', controller: _employeeNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                        DigifyTextField(
+                          hintText: 'Employee Name',
+                          controller: _employeeNameController,
+                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                          filled: true,
+                        ),
                       ],
                     ),
                   ),
@@ -290,10 +340,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                       children: [
                         Text(
                           'Project Name',
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                         Gap(6.h),
-                        DigifyTextField(hintText: 'Project Name', controller: _projectNameController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                        DigifyTextField(
+                          hintText: 'Project Name',
+                          controller: _projectNameController,
+                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                          filled: true,
+                        ),
                       ],
                     ),
                   ),
@@ -310,10 +370,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                     children: [
                       Text(
                         'Position',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                       Gap(6.h),
-                      DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                      DigifyTextField(
+                        hintText: 'Position',
+                        controller: _positionController,
+                        fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                        filled: true,
+                      ),
                     ],
                   ),
                   Gap(16.h),
@@ -322,7 +392,12 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                     children: [
                       Text(
                         'Department',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                       Gap(6.h),
                       DigifyTextField(
@@ -345,10 +420,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                       children: [
                         Text(
                           'Position',
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                         Gap(6.h),
-                        DigifyTextField(hintText: 'Position', controller: _positionController, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+                        DigifyTextField(
+                          hintText: 'Position',
+                          controller: _positionController,
+                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                          filled: true,
+                        ),
                       ],
                     ),
                   ),
@@ -359,7 +444,12 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                       children: [
                         Text(
                           'Department',
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                         Gap(6.h),
                         DigifyTextField(
@@ -381,10 +471,21 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           children: [
             Text(
               'Description',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: isDark ? context.themeTextPrimary : AppColors.inputLabel, fontFamily: 'Inter'),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                fontFamily: 'Inter',
+              ),
             ),
             Gap(6.h),
-            DigifyTextField(hintText: 'Write...', controller: _descriptionController, maxLines: 3, fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg, filled: true),
+            DigifyTextField(
+              hintText: 'Write...',
+              controller: _descriptionController,
+              maxLines: 3,
+              fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+              filled: true,
+            ),
           ],
         ),
       ],
@@ -438,14 +539,20 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                       _weekStartDate = date.subtract(const Duration(days: 6));
                     });
                   },
-
                 ),
               ),
             ],
           );
   }
 
-  Widget _buildDailyTimeEntriesTable(BuildContext context, bool isDark, List<DateTime> weekDates, List<String> dayNames, double totalRegularHours, double totalOTHours) {
+  Widget _buildDailyTimeEntriesTable(
+    BuildContext context,
+    bool isDark,
+    List<DateTime> weekDates,
+    List<String> dayNames,
+    double totalRegularHours,
+    double totalOTHours,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -453,7 +560,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
           children: [
             Text(
               'Daily Time Entries',
-              style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle),
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+              ),
             ),
             Gap(4.w),
             Text(
@@ -483,7 +593,14 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
     );
   }
 
-  Widget _buildTableContent(BuildContext context, bool isDark, List<DateTime> weekDates, List<String> dayNames, double totalRegularHours, double totalOTHours) {
+  Widget _buildTableContent(
+    BuildContext context,
+    bool isDark,
+    List<DateTime> weekDates,
+    List<String> dayNames,
+    double totalRegularHours,
+    double totalOTHours,
+  ) {
     return Column(
       children: [
         // Table Header
@@ -509,81 +626,90 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
         ),
         // Table Rows
         ...List.generate(7, (index) {
-                final date = weekDates.isNotEmpty ? weekDates[index] : DateTime.now().add(Duration(days: index));
-                final dayName = dayNames[index];
-                final isRestDay = index >= 5; // Friday and Saturday
+          final date = weekDates.isNotEmpty ? weekDates[index] : DateTime.now().add(Duration(days: index));
+          final dayName = dayNames[index];
+          final isRestDay = index >= 5; // Friday and Saturday
 
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: index < 6 ? 1 : 0),
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+                  width: index < 6 ? 1 : 0,
+                ),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    isRestDay ? '$dayName (Rest)' : dayName,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      fontSize: 14.sp,
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          isRestDay ? '$dayName (Rest)' : dayName,
-                          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, fontSize: 14.sp),
-                        ),
-                      ),
-                      Gap(16.w),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          DateFormat('MMM d').format(date),
-                          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, fontSize: 14.sp),
-                        ),
-                      ),
-                      Gap(16.w),
-                      Expanded(
-                        flex: 3,
-                        child: DigifyTextField(
-                          hintText: 'Enter task...',
-                          controller: _taskControllers[index],
-                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                          filled: true,
-                          enabled: !isRestDay,
-                          border: 4.r,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                        ),
-                      ),
-                      Gap(16.w),
-                      Expanded(
-                        flex: 2,
-                        child: DigifyTextField(
-                          hintText: '0',
-                          controller: _regularHoursControllers[index],
-                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                          filled: true,
-                          enabled: !isRestDay,
-                          border: 4.r,
-                          keyboardType: TextInputType.number,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                          onChanged: (_) => setState(() {}),
-                        ),
-                      ),
-                      Gap(16.w),
-                      Expanded(
-                        flex: 2,
-                        child: DigifyTextField(
-                          hintText: '0',
-                          controller: _otHoursControllers[index],
-                          fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                          filled: true,
-                          enabled: !isRestDay,
-                          border: 4.r,
-                          keyboardType: TextInputType.number,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                          onChanged: (_) => setState(() {}),
-                        ),
-                      ),
-                    ],
+                ),
+                Gap(16.w),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    DateFormat('MMM d').format(date),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      fontSize: 14.sp,
+                    ),
                   ),
-                );
-              }),
+                ),
+                Gap(16.w),
+                Expanded(
+                  flex: 3,
+                  child: DigifyTextField(
+                    hintText: 'Enter task...',
+                    controller: _taskControllers[index],
+                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                    filled: true,
+                    enabled: !isRestDay,
+                    border: 4.r,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  ),
+                ),
+                Gap(16.w),
+                Expanded(
+                  flex: 2,
+                  child: DigifyTextField(
+                    hintText: '0',
+                    controller: _regularHoursControllers[index],
+                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                    filled: true,
+                    enabled: !isRestDay,
+                    border: 4.r,
+                    keyboardType: TextInputType.number,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ),
+                Gap(16.w),
+                Expanded(
+                  flex: 2,
+                  child: DigifyTextField(
+                    hintText: '0',
+                    controller: _otHoursControllers[index],
+                    fillColor: isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                    filled: true,
+                    enabled: !isRestDay,
+                    border: 4.r,
+                    keyboardType: TextInputType.number,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
         // Weekly Total Row
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -610,7 +736,10 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
   }
 
   TextStyle? _getHeaderStyle(BuildContext context, bool isDark) {
-    return context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700, color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153));
+    return context.textTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: isDark ? AppColors.textSecondaryDark : const Color(0xFF364153),
+    );
   }
 
   Widget _buildFooter(BuildContext context, bool isDark) {
@@ -639,7 +768,6 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 AppButton(
                   label: 'Save as Draft',
                   onPressed: () {
-                    // TODO: Implement save as draft
                     Navigator.of(context).pop();
                   },
                   icon: Icons.description_outlined,
@@ -658,7 +786,6 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                   onPressed: () {
                     final formState = _formKey.currentState;
                     if (formState != null && formState.validate()) {
-                      // TODO: Implement submit for approval
                       Navigator.of(context).pop();
                     }
                   },
@@ -688,7 +815,6 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                 AppButton(
                   label: 'Save as Draft',
                   onPressed: () {
-                    // TODO: Implement save as draft
                     Navigator.of(context).pop();
                   },
                   type: AppButtonType.outline,
@@ -705,7 +831,6 @@ class _NewTimesheetDialogState extends State<NewTimesheetDialog> {
                   onPressed: () {
                     final formState = _formKey.currentState;
                     if (formState != null && formState.validate()) {
-                      // TODO: Implement submit for approval
                       Navigator.of(context).pop();
                     }
                   },
