@@ -29,13 +29,13 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
     final maritalValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.maritalStatus));
     final draftNotifier = ref.read(policyDraftProvider.notifier);
 
-    final genderOptions = ['All', ...genderValues.map((v) => v.lookupValueName)];
-    final religionOptions = ['All', ...religionValues.map((v) => v.lookupValueName)];
-    final maritalOptions = ['All', ...maritalValues.map((v) => v.lookupValueName)];
+    final genderOptions = genderValues.map((v) => v.lookupValueName).toList();
+    final religionOptions = religionValues.map((v) => v.lookupValueName).toList();
+    final maritalOptions = maritalValues.map((v) => v.lookupValueName).toList();
 
-    final genderSelected = _selectedName(eligibility.genderCode, genderValues, true);
-    final religionSelected = _selectedName(eligibility.religionCode, religionValues, true);
-    final maritalSelected = _selectedName(eligibility.maritalStatusCode, maritalValues, true);
+    final genderSelected = _selectedName(eligibility.genderCode, genderValues);
+    final religionSelected = _selectedName(eligibility.religionCode, religionValues);
+    final maritalSelected = _selectedName(eligibility.maritalStatusCode, maritalValues);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -86,16 +86,16 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
     );
   }
 
-  String? _selectedName(String? code, List<AbsLookupValue> values, bool addAll) {
-    if (code == null || code.isEmpty) return addAll ? 'All' : null;
+  String? _selectedName(String? code, List<AbsLookupValue> values) {
+    if (code == null || code.isEmpty) return null;
     for (final v in values) {
       if (v.lookupValueCode == code) return v.lookupValueName;
     }
-    return addAll ? 'All' : null;
+    return null;
   }
 
   static String? _codeForName(String? name, List<AbsLookupValue> values) {
-    if (name == null || name.isEmpty || name == 'All') return null;
+    if (name == null || name.isEmpty) return null;
     final v = values.where((e) => e.lookupValueName == name).firstOrNull;
     return v?.lookupValueCode;
   }

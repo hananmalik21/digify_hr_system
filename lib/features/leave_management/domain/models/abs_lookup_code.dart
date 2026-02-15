@@ -8,7 +8,7 @@ enum AbsLookupCode {
   nationality('NATIONALITY'),
   religion('RELIGION'),
   religionCode('RELIGION_CODE'),
-  accrualMethod('ACCRUAL_METHOD'),
+  accrualMethod('ACCURAL_METHOD'),
   shiftTime('SHIFT_TIME');
 
   const AbsLookupCode(this.code);
