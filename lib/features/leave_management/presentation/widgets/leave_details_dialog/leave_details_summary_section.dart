@@ -45,7 +45,7 @@ class LeaveDetailsSummarySection extends StatelessWidget {
           child: LeaveDetailsStatsCard(
             label: 'Entitlement',
             value: summary['entitlement'] as String,
-            iconPath: Assets.icons.leaveManagement.downfall.path,
+            iconPath: Assets.icons.workforce.fillRate.path,
             isDark: isDark,
           ),
         ),

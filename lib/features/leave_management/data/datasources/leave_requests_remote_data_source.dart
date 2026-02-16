@@ -58,7 +58,6 @@ class LeaveRequestsRemoteDataSourceImpl implements LeaveRequestsRemoteDataSource
   }) async {
     try {
       final queryParameters = <String, String>{'page': page.toString(), 'page_size': pageSize.toString()};
-
       if (status != null && status.isNotEmpty) {
         queryParameters['status'] = status;
       }

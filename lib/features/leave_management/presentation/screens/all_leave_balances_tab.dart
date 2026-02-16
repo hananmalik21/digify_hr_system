@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_filters_bar.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_summary_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table.dart';
@@ -19,6 +20,14 @@ class AllLeaveBalancesTab extends ConsumerStatefulWidget {
 
 class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(leaveTypesNotifierProvider.notifier).loadLeaveTypes();
+    });
+  }
 
   @override
   void dispose() {

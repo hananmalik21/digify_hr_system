@@ -195,7 +195,7 @@ class LeaveRequestEmployeeDetailTableRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(4.r),
       ),
       child: Text(
-        LeaveTypeMapper.getShortLabel(request.type),
+        request.leaveTypeInfo?.leaveNameEn ?? LeaveTypeMapper.getShortLabel(request.type),
         style: context.textTheme.bodyLarge?.copyWith(color: isDark ? AppColors.textPrimaryDark : AppColors.lightDark),
       ),
     );

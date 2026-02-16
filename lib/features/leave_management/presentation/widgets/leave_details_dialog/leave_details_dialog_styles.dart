@@ -2,7 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const double leaveDetailsSectionGap = 16.0;
+const double leaveDetailsSectionGap = 20.0;
 
 BoxDecoration leaveDetailsStatsCardCardDecoration(bool isDark, {Color? color}) {
   return BoxDecoration(

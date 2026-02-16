@@ -33,10 +33,6 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
 
   LeaveBalancesRemoteDataSourceImpl({required this.apiClient});
 
-  Map<String, String> _buildHeaders({int? tenantId}) {
-    return {if (tenantId != null) 'x-tenant-id': tenantId.toString(), 'x-user-id': 'admin'};
-  }
-
   @override
   Future<PaginatedLeaveBalancesDto> getLeaveBalances({
     int page = 1,
@@ -48,14 +44,11 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
       final queryParameters = <String, String>{
         'page': page.toString(),
         'page_size': pageSize.toString(),
+        if (tenantId != null) 'tenant_id': tenantId.toString(),
         if (employeeGuid != null && employeeGuid.isNotEmpty) 'employee_guid': employeeGuid,
       };
 
-      final response = await apiClient.get(
-        ApiEndpoints.absLeaveBalances,
-        queryParameters: queryParameters,
-        headers: _buildHeaders(tenantId: tenantId),
-      );
+      final response = await apiClient.get(ApiEndpoints.absLeaveBalances, queryParameters: queryParameters);
 
       return PaginatedLeaveBalancesDto.fromJson(response);
     } on AppException {
@@ -76,13 +69,10 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
       final queryParameters = <String, String>{
         'page': page.toString(),
         'page_size': pageSize.toString(),
+        if (tenantId != null) 'tenant_id': tenantId.toString(),
         if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
       };
-      final response = await apiClient.get(
-        ApiEndpoints.absLeaveBalances,
-        queryParameters: queryParameters,
-        headers: _buildHeaders(tenantId: tenantId),
-      );
+      final response = await apiClient.get(ApiEndpoints.absLeaveBalances, queryParameters: queryParameters);
       return LeaveBalanceSummaryResponseDto.fromJson(response);
     } on AppException {
       rethrow;
@@ -98,10 +88,11 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
     int? tenantId,
   }) async {
     try {
+      final queryParameters = <String, String>{if (tenantId != null) 'tenant_id': tenantId.toString()};
       return await apiClient.put(
         ApiEndpoints.absLeaveBalanceUpdate(employeeLeaveBalanceGuid),
         body: body,
-        headers: _buildHeaders(tenantId: tenantId),
+        queryParameters: queryParameters.isEmpty ? null : queryParameters,
       );
     } on AppException {
       rethrow;
@@ -113,11 +104,9 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
   @override
   Future<Map<String, dynamic>> adjustLeaveBalances(Map<String, dynamic> body, {int? tenantId}) async {
     try {
-      return await apiClient.post(
-        ApiEndpoints.absLeaveBalancesAdjust,
-        body: body,
-        headers: _buildHeaders(tenantId: tenantId),
-      );
+      final requestBody = Map<String, dynamic>.from(body);
+      if (tenantId != null) requestBody['tenant_id'] = tenantId;
+      return await apiClient.post(ApiEndpoints.absLeaveBalancesAdjust, body: requestBody);
     } on AppException {
       rethrow;
     } catch (e) {
