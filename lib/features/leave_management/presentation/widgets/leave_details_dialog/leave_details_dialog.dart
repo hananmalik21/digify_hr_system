@@ -14,7 +14,6 @@ import 'package:intl/intl.dart';
 import 'leave_details_dialog_models.dart';
 import 'leave_details_dialog_styles.dart';
 import 'leave_details_employee_section.dart';
-import 'leave_details_labor_law_section.dart';
 import 'leave_details_leave_type_selector.dart';
 import 'leave_details_summary_section.dart';
 import 'leave_details_transaction_section.dart';
@@ -79,6 +78,7 @@ class _LeaveDetailsDialogState extends ConsumerState<LeaveDetailsDialog> {
         data: (data) {
           final summaryMap = _summaryMapFromData(data.summaryByLeaveType);
           final summary = summaryMap[_selectedLeaveType]!;
+          final transactionPage = ref.watch(leaveDetailsTransactionPageProvider(widget.employeeId));
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -93,9 +93,15 @@ class _LeaveDetailsDialogState extends ConsumerState<LeaveDetailsDialog> {
               Gap(leaveDetailsSectionGap.h),
               LeaveDetailsSummarySection(summary: summary, isDark: isDark),
               Gap(leaveDetailsSectionGap.h),
-              LeaveDetailsTransactionSection(transactions: data.transactions, isDark: isDark),
-              Gap(leaveDetailsSectionGap.h),
-              LeaveDetailsLaborLawSection(isDark: isDark),
+              LeaveDetailsTransactionSection(
+                transactions: transactionPage.transactions,
+                isDark: isDark,
+                paginationInfo: transactionPage.paginationInfo,
+                currentPage: transactionPage.currentPage,
+                pageSize: transactionPage.pageSize,
+                onPrevious: transactionPage.movePrevious,
+                onNext: transactionPage.moveNext,
+              ),
             ],
           );
         },
