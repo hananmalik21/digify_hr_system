@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Cards visibility provider
 class CardsVisibilityNotifier extends StateNotifier<bool> {
   CardsVisibilityNotifier() : super(true);
 
@@ -17,8 +16,10 @@ class CardsVisibilityNotifier extends StateNotifier<bool> {
   }
 }
 
-final cardsVisibilityProvider =
-    StateNotifierProvider<CardsVisibilityNotifier, bool>((ref) {
+final cardsVisibilityProvider = StateNotifierProvider<CardsVisibilityNotifier, bool>((ref) {
   return CardsVisibilityNotifier();
 });
 
+final tasksMinimizedProvider = StateProvider<bool>((ref) => false);
+
+final attendanceMinimizedProvider = StateProvider<bool>((ref) => false);
