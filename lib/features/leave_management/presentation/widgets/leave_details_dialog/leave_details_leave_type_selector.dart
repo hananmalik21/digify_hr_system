@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_details_dialog/leave_details_dialog_models.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -8,14 +9,18 @@ import 'package:gap/gap.dart';
 class LeaveDetailsLeaveTypeSelector extends StatelessWidget {
   const LeaveDetailsLeaveTypeSelector({
     super.key,
-    required this.selectedLeaveType,
+    required this.leaveTypes,
+    required this.selectedLeaveTypeId,
     required this.onTypeChanged,
     required this.isDark,
+    this.isLoading = false,
   });
 
-  final LeaveType selectedLeaveType;
-  final ValueChanged<LeaveType> onTypeChanged;
+  final List<ApiLeaveType> leaveTypes;
+  final int? selectedLeaveTypeId;
+  final ValueChanged<ApiLeaveType> onTypeChanged;
   final bool isDark;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +34,45 @@ class LeaveDetailsLeaveTypeSelector extends StatelessWidget {
           ),
         ),
         Gap(8.h),
-        Row(
-          spacing: 7.w,
-          children: [
-            Expanded(
-              child: _LeaveTypeButton(
-                label: 'Annual Leave',
-                type: LeaveType.annualLeave,
-                isSelected: selectedLeaveType == LeaveType.annualLeave,
-                isDark: isDark,
-                onTap: () => onTypeChanged(LeaveType.annualLeave),
+        if (isLoading)
+          SizedBox(
+            height: 42.h,
+            child: const Center(child: AppLoadingIndicator(type: LoadingType.circle, size: 24)),
+          )
+        else if (leaveTypes.isEmpty)
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+            child: Text(
+              'No leave types available',
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),
             ),
-            Expanded(
-              child: _LeaveTypeButton(
-                label: 'Sick Leave',
-                type: LeaveType.sickLeave,
-                isSelected: selectedLeaveType == LeaveType.sickLeave,
-                isDark: isDark,
-                onTap: () => onTypeChanged(LeaveType.sickLeave),
-              ),
-            ),
-          ],
-        ),
+          )
+        else
+          Row(
+            spacing: 7.w,
+            children: [
+              for (final leaveType in leaveTypes)
+                Expanded(
+                  child: _LeaveTypeButton(
+                    label: leaveType.displayName,
+                    isSelected: selectedLeaveTypeId == leaveType.id,
+                    isDark: isDark,
+                    onTap: () => onTypeChanged(leaveType),
+                  ),
+                ),
+            ],
+          ),
       ],
     );
   }
 }
 
 class _LeaveTypeButton extends StatelessWidget {
-  const _LeaveTypeButton({
-    required this.label,
-    required this.type,
-    required this.isSelected,
-    required this.isDark,
-    required this.onTap,
-  });
+  const _LeaveTypeButton({required this.label, required this.isSelected, required this.isDark, required this.onTap});
 
   final String label;
-  final LeaveType type;
   final bool isSelected;
   final bool isDark;
   final VoidCallback onTap;

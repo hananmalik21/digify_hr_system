@@ -170,6 +170,6 @@ class LeaveBalancesTableRow extends StatelessWidget {
   }
 
   void _handleDetails(BuildContext context) {
-    LeaveDetailsDialog.show(context, employeeName: item.employeeName, employeeId: item.employeeNumber);
+    LeaveDetailsDialog.show(context, employeeName: item.employeeName, employeeId: item.employeeGuid);
   }
 }

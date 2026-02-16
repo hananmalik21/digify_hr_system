@@ -214,7 +214,15 @@ class LeaveRequestDto {
               .trim()
         : '';
 
-    final leaveType = _mapLeaveType(leaveTypeInfo?.leaveCode);
+    final LeaveTypeInfo? domainLeaveTypeInfo = leaveTypeInfo == null
+        ? null
+        : LeaveTypeInfo(
+            leaveTypeId: leaveTypeInfo!.leaveTypeId,
+            leaveTypeGuid: leaveTypeInfo!.leaveTypeGuid,
+            leaveNameEn: leaveTypeInfo!.leaveNameEn,
+            leaveNameAr: leaveTypeInfo!.leaveNameAr,
+            leaveCode: leaveTypeInfo!.leaveCode,
+          );
 
     return TimeOffRequest(
       id: leaveRequestId,
@@ -224,7 +232,8 @@ class LeaveRequestDto {
       employeeGuid: employeeInfo?.employeeGuid,
       department: employeeInfo?.departmentName,
       position: employeeInfo?.positionName,
-      type: leaveType,
+      type: TimeOffType.other,
+      leaveTypeInfo: domainLeaveTypeInfo,
       startDate: startDate,
       endDate: endDate,
       totalDays: totalDays,
@@ -237,23 +246,5 @@ class LeaveRequestDto {
       approvedAt: approvedAt,
       rejectedAt: rejectedAt,
     );
-  }
-
-  TimeOffType _mapLeaveType(String? leaveCode) {
-    if (leaveCode == null) return TimeOffType.other;
-    switch (leaveCode.toUpperCase()) {
-      case 'ANNUAL':
-        return TimeOffType.annualLeave;
-      case 'SICK':
-        return TimeOffType.sickLeave;
-      case 'PERSONAL':
-        return TimeOffType.personalLeave;
-      case 'EMERGENCY':
-        return TimeOffType.emergencyLeave;
-      case 'UNPAID':
-        return TimeOffType.unpaidLeave;
-      default:
-        return TimeOffType.other;
-    }
   }
 }
