@@ -15,10 +15,6 @@ class LeavePoliciesRemoteDataSourceImpl implements LeavePoliciesRemoteDataSource
 
   LeavePoliciesRemoteDataSourceImpl({required this.apiClient});
 
-  Map<String, String> _buildHeaders({int? tenantId}) {
-    return {if (tenantId != null) 'x-tenant-id': tenantId.toString(), 'x-user-id': 'admin'};
-  }
-
   @override
   Future<LeavePoliciesResponseDto> getLeavePolicies({
     int? tenantId,
@@ -36,7 +32,6 @@ class LeavePoliciesRemoteDataSourceImpl implements LeavePoliciesRemoteDataSource
       final response = await apiClient.get(
         ApiEndpoints.absLeavePolicies,
         queryParameters: queryParameters.isEmpty ? null : queryParameters,
-        headers: _buildHeaders(tenantId: tenantId),
       );
 
       return LeavePoliciesResponseDto.fromJson(response);
@@ -60,11 +55,7 @@ class LeavePoliciesRemoteDataSourceImpl implements LeavePoliciesRemoteDataSource
         'status': params.status,
         'kuwait_labor_compliant': params.kuwaitLaborCompliant,
       };
-      final response = await apiClient.post(
-        ApiEndpoints.absLeavePolicies,
-        body: body,
-        headers: _buildHeaders(tenantId: params.tenantId),
-      );
+      final response = await apiClient.post(ApiEndpoints.absLeavePolicies, body: body);
       final data = response['data'];
       if (data is Map<String, dynamic>) {
         final dto = LeavePolicyDto.fromJson(data);
@@ -126,7 +117,6 @@ class LeavePoliciesRemoteDataSourceImpl implements LeavePoliciesRemoteDataSource
         ApiEndpoints.absLeavePolicyUpdate(policyGuid),
         body: body,
         queryParameters: queryParameters.isEmpty ? null : queryParameters,
-        headers: _buildHeaders(tenantId: tenantId),
       );
     } on AppException {
       rethrow;

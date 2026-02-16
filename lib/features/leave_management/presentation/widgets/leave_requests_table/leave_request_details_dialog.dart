@@ -245,7 +245,7 @@ class _LeaveRequestDetailsDialogContent extends StatelessWidget {
     final cardBg = isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground;
     final labelColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
     final valueColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
-    final leaveTypeLabel = LeaveTypeMapper.getShortLabel(request.type);
+    final leaveTypeLabel = request.leaveTypeInfo?.leaveNameEn ?? LeaveTypeMapper.getShortLabel(request.type);
 
     return Container(
       width: double.infinity,

@@ -1,5 +1,21 @@
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
+class LeaveTypeInfo {
+  const LeaveTypeInfo({
+    required this.leaveTypeId,
+    required this.leaveTypeGuid,
+    required this.leaveNameEn,
+    this.leaveNameAr,
+    required this.leaveCode,
+  });
+
+  final int leaveTypeId;
+  final String leaveTypeGuid;
+  final String leaveNameEn;
+  final String? leaveNameAr;
+  final String leaveCode;
+}
+
 /// Domain model for Time-off Request
 class TimeOffRequest {
   final int id;
@@ -10,6 +26,7 @@ class TimeOffRequest {
   final String? department;
   final String? position;
   final TimeOffType type;
+  final LeaveTypeInfo? leaveTypeInfo;
   final DateTime startDate;
   final DateTime endDate;
   final double totalDays;
@@ -31,6 +48,7 @@ class TimeOffRequest {
     this.department,
     this.position,
     required this.type,
+    this.leaveTypeInfo,
     required this.startDate,
     required this.endDate,
     required this.totalDays,

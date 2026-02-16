@@ -70,7 +70,9 @@ class ApiEndpoints {
   static String absLeaveRequestDelete(String guid) => '$absLeaveRequests/$guid';
   static String absLeaveRequestUpdate(String guid) => '$absLeaveRequests/$guid';
   static const String absLeaveTypes = '$api/abs/leave-types';
+  static const String absLeaveBalanceTransactions = '$api/abs/leave-balance-transactions';
   static const String absLeaveBalances = '$api/abs/leave-balances';
+  static const String absLeaveBalancesAdjust = '$absLeaveBalances/adjust';
   static String absLeaveBalanceUpdate(String employeeLeaveBalanceGuid) => '$absLeaveBalances/$employeeLeaveBalanceGuid';
   static const String absLeavePolicies = '$api/abs/leave-policies';
   static String absLeavePolicyUpdate(String policyGuid) => '$absLeavePolicies/$policyGuid';
