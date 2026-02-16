@@ -1322,6 +1322,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/martial-status.svg
   SvgGenImage get martialStatus => const SvgGenImage('assets/icons/leave_management/martial-status.svg');
 
+  /// File path: assets/icons/leave_management/minus.svg
+  SvgGenImage get minus => const SvgGenImage('assets/icons/leave_management/minus.svg');
+
   /// File path: assets/icons/leave_management/my_leave.svg
   SvgGenImage get myLeave => const SvgGenImage('assets/icons/leave_management/my_leave.svg');
 
@@ -1369,6 +1372,7 @@ class $AssetsIconsLeaveManagementGen {
     leaveRequests,
     marker,
     martialStatus,
+    minus,
     myLeave,
     phone,
     play,

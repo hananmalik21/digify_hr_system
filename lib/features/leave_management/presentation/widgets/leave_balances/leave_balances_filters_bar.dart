@@ -12,6 +12,8 @@ import 'package:gap/gap.dart';
 class LeaveBalancesFiltersBar extends StatelessWidget {
   final AppLocalizations localizations;
   final TextEditingController searchController;
+  final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<String>? onSearchSubmitted;
   final VoidCallback? onExport;
   final VoidCallback? onRefresh;
 
@@ -19,6 +21,8 @@ class LeaveBalancesFiltersBar extends StatelessWidget {
     super.key,
     required this.localizations,
     required this.searchController,
+    this.onSearchChanged,
+    this.onSearchSubmitted,
     this.onExport,
     this.onRefresh,
   });
@@ -41,6 +45,8 @@ class LeaveBalancesFiltersBar extends StatelessWidget {
             hintText: 'Search by name or employee number...',
             filled: false,
             borderColor: isDark ? AppColors.inputBorderDark : AppColors.inputBorder,
+            onChanged: onSearchChanged,
+            onSubmitted: onSearchSubmitted,
           ),
           Gap(16.h),
           Wrap(
