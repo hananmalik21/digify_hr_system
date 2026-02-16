@@ -38,13 +38,10 @@ class DigifyRadio<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final effectiveActiveColor = activeColor ?? AppColors.primary;
-    final effectiveFillColor = fillColor ?? Colors.white;
 
     final borderColor = enabled
         ? (_isSelected ? effectiveActiveColor : (isDark ? AppColors.borderGreyDark : AppColors.borderGrey))
         : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder);
-
-    final backgroundColor = _isSelected ? effectiveActiveColor : (isDark ? AppColors.cardBackgroundDark : Colors.white);
 
     final radio = GestureDetector(
       onTap: enabled && onChanged != null ? () => onChanged!(value) : null,
@@ -55,16 +52,16 @@ class DigifyRadio<T> extends StatelessWidget {
         width: 20.w,
         height: 20.h,
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Colors.transparent,
           shape: BoxShape.circle,
-          border: Border.all(color: borderColor, width: _isSelected ? 0 : 1.5),
+          border: Border.all(color: borderColor, width: 1.5),
         ),
         child: _isSelected
             ? Center(
                 child: Container(
-                  width: 8.w,
-                  height: 8.h,
-                  decoration: BoxDecoration(color: effectiveFillColor, shape: BoxShape.circle),
+                  width: 12.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(color: effectiveActiveColor, shape: BoxShape.circle),
                 ),
               )
             : null,

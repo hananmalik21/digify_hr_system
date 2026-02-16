@@ -1,10 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,13 +29,6 @@ class SupportingDocumentationCard extends ConsumerWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          DigifyAsset(
-            assetPath: Assets.icons.leaveManagement.forfeitReports.path,
-            width: 20,
-            height: 20,
-            color: isDark ? AppColors.warningTextDark : AppColors.yellowText,
-          ),
-          Gap(12.w),
           DigifyCheckbox(
             value: advanced.requiredSupportingDocumentation,
             onChanged: isEditing ? (v) => draftNotifier.updateRequiresDocument(v ?? false) : null,

@@ -27,7 +27,9 @@ class AbsPoliciesRepositoryImpl implements AbsPoliciesRepository {
     try {
       final request = createRequest as CreatePolicyRequestDto;
       final response = await remoteDataSource.createPolicy(request);
-      if (!response.success) return null;
+      if (!response.success) {
+        throw ServerException(response.message.isNotEmpty ? response.message : 'Failed to create policy');
+      }
       return response.data.toDomain();
     } on AppException {
       rethrow;

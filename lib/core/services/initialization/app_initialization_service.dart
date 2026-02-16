@@ -27,13 +27,24 @@ class AppInitializationService {
     this.preloadOrgStructureForEnterprise,
   });
 
-  Future<void> initializeAfterAuth() async {
+  Future<void> initializeAfterAuth({void Function()? onEnterprisesLoaded}) async {
     await _loadEnterprises();
+    _setEnterpriseIdFromEnterprises();
+    onEnterprisesLoaded?.call();
     await _loadActiveLevels();
-    onActiveEnterpriseReady?.call(_activeEnterpriseId);
-    preloadOrgStructureForEnterprise?.call(_activeEnterpriseId!);
+    final enterpriseId = _activeEnterpriseId;
+    if (enterpriseId == null) return;
+    preloadOrgStructureForEnterprise?.call(enterpriseId);
     await _loadAbsLookups();
     await _loadAbsLookupValues();
+  }
+
+  void _setEnterpriseIdFromEnterprises() {
+    final list = _enterprises;
+    if (list != null && list.isNotEmpty) {
+      _activeEnterpriseId = list.first.id;
+      onActiveEnterpriseReady?.call(_activeEnterpriseId);
+    }
   }
 
   Future<void> _loadAbsLookups() async {
@@ -64,6 +75,7 @@ class AppInitializationService {
     try {
       final responseDto = await orgStructureLevelRemoteDataSource.getActiveLevels();
       _activeEnterpriseId = responseDto.enterpriseId;
+      onActiveEnterpriseReady?.call(_activeEnterpriseId);
       final activeLevels = responseDto.levels
           .where((dto) => dto.isActive.toUpperCase() == 'Y')
           .map((dto) => dto.toDomain())
@@ -73,6 +85,7 @@ class AppInitializationService {
     } catch (e) {
       _activeLevels = [];
       _activeEnterpriseId = null;
+      onActiveEnterpriseReady?.call(null);
     }
   }
 

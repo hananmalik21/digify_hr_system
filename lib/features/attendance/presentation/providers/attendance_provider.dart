@@ -13,7 +13,6 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 });
 
 // Repository provider
-// TODO: Replace with real implementation when API is ready
 final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
   return AttendanceRepositoryImpl();
 });
@@ -95,10 +94,12 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
   final AttendanceRepository _repository;
 
   AttendanceNotifier(this._repository)
-      : super(AttendanceState(
+    : super(
+        AttendanceState(
           fromDate: DateTime(2026, 2, 2),
           toDate: DateTime(2026, 2, 2),
-        )) {
+        ),
+      ) {
     // Load initial data
     loadAttendance();
   }
@@ -111,11 +112,15 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
       final attendances = await _repository.getAttendance(
         fromDate: state.fromDate,
         toDate: state.toDate,
-        employeeNumber: state.employeeNumber.isEmpty ? null : state.employeeNumber,
+        employeeNumber: state.employeeNumber.isEmpty
+            ? null
+            : state.employeeNumber,
       );
 
       // Convert Attendance domain models to AttendanceRecord for UI
-      final records = attendances.map((a) => AttendanceRecord.fromAttendance(a)).toList();
+      final records = attendances
+          .map((a) => AttendanceRecord.fromAttendance(a))
+          .toList();
 
       // Calculate statistics
       final stats = _calculateStatistics(attendances);
@@ -218,10 +223,11 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
 }
 
 // State Notifier Provider
-final attendanceNotifierProvider = StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
-  final repository = ref.watch(attendanceRepositoryProvider);
-  return AttendanceNotifier(repository);
-});
+final attendanceNotifierProvider =
+    StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
+      final repository = ref.watch(attendanceRepositoryProvider);
+      return AttendanceNotifier(repository);
+    });
 
 // Convenience Providers
 final attendanceProvider = Provider<AttendanceState>((ref) {

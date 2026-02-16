@@ -8,7 +8,9 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/add_policy_dialog.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_edit_mode_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/add_policy/add_policy_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_skeleton.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_configuration_stat_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/policy_details_content.dart';
@@ -32,6 +34,11 @@ class PolicyConfigurationTab extends ConsumerWidget {
     final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
     final selectedPolicy = ref.watch(selectedPolicyConfigurationProvider);
     final setSelectedGuid = ref.read(selectedPolicyGuidProvider.notifier).setSelectedPolicyGuid;
+    void onPolicyChange(String? guid) {
+      ref.read(policyDraftProvider.notifier).clear();
+      ref.read(policyEditModeProvider.notifier).cancelEditing();
+      setSelectedGuid(guid);
+    }
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -59,6 +66,7 @@ class PolicyConfigurationTab extends ConsumerWidget {
           ),
           PolicyConfigurationStatCards(isDark: isDark),
           policiesAsync.when(
+            loading: () => PolicyConfigurationSkeleton(isDark: isDark, isMobile: isMobile),
             data: (paginated) {
               return isMobile
                   ? _buildMobileLayout(
@@ -69,7 +77,7 @@ class PolicyConfigurationTab extends ConsumerWidget {
                       pagination,
                       notifierState,
                       selectedPolicy,
-                      setSelectedGuid,
+                      onPolicyChange,
                     )
                   : _buildDesktopLayout(
                       ref,
@@ -79,10 +87,9 @@ class PolicyConfigurationTab extends ConsumerWidget {
                       pagination,
                       notifierState,
                       selectedPolicy,
-                      setSelectedGuid,
+                      onPolicyChange,
                     );
             },
-            loading: () => PolicyConfigurationSkeleton(isDark: isDark, isMobile: isMobile),
             error: (e, _) => _buildError(context, isDark, e.toString()),
           ),
         ],

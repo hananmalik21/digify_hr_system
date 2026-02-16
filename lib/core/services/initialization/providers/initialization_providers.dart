@@ -46,6 +46,7 @@ final enterprisesCacheProvider = Provider<List<Enterprise>?>((ref) {
 });
 
 final enterprisesCacheStateProvider = Provider<EnterprisesState>((ref) {
+  ref.watch(appInitializationAfterAuthProvider);
   final enterprises = ref.watch(enterprisesCacheProvider);
   return EnterprisesState(enterprises: enterprises ?? [], isLoading: enterprises == null, hasError: false);
 });
@@ -71,6 +72,8 @@ final activeEnterpriseIdProvider = Provider<int?>((ref) {
 });
 
 final appInitializationAfterAuthProvider = FutureProvider<void>((ref) async {
-  await ref.read(appInitializationServiceProvider).initializeAfterAuth();
+  await ref
+      .read(appInitializationServiceProvider)
+      .initializeAfterAuth(onEnterprisesLoaded: () => ref.invalidate(enterprisesCacheProvider));
   ref.invalidate(enterprisesCacheProvider);
 });

@@ -16,38 +16,14 @@ class WeekendHolidayCheckboxesSubsection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final draftNotifier = ref.read(policyDraftProvider.notifier);
 
-    return Row(
-      spacing: 12.w,
-      children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: AppColors.securityProfilesBackground,
-              borderRadius: BorderRadius.circular(7.r),
-            ),
-            child: DigifyCheckbox(
-              value: advanced.countWeekendsAsLeave,
-              onChanged: isEditing ? (v) => draftNotifier.updateCountWeekendsAsLeave(v ?? false) : null,
-              label: 'Count weekends as leave days',
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: AppColors.securityProfilesBackground,
-              borderRadius: BorderRadius.circular(7.r),
-            ),
-            child: DigifyCheckbox(
-              value: advanced.countPublicHolidaysAsLeave,
-              onChanged: isEditing ? (v) => draftNotifier.updateCountPublicHolidaysAsLeave(v ?? false) : null,
-              label: 'Count public holidays as leave days',
-            ),
-          ),
-        ),
-      ],
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(color: AppColors.securityProfilesBackground, borderRadius: BorderRadius.circular(7.r)),
+      child: DigifyCheckbox(
+        value: advanced.countWeekendsAsLeave,
+        onChanged: isEditing ? (v) => draftNotifier.updateCountWeekendsAsLeave(v ?? false) : null,
+        label: 'Count weekends as leave days',
+      ),
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:digify_hr_system/features/attendance/domain/models/attendance.da
 import 'package:digify_hr_system/features/attendance/domain/repositories/attendance_repository.dart';
 
 /// Mock implementation of AttendanceRepository
-/// TODO: Replace with real implementation when API is ready
 class AttendanceRepositoryImpl implements AttendanceRepository {
   @override
   Future<List<Attendance>> getAttendance({
@@ -141,22 +140,31 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
     // Filter by date range (compare only date part, ignore time)
     final fromDateOnly = DateTime(fromDate.year, fromDate.month, fromDate.day);
     final toDateOnly = DateTime(toDate.year, toDate.month, toDate.day);
-    
+
     var filtered = mockAttendances.where((a) {
-      final attendanceDateOnly = DateTime(a.date.year, a.date.month, a.date.day);
+      final attendanceDateOnly = DateTime(
+        a.date.year,
+        a.date.month,
+        a.date.day,
+      );
       // Check if attendance date is within the range (inclusive)
-      return (attendanceDateOnly.isAtSameMomentAs(fromDateOnly) || attendanceDateOnly.isAfter(fromDateOnly)) &&
-             (attendanceDateOnly.isAtSameMomentAs(toDateOnly) || attendanceDateOnly.isBefore(toDateOnly));
+      return (attendanceDateOnly.isAtSameMomentAs(fromDateOnly) ||
+              attendanceDateOnly.isAfter(fromDateOnly)) &&
+          (attendanceDateOnly.isAtSameMomentAs(toDateOnly) ||
+              attendanceDateOnly.isBefore(toDateOnly));
     }).toList();
 
     // Filter by employee number if provided
     if (employeeNumber != null && employeeNumber.isNotEmpty) {
       filtered = filtered
-          .where((a) => a.employeeNumber.toLowerCase().contains(employeeNumber.toLowerCase()))
+          .where(
+            (a) => a.employeeNumber.toLowerCase().contains(
+              employeeNumber.toLowerCase(),
+            ),
+          )
           .toList();
     }
 
     return filtered;
   }
 }
-

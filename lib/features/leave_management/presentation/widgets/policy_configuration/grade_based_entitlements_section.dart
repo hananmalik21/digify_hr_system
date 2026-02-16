@@ -70,7 +70,7 @@ class GradeBasedEntitlementsSection extends ConsumerWidget {
               alignment: AlignmentDirectional.centerEnd,
               child: AppButton.primary(
                 label: 'Add Grade',
-                svgPath: Assets.icons.addIcon.path,
+                svgPath: Assets.icons.addDivisionIcon.path,
                 onPressed: () => draftNotifier.addGradeRow(),
               ),
             ),
@@ -225,80 +225,92 @@ class _GradeRowCardState extends State<_GradeRowCard> {
               ],
             ],
           ),
-          Row(
-            spacing: 12.w,
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.h,
             children: [
-              Expanded(
-                flex: 1,
-                child: DigifyTextField.number(
-                  controller: _gradeFromController,
-                  labelText: 'Grade From',
-                  hintText: '1',
-                  filled: true,
-                  fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-                  readOnly: !isEditing,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: isEditing ? (v) => _emitUpdate(gradeFrom: int.tryParse(v)) : null,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    DigifyTextField.number(
-                      controller: _gradeToController,
-                      labelText: 'Grade To',
+              Row(
+                spacing: 12.w,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: DigifyTextField.number(
+                      controller: _gradeFromController,
+                      labelText: 'Grade From',
+                      hintText: '1',
+                      filled: true,
+                      fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+                      readOnly: !isEditing,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      onChanged: isEditing ? (v) => _emitUpdate(gradeFrom: int.tryParse(v)) : null,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DigifyTextField.number(
+                          controller: _gradeToController,
+                          labelText: 'Grade To',
+                          hintText: '0',
+                          filled: true,
+                          fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+                          readOnly: !isEditing,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          onChanged: isEditing ? (v) => _emitUpdate(gradeTo: v.isEmpty ? null : int.tryParse(v)) : null,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Leave empty for "and above"',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            fontSize: 11.sp,
+                            color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: DigifyTextField.number(
+                      controller: _daysController,
+                      labelText: 'Days',
                       hintText: '0',
                       filled: true,
                       fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
                       readOnly: !isEditing,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: isEditing ? (v) => _emitUpdate(gradeTo: v.isEmpty ? null : int.tryParse(v)) : null,
+                      onChanged: isEditing ? (v) => _emitUpdate(entitlementDays: int.tryParse(v) ?? 0) : null,
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Leave empty for "and above"',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        fontSize: 11.sp,
-                        color: isDark ? AppColors.textPlaceholderDark : AppColors.textPlaceholder,
-                      ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: DigifyTextField(
+                      controller: _accrualRateController,
+                      labelText: 'Accrual Rate',
+                      hintText: '0.00',
+                      filled: true,
+                      fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+                      readOnly: !isEditing,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [AppInputFormatters.decimalWithTwoPlaces()],
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
+                      onChanged: isEditing ? (v) => _emitUpdate(accrualRate: double.tryParse(v)) : null,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Expanded(
-                flex: 1,
-                child: DigifyTextField.number(
-                  controller: _daysController,
-                  labelText: 'Days',
-                  hintText: '0',
-                  filled: true,
-                  fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-                  readOnly: !isEditing,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: isEditing ? (v) => _emitUpdate(entitlementDays: int.tryParse(v) ?? 0) : null,
-                ),
+              Row(
+                spacing: 12.w,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 1, child: _buildAccrualMethodDropdown(context)),
+                  Expanded(flex: 1, child: _buildStatusDropdown(context)),
+                ],
               ),
-              Expanded(flex: 1, child: _buildAccrualMethodDropdown(context)),
-              Expanded(
-                flex: 1,
-                child: DigifyTextField(
-                  controller: _accrualRateController,
-                  labelText: 'Accrual Rate',
-                  hintText: '0.00',
-                  filled: true,
-                  fillColor: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-                  readOnly: !isEditing,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [AppInputFormatters.decimalWithTwoPlaces()],
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 15.h),
-                  onChanged: isEditing ? (v) => _emitUpdate(accrualRate: double.tryParse(v)) : null,
-                ),
-              ),
-              Expanded(flex: 1, child: _buildStatusDropdown(context)),
             ],
           ),
         ],
@@ -307,12 +319,14 @@ class _GradeRowCardState extends State<_GradeRowCard> {
   }
 
   Widget _buildAccrualMethodDropdown(BuildContext context) {
-    final code = (widget.grade.accrualMethodCode ?? widget.policyAccrualCode).toUpperCase();
+    final code = (widget.grade.accrualMethodCode ?? widget.policyAccrualCode).trim().toUpperCase();
     AbsLookupValue? selected;
-    for (final v in widget.accrualOptions) {
-      if (v.lookupValueCode.toUpperCase() == code) {
-        selected = v;
-        break;
+    if (code.isNotEmpty) {
+      for (final v in widget.accrualOptions) {
+        if (v.lookupValueCode.trim().toUpperCase() == code) {
+          selected = v;
+          break;
+        }
       }
     }
     return DigifySelectFieldWithLabel<AbsLookupValue>(

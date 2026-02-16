@@ -111,10 +111,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   final TimesheetRepository _repository;
 
   TimesheetNotifier(this._repository)
-      : super(TimesheetState(
-          weekStartDate: _getWeekStart(DateTime.now()),
-          weekEndDate: _getWeekEnd(DateTime.now()),
-        )) {
+    : super(TimesheetState(weekStartDate: _getWeekStart(DateTime.now()), weekEndDate: _getWeekEnd(DateTime.now()))) {
     loadTimesheets();
   }
 
@@ -159,7 +156,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
 
       state = state.copyWith(
         records: timesheets,
-        totalItems: timesheets.length, // TODO: Get actual total from API
+        totalItems: timesheets.length,
         total: stats['total'] as int? ?? 0,
         draft: stats['draft'] as int? ?? 0,
         submitted: stats['submitted'] as int? ?? 0,
@@ -171,11 +168,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
         clearError: true,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Failed to load timesheets: ${e.toString()}',
-        clearError: false,
-      );
+      state = state.copyWith(isLoading: false, error: 'Failed to load timesheets: ${e.toString()}', clearError: false);
     }
   }
 
@@ -269,4 +262,3 @@ final timesheetNotifierProvider = StateNotifierProvider<TimesheetNotifier, Times
   final repository = ref.watch(timesheetRepositoryProvider);
   return TimesheetNotifier(repository);
 });
-

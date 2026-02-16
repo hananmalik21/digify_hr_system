@@ -79,6 +79,7 @@ class PolicyDetailsContent extends ConsumerWidget {
     final config = detailForDisplay.toConfiguration();
 
     return Column(
+      key: ValueKey(selectedPolicy!.policyGuid),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PolicyDetailsHeader(
