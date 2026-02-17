@@ -35,24 +35,17 @@ class DialogSizing {
 
   factory DialogSizing.calculate(double maxWidth, double maxHeight) {
     final bp = getBreakpointForWidth(maxWidth);
-
-    // Responsive dialog width
     final dialogW = bp == DialogBreakpoint.mobile
         ? math.min(maxWidth * 0.95, maxWidth - 32)
         : math.min(maxWidth, 1200.0);
     final dialogH = math.min(maxHeight * 0.9, 647.0);
-
     final outerPad = bp == DialogBreakpoint.mobile ? 12.0 : 32.0;
     final gap = bp == DialogBreakpoint.mobile ? 8.0 : (bp == DialogBreakpoint.tablet ? 12.0 : 20.0);
-    final cardW = bp == DialogBreakpoint.mobile ? 150.0 : (bp == DialogBreakpoint.tablet ? 200.0 : 260.0);
-    final cardH = bp == DialogBreakpoint.mobile ? 160.0 : (bp == DialogBreakpoint.tablet ? 190.0 : 220.0);
-
+    final cardW = bp == DialogBreakpoint.mobile ? 140.0 : (bp == DialogBreakpoint.tablet ? 185.0 : 230.0);
+    final cardH = bp == DialogBreakpoint.mobile ? 170.0 : (bp == DialogBreakpoint.tablet ? 210.0 : 250.0);
     final availableGridW = dialogW - (outerPad * 2);
     int cols = ((availableGridW + gap) / (cardW + gap)).floor();
     cols = cols.clamp(bp == DialogBreakpoint.mobile ? 1 : 2, 4);
-
-    final wrapAlign = WrapAlignment.start;
-
     return DialogSizing(
       dialogWidth: dialogW,
       dialogHeight: dialogH,
@@ -61,7 +54,7 @@ class DialogSizing {
       cardWidth: cardW,
       cardHeight: cardH,
       columns: cols,
-      wrapAlignment: wrapAlign,
+      wrapAlignment: WrapAlignment.start,
       breakpoint: bp,
     );
   }

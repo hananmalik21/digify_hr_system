@@ -43,9 +43,8 @@ class HeaderLeftSection extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(6.r),
               child: DigifyAsset(
-                assetPath: Assets.logo.digifyLogo.path,
-                height: isMobile ? 40.h : 100.h,
-                width: isMobile ? 100.w : 150.w,
+                assetPath: isDark ? Assets.logo.digifyLogoDark.path : Assets.logo.digifyLogo.path,
+                height: isMobile ? 20.h : 30.h,
               ),
             ),
           )
@@ -53,9 +52,8 @@ class HeaderLeftSection extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(6.r),
             child: DigifyAsset(
-              assetPath: Assets.logo.digifyLogo.path,
-              height: isMobile ? 40.h : 100.h,
-              width: isMobile ? 100.w : 150.w,
+              assetPath: isDark ? Assets.logo.digifyLogoDark.path : Assets.logo.digifyLogo.path,
+              height: isMobile ? 20.h : 30.h,
             ),
           ),
       ],

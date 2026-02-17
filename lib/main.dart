@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/config/app_config.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/localization/locale_provider.dart';
 import 'package:digify_hr_system/core/router/app_router.dart';
@@ -43,7 +44,7 @@ class DigifyHrSystemApp extends ConsumerWidget {
           splitScreenMode: true,
           builder: (context, child) {
             return MaterialApp.router(
-              title: 'Digify HR System',
+              title: AppConfig.appName,
               debugShowCheckedModeBanner: false,
               locale: locale,
               theme: AppTheme.lightTheme,
@@ -58,8 +59,6 @@ class DigifyHrSystemApp extends ConsumerWidget {
                 return child;
               },
             );
-
-
           },
         );
       },

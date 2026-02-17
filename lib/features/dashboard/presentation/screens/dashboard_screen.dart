@@ -9,7 +9,7 @@ import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboa
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_button_model.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_buttons_helper.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_module_grid.dart';
-import 'package:digify_hr_system/features/dashboard/presentation/widgets/module_selection_dialog.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/tasks_events_card.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -53,10 +53,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
 
     if (match != null && match.children != null && match.children!.isNotEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => ModuleSelectionDialog(module: match!, parentColor: btn.color),
-      );
+      context.go(AppRoutes.dashboardModuleSelectionPath(btn.id));
     } else {
       context.go(btn.route);
     }

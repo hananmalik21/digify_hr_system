@@ -35,6 +35,7 @@ class SidebarConfig {
         id: 'dashboard',
         svgPath: Assets.icons.dashboardIcon.path,
         labelKey: 'dashboard',
+        subtitle: 'Overview, analytics & quick actions',
         children: [
           SidebarItem(
             id: 'overview',
@@ -72,6 +73,7 @@ class SidebarConfig {
         id: 'enterpriseStructure',
         svgPath: Assets.icons.enterpriseStructureIcon.path,
         labelKey: 'enterpriseStructure',
+        subtitle: 'Company, division, department & more',
         children: [
           SidebarItem(
             id: 'manageEnterpriseStructure',
@@ -121,6 +123,7 @@ class SidebarConfig {
         id: 'workforceStructure',
         svgPath: Assets.icons.workforceStructureIcon.path,
         labelKey: 'workforceStructure',
+        subtitle: 'Positions, grades & reporting structure',
         children: [
           SidebarItem(
             id: 'positions',
@@ -164,6 +167,7 @@ class SidebarConfig {
         id: 'timeManagement',
         svgPath: Assets.icons.clockIcon.path,
         labelKey: 'timeManagement',
+        subtitle: 'Shifts, schedules & calendar',
         children: [
           SidebarItem(
             id: 'shifts',
@@ -207,6 +211,7 @@ class SidebarConfig {
         id: 'employees',
         svgPath: Assets.icons.employeesIcon.path,
         labelKey: 'employees',
+        subtitle: 'Manage employees & lifecycle actions',
         children: [
           SidebarItem(
             id: 'manageEmployees',
@@ -242,6 +247,7 @@ class SidebarConfig {
         id: 'leaveManagement',
         svgPath: Assets.icons.leaveManagementIcon.path,
         labelKey: 'leaveManagement',
+        subtitle: 'Leave requests, balance & policies',
         children: [
           SidebarItem(
             id: 'leaveRequests',

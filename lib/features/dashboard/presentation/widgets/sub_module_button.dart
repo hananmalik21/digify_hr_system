@@ -1,8 +1,9 @@
+import 'dart:ui';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/module_selection/module_selection_sizing.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_button_model.dart';
-import 'package:digify_hr_system/features/dashboard/presentation/widgets/module_selection_dialog/module_selection_dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -43,8 +44,6 @@ class SubModuleSizeSpec {
 class SubModuleButton extends StatefulWidget {
   final DashboardButton button;
   final VoidCallback onTap;
-
-  /// ✅ NEW: responsive sizing config
   final SubModuleSizeSpec spec;
 
   const SubModuleButton({super.key, required this.button, required this.onTap, required this.spec});
@@ -71,125 +70,114 @@ class _SubModuleButtonState extends State<SubModuleButton> {
       child: GestureDetector(
         onTapDown: (_) => _clearHover(),
         onTap: widget.onTap,
-        child: Card(
-          elevation: _isHovered ? 4 : 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
-          color: AppColors.cardBackground,
-          child: Padding(
-            padding: EdgeInsets.all(
-              spec.breakpoint == DialogBreakpoint.mobile
-                  ? 16.0
-                  : (spec.breakpoint == DialogBreakpoint.tablet ? 20.0 : 24.0),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Icon + badge
-                Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: spec.iconBox,
-                      height: spec.iconBox,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24.r),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.primaryLight, AppColors.gradientBlue],
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24.r),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.cardBackground.withValues(alpha: 0.2),
-                                  AppColors.cardBackground.withValues(alpha: 0.0),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: DigifyAsset(
-                              assetPath: widget.button.icon,
-                              width: spec.iconSize,
-                              height: spec.iconSize,
-                              color: AppColors.cardBackground,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    if (widget.button.badgeCount != null && widget.button.badgeCount! > 0)
-                      Positioned(
-                        top: -10,
-                        right: -10,
-                        child: Container(
-                          width: spec.badgeBox,
-                          height: spec.badgeBox,
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: AppColors.cardBackground,
-                            border: Border.all(color: AppColors.primaryLight, width: 2),
-                            shape: BoxShape.circle,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            widget.button.badgeCount.toString(),
-                            style: context.textTheme.headlineMedium?.copyWith(
-                              fontSize: spec.badgeFont.sp,
-                              color: AppColors.shiftCreateButton,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+        child: AnimatedScale(
+          scale: _isHovered ? 1.02 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(21.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: _isHovered ? 0.08 : 0.05),
+                  offset: Offset(0, _isHovered ? 8 : 2),
+                  blurRadius: _isHovered ? 24 : 8,
+                  spreadRadius: _isHovered ? 2 : 0,
                 ),
-
-                Gap(spec.gapAfterIcon.h),
-
-                // Title
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: spec.titleHPad),
-                  child: Text(
-                    widget.button.label,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.headlineMedium?.copyWith(
-                      fontSize: spec.titleFont.sp,
-                      color: AppColors.dialogTitle,
-                    ),
-                  ),
-                ),
-
-                // Subtitle
-                if (widget.button.subtitle != null && widget.button.subtitle!.isNotEmpty) ...[
-                  Gap(16.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: spec.subtitleHPad),
-                    child: Text(
-                      widget.button.subtitle!,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontSize: spec.subtitleFont.sp,
-                        color: AppColors.inactiveStatusText,
-                      ),
-                    ),
-                  ),
-                ],
               ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(21.r),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(21.r),
+                    color: context.isDark
+                        ? AppColors.cardBackgroundDark.withValues(alpha: _isHovered ? 0.85 : 0.7)
+                        : AppColors.cardBackground.withValues(alpha: _isHovered ? 0.75 : 0.6),
+                    border: Border.all(
+                      color: context.isDark
+                          ? AppColors.cardBorderDark.withValues(alpha: _isHovered ? 0.8 : 0.5)
+                          : AppColors.cardBorder.withValues(alpha: _isHovered ? 0.8 : 0.5),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.0,
+                      vertical: spec.breakpoint == DialogBreakpoint.mobile
+                          ? 16.0
+                          : (spec.breakpoint == DialogBreakpoint.tablet ? 20.0 : 24.0),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Icon
+                        Container(
+                          width: spec.iconBox,
+                          height: spec.iconBox,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.r),
+                            color: AppColors.primary,
+                          ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(24.r),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      AppColors.cardBackground.withValues(alpha: 0.2),
+                                      AppColors.cardBackground.withValues(alpha: 0.0),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: AnimatedRotation(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeOutBack,
+                                  turns: _isHovered ? 0.02 : 0.0,
+                                  child: DigifyAsset(
+                                    assetPath: widget.button.icon,
+                                    width: spec.iconSize,
+                                    height: spec.iconSize,
+                                    color: AppColors.cardBackground,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Gap(spec.gapAfterIcon.h),
+
+                        // Title
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: spec.titleHPad),
+                          child: Text(
+                            widget.button.label,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.textTheme.headlineMedium?.copyWith(
+                              fontSize: spec.titleFont.sp,
+                              color: AppColors.dialogTitle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
