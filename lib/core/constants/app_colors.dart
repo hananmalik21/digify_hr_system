@@ -155,6 +155,42 @@ class AppColors {
   static const Color dashboardStatLabel = Color(0xFF717182);
   static const Color dashboardStatValue = Color(0xFF0F172B);
 
+  // Dashboard Module Icon Colors
+  static const Color dashJobSchedules = Color(0xFF0B5FCC);
+  static const Color dashManagerSS = Color(0xFF4F39F6);
+  static const Color dashHROps = Color(0xFFAD46FF);
+  static const Color dashRecruitment = Color(0xFF7CCF00);
+  static const Color dashLeaveManagement = Color(0xFF00B8DB);
+  static const Color dashAttendance = Color(0xFFFE9A00);
+  static const Color dashPayroll = Color(0xFF00BC7D);
+  static const Color dashCompensation = Color(0xFFF0B100);
+  static const Color dashCompliance = Color(0xFFFB2C36);
+  static const Color dashWorkforceStructure = Color(0xFF00BBA7);
+  static const Color dashEnterpriseStructure = Color(0xFF615FFF);
+  static const Color dashReports = Color(0xFF62748E);
+  static const Color dashEOSCalculator = Color(0xFF8E51FF);
+  static const Color dashGovernmentForms = Color(0xFFFF2056);
+  static const Color dashDEIDashboard = Color(0xFFE12AFB);
+  static const Color dashFinance = Color(0xFF155DFC);
+  static const Color dashSupplyChain = Color(0xFF00A63E);
+  static const Color dashModuleCatalogue = Color(0xFFAD46FF);
+  static const Color dashProductIntro = Color(0xFFF6339A);
+  static const Color dashPagePreview = Color(0xFF00A6F4);
+  static const Color dashSettings = Color(0xFF6A7282);
+
+  // Dashboard background gradient
+  static const Color dashboardBgGradientStart = Color(0xFFF3F4F6);
+  static const Color dashboardBgGradientMid = Color(0xFFEFF6FF);
+  static const Color dashboardBgGradientEnd = Color(0xFFF3F4F6);
+
+  // Dashboard background circles (bright gradient orbs)
+  static const Color dashboardCircleBlue = Color(0xFF51A2FF);
+  static const Color dashboardCirclePurple = Color(0xFFC27AFF);
+  static const Color dashboardCirclePink = Color(0xFFFB64B6);
+  static const Color dashboardCircleOrange = Color(0xFFFF8904);
+  static const Color dashboardCircleGreen = Color(0xFF05DF72);
+  static const Color dashboardCircleCyan = Color(0xFF00D3F2);
+
   // User Accounts View Colors
   static const Color activeStatusBg = Color(0xFFD1FAE5);
   static const Color activeStatusBorder = Color(0xFF86EFAC);

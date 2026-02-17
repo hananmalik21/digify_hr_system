@@ -1,193 +1,221 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/features/dashboard/domain/models/dashboard_event.dart';
+import 'package:digify_hr_system/features/dashboard/domain/models/dashboard_task.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/providers/events_provider.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/providers/tasks_provider.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-class TasksEventsCard extends StatelessWidget {
+class TasksEventsCard extends ConsumerWidget {
   final AppLocalizations localizations;
   final VoidCallback? onEyeIconTap;
 
   const TasksEventsCard({super.key, required this.localizations, this.onEyeIconTap});
 
   @override
-  Widget build(BuildContext context) {
-    final isDark = context.isDark;
-    final textColor = isDark ? AppColors.textPrimaryDark : const Color(0xFF101828);
-    final tertiaryColor = isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tasks = ref.watch(tasksProvider);
+    final events = ref.watch(eventsProvider);
+    final isMinimized = ref.watch(tasksMinimizedProvider);
 
     return Container(
       padding: EdgeInsetsDirectional.all(14.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark.withValues(alpha: 0.95) : Colors.white.withValues(alpha: 0.95),
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.5),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, 20)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 8)),
-        ],
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(5.25.w),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF2B7FFF), // #2b7fff
-                          Color(0xFF615FFF), // #615fff
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(5.25.w),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Color(0xFF2B7FFF), Color(0xFF615FFF)],
+                        ),
+                        borderRadius: BorderRadius.circular(7.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 10),
+                          ),
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 4),
+                          ),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(7.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 10),
+                      child: DigifyAsset(
+                        assetPath: Assets.icons.tasksIcon.path,
+                        width: 14,
+                        height: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Gap(7),
+                    Expanded(
+                      child: Text(
+                        localizations.tasksEvents,
+                        style: context.labelMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: context.themeTextPrimary,
                         ),
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+                        softWrap: true,
+                      ),
                     ),
-                    child: DigifyAsset(
-                      assetPath: Assets.icons.tasksIcon.path,
-                      width: 14,
-                      height: 14,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(width: 7.w),
-                  Text(
-                    localizations.tasksEvents,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
-                      color: textColor,
-                      height: 21 / 14,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const Gap(8),
               Row(
                 children: [
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: DigifyAsset(assetPath: Assets.icons.arrowUp.path, width: 14, height: 14, color: textColor),
-                    onPressed: () {},
+                    icon: Icon(isMinimized ? Icons.arrow_drop_down_rounded : Icons.arrow_drop_up_rounded),
+                    onPressed: () => ref.read(tasksMinimizedProvider.notifier).state = !isMinimized,
                   ),
-                  SizedBox(width: 3.5.w),
+                  const Gap(3.5),
                   IconButton(
                     padding: EdgeInsets.all(3.5.w),
                     constraints: const BoxConstraints(),
-                    icon: DigifyAsset(assetPath: Assets.icons.eyesIcon.path, width: 14, height: 14, color: textColor),
-                    onPressed: onEyeIconTap,
+                    icon: DigifyAsset(
+                      assetPath: Assets.icons.eyesIcon.path,
+                      width: 14,
+                      height: 14,
+                      color: context.themeTextPrimary,
+                    ),
+                    onPressed: () => ref.read(tasksMinimizedProvider.notifier).state = !isMinimized,
                   ),
                 ],
               ),
             ],
           ),
 
-          SizedBox(height: 7.h),
-
-          // My Tasks Section
-          Text(
-            localizations.myTasks,
-            style: TextStyle(
-              fontSize: 10.5.sp,
-              fontWeight: FontWeight.w600,
-              color: tertiaryColor,
-              height: 14 / 10.5,
-              letterSpacing: 0,
-            ),
-          ),
-
-          SizedBox(height: 7.h),
-
-          // Task items
-          _buildTaskItem(context, localizations.reviewLeaveRequests, localizations.dueToday, false),
-          SizedBox(height: 7.h),
-          _buildTaskItem(context, localizations.processMonthlyPayroll, localizations.dueIn3Days, false),
-          SizedBox(height: 7.h),
-          _buildTaskItem(context, localizations.updateEmployeeRecords, localizations.completed, true),
-
-          SizedBox(height: 7.h),
-
-          // Upcoming Events Section
-          Text(
-            localizations.upcomingEvents,
-            style: TextStyle(
-              fontSize: 10.5.sp,
-              fontWeight: FontWeight.w600,
-              color: tertiaryColor,
-              height: 14 / 10.5,
-              letterSpacing: 0,
-            ),
-          ),
-
-          SizedBox(height: 7.h),
-
-          // Event items
-          _buildEventItem(
-            context,
-            'DEC',
-            '15',
-            localizations.teamMeeting,
-            '10:00 AM - 11:00 AM',
-            isDark ? AppColors.infoBgDark : const Color(0xFFEFF6FF),
-            isDark ? AppColors.infoTextDark : const Color(0xFF155DFC),
-          ),
-          SizedBox(height: 7.h),
-          _buildEventItem(
-            context,
-            'DEC',
-            '20',
-            localizations.payrollProcessing,
-            localizations.allDay,
-            isDark ? AppColors.successBgDark : const Color(0xFFF0FDF4),
-            isDark ? AppColors.successTextDark : const Color(0xFF00A63E),
-          ),
-
-          SizedBox(height: 16.h),
-
-          // View all link
-          Center(
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          if (!isMinimized) ...[
+            Gap(14.h),
+            Text(
+              localizations.myTasks,
+              style: context.labelSmall.copyWith(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
+                color: context.themeTextTertiary,
               ),
-              child: Text(
-                localizations.viewAllTasksEvents,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF155DFC),
-                  height: 14 / 10.5,
-                  letterSpacing: 0,
+            ),
+
+            Gap(7.h),
+            ...tasks.map(
+              (task) => Padding(
+                padding: EdgeInsets.only(bottom: 7.h),
+                child: _buildTaskItem(context, ref, task),
+              ),
+            ),
+
+            Gap(10.h),
+            Text(
+              localizations.upcomingEvents,
+              style: context.labelSmall.copyWith(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
+                color: context.themeTextTertiary,
+              ),
+            ),
+
+            const Gap(4),
+            ...events.map((event) => _buildEventItem(context, event)),
+
+            Gap(15.h),
+            Center(
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  localizations.viewAllTasksEvents,
+                  style: context.labelSmall.copyWith(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskItem(BuildContext context, WidgetRef ref, DashboardTask task) {
+    final isDark = context.isDark;
+    final completedColor = AppColors.primary;
+    final borderColor = context.themeBorderGrey;
+
+    final textColor = task.isCompleted ? context.themeTextPlaceholder : context.themeTextPrimary;
+
+    final subtitleColor = task.isCompleted ? context.themeTextPlaceholder : context.themeTextTertiary;
+
+    final checkboxBg = task.isCompleted ? completedColor : (isDark ? AppColors.cardBackgroundDark : Colors.white);
+
+    return InkWell(
+      onTap: () => ref.read(tasksProvider.notifier).toggleTask(task.id),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 12.25.w,
+            height: 12.25.h,
+            margin: EdgeInsetsDirectional.only(top: 1.75.h),
+            decoration: BoxDecoration(
+              color: checkboxBg,
+              border: Border.all(color: task.isCompleted ? completedColor : borderColor, width: 1),
+              borderRadius: BorderRadius.circular(2.5.r),
+            ),
+            child: task.isCompleted ? Icon(Icons.check, size: 10.sp, color: Colors.white) : null,
+          ),
+          const Gap(7),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  task.title,
+                  style: context.bodySmall.copyWith(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
+                    color: textColor,
+                    decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+                  ),
+                ),
+                const Gap(1),
+                Text(
+                  task.subtitle,
+                  style: context.bodySmall.copyWith(fontSize: 9.sp, fontWeight: FontWeight.w400, color: subtitleColor),
+                ),
+              ],
             ),
           ),
         ],
@@ -195,137 +223,68 @@ class TasksEventsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskItem(BuildContext context, String title, String subtitle, bool isCompleted) {
-    final isDark = context.isDark;
-    final completedColor = AppColors.primary;
-    final borderColor = isDark ? AppColors.borderGreyDark : const Color(0xFF767676);
+  Widget _buildEventItem(BuildContext context, DashboardEvent event) {
+    Color bgColor;
+    Color textColor;
 
-    final textColor = isCompleted
-        ? (isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF))
-        : (isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939));
+    switch (event.category) {
+      case EventCategory.meeting:
+        bgColor = context.themeInfoBg;
+        textColor = context.themeInfoText;
+        break;
+      case EventCategory.payroll:
+        bgColor = context.themeSuccessBg;
+        textColor = context.themeSuccessText;
+        break;
+      case EventCategory.holiday:
+        bgColor = context.themeWarningBg;
+        textColor = context.themeWarningText;
+        break;
+    }
 
-    final subtitleColor = isCompleted
-        ? (isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF))
-        : (isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282));
-
-    final checkboxBg = isCompleted ? completedColor : (isDark ? AppColors.cardBackgroundDark : Colors.white);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 12.25.w,
-          height: 12.25.h,
-          margin: EdgeInsetsDirectional.only(top: 1.75.h),
-          decoration: BoxDecoration(
-            color: checkboxBg,
-            border: Border.all(color: isCompleted ? completedColor : borderColor, width: 1),
-            borderRadius: BorderRadius.circular(2.5.r),
-          ),
-          child: isCompleted ? Icon(Icons.check, size: 10.sp, color: Colors.white) : null,
-        ),
-        SizedBox(width: 7.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
-                  fontWeight: FontWeight.w400,
-                  color: textColor,
-                  height: 14 / 10.5,
-                  letterSpacing: 0,
-                  decoration: isCompleted ? TextDecoration.lineThrough : null,
-                ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w400,
-                  color: subtitleColor,
-                  height: 15 / 10,
-                  letterSpacing: 0,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEventItem(
-    BuildContext context,
-    String month,
-    String day,
-    String title,
-    String time,
-    Color bgColor,
-    Color textColor,
-  ) {
-    final isDark = context.isDark;
-    final primaryTextColor = isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939);
-    final tertiaryTextColor = isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282);
+    bgColor = event.bgColor ?? bgColor;
+    textColor = event.textColor ?? textColor;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          margin: EdgeInsets.only(bottom: 7.h),
           padding: EdgeInsetsDirectional.symmetric(horizontal: 9.39.w, vertical: 3.5.h),
           decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(7.r)),
           child: Column(
             children: [
               Text(
-                month,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w600,
-                  color: textColor,
-                  height: 15 / 10,
-                  letterSpacing: 0,
-                ),
+                event.month,
+                style: context.labelSmall.copyWith(fontSize: 10.sp, fontWeight: FontWeight.w600, color: textColor),
               ),
               Text(
-                day,
-                style: TextStyle(
-                  fontSize: 12.3.sp,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
-                  height: 17.5 / 12.3,
-                  letterSpacing: 0,
-                ),
+                event.day,
+                style: context.labelMedium.copyWith(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textColor),
               ),
             ],
           ),
         ),
-        SizedBox(width: 7.w),
+        const Gap(7),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
-                style: TextStyle(
-                  fontSize: 10.5.sp,
+                event.title,
+                style: context.labelSmall.copyWith(
+                  fontSize: 10.sp,
                   fontWeight: FontWeight.w500,
-                  color: primaryTextColor,
-                  height: 14 / 10.5,
-                  letterSpacing: 0,
+                  color: context.themeTextPrimary,
                 ),
               ),
-              SizedBox(height: 2.h),
+              const Gap(1),
               Text(
-                time,
-                style: TextStyle(
-                  fontSize: 10.sp,
+                event.time,
+                style: context.bodySmall.copyWith(
+                  fontSize: 9.sp,
                   fontWeight: FontWeight.w400,
-                  color: tertiaryTextColor,
-                  height: 15 / 10,
-                  letterSpacing: 0,
+                  color: context.themeTextTertiary,
                 ),
               ),
             ],

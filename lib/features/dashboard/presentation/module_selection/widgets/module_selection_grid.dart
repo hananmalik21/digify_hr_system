@@ -4,8 +4,8 @@ import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
 import 'package:digify_hr_system/core/navigation/mixins/tab_index_mixin.dart';
 import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
+import 'package:digify_hr_system/features/dashboard/presentation/module_selection/module_selection_sizing.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_button_model.dart';
-import 'package:digify_hr_system/features/dashboard/presentation/widgets/module_selection_dialog/module_selection_dialog_utils.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/sub_module_button.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
@@ -16,21 +16,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
+class ModuleSelectionGrid extends ConsumerWidget with TabIndexMixin {
   final List<SidebarItem> children;
   final Color parentColor;
   final DialogSizing sizing;
 
-  const ModuleSelectionDialogGrid({super.key, required this.children, required this.parentColor, required this.sizing});
+  const ModuleSelectionGrid({super.key, required this.children, required this.parentColor, required this.sizing});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final spec = _buildSubModuleSpec(sizing.breakpoint);
-
-    return Expanded(
-      child: Container(child: children.isEmpty ? _buildEmptyState() : _buildGrid(context, localizations, spec, ref)),
-    );
+    return Container(child: children.isEmpty ? _buildEmptyState() : _buildGrid(context, localizations, spec, ref));
   }
 
   Widget _buildEmptyState() {
@@ -53,7 +50,6 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
           final index = entry.key;
           final child = entry.value;
           final childLabel = SidebarConfig.getLocalizedLabel(child.labelKey, localizations);
-
           final btn = DashboardButton(
             id: child.id,
             icon: child.svgPath ?? 'assets/icons/default_icon.svg',
@@ -64,7 +60,6 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
             badgeCount: index + 1,
             subtitle: child.subtitle,
           );
-
           return SizedBox(
             width: sizing.cardWidth,
             height: sizing.cardHeight,
@@ -72,7 +67,6 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
               button: btn,
               onTap: () {
                 if (btn.route.isNotEmpty) {
-                  Navigator.of(context).pop();
                   context.go(btn.route);
                   _handleTabNavigation(btn.route, child.id, ref);
                 }
@@ -85,7 +79,6 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
     );
   }
 
-  /// Handles tab navigation for routes that have tabs
   void _handleTabNavigation(String route, String itemId, WidgetRef ref) {
     if (route == AppRoutes.employees) {
       final tabIndex = getEmployeeManagementTabIndex(itemId);
@@ -120,17 +113,17 @@ class ModuleSelectionDialogGrid extends ConsumerWidget with TabIndexMixin {
 
   SubModuleSizeSpec _buildSubModuleSpec(DialogBreakpoint bp) {
     return SubModuleSizeSpec(
-      iconBox: bp == DialogBreakpoint.mobile ? 48 : (bp == DialogBreakpoint.tablet ? 64 : 80),
-      iconSize: bp == DialogBreakpoint.mobile ? 24 : (bp == DialogBreakpoint.tablet ? 32 : 40),
+      iconBox: bp == DialogBreakpoint.mobile ? 66 : (bp == DialogBreakpoint.tablet ? 80 : 90),
+      iconSize: bp == DialogBreakpoint.mobile ? 33 : (bp == DialogBreakpoint.tablet ? 40 : 45),
       badgeBox: bp == DialogBreakpoint.mobile ? 20 : (bp == DialogBreakpoint.tablet ? 24 : 28),
       badgeFont: bp == DialogBreakpoint.mobile ? 10 : (bp == DialogBreakpoint.tablet ? 11 : 12),
-      topPadding: bp == DialogBreakpoint.mobile ? 18 : (bp == DialogBreakpoint.tablet ? 20 : 22),
-      gapAfterIcon: bp == DialogBreakpoint.mobile ? 10 : (bp == DialogBreakpoint.tablet ? 12 : 16),
-      gapBeforeSubtitle: bp == DialogBreakpoint.mobile ? 6 : 12,
+      topPadding: bp == DialogBreakpoint.mobile ? 12 : (bp == DialogBreakpoint.tablet ? 16 : 18),
+      gapAfterIcon: bp == DialogBreakpoint.mobile ? 8 : 18,
+      gapBeforeSubtitle: bp == DialogBreakpoint.mobile ? 4 : 8,
       titleFont: bp == DialogBreakpoint.mobile ? 14.5 : 15.6,
       subtitleFont: bp == DialogBreakpoint.mobile ? 11.2 : 11.8,
-      titleHPad: bp == DialogBreakpoint.mobile ? 12 : (bp == DialogBreakpoint.tablet ? 16 : 26),
-      subtitleHPad: bp == DialogBreakpoint.mobile ? 12 : (bp == DialogBreakpoint.tablet ? 16 : 30),
+      titleHPad: bp == DialogBreakpoint.mobile ? 4 : (bp == DialogBreakpoint.tablet ? 6 : 8),
+      subtitleHPad: bp == DialogBreakpoint.mobile ? 2 : (bp == DialogBreakpoint.tablet ? 4 : 6),
       breakpoint: bp,
     );
   }

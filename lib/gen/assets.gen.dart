@@ -770,6 +770,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/submitted.svg
   SvgGenImage get submitted => const SvgGenImage('assets/icons/submitted.svg');
 
+  /// File path: assets/icons/supply-chain.svg
+  SvgGenImage get supplyChain => const SvgGenImage('assets/icons/supply-chain.svg');
+
   /// File path: assets/icons/tasks_events_icon.svg
   SvgGenImage get tasksEventsIcon => const SvgGenImage('assets/icons/tasks_events_icon.svg');
 
@@ -1102,6 +1105,7 @@ class $AssetsIconsGen {
     settingsMainIcon,
     structureConfigurationIcon,
     submitted,
+    supplyChain,
     tasksEventsIcon,
     tasksIcon,
     teamLeaveRiskIconFigma,
@@ -1134,11 +1138,14 @@ class $AssetsIconsGen {
 class $AssetsLogoGen {
   const $AssetsLogoGen();
 
-  /// File path: assets/logo/digify-logo.png
-  AssetGenImage get digifyLogo => const AssetGenImage('assets/logo/digify-logo.png');
+  /// File path: assets/logo/digify-logo-dark.svg
+  SvgGenImage get digifyLogoDark => const SvgGenImage('assets/logo/digify-logo-dark.svg');
+
+  /// File path: assets/logo/digify-logo.svg
+  SvgGenImage get digifyLogo => const SvgGenImage('assets/logo/digify-logo.svg');
 
   /// List of all assets
-  List<AssetGenImage> get values => [digifyLogo];
+  List<SvgGenImage> get values => [digifyLogoDark, digifyLogo];
 }
 
 class $AssetsIconsAttendanceGen {
