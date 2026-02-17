@@ -83,7 +83,7 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
               height: 56.w,
               decoration: BoxDecoration(
                 color: button.color,
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(14.r),
                 boxShadow: [
                   BoxShadow(
                     color: button.color.withValues(alpha: canShowHover ? 0.4 : 0.3),
@@ -133,7 +133,7 @@ class _DashboardModuleButtonState extends State<DashboardModuleButton> {
               ),
           ],
         ),
-        const Gap(8),
+        Gap(6.h),
         SizedBox(
           height: 30.h,
           child: Text(

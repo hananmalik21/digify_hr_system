@@ -39,19 +39,11 @@ class LoginLayoutHandler extends ConsumerWidget {
     final isShortHeight = h < 700;
 
     if (isMobile) {
-      return _buildStackedLayout(
-        constraints: constraints,
-        showInfoPanel: false,
-        isShortHeight: isShortHeight,
-      );
+      return _buildStackedLayout(constraints: constraints, showInfoPanel: false, isShortHeight: isShortHeight);
     }
 
     if (isTablet && w < 900) {
-      return _buildStackedLayout(
-        constraints: constraints,
-        showInfoPanel: true,
-        isShortHeight: isShortHeight,
-      );
+      return _buildStackedLayout(constraints: constraints, showInfoPanel: true, isShortHeight: isShortHeight);
     }
 
     return _buildSideBySideLayout(constraints: constraints);
@@ -73,9 +65,7 @@ class LoginLayoutHandler extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: isShortHeight ? 12.h : 24.h),
-            Center(
-              child: LoginBrandingSection(center: true, maxWidth: maxWidth),
-            ),
+            Center(child: LoginBrandingSection(center: true, maxWidth: maxWidth)),
             SizedBox(height: 20.h),
             if (showInfoPanel) ...[
               LoginSystemDescription(center: true, maxWidth: maxWidth),
@@ -102,10 +92,7 @@ class LoginLayoutHandler extends ConsumerWidget {
     final pageMax = math.min(constraints.maxWidth, 1200.0);
     final paddingH = math.max(16.0, (constraints.maxWidth - pageMax) / 2);
 
-    final cardWidth = math.min(
-      520.0,
-      math.max(420.0, constraints.maxWidth * 0.36),
-    );
+    final cardWidth = math.min(520.0, math.max(420.0, constraints.maxWidth * 0.36));
     final gap = math.min(48.0, math.max(20.0, constraints.maxWidth * 0.04));
 
     return SingleChildScrollView(

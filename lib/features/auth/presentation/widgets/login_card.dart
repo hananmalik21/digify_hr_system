@@ -42,11 +42,7 @@ class LoginCard extends ConsumerWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 50,
-                offset: const Offset(0, 25),
-              ),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 50, offset: const Offset(0, 25)),
             ],
           ),
           child: Padding(
