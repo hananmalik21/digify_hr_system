@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/configs/menu_feature_config.dart';
-import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/models/sidebar_item.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class SidebarConfig {
@@ -32,6 +33,15 @@ class SidebarConfig {
   static List<SidebarItem> getMenuItems() {
     return _filterItems([
       SidebarItem(
+        id: 'quickAccess',
+        labelKey: 'quickAccess',
+        children: [
+          SidebarItem(id: 'payrollFlows', labelKey: 'payrollFlows', route: '/payroll'),
+          SidebarItem(id: 'absenceRequests', labelKey: 'absenceRequests', route: '/leave-management'),
+        ],
+      ),
+      SidebarItem(id: 'home', labelKey: 'home', route: AppRoutes.dashboard),
+      SidebarItem(
         id: 'dashboard',
         svgPath: Assets.icons.dashboardIcon.path,
         labelKey: 'dashboard',
@@ -56,18 +66,6 @@ class SidebarConfig {
             route: '/dashboard/quick-actions',
           ),
         ],
-      ),
-      SidebarItem(
-        id: 'moduleCatalogue',
-        svgPath: Assets.icons.moduleCatalogueIcon.path,
-        labelKey: 'moduleCatalogue',
-        route: '/module-catalogue',
-      ),
-      SidebarItem(
-        id: 'productIntro',
-        svgPath: Assets.icons.productIntroIcon.path,
-        labelKey: 'productIntro',
-        route: '/product-intro',
       ),
       SidebarItem(
         id: 'enterpriseStructure',
@@ -538,6 +536,14 @@ class SidebarConfig {
         return localizations.reportingStructure;
       case 'positionTree':
         return localizations.positionTree;
+      case 'quickAccess':
+        return 'QUICK ACCESS';
+      case 'home':
+        return 'Home';
+      case 'payrollFlows':
+        return 'Payroll Flows';
+      case 'absenceRequests':
+        return 'Absence Requests';
       default:
         return key;
     }

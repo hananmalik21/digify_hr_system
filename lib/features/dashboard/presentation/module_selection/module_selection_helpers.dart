@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/models/sidebar_item.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/widgets/dashboard_buttons_helper.dart';
 import 'package:flutter/material.dart';
 

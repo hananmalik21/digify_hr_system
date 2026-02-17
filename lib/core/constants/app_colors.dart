@@ -12,6 +12,12 @@ class AppColors {
   // Brand Colors
   static const Color brandRed = Color(0xFFE7000B);
 
+  static const Color sidebarActiveBg = Color(0xFFE8F2FF);
+  static const Color sidebarSearchBg = Color(0xFFF9FAFB);
+  static const Color sidebarActiveText = Color(0xFF0B5FCC);
+  static const Color sidebarSecondaryText = Color(0xFF6A7282);
+  static const Color sidebarCategoryText = Color(0xFF99A1AF);
+
   // Background Colors
   static const Color background = Color(0xFFF8F8F8);
   static const Color lightWhiteBackground = Color(0xFFF5F5F5);

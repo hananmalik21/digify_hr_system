@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/config/sidebar_config.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/module_selection/module_selection_helpers.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/module_selection/module_selection_sizing.dart';
 import 'package:digify_hr_system/features/dashboard/presentation/module_selection/widgets/module_selection_grid.dart';

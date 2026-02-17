@@ -19,4 +19,3 @@ class SidebarNotifier extends StateNotifier<bool> {
 final sidebarProvider = StateNotifierProvider<SidebarNotifier, bool>((ref) {
   return SidebarNotifier();
 });
-
