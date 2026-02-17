@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
