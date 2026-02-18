@@ -1138,6 +1138,9 @@ class $AssetsIconsGen {
 class $AssetsLogoGen {
   const $AssetsLogoGen();
 
+  /// File path: assets/logo/digify-favicon.png
+  AssetGenImage get digifyFavicon => const AssetGenImage('assets/logo/digify-favicon.png');
+
   /// File path: assets/logo/digify-logo-dark.svg
   SvgGenImage get digifyLogoDark => const SvgGenImage('assets/logo/digify-logo-dark.svg');
 
@@ -1145,7 +1148,7 @@ class $AssetsLogoGen {
   SvgGenImage get digifyLogo => const SvgGenImage('assets/logo/digify-logo.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [digifyLogoDark, digifyLogo];
+  List<dynamic> get values => [digifyFavicon, digifyLogoDark, digifyLogo];
 }
 
 class $AssetsIconsAttendanceGen {
