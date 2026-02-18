@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/navigation/root_navigator_key.dart';
 
 enum ToastType { success, error, warning, info }
 
@@ -15,20 +16,21 @@ class ToastService {
     String? title,
   }) {
     try {
-      // Remove existing toast if any
       _currentToast?.remove();
       _currentToast = null;
 
-      // Try to get overlay, prefer rootOverlay
       OverlayState? overlay;
       try {
         overlay = Overlay.maybeOf(context, rootOverlay: true);
-      } catch (e) {
-        // Ignore and try regular overlay
+      } catch (_) {}
+      overlay ??= Overlay.maybeOf(context, rootOverlay: false);
+      overlay ??= rootNavigatorKey.currentState?.overlay;
+
+      if (overlay == null) {
+        _showSnackBarFallback(context, message, type);
+        return;
       }
-      
-      overlay ??= Overlay.of(context, rootOverlay: false);
-      
+
       final overlayEntry = OverlayEntry(
         builder: (context) => Stack(
           children: [
@@ -50,22 +52,23 @@ class ToastService {
       overlay.insert(overlayEntry);
     } catch (e) {
       debugPrint('ToastService error: $e');
-      // Fallback: try to show using ScaffoldMessenger if available
-      try {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: type == ToastType.error 
-                ? Colors.red 
-                : type == ToastType.success 
-                    ? Colors.green 
-                    : Colors.blue,
-          ),
-        );
-      } catch (_) {
-        // If all else fails, just print
-        debugPrint('Toast message: $message');
-      }
+      _showSnackBarFallback(context, message, type);
+    }
+  }
+
+  static void _showSnackBarFallback(BuildContext context, String message, ToastType type) {
+    try {
+      final color = switch (type) {
+        ToastType.error => Colors.red,
+        ToastType.success => Colors.green,
+        ToastType.warning => Colors.orange,
+        ToastType.info => Colors.blue,
+      };
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text(message), backgroundColor: color, behavior: SnackBarBehavior.floating));
+    } catch (_) {
+      debugPrint('Toast message: $message');
     }
   }
 
@@ -75,13 +78,7 @@ class ToastService {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
-    show(
-      context: context,
-      message: message,
-      type: ToastType.success,
-      title: title,
-      duration: duration,
-    );
+    show(context: context, message: message, type: ToastType.success, title: title, duration: duration);
   }
 
   static void error(
@@ -90,13 +87,7 @@ class ToastService {
     String? title,
     Duration duration = const Duration(seconds: 4),
   }) {
-    show(
-      context: context,
-      message: message,
-      type: ToastType.error,
-      title: title,
-      duration: duration,
-    );
+    show(context: context, message: message, type: ToastType.error, title: title, duration: duration);
   }
 
   static void warning(
@@ -105,13 +96,7 @@ class ToastService {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
-    show(
-      context: context,
-      message: message,
-      type: ToastType.warning,
-      title: title,
-      duration: duration,
-    );
+    show(context: context, message: message, type: ToastType.warning, title: title, duration: duration);
   }
 
   static void info(
@@ -120,13 +105,7 @@ class ToastService {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
-    show(
-      context: context,
-      message: message,
-      type: ToastType.info,
-      title: title,
-      duration: duration,
-    );
+    show(context: context, message: message, type: ToastType.info, title: title, duration: duration);
   }
 
   static void dismiss() {
@@ -154,8 +133,7 @@ class _ToastWidget extends StatefulWidget {
   State<_ToastWidget> createState() => _ToastWidgetState();
 }
 
-class _ToastWidgetState extends State<_ToastWidget>
-    with SingleTickerProviderStateMixin {
+class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
@@ -163,10 +141,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
@@ -273,11 +248,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(color: _getBorderColor(), width: 1.5),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4)),
                   ],
                 ),
                 child: Row(
@@ -293,21 +264,13 @@ class _ToastWidgetState extends State<_ToastWidget>
                           if (widget.title != null) ...[
                             Text(
                               widget.title!,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: _getTextColor(),
-                              ),
+                              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: _getTextColor()),
                             ),
                             SizedBox(height: 2.h),
                           ],
                           Text(
                             widget.message,
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
-                              color: _getTextColor(),
-                            ),
+                            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: _getTextColor()),
                           ),
                         ],
                       ),
@@ -315,11 +278,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                     SizedBox(width: 8.w),
                     GestureDetector(
                       onTap: _dismiss,
-                      child: Icon(
-                        Icons.close_rounded,
-                        color: _getTextColor(),
-                        size: 20.sp,
-                      ),
+                      child: Icon(Icons.close_rounded, color: _getTextColor(), size: 20.sp),
                     ),
                   ],
                 ),

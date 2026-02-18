@@ -349,4 +349,18 @@ class AppColors {
   static const Color leaveTotalAvailableText = Color(0xFF432DD7);
   static const Color leaveTotalAvailableBgDark = Color(0xFF1E3A8A);
   static const Color leaveTotalAvailableTextDark = Color(0xFF93C5FD);
+
+  // Authentication Specific Colors
+  static const Color authBgStart = Color(0xFFE0F2FE);
+  static const Color authBgEnd = Color(0xFFF8FAFC);
+  static const Color authInputFill = Color(0xFFF8FAFC);
+  static const Color authInputBorder = Color(0xFFE2E8F0);
+  static const Color authBadgeBg = Color(0xFFEFF6FF);
+  static const Color authBadgeBorder = Color(0xFFDBEAFE);
+  static const Color authBadgeDot = Color(0xFF2B7FFF);
+  static const Color authDivider = Color(0xFFF1F5F9);
+  static const Color authSocialBtnBg = Color(0xFFF8FAFC);
+  static const Color authSocialBtnBorder = Color(0xFFE2E8F0);
+  static const Color authButton = Color(0xFF2563EB);
+  static const Color authLinkText = Color(0xFF62748E);
 }

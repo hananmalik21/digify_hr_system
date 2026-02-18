@@ -19,4 +19,13 @@ class AppShadows {
   static List<BoxShadow> get cardShadow => [
     BoxShadow(color: Colors.black.withValues(alpha: 0.05), offset: const Offset(0, 2), blurRadius: 4),
   ];
+
+  static List<BoxShadow> get loginCardShadow => [
+    BoxShadow(
+      color: const Color(0xFF0F172A).withValues(alpha: 0.12),
+      blurRadius: 100,
+      offset: const Offset(0, 32),
+      spreadRadius: -20,
+    ),
+  ];
 }

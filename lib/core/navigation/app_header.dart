@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/navigation/sidebar/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_provider.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,6 +72,10 @@ class AppHeader extends ConsumerWidget {
                 localizations: localizations,
                 onToggleTheme: () => ref.read(themeModeProvider.notifier).toggleTheme(),
                 onToggleLocale: () => ref.read(localeProvider.notifier).toggleLocale(),
+                onLogout: () async {
+                  await ref.read(authProvider.notifier).logout();
+                  if (context.mounted) context.go(AppRoutes.login);
+                },
               ),
             ],
           ),
