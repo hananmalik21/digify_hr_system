@@ -1230,6 +1230,9 @@ class $AssetsIconsAttendanceGen {
 class $AssetsIconsAuthGen {
   const $AssetsIconsAuthGen();
 
+  /// File path: assets/icons/auth/bg .gif
+  AssetGenImage get bg => const AssetGenImage('assets/icons/auth/bg .gif');
+
   /// File path: assets/icons/auth/fingerprint.svg
   SvgGenImage get fingerprint => const SvgGenImage('assets/icons/auth/fingerprint.svg');
 
@@ -1246,7 +1249,7 @@ class $AssetsIconsAuthGen {
   SvgGenImage get window => const SvgGenImage('assets/icons/auth/window.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [fingerprint, lock, mail, secureShield, window];
+  List<dynamic> get values => [bg, fingerprint, lock, mail, secureShield, window];
 }
 
 class $AssetsIconsEmployeeManagementGen {

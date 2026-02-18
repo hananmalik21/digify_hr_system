@@ -1,9 +1,11 @@
+import 'package:digify_hr_system/core/config/app_config.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/navigation/sidebar/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
+import 'package:digify_hr_system/features/auth/presentation/widgets/login_animated_background.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_header.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_layout_handler.dart';
 import 'package:flutter/foundation.dart';
@@ -34,8 +36,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ref.read(loginFormStateProvider.notifier).allowPrefillAgain();
     });
     if (kDebugMode) {
-      // _usernameController.text = AppConfig.debugUsername;
-      // _passwordController.text = AppConfig.debugPassword;
+      _usernameController.text = AppConfig.debugUsername;
+      _passwordController.text = AppConfig.debugPassword;
     }
   }
 
@@ -129,6 +131,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             child: Stack(
               children: [
+                const LoginAnimatedBackground(),
                 const LoginHeader(),
                 SafeArea(
                   child: LayoutBuilder(
