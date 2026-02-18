@@ -21,6 +21,7 @@ class HeaderRightSection extends StatelessWidget {
     required this.localizations,
     required this.onToggleTheme,
     required this.onToggleLocale,
+    this.onLogout,
   });
 
   final bool isMobile;
@@ -30,6 +31,7 @@ class HeaderRightSection extends StatelessWidget {
   final AppLocalizations localizations;
   final VoidCallback onToggleTheme;
   final VoidCallback onToggleLocale;
+  final VoidCallback? onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,7 @@ class HeaderRightSection extends StatelessWidget {
           thickness: 2,
           margin: EdgeInsets.symmetric(vertical: 13.h, horizontal: 14.w),
         ),
-        HeaderProfileSection(isDark: isDark, isMobile: isMobile, localizations: localizations),
+        HeaderProfileSection(isDark: isDark, isMobile: isMobile, localizations: localizations, onLogout: onLogout),
       ],
     );
   }

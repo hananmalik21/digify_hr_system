@@ -1,12 +1,19 @@
+import 'dart:ui';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_form.dart';
+import 'package:digify_hr_system/features/auth/presentation/widgets/login_social_button.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'dart:math' as math;
 
-/// Login card widget containing the login form
 class LoginCard extends ConsumerWidget {
   final double maxWidth;
   final GlobalKey<FormState> formKey;
@@ -14,7 +21,10 @@ class LoginCard extends ConsumerWidget {
   final TextEditingController passwordController;
   final FocusNode usernameFocusNode;
   final FocusNode passwordFocusNode;
+  final bool rememberMe;
+  final ValueChanged<bool> onRememberMeChanged;
   final VoidCallback onLogin;
+  final VoidCallback? onForgotPasswordTap;
 
   const LoginCard({
     super.key,
@@ -24,7 +34,10 @@ class LoginCard extends ConsumerWidget {
     required this.passwordController,
     required this.usernameFocusNode,
     required this.passwordFocusNode,
+    required this.rememberMe,
+    required this.onRememberMeChanged,
     required this.onLogin,
+    this.onForgotPasswordTap,
   });
 
   @override
@@ -32,72 +45,116 @@ class LoginCard extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final authState = ref.watch(authProvider);
 
-    final innerPad = (maxWidth < 420 ? 20.0 : 28.0);
-
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 50, offset: const Offset(0, 25)),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(innerPad.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(35.r),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(35.r),
+                border: Border.all(color: AppColors.authInputBorder.withValues(alpha: 0.6)),
+                boxShadow: AppShadows.loginCardShadow,
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: math.max(16.0, math.min(40.w, 40.0)),
+                  vertical: math.max(16.0, math.min(40.h, 40.0)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    Center(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.authBadgeBg,
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(color: AppColors.authBadgeBorder),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 5.w,
+                              height: 5.h,
+                              decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                            ),
+                            Gap(8.w),
+                            Text(
+                              localizations.userAuthentication.toUpperCase(),
+                              style: context.textTheme.headlineMedium?.copyWith(
+                                fontSize: 9.sp,
+                                color: AppColors.primary,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
                     Text(
                       localizations.welcomeBack,
-                      style: TextStyle(
-                        fontSize: 26.sp.clamp(20.0, 30.0),
-                        fontWeight: FontWeight.bold,
+                      style: context.textTheme.displaySmall?.copyWith(
+                        fontSize: 26.sp,
                         color: AppColors.textPrimary,
                         height: 1.2,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 8.h),
+                    const Gap(8),
                     Text(
-                      localizations.signInToAccessDashboard,
-                      style: TextStyle(
-                        fontSize: 14.5.sp.clamp(12.5, 16.0),
-                        fontWeight: FontWeight.normal,
-                        color: AppColors.textSecondary,
-                        height: 1.5,
-                      ),
+                      localizations.enterCredentialsToAccess,
+                      style: context.textTheme.labelMedium?.copyWith(color: AppColors.dashReports, height: 1.5),
                       textAlign: TextAlign.center,
+                    ),
+                    Gap(21.h),
+                    LoginForm(
+                      formKey: formKey,
+                      usernameController: usernameController,
+                      passwordController: passwordController,
+                      usernameFocusNode: usernameFocusNode,
+                      passwordFocusNode: passwordFocusNode,
+                      isLoading: authState.isLoading,
+                      rememberMe: rememberMe,
+                      onRememberMeChanged: onRememberMeChanged,
+                      onLogin: onLogin,
+                      onForgotPasswordTap: onForgotPasswordTap,
+                    ),
+                    Gap(53.h),
+                    Row(
+                      children: [
+                        const Expanded(child: DigifyDivider(color: AppColors.borderGrey)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Text(
+                            localizations.orSignInWith,
+                            style: context.textTheme.labelLarge?.copyWith(
+                              fontSize: 9.sp,
+                              color: AppColors.sidebarTextSecondary,
+                              letterSpacing: 3.5,
+                            ),
+                          ),
+                        ),
+                        const Expanded(child: DigifyDivider(color: AppColors.borderGrey)),
+                      ],
+                    ),
+                    Gap(17.h),
+                    Row(
+                      children: [
+                        Expanded(child: LoginSocialButton(iconPath: Assets.icons.auth.fingerprint.path)),
+                        const Gap(14),
+                        Expanded(child: LoginSocialButton(iconPath: Assets.icons.auth.window.path)),
+                      ],
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                LoginForm(
-                  formKey: formKey,
-                  usernameController: usernameController,
-                  passwordController: passwordController,
-                  usernameFocusNode: usernameFocusNode,
-                  passwordFocusNode: passwordFocusNode,
-                  isLoading: authState.isLoading,
-                  onLogin: onLogin,
-                ),
-                SizedBox(height: 22.h),
-                Text(
-                  localizations.copyrightText,
-                  style: TextStyle(
-                    fontSize: 12.8.sp.clamp(11.0, 14.0),
-                    fontWeight: FontWeight.normal,
-                    color: const Color(0xFF6A7282),
-                    height: 1.4,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
         ),

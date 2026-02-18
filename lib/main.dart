@@ -2,13 +2,16 @@ import 'package:digify_hr_system/core/config/app_config.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/localization/locale_provider.dart';
 import 'package:digify_hr_system/core/router/app_router.dart';
+import 'package:digify_hr_system/core/services/hive_service.dart';
 import 'package:digify_hr_system/core/theme/app_theme.dart';
 import 'package:digify_hr_system/core/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveService.init();
   runApp(const ProviderScope(child: DigifyHrSystemApp()));
 }
 

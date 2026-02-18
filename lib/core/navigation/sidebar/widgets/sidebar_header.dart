@@ -38,24 +38,11 @@ class SidebarHeader extends ConsumerWidget {
                       )
                     : Align(
                         alignment: Alignment.center,
-                        key: const ValueKey('hamburger-icon'),
+                        key: const ValueKey('condensed-placeholder'),
                         child: Icon(Icons.menu, size: 24.sp, color: AppColors.lightDark),
                       ),
               ),
             ),
-            if (isExpanded)
-              GestureDetector(
-                onTap: () => ref.read(sidebarProvider.notifier).collapse(),
-                child: AnimatedRotation(
-                  key: const ValueKey('header-chevron'),
-                  turns: 0,
-                  duration: const Duration(milliseconds: 350),
-                  curve: Curves.easeInOut,
-                  child: Icon(Icons.chevron_left, size: 20.sp, color: AppColors.sidebarCategoryText),
-                ),
-              ),
-            if (!isExpanded)
-              GestureDetector(onTap: () => ref.read(sidebarProvider.notifier).expand(), child: const SizedBox.shrink()),
           ],
         ),
       ),

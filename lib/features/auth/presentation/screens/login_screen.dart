@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/navigation/sidebar/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
+import 'package:digify_hr_system/features/auth/presentation/widgets/login_header.dart';
 import 'package:digify_hr_system/features/auth/presentation/widgets/login_layout_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +29,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(loginFormStateProvider.notifier).allowPrefillAgain();
+    });
     if (kDebugMode) {
-      _usernameController.text = 'admin@digify.com';
-      _passwordController.text = 'Digify@@2025';
+      // _usernameController.text = AppConfig.debugUsername;
+      // _passwordController.text = AppConfig.debugPassword;
     }
   }
 
@@ -46,49 +51,107 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final email = _usernameController.text.trim();
+    final rememberMe = ref.read(loginFormStateProvider).rememberMe;
+
+    await ref.read(authProvider.notifier).login(email, _passwordController.text.trim(), rememberMe: rememberMe);
+  }
+
+  void _showForgotPasswordDialog() {
     final localizations = AppLocalizations.of(context)!;
-
-    await ref.read(authProvider.notifier).login(_usernameController.text.trim(), _passwordController.text.trim());
-
-    if (!mounted) return;
-
-    final authState = ref.read(authProvider);
-    if (authState.isAuthenticated) {
-      ref.read(sidebarProvider.notifier).collapse();
-      context.go(AppRoutes.dashboard);
-    } else if (authState.error != null) {
-      ToastService.error(context, localizations.invalidCredentials);
-    }
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(localizations.forgotPasswordTitle),
+        content: Text(localizations.forgotPasswordDialogMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final formState = ref.watch(loginFormStateProvider);
+
+    ref.listen<LoginFormState>(loginFormStateProvider, (prev, next) {
+      if (!next.initialLoadDone || next.savedEmailConsumed) return;
+      final email = ref.read(loginFormStateProvider.notifier).consumeSavedEmailForPrefill();
+      if (email != null && email.isNotEmpty && (kReleaseMode || _usernameController.text.isEmpty)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _usernameController.text = email;
+        });
+      }
+    });
+
+    ref.listen<AuthState>(authProvider, (prev, next) {
+      final feedback = next.pendingLoginFeedback;
+      if (feedback != null) {
+        ref.read(authProvider.notifier).clearPendingLoginFeedback();
+        final localizations = AppLocalizations.of(context)!;
+        if (feedback.success) {
+          ToastService.success(context, localizations.loginSuccess);
+          ref.read(sidebarProvider.notifier).collapse();
+          context.go(AppRoutes.dashboard);
+        } else {
+          final message = switch (feedback.errorCode) {
+            'network_error' => localizations.connectionError,
+            _ => localizations.invalidCredentials,
+          };
+          ToastService.error(context, message, title: localizations.loginFailed);
+        }
+        return;
+      }
+      if (next.isAuthenticated && !next.isRestoring) {
+        ref.read(sidebarProvider.notifier).collapse();
+        context.go(AppRoutes.dashboard);
+      }
+    });
+
     return Scaffold(
-      body: Container(
-        height: ScreenUtil().screenHeight,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.primary, Color(0xFF4F39F6), Color(0xFF8200DB)],
-            stops: [0.0, 0.5, 1.0],
+      body: Stack(
+        children: [
+          Container(
+            height: ScreenUtil().screenHeight,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppColors.authBgEnd,
+              gradient: RadialGradient(
+                center: Alignment(-0.4, -0.4),
+                radius: 1.2,
+                colors: [AppColors.authBgStart, AppColors.authBgEnd],
+                stops: [0.0, 1.0],
+              ),
+            ),
+            child: Stack(
+              children: [
+                const LoginHeader(),
+                SafeArea(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return LoginLayoutHandler(
+                        constraints: constraints,
+                        formKey: _formKey,
+                        usernameController: _usernameController,
+                        passwordController: _passwordController,
+                        usernameFocusNode: _usernameFocusNode,
+                        passwordFocusNode: _passwordFocusNode,
+                        rememberMe: formState.rememberMe,
+                        onRememberMeChanged: (value) => ref.read(loginFormStateProvider.notifier).setRememberMe(value),
+                        onLogin: _handleLogin,
+                        onForgotPasswordTap: _showForgotPasswordDialog,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return LoginLayoutHandler(
-                constraints: constraints,
-                formKey: _formKey,
-                usernameController: _usernameController,
-                passwordController: _passwordController,
-                usernameFocusNode: _usernameFocusNode,
-                passwordFocusNode: _passwordFocusNode,
-                onLogin: _handleLogin,
-              );
-            },
-          ),
-        ),
+        ],
       ),
     );
   }
