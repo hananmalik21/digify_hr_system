@@ -13,7 +13,6 @@ import 'package:digify_hr_system/gen/assets.gen.dart' show Assets;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../widgets/manage_enterprise_structure_widgets/structure_configurations_header_widget.dart'
     show StructureConfigurationsHeaderWidget;
 
