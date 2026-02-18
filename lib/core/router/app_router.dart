@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/navigation/app_layout.dart';
+import 'package:digify_hr_system/core/navigation/root_navigator_key.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:digify_hr_system/core/widgets/feedback/placeholder_screen.dart';
@@ -28,11 +29,14 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutes.login,
     debugLogDiagnostics: false,
     redirect: (context, state) {
+      if (authState.isRestoring) return null;
+
       final isAuthenticated = authState.isAuthenticated;
-      final isLoggingIn = state.matchedLocation == AppRoutes.login || state.matchedLocation == AppRoutes.signup;
+      final isLoggingIn = state.matchedLocation == AppRoutes.login;
 
       if (!isAuthenticated && !isLoggingIn) {
         return AppRoutes.login;
