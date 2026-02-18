@@ -10,6 +10,7 @@ import 'package:digify_hr_system/core/navigation/sidebar/widgets/sidebar_menu.da
 import 'package:digify_hr_system/core/navigation/sidebar/widgets/sidebar_menu_item.dart';
 import 'package:digify_hr_system/core/navigation/sidebar/widgets/sidebar_search_section.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
+import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
@@ -61,6 +62,10 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         }
       }
       context.go(item.route!);
+      if (ResponsiveHelper.isMobile(context)) {
+        ref.read(sidebarProvider.notifier).collapse();
+        Scaffold.maybeOf(context)?.closeDrawer();
+      }
     }
   }
 
@@ -133,56 +138,58 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
     }
 
     return Material(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.fastOutSlowIn,
-        width: isExpanded ? 252.w : 64.w,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(right: BorderSide(color: AppColors.cardBorder)),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(2, 0)),
-          ],
-        ),
-        child: Column(
-          children: [
-            SidebarHeader(isExpanded: isExpanded),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.fastOutSlowIn,
-              child: SizedBox(
-                width: double.infinity,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.fastOutSlowIn,
-                  opacity: isExpanded ? 1.0 : 0.0,
-                  child: ClipRect(child: isExpanded ? const SidebarSearchSection() : const SizedBox.shrink()),
+      child: ClipRect(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.fastOutSlowIn,
+          width: isExpanded ? 252.w : 0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(right: BorderSide(color: AppColors.cardBorder)),
+            boxShadow: [
+              BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(2, 0)),
+            ],
+          ),
+          child: Column(
+            children: [
+              SidebarHeader(isExpanded: isExpanded),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.fastOutSlowIn,
+                    opacity: isExpanded ? 1.0 : 0.0,
+                    child: ClipRect(child: isExpanded ? const SidebarSearchSection() : const SizedBox.shrink()),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: SidebarMenu(
-                items: menuItems,
-                isExpanded: isExpanded,
-                scrollController: _menuScrollController,
-                itemBuilder: (context, item, index) =>
-                    _buildMenuItem(context, item, menuItems, isExpanded, currentRoute, localizations),
-              ),
-            ),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.fastOutSlowIn,
-              child: SizedBox(
-                width: double.infinity,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.fastOutSlowIn,
-                  opacity: isExpanded ? 1.0 : 0.0,
-                  child: ClipRect(child: isExpanded ? const SidebarFooter() : const SizedBox.shrink()),
+              Expanded(
+                child: SidebarMenu(
+                  items: menuItems,
+                  isExpanded: isExpanded,
+                  scrollController: _menuScrollController,
+                  itemBuilder: (context, item, index) =>
+                      _buildMenuItem(context, item, menuItems, isExpanded, currentRoute, localizations),
                 ),
               ),
-            ),
-          ],
+              AnimatedSize(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.fastOutSlowIn,
+                    opacity: isExpanded ? 1.0 : 0.0,
+                    child: ClipRect(child: isExpanded ? const SidebarFooter() : const SizedBox.shrink()),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

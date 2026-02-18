@@ -46,7 +46,13 @@ class AppHeader extends ConsumerWidget {
                 isSidebarExpanded: isSidebarExpanded,
                 onMenuTap: () {
                   if (isMobile) {
-                    Scaffold.of(context).openDrawer();
+                    if (isSidebarExpanded) {
+                      Scaffold.of(context).closeDrawer();
+                      ref.read(sidebarProvider.notifier).collapse();
+                    } else {
+                      Scaffold.of(context).openDrawer();
+                      ref.read(sidebarProvider.notifier).expand();
+                    }
                   } else {
                     ref.read(sidebarProvider.notifier).toggle();
                   }
