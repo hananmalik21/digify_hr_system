@@ -1134,6 +1134,8 @@
   "structureReferencedError": "لا يمكن حذف هيكل المؤسسة: هذا الهيكل مستخدم في سجلات أخرى في قاعدة البيانات.",
   "structureDeletedSuccess": "تم حذف هيكل المؤسسة بنجاح.",
   "confirmDeleteStructure": "هل أنت متأكد أنك تريد حذف هذا الهيكل؟",
+  "activateStructureTitle": "تفعيل الهيكل",
+  "confirmActivateStructure": "هل تريد تعيين هذا الهيكل كهيكل المؤسسة النشط؟",
   "structureHasOrgUnits": "يحتوي هذا الهيكل على {count} وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.",
   "@structureHasOrgUnits": {
     "placeholders": {

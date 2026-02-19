@@ -74,6 +74,7 @@ flutter:
     - assets/logo/
     - assets/icons/
     - assets/icons/auth/
+    - assets/icons/enterprise_structure/
     - assets/icons/workforce/
     - assets/icons/sidebar/
     - assets/icons/time_management/

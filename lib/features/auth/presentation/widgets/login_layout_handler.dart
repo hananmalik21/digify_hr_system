@@ -56,6 +56,7 @@ class LoginLayoutHandler extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Gap(isMobile ? 80.h : 40.h),
             LoginCard(
               maxWidth: maxWidth,
               formKey: formKey,

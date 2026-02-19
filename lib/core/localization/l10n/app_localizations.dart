@@ -6824,6 +6824,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this structure?'**
   String get confirmDeleteStructure;
 
+  /// No description provided for @activateStructureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate structure'**
+  String get activateStructureTitle;
+
+  /// No description provided for @confirmActivateStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to set this structure as the active organization structure?'**
+  String get confirmActivateStructure;
+
   /// No description provided for @structureHasOrgUnits.
   ///
   /// In en, this message translates to:

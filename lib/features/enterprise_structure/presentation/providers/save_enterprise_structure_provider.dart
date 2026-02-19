@@ -2,6 +2,8 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise_structure.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart'
+    show saveEnterpriseStructureUseCaseProvider;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// State for save enterprise structure operation
@@ -38,12 +40,10 @@ class SaveEnterpriseStructureState {
 }
 
 /// Notifier for saving enterprise structure
-class SaveEnterpriseStructureNotifier
-    extends StateNotifier<SaveEnterpriseStructureState> {
+class SaveEnterpriseStructureNotifier extends StateNotifier<SaveEnterpriseStructureState> {
   final SaveEnterpriseStructureUseCase saveUseCase;
 
-  SaveEnterpriseStructureNotifier({required this.saveUseCase})
-    : super(const SaveEnterpriseStructureState());
+  SaveEnterpriseStructureNotifier({required this.saveUseCase}) : super(const SaveEnterpriseStructureState());
 
   /// Saves or updates the enterprise structure
   /// Returns true on success, throws AppException on error
@@ -54,8 +54,7 @@ class SaveEnterpriseStructureNotifier
     int? enterpriseId,
     String? structureCode,
     bool isActive = true,
-    String?
-    structureId, // If provided, performs update (PUT), otherwise create (POST)
+    String? structureId, // If provided, performs update (PUT), otherwise create (POST)
   }) async {
     // Try to update loading state, but don't fail if provider is disposed
     try {
@@ -63,8 +62,7 @@ class SaveEnterpriseStructureNotifier
         isSaving: true,
         hasError: false,
         errorMessage: null,
-        loadingStructureId:
-            structureId, // Track which structure is being activated
+        loadingStructureId: structureId, // Track which structure is being activated
       );
     } catch (e) {
       // Provider might be disposed, continue anyway
@@ -83,27 +81,20 @@ class SaveEnterpriseStructureNotifier
       if (structureId == null) {
         // Convert HierarchyLevel to EnterpriseStructureLevel (only for create)
         // Only include active levels and maintain their order
-        structureLevels = levels
-            .where((level) => level.isActive)
-            .toList()
-            .asMap()
-            .entries
-            .map((entry) {
-              final level = entry.value;
-              final displayOrder =
-                  entry.key + 1; // 1-based index for display order
+        structureLevels = levels.where((level) => level.isActive).toList().asMap().entries.map((entry) {
+          final level = entry.value;
+          final displayOrder = entry.key + 1; // 1-based index for display order
 
-              // Parse structureLevelId from HierarchyLevel.id
-              // HierarchyLevel.id should be the structure level ID from API
-              final structureLevelId = int.tryParse(level.id) ?? 0;
+          // Parse structureLevelId from HierarchyLevel.id
+          // HierarchyLevel.id should be the structure level ID from API
+          final structureLevelId = int.tryParse(level.id) ?? 0;
 
-              return EnterpriseStructureLevel(
-                structureLevelId: structureLevelId,
-                levelNumber: level.level,
-                displayOrder: displayOrder,
-              );
-            })
-            .toList();
+          return EnterpriseStructureLevel(
+            structureLevelId: structureLevelId,
+            levelNumber: level.level,
+            displayOrder: displayOrder,
+          );
+        }).toList();
       }
 
       final enterpriseStructure = EnterpriseStructure(
@@ -113,8 +104,7 @@ class SaveEnterpriseStructureNotifier
         structureType: 'ENTERPRISE',
         description: description,
         isActive: isActive,
-        levels:
-            structureLevels, // Empty list for updates, populated for creates
+        levels: structureLevels, // Empty list for updates, populated for creates
       );
 
       // Use PUT for updates, POST for creates
@@ -222,3 +212,8 @@ class SaveEnterpriseStructureNotifier
 }
 
 /// Provider for save enterprise structure notifier
+final saveEnterpriseStructureProvider =
+    StateNotifierProvider.autoDispose<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>((ref) {
+      final saveUseCase = ref.watch(saveEnterpriseStructureUseCaseProvider);
+      return SaveEnterpriseStructureNotifier(saveUseCase: saveUseCase);
+    });

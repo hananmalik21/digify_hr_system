@@ -1,9 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class ConfigurationSummaryWidget extends StatelessWidget {
   final int totalLevels;
@@ -23,26 +23,16 @@ class ConfigurationSummaryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
+    final textTheme = context.textTheme;
+
+    final textColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
 
     return Container(
-      padding: ResponsiveHelper.getResponsivePadding(
-        context,
-        mobile: EdgeInsetsDirectional.all(12.w),
-        tablet: EdgeInsetsDirectional.all(14.w),
-        web: EdgeInsetsDirectional.all(17.w),
-      ),
+      width: double.infinity,
+      padding: EdgeInsetsDirectional.all(16.w),
       decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.purpleBgDark
-            : const Color(0xFFFAF5FF),
-        border: Border.all(
-          color: isDark
-              ? AppColors.purpleBorderDark
-              : const Color(0xFFE9D4FF),
-          width: 1,
-        ),
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.infoBg,
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.infoBorder, width: 1),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
@@ -50,320 +40,82 @@ class ConfigurationSummaryWidget extends StatelessWidget {
         children: [
           Text(
             localizations.configurationSummary,
-            style: TextStyle(
-              fontSize: isMobile ? 14.sp : (isTablet ? 14.5.sp : 15.5.sp),
-              fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.purpleTextDark
-                  : const Color(0xFF59168B),
-              height: 24 / 15.5,
-              letterSpacing: 0,
-            ),
+            style: textTheme.titleSmall?.copyWith(fontSize: 16.sp, color: textColor),
           ),
-          SizedBox(height: isMobile ? 10.h : 12.h),
-          isMobile
-              ? Column(
+          Gap(8.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16.h,
                   children: [
-                    Text.rich(
-                      TextSpan(
-                        text: '${localizations.totalLevels}: ',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.purpleTextDark
-                              : const Color(0xFF8200DB),
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: ' ',
-                            style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF0A0A0A),
-                            ),
-                          ),
-                          TextSpan(
-                            text: '$totalLevels',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF59168B),
-                            ),
-                          ),
-                        ],
-                      ),
+                    _SummaryRow(
+                      label: '${localizations.totalLevels}: ',
+                      value: '$totalLevels',
+                      textColor: textColor,
+                      textTheme: textTheme,
                     ),
-                    SizedBox(height: 8.h),
-                    Text.rich(
-                      TextSpan(
-                        text: '${localizations.activeLevels}: ',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.purpleTextDark
-                              : const Color(0xFF8200DB),
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: ' ',
-                            style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF0A0A0A),
-                            ),
-                          ),
-                          TextSpan(
-                            text: '$activeLevels',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF59168B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text.rich(
-                      TextSpan(
-                        text: '${localizations.hierarchyDepth}: ',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.purpleTextDark
-                              : const Color(0xFF8200DB),
-                          height: 20 / 13.7,
-                          letterSpacing: 0,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: ' ',
-                            style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF0A0A0A),
-                            ),
-                          ),
-                          TextSpan(
-                            text: '$hierarchyDepth levels',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF59168B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text.rich(
-                      TextSpan(
-                        text: '${localizations.topLevel}: ',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.purpleTextDark
-                              : const Color(0xFF8200DB),
-                          height: 20 / 13.6,
-                          letterSpacing: 0,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: ' ',
-                            style: TextStyle(
-                              color: isDark
-                                  ? AppColors.textPrimaryDark
-                                  : const Color(0xFF0A0A0A),
-                            ),
-                          ),
-                          TextSpan(
-                            text: topLevel,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF59168B),
-                            ),
-                          ),
-                        ],
-                      ),
+                    _SummaryRow(
+                      label: '${localizations.hierarchyDepth}: ',
+                      value: '$hierarchyDepth levels',
+                      textColor: textColor,
+                      textTheme: textTheme,
                     ),
                   ],
-                )
-              : SizedBox(
-                  height: isTablet ? 50.h : 56.h,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 0,
-                        right: isTablet ? 200.w : 415.w,
-                        top: 0,
-                        child: Text.rich(
-                          TextSpan(
-                            text: '${localizations.totalLevels}: ',
-                            style: TextStyle(
-                              fontSize: isTablet ? 12.5.sp : 13.6.sp,
-                              fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF8200DB),
-                              height: 20 / 13.6,
-                              letterSpacing: 0,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' ',
-                                style: TextStyle(
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF0A0A0A),
-                                ),
-                              ),
-                              TextSpan(
-                                text: '$totalLevels',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.purpleTextDark
-                                      : const Color(0xFF59168B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: isTablet ? 200.w : 415.w,
-                        right: 0,
-                        top: 0,
-                        child: Text.rich(
-                          TextSpan(
-                            text: '${localizations.activeLevels}: ',
-                            style: TextStyle(
-                              fontSize: isTablet ? 12.5.sp : 13.6.sp,
-                              fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF8200DB),
-                              height: 20 / 13.6,
-                              letterSpacing: 0,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' ',
-                                style: TextStyle(
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF0A0A0A),
-                                ),
-                              ),
-                              TextSpan(
-                                text: '$activeLevels',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.purpleTextDark
-                                      : const Color(0xFF59168B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        right: isTablet ? 200.w : 415.w,
-                        top: isTablet ? 30.h : 36.h,
-                        child: Text.rich(
-                          TextSpan(
-                            text: '${localizations.hierarchyDepth}: ',
-                            style: TextStyle(
-                              fontSize: isTablet ? 12.5.sp : 13.7.sp,
-                              fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF8200DB),
-                              height: 20 / 13.7,
-                              letterSpacing: 0,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' ',
-                                style: TextStyle(
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF0A0A0A),
-                                ),
-                              ),
-                              TextSpan(
-                                text: '$hierarchyDepth levels',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.purpleTextDark
-                                      : const Color(0xFF59168B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: isTablet ? 200.w : 415.w,
-                        right: 0,
-                        top: isTablet ? 30.h : 36.h,
-                        child: Text.rich(
-                          TextSpan(
-                            text: '${localizations.topLevel}: ',
-                            style: TextStyle(
-                              fontSize: isTablet ? 12.5.sp : 13.6.sp,
-                              fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.purpleTextDark
-                                  : const Color(0xFF8200DB),
-                              height: 20 / 13.6,
-                              letterSpacing: 0,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: ' ',
-                                style: TextStyle(
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : const Color(0xFF0A0A0A),
-                                ),
-                              ),
-                              TextSpan(
-                                text: topLevel,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.purpleTextDark
-                                      : const Color(0xFF59168B),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
+              ),
+              Gap(24.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16.h,
+                  children: [
+                    _SummaryRow(
+                      label: '${localizations.activeLevels}: ',
+                      value: '$activeLevels',
+                      textColor: textColor,
+                      textTheme: textTheme,
+                    ),
+                    _SummaryRow(
+                      label: '${localizations.topLevel}: ',
+                      value: topLevel,
+                      textColor: textColor,
+                      textTheme: textTheme,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
+class _SummaryRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color textColor;
+  final TextTheme textTheme;
+
+  const _SummaryRow({required this.label, required this.value, required this.textColor, required this.textTheme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(
+        text: label,
+        style: textTheme.bodyMedium?.copyWith(color: textColor),
+        children: [
+          TextSpan(
+            text: value,
+            style: textTheme.titleSmall?.copyWith(color: textColor),
+          ),
+        ],
+      ),
+    );
+  }
+}

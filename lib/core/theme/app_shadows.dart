@@ -21,11 +21,19 @@ class AppShadows {
   ];
 
   static List<BoxShadow> get loginCardShadow => [
+    // Main soft shadow
     BoxShadow(
       color: const Color(0xFF0F172A).withValues(alpha: 0.12),
       blurRadius: 100,
       offset: const Offset(0, 32),
       spreadRadius: -20,
+    ),
+    // Subtle ambient layer
+    BoxShadow(
+      color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+      blurRadius: 20,
+      offset: const Offset(0, 10),
+      spreadRadius: -5,
     ),
   ];
 }

@@ -1,12 +1,12 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-/// Hierarchy levels widget
 class HierarchyLevelsWidget extends StatelessWidget {
   final AppLocalizations localizations;
   final bool isDark;
@@ -21,12 +21,11 @@ class HierarchyLevelsWidget extends StatelessWidget {
     required this.levelCount,
   });
 
-  /// Use these 5 icons cyclically for any number of levels.
   static List<String> get _iconPool => [
     Assets.icons.companyIconPurple.path,
-    Assets.icons.divisionIconPurple.path,
-    Assets.icons.businessUnitIcon.path,
-    Assets.icons.departmentIcon.path,
+    Assets.icons.businessUnitIconPurple.path,
+    Assets.icons.businessUnitSmallIcon.path,
+    Assets.icons.departmentIconPurple.path,
     Assets.icons.sectionIconPurple.path,
   ];
 
@@ -36,91 +35,59 @@ class HierarchyLevelsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
+    final labelColor = isDark ? AppColors.textTertiaryDark : AppColors.sidebarSecondaryText;
+    final levelStyle = context.textTheme.labelMedium?.copyWith(color: AppColors.primary);
+    final mutedStyle = context.textTheme.labelSmall?.copyWith(fontSize: 12.sp, color: labelColor);
+    final arrowColor = isDark ? AppColors.textPlaceholderDark : AppColors.sidebarCategoryText;
 
-    return Wrap(
-      spacing: isMobile ? 6.w : (isTablet ? 7.w : 8.w),
-      runSpacing: isMobile ? 6.h : 0,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          localizations.hierarchy,
-          style: TextStyle(
-            fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
-            fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
-            height: 20 / 13.7,
-            letterSpacing: 0,
-          ),
-        ),
-        ...levels.asMap().entries.map((entry) {
-          final index = entry.key;
-          final level = entry.value;
+        Text('${localizations.hierarchy}:', style: context.textTheme.bodyMedium?.copyWith(color: labelColor)),
+        Gap(8.w),
+        Wrap(
+          runSpacing: 6.h,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: levels.asMap().entries.map((entry) {
+            final index = entry.key;
+            final level = entry.value;
 
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsetsDirectional.symmetric(
-                  horizontal: isMobile ? 7.w : (isTablet ? 8.w : 9.w),
-                  vertical: isMobile ? 4.h : 5.h,
-                ),
-                decoration: BoxDecoration(
-                  color: Color(0xffEFF6FF),
-                  // border: Border.all(color: isDark ? AppColors.purpleBorderDark : const Color(0xFFE9D4FF), width: 1),
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    DigifyAsset(
-                      assetPath: _resolveIconByIndex(index),
-                      width: isMobile ? 12 : (isTablet ? 13 : 14),
-                      height: isMobile ? 12 : (isTablet ? 13 : 14),
-                      color: Color(0xFF155DFC),                    ),
-                    SizedBox(width: isMobile ? 3.w : 4.w),
-                    Text(
-                      level,
-                      style: TextStyle(
-                        fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
-                        fontWeight: FontWeight.w500,
-                        color:     Color(0xFF155DFC),
-                        height: 16 / 12,
-                        letterSpacing: 0,
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.infoBgDark : AppColors.infoBg,
+                    border: Border.all(color: AppColors.ingobgBorder),
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DigifyAsset(
+                        assetPath: _resolveIconByIndex(index),
+                        width: 14,
+                        height: 14,
+                        color: AppColors.primary,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (index < levels.length - 1) ...[
-                SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
-                Text(
-                  '→',
-                  style: TextStyle(
-                    fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 16.sp),
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? AppColors.textPlaceholderDark : const Color(0xFF99A1AF),
-                    height: 24 / 16,
-                    letterSpacing: 0,
+                      Gap(4.w),
+                      Text(level, style: levelStyle),
+                    ],
                   ),
                 ),
-                SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
+                if (index < levels.length - 1) ...[
+                  Gap(8.w),
+                  DigifyAsset(assetPath: Assets.icons.enterpriseStructure.rightArrow.path, color: arrowColor),
+                  Gap(8.w),
+                ],
               ],
-            ],
-          );
-        }),
-        SizedBox(width: isMobile ? 6.w : (isTablet ? 7.w : 8.w)),
-        Text(
-          '($levelCount ${localizations.levels})',
-          style: TextStyle(
-            fontSize: isMobile ? 11.sp : (isTablet ? 11.5.sp : 12.sp),
-            fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textTertiaryDark : const Color(0xFF6A7282),
-            height: 16 / 12,
-            letterSpacing: 0,
-          ),
+            );
+          }).toList(),
         ),
+        Gap(8.w),
+        Text('($levelCount ${localizations.levels})', style: mutedStyle),
       ],
     );
   }
