@@ -3498,6 +3498,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this structure?';
 
   @override
+  String get activateStructureTitle => 'Activate structure';
+
+  @override
+  String get confirmActivateStructure =>
+      'Do you want to set this structure as the active organization structure?';
+
+  @override
   String structureHasOrgUnits(int count) {
     return 'This structure has $count organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.';
   }

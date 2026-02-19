@@ -1253,6 +1253,8 @@
   "structureReferencedError": "Cannot delete organization structure: This structure is referenced by other records in the database.",
   "structureDeletedSuccess": "Organization structure deleted successfully.",
   "confirmDeleteStructure": "Are you sure you want to delete this structure?",
+  "activateStructureTitle": "Activate structure",
+  "confirmActivateStructure": "Do you want to set this structure as the active organization structure?",
   "structureHasOrgUnits": "This structure has {count} organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.",
   "@structureHasOrgUnits": {
     "placeholders": {

@@ -3475,6 +3475,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmDeleteStructure => 'هل أنت متأكد أنك تريد حذف هذا الهيكل؟';
 
   @override
+  String get activateStructureTitle => 'تفعيل الهيكل';
+
+  @override
+  String get confirmActivateStructure =>
+      'هل تريد تعيين هذا الهيكل كهيكل المؤسسة النشط؟';
+
+  @override
   String structureHasOrgUnits(int count) {
     return 'يحتوي هذا الهيكل على $count وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.';
   }

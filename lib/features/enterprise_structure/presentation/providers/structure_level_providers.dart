@@ -50,6 +50,7 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/g
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_structure_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/delete_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart'
     show StructureListNotifier, StructureListState, StructureListViewState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -386,4 +387,10 @@ final structureDeleteRepositoryProvider = Provider<StructureDeleteRepositoryImpl
 final deleteStructureUseCaseProvider = Provider<DeleteStructureUseCase>((ref) {
   final repository = ref.watch(structureDeleteRepositoryProvider);
   return DeleteStructureUseCase(repository: repository);
+});
+
+/// Provider for delete structure flow (confirmation + cascade dialogs, loading state)
+final deleteStructureProvider = StateNotifierProvider.autoDispose<DeleteStructureNotifier, DeleteStructureState>((ref) {
+  final deleteStructureUseCase = ref.watch(deleteStructureUseCaseProvider);
+  return DeleteStructureNotifier(deleteStructureUseCase: deleteStructureUseCase);
 });

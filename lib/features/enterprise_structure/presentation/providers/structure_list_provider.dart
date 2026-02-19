@@ -270,6 +270,14 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     await loadStructures(refresh: true);
   }
 
+  void setStructureActive(String structureId, bool isActive) {
+    final updated = state.structures.map((s) {
+      if (s.structureId == structureId) return s.copyWith(isActive: isActive);
+      return isActive ? s.copyWith(isActive: false) : s;
+    }).toList();
+    state = state.copyWith(structures: updated);
+  }
+
   /// Go to a specific page
   Future<void> goToPage(int page) async {
     if (page < 1 || (state.pagination != null && page > state.pagination!.totalPages)) {

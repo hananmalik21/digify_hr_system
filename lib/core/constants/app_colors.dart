@@ -76,6 +76,7 @@ class AppColors {
 
   static const Color info = Color(0xFF3B82F6);
   static const Color infoBg = Color(0xFFEFF6FF);
+  static const Color ingobgBorder = Color(0xFF9FC9FF);
   static const Color infoBorder = Color(0xFFBEDBFF);
   static const Color infoText = Color(0xFF1C398E);
   static const Color infoTextSecondary = Color(0xFF193CB8);
