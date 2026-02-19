@@ -1,30 +1,26 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_structure_dialog_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_summary_widget.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_area.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import 'active_switch_section.dart';
 import 'enterprise_dropdown_section.dart';
 import 'enterprise_structure_dialog_mode.dart';
 import 'enterprise_structure_dialog_providers.dart';
 import 'hierarchy_preview_section.dart';
 import 'organizational_hierarchy_levels_section.dart';
-import 'shimmer_loading_widget.dart';
 
 class CreateFormBody extends ConsumerWidget {
-  final List<HierarchyLevel> levels;
-  final EditEnterpriseStructureState editState;
-  final EnterpriseStructureDialogState? dialogState;
-  final EditDialogParams params;
+  final EditEnterpriseStructureState formState;
+  final EditEnterpriseStructureNotifier formNotifier;
   final int? enterpriseId;
   final TextEditingController nameController;
   final TextEditingController descriptionController;
@@ -32,11 +28,9 @@ class CreateFormBody extends ConsumerWidget {
 
   const CreateFormBody({
     super.key,
-    required this.levels,
-    required this.editState,
-    required this.dialogState,
-    required this.params,
-    required this.enterpriseId,
+    required this.formState,
+    required this.formNotifier,
+    this.enterpriseId,
     required this.nameController,
     required this.descriptionController,
     required this.localizations,
@@ -45,82 +39,75 @@ class CreateFormBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final isLoading = dialogState != null && dialogState!.isLoading;
-    final hasError = dialogState != null && dialogState!.hasError;
-    final errorMessage = dialogState?.errorMessage;
+    final levels = formState.levels;
+    final hierarchyLevelsAsync = ref.watch(structureLevelsForCreateProvider);
+    final isHierarchyLoading = hierarchyLevelsAsync.isLoading;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EnterpriseDropdownSection(
-          params: params,
-          editDialogProvider: editEnterpriseStructureDialogProvider,
-          initialEnterpriseId: enterpriseId,
-        ),
-        EnterpriseStructureTextField(
-          label: localizations.structureName,
+        EnterpriseDropdownSection(formState: formState, formNotifier: formNotifier, initialEnterpriseId: enterpriseId),
+        DigifyTextField(
+          labelText: localizations.structureName,
           isRequired: true,
           controller: nameController,
-          value: null,
-          readOnly: false,
           hintText: localizations.structureNamePlaceholder,
-          onChanged: (value) =>
-              ref.read(editEnterpriseStructureDialogProvider(params).notifier).updateStructureName(value),
+          onChanged: formNotifier.updateStructureName,
         ),
         Gap(16.h),
-        EnterpriseStructureTextArea(
-          label: localizations.description,
+        DigifyTextArea(
+          labelText: localizations.description,
           isRequired: true,
           controller: descriptionController,
-          value: null,
-          readOnly: false,
           hintText: localizations.descriptionPlaceholder,
-          onChanged: (value) =>
-              ref.read(editEnterpriseStructureDialogProvider(params).notifier).updateDescription(value),
+          onChanged: formNotifier.updateDescription,
+          maxLines: 4,
         ),
         Gap(16.h),
-        ActiveSwitchSection(params: params, editDialogProvider: editEnterpriseStructureDialogProvider),
-        _buildLevelsSection(context, ref, isDark, isLoading, hasError, errorMessage),
-        Gap(24.h),
-        HierarchyPreviewSection(levels: levels),
-        Gap(24.h),
-        ConfigurationSummaryWidget(
-          totalLevels: levels.length,
-          activeLevels: levels.where((l) => l.isActive).length,
-          hierarchyDepth: levels.where((l) => l.isActive).length,
-          topLevel: levels.isNotEmpty ? levels.first.name : '',
+        DigifySelectFieldWithLabel<PositionStatus>(
+          label: localizations.status,
+          value: formState.isActive ? PositionStatus.active : PositionStatus.inactive,
+          items: const [PositionStatus.active, PositionStatus.inactive],
+          itemLabelBuilder: (s) => s == PositionStatus.active ? 'Active' : 'Inactive',
+          onChanged: (value) {
+            if (value != null) {
+              formNotifier.updateIsActive(value == PositionStatus.active);
+            }
+          },
+          isRequired: true,
         ),
+        Gap(16.h),
+        if (isHierarchyLoading)
+          SizedBox(
+            height: 200.h,
+            child: Center(
+              child: AppLoadingIndicator(type: LoadingType.fadingCircle, size: 48.r),
+            ),
+          )
+        else ...[
+          _buildLevelsSection(context, isDark, levels),
+          Gap(24.h),
+          HierarchyPreviewSection(levels: levels),
+          Gap(24.h),
+          ConfigurationSummaryWidget(
+            totalLevels: levels.length,
+            activeLevels: levels.where((l) => l.isActive).length,
+            hierarchyDepth: levels.where((l) => l.isActive).length,
+            topLevel: levels.isNotEmpty ? levels.first.name : '',
+          ),
+        ],
       ],
     );
   }
 
-  Widget _buildLevelsSection(
-    BuildContext context,
-    WidgetRef ref,
-    bool isDark,
-    bool isLoading,
-    bool hasError,
-    String? errorMessage,
-  ) {
-    if (isLoading) {
-      return const ShimmerLoadingWidget();
-    }
-    if (hasError) {
-      return Padding(
-        padding: EdgeInsetsDirectional.all(16.w),
-        child: Text(
-          errorMessage ?? 'Failed to load structure levels',
-          style: TextStyle(fontSize: 13.sp, color: Colors.red),
-        ),
-      );
-    }
+  Widget _buildLevelsSection(BuildContext context, bool isDark, List<HierarchyLevel> levels) {
     if (levels.isEmpty) {
       return Padding(
         padding: EdgeInsetsDirectional.all(16.w),
         child: Center(
           child: Text(
             'No structure levels found',
-            style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565)),
+            style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
           ),
         ),
       );
@@ -128,10 +115,9 @@ class CreateFormBody extends ConsumerWidget {
     return OrganizationalHierarchyLevelsSection(
       mode: EnterpriseStructureDialogMode.create,
       levels: levels,
-      state: editState,
-      dialogState: dialogState,
-      params: params,
-      editDialogProvider: editEnterpriseStructureDialogProvider,
+      formState: formState,
+      formNotifier: formNotifier,
+      dialogState: null,
     );
   }
 }

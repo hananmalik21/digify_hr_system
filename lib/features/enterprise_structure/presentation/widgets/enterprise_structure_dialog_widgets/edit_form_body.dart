@@ -37,15 +37,12 @@ class EditFormBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final levels = editState.levels;
+    final formNotifier = ref.read(editEnterpriseStructureDialogProvider(params).notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EnterpriseDropdownSection(
-          params: params,
-          editDialogProvider: editEnterpriseStructureDialogProvider,
-          initialEnterpriseId: enterpriseId,
-        ),
+        EnterpriseDropdownSection(formState: editState, formNotifier: formNotifier, initialEnterpriseId: enterpriseId),
         EnterpriseStructureTextField(
           label: localizations.structureName,
           isRequired: true,
@@ -53,8 +50,7 @@ class EditFormBody extends ConsumerWidget {
           value: null,
           readOnly: false,
           hintText: null,
-          onChanged: (value) =>
-              ref.read(editEnterpriseStructureDialogProvider(params).notifier).updateStructureName(value),
+          onChanged: formNotifier.updateStructureName,
         ),
         Gap(16.h),
         EnterpriseStructureTextArea(
@@ -64,18 +60,16 @@ class EditFormBody extends ConsumerWidget {
           value: null,
           readOnly: false,
           hintText: null,
-          onChanged: (value) =>
-              ref.read(editEnterpriseStructureDialogProvider(params).notifier).updateDescription(value),
+          onChanged: formNotifier.updateDescription,
         ),
         Gap(16.h),
-        ActiveSwitchSection(params: params, editDialogProvider: editEnterpriseStructureDialogProvider),
+        ActiveSwitchSection(formState: editState, formNotifier: formNotifier),
         OrganizationalHierarchyLevelsSection(
           mode: EnterpriseStructureDialogMode.edit,
           levels: levels,
-          state: editState,
+          formState: editState,
+          formNotifier: formNotifier,
           dialogState: null,
-          params: params,
-          editDialogProvider: editEnterpriseStructureDialogProvider,
         ),
         Gap(24.h),
         HierarchyPreviewSection(levels: levels),
