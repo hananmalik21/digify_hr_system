@@ -27,6 +27,36 @@ class StructureListItem {
     required this.levels,
     this.orgUnitCount = 0,
   });
+
+  StructureListItem copyWith({
+    String? structureId,
+    int? enterpriseId,
+    String? enterpriseName,
+    String? structureCode,
+    String? structureName,
+    String? structureType,
+    String? description,
+    bool? isActive,
+    DateTime? createdDate,
+    DateTime? lastUpdatedDate,
+    List<StructureLevelItem>? levels,
+    int? orgUnitCount,
+  }) {
+    return StructureListItem(
+      structureId: structureId ?? this.structureId,
+      enterpriseId: enterpriseId ?? this.enterpriseId,
+      enterpriseName: enterpriseName ?? this.enterpriseName,
+      structureCode: structureCode ?? this.structureCode,
+      structureName: structureName ?? this.structureName,
+      structureType: structureType ?? this.structureType,
+      description: description ?? this.description,
+      isActive: isActive ?? this.isActive,
+      createdDate: createdDate ?? this.createdDate,
+      lastUpdatedDate: lastUpdatedDate ?? this.lastUpdatedDate,
+      levels: levels ?? this.levels,
+      orgUnitCount: orgUnitCount ?? this.orgUnitCount,
+    );
+  }
 }
 
 /// Domain model for a structure level item in the list
@@ -83,4 +113,3 @@ class PaginatedStructureList {
     required this.count,
   });
 }
-

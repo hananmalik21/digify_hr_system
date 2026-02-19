@@ -470,6 +470,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/employees_small_icon.svg
   SvgGenImage get employeesSmallIcon => const SvgGenImage('assets/icons/employees_small_icon.svg');
 
+  /// Directory path: assets/icons/enterprise_structure
+  $AssetsIconsEnterpriseStructureGen get enterpriseStructure => const $AssetsIconsEnterpriseStructureGen();
+
   /// File path: assets/icons/enterprise_structure_icon.svg
   SvgGenImage get enterpriseStructureIcon => const SvgGenImage('assets/icons/enterprise_structure_icon.svg');
 
@@ -1330,6 +1333,25 @@ class $AssetsIconsEmployeeManagementGen {
     passport,
     user,
   ];
+}
+
+class $AssetsIconsEnterpriseStructureGen {
+  const $AssetsIconsEnterpriseStructureGen();
+
+  /// File path: assets/icons/enterprise_structure/down-arrow.svg
+  SvgGenImage get downArrow => const SvgGenImage('assets/icons/enterprise_structure/down-arrow.svg');
+
+  /// File path: assets/icons/enterprise_structure/hierarchy-level.svg
+  SvgGenImage get hierarchyLevel => const SvgGenImage('assets/icons/enterprise_structure/hierarchy-level.svg');
+
+  /// File path: assets/icons/enterprise_structure/right-arrow.svg
+  SvgGenImage get rightArrow => const SvgGenImage('assets/icons/enterprise_structure/right-arrow.svg');
+
+  /// File path: assets/icons/enterprise_structure/up-arrow.svg
+  SvgGenImage get upArrow => const SvgGenImage('assets/icons/enterprise_structure/up-arrow.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [downArrow, hierarchyLevel, rightArrow, upArrow];
 }
 
 class $AssetsIconsHeaderGen {

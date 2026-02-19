@@ -4,6 +4,8 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
@@ -63,7 +65,7 @@ class StructureCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-    final borderColor = isActive ? AppColors.success : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder);
+    final borderColor = isActive ? AppColors.statIconGreen : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder);
     final cardPadding = ResponsiveHelper.getResponsivePadding(
       context,
       mobile: EdgeInsetsDirectional.all(isActive ? 16.w : 18.w),
@@ -72,6 +74,7 @@ class StructureCardWidget extends StatelessWidget {
     );
 
     return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
       padding: cardPadding,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
@@ -92,19 +95,19 @@ class StructureCardWidget extends StatelessWidget {
   Widget _buildMobileContent(BuildContext context, bool isTablet) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
       children: [
         _buildTitleAndBadge(context, isTablet),
-        Gap(8.h),
         _buildDescription(context, isTablet),
-        Padding(
-          padding: EdgeInsetsDirectional.only(top: 8.h),
-          child: _buildHierarchy(),
+        HierarchyLevelsWidget(localizations: localizations, isDark: isDark, levels: levels, levelCount: levelCount),
+        StructureMetricsWidget(
+          localizations: localizations,
+          isDark: isDark,
+          components: components,
+          employees: employees,
+          created: created,
+          modified: modified,
         ),
-        Padding(
-          padding: EdgeInsetsDirectional.only(top: 8.h),
-          child: _buildMetrics(),
-        ),
-        Gap(16.h),
         ActionButtonsWidget(
           context: context,
           localizations: localizations,
@@ -130,22 +133,27 @@ class StructureCardWidget extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.h,
             children: [
               _buildTitleAndBadge(context, isTablet),
-              Gap(8.h),
               _buildDescription(context, isTablet),
-              Padding(
-                padding: EdgeInsetsDirectional.only(top: 8.h),
-                child: _buildHierarchy(),
+              HierarchyLevelsWidget(
+                localizations: localizations,
+                isDark: isDark,
+                levels: levels,
+                levelCount: levelCount,
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.only(top: 8.h),
-                child: _buildMetrics(),
+              StructureMetricsWidget(
+                localizations: localizations,
+                isDark: isDark,
+                components: components,
+                employees: employees,
+                created: created,
+                modified: modified,
               ),
             ],
           ),
         ),
-        Gap(isTablet ? 16.w : 24.w),
         ActionButtonsWidget(
           context: context,
           localizations: localizations,
@@ -165,42 +173,25 @@ class StructureCardWidget extends StatelessWidget {
   }
 
   Widget _buildTitleAndBadge(BuildContext context, bool isTablet) {
-    final titleStyle = (isTablet ? context.titleSmall : context.titleMedium).copyWith(
-      fontWeight: FontWeight.w600,
+    final titleStyle = context.textTheme.headlineSmall?.copyWith(
       color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-    );
-    final badgeTextStyle = context.labelSmall.copyWith(
-      fontWeight: FontWeight.w400,
-      color: isActive ? AppColors.cardBackground : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
     );
     final badgeBg = isActive
         ? AppColors.greenButton
         : (isDark ? AppColors.cardBackgroundGreyDark : AppColors.cardBackgroundGrey);
+    final badgeTextColor = isActive
+        ? AppColors.cardBackground
+        : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary);
 
     return Row(
       children: [
-        Expanded(
-          child: Text(title, style: titleStyle, overflow: TextOverflow.ellipsis),
-        ),
-        Gap(isTablet ? 10.w : 12.w),
-        Container(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 10.w : 12.w, vertical: 4.h),
-          decoration: BoxDecoration(color: badgeBg, borderRadius: BorderRadius.circular(9999.r)),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isActive) ...[
-                DigifyAsset(
-                  assetPath: Assets.icons.activeCheckIcon.path,
-                  width: isTablet ? 11 : 12,
-                  height: isTablet ? 11 : 12,
-                  color: AppColors.cardBackground,
-                ),
-                Gap(4.w),
-              ],
-              Text(isActive ? localizations.active : localizations.notUsed, style: badgeTextStyle),
-            ],
-          ),
+        Text(title, style: titleStyle, overflow: TextOverflow.ellipsis),
+        Gap(12.w),
+        DigifyCapsule(
+          label: isActive ? localizations.active : localizations.inactive,
+          iconPath: isActive ? Assets.icons.checkIconGreen.path : null,
+          backgroundColor: badgeBg,
+          textColor: badgeTextColor,
         ),
       ],
     );
@@ -209,53 +200,42 @@ class StructureCardWidget extends StatelessWidget {
   Widget _buildDescription(BuildContext context, bool isTablet) {
     return Text(
       description,
-      style: context.bodySmall.copyWith(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
-    );
-  }
-
-  Widget _buildHierarchy() {
-    return HierarchyLevelsWidget(localizations: localizations, isDark: isDark, levels: levels, levelCount: levelCount);
-  }
-
-  Widget _buildMetrics() {
-    return StructureMetricsWidget(
-      localizations: localizations,
-      isDark: isDark,
-      components: components,
-      employees: employees,
-      created: created,
-      modified: modified,
+      style: context.textTheme.bodyLarge?.copyWith(
+        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+      ),
     );
   }
 
   Widget _buildInfoBanner(BuildContext context) {
-    return Container(
-      margin: EdgeInsetsDirectional.only(top: 17.h),
-      padding: EdgeInsetsDirectional.only(top: 17.h),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: isDark ? AppColors.successBorderDark : AppColors.greenBorder, width: 1)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsetsDirectional.only(top: 2.h),
-            child: DigifyAsset(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DigifyDivider.horizontal(
+          color: isDark ? AppColors.successBorderDark : AppColors.activeStatusBorderLight,
+          margin: EdgeInsets.symmetric(vertical: 17.h),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DigifyAsset(
               assetPath: Assets.icons.infoIconGreen.path,
-              width: 16,
-              height: 16,
-              color: isDark ? AppColors.successTextDark : AppColors.successText,
+              width: 16.w,
+              height: 16.h,
+              color: isDark ? AppColors.successTextDark : AppColors.activeStatusTextLight,
             ),
-          ),
-          Gap(8.w),
-          Expanded(
-            child: Text(
-              localizations.currentlyActiveStructureMessage,
-              style: context.bodySmall.copyWith(color: isDark ? AppColors.successTextDark : AppColors.successText),
+            Gap(8.w),
+            Expanded(
+              child: Text(
+                localizations.currentlyActiveStructureMessage,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: isDark ? AppColors.successTextDark : AppColors.activeStatusTextLight,
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

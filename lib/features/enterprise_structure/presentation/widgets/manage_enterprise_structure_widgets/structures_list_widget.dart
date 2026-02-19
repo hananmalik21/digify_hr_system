@@ -63,6 +63,10 @@ class StructuresListWidget extends ConsumerWidget {
     final pagination = listState.pagination;
     final notifier = ref.read(structureListProvider.notifier);
 
+    if (listState.isLoadingMore || listState.isLoading) {
+      return const StructuresListSkeleton(itemCount: 3);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,31 +79,27 @@ class StructuresListWidget extends ConsumerWidget {
               ? dateFormat.format(structure.lastUpdatedDate!)
               : createdDate;
 
-          return Padding(
-            padding: EdgeInsetsDirectional.only(bottom: 16.h),
-            child: StructureCardWidget(
-              context: context,
-              localizations: localizations,
-              isDark: isDark,
-              title: structure.structureName,
-              description: structure.description,
-              isActive: structure.isActive,
-              levels: levelNames,
-              levelCount: activeLevels.length,
-              components: structure.orgUnitCount,
-              employees: 0,
-              created: createdDate,
-              modified: modifiedDate,
-              showInfoMessage: structure.isActive,
-              structureLevels: structure.levels,
-              enterpriseId: structure.enterpriseId,
-              structureId: structure.structureId,
-              structureListProvider: structureListProvider,
-              saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
-            ),
+          return StructureCardWidget(
+            context: context,
+            localizations: localizations,
+            isDark: isDark,
+            title: structure.structureName,
+            description: structure.description,
+            isActive: structure.isActive,
+            levels: levelNames,
+            levelCount: activeLevels.length,
+            components: structure.orgUnitCount,
+            employees: 0,
+            created: createdDate,
+            modified: modifiedDate,
+            showInfoMessage: structure.isActive,
+            structureLevels: structure.levels,
+            enterpriseId: structure.enterpriseId,
+            structureId: structure.structureId,
+            structureListProvider: structureListProvider,
+            saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
           );
         }),
-        if (listState.isLoadingMore) ...[Gap(16.h), const StructuresListSkeleton(itemCount: 2)],
         if (pagination != null) ...[
           Gap(16.h),
           PaginationControls(
