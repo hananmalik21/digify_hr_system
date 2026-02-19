@@ -50,7 +50,8 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/g
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_structure_usecase.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart' show StructureListNotifier, StructureListState;
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart'
+    show StructureListNotifier, StructureListState, StructureListViewState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Provider for ApiClient instance
@@ -59,368 +60,330 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 });
 
 /// Provider for StructureLevelRemoteDataSource
-final structureLevelRemoteDataSourceProvider =
-    Provider<StructureLevelRemoteDataSource>((ref) {
+final structureLevelRemoteDataSourceProvider = Provider<StructureLevelRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return StructureLevelRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for StructureLevelRepository
-final structureLevelRepositoryProvider =
-    Provider<StructureLevelRepositoryImpl>((ref) {
+final structureLevelRepositoryProvider = Provider<StructureLevelRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(structureLevelRemoteDataSourceProvider);
   return StructureLevelRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetStructureLevelsUseCase
-final getStructureLevelsUseCaseProvider =
-    Provider<GetStructureLevelsUseCase>((ref) {
+final getStructureLevelsUseCaseProvider = Provider<GetStructureLevelsUseCase>((ref) {
   final repository = ref.watch(structureLevelRepositoryProvider);
   return GetStructureLevelsUseCase(repository: repository);
 });
 
 /// Provider for EnterpriseStructureRemoteDataSource
-final enterpriseStructureRemoteDataSourceProvider =
-    Provider<EnterpriseStructureRemoteDataSource>((ref) {
+final enterpriseStructureRemoteDataSourceProvider = Provider<EnterpriseStructureRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return EnterpriseStructureRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for EnterpriseStructureRepository
-final enterpriseStructureRepositoryProvider =
-    Provider<EnterpriseStructureRepositoryImpl>((ref) {
+final enterpriseStructureRepositoryProvider = Provider<EnterpriseStructureRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(enterpriseStructureRemoteDataSourceProvider);
   return EnterpriseStructureRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for SaveEnterpriseStructureUseCase
-final saveEnterpriseStructureUseCaseProvider =
-    Provider<SaveEnterpriseStructureUseCase>((ref) {
+final saveEnterpriseStructureUseCaseProvider = Provider<SaveEnterpriseStructureUseCase>((ref) {
   final repository = ref.watch(enterpriseStructureRepositoryProvider);
   return SaveEnterpriseStructureUseCase(repository: repository);
 });
 
 /// Provider for EnterpriseRemoteDataSource
-final enterpriseRemoteDataSourceProvider =
-    Provider<EnterpriseRemoteDataSource>((ref) {
+final enterpriseRemoteDataSourceProvider = Provider<EnterpriseRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return EnterpriseRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for EnterpriseRepository
-final enterpriseRepositoryProvider =
-    Provider<EnterpriseRepositoryImpl>((ref) {
+final enterpriseRepositoryProvider = Provider<EnterpriseRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(enterpriseRemoteDataSourceProvider);
   return EnterpriseRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetEnterprisesUseCase
-final getEnterprisesUseCaseProvider =
-    Provider<GetEnterprisesUseCase>((ref) {
+final getEnterprisesUseCaseProvider = Provider<GetEnterprisesUseCase>((ref) {
   final repository = ref.watch(enterpriseRepositoryProvider);
   return GetEnterprisesUseCase(repository: repository);
 });
 
 /// Provider for StructureListRemoteDataSource
-final structureListRemoteDataSourceProvider =
-    Provider<StructureListRemoteDataSource>((ref) {
+final structureListRemoteDataSourceProvider = Provider<StructureListRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return StructureListRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for StructureListRepository
-final structureListRepositoryProvider =
-    Provider<StructureListRepositoryImpl>((ref) {
+final structureListRepositoryProvider = Provider<StructureListRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(structureListRemoteDataSourceProvider);
   return StructureListRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetStructureListUseCase
-final getStructureListUseCaseProvider =
-    Provider<GetStructureListUseCase>((ref) {
+final getStructureListUseCaseProvider = Provider<GetStructureListUseCase>((ref) {
   final repository = ref.watch(structureListRepositoryProvider);
   return GetStructureListUseCase(repository: repository);
 });
 
 /// Provider for CompanyRemoteDataSource
-final companyRemoteDataSourceProvider =
-    Provider<CompanyRemoteDataSource>((ref) {
+final companyRemoteDataSourceProvider = Provider<CompanyRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return CompanyRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for CompanyRepository
-final companyRepositoryProvider =
-    Provider<CompanyRepositoryImpl>((ref) {
+final companyRepositoryProvider = Provider<CompanyRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(companyRemoteDataSourceProvider);
   return CompanyRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetCompaniesUseCase
-final getCompaniesUseCaseProvider =
-    Provider<GetCompaniesUseCase>((ref) {
+final getCompaniesUseCaseProvider = Provider<GetCompaniesUseCase>((ref) {
   final repository = ref.watch(companyRepositoryProvider);
   return GetCompaniesUseCase(repository: repository);
 });
 
 /// Provider for CreateCompanyUseCase
-final createCompanyUseCaseProvider =
-    Provider<CreateCompanyUseCase>((ref) {
+final createCompanyUseCaseProvider = Provider<CreateCompanyUseCase>((ref) {
   final repository = ref.watch(companyRepositoryProvider);
   return CreateCompanyUseCase(repository: repository);
 });
 
 /// Provider for UpdateCompanyUseCase
-final updateCompanyUseCaseProvider =
-    Provider<UpdateCompanyUseCase>((ref) {
+final updateCompanyUseCaseProvider = Provider<UpdateCompanyUseCase>((ref) {
   final repository = ref.watch(companyRepositoryProvider);
   return UpdateCompanyUseCase(repository: repository);
 });
 
 /// Provider for DeleteCompanyUseCase
-final deleteCompanyUseCaseProvider =
-    Provider<DeleteCompanyUseCase>((ref) {
+final deleteCompanyUseCaseProvider = Provider<DeleteCompanyUseCase>((ref) {
   final repository = ref.watch(companyRepositoryProvider);
   return DeleteCompanyUseCase(repository: repository);
 });
 
 /// Provider for DivisionRemoteDataSource
-final divisionRemoteDataSourceProvider =
-    Provider<DivisionRemoteDataSource>((ref) {
+final divisionRemoteDataSourceProvider = Provider<DivisionRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return DivisionRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for DivisionRepository
-final divisionRepositoryProvider =
-    Provider<DivisionRepositoryImpl>((ref) {
+final divisionRepositoryProvider = Provider<DivisionRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(divisionRemoteDataSourceProvider);
   return DivisionRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetDivisionsUseCase
-final getDivisionsUseCaseProvider =
-    Provider<GetDivisionsUseCase>((ref) {
+final getDivisionsUseCaseProvider = Provider<GetDivisionsUseCase>((ref) {
   final repository = ref.watch(divisionRepositoryProvider);
   return GetDivisionsUseCase(repository: repository);
 });
 
 /// Provider for CreateDivisionUseCase
-final createDivisionUseCaseProvider =
-    Provider<CreateDivisionUseCase>((ref) {
+final createDivisionUseCaseProvider = Provider<CreateDivisionUseCase>((ref) {
   final repository = ref.watch(divisionRepositoryProvider);
   return CreateDivisionUseCase(repository: repository);
 });
 
 /// Provider for UpdateDivisionUseCase
-final updateDivisionUseCaseProvider =
-    Provider<UpdateDivisionUseCase>((ref) {
+final updateDivisionUseCaseProvider = Provider<UpdateDivisionUseCase>((ref) {
   final repository = ref.watch(divisionRepositoryProvider);
   return UpdateDivisionUseCase(repository: repository);
 });
 
 /// Provider for DeleteDivisionUseCase
-final deleteDivisionUseCaseProvider =
-    Provider<DeleteDivisionUseCase>((ref) {
+final deleteDivisionUseCaseProvider = Provider<DeleteDivisionUseCase>((ref) {
   final repository = ref.watch(divisionRepositoryProvider);
   return DeleteDivisionUseCase(repository: repository);
 });
 
 /// Provider for BusinessUnitRemoteDataSource
-final businessUnitRemoteDataSourceProvider =
-    Provider<BusinessUnitRemoteDataSource>((ref) {
+final businessUnitRemoteDataSourceProvider = Provider<BusinessUnitRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return BusinessUnitRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for BusinessUnitRepository
-final businessUnitRepositoryProvider =
-    Provider<BusinessUnitRepositoryImpl>((ref) {
+final businessUnitRepositoryProvider = Provider<BusinessUnitRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(businessUnitRemoteDataSourceProvider);
   return BusinessUnitRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetBusinessUnitsUseCase
-final getBusinessUnitsUseCaseProvider =
-    Provider<GetBusinessUnitsUseCase>((ref) {
+final getBusinessUnitsUseCaseProvider = Provider<GetBusinessUnitsUseCase>((ref) {
   final repository = ref.watch(businessUnitRepositoryProvider);
   return GetBusinessUnitsUseCase(repository: repository);
 });
 
 /// Provider for CreateBusinessUnitUseCase
-final createBusinessUnitUseCaseProvider =
-    Provider<CreateBusinessUnitUseCase>((ref) {
+final createBusinessUnitUseCaseProvider = Provider<CreateBusinessUnitUseCase>((ref) {
   final repository = ref.watch(businessUnitRepositoryProvider);
   return CreateBusinessUnitUseCase(repository: repository);
 });
 
 /// Provider for UpdateBusinessUnitUseCase
-final updateBusinessUnitUseCaseProvider =
-    Provider<UpdateBusinessUnitUseCase>((ref) {
+final updateBusinessUnitUseCaseProvider = Provider<UpdateBusinessUnitUseCase>((ref) {
   final repository = ref.watch(businessUnitRepositoryProvider);
   return UpdateBusinessUnitUseCase(repository: repository);
 });
 
 /// Provider for DeleteBusinessUnitUseCase
-final deleteBusinessUnitUseCaseProvider =
-    Provider<DeleteBusinessUnitUseCase>((ref) {
+final deleteBusinessUnitUseCaseProvider = Provider<DeleteBusinessUnitUseCase>((ref) {
   final repository = ref.watch(businessUnitRepositoryProvider);
   return DeleteBusinessUnitUseCase(repository: repository);
 });
 
 /// Provider for DepartmentRemoteDataSource
-final departmentRemoteDataSourceProvider =
-    Provider<DepartmentRemoteDataSource>((ref) {
+final departmentRemoteDataSourceProvider = Provider<DepartmentRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return DepartmentRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for DepartmentRepository
-final departmentRepositoryProvider =
-    Provider<DepartmentRepositoryImpl>((ref) {
+final departmentRepositoryProvider = Provider<DepartmentRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(departmentRemoteDataSourceProvider);
   return DepartmentRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetDepartmentsUseCase
-final getDepartmentsUseCaseProvider =
-    Provider<GetDepartmentsUseCase>((ref) {
+final getDepartmentsUseCaseProvider = Provider<GetDepartmentsUseCase>((ref) {
   final repository = ref.watch(departmentRepositoryProvider);
   return GetDepartmentsUseCase(repository: repository);
 });
 
 /// Provider for CreateDepartmentUseCase
-final createDepartmentUseCaseProvider =
-    Provider<CreateDepartmentUseCase>((ref) {
+final createDepartmentUseCaseProvider = Provider<CreateDepartmentUseCase>((ref) {
   final repository = ref.watch(departmentRepositoryProvider);
   return CreateDepartmentUseCase(repository: repository);
 });
 
 /// Provider for UpdateDepartmentUseCase
-final updateDepartmentUseCaseProvider =
-    Provider<UpdateDepartmentUseCase>((ref) {
+final updateDepartmentUseCaseProvider = Provider<UpdateDepartmentUseCase>((ref) {
   final repository = ref.watch(departmentRepositoryProvider);
   return UpdateDepartmentUseCase(repository: repository);
 });
 
 /// Provider for DeleteDepartmentUseCase
-final deleteDepartmentUseCaseProvider =
-    Provider<DeleteDepartmentUseCase>((ref) {
+final deleteDepartmentUseCaseProvider = Provider<DeleteDepartmentUseCase>((ref) {
   final repository = ref.watch(departmentRepositoryProvider);
   return DeleteDepartmentUseCase(repository: repository);
 });
 
 /// Provider for business units dropdown (with pageSize 1000)
-final businessUnitsDropdownProvider = StateNotifierProvider.autoDispose<BusinessUnitListNotifier, BusinessUnitListState>(
-  (ref) {
-    final getBusinessUnitsUseCase = ref.watch(getBusinessUnitsUseCaseProvider);
-    return BusinessUnitListNotifier.withPageSize(
-      getBusinessUnitsUseCase: getBusinessUnitsUseCase,
-      pageSize: 1000,
-    );
-  },
-);
+final businessUnitsDropdownProvider =
+    StateNotifierProvider.autoDispose<BusinessUnitListNotifier, BusinessUnitListState>((ref) {
+      final getBusinessUnitsUseCase = ref.watch(getBusinessUnitsUseCaseProvider);
+      return BusinessUnitListNotifier.withPageSize(getBusinessUnitsUseCase: getBusinessUnitsUseCase, pageSize: 1000);
+    });
+
+/// Provider for manage enterprise structure screen (default pagination)
+final structureListProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
+  final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
+  return StructureListNotifier(getStructureListUseCase: getStructureListUseCase);
+});
+
+final structureListViewStateProvider = Provider.autoDispose<StructureListViewState>((ref) {
+  final state = ref.watch(structureListProvider);
+  if (state.isLoading && state.structures.isEmpty) {
+    return StructureListViewState.initialLoading();
+  }
+  if (state.hasError && state.structures.isEmpty) {
+    return StructureListViewState.error(state.errorMessage);
+  }
+  if (state.structures.isEmpty) {
+    return StructureListViewState.empty();
+  }
+  return StructureListViewState.content(state);
+});
 
 /// Provider for organization structures dropdown (with pageSize 1000)
-final orgStructuresDropdownProvider =
-    StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>(
-  (ref) {
-    final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
-    return StructureListNotifier.withPageSize(
-      getStructureListUseCase: getStructureListUseCase,
-      pageSize: 1000,
-    );
-  },
-);
+final orgStructuresDropdownProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((
+  ref,
+) {
+  final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
+  return StructureListNotifier.withPageSize(getStructureListUseCase: getStructureListUseCase, pageSize: 1000);
+});
 
 /// Provider for OrgStructureLevelRemoteDataSource
-final orgStructureLevelRemoteDataSourceProvider =
-    Provider<OrgStructureLevelRemoteDataSource>((ref) {
+final orgStructureLevelRemoteDataSourceProvider = Provider<OrgStructureLevelRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return OrgStructureLevelRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for OrgStructureLevelRepository
-final orgStructureLevelRepositoryProvider =
-    Provider<OrgStructureLevelRepositoryImpl>((ref) {
+final orgStructureLevelRepositoryProvider = Provider<OrgStructureLevelRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(orgStructureLevelRemoteDataSourceProvider);
   return OrgStructureLevelRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetActiveLevelsUseCase
-final getActiveLevelsUseCaseProvider =
-    Provider<GetActiveLevelsUseCase>((ref) {
+final getActiveLevelsUseCaseProvider = Provider<GetActiveLevelsUseCase>((ref) {
   final repository = ref.watch(orgStructureLevelRepositoryProvider);
   return GetActiveLevelsUseCase(repository: repository);
 });
 
 /// Provider for OrgUnitRemoteDataSource
-final orgUnitRemoteDataSourceProvider =
-    Provider<OrgUnitRemoteDataSource>((ref) {
+final orgUnitRemoteDataSourceProvider = Provider<OrgUnitRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return OrgUnitRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for OrgUnitRepository
-final orgUnitRepositoryProvider =
-    Provider<OrgUnitRepositoryImpl>((ref) {
+final orgUnitRepositoryProvider = Provider<OrgUnitRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(orgUnitRemoteDataSourceProvider);
   return OrgUnitRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for GetOrgUnitsByLevelUseCase
-final getOrgUnitsByLevelUseCaseProvider =
-    Provider<GetOrgUnitsByLevelUseCase>((ref) {
+final getOrgUnitsByLevelUseCaseProvider = Provider<GetOrgUnitsByLevelUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return GetOrgUnitsByLevelUseCase(repository: repository);
 });
 
 /// Provider for GetOrgUnitsPaginatedUseCase
-final getOrgUnitsPaginatedUseCaseProvider =
-    Provider<GetOrgUnitsPaginatedUseCase>((ref) {
+final getOrgUnitsPaginatedUseCaseProvider = Provider<GetOrgUnitsPaginatedUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return GetOrgUnitsPaginatedUseCase(repository: repository);
 });
 
 /// Provider for CreateOrgUnitUseCase
-final createOrgUnitUseCaseProvider =
-    Provider<CreateOrgUnitUseCase>((ref) {
+final createOrgUnitUseCaseProvider = Provider<CreateOrgUnitUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return CreateOrgUnitUseCase(repository: repository);
 });
 
 /// Provider for UpdateOrgUnitUseCase
-final updateOrgUnitUseCaseProvider =
-    Provider<UpdateOrgUnitUseCase>((ref) {
+final updateOrgUnitUseCaseProvider = Provider<UpdateOrgUnitUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return UpdateOrgUnitUseCase(repository: repository);
 });
 
 /// Provider for DeleteOrgUnitUseCase
-final deleteOrgUnitUseCaseProvider =
-    Provider<DeleteOrgUnitUseCase>((ref) {
+final deleteOrgUnitUseCaseProvider = Provider<DeleteOrgUnitUseCase>((ref) {
   final repository = ref.watch(orgUnitRepositoryProvider);
   return DeleteOrgUnitUseCase(repository: repository);
 });
 
 /// Provider for StructureDeleteRemoteDataSource
-final structureDeleteRemoteDataSourceProvider =
-    Provider<StructureDeleteRemoteDataSource>((ref) {
+final structureDeleteRemoteDataSourceProvider = Provider<StructureDeleteRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return StructureDeleteRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 /// Provider for StructureDeleteRepository
-final structureDeleteRepositoryProvider =
-    Provider<StructureDeleteRepositoryImpl>((ref) {
+final structureDeleteRepositoryProvider = Provider<StructureDeleteRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(structureDeleteRemoteDataSourceProvider);
   return StructureDeleteRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
 /// Provider for DeleteStructureUseCase
-final deleteStructureUseCaseProvider =
-    Provider<DeleteStructureUseCase>((ref) {
+final deleteStructureUseCaseProvider = Provider<DeleteStructureUseCase>((ref) {
   final repository = ref.watch(structureDeleteRepositoryProvider);
   return DeleteStructureUseCase(repository: repository);
 });
-

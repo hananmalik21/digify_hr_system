@@ -1,14 +1,16 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/features/enterprise_structure/data/models/stat_card.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-/// Stats cards widget
 class StatsCardsWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
@@ -21,140 +23,148 @@ class StatsCardsWidget extends ConsumerWidget {
     required this.structureListProvider,
   });
 
+  static const Color _iconBackgroundLight = AppColors.infoBg;
+  static const Color _iconColor = AppColors.statIconBlue;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
-
-    // Get total from pagination
     final listState = ref.watch(structureListProvider);
     final totalStructures = listState.pagination?.total ?? listState.total;
+    final activeCount = listState.structures.where((s) => s.isActive).length;
 
     final cards = [
-      StatCard(
+      _EnterpriseStatCard(
         label: localizations.totalStructures,
         value: totalStructures.toString(),
-        icon: 'assets/icons/total_structures_icon.svg',
-        color: const Color(0xFF9810FA),
+        iconPath: Assets.icons.totalStructuresIcon.path,
+        isDark: isDark,
+        iconColor: _iconColor,
+        iconBgLight: _iconBackgroundLight,
       ),
-      StatCard(
+      _EnterpriseStatCard(
         label: localizations.activeStructure,
-        value: '1',
-        icon: 'assets/icons/active_structure_icon.svg',
-        color: const Color(0xFF00A63E),
+        value: activeCount.toString(),
+        iconPath: Assets.icons.activeStructureIcon.path,
+        isDark: isDark,
+        iconColor: _iconColor,
+        iconBgLight: _iconBackgroundLight,
       ),
-      StatCard(
+      _EnterpriseStatCard(
         label: localizations.componentsInUse,
         value: '58',
-        icon: 'assets/icons/components_icon.svg',
-        color: const Color(0xFF155DFC),
+        iconPath: Assets.icons.componentsIcon.path,
+        isDark: isDark,
+        iconColor: _iconColor,
+        iconBgLight: _iconBackgroundLight,
       ),
-      StatCard(
+      _EnterpriseStatCard(
         label: localizations.employeesAssigned,
         value: '450',
-        icon: 'assets/icons/employees_assigned_icon.svg',
-        color: const Color(0xFFF54900),
+        iconPath: Assets.icons.employeesAssignedIcon.path,
+        isDark: isDark,
+        iconColor: _iconColor,
+        iconBgLight: _iconBackgroundLight,
       ),
     ];
 
     if (isMobile) {
       return Column(
-        children: cards.map((card) {
-          return Padding(
-            padding: EdgeInsetsDirectional.only(bottom: card != cards.last ? 12.h : 0),
-            child: StatCardWidget(card: card, isDark: isDark),
-          );
-        }).toList(),
+        children: [
+          for (var i = 0; i < cards.length; i++)
+            Padding(
+              padding: EdgeInsetsDirectional.only(bottom: i < cards.length - 1 ? 12.h : 0),
+              child: cards[i],
+            ),
+        ],
       );
     } else if (isTablet) {
       return Wrap(
         spacing: 12.w,
         runSpacing: 12.h,
-        children: cards.map((card) {
-          return SizedBox(
-            width: (MediaQuery.of(context).size.width - 48.w - 12.w) / 2,
-            child: StatCardWidget(card: card, isDark: isDark),
-          );
-        }).toList(),
+        children: cards
+            .map((card) => SizedBox(width: (MediaQuery.of(context).size.width - 48.w - 12.w) / 2, child: card))
+            .toList(),
       );
     } else {
       return Row(
-        children: cards.map((card) {
-          return Expanded(
-            child: Padding(
-              padding: EdgeInsetsDirectional.only(end: card != cards.last ? 16.w : 0),
-              child: StatCardWidget(card: card, isDark: isDark),
+        children: [
+          for (var i = 0; i < cards.length; i++)
+            Expanded(
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(end: i < cards.length - 1 ? 21.w : 0),
+                child: cards[i],
+              ),
             ),
-          );
-        }).toList(),
+        ],
       );
     }
   }
 }
 
-/// Individual stat card widget
-class StatCardWidget extends StatelessWidget {
-  final StatCard card;
+class _EnterpriseStatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String iconPath;
   final bool isDark;
+  final Color iconColor;
+  final Color iconBgLight;
 
-  const StatCardWidget({super.key, required this.card, required this.isDark});
+  const _EnterpriseStatCard({
+    required this.label,
+    required this.value,
+    required this.iconPath,
+    required this.isDark,
+    required this.iconColor,
+    required this.iconBgLight,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
+    final titleColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final valueColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final iconBgColor = isDark ? AppColors.infoBgDark.withValues(alpha: 0.5) : iconBgLight;
 
     return Container(
-      padding: ResponsiveHelper.getResponsivePadding(
-        context,
-        mobile: EdgeInsetsDirectional.all(16.w),
-        tablet: EdgeInsetsDirectional.all(20.w),
-        web: EdgeInsetsDirectional.all(24.w),
-      ),
+      padding: EdgeInsetsDirectional.all(22.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  card.label,
-                  style: TextStyle(
-                    fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.7.sp),
-                    fontWeight: FontWeight.w400,
-                    color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-                    height: 20 / 13.7,
-                    letterSpacing: 0,
-                  ),
+                  label,
+                  style: context.textTheme.titleSmall?.copyWith(color: titleColor, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 4.h),
+                Gap(7.h),
                 Text(
-                  card.value,
-                  style: TextStyle(
-                    fontSize: isMobile ? 20.sp : (isTablet ? 22.sp : 24.sp),
+                  value,
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontSize: 26.sp,
                     fontWeight: FontWeight.w700,
-                    color: card.color,
-                    height: 32 / 24,
-                    letterSpacing: 0,
+                    color: valueColor,
                   ),
                 ),
               ],
             ),
           ),
-          DigifyAsset(
-            assetPath: card.icon,
-            width: isMobile ? 20 : (isTablet ? 22 : 24),
-            height: isMobile ? 20 : (isTablet ? 22 : 24),
-            color: card.color,
+          Container(
+            width: 42.w,
+            height: 42.h,
+            decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(7.r)),
+            alignment: Alignment.center,
+            child: DigifyAsset(assetPath: iconPath, color: iconColor, width: 21, height: 21),
           ),
         ],
       ),
