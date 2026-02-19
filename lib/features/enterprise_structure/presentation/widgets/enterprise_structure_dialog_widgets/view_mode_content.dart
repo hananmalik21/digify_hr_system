@@ -1,25 +1,23 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_summary_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/hierarchy_level_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import 'enterprise_structure_dialog_mode.dart';
-import 'enterprise_structure_dialog_providers.dart';
 import 'hierarchy_preview_section.dart';
-import 'organizational_hierarchy_levels_section.dart';
 
 class ViewModeContent extends StatelessWidget {
   final AppLocalizations localizations;
   final List<HierarchyLevel> levels;
   final String structureName;
   final String description;
-  final EditDialogParams params;
 
   const ViewModeContent({
     super.key,
@@ -27,12 +25,13 @@ class ViewModeContent extends StatelessWidget {
     required this.levels,
     required this.structureName,
     required this.description,
-    required this.params,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final hasActiveLevels = levels.any((l) => l.isActive);
+    final status = hasActiveLevels ? PositionStatus.active : PositionStatus.inactive;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,6 +53,15 @@ class ViewModeContent extends StatelessWidget {
           maxLines: 4,
           filled: true,
         ),
+        Gap(16.h),
+        DigifySelectFieldWithLabel<PositionStatus>(
+          label: localizations.status,
+          value: status,
+          items: const [PositionStatus.active, PositionStatus.inactive],
+          itemLabelBuilder: (s) => s == PositionStatus.active ? 'Active' : 'Inactive',
+          onChanged: null,
+          isRequired: true,
+        ),
         Gap(24.h),
         if (levels.isEmpty)
           Padding(
@@ -69,13 +77,36 @@ class ViewModeContent extends StatelessWidget {
             ),
           )
         else
-          OrganizationalHierarchyLevelsSection(
-            mode: EnterpriseStructureDialogMode.view,
-            levels: levels,
-            state: null,
-            dialogState: null,
-            params: params,
-            editDialogProvider: editEnterpriseStructureDialogProvider,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localizations.organizationalHierarchyLevels,
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontSize: 15.sp,
+                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                ),
+              ),
+              Gap(16.h),
+              ...levels.map(
+                (level) => Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: 12.h),
+                  child: HierarchyLevelCard(
+                    name: level.name,
+                    icon: level.icon,
+                    levelNumber: level.level,
+                    isMandatory: level.isMandatory,
+                    isActive: level.isActive,
+                    canMoveUp: false,
+                    canMoveDown: false,
+                    onMoveUp: null,
+                    onMoveDown: null,
+                    onToggleActive: null,
+                    showArrows: false,
+                  ),
+                ),
+              ),
+            ],
           ),
         Gap(12.h),
         HierarchyPreviewSection(levels: levels),

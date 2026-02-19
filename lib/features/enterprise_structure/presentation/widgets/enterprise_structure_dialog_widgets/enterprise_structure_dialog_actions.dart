@@ -1,8 +1,6 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/buttons/custom_button.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -29,32 +27,15 @@ class EnterpriseStructureDialogActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final saveState = ref.watch(saveEnterpriseStructureDialogProvider);
-    final isDark = context.isDark;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextButton(
-          onPressed: saveState.isSaving ? null : () => context.pop(),
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
-              side: BorderSide(color: isDark ? AppColors.inputBorderDark : AppColors.inputBorder),
-            ),
-          ),
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-            ),
-          ),
-        ),
+        AppButton.outline(label: 'Cancel', onPressed: saveState.isSaving ? null : () => context.pop()),
         Gap(16.w),
-        CustomButton.icon(
-          svgIcon: Assets.icons.saveConfigIcon.path,
+        AppButton.primary(
+          label: 'Save Configuration',
+          svgPath: Assets.icons.saveConfigIcon.path,
           isLoading: saveState.isSaving,
           onPressed: saveState.isSaving
               ? null
@@ -88,7 +69,6 @@ class EnterpriseStructureDialogActions extends ConsumerWidget {
 
                     if (!context.mounted) return;
                     if (success) {
-                      ref.read(provider.notifier).refresh();
                       context.pop(true);
                       ToastService.success(context, 'Structure saved successfully');
                     }
@@ -100,8 +80,6 @@ class EnterpriseStructureDialogActions extends ConsumerWidget {
                     ToastService.error(context, 'Failed to save structure: ${e.toString()}');
                   }
                 },
-          text: 'Save Configuration',
-          icon: null,
         ),
       ],
     );

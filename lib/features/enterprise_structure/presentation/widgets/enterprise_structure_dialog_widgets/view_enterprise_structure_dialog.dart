@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,13 +49,6 @@ class ViewEnterpriseStructureDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final levels = initialLevels ?? const <HierarchyLevel>[];
-    final params = EditDialogParams(
-      structureName: structureName,
-      description: description,
-      initialLevels: levels,
-      selectedEnterpriseId: enterpriseId,
-      isActive: true,
-    );
 
     return AppDialog(
       title: localizations.viewEnterpriseStructureConfiguration,
@@ -68,7 +60,6 @@ class ViewEnterpriseStructureDialog extends StatelessWidget {
         levels: levels,
         structureName: structureName,
         description: description,
-        params: params,
       ),
     );
   }
