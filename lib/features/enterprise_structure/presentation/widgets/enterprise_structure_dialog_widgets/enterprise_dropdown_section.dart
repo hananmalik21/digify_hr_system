@@ -43,7 +43,7 @@ class EnterpriseDropdownSection extends ConsumerWidget {
             Gap(8.h),
             Container(
               width: double.infinity,
-              height: 56.h,
+              height: 48.h,
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[800] : Colors.grey[300],
                 borderRadius: BorderRadius.circular(10.r),

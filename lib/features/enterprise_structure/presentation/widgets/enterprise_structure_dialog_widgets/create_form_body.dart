@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
@@ -15,6 +14,7 @@ import 'package:gap/gap.dart';
 import 'enterprise_dropdown_section.dart';
 import 'enterprise_structure_dialog_mode.dart';
 import 'enterprise_structure_dialog_providers.dart';
+import 'hierarchy_loading_placeholder.dart';
 import 'hierarchy_preview_section.dart';
 import 'organizational_hierarchy_levels_section.dart';
 
@@ -78,12 +78,7 @@ class CreateFormBody extends ConsumerWidget {
         ),
         Gap(16.h),
         if (isHierarchyLoading)
-          SizedBox(
-            height: 200.h,
-            child: Center(
-              child: AppLoadingIndicator(type: LoadingType.fadingCircle, size: 48.r),
-            ),
-          )
+          HierarchyLoadingPlaceholder(isDark: isDark)
         else ...[
           _buildLevelsSection(context, isDark, levels),
           Gap(24.h),
