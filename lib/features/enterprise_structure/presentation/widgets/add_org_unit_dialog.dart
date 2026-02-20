@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/date_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
@@ -21,7 +19,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 
-/// Dialog for adding or editing an org unit
 class AddOrgUnitDialog extends ConsumerStatefulWidget {
   final String structureId;
   final String levelCode;
@@ -35,14 +32,10 @@ class AddOrgUnitDialog extends ConsumerStatefulWidget {
     required String levelCode,
     OrgStructureLevel? initialValue,
   }) {
-    debugPrint(
-      'AddOrgUnitDialog.show called with structureId=$structureId, levelCode=$levelCode, isEdit=${initialValue != null}',
-    );
     return showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (dialogContext) {
-        debugPrint('AddOrgUnitDialog builder called');
         return AddOrgUnitDialog(structureId: structureId, levelCode: levelCode, initialValue: initialValue);
       },
     );
@@ -96,31 +89,22 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       'description': TextEditingController(text: initial?.description ?? ''),
     };
 
-    // Set parent ID and name from initial value (for editing)
     _selectedParentId = initial?.parentOrgUnitId;
-    // Use parentUnit.name if available (from API response), otherwise use parentName getter
     if (initial != null) {
       _selectedParentName = initial.parentUnit?.name;
-      // Fallback to parentName getter if parentUnit.name is not available
       if (_selectedParentName == null || _selectedParentName!.isEmpty) {
         final parentName = initial.parentName;
         _selectedParentName = parentName.isNotEmpty ? parentName : null;
       }
     }
 
-    // Pre-fetch parent org units when dialog opens (only if not COMPANY level)
-    // This ensures the parent units list is available if user wants to change the parent
     if (widget.levelCode.toUpperCase() != 'COMPANY') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          debugPrint(
-            'AddOrgUnitDialog: Pre-fetching parent org units for structureId=${widget.structureId}, levelCode=${widget.levelCode}',
-          );
           // Trigger the provider to fetch data by refreshing it
           final params = ParentOrgUnitsParams(structureId: widget.structureId, levelCode: widget.levelCode);
           ref.invalidate(parentOrgUnitsProvider(params));
 
-          // If we don't have parent name yet, try to get it from the loaded list
           if (_selectedParentId != null && _selectedParentName == null) {
             ref.listen<AsyncValue<List<OrgStructureLevel>>>(parentOrgUnitsProvider(params), (previous, next) {
               if (mounted && next.hasValue && _selectedParentId != null && _selectedParentName == null) {
@@ -129,9 +113,8 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                   setState(() {
                     _selectedParentName = parentUnit.orgUnitNameEn;
                   });
-                } catch (e) {
+                } catch (_) {
                   // Parent not found in the list, keep parent ID but no name
-                  debugPrint('Parent unit with ID $_selectedParentId not found in parent units list');
                 }
               }
             });
@@ -150,7 +133,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
   }
 
   Future<void> _selectParent() async {
-    // Don't allow parent selection for COMPANY level
     if (widget.levelCode.toUpperCase() == 'COMPANY') {
       return;
     }
@@ -162,7 +144,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     );
     if (selected != null && mounted) {
       setState(() {
-        log("selected is ${selected.orgUnitId}");
         _selectedParentId = selected.orgUnitId;
         _selectedParentName = selected.orgUnitNameEn;
       });
@@ -181,12 +162,10 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     try {
       final isEdit = widget.initialValue != null;
 
-      // Prepare data for API call
       final requestData = <String, dynamic>{
         'org_unit_code': _controllers['orgUnitCode']!.text.trim(),
         'org_unit_name_en': _controllers['nameEn']!.text.trim(),
         'org_unit_name_ar': _controllers['nameAr']!.text.trim(),
-        // For COMPANY level, send null; for other levels, send the selected parent ID
         'parent_org_unit_id': widget.levelCode.toUpperCase() == 'COMPANY' ? null : _selectedParentId,
         'is_active': _selectedStatus == 'Active' ? 'Y' : 'N',
         'manager_name': _controllers['managerName']!.text.trim(),
@@ -198,24 +177,18 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
         'description': _controllers['description']!.text.trim(),
       };
 
-      // Add level_code only for create, not for update
       if (!isEdit) {
         requestData['level_code'] = widget.levelCode;
       }
 
-      // Add last_update_login for update
       if (isEdit) {
         requestData['last_update_login'] = 'SYSTEM';
       }
 
-      debugPrint('AddOrgUnitDialog: Submitting data (isEdit=$isEdit): $requestData');
-
       if (isEdit) {
-        // Call API to update org unit
         final updateUseCase = ref.read(updateOrgUnitUseCaseProvider);
         await updateUseCase.call(widget.structureId, widget.initialValue!.orgUnitId, requestData);
       } else {
-        // Call API to create org unit
         final createUseCase = ref.read(createOrgUnitUseCaseProvider);
         await createUseCase.call(widget.structureId, requestData);
       }
@@ -223,7 +196,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       if (mounted) {
         Navigator.of(context).pop();
         ToastService.success(context, isEdit ? 'Org unit updated successfully' : 'Org unit created successfully');
-        // Refresh the org units list
         ref.read(orgUnitsProvider(widget.levelCode).notifier).refresh();
       }
     } catch (e) {
@@ -265,16 +237,13 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header
                 _buildHeader(context, localizations, isDark, isMobile, isTablet),
-                // Form content
                 Flexible(
                   child: SingleChildScrollView(
                     padding: EdgeInsetsDirectional.all(24.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Org Unit Code
                         _buildTextField(
                           context,
                           localizations,
@@ -288,7 +257,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           inputFormatters: [AppInputFormatters.orgUnitCode, AppInputFormatters.maxLen(30)],
                         ),
                         SizedBox(height: 24.h),
-                        // Name (English) and Name (Arabic) side by side
                         Row(
                           children: [
                             Expanded(
@@ -323,10 +291,8 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           ],
                         ),
                         SizedBox(height: 24.h),
-                        // Status
                         _buildStatusDropdown(context, localizations, isDark, isMobile, isTablet),
                         SizedBox(height: 24.h),
-                        // Country and City
                         Row(
                           children: [
                             Expanded(
@@ -359,16 +325,10 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           ],
                         ),
 
-                        // Address
-                        SizedBox(height: 24.h),
-                        // Currency and Fiscal Year Start
-
-                        // Parent Org Unit (only show if not COMPANY level)
                         if (widget.levelCode.toUpperCase() != 'COMPANY') ...[
                           _buildParentField(context, localizations, isDark, isMobile, isTablet),
                           SizedBox(height: 24.h),
                         ],
-                        // Manager Name
                         _buildTextField(
                           context,
                           localizations,
@@ -381,7 +341,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: 24.h),
-                        // Manager Email and Phone side by side
                         Row(
                           children: [
                             Expanded(
@@ -418,7 +377,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           ],
                         ),
                         SizedBox(height: 24.h),
-                        // Location
                         _buildTextField(
                           context,
                           localizations,
@@ -431,7 +389,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: 24.h),
-                        // Description
                         _buildTextField(
                           context,
                           localizations,
@@ -448,7 +405,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                     ),
                   ),
                 ),
-                // Footer
                 _buildFooter(context, localizations, isDark, isMobile, isTablet),
               ],
             ),
@@ -513,7 +469,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
     int maxLines = 1,
     required bool isMobile,
     required bool isTablet,
-    List<TextInputFormatter>? inputFormatters, // ✅ add
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,7 +490,6 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
           maxLines: maxLines,
           enabled: !_isLoading,
           inputFormatters: inputFormatters,
-          // ✅ add
           style: TextStyle(
             fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
             fontWeight: FontWeight.w400,
@@ -681,53 +636,13 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
 
             onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
           ),
-          // TextButton(
-          //   onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          //   child: Text(
-          //     localizations.cancel,
-          //     style: TextStyle(
-          //       fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
-          //       fontWeight: FontWeight.w500,
-          //       color: isDark
-          //           ? AppColors.textSecondaryDark
-          //           : AppColors.textSecondary,
-          //     ),
-          //   ),
-          // ),
           SizedBox(width: 12.w),
           CustomButton.icon(
             svgIcon: Assets.icons.saveConfigIcon.path,
             onPressed: _isLoading ? null : _handleSubmit,
             text: localizations.saveConfiguration,
             isLoading: _isLoading,
-            icon: null,
           ),
-          // ElevatedButton(
-          //   onPressed: _isLoading ? null : _handleSubmit,
-          //   style: ElevatedButton.styleFrom(
-          //     backgroundColor: AppColors.primary,
-          //     padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w),
-          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-          //   ),
-          //   child: _isLoading
-          //       ? SizedBox(
-          //           width: 16.w,
-          //           height: 16.h,
-          //           child: const AppLoadingIndicator(
-          //             type: LoadingType.fadingCircle,
-          //             size: 16,
-          //             color: Colors.white,
-          //           ),
-          //         )
-          //       : Text(
-          //           localizations.saveChanges,
-          //           style: TextStyle(
-          //             fontSize: isMobile ? 13.sp : (isTablet ? 13.5.sp : 14.sp),
-          //             fontWeight: FontWeight.w500,
-          //             color: Colors.white,
-          //           ),
-          //         ),
-          // ),
         ],
       ),
     );

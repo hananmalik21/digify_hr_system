@@ -31,11 +31,9 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
     final isRefreshing = listState.isLoading && businessUnits.isNotEmpty;
     final isDark = context.isDark;
 
-    // Calculate stats from current list
     final totalEmployees = businessUnits.fold<int>(0, (previousValue, bu) => previousValue + bu.employees);
     final activeUnits = businessUnits.where((bu) => bu.isActive).length;
 
-    // Calculate total budget
     double totalBudget = 0;
     for (var bu in businessUnits) {
       final budgetStr = bu.budget.replaceAll('M', '').replaceAll(' KWD', '').replaceAll(',', '');
@@ -247,7 +245,6 @@ class BusinessUnitManagementScreen extends ConsumerWidget {
               child: TextField(
                 onChanged: (value) {
                   ref.read(businessUnitSearchQueryProvider.notifier).state = value;
-                  // Debounce API search - only search if user stops typing for 500ms
                   Future.delayed(const Duration(milliseconds: 500), () {
                     if (ref.read(businessUnitSearchQueryProvider) == value) {
                       ref.read(businessUnitListNotifierProvider.notifier).search(value);
@@ -460,7 +457,6 @@ class _BusinessUnitCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Row
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -468,7 +464,6 @@ class _BusinessUnitCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Icon + Name
                       Row(
                         children: [
                           Container(
@@ -517,7 +512,6 @@ class _BusinessUnitCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8.h),
-                      // Badges
                       Row(
                         children: [
                           _Badge(
@@ -534,7 +528,6 @@ class _BusinessUnitCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8.h),
-                      // Division Name
                       Row(
                         children: [
                           DigifyAsset(
@@ -558,7 +551,6 @@ class _BusinessUnitCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 4.h),
-                      // Company Name
                       Row(
                         children: [
                           DigifyAsset(
@@ -584,7 +576,6 @@ class _BusinessUnitCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Action Buttons
                 Row(
                   children: [
                     _ActionIcon(
@@ -600,10 +591,8 @@ class _BusinessUnitCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 16.h),
-            // Details Section
             Column(
               children: [
-                // Head Row
                 Container(
                   padding: EdgeInsets.all(8.w),
                   decoration: BoxDecoration(
@@ -642,7 +631,6 @@ class _BusinessUnitCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
-                // Stats Row
                 Row(
                   children: [
                     Expanded(
@@ -714,7 +702,6 @@ class _BusinessUnitCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 12.h),
-                // Focus Area Row
                 Row(
                   children: [
                     DigifyAsset(

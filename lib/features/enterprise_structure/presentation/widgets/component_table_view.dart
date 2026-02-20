@@ -2,19 +2,21 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
-/// Table view for component values matching Figma design pixel-perfectly
 class ComponentTableView extends StatelessWidget {
   final List<ComponentValue> components;
-  final List<ComponentValue> allComponents; // Full list for parent lookup
+  final List<ComponentValue> allComponents;
   final ComponentType? filterType;
-  final List<StructureListItem>? orgStructures; // Org structures for company parent org lookup
+  final List<StructureListItem>? orgStructures;
+  final bool isLoading;
   final Function(ComponentValue component)? onView;
   final Function(ComponentValue component)? onEdit;
   final Function(ComponentValue component)? onDelete;
@@ -26,6 +28,7 @@ class ComponentTableView extends StatelessWidget {
     required this.allComponents,
     this.filterType,
     this.orgStructures,
+    this.isLoading = false,
     this.onView,
     this.onEdit,
     this.onDelete,
@@ -36,6 +39,28 @@ class ComponentTableView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+
+    if (isLoading && components.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
+              Gap(16.h),
+              Text(
+                localizations.pleaseWait,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     if (components.isEmpty) {
       return Container(
@@ -57,10 +82,8 @@ class ComponentTableView extends StatelessWidget {
       );
     }
 
-    // Get column widths based on component type
     final columnWidths = _getColumnWidths(filterType);
 
-    // Calculate total table width
     final totalWidth = columnWidths.values.fold<double>(0, (sum, width) => sum + width);
 
     return Container(
@@ -79,9 +102,7 @@ class ComponentTableView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Table header
               _buildTableHeader(context, localizations, isDark, columnWidths),
-              // Table body
               _buildTableBody(context, localizations, isDark, columnWidths),
             ],
           ),
@@ -91,7 +112,6 @@ class ComponentTableView extends StatelessWidget {
   }
 
   Map<String, double> _getColumnWidths(ComponentType? type) {
-    // Column widths from Figma designs (in pixels, will be converted with .w)
     switch (type) {
       case ComponentType.company:
         return {
@@ -307,10 +327,8 @@ class ComponentTableView extends StatelessWidget {
     Map<String, double> columnWidths,
     bool isLast,
   ) {
-    // Get parent component name
     final parentName = _getParentName(component);
 
-    // Row padding varies based on component type to match Figma
     final rowPadding = filterType == ComponentType.department ? 24.25.h : 23.75.h;
 
     return Container(
@@ -322,7 +340,6 @@ class ComponentTableView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Code
           _buildCell(
             context,
             component.code,
@@ -332,7 +349,6 @@ class ComponentTableView extends StatelessWidget {
             fontWeight: FontWeight.w500,
             fontSize: filterType == ComponentType.department ? 13.8.sp : 13.9.sp,
           ),
-          // Name
           _buildCell(
             context,
             _formatName(component.name),
@@ -342,7 +358,6 @@ class ComponentTableView extends StatelessWidget {
             isMultiLine: filterType == ComponentType.department && component.name.contains(' '),
             fontSize: filterType == ComponentType.department ? 13.5.sp : 13.6.sp,
           ),
-          // Arabic Name
           _buildCell(
             context,
             _formatArabicName(component.arabicName),
@@ -354,7 +369,6 @@ class ComponentTableView extends StatelessWidget {
             isMultiLine: filterType == ComponentType.department && component.arabicName.contains(' '),
             fontSize: 14.sp,
           ),
-          // Parent
           _buildCell(
             context,
             parentName,
@@ -365,7 +379,6 @@ class ComponentTableView extends StatelessWidget {
             isMultiLine: filterType == ComponentType.department && parentName.contains('('),
             fontSize: filterType == ComponentType.department ? 13.6.sp : 13.7.sp,
           ),
-          // Manager
           _buildCell(
             context,
             _formatManagerName(component.managerId ?? '-'),
@@ -376,7 +389,6 @@ class ComponentTableView extends StatelessWidget {
             isMultiLine: filterType == ComponentType.department && (component.managerId?.contains(' ') ?? false),
             fontSize: filterType == ComponentType.department ? 13.6.sp : 13.7.sp,
           ),
-          // Location
           _buildCell(
             context,
             _formatLocation(component.location ?? '-'),
@@ -387,11 +399,8 @@ class ComponentTableView extends StatelessWidget {
             isMultiLine: filterType == ComponentType.department && (component.location?.contains('-') ?? false),
             fontSize: filterType == ComponentType.department ? 13.6.sp : 13.5.sp,
           ),
-          // Status
           _buildStatusCell(context, component.status, columnWidths['status']!, rowPadding, isDark, localizations),
-          // Last Updated
           _buildLastUpdatedCell(context, component, columnWidths['lastUpdated']!, rowPadding, isDark, localizations),
-          // Actions
           _buildActionsCell(context, component, columnWidths['actions']!, rowPadding, isDark, localizations),
         ],
       ),
@@ -465,7 +474,6 @@ class ComponentTableView extends StatelessWidget {
     final isTablet = ResponsiveHelper.isTablet(context);
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
 
-    // Status cell has different vertical padding to center the badge
     final statusPadding = filterType == ComponentType.department
         ? EdgeInsetsDirectional.only(
             start: horizontalPadding,
@@ -566,7 +574,6 @@ class ComponentTableView extends StatelessWidget {
     final isTablet = ResponsiveHelper.isTablet(context);
     final horizontalPadding = isMobile ? 12.w : (isTablet ? 16.w : 24.w);
     final showDuplicate = filterType == ComponentType.department;
-    // Actions cell padding - top padding varies to align with content
     final actionsTopPadding = filterType == ComponentType.department
         ? (isMobile ? 22.h : (isTablet ? 28.h : 34.25.h))
         : (isMobile ? 18.h : (isTablet ? 22.h : 26.25.h));
@@ -577,7 +584,6 @@ class ComponentTableView extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // View button
           if (onView != null)
             _buildActionIconButton(
               context,
@@ -587,7 +593,6 @@ class ComponentTableView extends StatelessWidget {
               localizations.view,
             ),
           if (onView != null) SizedBox(width: 8.w),
-          // Edit button
           if (onEdit != null)
             _buildActionIconButton(
               context,
@@ -597,7 +602,6 @@ class ComponentTableView extends StatelessWidget {
               localizations.edit,
             ),
           if (onEdit != null) SizedBox(width: 8.w),
-          // Delete button
           if (onDelete != null)
             _buildActionIconButton(
               context,
@@ -606,7 +610,6 @@ class ComponentTableView extends StatelessWidget {
               () => onDelete!(component),
               localizations.delete,
             ),
-          // Duplicate button (only for departments)
           if (showDuplicate && onDuplicate != null) ...[
             SizedBox(width: 8.w),
             _buildActionIconButton(
@@ -644,7 +647,6 @@ class ComponentTableView extends StatelessWidget {
   String _getParentName(ComponentValue component) {
     if (component.parentId == null) return '-';
 
-    // For companies, look up org structure name
     if (filterType == ComponentType.company && component.type == ComponentType.company) {
       final orgStructureId = int.tryParse(component.parentId ?? '');
       if (orgStructureId != null && orgStructures != null) {
@@ -658,7 +660,6 @@ class ComponentTableView extends StatelessWidget {
       return '-';
     }
 
-    // Find parent component from all components (not just filtered)
     final parent = allComponents.firstWhere(
       (c) => c.id == component.parentId,
       orElse: () => ComponentValue(
@@ -676,7 +677,6 @@ class ComponentTableView extends StatelessWidget {
       return '-';
     }
 
-    // Format based on component type
     switch (filterType) {
       case ComponentType.division:
         return '${parent.name} (${parent.code})';
@@ -694,7 +694,6 @@ class ComponentTableView extends StatelessWidget {
   }
 
   String _getUpdatedBy(ComponentValue component) {
-    // Mock data - in real app, this would come from the component
     switch (filterType) {
       case ComponentType.company:
         return 'by HR Admin';
@@ -711,7 +710,6 @@ class ComponentTableView extends StatelessWidget {
 
   String _formatName(String name) {
     if (filterType == ComponentType.department && name.contains(' ')) {
-      // Split long department names into two lines
       final words = name.split(' ');
       if (words.length >= 2) {
         final mid = (words.length / 2).ceil();
@@ -723,7 +721,6 @@ class ComponentTableView extends StatelessWidget {
 
   String _formatArabicName(String arabicName) {
     if (filterType == ComponentType.department && arabicName.contains(' ')) {
-      // Split long Arabic names into two lines
       final words = arabicName.split(' ');
       if (words.length >= 2) {
         final mid = (words.length / 2).ceil();
@@ -734,13 +731,11 @@ class ComponentTableView extends StatelessWidget {
   }
 
   String _formatManagerName(String managerName) {
-    // For companies, managerName is actually registration number
     if (filterType == ComponentType.company) {
-      return managerName; // Already registration number
+      return managerName;
     }
 
     if (filterType == ComponentType.department && managerName.contains(' ')) {
-      // Split manager names with spaces into two lines
       final words = managerName.split(' ');
       if (words.length >= 2) {
         return '${words.take(words.length - 1).join(' ')}\n${words.last}';
@@ -751,7 +746,6 @@ class ComponentTableView extends StatelessWidget {
 
   String _formatLocation(String location) {
     if (filterType == ComponentType.department && location.contains(' - ')) {
-      // Split location with " - " into two lines
       final parts = location.split(' - ');
       if (parts.length >= 2) {
         return '${parts.first} -\n${parts.skip(1).join(' - ')}';

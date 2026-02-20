@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 
 /// Simple parent unit model for dropdown/tree display
@@ -13,7 +11,6 @@ class ParentUnitDto {
   const ParentUnitDto({required this.id, required this.name, this.level});
 
   factory ParentUnitDto.fromJson(Map<String, dynamic> json) {
-    log("parent is $json");
     // Helper to convert id to String (handles both num and String)
     final idValue = json['id'];
     final idString = idValue is String

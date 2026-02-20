@@ -1,4 +1,6 @@
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_levels_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +21,7 @@ class ManageComponentValuesScreenState {
 
 class ManageComponentValuesScreenNotifier extends StateNotifier<ManageComponentValuesScreenState> {
   final Ref _ref;
+  final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   ManageComponentValuesScreenNotifier(this._ref) : super(const ManageComponentValuesScreenState());
 
@@ -39,12 +42,42 @@ class ManageComponentValuesScreenNotifier extends StateNotifier<ManageComponentV
     _ref.read(orgUnitsProvider(level.levelCode).notifier).loadOrgUnits(level.levelCode, structureId: level.structureId);
   }
 
+  void initializeLevel(String levelCode) {
+    final orgState = _ref.read(orgUnitsProvider(levelCode));
+    if (orgState.isLoading || orgState.hasError || orgState.units.isNotEmpty || orgState.levelCode != null) return;
+
+    final activeLevels = _ref.read(activeLevelsProvider);
+    if (activeLevels.levels.isEmpty) return;
+
+    final level = activeLevels.levels.firstWhere(
+      (l) => l.levelCode == levelCode,
+      orElse: () => activeLevels.levels.first,
+    );
+    _ref
+        .read(orgUnitsProvider(levelCode).notifier)
+        .loadOrgUnits(levelCode, structureId: level.structureId, page: 1, pageSize: 10);
+  }
+
+  void handleSearch(String levelCode, String query) {
+    state = state.copyWith(orgUnitsSearchQuery: query);
+
+    _debouncer.run(() {
+      _ref.read(orgUnitsProvider(levelCode).notifier).search(query);
+    });
+  }
+
   void setOrgUnitsSearchQuery(String query) {
     state = state.copyWith(orgUnitsSearchQuery: query);
   }
 
   void clearSearch() {
     state = state.copyWith(orgUnitsSearchQuery: '');
+  }
+
+  @override
+  void dispose() {
+    _debouncer.dispose();
+    super.dispose();
   }
 }
 
