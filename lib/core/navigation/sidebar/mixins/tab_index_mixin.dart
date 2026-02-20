@@ -78,4 +78,25 @@ mixin TabIndexMixin {
         return null;
     }
   }
+
+  int? getEnterpriseStructureTabIndex(String itemId) {
+    switch (itemId) {
+      case 'manageEnterpriseStructure':
+        return 0;
+      case 'manageComponentValues':
+        return 1;
+      case 'company':
+        return 2;
+      case 'division':
+        return 3;
+      case 'businessUnit':
+        return 4;
+      case 'department':
+        return 5;
+      case 'section':
+        return 6;
+      default:
+        return null;
+    }
+  }
 }
