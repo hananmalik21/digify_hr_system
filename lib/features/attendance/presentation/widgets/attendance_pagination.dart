@@ -27,7 +27,9 @@ class AttendancePagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final startItem = ((currentPage - 1) * itemsPerPage) + 1;
-    final endItem = currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage;
+    final endItem = currentPage * itemsPerPage > totalItems
+        ? totalItems
+        : currentPage * itemsPerPage;
 
     return Container(
       width: double.infinity,
@@ -35,7 +37,10 @@ class AttendancePagination extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        border: Border.all(
+          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+          width: 1,
+        ),
       ),
       child: context.isMobile
           ? Wrap(
@@ -69,7 +74,9 @@ class AttendancePagination extends StatelessWidget {
         Text(
           'Items per page:',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -102,11 +109,18 @@ class AttendancePagination extends StatelessWidget {
           width: 40.w,
           height: 40.h,
           decoration: BoxDecoration(
-            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+            border: Border.all(
+              color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+            ),
             borderRadius: BorderRadius.circular(8.r),
           ),
           alignment: Alignment.center,
-          child: Text('$currentPage', style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+          child: Text(
+            '$currentPage',
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         Gap(8.w),
         _buildNavButton(
@@ -120,12 +134,14 @@ class AttendancePagination extends StatelessWidget {
 
   Widget _buildGoToPage(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: [
         Text(
           'Go to page:',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
           ),
         ),
         Gap(12.w),
@@ -135,7 +151,10 @@ class AttendancePagination extends StatelessWidget {
           child: TextFormField(
             initialValue: currentPage.toString(),
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.zero),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.zero,
+            ),
             onFieldSubmitted: (value) {
               final page = int.tryParse(value);
               if (page != null && page >= 1 && page <= totalPages) {
@@ -148,7 +167,9 @@ class AttendancePagination extends StatelessWidget {
         Text(
           'of $totalPages',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
           ),
         ),
       ],
@@ -160,7 +181,9 @@ class AttendancePagination extends StatelessWidget {
       height: 40.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+        ),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: DropdownButtonHideUnderline(
@@ -176,7 +199,11 @@ class AttendancePagination extends StatelessWidget {
     );
   }
 
-  Widget _buildNavButton({required IconData icon, required bool enabled, required VoidCallback onTap}) {
+  Widget _buildNavButton({
+    required IconData icon,
+    required bool enabled,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: enabled ? onTap : null,
       borderRadius: BorderRadius.circular(8.r),
@@ -184,9 +211,13 @@ class AttendancePagination extends StatelessWidget {
         width: 40.w,
         height: 40.h,
         decoration: BoxDecoration(
-          border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+          border: Border.all(
+            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+          ),
           borderRadius: BorderRadius.circular(8.r),
-          color: enabled ? Colors.transparent : Colors.grey.withValues(alpha: 0.1),
+          color: enabled
+              ? Colors.transparent
+              : Colors.grey.withValues(alpha: 0.1),
         ),
         child: Icon(
           icon,
