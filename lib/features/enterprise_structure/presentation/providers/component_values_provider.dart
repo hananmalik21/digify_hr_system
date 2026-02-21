@@ -12,11 +12,7 @@ class ComponentTreeNode {
   final List<ComponentTreeNode> children;
   final int level;
 
-  ComponentTreeNode({
-    required this.component,
-    this.children = const [],
-    this.level = 0,
-  });
+  ComponentTreeNode({required this.component, this.children = const [], this.level = 0});
 }
 
 /// State for component values list
@@ -91,9 +87,7 @@ class ComponentValuesState {
 
     // Apply type filter
     if (filterType != null) {
-      filtered = filtered
-          .where((component) => component.type == filterType)
-          .toList();
+      filtered = filtered.where((component) => component.type == filterType).toList();
     }
 
     // Apply sorting
@@ -127,13 +121,9 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
 
   ComponentValuesNotifier(this.ref) : super(ComponentValuesState()) {
     // Create a new instance of CompaniesNotifier for this component values screen
-    _companiesNotifier = CompaniesNotifier(
-      getCompaniesUseCase: ref.read(getCompaniesUseCaseProvider),
-    );
+    _companiesNotifier = CompaniesNotifier(getCompaniesUseCase: ref.read(getCompaniesUseCaseProvider));
     // Create a new instance of DivisionsNotifier for this component values screen
-    _divisionsNotifier = DivisionsNotifier(
-      getDivisionsUseCase: ref.read(getDivisionsUseCaseProvider),
-    );
+    _divisionsNotifier = DivisionsNotifier(getDivisionsUseCase: ref.read(getDivisionsUseCaseProvider));
     loadComponents();
   }
 
@@ -153,10 +143,8 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
       name: company.name,
       arabicName: company.nameArabic,
       type: ComponentType.company,
-      parentId: company.orgStructureId
-          ?.toString(), // Store org structure ID for lookup
-      managerId:
-          company.registrationNumber, // Store registration number for display
+      parentId: company.orgStructureId?.toString(), // Store org structure ID for lookup
+      managerId: company.registrationNumber, // Store registration number for display
       location: company.location,
       status: company.isActive,
       description: company.industry,
@@ -192,8 +180,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
       // If filter is company, fetch from companies API using CompaniesNotifier
       if (state.filterType == ComponentType.company) {
         // Use search if provided, otherwise use existing search query
-        final searchQuery =
-            search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : '');
+        final searchQuery = search ?? (state.searchQuery.isNotEmpty ? state.searchQuery : '');
 
         if (searchQuery.isNotEmpty) {
           // Trigger search in companies notifier
@@ -210,9 +197,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
         final companiesState = _companiesNotifier.state;
         final companies = companiesState.companies;
 
-        final companyComponents = companies
-            .map(_companyToComponentValue)
-            .toList();
+        final companyComponents = companies.map(_companyToComponentValue).toList();
 
         state = state.copyWith(
           components: companyComponents,
@@ -443,9 +428,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
         if (state.filterType == ComponentType.company) {
           final companiesState = _companiesNotifier.state;
           final companies = companiesState.companies;
-          final companyComponents = companies
-              .map(_companyToComponentValue)
-              .toList();
+          final companyComponents = companies.map(_companyToComponentValue).toList();
 
           state = state.copyWith(
             components: companyComponents,
@@ -465,9 +448,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
         if (state.filterType == ComponentType.division) {
           final divisionsState = _divisionsNotifier.state;
           final divisions = divisionsState.divisions;
-          final divisionComponents = divisions
-              .map(_divisionToComponentValue)
-              .toList();
+          final divisionComponents = divisions.map(_divisionToComponentValue).toList();
 
           state = state.copyWith(
             components: divisionComponents,
@@ -480,13 +461,13 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   }
 
   /// Filter by component type
-  void filterByType(ComponentType? type) {
+  void filterByType(ComponentType? type, {bool? isTreeView}) {
     // When a filter type is selected, switch to table view
     // When filter is cleared, switch back to tree view
 
     state = state.copyWith(
       filterType: type,
-      isTreeView: type == null,
+      isTreeView: isTreeView ?? (type == null),
       searchQuery: '', // Clear search when changing filter
     );
 
@@ -505,9 +486,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     try {
       await Future.delayed(const Duration(milliseconds: 300));
 
-      final updatedComponents = state.components
-          .where((c) => c.id != id)
-          .toList();
+      final updatedComponents = state.components.where((c) => c.id != id).toList();
       state = state.copyWith(components: updatedComponents);
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -517,10 +496,7 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
   /// Toggle tree view
   void toggleTreeView() {
     // When switching to tree view, clear any active filter
-    state = state.copyWith(
-      isTreeView: !state.isTreeView,
-      filterType: !state.isTreeView ? null : state.filterType,
-    );
+    state = state.copyWith(isTreeView: !state.isTreeView, filterType: !state.isTreeView ? null : state.filterType);
   }
 
   /// Build tree structure from flat component list
@@ -545,18 +521,12 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
     // Recursive function to build tree nodes
     ComponentTreeNode buildNode(ComponentValue component, int level) {
       final children = childrenMap[component.id] ?? [];
-      final childNodes = children
-          .map((child) => buildNode(child, level + 1))
-          .toList();
+      final childNodes = children.map((child) => buildNode(child, level + 1)).toList();
 
       // Sort children by name
       childNodes.sort((a, b) => a.component.name.compareTo(b.component.name));
 
-      return ComponentTreeNode(
-        component: component,
-        children: childNodes,
-        level: level,
-      );
+      return ComponentTreeNode(component: component, children: childNodes, level: level);
     }
 
     // Find root nodes (components without parents)
@@ -591,7 +561,6 @@ class ComponentValuesNotifier extends StateNotifier<ComponentValuesState> {
 }
 
 /// Provider for component values
-final componentValuesProvider =
-    StateNotifierProvider<ComponentValuesNotifier, ComponentValuesState>(
-      (ref) => ComponentValuesNotifier(ref),
-    );
+final componentValuesProvider = StateNotifierProvider<ComponentValuesNotifier, ComponentValuesState>(
+  (ref) => ComponentValuesNotifier(ref),
+);

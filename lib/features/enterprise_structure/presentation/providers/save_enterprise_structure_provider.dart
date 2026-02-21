@@ -57,9 +57,7 @@ class SaveEnterpriseStructureNotifier extends StateNotifier<SaveEnterpriseStruct
   }) async {
     try {
       state = state.copyWith(isSaving: true, hasError: false, errorMessage: null, loadingStructureId: structureId);
-    } catch (e) {
-      debugPrint('SaveEnterpriseStructureNotifier: error updating loading state: $e');
-    }
+    } catch (_) {}
 
     String? errorMessage;
 
@@ -106,16 +104,12 @@ class SaveEnterpriseStructureNotifier extends StateNotifier<SaveEnterpriseStruct
           loadingStructureId: null,
         );
         onSuccess?.call();
-      } catch (e) {
-        debugPrint('SaveEnterpriseStructureNotifier: error in onSuccess: $e');
-      }
+      } catch (_) {}
       return true;
     } on ValidationException catch (e) {
       try {
         state = state.copyWith(isSaving: false, loadingStructureId: null);
-      } catch (err) {
-        debugPrint('SaveEnterpriseStructureNotifier: error clearing state on ValidationException: $err');
-      }
+      } catch (_) {}
 
       errorMessage = e.message;
       if (e.errors != null && e.errors!.isNotEmpty) {
@@ -136,18 +130,13 @@ class SaveEnterpriseStructureNotifier extends StateNotifier<SaveEnterpriseStruct
     } on AppException {
       try {
         state = state.copyWith(isSaving: false, loadingStructureId: null);
-      } catch (err) {
-        debugPrint('SaveEnterpriseStructureNotifier: error clearing state on AppException: $err');
-      }
+      } catch (_) {}
 
       rethrow;
     } catch (e) {
       try {
         state = state.copyWith(isSaving: false, loadingStructureId: null);
-      } catch (err) {
-        debugPrint('SaveEnterpriseStructureNotifier: error clearing state: $err');
-      }
-      debugPrint('SaveEnterpriseStructureNotifier: save failed: $e');
+      } catch (_) {}
 
       errorMessage = 'Failed to save enterprise structure: ${e.toString()}';
       throw UnknownException(errorMessage, originalError: e);

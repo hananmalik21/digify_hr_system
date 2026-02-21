@@ -35,4 +35,24 @@ class OrgUnitTree {
   final List<OrgUnitTreeNode> tree;
 
   const OrgUnitTree({required this.structureId, required this.structureName, required this.tree});
+
+  factory OrgUnitTree.mock() {
+    return OrgUnitTree(
+      structureId: '0',
+      structureName: 'Loading...',
+      tree: List.generate(
+        5,
+        (i) => OrgUnitTreeNode(
+          orgUnitId: 'node_$i',
+          orgUnitCode: 'CODE-$i',
+          orgUnitNameEn: 'Loading Org Unit Name $i',
+          orgUnitNameAr: 'تحميل الوحدة $i',
+          levelCode: 'COMPANY',
+          parentOrgUnitId: null,
+          isActive: true,
+          children: [],
+        ),
+      ),
+    );
+  }
 }

@@ -1,8 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
@@ -20,55 +26,55 @@ class ComponentValuesStatCardData {
 }
 
 List<ComponentValuesStatCardData> buildStatCardsFromCounts(
-  Map<ComponentType, int> statCounts, {
-  required String companiesLabel,
-  required String divisionsLabel,
-  required String businessUnitsLabel,
-  required String departmentsLabel,
-  required String sectionsLabel,
-}) {
+  Map<ComponentType, int> statCounts,
+  AppLocalizations localizations,
+) {
+  const iconColor = AppColors.statIconBlue;
+
   return [
     ComponentValuesStatCardData(
-      label: companiesLabel,
+      label: localizations.companies,
       count: statCounts[ComponentType.company] ?? 0,
-      icon: 'assets/icons/company_stat_icon.svg',
-      color: AppColors.statIconPurple,
+      icon: Assets.icons.companyStatIcon.path,
+      color: iconColor,
     ),
     ComponentValuesStatCardData(
-      label: divisionsLabel,
+      label: localizations.divisions,
       count: statCounts[ComponentType.division] ?? 0,
-      icon: 'assets/icons/division_stat_icon.svg',
-      color: AppColors.statIconBlue,
+      icon: Assets.icons.divisionStatIcon.path,
+      color: iconColor,
     ),
     ComponentValuesStatCardData(
-      label: businessUnitsLabel,
+      label: localizations.businessUnits,
       count: statCounts[ComponentType.businessUnit] ?? 0,
-      icon: 'assets/icons/business_unit_stat_icon.svg',
-      color: AppColors.statIconGreen,
+      icon: Assets.icons.businessUnitStatIcon.path,
+      color: iconColor,
     ),
     ComponentValuesStatCardData(
-      label: departmentsLabel,
+      label: localizations.departments,
       count: statCounts[ComponentType.department] ?? 0,
-      icon: 'assets/icons/department_stat_icon.svg',
-      color: AppColors.statIconOrange,
+      icon: Assets.icons.departmentStatIcon.path,
+      color: iconColor,
     ),
     ComponentValuesStatCardData(
-      label: sectionsLabel,
+      label: localizations.sections,
       count: statCounts[ComponentType.section] ?? 0,
-      icon: 'assets/icons/section_stat_icon.svg',
-      color: AppColors.textSecondary,
+      icon: Assets.icons.sectionStatIcon.path,
+      color: iconColor,
     ),
   ];
 }
 
-class ComponentValuesStatCards extends StatelessWidget {
-  const ComponentValuesStatCards({super.key, required this.cards, required this.isDark});
-
-  final List<ComponentValuesStatCardData> cards;
-  final bool isDark;
+class ComponentValuesStatCards extends ConsumerWidget {
+  const ComponentValuesStatCards({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cvState = ref.watch(componentValuesProvider);
+    final localizations = AppLocalizations.of(context)!;
+    final isDark = context.isDark;
+    final cards = buildStatCardsFromCounts(cvState.statCounts, localizations);
+
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
 
@@ -97,7 +103,7 @@ class ComponentValuesStatCards extends StatelessWidget {
     return Row(
       children: [
         for (var i = 0; i < cards.length; i++) ...[
-          if (i > 0) Gap(16.w),
+          if (i > 0) Gap(21.w),
           Expanded(
             child: _ComponentValuesStatCard(card: cards[i], isDark: isDark),
           ),
@@ -115,46 +121,50 @@ class _ComponentValuesStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleColor = isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final valueColor = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final iconBgColor = isDark ? AppColors.infoBgDark.withValues(alpha: 0.5) : AppColors.infoBg;
+
     return Container(
-      padding: EdgeInsetsDirectional.all(24.w),
+      padding: EdgeInsetsDirectional.all(22.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 2, offset: const Offset(0, -1)),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+        boxShadow: AppShadows.primaryShadow,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                card.label,
-                style: TextStyle(
-                  fontSize: 13.7.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-                  height: 20 / 13.7,
-                  letterSpacing: 0,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  card.label,
+                  style: context.textTheme.titleSmall?.copyWith(color: titleColor, fontWeight: FontWeight.w500),
                 ),
-              ),
-              Gap(4.h),
-              Text(
-                card.count.toString(),
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: card.color,
-                  height: 32 / 24,
-                  letterSpacing: 0,
+                Gap(7.h),
+                Text(
+                  card.count.toString(),
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontSize: 26.sp,
+                    fontWeight: FontWeight.w700,
+                    color: valueColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          DigifyAsset(assetPath: card.icon, width: 24, height: 24, color: card.color),
+          Container(
+            width: 42.w,
+            height: 42.h,
+            decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(7.r)),
+            alignment: Alignment.center,
+            child: DigifyAsset(assetPath: card.icon, color: card.color, width: 21, height: 21),
+          ),
         ],
       ),
     );
