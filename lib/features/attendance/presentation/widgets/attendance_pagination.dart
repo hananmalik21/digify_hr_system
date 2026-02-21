@@ -35,10 +35,7 @@ class AttendancePagination extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
       child: context.isMobile
           ? Wrap(
@@ -109,12 +106,7 @@ class AttendancePagination extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.r),
           ),
           alignment: Alignment.center,
-          child: Text(
-            '$currentPage',
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          child: Text('$currentPage', style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
         ),
         Gap(8.w),
         _buildNavButton(
@@ -128,7 +120,7 @@ class AttendancePagination extends StatelessWidget {
 
   Widget _buildGoToPage(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: [
         Text(
           'Go to page:',
@@ -146,10 +138,7 @@ class AttendancePagination extends StatelessWidget {
           ),
           child: TextField(
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.zero,
-            ),
+            decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.zero),
             onSubmitted: (value) {
               final page = int.tryParse(value);
               if (page != null && page >= 1 && page <= totalPages) {
@@ -182,10 +171,7 @@ class AttendancePagination extends StatelessWidget {
         child: DropdownButton<int>(
           value: itemsPerPage,
           items: [10, 20, 50, 100].map((int value) {
-            return DropdownMenuItem<int>(
-              value: value,
-              child: Text('$value'),
-            );
+            return DropdownMenuItem<int>(value: value, child: Text('$value'));
           }).toList(),
           onChanged: onItemsPerPageChanged,
           icon: const Icon(Icons.keyboard_arrow_down, size: 20),
@@ -194,11 +180,7 @@ class AttendancePagination extends StatelessWidget {
     );
   }
 
-  Widget _buildNavButton({
-    required IconData icon,
-    required bool enabled,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildNavButton({required IconData icon, required bool enabled, required VoidCallback onTap}) {
     return InkWell(
       onTap: enabled ? onTap : null,
       borderRadius: BorderRadius.circular(8.r),
