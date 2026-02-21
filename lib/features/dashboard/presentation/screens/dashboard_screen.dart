@@ -44,7 +44,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       } catch (_) {
         if (btn.id == 'settings') {
           try {
-            match = sidebarItems.firstWhere((item) => item.id == 'settingsConfig');
+            match = sidebarItems.firstWhere(
+              (item) => item.id == 'settingsConfig',
+            );
           } catch (_) {}
         }
       }
@@ -53,7 +55,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     if (match != null && match.children != null && match.children!.isNotEmpty) {
       showDialog(
         context: context,
-        builder: (context) => ModuleSelectionDialog(module: match!, parentColor: btn.color),
+        builder: (context) =>
+            ModuleSelectionDialog(module: match!, parentColor: btn.color),
       );
     } else {
       context.go(btn.route);
@@ -105,85 +108,113 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 final sideWidth = (w * 0.22).clamp(260.0, 340.0).toDouble();
 
                 return SingleChildScrollView(
-                  child: Padding(
+                  child: Container(
+                    alignment: Alignment.center,
                     padding: pagePadding,
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 1800),
-                        child: isWeb
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
-                                  ),
-                                  SizedBox(width: 14.w),
+                    constraints: const BoxConstraints(maxWidth: 1800),
+                    child: isWeb
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: DashboardModuleGrid(
+                                  buttons: buttons,
+                                  onButtonTap: _handleModuleTap,
+                                ),
+                              ),
+                              SizedBox(width: 14.w),
 
-                                  if (showCards)
-                                    SizedBox(
-                                      width: sideWidth,
-                                      child: Column(
-                                        children: [
-                                          TasksEventsCard(
-                                            localizations: localizations,
-                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
-                                          ),
-                                          SizedBox(height: 14.h),
-                                          AttendanceLeavesCard(
-                                            localizations: localizations,
-                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
-                                          ),
-                                        ],
+                              if (showCards)
+                                SizedBox(
+                                  width: sideWidth,
+                                  child: Column(
+                                    children: [
+                                      TasksEventsCard(
+                                        localizations: localizations,
+                                        onEyeIconTap: () => ref
+                                            .read(
+                                              cardsVisibilityProvider.notifier,
+                                            )
+                                            .toggle(),
+                                      ),
+                                      SizedBox(height: 14.h),
+                                      AttendanceLeavesCard(
+                                        localizations: localizations,
+                                        onEyeIconTap: () => ref
+                                            .read(
+                                              cardsVisibilityProvider.notifier,
+                                            )
+                                            .toggle(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              DashboardModuleGrid(
+                                buttons: buttons,
+                                onButtonTap: _handleModuleTap,
+                              ),
+                              SizedBox(height: 14.h),
+
+                              if (isTablet && showCards)
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: TasksEventsCard(
+                                        localizations: localizations,
+                                        onEyeIconTap: () => ref
+                                            .read(
+                                              cardsVisibilityProvider.notifier,
+                                            )
+                                            .toggle(),
                                       ),
                                     ),
-                                ],
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
-                                  SizedBox(height: 14.h),
-
-                                  if (isTablet && showCards)
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: TasksEventsCard(
-                                            localizations: localizations,
-                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
-                                          ),
-                                        ),
-                                        SizedBox(width: 14.w),
-                                        Expanded(
-                                          child: AttendanceLeavesCard(
-                                            localizations: localizations,
-                                            onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  else if (showCards) ...[
-                                    TasksEventsCard(
-                                      localizations: localizations,
-                                      onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
-                                    ),
-                                    SizedBox(height: 14.h),
-                                    AttendanceLeavesCard(
-                                      localizations: localizations,
-                                      onEyeIconTap: () => ref.read(cardsVisibilityProvider.notifier).toggle(),
+                                    SizedBox(width: 14.w),
+                                    Expanded(
+                                      child: AttendanceLeavesCard(
+                                        localizations: localizations,
+                                        onEyeIconTap: () => ref
+                                            .read(
+                                              cardsVisibilityProvider.notifier,
+                                            )
+                                            .toggle(),
+                                      ),
                                     ),
                                   ],
-                                ],
-                              ),
-                      ),
-                    ),
+                                )
+                              else if (showCards) ...[
+                                TasksEventsCard(
+                                  localizations: localizations,
+                                  onEyeIconTap: () => ref
+                                      .read(cardsVisibilityProvider.notifier)
+                                      .toggle(),
+                                ),
+                                SizedBox(height: 14.h),
+                                AttendanceLeavesCard(
+                                  localizations: localizations,
+                                  onEyeIconTap: () => ref
+                                      .read(cardsVisibilityProvider.notifier)
+                                      .toggle(),
+                                ),
+                              ],
+                            ],
+                          ),
                   ),
                 );
               },
             ),
 
-            if (!showCards) Positioned(top: 12.h, right: 12.w, child: const FloatingEyeIcon()),
+            if (!showCards)
+              Positioned(
+                top: 12.h,
+                right: 12.w,
+                child: const FloatingEyeIcon(),
+              ),
           ],
         ),
       ),

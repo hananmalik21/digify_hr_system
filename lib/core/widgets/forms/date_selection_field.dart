@@ -59,7 +59,9 @@ class DateSelectionField extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
+                      color: isDark
+                          ? context.themeTextPrimary
+                          : AppColors.inputLabel,
                       fontFamily: 'Inter',
                     ),
                   ),
@@ -82,10 +84,12 @@ class DateSelectionField extends StatelessWidget {
         InkWell(
           onTap: enabled ? () => _selectDate(context) : null,
           child: Container(
-            height: 36.h,
+            height: 50.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
-              color: enabled ? AppColors.cardBackground : AppColors.cardBackground.withValues(alpha: 0.5),
+              color: enabled
+                  ? AppColors.cardBackground
+                  : AppColors.cardBackground.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: AppColors.borderGrey),
             ),
@@ -93,11 +97,15 @@ class DateSelectionField extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
+                    date != null
+                        ? DateFormat('dd/MM/yyyy').format(date!)
+                        : (hintText ?? 'Select Date'),
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: date != null
-                          ? (enabled ? AppColors.textPrimary : AppColors.textSecondary)
+                          ? (enabled
+                                ? AppColors.textPrimary
+                                : AppColors.textSecondary)
                           : AppColors.textSecondary.withValues(alpha: 0.6),
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -196,7 +204,9 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
-                        color: isDark ? context.themeTextSecondary : AppColors.inputLabel,
+                        color: isDark
+                            ? context.themeTextSecondary
+                            : AppColors.inputLabel,
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -220,7 +230,9 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
                   height: 36.h,
                   padding: EdgeInsets.symmetric(horizontal: 14.w),
                   decoration: BoxDecoration(
-                    color: enabled ? AppColors.cardBackground : AppColors.cardBackground.withValues(alpha: 0.5),
+                    color: enabled
+                        ? AppColors.cardBackground
+                        : AppColors.cardBackground.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(10.r),
                     border: Border.all(color: AppColors.borderGrey),
                   ),
@@ -228,12 +240,18 @@ class DateSelectionFieldHorizontal extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          date != null ? DateFormat('dd/MM/yyyy').format(date!) : (hintText ?? 'Select Date'),
+                          date != null
+                              ? DateFormat('dd/MM/yyyy').format(date!)
+                              : (hintText ?? 'Select Date'),
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: date != null
-                                ? (enabled ? AppColors.textPrimary : AppColors.textSecondary)
-                                : AppColors.textSecondary.withValues(alpha: 0.6),
+                                ? (enabled
+                                      ? AppColors.textPrimary
+                                      : AppColors.textSecondary)
+                                : AppColors.textSecondary.withValues(
+                                    alpha: 0.6,
+                                  ),
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),

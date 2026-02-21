@@ -17,16 +17,30 @@ class TimesheetTable extends ConsumerWidget {
   final List<Timesheet> records;
   final bool isDark;
 
-  const TimesheetTable({super.key, required this.records, required this.isDark});
+  const TimesheetTable({
+    super.key,
+    required this.records,
+    required this.isDark,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(
+          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,14 +49,21 @@ class TimesheetTable extends ConsumerWidget {
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-            color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+              color: isDark
+                  ? AppColors.cardBackgroundGreyDark
+                  : AppColors.tableHeaderBackground,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Timesheet Records',
                   style: context.textTheme.titleSmall?.copyWith(
-                    color: context.isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                    color: context.isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.dialogTitle,
                   ),
                 ),
                 Gap(4.h),
@@ -50,7 +71,9 @@ class TimesheetTable extends ConsumerWidget {
                   'Showing ${records.length} of ${records.length} timesheets',
                   style: context.textTheme.labelMedium?.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: context.isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                    color: context.isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -62,7 +85,9 @@ class TimesheetTable extends ConsumerWidget {
               // Calculate minimum table width based on content
               final minTableWidth = 1000.w;
               final availableWidth = constraints.maxWidth;
-              final tableWidth = minTableWidth > availableWidth ? minTableWidth : availableWidth;
+              final tableWidth = minTableWidth > availableWidth
+                  ? minTableWidth
+                  : availableWidth;
 
               return ScrollableSingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -77,21 +102,29 @@ class TimesheetTable extends ConsumerWidget {
                         Container(
                           width: double.infinity,
                           height: 1,
-                          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+                          color: isDark
+                              ? AppColors.cardBorderDark
+                              : AppColors.cardBorder,
                         ),
                         _buildTableHeader(context),
                         Container(
                           width: double.infinity,
                           height: 1,
-                          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+                          color: isDark
+                              ? AppColors.cardBorderDark
+                              : AppColors.cardBorder,
                         ),
                         // Table Data Rows
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: records.length,
-                          separatorBuilder: (context, index) =>
-                              Divider(height: 1, color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
+                            color: isDark
+                                ? AppColors.cardBorderDark
+                                : AppColors.cardBorder,
+                          ),
                           itemBuilder: (context, index) {
                             final timesheet = records[index];
                             return _buildTableRow(context, timesheet, ref);
@@ -116,8 +149,10 @@ class TimesheetTable extends ConsumerWidget {
     );
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 11.h),
-      color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.tableHeaderBackground,
+      padding: EdgeInsets.symmetric(horizontal: 21.w, vertical: 24.h),
+      color: isDark
+          ? AppColors.cardBackgroundGreyDark
+          : AppColors.tableHeaderBackground,
       child: Row(
         children: [
           Expanded(flex: 3, child: Text('Employee', style: headerStyle)),
@@ -135,16 +170,24 @@ class TimesheetTable extends ConsumerWidget {
           ),
           SizedBox(
             width: 120.w,
-            child: Text('Actions', style: headerStyle, textAlign: TextAlign.center),
+            child: Text(
+              'Actions',
+              style: headerStyle,
+              textAlign: TextAlign.center,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTableRow(BuildContext context, Timesheet timesheet, WidgetRef ref) {
+  Widget _buildTableRow(
+    BuildContext context,
+    Timesheet timesheet,
+    WidgetRef ref,
+  ) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,7 +217,9 @@ class TimesheetTable extends ConsumerWidget {
                     Text(
                       timesheet.employeeName,
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.dialogTitle,
                       ),
                     ),
                     Gap(2.h),
@@ -182,7 +227,9 @@ class TimesheetTable extends ConsumerWidget {
                       timesheet.employeeNumber,
                       style: context.textTheme.labelSmall?.copyWith(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText,
+                        color: isDark
+                            ? AppColors.textTertiaryDark
+                            : AppColors.tableHeaderText,
                       ),
                     ),
                   ],
@@ -205,7 +252,9 @@ class TimesheetTable extends ConsumerWidget {
                 Text(
                   timesheet.departmentName,
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.inputLabel,
                   ),
                 ),
               ],
@@ -227,7 +276,9 @@ class TimesheetTable extends ConsumerWidget {
                   child: Text(
                     timesheet.formattedWeekPeriod,
                     style: context.textTheme.bodyMedium?.copyWith(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.inputLabel,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -251,7 +302,9 @@ class TimesheetTable extends ConsumerWidget {
                 Text(
                   '${timesheet.regularHours.toInt()}h',
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.inputLabel,
                   ),
                 ),
               ],
@@ -272,7 +325,9 @@ class TimesheetTable extends ConsumerWidget {
                 Text(
                   '${timesheet.overtimeHours.toInt()}h',
                   style: context.textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.inputLabel,
                   ),
                 ),
               ],
@@ -284,14 +339,19 @@ class TimesheetTable extends ConsumerWidget {
             child: Text(
               '${timesheet.totalHours.toInt()}h',
               style: context.textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.inputLabel,
               ),
             ),
           ),
           // Status
           SizedBox(
             width: 150.w,
-            child: Row(mainAxisSize: MainAxisSize.min, children: [Gap(10.w), _buildStatusChip(timesheet.status)]),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [Gap(10.w), _buildStatusChip(timesheet.status)],
+            ),
           ),
           // Actions
           SizedBox(
@@ -301,22 +361,30 @@ class TimesheetTable extends ConsumerWidget {
               children: [
                 InkWell(
                   onTap: () {},
-                  child: Icon(Icons.visibility_outlined, size: 18.r, color: AppColors.primary),
+                  child: Icon(
+                    Icons.visibility_outlined,
+                    size: 18.r,
+                    color: AppColors.primary,
+                  ),
                 ),
                 if (timesheet.status == TimesheetStatus.submitted) ...[
                   Gap(12.w),
                   InkWell(
                     onTap: () {
-                      ref.read(timesheetNotifierProvider.notifier).approveTimesheet(timesheet.id);
+                      ref
+                          .read(timesheetNotifierProvider.notifier)
+                          .approveTimesheet(timesheet.id);
                     },
-                    child: Icon(Icons.check_circle_outline, size: 18.r, color: Colors.green),
+                    child: Icon(Icons.check, size: 18.r, color: Colors.green),
                   ),
                   Gap(12.w),
                   InkWell(
                     onTap: () {
-                      ref.read(timesheetNotifierProvider.notifier).rejectTimesheet(timesheet.id, 'Rejected by manager');
+                      ref
+                          .read(timesheetNotifierProvider.notifier)
+                          .rejectTimesheet(timesheet.id, 'Rejected by manager');
                     },
-                    child: Icon(Icons.cancel_outlined, size: 18.r, color: Colors.red),
+                    child: Icon(Icons.close, size: 18.r, color: Colors.red),
                   ),
                 ],
               ],
@@ -358,7 +426,17 @@ class TimesheetTable extends ConsumerWidget {
     }
 
     return path != null
-        ? DigifyCapsule(label: status.displayName, backgroundColor: bgColor, textColor: textColor, iconPath: path)
-        : DigifyCapsule(label: status.displayName, backgroundColor: bgColor, textColor: textColor, icon: icon);
+        ? DigifyCapsule(
+            label: status.displayName,
+            backgroundColor: bgColor,
+            textColor: textColor,
+            iconPath: path,
+          )
+        : DigifyCapsule(
+            label: status.displayName,
+            backgroundColor: bgColor,
+            textColor: textColor,
+            icon: icon,
+          );
   }
 }

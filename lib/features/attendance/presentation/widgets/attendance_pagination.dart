@@ -27,7 +27,9 @@ class AttendancePagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final startItem = ((currentPage - 1) * itemsPerPage) + 1;
-    final endItem = currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage;
+    final endItem = currentPage * itemsPerPage > totalItems
+        ? totalItems
+        : currentPage * itemsPerPage;
 
     return Container(
       width: double.infinity,
@@ -72,7 +74,9 @@ class AttendancePagination extends StatelessWidget {
         Text(
           'Items per page:',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -105,7 +109,9 @@ class AttendancePagination extends StatelessWidget {
           width: 40.w,
           height: 40.h,
           decoration: BoxDecoration(
-            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+            border: Border.all(
+              color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+            ),
             borderRadius: BorderRadius.circular(8.r),
           ),
           alignment: Alignment.center,
@@ -133,24 +139,23 @@ class AttendancePagination extends StatelessWidget {
         Text(
           'Go to page:',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
           ),
         ),
         Gap(12.w),
         Container(
           width: 60.w,
           height: 40.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: TextField(
+          child: TextFormField(
+            initialValue: currentPage.toString(),
             textAlign: TextAlign.center,
             decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
             ),
-            onSubmitted: (value) {
+            onFieldSubmitted: (value) {
               final page = int.tryParse(value);
               if (page != null && page >= 1 && page <= totalPages) {
                 onPageChanged(page);
@@ -162,7 +167,9 @@ class AttendancePagination extends StatelessWidget {
         Text(
           'of $totalPages',
           style: context.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : const Color(0xFF4A5565),
           ),
         ),
       ],
@@ -171,21 +178,19 @@ class AttendancePagination extends StatelessWidget {
 
   Widget _buildDropdown(BuildContext context) {
     return Container(
-      width: 70.w,
       height: 40.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+        ),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: itemsPerPage,
           items: [10, 20, 50, 100].map((int value) {
-            return DropdownMenuItem<int>(
-              value: value,
-              child: Text('$value'),
-            );
+            return DropdownMenuItem<int>(value: value, child: Text('$value'));
           }).toList(),
           onChanged: onItemsPerPageChanged,
           icon: const Icon(Icons.keyboard_arrow_down, size: 20),
@@ -206,9 +211,13 @@ class AttendancePagination extends StatelessWidget {
         width: 40.w,
         height: 40.h,
         decoration: BoxDecoration(
-          border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+          border: Border.all(
+            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+          ),
           borderRadius: BorderRadius.circular(8.r),
-          color: enabled ? Colors.transparent : Colors.grey.withValues(alpha: 0.1),
+          color: enabled
+              ? Colors.transparent
+              : Colors.grey.withValues(alpha: 0.1),
         ),
         child: Icon(
           icon,
