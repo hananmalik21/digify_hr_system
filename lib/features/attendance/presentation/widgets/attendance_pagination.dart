@@ -191,6 +191,7 @@ class AttendancePagination extends StatelessWidget {
           value: itemsPerPage,
           items: [10, 20, 50, 100].map((int value) {
             return DropdownMenuItem<int>(value: value, child: Text('$value'));
+            return DropdownMenuItem<int>(value: value, child: Text('$value'));
           }).toList(),
           onChanged: onItemsPerPageChanged,
           icon: const Icon(Icons.keyboard_arrow_down, size: 20),

@@ -46,7 +46,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       } catch (_) {
         if (btn.id == 'settings') {
           try {
-            match = sidebarItems.firstWhere((item) => item.id == 'settingsConfig');
+            match = sidebarItems.firstWhere(
+              (item) => item.id == 'settingsConfig',
+            );
           } catch (_) {}
         }
       }
@@ -112,7 +114,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 final sideWidth = (w * 0.15).clamp(200.0, 250.0).toDouble();
 
                 return SingleChildScrollView(
-                  child: Padding(
+                  child: Container(
+                    alignment: Alignment.center,
                     padding: pagePadding,
                     child: Center(
                       child: ConstrainedBox(
@@ -122,16 +125,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
-                                    child: DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
+                                    child: DashboardModuleGrid(
+                                      buttons: buttons,
+                                      onButtonTap: _handleModuleTap,
+                                    ),
                                   ),
                                   Gap(14.w),
                                   SizedBox(
                                     width: sideWidth,
                                     child: Column(
                                       children: [
-                                        TasksEventsCard(localizations: localizations),
+                                        TasksEventsCard(
+                                          localizations: localizations,
+                                        ),
                                         Gap(14.h),
-                                        AttendanceLeavesCard(localizations: localizations),
+                                        AttendanceLeavesCard(
+                                          localizations: localizations,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -140,21 +150,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  DashboardModuleGrid(buttons: buttons, onButtonTap: _handleModuleTap),
+                                  DashboardModuleGrid(
+                                    buttons: buttons,
+                                    onButtonTap: _handleModuleTap,
+                                  ),
                                   Gap(14.h),
                                   if (isTablet)
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Expanded(child: TasksEventsCard(localizations: localizations)),
+                                        Expanded(
+                                          child: TasksEventsCard(
+                                            localizations: localizations,
+                                          ),
+                                        ),
                                         Gap(14.w),
-                                        Expanded(child: AttendanceLeavesCard(localizations: localizations)),
+                                        Expanded(
+                                          child: AttendanceLeavesCard(
+                                            localizations: localizations,
+                                          ),
+                                        ),
                                       ],
                                     )
                                   else ...[
-                                    TasksEventsCard(localizations: localizations),
+                                    TasksEventsCard(
+                                      localizations: localizations,
+                                    ),
                                     Gap(14.h),
-                                    AttendanceLeavesCard(localizations: localizations),
+                                    AttendanceLeavesCard(
+                                      localizations: localizations,
+                                    ),
                                   ],
                                 ],
                               ),
