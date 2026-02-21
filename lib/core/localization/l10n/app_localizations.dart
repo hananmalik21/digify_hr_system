@@ -206,6 +206,54 @@ abstract class AppLocalizations {
   /// **'Welcome Back'**
   String get welcomeBack;
 
+  /// No description provided for @enterCredentialsToAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your credentials to access your account.'**
+  String get enterCredentialsToAccess;
+
+  /// No description provided for @orSignInWith.
+  ///
+  /// In en, this message translates to:
+  /// **'OR SIGN IN WITH'**
+  String get orSignInWith;
+
+  /// No description provided for @rememberMe.
+  ///
+  /// In en, this message translates to:
+  /// **'REMEMBER ME'**
+  String get rememberMe;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'FORGOT PASSWORD?'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @forgotPasswordDialogMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'To reset your password, please contact your system administrator.'**
+  String get forgotPasswordDialogMessage;
+
+  /// No description provided for @signInBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'SIGN IN'**
+  String get signInBtn;
+
+  /// No description provided for @endToEndEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'END-TO-END ENCRYPTED'**
+  String get endToEndEncrypted;
+
+  /// No description provided for @copyrightInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'2026 DIGIFY INTELLIGENCE SYSTEMS.\nCORE: KUWAIT.'**
+  String get copyrightInfo;
+
   /// No description provided for @signInToAccessDashboard.
   ///
   /// In en, this message translates to:
@@ -301,6 +349,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid email or password. Please try again.'**
   String get invalidCredentials;
+
+  /// No description provided for @connectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error. Please try again.'**
+  String get connectionError;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get loginFailed;
 
   /// No description provided for @fullNameHint.
   ///
@@ -1051,6 +1111,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Position'**
   String get position;
+
+  /// No description provided for @employee.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee'**
+  String get employee;
+
+  /// No description provided for @leaveType.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Type'**
+  String get leaveType;
+
+  /// No description provided for @riskLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk Level'**
+  String get riskLevel;
 
   /// No description provided for @accountStatus.
   ///
@@ -6746,6 +6824,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this structure?'**
   String get confirmDeleteStructure;
 
+  /// No description provided for @activateStructureTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate structure'**
+  String get activateStructureTitle;
+
+  /// No description provided for @confirmActivateStructure.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to set this structure as the active organization structure?'**
+  String get confirmActivateStructure;
+
   /// No description provided for @structureHasOrgUnits.
   ///
   /// In en, this message translates to:
@@ -7129,18 +7219,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'rejected'**
   String get leaveFilterRejected;
-
-  /// No description provided for @employee.
-  ///
-  /// In en, this message translates to:
-  /// **'Employee'**
-  String get employee;
-
-  /// No description provided for @leaveType.
-  ///
-  /// In en, this message translates to:
-  /// **'Leave Type'**
-  String get leaveType;
 
   /// No description provided for @days.
   ///
@@ -7627,12 +7705,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Carry Forward Limit'**
   String get carryForwardLimit;
-
-  /// No description provided for @riskLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Risk Level'**
-  String get riskLevel;
 
   /// No description provided for @daysLeft.
   ///

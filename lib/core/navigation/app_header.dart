@@ -1,11 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/localization/locale_provider.dart';
-import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
-import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_provider.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +16,8 @@ import 'header_right_section.dart';
 import 'header_welcome_section.dart';
 
 class AppHeader extends ConsumerWidget {
-  const AppHeader({super.key});
+  final bool isSidebarExpanded;
+  const AppHeader({super.key, this.isSidebarExpanded = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,10 +31,10 @@ class AppHeader extends ConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        height: 60.h,
+        height: 56.h,
         decoration: BoxDecoration(
           color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-          boxShadow: AppShadows.headerShadow(isDark),
+          border: Border(bottom: BorderSide(color: AppColors.cardBorder)),
         ),
         child: Padding(
           padding: EdgeInsetsDirectional.symmetric(horizontal: 14.w),
@@ -43,9 +44,16 @@ class AppHeader extends ConsumerWidget {
               HeaderLeftSection(
                 isMobile: isMobile,
                 isDark: isDark,
+                isSidebarExpanded: isSidebarExpanded,
                 onMenuTap: () {
                   if (isMobile) {
-                    Scaffold.of(context).openDrawer();
+                    if (isSidebarExpanded) {
+                      Scaffold.of(context).closeDrawer();
+                      ref.read(sidebarProvider.notifier).collapse();
+                    } else {
+                      Scaffold.of(context).openDrawer();
+                      ref.read(sidebarProvider.notifier).expand();
+                    }
                   } else {
                     ref.read(sidebarProvider.notifier).toggle();
                   }
@@ -64,6 +72,10 @@ class AppHeader extends ConsumerWidget {
                 localizations: localizations,
                 onToggleTheme: () => ref.read(themeModeProvider.notifier).toggleTheme(),
                 onToggleLocale: () => ref.read(localeProvider.notifier).toggleLocale(),
+                onLogout: () async {
+                  await ref.read(authProvider.notifier).logout();
+                  if (context.mounted) context.go(AppRoutes.login);
+                },
               ),
             ],
           ),

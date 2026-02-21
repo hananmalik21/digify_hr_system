@@ -60,7 +60,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get usernameHint => 'أدخل اسم المستخدم';
 
   @override
-  String get welcomeBack => 'مرحباً بعودتك';
+  String get welcomeBack => 'مرحبا بك من جديد';
+
+  @override
+  String get enterCredentialsToAccess =>
+      'أدخل بيانات الاعتماد الخاصة بك للوصول إلى حسابك.';
+
+  @override
+  String get orSignInWith => 'أو قم بتسجيل الدخول بواسطة';
+
+  @override
+  String get rememberMe => 'تذكرني';
+
+  @override
+  String get forgotPasswordTitle => 'نسيت كلمة المرور؟';
+
+  @override
+  String get forgotPasswordDialogMessage =>
+      'لإعادة تعيين كلمة المرور، يرجى التواصل مع مسؤول النظام.';
+
+  @override
+  String get signInBtn => 'تسجيل الدخول';
+
+  @override
+  String get endToEndEncrypted => 'مشفر من طرفين';
+
+  @override
+  String get copyrightInfo => '2026 ديجيفاي لأنظمة الذكاء.\nالنواة: الكويت.';
 
   @override
   String get signInToAccessDashboard =>
@@ -116,6 +142,12 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get invalidCredentials =>
       'البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get connectionError => 'خطأ في الاتصال. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get loginFailed => 'فشل تسجيل الدخول';
 
   @override
   String get fullNameHint => 'أدخل اسمك الكامل';
@@ -495,10 +527,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailAddress => 'عنوان البريد الإلكتروني';
 
   @override
-  String get department => 'القسم';
+  String get department => 'الإدارة';
 
   @override
   String get position => 'المنصب';
+
+  @override
+  String get employee => 'الموظف';
+
+  @override
+  String get leaveType => 'نوع الإجازة';
+
+  @override
+  String get riskLevel => 'مستوى الخطر';
 
   @override
   String get accountStatus => 'حالة الحساب';
@@ -1360,7 +1401,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myUpcomingLeaves => 'إجازاتي القادمة';
 
   @override
-  String get annualLeave => 'الإجازة السنوية';
+  String get annualLeave => 'إجازة سنوية';
 
   @override
   String get leaveDates => '25 ديسمبر - 30 ديسمبر 2024';
@@ -3434,6 +3475,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmDeleteStructure => 'هل أنت متأكد أنك تريد حذف هذا الهيكل؟';
 
   @override
+  String get activateStructureTitle => 'تفعيل الهيكل';
+
+  @override
+  String get confirmActivateStructure =>
+      'هل تريد تعيين هذا الهيكل كهيكل المؤسسة النشط؟';
+
+  @override
   String structureHasOrgUnits(int count) {
     return 'يحتوي هذا الهيكل على $count وحدة تنظيمية تشير إليه. يجب حذف جميع الوحدات التنظيمية أولاً، أو استخدام الحذف المتتالي.';
   }
@@ -3522,7 +3570,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hajjLeaveArabic => 'إجازة الحج';
 
   @override
-  String get compassionateLeave => 'إجازة التعاطف';
+  String get compassionateLeave => 'إجازة خاصة';
 
   @override
   String get compassionateLeaveArabic => 'إجازة خاصة';
@@ -3643,19 +3691,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get leaveFilterRejected => 'مرفوض';
 
   @override
-  String get employee => 'الموظف';
+  String get days => 'Days';
 
   @override
-  String get leaveType => 'نوع الإجازة';
+  String get leaveBalanceTotal => 'Total:';
 
   @override
-  String get days => 'الأيام';
-
-  @override
-  String get leaveBalanceTotal => 'الإجمالي:';
-
-  @override
-  String get leaveBalanceUsed => 'المستخدم:';
+  String get leaveBalanceUsed => 'Used:';
 
   @override
   String get leaveBalanceRemaining => 'المتبقي:';
@@ -3905,9 +3947,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get carryForwardLimit => 'حد التحويل';
-
-  @override
-  String get riskLevel => 'مستوى الخطر';
 
   @override
   String daysLeft(int count) {

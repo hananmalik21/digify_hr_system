@@ -50,4 +50,3 @@ class GridSpec {
     required this.needsLongPress,
   });
 }
-

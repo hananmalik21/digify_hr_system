@@ -1,10 +1,10 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balances_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_filters_bar.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_header.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_labor_law_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_summary_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances_table.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,14 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(leaveTypesNotifierProvider.notifier).loadLeaveTypes();
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -30,6 +38,7 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
 
     return SingleChildScrollView(
@@ -39,7 +48,7 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 24.h,
         children: [
-          LeaveBalancesHeader(localizations: localizations),
+          DigifyTabHeader(title: localizations.leaveBalance, description: localizations.leaveBalanceDescription),
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
@@ -49,13 +58,14 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),
-          LeaveBalancesSummaryCards(localizations: localizations),
-          LeaveBalancesLaborLawSection(localizations: localizations),
+          LeaveBalancesSummaryCards(localizations: localizations, isDark: isDark),
           LeaveBalancesFiltersBar(
             localizations: localizations,
             searchController: _searchController,
+            onSearchChanged: (value) => ref.read(leaveBalanceSummaryListProvider.notifier).setSearchQueryInput(value),
+            onSearchSubmitted: (value) => ref.read(leaveBalanceSummaryListProvider.notifier).search(value.trim()),
             onExport: () {},
-            onRefresh: ref.read(leaveBalancesRefreshProvider),
+            onRefresh: () => ref.read(leaveBalanceSummaryListProvider.notifier).refresh(),
           ),
           const LeaveBalancesTable(),
         ],

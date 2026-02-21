@@ -9,32 +9,17 @@ class LoginPrimaryButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback? onTap;
 
-  const LoginPrimaryButton({
-    super.key,
-    required this.text,
-    required this.isLoading,
-    required this.onTap,
-  });
+  const LoginPrimaryButton({super.key, required this.text, required this.isLoading, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, Color(0xFF4F39F6)],
-        ),
+        gradient: const LinearGradient(colors: [AppColors.primary, Color(0xFF4F39F6)]),
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            blurRadius: 15,
-            offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.10), blurRadius: 15, offset: const Offset(0, 10)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6, offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
@@ -47,20 +32,12 @@ class LoginPrimaryButton extends StatelessWidget {
             child: Center(
               child: isLoading
                   ? SizedBox(
-                      child: AppLoadingIndicator(
-                        color: Colors.white,
-                        type: LoadingType.circle,
-                        size: 20.0,
-                      ),
+                      child: AppLoadingIndicator(color: Colors.white, type: LoadingType.circle, size: 20.0),
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.lock_outline,
-                          size: 20.sp,
-                          color: Colors.white,
-                        ),
+                        Icon(Icons.lock_outline, size: 20.sp, color: Colors.white),
                         SizedBox(width: 8.w),
                         Text(
                           text,

@@ -1,13 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/navigation/models/sidebar_item.dart';
-import 'package:digify_hr_system/core/navigation/configs/sidebar_config.dart';
-import 'package:digify_hr_system/core/navigation/mixins/tab_index_mixin.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/config/sidebar_config.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/mixins/tab_index_mixin.dart';
+import 'package:digify_hr_system/core/navigation/sidebar/models/sidebar_item.dart';
 import 'package:digify_hr_system/core/navigation/sidebar_provider.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_structure_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
@@ -40,6 +41,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         final tabIndex = getEmployeeManagementTabIndex(item.id);
         if (tabIndex != null) {
           ref.read(employeeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+        }
+      } else if (item.route == AppRoutes.enterpriseStructure) {
+        final tabIndex = getEnterpriseStructureTabIndex(item.id);
+        if (tabIndex != null) {
+          ref.read(enterpriseStructureTabStateProvider.notifier).setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.timeManagement) {
         final tabIndex = getTimeManagementTabIndex(item.id);
@@ -347,9 +353,9 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                         final index = entry.key;
                         final child = entry.value;
                         final currentRoute = GoRouterState.of(context).uri.path;
-                        // For employees, time management, workforce structure, and leave management, check route and tab index
                         final isChildActive =
                             item.id == 'employees' ||
+                                item.id == 'enterpriseStructure' ||
                                 item.id == 'timeManagement' ||
                                 item.id == 'workforceStructure' ||
                                 item.id == 'leaveManagement'
@@ -358,6 +364,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                                           getEmployeeManagementTabIndex(child.id) ==
                                               ref.watch(
                                                 employeeManagementTabStateProvider.select((s) => s.currentTabIndex),
+                                              )) ||
+                                      (item.id == 'enterpriseStructure' &&
+                                          getEnterpriseStructureTabIndex(child.id) ==
+                                              ref.watch(
+                                                enterpriseStructureTabStateProvider.select((s) => s.currentTabIndex),
                                               )) ||
                                       (item.id == 'timeManagement' &&
                                           getTimeManagementTabIndex(child.id) ==

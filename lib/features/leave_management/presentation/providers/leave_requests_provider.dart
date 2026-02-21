@@ -130,6 +130,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
               department: request.department,
               position: request.position,
               type: request.type,
+              leaveTypeInfo: request.leaveTypeInfo,
               startDate: request.startDate,
               endDate: request.endDate,
               totalDays: request.totalDays,
@@ -179,6 +180,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
               department: request.department,
               position: request.position,
               type: request.type,
+              leaveTypeInfo: request.leaveTypeInfo,
               startDate: request.startDate,
               endDate: request.endDate,
               totalDays: request.totalDays,
@@ -264,31 +266,15 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
                   employeeName = '$firstName ${middleName ?? ''} $lastName'.trim();
                 }
 
-                TimeOffType leaveType = request.type;
-                if (leaveTypeInfo != null) {
-                  final leaveCode = leaveTypeInfo['leave_code'] as String?;
-                  if (leaveCode != null) {
-                    switch (leaveCode.toUpperCase()) {
-                      case 'ANNUAL':
-                        leaveType = TimeOffType.annualLeave;
-                        break;
-                      case 'SICK':
-                        leaveType = TimeOffType.sickLeave;
-                        break;
-                      case 'PERSONAL':
-                        leaveType = TimeOffType.personalLeave;
-                        break;
-                      case 'EMERGENCY':
-                        leaveType = TimeOffType.emergencyLeave;
-                        break;
-                      case 'UNPAID':
-                        leaveType = TimeOffType.unpaidLeave;
-                        break;
-                      default:
-                        leaveType = TimeOffType.other;
-                    }
-                  }
-                }
+                final LeaveTypeInfo? domainLeaveTypeInfo = leaveTypeInfo != null
+                    ? LeaveTypeInfo(
+                        leaveTypeId: (leaveTypeInfo['leave_type_id'] as num?)?.toInt() ?? 0,
+                        leaveTypeGuid: leaveTypeInfo['leave_type_guid'] as String? ?? '',
+                        leaveNameEn: leaveTypeInfo['leave_name_en'] as String? ?? '',
+                        leaveNameAr: leaveTypeInfo['leave_name_ar'] as String?,
+                        leaveCode: leaveTypeInfo['leave_code'] as String? ?? '',
+                      )
+                    : request.leaveTypeInfo;
 
                 DateTime parseDateTime(dynamic value) {
                   if (value == null) return DateTime.now();
@@ -342,7 +328,8 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
                   employeeGuid: request.employeeGuid,
                   department: department ?? request.department,
                   position: position ?? request.position,
-                  type: leaveType,
+                  type: TimeOffType.other,
+                  leaveTypeInfo: domainLeaveTypeInfo,
                   startDate: parseDateTime(leaveDetails['start_date']),
                   endDate: parseDateTime(leaveDetails['end_date']),
                   totalDays: parseDouble(leaveDetails['total_days']),
@@ -421,6 +408,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
       department: null,
       position: null,
       type: leaveType,
+      leaveTypeInfo: null,
       startDate: parseDateTime(leaveRequest['start_date']),
       endDate: parseDateTime(leaveRequest['end_date']),
       totalDays: parseDouble(leaveRequest['total_days']),

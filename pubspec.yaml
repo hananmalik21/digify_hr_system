@@ -32,6 +32,8 @@ dependencies:
 
   # Utilities
   archive: ^4.0.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   intl: any
   url_launcher: ^6.3.2
   skeletonizer: ^2.1.2
@@ -67,9 +69,12 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
+    - assets/favicon/
     - assets/icons/header/
     - assets/logo/
     - assets/icons/
+    - assets/icons/auth/
+    - assets/icons/enterprise_structure/
     - assets/icons/workforce/
     - assets/icons/sidebar/
     - assets/icons/time_management/

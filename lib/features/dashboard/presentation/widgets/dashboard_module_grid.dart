@@ -39,34 +39,31 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
     final bool isTablet = maxW >= 600 && maxW < 1024;
     final bool isWeb = maxW >= 1024;
 
-    final double spacing = 16.w;
+    final double spacing = isMobile ? 4.w : 6.w;
 
     if (isMobile) {
       const int columns = 2;
-      final double usable = maxW - spacing;
-      final double tileW = (usable / columns).clamp(130.0, 155.0).toDouble();
-      final double tileH = (tileW * 0.95).clamp(155.0, 180.0).toDouble();
+      final double totalSpacing = spacing * (columns - 1);
+      final double tileW = ((maxW - totalSpacing) / columns).floorToDouble();
+      final double tileH = (tileW * 1.0).clamp(130.h, 150.h).toDouble();
 
       return GridSpec(columns: columns, spacing: spacing, tileW: tileW, tileH: tileH, needsLongPress: true);
     }
 
-    final double minTileW = isTablet ? 170.0 : 170.0;
-    final double maxTileW = isTablet ? 220.0 : 230.0;
+    final double minTileW = 140.w;
+    final double maxTileW = isWeb ? 175.w : 155.w;
 
     int columns = ((maxW + spacing) / (minTileW + spacing)).floor();
 
     if (isTablet) {
-      columns = columns.clamp(2, 4);
+      columns = columns.clamp(3, 5);
     } else if (isWeb) {
-      columns = columns.clamp(3, 6);
+      columns = columns.clamp(4, 9);
     }
 
-    final double usable = maxW - (spacing * (columns - 1));
-    final double tileW = (usable / columns).clamp(minTileW, maxTileW).toDouble();
-
-    final double tileH = isTablet
-        ? (tileW * 0.78).clamp(140.0, 160.0).toDouble()
-        : (tileW * 0.70).clamp(120.0, 140.0).toDouble();
+    final double usableZone = maxW - (spacing * (columns - 1));
+    final double tileW = (usableZone / columns).clamp(minTileW, maxTileW).toDouble();
+    final double tileH = (tileW * 0.85).clamp(120.h, 145.h).toDouble();
 
     return GridSpec(columns: columns, spacing: spacing, tileW: tileW, tileH: tileH, needsLongPress: false);
   }
@@ -77,13 +74,12 @@ class _DashboardModuleGridState extends ConsumerState<DashboardModuleGrid> {
       builder: (context, constraints) {
         final maxW = constraints.maxWidth;
         final isMobile = maxW < 600;
-        final isTablet = maxW >= 600 && maxW < 1024;
 
         final spec = _gridSpecForWidth(context, maxW);
 
         return ReorderableWrap(
           spacing: spec.spacing,
-          runSpacing: isMobile ? 10.h : (isTablet ? 12.h : 14.h),
+          runSpacing: isMobile ? 4.h : 6.h,
           alignment: WrapAlignment.start,
           needsLongPressDraggable: spec.needsLongPress,
 

@@ -8,11 +8,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class HeaderProfileSection extends StatelessWidget {
+  const HeaderProfileSection({
+    super.key,
+    required this.isDark,
+    required this.isMobile,
+    required this.localizations,
+    this.onLogout,
+  });
+
   final bool isDark;
   final bool isMobile;
   final AppLocalizations localizations;
-
-  const HeaderProfileSection({super.key, required this.isDark, required this.isMobile, required this.localizations});
+  final VoidCallback? onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,7 @@ class HeaderProfileSection extends StatelessWidget {
         shadowColor: Colors.black.withValues(alpha: 0.10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         onSelected: (value) {
-          debugPrint('Selected: $value');
+          if (value == 'logout') onLogout?.call();
         },
         itemBuilder: (context) => [
           PopupMenuItem<String>(

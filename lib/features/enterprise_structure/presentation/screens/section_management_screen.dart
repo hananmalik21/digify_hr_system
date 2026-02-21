@@ -29,7 +29,6 @@ class SectionManagementScreen extends ConsumerWidget {
     final totalBudget = allSections.fold<double>(0, (prev, section) {
       final sanitized = section.budget.replaceAll('M', '').replaceAll('K', '').replaceAll(' ', '');
       final parsed = double.tryParse(sanitized) ?? 0;
-      // Convert K to M for calculation (divide by 1000)
       if (section.budget.contains('K')) {
         return prev + (parsed / 1000);
       }

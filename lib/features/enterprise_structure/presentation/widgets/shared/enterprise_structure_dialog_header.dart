@@ -1,10 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class EnterpriseStructureDialogHeader extends StatelessWidget {
   final String title;
@@ -23,16 +23,9 @@ class EnterpriseStructureDialogHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
 
     return Container(
-      padding: ResponsiveHelper.getResponsivePadding(
-        context,
-        mobile: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 16.h),
-        tablet: EdgeInsetsDirectional.symmetric(horizontal: 20.w, vertical: 20.h),
-        web: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 24.h),
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : const Color(0xFFE5E7EB), width: 1),
@@ -42,11 +35,11 @@ class EnterpriseStructureDialogHeader extends StatelessWidget {
         children: [
           DigifyAsset(
             assetPath: iconPath,
-            width: isMobile ? 18 : (isTablet ? 19 : 20),
-            height: isMobile ? 18 : (isTablet ? 19 : 20),
+            width: 20,
+            height: 20,
             color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
           ),
-          SizedBox(width: isMobile ? 6.w : 8.w),
+          Gap(8.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,22 +47,22 @@ class EnterpriseStructureDialogHeader extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: isMobile ? 14.sp : (isTablet ? 15.sp : 15.6.sp),
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-                    height: 24 / 15.6,
+                    height: 24 / 15,
                     letterSpacing: 0,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4.h),
+                Gap(4.h),
                 Text(
                   subtitle,
                   style: TextStyle(
-                    fontSize: isMobile ? 12.sp : (isTablet ? 13.sp : 13.6.sp),
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
                     color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-                    height: 20 / 13.6,
+                    height: 20 / 13,
                     letterSpacing: 0,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -82,8 +75,8 @@ class EnterpriseStructureDialogHeader extends StatelessWidget {
               onTap: onClose,
               child: DigifyAsset(
                 assetPath: Assets.icons.closeIcon.path,
-                width: isMobile ? 20 : (isTablet ? 22 : 24),
-                height: isMobile ? 20 : (isTablet ? 22 : 24),
+                width: 24,
+                height: 24,
                 color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
               ),
             ),

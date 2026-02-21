@@ -12,6 +12,12 @@ class AppColors {
   // Brand Colors
   static const Color brandRed = Color(0xFFE7000B);
 
+  static const Color sidebarActiveBg = Color(0xFFE8F2FF);
+  static const Color sidebarSearchBg = Color(0xFFF9FAFB);
+  static const Color sidebarActiveText = Color(0xFF0B5FCC);
+  static const Color sidebarSecondaryText = Color(0xFF6A7282);
+  static const Color sidebarCategoryText = Color(0xFF99A1AF);
+
   // Background Colors
   static const Color background = Color(0xFFF8F8F8);
   static const Color lightWhiteBackground = Color(0xFFF5F5F5);
@@ -70,6 +76,7 @@ class AppColors {
 
   static const Color info = Color(0xFF3B82F6);
   static const Color infoBg = Color(0xFFEFF6FF);
+  static const Color ingobgBorder = Color(0xFF9FC9FF);
   static const Color infoBorder = Color(0xFFBEDBFF);
   static const Color infoText = Color(0xFF1C398E);
   static const Color infoTextSecondary = Color(0xFF193CB8);
@@ -154,6 +161,42 @@ class AppColors {
   static const Color dashboardCardBorder = Color(0xFFE5E7EB);
   static const Color dashboardStatLabel = Color(0xFF717182);
   static const Color dashboardStatValue = Color(0xFF0F172B);
+
+  // Dashboard Module Icon Colors
+  static const Color dashJobSchedules = Color(0xFF0B5FCC);
+  static const Color dashManagerSS = Color(0xFF4F39F6);
+  static const Color dashHROps = Color(0xFFAD46FF);
+  static const Color dashRecruitment = Color(0xFF7CCF00);
+  static const Color dashLeaveManagement = Color(0xFF00B8DB);
+  static const Color dashAttendance = Color(0xFFFE9A00);
+  static const Color dashPayroll = Color(0xFF00BC7D);
+  static const Color dashCompensation = Color(0xFFF0B100);
+  static const Color dashCompliance = Color(0xFFFB2C36);
+  static const Color dashWorkforceStructure = Color(0xFF00BBA7);
+  static const Color dashEnterpriseStructure = Color(0xFF615FFF);
+  static const Color dashReports = Color(0xFF62748E);
+  static const Color dashEOSCalculator = Color(0xFF8E51FF);
+  static const Color dashGovernmentForms = Color(0xFFFF2056);
+  static const Color dashDEIDashboard = Color(0xFFE12AFB);
+  static const Color dashFinance = Color(0xFF155DFC);
+  static const Color dashSupplyChain = Color(0xFF00A63E);
+  static const Color dashModuleCatalogue = Color(0xFFAD46FF);
+  static const Color dashProductIntro = Color(0xFFF6339A);
+  static const Color dashPagePreview = Color(0xFF00A6F4);
+  static const Color dashSettings = Color(0xFF6A7282);
+
+  // Dashboard background gradient
+  static const Color dashboardBgGradientStart = Color(0xFFF3F4F6);
+  static const Color dashboardBgGradientMid = Color(0xFFEFF6FF);
+  static const Color dashboardBgGradientEnd = Color(0xFFF3F4F6);
+
+  // Dashboard background circles (bright gradient orbs)
+  static const Color dashboardCircleBlue = Color(0xFF51A2FF);
+  static const Color dashboardCirclePurple = Color(0xFFC27AFF);
+  static const Color dashboardCirclePink = Color(0xFFFB64B6);
+  static const Color dashboardCircleOrange = Color(0xFFFF8904);
+  static const Color dashboardCircleGreen = Color(0xFF05DF72);
+  static const Color dashboardCircleCyan = Color(0xFF00D3F2);
 
   // User Accounts View Colors
   static const Color activeStatusBg = Color(0xFFD1FAE5);
@@ -307,4 +350,18 @@ class AppColors {
   static const Color leaveTotalAvailableText = Color(0xFF432DD7);
   static const Color leaveTotalAvailableBgDark = Color(0xFF1E3A8A);
   static const Color leaveTotalAvailableTextDark = Color(0xFF93C5FD);
+
+  // Authentication Specific Colors
+  static const Color authBgStart = Color(0xFFE0F2FE);
+  static const Color authBgEnd = Color(0xFFF8FAFC);
+  static const Color authInputFill = Color(0xFFF8FAFC);
+  static const Color authInputBorder = Color(0xFFE2E8F0);
+  static const Color authBadgeBg = Color(0xFFEFF6FF);
+  static const Color authBadgeBorder = Color(0xFFDBEAFE);
+  static const Color authBadgeDot = Color(0xFF2B7FFF);
+  static const Color authDivider = Color(0xFFF1F5F9);
+  static const Color authSocialBtnBg = Color(0xFFF8FAFC);
+  static const Color authSocialBtnBorder = Color(0xFFE2E8F0);
+  static const Color authButton = Color(0xFF2563EB);
+  static const Color authLinkText = Color(0xFF62748E);
 }

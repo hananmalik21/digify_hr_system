@@ -9,6 +9,9 @@ class AppRoutes {
 
   // Dashboard routes
   static const String dashboard = '/dashboard';
+  static const String dashboardModuleSelection = '$dashboard/module-selection';
+  static const String dashboardModuleSelectionParam = 'moduleId';
+  static String dashboardModuleSelectionPath(String moduleId) => '$dashboardModuleSelection/$moduleId';
   static const String dashboardOverview = '$dashboard/overview';
   static const String dashboardAnalytics = '$dashboard/analytics';
   static const String dashboardQuickActions = '$dashboard/quick-actions';

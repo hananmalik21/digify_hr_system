@@ -63,6 +63,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeBack => 'Welcome Back';
 
   @override
+  String get enterCredentialsToAccess =>
+      'Enter your credentials to access your account.';
+
+  @override
+  String get orSignInWith => 'OR SIGN IN WITH';
+
+  @override
+  String get rememberMe => 'REMEMBER ME';
+
+  @override
+  String get forgotPasswordTitle => 'FORGOT PASSWORD?';
+
+  @override
+  String get forgotPasswordDialogMessage =>
+      'To reset your password, please contact your system administrator.';
+
+  @override
+  String get signInBtn => 'SIGN IN';
+
+  @override
+  String get endToEndEncrypted => 'END-TO-END ENCRYPTED';
+
+  @override
+  String get copyrightInfo =>
+      '2026 DIGIFY INTELLIGENCE SYSTEMS.\nCORE: KUWAIT.';
+
+  @override
   String get signInToAccessDashboard => 'Sign in to access your HR dashboard';
 
   @override
@@ -115,6 +142,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidCredentials =>
       'Invalid email or password. Please try again.';
+
+  @override
+  String get connectionError => 'Connection error. Please try again.';
+
+  @override
+  String get loginFailed => 'Login failed';
 
   @override
   String get fullNameHint => 'Enter your full name';
@@ -498,6 +531,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get position => 'Position';
+
+  @override
+  String get employee => 'Employee';
+
+  @override
+  String get leaveType => 'Leave Type';
+
+  @override
+  String get riskLevel => 'Risk Level';
 
   @override
   String get accountStatus => 'Account Status';
@@ -3456,6 +3498,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this structure?';
 
   @override
+  String get activateStructureTitle => 'Activate structure';
+
+  @override
+  String get confirmActivateStructure =>
+      'Do you want to set this structure as the active organization structure?';
+
+  @override
   String structureHasOrgUnits(int count) {
     return 'This structure has $count organizational unit(s) that reference it. You must delete all organizational units first, or use cascade delete.';
   }
@@ -3662,12 +3711,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leaveFilterRejected => 'rejected';
-
-  @override
-  String get employee => 'Employee';
-
-  @override
-  String get leaveType => 'Leave Type';
 
   @override
   String get days => 'Days';
@@ -3932,9 +3975,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get carryForwardLimit => 'Carry Forward Limit';
-
-  @override
-  String get riskLevel => 'Risk Level';
 
   @override
   String daysLeft(int count) {

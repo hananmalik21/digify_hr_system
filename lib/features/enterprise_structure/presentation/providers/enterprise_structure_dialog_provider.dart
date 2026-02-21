@@ -42,9 +42,7 @@ class EnterpriseStructureDialogState {
       return [];
     }
 
-    if (kDebugMode) {
-      debugPrint("levels are ${structureLevels.length}");
-    }
+    if (kDebugMode) {}
 
     return structureLevels.map((level) {
       return HierarchyLevel(
@@ -113,14 +111,12 @@ class EnterpriseStructureDialogState {
 
 /// Notifier for enterprise structure dialog
 /// Automatically loads data when created (each dialog instance gets fresh data)
-class EnterpriseStructureDialogNotifier
-    extends StateNotifier<EnterpriseStructureDialogState> {
+class EnterpriseStructureDialogNotifier extends StateNotifier<EnterpriseStructureDialogState> {
   final GetStructureLevelsUseCase getStructureLevelsUseCase;
   bool _hasLoaded = false;
 
-  EnterpriseStructureDialogNotifier({
-    required this.getStructureLevelsUseCase,
-  }) : super(const EnterpriseStructureDialogState(structureLevels: [])) {
+  EnterpriseStructureDialogNotifier({required this.getStructureLevelsUseCase})
+    : super(const EnterpriseStructureDialogState(structureLevels: [])) {
     // Automatically load data when provider is created
     // This ensures fresh data every time a dialog opens
     _loadData();
@@ -129,23 +125,15 @@ class EnterpriseStructureDialogNotifier
   /// Internal method to load data
   Future<void> _loadData() async {
     if (_hasLoaded) return; // Prevent duplicate loads
-    
+
     _hasLoaded = true;
     state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
 
     try {
       final levels = await getStructureLevelsUseCase();
-      state = state.copyWith(
-        structureLevels: levels,
-        isLoading: false,
-        hasError: false,
-      );
+      state = state.copyWith(structureLevels: levels, isLoading: false, hasError: false);
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
       _hasLoaded = false; // Allow retry on error
     } catch (e) {
       state = state.copyWith(
@@ -172,15 +160,8 @@ class EnterpriseStructureDialogNotifier
 /// Provider for enterprise structure dialog notifier
 /// Uses a family provider to create a unique instance for each dialog
 /// Each dialog instance gets its own provider with a unique key
-final enterpriseStructureDialogProvider =
-    StateNotifierProvider.autoDispose
-        .family<EnterpriseStructureDialogNotifier,
-            EnterpriseStructureDialogState, String>(
-  (ref, dialogId) {
-    final useCase = ref.watch(getStructureLevelsUseCaseProvider);
-    return EnterpriseStructureDialogNotifier(
-      getStructureLevelsUseCase: useCase,
-    );
-  },
-);
-
+final enterpriseStructureDialogProvider = StateNotifierProvider.autoDispose
+    .family<EnterpriseStructureDialogNotifier, EnterpriseStructureDialogState, String>((ref, dialogId) {
+      final useCase = ref.watch(getStructureLevelsUseCaseProvider);
+      return EnterpriseStructureDialogNotifier(getStructureLevelsUseCase: useCase);
+    });

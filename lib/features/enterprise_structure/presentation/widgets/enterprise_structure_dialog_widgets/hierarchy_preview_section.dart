@@ -2,21 +2,15 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/hierarchy_preview_widget.dart';
 import 'package:flutter/material.dart';
 
-/// Helper function to calculate preview width
-double getPreviewWidth(int level, int totalLevels) {
-  final baseWidth = 814.0;
-  final widthDecrement = 24.0;
-  return baseWidth - (widthDecrement * (level - 1));
-}
+const double _previewBaseWidth = 814.0;
+const double _previewWidthDecrement = 24.0;
 
-/// Hierarchy preview section widget
+double _previewLevelWidth(int level) => _previewBaseWidth - (_previewWidthDecrement * (level - 1));
+
 class HierarchyPreviewSection extends StatelessWidget {
   final List<HierarchyLevel> levels;
 
-  const HierarchyPreviewSection({
-    super.key,
-    required this.levels,
-  });
+  const HierarchyPreviewSection({super.key, required this.levels});
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +18,15 @@ class HierarchyPreviewSection extends StatelessWidget {
     final previewLevels = activeLevels.asMap().entries.map((entry) {
       final index = entry.key;
       final level = entry.value;
-      final sequentialLevel = index + 1; // Sequential level number (1, 2, 3, ...)
-
+      final sequentialLevel = index + 1;
       return HierarchyPreviewLevel(
         name: level.name,
         icon: level.previewIcon,
         level: sequentialLevel,
-        width: getPreviewWidth(sequentialLevel, activeLevels.length),
+        width: _previewLevelWidth(sequentialLevel),
       );
     }).toList();
 
     return HierarchyPreviewWidget(levels: previewLevels);
   }
 }
-

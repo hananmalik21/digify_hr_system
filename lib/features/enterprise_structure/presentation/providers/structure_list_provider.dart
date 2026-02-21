@@ -3,7 +3,6 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/str
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_structure_list_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// State for structure list with pagination
 class StructureListState {
   final List<StructureListItem> structures;
   final bool isLoading;
@@ -55,14 +54,32 @@ class StructureListState {
   bool get hasPrevious => pagination?.hasPrevious ?? false;
 }
 
-/// Notifier for structure list with pagination
+enum StructureListViewStateType { initialLoading, error, empty, content }
+
+class StructureListViewState {
+  final StructureListViewStateType type;
+  final StructureListState? state;
+  final String? errorMessage;
+
+  const StructureListViewState._(this.type, [this.state, this.errorMessage]);
+
+  factory StructureListViewState.initialLoading() =>
+      const StructureListViewState._(StructureListViewStateType.initialLoading);
+
+  factory StructureListViewState.error(String? message) =>
+      StructureListViewState._(StructureListViewStateType.error, null, message);
+
+  factory StructureListViewState.empty() => const StructureListViewState._(StructureListViewStateType.empty);
+
+  factory StructureListViewState.content(StructureListState state) =>
+      StructureListViewState._(StructureListViewStateType.content, state);
+}
+
 class StructureListNotifier extends StateNotifier<StructureListState> {
   final GetStructureListUseCase getStructureListUseCase;
   bool _isDisposed = false;
 
-  StructureListNotifier({required this.getStructureListUseCase})
-    : super(const StructureListState()) {
-    // Use Future.microtask to ensure the notifier is fully initialized
+  StructureListNotifier({required this.getStructureListUseCase}) : super(const StructureListState()) {
     Future.microtask(() {
       if (!_isDisposed) {
         loadStructures();
@@ -70,12 +87,8 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     });
   }
 
-  /// Constructor with custom page size
-  StructureListNotifier.withPageSize({
-    required this.getStructureListUseCase,
-    int pageSize = 1000,
-  }) : super(StructureListState(pageSize: pageSize)) {
-    // Use Future.microtask to ensure the notifier is fully initialized
+  StructureListNotifier.withPageSize({required this.getStructureListUseCase, int pageSize = 1000})
+    : super(StructureListState(pageSize: pageSize)) {
     Future.microtask(() {
       if (!_isDisposed) {
         loadStructuresWithPageSize(pageSize: pageSize);
@@ -89,36 +102,23 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     super.dispose();
   }
 
-  /// Load structures for the first page
   Future<void> loadStructures({bool refresh = false}) async {
     if (_isDisposed) return;
 
     if (refresh) {
       if (_isDisposed) return;
-      state = state.copyWith(
-        isLoading: true,
-        hasError: false,
-        errorMessage: null,
-        currentPage: 1,
-      );
+      state = state.copyWith(isLoading: true, hasError: false, errorMessage: null, currentPage: 1);
     } else if (state.isLoading) {
-      return; // Already loading
+      return;
     } else {
       if (_isDisposed) return;
-      state = state.copyWith(
-        isLoading: true,
-        hasError: false,
-        errorMessage: null,
-      );
+      state = state.copyWith(isLoading: true, hasError: false, errorMessage: null);
     }
 
     try {
-      final result = await getStructureListUseCase(
-        page: refresh ? 1 : state.currentPage,
-        pageSize: state.pageSize,
-      );
+      final result = await getStructureListUseCase(page: refresh ? 1 : state.currentPage, pageSize: state.pageSize);
 
-      if (_isDisposed) return; // Check if disposed during async operation
+      if (_isDisposed) return;
 
       try {
         state = state.copyWith(
@@ -130,20 +130,13 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
           currentPage: result.pagination.page,
         );
       } catch (e) {
-        // Ignore if disposed
         if (!_isDisposed) rethrow;
       }
     } on AppException catch (e) {
       if (_isDisposed) return;
       try {
-        state = state.copyWith(
-          isLoading: false,
-          hasError: true,
-          errorMessage: e.message,
-        );
-      } catch (_) {
-        // Ignore if disposed
-      }
+        state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
+      } catch (_) {}
     } catch (e) {
       if (_isDisposed) return;
       try {
@@ -152,31 +145,22 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
           hasError: true,
           errorMessage: 'Failed to load structures: ${e.toString()}',
         );
-      } catch (_) {
-        // Ignore if disposed
-      }
+      } catch (_) {}
     }
   }
 
-  /// Load structures with custom page size
   Future<void> loadStructuresWithPageSize({int pageSize = 1000}) async {
     if (_isDisposed || state.isLoading) {
-      return; // Already loading or disposed
+      return;
     }
 
     if (_isDisposed) return;
-    state = state.copyWith(
-      isLoading: true,
-      hasError: false,
-      errorMessage: null,
-      currentPage: 1,
-      pageSize: pageSize,
-    );
+    state = state.copyWith(isLoading: true, hasError: false, errorMessage: null, currentPage: 1, pageSize: pageSize);
 
     try {
       final result = await getStructureListUseCase(page: 1, pageSize: pageSize);
 
-      if (_isDisposed) return; // Check if disposed during async operation
+      if (_isDisposed) return;
 
       try {
         state = state.copyWith(
@@ -189,20 +173,13 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
           pageSize: pageSize,
         );
       } catch (e) {
-        // Ignore if disposed
         if (!_isDisposed) rethrow;
       }
     } on AppException catch (e) {
       if (_isDisposed) return;
       try {
-        state = state.copyWith(
-          isLoading: false,
-          hasError: true,
-          errorMessage: e.message,
-        );
-      } catch (_) {
-        // Ignore if disposed
-      }
+        state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
+      } catch (_) {}
     } catch (e) {
       if (_isDisposed) return;
       try {
@@ -211,13 +188,10 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
           hasError: true,
           errorMessage: 'Failed to load structures: ${e.toString()}',
         );
-      } catch (_) {
-        // Ignore if disposed
-      }
+      } catch (_) {}
     }
   }
 
-  /// Load next page
   Future<void> loadNextPage() async {
     if (state.isLoadingMore || !state.hasMore) return;
 
@@ -225,10 +199,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
 
     try {
       final nextPage = state.currentPage + 1;
-      final result = await getStructureListUseCase(
-        page: nextPage,
-        pageSize: state.pageSize,
-      );
+      final result = await getStructureListUseCase(page: nextPage, pageSize: state.pageSize);
 
       state = state.copyWith(
         structures: [...state.structures, ...result.structures],
@@ -238,11 +209,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
         currentPage: nextPage,
       );
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoadingMore: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoadingMore: false, hasError: true, errorMessage: e.message);
     } catch (e) {
       state = state.copyWith(
         isLoadingMore: false,
@@ -252,7 +219,6 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     }
   }
 
-  /// Load previous page
   Future<void> loadPreviousPage() async {
     if (state.isLoading || !state.hasPrevious) return;
 
@@ -260,10 +226,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
 
     try {
       final previousPage = state.currentPage - 1;
-      final result = await getStructureListUseCase(
-        page: previousPage,
-        pageSize: state.pageSize,
-      );
+      final result = await getStructureListUseCase(page: previousPage, pageSize: state.pageSize);
 
       state = state.copyWith(
         structures: result.structures,
@@ -273,11 +236,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
         currentPage: previousPage,
       );
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -287,28 +246,31 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     }
   }
 
-  /// Refresh the list
   Future<void> refresh() async {
     await loadStructures(refresh: true);
   }
 
-  /// Go to a specific page
+  void setStructureActive(String structureId, bool isActive) {
+    final updated = state.structures.map((s) {
+      if (s.structureId == structureId) return s.copyWith(isActive: isActive);
+      return isActive ? s.copyWith(isActive: false) : s;
+    }).toList();
+    state = state.copyWith(structures: updated);
+  }
+
   Future<void> goToPage(int page) async {
     if (page < 1 || (state.pagination != null && page > state.pagination!.totalPages)) {
       return;
     }
 
     if (page == state.currentPage) {
-      return; // Already on this page
+      return;
     }
 
     state = state.copyWith(isLoading: true);
 
     try {
-      final result = await getStructureListUseCase(
-        page: page,
-        pageSize: state.pageSize,
-      );
+      final result = await getStructureListUseCase(page: page, pageSize: state.pageSize);
 
       state = state.copyWith(
         structures: result.structures,
@@ -318,11 +280,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
         currentPage: page,
       );
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,

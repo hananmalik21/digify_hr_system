@@ -14,6 +14,42 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsFaviconGen {
+  const $AssetsFaviconGen();
+
+  /// File path: assets/favicon/android-chrome-192x192.png
+  AssetGenImage get androidChrome192x192 => const AssetGenImage('assets/favicon/android-chrome-192x192.png');
+
+  /// File path: assets/favicon/android-chrome-512x512.png
+  AssetGenImage get androidChrome512x512 => const AssetGenImage('assets/favicon/android-chrome-512x512.png');
+
+  /// File path: assets/favicon/apple-touch-icon.png
+  AssetGenImage get appleTouchIcon => const AssetGenImage('assets/favicon/apple-touch-icon.png');
+
+  /// File path: assets/favicon/favicon-16x16.png
+  AssetGenImage get favicon16x16 => const AssetGenImage('assets/favicon/favicon-16x16.png');
+
+  /// File path: assets/favicon/favicon-32x32.png
+  AssetGenImage get favicon32x32 => const AssetGenImage('assets/favicon/favicon-32x32.png');
+
+  /// File path: assets/favicon/favicon.ico
+  String get favicon => 'assets/favicon/favicon.ico';
+
+  /// File path: assets/favicon/site.webmanifest
+  String get site => 'assets/favicon/site.webmanifest';
+
+  /// List of all assets
+  List<dynamic> get values => [
+    androidChrome192x192,
+    androidChrome512x512,
+    appleTouchIcon,
+    favicon16x16,
+    favicon32x32,
+    favicon,
+    site,
+  ];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -82,6 +118,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/audit_trail_icon_department.svg
   SvgGenImage get auditTrailIconDepartment => const SvgGenImage('assets/icons/audit_trail_icon_department.svg');
+
+  /// Directory path: assets/icons/auth
+  $AssetsIconsAuthGen get auth => const $AssetsIconsAuthGen();
 
   /// File path: assets/icons/basic_info_division_icon.svg
   SvgGenImage get basicInfoDivisionIcon => const SvgGenImage('assets/icons/basic_info_division_icon.svg');
@@ -431,6 +470,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/employees_small_icon.svg
   SvgGenImage get employeesSmallIcon => const SvgGenImage('assets/icons/employees_small_icon.svg');
 
+  /// Directory path: assets/icons/enterprise_structure
+  $AssetsIconsEnterpriseStructureGen get enterpriseStructure => const $AssetsIconsEnterpriseStructureGen();
+
   /// File path: assets/icons/enterprise_structure_icon.svg
   SvgGenImage get enterpriseStructureIcon => const SvgGenImage('assets/icons/enterprise_structure_icon.svg');
 
@@ -770,6 +812,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/submitted.svg
   SvgGenImage get submitted => const SvgGenImage('assets/icons/submitted.svg');
 
+  /// File path: assets/icons/supply-chain.svg
+  SvgGenImage get supplyChain => const SvgGenImage('assets/icons/supply-chain.svg');
+
   /// File path: assets/icons/tasks_events_icon.svg
   SvgGenImage get tasksEventsIcon => const SvgGenImage('assets/icons/tasks_events_icon.svg');
 
@@ -1102,6 +1147,7 @@ class $AssetsIconsGen {
     settingsMainIcon,
     structureConfigurationIcon,
     submitted,
+    supplyChain,
     tasksEventsIcon,
     tasksIcon,
     teamLeaveRiskIconFigma,
@@ -1134,11 +1180,23 @@ class $AssetsIconsGen {
 class $AssetsLogoGen {
   const $AssetsLogoGen();
 
-  /// File path: assets/logo/digify-logo.png
-  AssetGenImage get digifyLogo => const AssetGenImage('assets/logo/digify-logo.png');
+  /// File path: assets/logo/digify-favicon.png
+  AssetGenImage get digifyFavicon => const AssetGenImage('assets/logo/digify-favicon.png');
+
+  /// File path: assets/logo/digify-logo-dark.svg
+  SvgGenImage get digifyLogoDark => const SvgGenImage('assets/logo/digify-logo-dark.svg');
+
+  /// File path: assets/logo/digify-logo.svg
+  SvgGenImage get digifyLogo => const SvgGenImage('assets/logo/digify-logo.svg');
+
+  /// File path: assets/logo/part-logo-dark.svg
+  SvgGenImage get partLogoDark => const SvgGenImage('assets/logo/part-logo-dark.svg');
+
+  /// File path: assets/logo/part-logo.svg
+  SvgGenImage get partLogo => const SvgGenImage('assets/logo/part-logo.svg');
 
   /// List of all assets
-  List<AssetGenImage> get values => [digifyLogo];
+  List<dynamic> get values => [digifyFavicon, digifyLogoDark, digifyLogo, partLogoDark, partLogo];
 }
 
 class $AssetsIconsAttendanceGen {
@@ -1170,6 +1228,31 @@ class $AssetsIconsAttendanceGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [absent, emptyCalander, enterprise, halfDay, late, leave, present, staff];
+}
+
+class $AssetsIconsAuthGen {
+  const $AssetsIconsAuthGen();
+
+  /// File path: assets/icons/auth/bg .gif
+  AssetGenImage get bg => const AssetGenImage('assets/icons/auth/bg .gif');
+
+  /// File path: assets/icons/auth/fingerprint.svg
+  SvgGenImage get fingerprint => const SvgGenImage('assets/icons/auth/fingerprint.svg');
+
+  /// File path: assets/icons/auth/lock.svg
+  SvgGenImage get lock => const SvgGenImage('assets/icons/auth/lock.svg');
+
+  /// File path: assets/icons/auth/mail.svg
+  SvgGenImage get mail => const SvgGenImage('assets/icons/auth/mail.svg');
+
+  /// File path: assets/icons/auth/secure-shield.svg
+  SvgGenImage get secureShield => const SvgGenImage('assets/icons/auth/secure-shield.svg');
+
+  /// File path: assets/icons/auth/window.svg
+  SvgGenImage get window => const SvgGenImage('assets/icons/auth/window.svg');
+
+  /// List of all assets
+  List<dynamic> get values => [bg, fingerprint, lock, mail, secureShield, window];
 }
 
 class $AssetsIconsEmployeeManagementGen {
@@ -1252,6 +1335,25 @@ class $AssetsIconsEmployeeManagementGen {
   ];
 }
 
+class $AssetsIconsEnterpriseStructureGen {
+  const $AssetsIconsEnterpriseStructureGen();
+
+  /// File path: assets/icons/enterprise_structure/down-arrow.svg
+  SvgGenImage get downArrow => const SvgGenImage('assets/icons/enterprise_structure/down-arrow.svg');
+
+  /// File path: assets/icons/enterprise_structure/hierarchy-level.svg
+  SvgGenImage get hierarchyLevel => const SvgGenImage('assets/icons/enterprise_structure/hierarchy-level.svg');
+
+  /// File path: assets/icons/enterprise_structure/right-arrow.svg
+  SvgGenImage get rightArrow => const SvgGenImage('assets/icons/enterprise_structure/right-arrow.svg');
+
+  /// File path: assets/icons/enterprise_structure/up-arrow.svg
+  SvgGenImage get upArrow => const SvgGenImage('assets/icons/enterprise_structure/up-arrow.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [downArrow, hierarchyLevel, rightArrow, upArrow];
+}
+
 class $AssetsIconsHeaderGen {
   const $AssetsIconsHeaderGen();
 
@@ -1322,6 +1424,9 @@ class $AssetsIconsLeaveManagementGen {
   /// File path: assets/icons/leave_management/martial-status.svg
   SvgGenImage get martialStatus => const SvgGenImage('assets/icons/leave_management/martial-status.svg');
 
+  /// File path: assets/icons/leave_management/minus.svg
+  SvgGenImage get minus => const SvgGenImage('assets/icons/leave_management/minus.svg');
+
   /// File path: assets/icons/leave_management/my_leave.svg
   SvgGenImage get myLeave => const SvgGenImage('assets/icons/leave_management/my_leave.svg');
 
@@ -1369,6 +1474,7 @@ class $AssetsIconsLeaveManagementGen {
     leaveRequests,
     marker,
     martialStatus,
+    minus,
     myLeave,
     phone,
     play,
@@ -1471,6 +1577,7 @@ class $AssetsIconsWorkforceGen {
 class Assets {
   const Assets._();
 
+  static const $AssetsFaviconGen favicon = $AssetsFaviconGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsLogoGen logo = $AssetsLogoGen();
 }

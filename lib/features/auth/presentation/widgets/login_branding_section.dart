@@ -32,11 +32,7 @@ class LoginBrandingSection extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(14.r),
               ),
-              child: DigifyAsset(
-                assetPath: Assets.icons.securityIcon.path,
-                width: 40,
-                height: 40,
-              ),
+              child: DigifyAsset(assetPath: Assets.icons.securityIcon.path, width: 40, height: 40),
             ),
           ),
         ),
@@ -49,12 +45,7 @@ class LoginBrandingSection extends StatelessWidget {
                 localizations.digifyHrTitle,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: titleSize,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1.16,
-                ),
+                style: TextStyle(fontSize: titleSize, fontWeight: FontWeight.bold, color: Colors.white, height: 1.16),
               ),
               SizedBox(height: 4.h),
               Text(

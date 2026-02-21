@@ -10,11 +10,13 @@ class HeaderLeftSection extends StatelessWidget {
     required this.isMobile,
     required this.isDark,
     required this.onMenuTap,
+    this.isSidebarExpanded = false,
     this.onLogoTap,
   });
 
   final bool isMobile;
   final bool isDark;
+  final bool isSidebarExpanded;
   final VoidCallback onMenuTap;
   final VoidCallback? onLogoTap;
 
@@ -28,36 +30,42 @@ class HeaderLeftSection extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(6.r),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
-            child: DigifyAsset(
-              assetPath: Assets.icons.menuToggleIcon.path,
-              width: 20.w,
-              height: 20.h,
-              color: isDark ? AppColors.textPrimaryDark : const Color(0xFF1E2939),
-            ),
+            child: isSidebarExpanded
+                ? DigifyAsset(
+                    assetPath: Assets.icons.closeIcon.path,
+                    width: 20.w,
+                    height: 20.h,
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.lightDark,
+                  )
+                : DigifyAsset(
+                    assetPath: Assets.icons.menuToggleIcon.path,
+                    height: 20.h,
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.lightDark,
+                  ),
           ),
         ),
-        if (onLogoTap != null)
-          InkWell(
-            onTap: onLogoTap,
-            borderRadius: BorderRadius.circular(10.r),
-            child: Padding(
+        if (!isSidebarExpanded) ...[
+          if (onLogoTap != null)
+            InkWell(
+              onTap: onLogoTap,
+              borderRadius: BorderRadius.circular(10.r),
+              child: Padding(
+                padding: EdgeInsets.all(6.r),
+                child: DigifyAsset(
+                  assetPath: isDark ? Assets.logo.digifyLogoDark.path : Assets.logo.digifyLogo.path,
+                  height: 25.h,
+                ),
+              ),
+            )
+          else
+            Padding(
               padding: EdgeInsets.all(6.r),
               child: DigifyAsset(
-                assetPath: Assets.logo.digifyLogo.path,
-                height: isMobile ? 40.h : 100.h,
-                width: isMobile ? 100.w : 150.w,
+                assetPath: isDark ? Assets.logo.digifyLogoDark.path : Assets.logo.digifyLogo.path,
+                height: 20.h,
               ),
             ),
-          )
-        else
-          Padding(
-            padding: EdgeInsets.all(6.r),
-            child: DigifyAsset(
-              assetPath: Assets.logo.digifyLogo.path,
-              height: isMobile ? 40.h : 100.h,
-              width: isMobile ? 100.w : 150.w,
-            ),
-          ),
+        ],
       ],
     );
   }

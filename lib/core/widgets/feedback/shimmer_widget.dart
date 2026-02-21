@@ -9,28 +9,19 @@ class ShimmerWidget extends StatefulWidget {
   final Color? baseColor;
   final Color? highlightColor;
 
-  const ShimmerWidget({
-    super.key,
-    required this.child,
-    this.baseColor,
-    this.highlightColor,
-  });
+  const ShimmerWidget({super.key, required this.child, this.baseColor, this.highlightColor});
 
   @override
   State<ShimmerWidget> createState() => _ShimmerWidgetState();
 }
 
-class _ShimmerWidgetState extends State<ShimmerWidget>
-    with SingleTickerProviderStateMixin {
+class _ShimmerWidgetState extends State<ShimmerWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat();
   }
 
   @override
@@ -42,10 +33,8 @@ class _ShimmerWidgetState extends State<ShimmerWidget>
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final baseColor = widget.baseColor ??
-        (isDark ? AppColors.cardBackgroundDark : const Color(0xFFE5E7EB));
-    final highlightColor = widget.highlightColor ??
-        (isDark ? AppColors.cardBorderDark : const Color(0xFFF3F4F6));
+    final baseColor = widget.baseColor ?? (isDark ? AppColors.cardBackgroundDark : const Color(0xFFE5E7EB));
+    final highlightColor = widget.highlightColor ?? (isDark ? AppColors.cardBorderDark : const Color(0xFFF3F4F6));
 
     return AnimatedBuilder(
       animation: _controller,
@@ -55,11 +44,7 @@ class _ShimmerWidgetState extends State<ShimmerWidget>
             return LinearGradient(
               begin: Alignment(-1.0 - _controller.value * 2, 0.0),
               end: Alignment(1.0 - _controller.value * 2, 0.0),
-              colors: [
-                baseColor,
-                highlightColor,
-                baseColor,
-              ],
+              colors: [baseColor, highlightColor, baseColor],
               stops: const [0.0, 0.5, 1.0],
             ).createShader(bounds);
           },
@@ -90,8 +75,7 @@ class ShimmerContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final base = baseColor ??
-        (isDark ? AppColors.cardBackgroundDark : const Color(0xFFE5E7EB));
+    final base = baseColor ?? (isDark ? AppColors.cardBackgroundDark : const Color(0xFFE5E7EB));
 
     return ShimmerWidget(
       baseColor: baseColor,
@@ -99,12 +83,8 @@ class ShimmerContainer extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        decoration: BoxDecoration(
-          color: base,
-          borderRadius: BorderRadius.circular(borderRadius.r),
-        ),
+        decoration: BoxDecoration(color: base, borderRadius: BorderRadius.circular(borderRadius.r)),
       ),
     );
   }
 }
-
