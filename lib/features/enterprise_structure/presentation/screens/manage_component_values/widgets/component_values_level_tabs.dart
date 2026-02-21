@@ -34,7 +34,7 @@ class ComponentValuesLevelTabs extends ConsumerWidget {
     final isLevelsLoading = activeLevelsState.isLoading;
     final levels = activeLevelsState.levels;
     final isTreeViewActive = cvState.isTreeView;
-    final selectedLevelCode = screenState.selectedLevelCode;
+    final selectedLevel = screenState.selectedLevel;
     final treeViewLabel = localizations.treeView;
 
     final onTreeViewTap = screenNotifier.selectTreeView;
@@ -97,7 +97,7 @@ class ComponentValuesLevelTabs extends ConsumerWidget {
               Gap(8.w),
               ...displayLevels.map((level) {
                 final icons = getIconsForLevelCode(level.levelCode);
-                final isActive = selectedLevelCode == level.levelCode;
+                final isActive = selectedLevel?.code == level.levelCode;
                 return Padding(
                   key: Key('tab_${level.levelCode}'),
                   padding: EdgeInsetsDirectional.only(end: 8.w),

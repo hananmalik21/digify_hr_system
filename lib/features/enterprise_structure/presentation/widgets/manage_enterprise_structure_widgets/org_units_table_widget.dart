@@ -69,7 +69,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
                       const OrgUnitsTableSkeleton()
                     else if (units.isEmpty && !isLoading)
                       SizedBox(
-                        width: 1200.w, // Approximate width of all columns
+                        width: 1200.w,
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 48.h),
                           child: Center(
@@ -107,7 +107,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
               pageSize: pageSize,
               onPrevious: onPrevious,
               onNext: onNext,
-              isLoading: paginationIsLoading ?? isLoading,
+              isLoading: false,
               style: PaginationStyle.simple,
             ),
           ],

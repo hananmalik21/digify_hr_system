@@ -18,22 +18,20 @@ class ComponentValuesTabContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cvState = ref.watch(componentValuesProvider);
-    final selectedLevelCode = ref.watch(manageComponentValuesScreenProvider.select((s) => s.selectedLevelCode));
+    final selectedLevel = ref.watch(manageComponentValuesScreenProvider.select((s) => s.selectedLevel));
 
-    if (cvState.isTreeView && selectedLevelCode == null) {
+    if (cvState.isTreeView && selectedLevel == null) {
       return const ComponentValuesTreeView();
     }
 
-    if (selectedLevelCode != null) {
-      return _buildLevelView(selectedLevelCode);
+    if (selectedLevel != null) {
+      return _buildLevelView(selectedLevel);
     }
 
     return const ComponentValuesDefaultView();
   }
 
-  Widget _buildLevelView(String levelCode) {
-    final level = OrganizationLevel.fromCode(levelCode);
-
+  Widget _buildLevelView(OrganizationLevel level) {
     switch (level) {
       case OrganizationLevel.company:
         return const CompanyValuesView();

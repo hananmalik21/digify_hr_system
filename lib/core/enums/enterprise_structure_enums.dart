@@ -28,4 +28,21 @@ enum OrganizationLevel {
         return OrganizationLevel.unknown;
     }
   }
+
+  String get code {
+    switch (this) {
+      case OrganizationLevel.company:
+        return 'COMPANY';
+      case OrganizationLevel.division:
+        return 'DIVISION';
+      case OrganizationLevel.businessUnit:
+        return 'BUSINESS_UNIT';
+      case OrganizationLevel.department:
+        return 'DEPARTMENT';
+      case OrganizationLevel.section:
+        return 'SECTION';
+      case OrganizationLevel.unknown:
+        return '';
+    }
+  }
 }

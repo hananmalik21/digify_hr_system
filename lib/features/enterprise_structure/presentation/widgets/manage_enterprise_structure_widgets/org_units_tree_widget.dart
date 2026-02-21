@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Widget to display org units tree view matching ComponentTreeView design
 class OrgUnitsTreeWidget extends ConsumerStatefulWidget {
   final AppLocalizations localizations;
   final bool isDark;

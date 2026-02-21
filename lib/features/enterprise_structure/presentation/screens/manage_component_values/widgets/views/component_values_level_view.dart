@@ -32,8 +32,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   }
 
   void _maybeLoadOrgUnits() {
-    final levelCode = ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
-    if (levelCode == null) return;
+    final selectedLevel = ref.read(manageComponentValuesScreenProvider).selectedLevel;
+    if (selectedLevel == null) return;
+    final levelCode = selectedLevel.code;
 
     final orgState = ref.read(orgUnitsProvider(levelCode));
     if (orgState.isLoading || orgState.hasError || orgState.units.isNotEmpty || orgState.levelCode != null) return;
@@ -49,8 +50,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   }
 
   void _handleSearchChanged(String value) {
-    final levelCode = ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
-    if (levelCode == null) return;
+    final selectedLevel = ref.read(manageComponentValuesScreenProvider).selectedLevel;
+    if (selectedLevel == null) return;
+    final levelCode = selectedLevel.code;
 
     ref.read(manageComponentValuesScreenProvider.notifier).setOrgUnitsSearchQuery(value);
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -61,8 +63,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   }
 
   void _handleAddNew() {
-    final levelCode = ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
-    if (levelCode == null) return;
+    final selectedLevel = ref.read(manageComponentValuesScreenProvider).selectedLevel;
+    if (selectedLevel == null) return;
+    final levelCode = selectedLevel.code;
 
     final activeLevels = ref.read(activeLevelsProvider);
     if (activeLevels.levels.isEmpty) {
@@ -77,8 +80,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   }
 
   void _handleEdit(OrgStructureLevel unit) {
-    final levelCode = ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
-    if (levelCode == null) return;
+    final selectedLevel = ref.read(manageComponentValuesScreenProvider).selectedLevel;
+    if (selectedLevel == null) return;
+    final levelCode = selectedLevel.code;
 
     final activeLevels = ref.read(activeLevelsProvider);
     final level = activeLevels.levels.firstWhere(
@@ -89,8 +93,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   }
 
   Future<void> _handleDelete(OrgStructureLevel unit) async {
-    final levelCode = ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
-    if (levelCode == null) return;
+    final selectedLevel = ref.read(manageComponentValuesScreenProvider).selectedLevel;
+    if (selectedLevel == null) return;
+    final levelCode = selectedLevel.code;
 
     final localizations = AppLocalizations.of(context)!;
     final activeLevels = ref.read(activeLevelsProvider);
@@ -139,8 +144,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
   @override
   Widget build(BuildContext context) {
     final screenState = ref.watch(manageComponentValuesScreenProvider);
-    final levelCode = screenState.selectedLevelCode;
-    if (levelCode == null) return const SizedBox.shrink();
+    final selectedLevel = screenState.selectedLevel;
+    if (selectedLevel == null) return const SizedBox.shrink();
+    final levelCode = selectedLevel.code;
 
     final orgUnitsState = ref.watch(orgUnitsProvider(levelCode));
     final localizations = AppLocalizations.of(context)!;
