@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/repositorie
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_org_units_by_level_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final orgUnitRemoteDataSourceProvider = Provider<OrgUnitRemoteDataSource>((ref) {
@@ -26,9 +27,11 @@ final enterpriseSelectionNotifierProvider =
       EnterpriseSelectionState,
       ({List<OrgStructureLevel> levels, String structureId})
     >((ref, params) {
+      final tenantId = ref.watch(workforceEnterpriseIdProvider);
       return EnterpriseSelectionNotifier(
         getOrgUnitsByLevelUseCase: ref.read(getOrgUnitsByLevelUseCaseProvider),
         levels: params.levels,
         structureId: params.structureId,
+        tenantId: tenantId,
       );
     });

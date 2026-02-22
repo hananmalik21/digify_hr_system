@@ -6,7 +6,7 @@ class GetActiveOrgStructureLevelsUseCase {
 
   const GetActiveOrgStructureLevelsUseCase({required this.repository});
 
-  Future<OrgStructure> call() async {
-    return await repository.getActiveOrgStructureLevels();
+  Future<OrgStructure> call({int? tenantId}) async {
+    return await repository.getActiveOrgStructureLevels(tenantId: tenantId);
   }
 }

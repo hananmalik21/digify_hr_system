@@ -5,11 +5,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/job_
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family_response.dart';
 
 abstract class JobFamilyRemoteDataSource {
-  Future<JobFamilyResponse> getJobFamilies({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  });
+  Future<JobFamilyResponse> getJobFamilies({int page = 1, int pageSize = 10, String? search, int? tenantId});
   Future<JobFamily> createJobFamily({
     required String code,
     required String nameEnglish,
@@ -34,24 +30,18 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
   const JobFamilyRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<JobFamilyResponse> getJobFamilies({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    final queryParams = {
-      'page': page.toString(),
-      'page_size': pageSize.toString(),
-    };
+  Future<JobFamilyResponse> getJobFamilies({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    final queryParams = {'page': page.toString(), 'page_size': pageSize.toString()};
 
     if (search != null && search.isNotEmpty) {
       queryParams['search'] = search;
     }
 
-    final response = await apiClient.get(
-      ApiEndpoints.jobFamilies,
-      queryParameters: queryParams,
-    );
+    if (tenantId != null) {
+      queryParams['tenant_id'] = tenantId.toString();
+    }
+
+    final response = await apiClient.get(ApiEndpoints.jobFamilies, queryParameters: queryParams);
 
     return JobFamilyResponse.fromJson(response);
   }
@@ -105,9 +95,6 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
 
   @override
   Future<void> deleteJobFamily({required int id, bool hard = true}) async {
-    await apiClient.delete(
-      '${ApiEndpoints.jobFamilies}/$id',
-      queryParameters: {'hard': hard.toString()},
-    );
+    await apiClient.delete('${ApiEndpoints.jobFamilies}/$id', queryParameters: {'hard': hard.toString()});
   }
 }

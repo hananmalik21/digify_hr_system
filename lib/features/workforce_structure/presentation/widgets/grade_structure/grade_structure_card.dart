@@ -48,9 +48,10 @@ class GradeStructureCard extends StatelessWidget {
             ],
           ),
           Gap(16.h),
-          // Hidden due to not in the FIGMA design
-          // Text(grade.description, style: context.textTheme.bodySmall),
-          // Gap(16.h),
+          if (grade.description.isNotEmpty) ...[
+            Text(grade.description, style: context.textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
+            Gap(16.h),
+          ],
           Wrap(
             spacing: 8.w,
             runSpacing: 8.h,

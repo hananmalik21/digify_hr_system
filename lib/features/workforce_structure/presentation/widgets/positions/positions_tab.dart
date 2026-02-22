@@ -64,26 +64,24 @@ class _PositionsTabState extends ConsumerState<PositionsTab> {
             onRetry: () => ref.read(positionNotifierProvider.notifier).refresh(),
           )
         else
-          Expanded(
-            child: WorkforcePositionsTable(
-              localizations: localizations,
-              positions: positionState.items,
-              isDark: isDark,
-              isLoading: positionState.isLoading,
-              paginationInfo: paginationInfo,
-              currentPage: positionState.currentPage,
-              pageSize: positionState.pageSize,
-              onPrevious: paginationInfo != null && positionState.hasPreviousPage
-                  ? () => ref.read(positionNotifierProvider.notifier).goToPage(positionState.currentPage - 1)
-                  : null,
-              onNext: paginationInfo != null && positionState.hasNextPage
-                  ? () => ref.read(positionNotifierProvider.notifier).goToPage(positionState.currentPage + 1)
-                  : null,
-              onView: (position) => _showPositionDetailsDialog(context, position),
-              onEdit: (position) => _showPositionFormDialog(context, position, true),
-              onDelete: (position) => _showDeleteConfirmation(position),
-              paginationIsLoading: false,
-            ),
+          WorkforcePositionsTable(
+            localizations: localizations,
+            positions: positionState.items,
+            isDark: isDark,
+            isLoading: positionState.isLoading,
+            paginationInfo: paginationInfo,
+            currentPage: positionState.currentPage,
+            pageSize: positionState.pageSize,
+            onPrevious: paginationInfo != null && positionState.hasPreviousPage
+                ? () => ref.read(positionNotifierProvider.notifier).goToPage(positionState.currentPage - 1)
+                : null,
+            onNext: paginationInfo != null && positionState.hasNextPage
+                ? () => ref.read(positionNotifierProvider.notifier).goToPage(positionState.currentPage + 1)
+                : null,
+            onView: (position) => _showPositionDetailsDialog(context, position),
+            onEdit: (position) => _showPositionFormDialog(context, position, true),
+            onDelete: (position) => _showDeleteConfirmation(position),
+            paginationIsLoading: false,
           ),
       ],
     );

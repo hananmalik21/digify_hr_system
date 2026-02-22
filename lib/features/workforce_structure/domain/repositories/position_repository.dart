@@ -10,8 +10,9 @@ abstract class PositionRepository {
     int pageSize = 10,
     String? search,
     PositionStatus? status,
+    int? tenantId,
   });
-  Future<Position> createPosition(Map<String, dynamic> positionData);
-  Future<Position> updatePosition(String id, Map<String, dynamic> positionData);
-  Future<void> deletePosition(String id, {bool hard = true});
+  Future<Position> createPosition(Map<String, dynamic> positionData, {int? tenantId});
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData, {int? tenantId});
+  Future<void> deletePosition(String id, {bool hard = true, int? tenantId});
 }

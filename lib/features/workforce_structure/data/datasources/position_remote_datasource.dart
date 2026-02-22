@@ -13,10 +13,11 @@ abstract class PositionRemoteDataSource {
     int pageSize = 10,
     String? search,
     PositionStatus? status,
+    int? tenantId,
   });
-  Future<Position> createPosition(Map<String, dynamic> positionData);
-  Future<Position> updatePosition(String id, Map<String, dynamic> positionData);
-  Future<void> deletePosition(String id, {bool hard = true});
+  Future<Position> createPosition(Map<String, dynamic> positionData, {int? tenantId});
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData, {int? tenantId});
+  Future<void> deletePosition(String id, {bool hard = true, int? tenantId});
 }
 
 /// Position remote data source implementation
@@ -31,11 +32,9 @@ class PositionRemoteDataSourceImpl implements PositionRemoteDataSource {
     int pageSize = 10,
     String? search,
     PositionStatus? status,
+    int? tenantId,
   }) async {
-    final queryParameters = {
-      'page': page.toString(),
-      'page_size': pageSize.toString(),
-    };
+    final queryParameters = {'page': page.toString(), 'page_size': pageSize.toString()};
 
     if (search != null && search.isNotEmpty) {
       queryParameters['search'] = search;
@@ -45,44 +44,39 @@ class PositionRemoteDataSourceImpl implements PositionRemoteDataSource {
       queryParameters['status'] = status.name;
     }
 
-    final response = await apiClient.get(
-      ApiEndpoints.positions,
-      queryParameters: queryParameters,
-    );
+    if (tenantId != null) {
+      queryParameters['tenant_id'] = tenantId.toString();
+    }
+
+    final response = await apiClient.get(ApiEndpoints.positions, queryParameters: queryParameters);
 
     return PositionResponseModel.fromJson(response).toEntity();
   }
 
   @override
-  Future<Position> createPosition(Map<String, dynamic> positionData) async {
-    final response = await apiClient.post(
-      ApiEndpoints.positions,
-      body: positionData,
-    );
+  Future<Position> createPosition(Map<String, dynamic> positionData, {int? tenantId}) async {
+    if (tenantId != null) positionData['tenant_id'] = tenantId;
+    final response = await apiClient.post(ApiEndpoints.positions, body: positionData);
 
     final data = response['data'] as Map<String, dynamic>;
     return PositionModel.fromJson(data).toEntity();
   }
 
   @override
-  Future<Position> updatePosition(
-    String id,
-    Map<String, dynamic> positionData,
-  ) async {
-    final response = await apiClient.put(
-      '${ApiEndpoints.positions}/$id',
-      body: positionData,
-    );
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData, {int? tenantId}) async {
+    if (tenantId != null) positionData['tenant_id'] = tenantId;
+    final response = await apiClient.put('${ApiEndpoints.positions}/$id', body: positionData);
 
     final data = response['data'] as Map<String, dynamic>;
     return PositionModel.fromJson(data).toEntity();
   }
 
   @override
-  Future<void> deletePosition(String id, {bool hard = true}) async {
-    await apiClient.delete(
-      '${ApiEndpoints.positions}/$id',
-      queryParameters: {'hard': hard.toString()},
-    );
+  Future<void> deletePosition(String id, {bool hard = true, int? tenantId}) async {
+    final queryParameters = <String, String>{'hard': hard.toString()};
+    if (tenantId != null) {
+      queryParameters['tenant_id'] = tenantId.toString();
+    }
+    await apiClient.delete('${ApiEndpoints.positions}/$id', queryParameters: queryParameters);
   }
 }

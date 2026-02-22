@@ -9,16 +9,8 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
   const JobFamilyRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<JobFamilyResponse> getJobFamilies({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    return await remoteDataSource.getJobFamilies(
-      page: page,
-      pageSize: pageSize,
-      search: search,
-    );
+  Future<JobFamilyResponse> getJobFamilies({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    return await remoteDataSource.getJobFamilies(page: page, pageSize: pageSize, search: search, tenantId: tenantId);
   }
 
   @override

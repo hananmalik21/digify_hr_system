@@ -1,13 +1,13 @@
 class WorkforcePositionsTableConfig {
   WorkforcePositionsTableConfig._();
 
-  static const bool showPositionCode = false;
+  static const bool showPositionCode = true;
   static const bool showTitle = true;
   static const bool showDepartment = true;
   static const bool showJobFamily = true;
-  static const bool showJobLevel = false;
+  static const bool showJobLevel = true;
   static const bool showGradeStep = true;
-  static const bool showReportsTo = false;
+  static const bool showReportsTo = true;
   static const bool showHeadcount = true;
   static const bool showVacancy = true;
   static const bool showStatus = true;

@@ -214,14 +214,16 @@ class PositionModel {
       level: jobLevel?.levelNameEn ?? '',
       grade: grade?.gradeNumber ?? '',
       step: stepNo != null ? 'Step $stepNo' : '',
-      reportsTo: reportsTo?.positionTitleEn,
+      reportsTo: _buildReportsToDisplay(reportsTo),
       reportsToPositionId: reportsToPositionId,
+      reportsToTitle: reportsTo?.positionTitleEn,
+      reportsToCode: reportsTo?.positionCode,
       division: division,
       costCenter: costCenter ?? '',
       location: location ?? '',
-      budgetedMin: budgetedMinKd != null ? '${budgetedMinKd!.toStringAsFixed(0)} KD' : '',
-      budgetedMax: budgetedMaxKd != null ? '${budgetedMaxKd!.toStringAsFixed(0)} KD' : '',
-      actualAverage: actualAvgKd != null ? '${actualAvgKd!.toStringAsFixed(0)} KD' : '',
+      budgetedMin: budgetedMinKd != null ? budgetedMinKd!.toStringAsFixed(0) : '',
+      budgetedMax: budgetedMaxKd != null ? budgetedMaxKd!.toStringAsFixed(0) : '',
+      actualAverage: actualAvgKd != null ? actualAvgKd!.toStringAsFixed(0) : '',
       headcount: numberOfPositions,
       filled: filledPositions,
       vacant: vacant,
@@ -242,6 +244,14 @@ class PositionModel {
       return DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
     }
     return DateTime.tryParse(v) ?? DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+  }
+
+  static String? _buildReportsToDisplay(ReportsToModel? model) {
+    if (model == null) return null;
+    final title = model.positionTitleEn.trim();
+    final code = model.positionCode.trim();
+    if (title.isEmpty) return code.isEmpty ? null : code;
+    return code.isEmpty ? title : '$title ($code)';
   }
 }
 

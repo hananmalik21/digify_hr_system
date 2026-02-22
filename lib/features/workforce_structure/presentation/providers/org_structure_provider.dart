@@ -7,17 +7,9 @@ class OrgStructureState {
   final bool isLoading;
   final String? error;
 
-  const OrgStructureState({
-    this.orgStructure,
-    this.isLoading = false,
-    this.error,
-  });
+  const OrgStructureState({this.orgStructure, this.isLoading = false, this.error});
 
-  OrgStructureState copyWith({
-    OrgStructure? orgStructure,
-    bool? isLoading,
-    String? error,
-  }) {
+  OrgStructureState copyWith({OrgStructure? orgStructure, bool? isLoading, String? error}) {
     return OrgStructureState(
       orgStructure: orgStructure ?? this.orgStructure,
       isLoading: isLoading ?? this.isLoading,
@@ -28,15 +20,16 @@ class OrgStructureState {
 
 class OrgStructureNotifier extends StateNotifier<OrgStructureState> {
   final GetActiveOrgStructureLevelsUseCase getActiveOrgStructureLevelsUseCase;
+  final int? tenantId;
 
-  OrgStructureNotifier({required this.getActiveOrgStructureLevelsUseCase})
+  OrgStructureNotifier({required this.getActiveOrgStructureLevelsUseCase, this.tenantId})
     : super(const OrgStructureState());
 
   Future<void> fetchOrgStructureLevels() async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final orgStructure = await getActiveOrgStructureLevelsUseCase();
+      final orgStructure = await getActiveOrgStructureLevelsUseCase(tenantId: tenantId);
       state = state.copyWith(orgStructure: orgStructure, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -44,22 +37,17 @@ class OrgStructureNotifier extends StateNotifier<OrgStructureState> {
   }
 
   /// Get active levels sorted by display order
-  List<OrgStructureLevel> get activeLevels =>
-      state.orgStructure?.activeLevels ?? [];
+  List<OrgStructureLevel> get activeLevels => state.orgStructure?.activeLevels ?? [];
 
   /// Check if a specific level code is active
   bool hasLevel(String levelCode) {
-    return activeLevels.any(
-      (level) => level.levelCode.toUpperCase() == levelCode.toUpperCase(),
-    );
+    return activeLevels.any((level) => level.levelCode.toUpperCase() == levelCode.toUpperCase());
   }
 
   /// Get level by code
   OrgStructureLevel? getLevelByCode(String levelCode) {
     try {
-      return activeLevels.firstWhere(
-        (level) => level.levelCode.toUpperCase() == levelCode.toUpperCase(),
-      );
+      return activeLevels.firstWhere((level) => level.levelCode.toUpperCase() == levelCode.toUpperCase());
     } catch (e) {
       return null;
     }

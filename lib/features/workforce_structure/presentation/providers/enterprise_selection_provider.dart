@@ -72,12 +72,14 @@ class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState
   final GetOrgUnitsByLevelUseCase getOrgUnitsByLevelUseCase;
   final List<OrgStructureLevel> levels;
   final _debouncer = Debouncer();
+  final int? tenantId;
   bool _didPreloadFirstLevel = false;
 
   EnterpriseSelectionNotifier({
     required this.getOrgUnitsByLevelUseCase,
     required this.levels,
     required String structureId,
+    this.tenantId,
   }) : super(EnterpriseSelectionState(structureId: structureId));
 
   void ensureFirstLevelOptionsLoaded() {
@@ -117,6 +119,7 @@ class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState
         levelCode: levelCode,
         parentOrgUnitId: parentOrgUnitId,
         search: state.getSearchQuery(levelCode),
+        tenantId: tenantId,
         page: 1,
         pageSize: 10,
       );
@@ -157,6 +160,7 @@ class EnterpriseSelectionNotifier extends StateNotifier<EnterpriseSelectionState
         levelCode: levelCode,
         parentOrgUnitId: parentOrgUnitId,
         search: state.getSearchQuery(levelCode),
+        tenantId: tenantId,
         page: nextPage,
         pageSize: 10,
       );

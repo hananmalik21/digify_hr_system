@@ -14,12 +14,17 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
   final CreatePositionUseCase _createPositionUseCase;
   final UpdatePositionUseCase _updatePositionUseCase;
   final DeletePositionUseCase _deletePositionUseCase;
+  final int? tenantId;
+  String? _deletingId;
+
+  String? get deletingPositionId => _deletingId;
 
   PositionNotifier(
     this._getPositionsUseCase,
     this._createPositionUseCase,
     this._updatePositionUseCase,
     this._deletePositionUseCase,
+    this.tenantId,
   ) : super(const PaginationState());
 
   @override
@@ -34,6 +39,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
         pageSize: state.pageSize,
         search: state.searchQuery,
         status: state.status,
+        tenantId: tenantId,
       );
 
       state = handleSuccessState(
@@ -65,6 +71,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
         pageSize: state.pageSize,
         search: state.searchQuery,
         status: state.status,
+        tenantId: tenantId,
       );
 
       state = handleSuccessState(
@@ -94,6 +101,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
         pageSize: state.pageSize,
         search: state.searchQuery,
         status: state.status,
+        tenantId: tenantId,
       );
 
       state = handleSuccessState(
@@ -149,7 +157,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
 
   Future<Position> createPosition(Map<String, dynamic> positionData) async {
     try {
-      final newPosition = await _createPositionUseCase(positionData);
+      final newPosition = await _createPositionUseCase(positionData, tenantId: tenantId);
 
       state = state.copyWith(items: [newPosition, ...state.items], totalItems: state.totalItems + 1);
 
@@ -161,7 +169,7 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
 
   Future<Position> updatePosition(String id, Map<String, dynamic> positionData) async {
     try {
-      final updatedPosition = await _updatePositionUseCase.execute(id, positionData);
+      final updatedPosition = await _updatePositionUseCase.execute(id, positionData, tenantId: tenantId);
 
       state = state.copyWith(items: state.items.map((p) => p.id == id ? updatedPosition : p).toList());
 
@@ -172,16 +180,16 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
   }
 
   Future<void> deletePosition(String id, {bool hard = true}) async {
-    final previousItems = state.items;
-    final previousTotal = state.totalItems;
-
-    state = state.copyWith(items: state.items.where((p) => p.id != id).toList(), totalItems: state.totalItems - 1);
-
+    _deletingId = id;
+    state = state.copyWith();
     try {
-      await _deletePositionUseCase.execute(id, hard: hard);
+      await _deletePositionUseCase.execute(id, hard: hard, tenantId: tenantId);
+      state = state.copyWith(items: state.items.where((p) => p.id != id).toList(), totalItems: state.totalItems - 1);
     } catch (e) {
-      state = state.copyWith(items: previousItems, totalItems: previousTotal);
       rethrow;
+    } finally {
+      _deletingId = null;
+      if (state.items.isNotEmpty || true) state = state.copyWith();
     }
   }
 
