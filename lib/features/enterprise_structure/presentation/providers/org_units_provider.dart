@@ -226,6 +226,22 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
     }
   }
 
+  void updateUnitLocal(OrgStructureLevel updatedUnit) {
+    try {
+      final updatedUnits = state.units.map((unit) {
+        return unit.orgUnitId == updatedUnit.orgUnitId ? updatedUnit : unit;
+      }).toList();
+      state = state.copyWith(units: updatedUnits);
+    } catch (_) {}
+  }
+
+  void removeUnitLocal(String orgUnitId) {
+    try {
+      final updatedUnits = state.units.where((unit) => unit.orgUnitId != orgUnitId).toList();
+      state = state.copyWith(units: updatedUnits, totalItems: state.totalItems > 0 ? state.totalItems - 1 : 0);
+    } catch (_) {}
+  }
+
   void clear() {
     try {
       state = const OrgUnitsState();

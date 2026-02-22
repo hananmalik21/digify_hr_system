@@ -1,13 +1,13 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_structure_tab_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/business_unit_management_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/company_management_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/department_management_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/division_management_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure_screen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/section_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/level_management/business_unit_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/level_management/company_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/level_management/department_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/level_management/division_management_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/manage_component_values_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_enterprise_structure/manage_enterprise_structure_screen.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/level_management/section_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

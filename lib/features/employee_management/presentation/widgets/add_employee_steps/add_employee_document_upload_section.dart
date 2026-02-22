@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/employee_full_details.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
@@ -12,6 +11,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/employee_document_card.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/bulk_upload_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/document_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';

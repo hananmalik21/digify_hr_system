@@ -1,70 +1,71 @@
+import 'dart:ui' as ui;
+
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
 import 'package:digify_hr_system/core/widgets/buttons/gradient_icon_button.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/company_management_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/division_management_provider.dart';
+import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/business_unit.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_division_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/division_details_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/add_business_unit_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/business_unit_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DivisionManagementScreen extends ConsumerWidget {
-  const DivisionManagementScreen({super.key});
+class BusinessUnitManagementScreen extends ConsumerWidget {
+  const BusinessUnitManagementScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-    final divisionsState = ref.watch(divisionsProvider);
-    final allDivisions = divisionsState.divisions;
-    final isRefreshing = divisionsState.isLoading && allDivisions.isNotEmpty;
-    final totalEmployees = allDivisions.fold<int>(0, (previousValue, division) => previousValue + division.employees);
-    final activeDivisions = allDivisions.where((division) => division.isActive).length;
+    final listState = ref.watch(businessUnitListNotifierProvider);
+    final businessUnits = listState.businessUnits;
+    final isRefreshing = listState.isLoading && businessUnits.isNotEmpty;
     final isDark = context.isDark;
 
-    // Calculate total budget
+    final totalEmployees = businessUnits.fold<int>(0, (previousValue, bu) => previousValue + bu.employees);
+    final activeUnits = businessUnits.where((bu) => bu.isActive).length;
+
     double totalBudget = 0;
-    for (var division in allDivisions) {
-      final budgetStr = division.budget.replaceAll('M', '');
+    for (var bu in businessUnits) {
+      final budgetStr = bu.budget.replaceAll('M', '').replaceAll(' KWD', '').replaceAll(',', '');
       totalBudget += double.tryParse(budgetStr) ?? 0;
     }
 
     final stats = [
       StatsCardData(
-        label: localizations.totalDivisions,
-        value: '${allDivisions.length}',
-        iconPath: 'assets/icons/division_stat_icon.svg',
-        iconColor: const Color(0xFF9810FA),
-        iconBackground: const Color(0xFFF3E8FF),
+        label: localizations.totalUnits,
+        value: '${businessUnits.length}',
+        iconPath: 'assets/icons/total_units_icon.svg',
+        iconColor: const Color(0xFF3B82F6),
+        iconBackground: const Color(0xFFDBEAFE),
       ),
       StatsCardData(
-        label: localizations.activeDivisions,
-        value: '$activeDivisions',
-        iconPath: 'assets/icons/active_division_icon.svg',
+        label: localizations.activeUnits,
+        value: '$activeUnits',
+        iconPath: 'assets/icons/active_units_icon.svg',
         iconColor: const Color(0xFF22C55E),
         iconBackground: const Color(0xFFDCFCE7),
       ),
       StatsCardData(
         label: localizations.totalEmployees,
         value: '$totalEmployees',
-        iconPath: 'assets/icons/employees_blue_icon.svg',
-        iconColor: const Color(0xFF3B82F6),
-        iconBackground: const Color(0xFFDBEAFE),
+        iconPath: 'assets/icons/employees_cyan_icon.svg',
+        iconColor: const Color(0xFF06B6D4),
+        iconBackground: const Color(0xFFCEFAFE),
       ),
       StatsCardData(
         label: localizations.totalBudget,
         value: '${totalBudget.toStringAsFixed(1)}M KWD',
-        iconPath: 'assets/icons/budget_icon.svg',
+        iconPath: 'assets/icons/budget_green_icon.svg',
         iconColor: const Color(0xFF10B981),
         iconBackground: const Color(0xFFD0FAE5),
       ),
@@ -76,7 +77,7 @@ class DivisionManagementScreen extends ConsumerWidget {
         child: Stack(
           children: [
             RefreshIndicator(
-              onRefresh: () => ref.read(divisionsProvider.notifier).refresh(),
+              onRefresh: () => ref.read(businessUnitListNotifierProvider.notifier).refresh(),
               child: Opacity(
                 opacity: isRefreshing ? 0.5 : 1.0,
                 child: SingleChildScrollView(
@@ -95,17 +96,7 @@ class DivisionManagementScreen extends ConsumerWidget {
                       SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
                       _buildSearchBar(context, ref, localizations),
                       SizedBox(height: ResponsiveHelper.isMobile(context) ? 16.h : 24.h),
-                      if (divisionsState.isLoading && divisionsState.divisions.isEmpty)
-                        _buildLoadingState(context, localizations)
-                      else if (divisionsState.hasError)
-                        _buildErrorState(
-                          context,
-                          ref,
-                          divisionsState.errorMessage ?? 'An error occurred while loading divisions',
-                          localizations,
-                        )
-                      else
-                        _buildDivisionList(context, allDivisions, localizations, isDark: isDark),
+                      _buildBusinessUnitList(context, ref, listState, businessUnits, localizations, isDark: isDark),
                     ],
                   ),
                 ),
@@ -150,37 +141,6 @@ class DivisionManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoadingState(BuildContext context, AppLocalizations localizations) {
-    return Center(
-      child: Column(
-        children: [
-          const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
-          SizedBox(height: 16.h),
-          Text(
-            localizations.pleaseWait,
-            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context, WidgetRef ref, String message, AppLocalizations localizations) {
-    return Center(
-      child: Column(
-        children: [
-          Text(
-            message,
-            style: TextStyle(fontSize: 14.sp, color: Colors.red),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 16.h),
-          ElevatedButton(onPressed: () => ref.read(divisionsProvider.notifier).refresh(), child: const Text('Retry')),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeader(BuildContext context, AppLocalizations localizations) {
     final isMobile = ResponsiveHelper.isMobile(context);
     return Row(
@@ -189,9 +149,14 @@ class DivisionManagementScreen extends ConsumerWidget {
         Container(
           width: 48.r,
           height: 48.r,
-          decoration: BoxDecoration(color: const Color(0xFFAD46FF), borderRadius: BorderRadius.circular(14.r)),
+          decoration: BoxDecoration(color: const Color(0xFF2B7FFF), borderRadius: BorderRadius.circular(14.r)),
           child: Center(
-            child: DigifyAsset(assetPath: Assets.icons.divisionIcon.path, width: 24, height: 24, color: Colors.white),
+            child: DigifyAsset(
+              assetPath: Assets.icons.businessUnitIcon.path,
+              width: 24,
+              height: 24,
+              color: Colors.white,
+            ),
           ),
         ),
         SizedBox(width: 12.w),
@@ -200,7 +165,7 @@ class DivisionManagementScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                localizations.divisionManagement,
+                localizations.businessUnitManagement,
                 style: TextStyle(
                   fontSize: isMobile ? 20.sp : 22.1.sp,
                   fontWeight: FontWeight.w500,
@@ -210,12 +175,12 @@ class DivisionManagementScreen extends ConsumerWidget {
               ),
               SizedBox(height: 4.h),
               Text(
-                localizations.manageDivisionsSubtitle,
+                localizations.manageBusinessUnitsSubtitle,
                 style: TextStyle(
-                  fontSize: 15.3.sp,
+                  fontSize: 15.1.sp,
                   fontWeight: FontWeight.w400,
                   color: context.themeTextSecondary,
-                  height: 24 / 15.3,
+                  height: 24 / 15.1,
                 ),
               ),
             ],
@@ -223,10 +188,10 @@ class DivisionManagementScreen extends ConsumerWidget {
         ),
         SizedBox(width: 12.w),
         GradientIconButton(
-          label: localizations.addDivision,
-          iconPath: 'assets/icons/add_division_icon.svg',
-          backgroundColor: const Color(0xFF9810FA),
-          onTap: () => AddDivisionDialog.show(context),
+          label: localizations.addBusinessUnit,
+          iconPath: 'assets/icons/add_business_unit_icon.svg',
+          backgroundColor: const Color(0xFF155DFC),
+          onTap: () => AddBusinessUnitDialog.show(context),
         ),
       ],
     );
@@ -259,7 +224,7 @@ class DivisionManagementScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackground : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.inputBorderDark : const Color(0xFFE5E7EB)),
         boxShadow: [
@@ -278,19 +243,26 @@ class DivisionManagementScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.r),
               child: TextField(
-                onChanged: (value) => ref.read(divisionsProvider.notifier).searchDivisions(value),
+                onChanged: (value) {
+                  ref.read(businessUnitSearchQueryProvider.notifier).state = value;
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    if (ref.read(businessUnitSearchQueryProvider) == value) {
+                      ref.read(businessUnitListNotifierProvider.notifier).search(value);
+                    }
+                  });
+                },
                 decoration: InputDecoration(
                   isDense: true,
                   filled: true,
-                  fillColor: isDark ? AppColors.cardBackground : Colors.white,
+                  fillColor: isDark ? AppColors.cardBackgroundDark : Colors.white,
                   border: InputBorder.none,
-                  hintText: localizations.searchDivisionsPlaceholder,
+                  hintText: localizations.searchBusinessUnitsPlaceholder,
                   hintStyle: TextStyle(color: const Color(0xFF364153).withValues(alpha: 0.5), fontSize: 15.3.sp),
                   contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
                   prefixIcon: Padding(
                     padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
                     child: DigifyAsset(
-                      assetPath: Assets.icons.searchIcon.path,
+                      assetPath: Assets.icons.searchIconBu.path,
                       width: 20,
                       height: 20,
                       color: context.themeTextSecondary,
@@ -307,7 +279,7 @@ class DivisionManagementScreen extends ConsumerWidget {
             child: Row(
               children: [
                 DigifyAsset(
-                  assetPath: Assets.icons.companyFilterIcon.path,
+                  assetPath: Assets.icons.divisionFilterIcon.path,
                   width: 20,
                   height: 20,
                   color: context.themeTextSecondary,
@@ -320,7 +292,7 @@ class DivisionManagementScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Text(
-                    localizations.allCompanies,
+                    localizations.allDivisions,
                     style: TextStyle(
                       fontSize: 15.4.sp,
                       fontWeight: FontWeight.w400,
@@ -337,17 +309,54 @@ class DivisionManagementScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDivisionList(
+  Widget _buildBusinessUnitList(
     BuildContext context,
-    List<DivisionOverview> divisions,
+    WidgetRef ref,
+    BusinessUnitListState listState,
+    List<BusinessUnitOverview> businessUnits,
     AppLocalizations localizations, {
     required bool isDark,
   }) {
-    if (divisions.isEmpty) {
+    if (listState.isLoading && businessUnits.isEmpty) {
       return Center(
-        child: Text(
-          localizations.noResultsFound,
-          style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: const AppLoadingIndicator(type: LoadingType.fadingCircle, color: AppColors.primary),
+        ),
+      );
+    }
+
+    if (listState.hasError) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                listState.errorMessage ?? 'An error occurred',
+                style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              ElevatedButton(
+                onPressed: () => ref.read(businessUnitListNotifierProvider.notifier).refresh(),
+                child: Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (businessUnits.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(24.h),
+          child: Text(
+            localizations.noResultsFound,
+            style: TextStyle(fontSize: 14.sp, color: context.themeTextSecondary),
+          ),
         ),
       );
     }
@@ -364,29 +373,71 @@ class DivisionManagementScreen extends ConsumerWidget {
         return Wrap(
           spacing: gap,
           runSpacing: 24.h,
-          children: divisions.map((division) {
+          children: businessUnits.map((bu) {
             return SizedBox(
               width: columns == 1 ? double.infinity : cardWidth,
-              child: _DivisionCard(division: division, localizations: localizations, isDark: isDark),
+              child: _BusinessUnitCard(
+                businessUnit: bu,
+                localizations: localizations,
+                isDark: isDark,
+                onDelete: (businessUnit) => _handleDelete(context, ref, businessUnit, localizations),
+              ),
             );
           }).toList(),
         );
       },
     );
   }
+
+  Future<void> _handleDelete(
+    BuildContext context,
+    WidgetRef ref,
+    BusinessUnitOverview businessUnit,
+    AppLocalizations localizations,
+  ) async {
+    final confirmed = await DeleteConfirmationDialog.show(
+      context,
+      title: localizations.delete,
+      message: 'Are you sure you want to delete this business unit? This action cannot be undone.',
+      itemName: businessUnit.name,
+    );
+
+    if (confirmed == true) {
+      try {
+        final deleteUseCase = ref.read(deleteBusinessUnitUseCaseProvider);
+        await deleteUseCase(int.parse(businessUnit.id), hard: true);
+        if (context.mounted) {
+          ToastService.success(context, 'Business unit deleted successfully');
+          ref.read(businessUnitListNotifierProvider.notifier).refresh();
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ToastService.error(context, 'Error deleting business unit: ${e.toString()}');
+        }
+      }
+    }
+  }
 }
 
-class _DivisionCard extends ConsumerWidget {
-  final DivisionOverview division;
+class _BusinessUnitCard extends StatelessWidget {
+  final BusinessUnitOverview businessUnit;
   final AppLocalizations localizations;
   final bool isDark;
+  final Function(BusinessUnitOverview) onDelete;
 
-  const _DivisionCard({required this.division, required this.localizations, required this.isDark});
+  const _BusinessUnitCard({
+    required this.businessUnit,
+    required this.localizations,
+    required this.isDark,
+    required this.onDelete,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => DivisionDetailsDialog.show(context, division),
+      onTap: () {
+        BusinessUnitDetailsDialog.show(context, businessUnit);
+      },
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
@@ -406,31 +457,28 @@ class _DivisionCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ===== Header Row (Left content + Right actions) =====
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Left section
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Icon + Names
                       Row(
                         children: [
                           Container(
                             width: 40.r,
                             height: 40.r,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF3E8FF),
+                              color: const Color(0xFFDBEAFE),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
                               child: DigifyAsset(
-                                assetPath: Assets.icons.divisionCardIcon.path,
+                                assetPath: Assets.icons.businessUnitCardIcon.path,
                                 width: 20,
                                 height: 20,
-                                color: const Color(0xFF9810FA),
+                                color: const Color(0xFF3B82F6),
                               ),
                             ),
                           ),
@@ -440,56 +488,50 @@ class _DivisionCard extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  division.name,
+                                  businessUnit.name,
                                   style: TextStyle(
-                                    fontSize: 17.2.sp,
+                                    fontSize: 17.sp,
                                     fontWeight: FontWeight.w500,
                                     color: context.themeTextPrimary,
-                                    height: 27 / 17.2,
+                                    height: 27 / 17,
                                   ),
                                 ),
                                 Text(
-                                  division.nameArabic,
+                                  businessUnit.nameArabic,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w400,
                                     color: context.themeTextSecondary,
                                     height: 24 / 16,
                                   ),
-                                  textDirection: TextDirection.rtl,
+                                  textDirection: ui.TextDirection.rtl,
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-
                       SizedBox(height: 8.h),
-
-                      // Badges
                       Row(
                         children: [
                           _Badge(
-                            label: division.code,
+                            label: businessUnit.code,
                             backgroundColor: const Color(0xFFF3F4F6),
                             textColor: const Color(0xFF364153),
                           ),
                           SizedBox(width: 8.w),
                           _Badge(
-                            label: division.isActive ? localizations.active : localizations.inactive,
-                            backgroundColor: division.isActive ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
-                            textColor: division.isActive ? const Color(0xFF016630) : const Color(0xFF991B1B),
+                            label: businessUnit.isActive ? localizations.active : localizations.inactive,
+                            backgroundColor: isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7),
+                            textColor: isDark ? AppColors.successTextDark : const Color(0xFF016630),
                           ),
                         ],
                       ),
-
                       SizedBox(height: 8.h),
-
-                      // Company Name
                       Row(
                         children: [
                           DigifyAsset(
-                            assetPath: Assets.icons.buildingSmallIcon.path,
+                            assetPath: Assets.icons.divisionSmallIcon.path,
                             width: 12,
                             height: 12,
                             color: context.themeTextSecondary,
@@ -497,14 +539,36 @@ class _DivisionCard extends ConsumerWidget {
                           SizedBox(width: 4.w),
                           Expanded(
                             child: Text(
-                              division.companyName,
+                              businessUnit.divisionName,
+                              style: TextStyle(
+                                fontSize: 13.7.sp,
+                                fontWeight: FontWeight.w400,
+                                color: context.themeTextSecondary,
+                                height: 20 / 13.7,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4.h),
+                      Row(
+                        children: [
+                          DigifyAsset(
+                            assetPath: Assets.icons.buildingSmall2Icon.path,
+                            width: 12,
+                            height: 12,
+                            color: const Color(0xFF6A7282),
+                          ),
+                          SizedBox(width: 4.w),
+                          Expanded(
+                            child: Text(
+                              businessUnit.companyName,
                               style: TextStyle(
                                 fontSize: 13.6.sp,
                                 fontWeight: FontWeight.w400,
-                                color: context.themeTextSecondary,
+                                color: const Color(0xFF6A7282),
                                 height: 20 / 13.6,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -512,184 +576,151 @@ class _DivisionCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-
-                // Right section: Action Buttons (ONLY ONCE)
                 Row(
                   children: [
                     _ActionIcon(
                       assetPath: 'assets/icons/edit_icon_green.svg',
-                      description: localizations.edit,
-                      iconColor: context.themeTextSecondary,
                       onTap: () {
-                        // Format established date from YYYY-MM-DD to DD/MM/YYYY if available
-                        String? formattedDate;
-                        if (division.establishedDate != null && division.establishedDate!.isNotEmpty) {
-                          try {
-                            final parts = division.establishedDate!.split('-');
-                            if (parts.length == 3) {
-                              formattedDate = '${parts[2]}/${parts[1]}/${parts[0]}';
-                            } else {
-                              formattedDate = division.establishedDate;
-                            }
-                          } catch (_) {
-                            formattedDate = division.establishedDate;
-                          }
-                        }
-
-                        // Use companyId from division if available, otherwise try resolve by name
-                        int? companyId = division.companyId;
-                        if (companyId == null && division.companyName.isNotEmpty) {
-                          final companiesState = ref.read(companiesProvider);
-                          if (companiesState.companies.isNotEmpty) {
-                            try {
-                              final company = companiesState.companies.firstWhere(
-                                (c) => c.name == division.companyName,
-                              );
-                              companyId = int.tryParse(company.id);
-                            } catch (_) {}
-                          }
-                        }
-
-                        final divisionId = int.tryParse(division.id);
-                        if (divisionId == null || divisionId <= 0) {
-                          ToastService.error(context, 'Invalid division ID. Cannot edit this division.');
-                          return;
-                        }
-
-                        AddDivisionDialog.show(
-                          context,
-                          isEditMode: true,
-                          initialData: {
-                            'divisionId': divisionId,
-                            'divisionCode': division.code,
-                            'nameEn': division.name,
-                            'nameAr': division.nameArabic,
-                            'company': division.companyName,
-                            'companyId': companyId,
-                            'headOfDivision': division.headName,
-                            'headEmail': division.headEmail ?? '',
-                            'headPhone': division.headPhone ?? '',
-                            'location': division.location,
-                            'city': division.city ?? '',
-                            'address': division.address ?? '',
-                            'establishedDate': formattedDate ?? '',
-                            'totalEmployees': division.employees.toString(),
-                            'totalDepartments': division.departments.toString(),
-                            'annualBudget': division.budget.replaceAll(RegExp(r'[^\d.]'), ''),
-                            'businessFocus': division.industry,
-                            'description': division.description ?? '',
-                            'status': division.isActive ? 'Active' : 'Inactive',
-                          },
-                        );
+                        AddBusinessUnitDialog.show(context, isEditMode: true, businessUnit: businessUnit);
                       },
                     ),
                     SizedBox(width: 8.w),
-                    _ActionIcon(
-                      assetPath: 'assets/icons/delete_icon_red.svg',
-                      description: localizations.delete,
-                      iconColor: AppColors.deleteIconRed,
-                      onTap: () async {
-                        final confirmed = await DeleteConfirmationDialog.show(
-                          context,
-                          title: localizations.delete,
-                          message: 'Are you sure you want to delete this division? This action cannot be undone.',
-                          itemName: division.name,
-                        );
-
-                        if (confirmed == true) {
-                          try {
-                            final deleteUseCase = ref.read(deleteDivisionUseCaseProvider);
-                            await deleteUseCase(int.parse(division.id), hard: true);
-
-                            if (!context.mounted) return;
-
-                            ToastService.success(context, 'Division deleted successfully');
-                            ref.read(divisionsProvider.notifier).refresh();
-                          } catch (e) {
-                            if (!context.mounted) return;
-                            ToastService.error(context, 'Failed to delete division: $e');
-                          }
-                        }
-                      },
-                    ),
+                    _ActionIcon(assetPath: 'assets/icons/delete_icon_red.svg', onTap: () => onDelete(businessUnit)),
                   ],
                 ),
               ],
             ),
-
-            SizedBox(height: 12.h),
-
-            // ===== Stats Row =====
-            Row(
+            SizedBox(height: 16.h),
+            Column(
               children: [
-                Expanded(
-                  child: _buildInfoItem(
-                    context,
-                    'assets/icons/employees_small_icon.svg',
-                    '${division.employees} ${localizations.emp}',
+                Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.inputBgDark : const Color(0xFFF9FAFB),
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                  child: Row(
+                    children: [
+                      DigifyAsset(
+                        assetPath: Assets.icons.headPersonSmallIcon.path,
+                        width: 16,
+                        height: 16,
+                        color: context.themeTextSecondary,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        '${localizations.head}:',
+                        style: TextStyle(
+                          fontSize: 13.9.sp,
+                          fontWeight: FontWeight.w500,
+                          color: context.themeTextSecondary,
+                          height: 20 / 13.9,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        businessUnit.headName,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w400,
+                          color: context.themeTextSecondary,
+                          height: 20 / 13.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: _buildInfoItem(
-                    context,
-                    'assets/icons/departments_icon.svg',
-                    '${division.departments} ${localizations.depts}',
-                  ),
-                ),
-                Expanded(child: _buildInfoItem(context, 'assets/icons/budget_small_icon.svg', division.budget)),
-              ],
-            ),
-
-            SizedBox(height: 12.h),
-
-            // ===== Location Row =====
-            Row(
-              children: [
-                DigifyAsset(
-                  assetPath: Assets.icons.locationSmallIcon.path,
-                  width: 16,
-                  height: 16,
-                  color: context.themeTextSecondary,
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Text(
-                    division.location,
-                    style: TextStyle(
-                      fontSize: 13.6.sp,
-                      fontWeight: FontWeight.w400,
-                      color: context.themeTextSecondary,
-                      height: 20 / 13.6,
+                SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          DigifyAsset(
+                            assetPath: Assets.icons.employeesSmall2Icon.path,
+                            width: 16,
+                            height: 16,
+                            color: context.themeTextSecondary,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${businessUnit.employees} ${localizations.emp}',
+                            style: TextStyle(
+                              fontSize: 13.7.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.themeTextSecondary,
+                              height: 20 / 13.7,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 12.h),
-
-            // ===== Industry Row =====
-            Row(
-              children: [
-                DigifyAsset(
-                  assetPath: Assets.icons.industryIcon.path,
-                  width: 16,
-                  height: 16,
-                  color: context.themeTextSecondary,
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Text(
-                    division.industry,
-                    style: TextStyle(
-                      fontSize: 13.6.sp,
-                      fontWeight: FontWeight.w400,
-                      color: context.themeTextSecondary,
-                      height: 20 / 13.6,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          DigifyAsset(
+                            assetPath: Assets.icons.departmentsSmallIcon.path,
+                            width: 16,
+                            height: 16,
+                            color: context.themeTextSecondary,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${businessUnit.departments} ${localizations.depts}',
+                            style: TextStyle(
+                              fontSize: 13.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.themeTextSecondary,
+                              height: 20 / 13.6,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          DigifyAsset(
+                            assetPath: Assets.icons.budgetSmall2Icon.path,
+                            width: 16,
+                            height: 16,
+                            color: context.themeTextSecondary,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            businessUnit.budget,
+                            style: TextStyle(
+                              fontSize: 13.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.themeTextSecondary,
+                              height: 20 / 13.8,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    DigifyAsset(
+                      assetPath: Assets.icons.focusAreaIcon.path,
+                      width: 16,
+                      height: 16,
+                      color: context.themeTextSecondary,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      businessUnit.focusArea,
+                      style: TextStyle(
+                        fontSize: 13.6.sp,
+                        fontWeight: FontWeight.w400,
+                        color: context.themeTextSecondary,
+                        height: 20 / 13.6,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -698,45 +729,25 @@ class _DivisionCard extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildInfoItem(BuildContext context, String iconPath, String value) {
-    return Row(
-      children: [
-        DigifyAsset(assetPath: iconPath, width: 16, height: 16, color: context.themeTextSecondary),
-        SizedBox(width: 4.w),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 13.7.sp,
-              fontWeight: FontWeight.w400,
-              color: context.themeTextSecondary,
-              height: 20 / 13.7,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _ActionIcon extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;
-  final String? description;
-  final Color? iconColor;
 
-  const _ActionIcon({required this.assetPath, required this.onTap, this.description, this.iconColor});
+  const _ActionIcon({required this.assetPath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(8.w),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r)),
-        child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: iconColor ?? context.themeTextSecondary),
+        width: 32.r,
+        height: 32.r,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.r), color: context.themeCardBackground),
+        child: Center(
+          child: DigifyAsset(assetPath: assetPath, width: 16, height: 16, color: context.themeTextSecondary),
+        ),
       ),
     );
   }

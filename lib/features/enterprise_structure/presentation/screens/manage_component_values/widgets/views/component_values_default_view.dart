@@ -3,9 +3,9 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/com
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/component_values_search_and_actions.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_detail_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_table_view.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/bulk_upload_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_component_values/component_detail_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_component_values/component_table_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/create_component_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

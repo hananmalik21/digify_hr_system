@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:go_router/go_router.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/delete_confirmation_dialog.dart';
@@ -8,9 +9,9 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/component_values_search_and_actions.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_org_unit_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/org_unit_details_dialog.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_units_table_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/add_org_unit_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/org_unit_details_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/org_units_table_widget.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,9 +122,9 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
                 final deleteUseCase = ref.read(deleteOrgUnitUseCaseProvider);
                 await deleteUseCase.call(level.structureId, unit.orgUnitId, hard: true);
                 if (dialogContext.mounted) {
-                  Navigator.of(dialogContext).pop(true);
+                  dialogContext.pop(true);
                   ToastService.success(dialogContext, '${unit.orgUnitNameEn} deleted successfully');
-                  ref.read(orgUnitsProvider(levelCode).notifier).refresh();
+                  ref.read(orgUnitsProvider(levelCode).notifier).removeUnitLocal(unit.orgUnitId);
                 }
               } catch (e) {
                 setState(() => isLoading = false);
@@ -133,7 +134,7 @@ class _ComponentValuesLevelViewState extends ConsumerState<ComponentValuesLevelV
               }
             },
             onCancel: () {
-              if (!isLoading) Navigator.of(dialogContext).pop(false);
+              if (!isLoading) dialogContext.pop(false);
             },
           );
         },
