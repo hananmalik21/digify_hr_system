@@ -6,7 +6,7 @@ class CreateGradeUseCase {
 
   CreateGradeUseCase(this.repository);
 
-  Future<Grade> execute(Grade grade) {
-    return repository.createGrade(grade);
+  Future<Grade> execute(Grade grade, {int? tenantId}) {
+    return repository.createGrade(grade, tenantId: tenantId);
   }
 }

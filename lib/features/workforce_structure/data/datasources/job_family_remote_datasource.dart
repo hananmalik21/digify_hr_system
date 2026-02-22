@@ -12,6 +12,7 @@ abstract class JobFamilyRemoteDataSource {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   });
   Future<JobFamily> updateJobFamily({
     required int id,
@@ -20,8 +21,9 @@ abstract class JobFamilyRemoteDataSource {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   });
-  Future<void> deleteJobFamily({required int id, bool hard = true});
+  Future<void> deleteJobFamily({required int id, bool hard = true, int? tenantId});
 }
 
 class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
@@ -53,18 +55,17 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
-    final response = await apiClient.post(
-      ApiEndpoints.jobFamilies,
-      body: {
-        'job_family_code': code,
-        'job_family_name_en': nameEnglish,
-        'job_family_name_ar': nameArabic,
-        'description': description,
-        'status': status,
-      },
-    );
-
+    final body = {
+      'job_family_code': code,
+      'job_family_name_en': nameEnglish,
+      'job_family_name_ar': nameArabic,
+      'description': description,
+      'status': status,
+    };
+    if (tenantId != null) body['tenant_id'] = tenantId.toString();
+    final response = await apiClient.post(ApiEndpoints.jobFamilies, body: body);
     final model = JobFamilyModel.fromJson(response['data']);
     return model.toEntity();
   }
@@ -77,24 +78,25 @@ class JobFamilyRemoteDataSourceImpl implements JobFamilyRemoteDataSource {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
-    final response = await apiClient.put(
-      '${ApiEndpoints.jobFamilies}/$id',
-      body: {
-        'job_family_code': code,
-        'job_family_name_en': nameEnglish,
-        'job_family_name_ar': nameArabic,
-        'description': description,
-        'status': status,
-      },
-    );
-
+    final body = {
+      'job_family_code': code,
+      'job_family_name_en': nameEnglish,
+      'job_family_name_ar': nameArabic,
+      'description': description,
+      'status': status,
+    };
+    if (tenantId != null) body['tenant_id'] = tenantId.toString();
+    final response = await apiClient.put('${ApiEndpoints.jobFamilies}/$id', body: body);
     final model = JobFamilyModel.fromJson(response['data']);
     return model.toEntity();
   }
 
   @override
-  Future<void> deleteJobFamily({required int id, bool hard = true}) async {
-    await apiClient.delete('${ApiEndpoints.jobFamilies}/$id', queryParameters: {'hard': hard.toString()});
+  Future<void> deleteJobFamily({required int id, bool hard = true, int? tenantId}) async {
+    final queryParams = <String, String>{'hard': hard.toString()};
+    if (tenantId != null) queryParams['tenant_id'] = tenantId.toString();
+    await apiClient.delete('${ApiEndpoints.jobFamilies}/$id', queryParameters: queryParams);
   }
 }

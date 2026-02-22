@@ -52,6 +52,9 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
   final DeleteJobLevelUseCase _deleteJobLevelUseCase;
   final _debouncer = Debouncer();
   final int? tenantId;
+  int? _deletingId;
+
+  int? get deletingJobLevelId => _deletingId;
 
   JobLevelNotifier(
     this._getJobLevelsUseCase,
@@ -210,20 +213,21 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
     state = const PaginationState();
   }
 
-  /// Delete a job level and update the state
+  /// Delete a job level and update the state only after API success
   Future<void> deleteJobLevel(int id) async {
-    final previousItems = state.items;
-    state = state.copyWith(
-      items: state.items.where((item) => item.id != id).toList(),
-      totalItems: state.totalItems - 1,
-    );
-
+    _deletingId = id;
+    state = state.copyWith(); // trigger rebuild for loading state
     try {
-      await _deleteJobLevelUseCase.execute(id);
+      await _deleteJobLevelUseCase.execute(id, tenantId: tenantId);
+      state = state.copyWith(
+        items: state.items.where((item) => item.id != id).toList(),
+        totalItems: state.totalItems - 1,
+      );
     } catch (e) {
-      // Rollback on error
-      state = state.copyWith(items: previousItems, totalItems: previousItems.length);
       rethrow;
+    } finally {
+      _deletingId = null;
+      state = state.copyWith(); // trigger rebuild to clear loading state
     }
   }
 
@@ -247,13 +251,15 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
 // Provider for the notifier
 final jobLevelNotifierProvider = StateNotifierProvider<JobLevelNotifier, PaginationState<JobLevel>>((ref) {
   final tenantId = ref.watch(workforceEnterpriseIdProvider);
-  return JobLevelNotifier(
+  final notifier = JobLevelNotifier(
     ref.read(getJobLevelsUseCaseProvider),
     ref.read(createJobLevelUseCaseProvider),
     ref.read(updateJobLevelUseCaseProvider),
     ref.read(deleteJobLevelUseCaseProvider),
     tenantId,
   );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
 });
 
 // Convenience providers

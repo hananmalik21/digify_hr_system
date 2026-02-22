@@ -13,6 +13,7 @@ class UpdateJobFamilyUseCase {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
     return await repository.updateJobFamily(
       id: id,
@@ -21,6 +22,7 @@ class UpdateJobFamilyUseCase {
       nameArabic: nameArabic,
       description: description,
       status: status,
+      tenantId: tenantId,
     );
   }
 }
