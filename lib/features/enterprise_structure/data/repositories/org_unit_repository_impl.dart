@@ -125,6 +125,10 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
           orgUnitNameAr: nodeDto.orgUnitNameAr,
           levelCode: nodeDto.levelCode,
           parentOrgUnitId: nodeDto.parentOrgUnitId,
+          parentName: nodeDto.parentName ?? '-',
+          managerName: nodeDto.managerName ?? '-',
+          location: nodeDto.location ?? '-',
+          lastUpdatedDate: nodeDto.lastUpdatedDate ?? '-',
           isActive: nodeDto.isActive.toUpperCase() == 'Y',
           children: nodeDto.children.map((child) => convertTreeNode(child)).toList(),
         );

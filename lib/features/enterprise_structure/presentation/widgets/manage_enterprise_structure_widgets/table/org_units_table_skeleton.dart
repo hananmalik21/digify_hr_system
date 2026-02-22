@@ -32,7 +32,11 @@ class OrgUnitsTableSkeleton extends StatelessWidget {
               if (ManageOrgUnitsTableConfig.showNameEn) _buildSkeletonCell(ManageOrgUnitsTableConfig.nameEnWidth.w),
               if (ManageOrgUnitsTableConfig.showNameAr) _buildSkeletonCell(ManageOrgUnitsTableConfig.nameArWidth.w),
               if (ManageOrgUnitsTableConfig.showParent) _buildSkeletonCell(ManageOrgUnitsTableConfig.parentWidth.w),
+              if (ManageOrgUnitsTableConfig.showManager) _buildSkeletonCell(ManageOrgUnitsTableConfig.managerWidth.w),
+              if (ManageOrgUnitsTableConfig.showLocation) _buildSkeletonCell(ManageOrgUnitsTableConfig.locationWidth.w),
               if (ManageOrgUnitsTableConfig.showActive) _buildSkeletonCell(ManageOrgUnitsTableConfig.activeWidth.w),
+              if (ManageOrgUnitsTableConfig.showLastUpdated)
+                _buildSkeletonCell(ManageOrgUnitsTableConfig.lastUpdatedWidth.w),
               if (ManageOrgUnitsTableConfig.showActions) _buildSkeletonCell(ManageOrgUnitsTableConfig.actionsWidth.w),
             ],
           ),

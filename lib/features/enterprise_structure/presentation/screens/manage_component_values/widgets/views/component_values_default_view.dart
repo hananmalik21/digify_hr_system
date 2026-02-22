@@ -19,10 +19,7 @@ class ComponentValuesDefaultView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(componentValuesProvider);
     final localizations = AppLocalizations.of(context)!;
-    final isDark =
-        Theme.of(context).brightness ==
-        Brightness
-            .dark; // Assuming context.isDark is an extension, using Theme.of(context).brightness for a common approach.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final orgStructuresState = ref.watch(orgStructuresDropdownProvider);
 
     return Column(
