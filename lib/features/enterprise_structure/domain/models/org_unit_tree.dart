@@ -1,6 +1,6 @@
+import 'package:digify_hr_system/core/enums/enterprise_structure_enums.dart';
 import 'package:flutter/foundation.dart';
 
-/// Domain model for a single node in the org unit tree
 @immutable
 class OrgUnitTreeNode {
   final String orgUnitId;
@@ -9,6 +9,10 @@ class OrgUnitTreeNode {
   final String orgUnitNameAr;
   final String levelCode;
   final String? parentOrgUnitId;
+  final String parentName;
+  final String managerName;
+  final String location;
+  final String lastUpdatedDate;
   final bool isActive;
   final List<OrgUnitTreeNode> children;
 
@@ -19,15 +23,19 @@ class OrgUnitTreeNode {
     required this.orgUnitNameAr,
     required this.levelCode,
     this.parentOrgUnitId,
+    required this.parentName,
+    required this.managerName,
+    required this.location,
+    required this.lastUpdatedDate,
     required this.isActive,
     required this.children,
   });
 
-  /// Preferred display name
   String get displayName => orgUnitNameEn.isNotEmpty ? orgUnitNameEn : orgUnitNameAr;
+
+  OrganizationLevel get level => OrganizationLevel.fromCode(levelCode);
 }
 
-/// Domain model for the complete org unit tree response
 @immutable
 class OrgUnitTree {
   final String structureId;
@@ -49,6 +57,10 @@ class OrgUnitTree {
           orgUnitNameAr: 'تحميل الوحدة $i',
           levelCode: 'COMPANY',
           parentOrgUnitId: null,
+          parentName: '-',
+          managerName: 'Manager Name',
+          location: 'Location Name',
+          lastUpdatedDate: '2024-01-01',
           isActive: true,
           children: [],
         ),
