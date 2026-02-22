@@ -79,19 +79,28 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
     if (route == AppRoutes.employees) {
       final state = ref.watch(employeeManagementTabStateProvider);
       final itemTabIndex = getEmployeeManagementTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.enterpriseStructure) {
       final state = ref.watch(enterpriseStructureTabStateProvider);
       final itemTabIndex = getEnterpriseStructureTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.timeManagement) {
+      final state = ref.watch(timeManagementTabStateProvider);
+      final itemTabIndex = getTimeManagementTabIndex(itemId);
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
+    } else if (route == AppRoutes.workforceStructure) {
       final state = ref.watch(workforceTabStateProvider);
       final itemTabIndex = getWorkforceStructureTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.leaveManagement) {
       final state = ref.watch(leaveManagementTabStateProvider);
       final itemTabIndex = getLeaveManagementTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     }
     return true;
   }
@@ -122,6 +131,7 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         if (!mounted) return;
         String? itemToExpand;
         for (final item in menuItems) {
+          if (item.id == 'quickAccess') continue;
           if (item.children != null) {
             final hasActiveChild = item.children!.any((child) => child.route == currentRoute);
             if (hasActiveChild) {
