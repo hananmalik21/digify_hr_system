@@ -120,7 +120,7 @@ class AttendancePagination extends StatelessWidget {
 
   Widget _buildGoToPage(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Go to page:',
