@@ -27,14 +27,6 @@ class PositionsTab extends ConsumerStatefulWidget {
 
 class _PositionsTabState extends ConsumerState<PositionsTab> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(positionNotifierProvider.notifier).loadFirstPage();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;

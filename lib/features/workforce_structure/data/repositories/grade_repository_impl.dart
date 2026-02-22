@@ -14,8 +14,8 @@ class GradeRepositoryImpl implements GradeRepository {
   }
 
   @override
-  Future<Grade> createGrade(Grade grade) async {
-    final data = {
+  Future<Grade> createGrade(Grade grade, {int? tenantId}) async {
+    final data = <String, dynamic>{
       'grade_number': grade.gradeNumber,
       'grade_category': grade.gradeCategory,
       'step_1_salary': grade.step1Salary,
@@ -26,12 +26,13 @@ class GradeRepositoryImpl implements GradeRepository {
       'description': grade.description,
       'last_update_login': 'ADMIN',
     };
+    if (tenantId != null) data['tenant_id'] = tenantId;
     return await remoteDataSource.createGrade(data);
   }
 
   @override
-  Future<Grade> updateGrade(int gradeId, Grade grade) async {
-    final data = {
+  Future<Grade> updateGrade(int gradeId, Grade grade, {int? tenantId}) async {
+    final data = <String, dynamic>{
       'grade_category': grade.gradeCategory,
       'step_1_salary': grade.step1Salary,
       'step_2_salary': grade.step2Salary,
@@ -40,11 +41,12 @@ class GradeRepositoryImpl implements GradeRepository {
       'step_5_salary': grade.step5Salary,
       'description': grade.description,
     };
+    if (tenantId != null) data['tenant_id'] = tenantId;
     return await remoteDataSource.updateGrade(gradeId, data);
   }
 
   @override
-  Future<void> deleteGrade(int gradeId) async {
-    return await remoteDataSource.deleteGrade(gradeId);
+  Future<void> deleteGrade(int gradeId, {int? tenantId}) async {
+    return await remoteDataSource.deleteGrade(gradeId, tenantId: tenantId);
   }
 }

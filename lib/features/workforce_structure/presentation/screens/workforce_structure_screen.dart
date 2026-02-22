@@ -92,7 +92,8 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
       case 2:
         return JobLevelsTab(scrollController: _scrollController);
       case 3:
-        return GradeStructureTab(scrollController: _scrollController);
+        return const GradeStructureTab();
+
       case 4:
         return const ReportingStructureTab();
       case 5:

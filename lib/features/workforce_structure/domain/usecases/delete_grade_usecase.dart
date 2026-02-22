@@ -5,7 +5,7 @@ class DeleteGradeUseCase {
 
   DeleteGradeUseCase(this.repository);
 
-  Future<void> execute(int gradeId) {
-    return repository.deleteGrade(gradeId);
+  Future<void> execute(int gradeId, {int? tenantId}) {
+    return repository.deleteGrade(gradeId, tenantId: tenantId);
   }
 }

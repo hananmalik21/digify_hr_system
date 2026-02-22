@@ -22,6 +22,10 @@ class JobLevelRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final deletingId = ref.watch(
+      jobLevelNotifierProvider.select((_) => ref.read(jobLevelNotifierProvider.notifier).deletingJobLevelId),
+    );
+    final isDeleting = deletingId == level.id;
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -88,28 +92,31 @@ class JobLevelRow extends ConsumerWidget {
                   ),
                   DigifyAssetButton(
                     assetPath: Assets.icons.redDeleteIcon.path,
-                    onTap: () async {
-                      final localizations = AppLocalizations.of(context)!;
-                      final confirmed = await DeleteConfirmationDialog.show(
-                        context,
-                        title: localizations.deleteJobLevel,
-                        message: localizations.deleteJobLevelConfirmationMessage,
-                        itemName: level.nameEn,
-                      );
+                    isLoading: isDeleting,
+                    onTap: isDeleting
+                        ? null
+                        : () async {
+                            final localizations = AppLocalizations.of(context)!;
+                            final confirmed = await DeleteConfirmationDialog.show(
+                              context,
+                              title: localizations.deleteJobLevel,
+                              message: localizations.deleteJobLevelConfirmationMessage,
+                              itemName: level.nameEn,
+                            );
 
-                      if (confirmed == true) {
-                        try {
-                          await ref.read(jobLevelNotifierProvider.notifier).deleteJobLevel(level.id);
-                          if (context.mounted) {
-                            ToastService.success(context, localizations.jobLevelDeletedSuccessfully);
-                          }
-                        } catch (e) {
-                          if (context.mounted) {
-                            ToastService.error(context, localizations.errorDeletingJobLevel);
-                          }
-                        }
-                      }
-                    },
+                            if (confirmed == true) {
+                              try {
+                                await ref.read(jobLevelNotifierProvider.notifier).deleteJobLevel(level.id);
+                                if (context.mounted) {
+                                  ToastService.success(context, localizations.jobLevelDeletedSuccessfully);
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ToastService.error(context, localizations.errorDeletingJobLevel);
+                                }
+                              }
+                            }
+                          },
                   ),
                 ],
               ),

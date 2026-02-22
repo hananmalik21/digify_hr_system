@@ -44,7 +44,7 @@ class JobLevelRepositoryImpl implements JobLevelRepository {
   }
 
   @override
-  Future<void> deleteJobLevel(int id) async {
-    await remoteDataSource.deleteJobLevel(id, hard: true);
+  Future<void> deleteJobLevel(int id, {int? tenantId}) async {
+    await remoteDataSource.deleteJobLevel(id, hard: true, tenantId: tenantId);
   }
 }

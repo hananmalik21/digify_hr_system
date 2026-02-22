@@ -5,7 +5,7 @@ class DeleteJobLevelUseCase {
 
   DeleteJobLevelUseCase(this.repository);
 
-  Future<void> execute(int id) {
-    return repository.deleteJobLevel(id);
+  Future<void> execute(int id, {int? tenantId}) {
+    return repository.deleteJobLevel(id, tenantId: tenantId);
   }
 }

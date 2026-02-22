@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
@@ -12,34 +11,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class GradeStructureTab extends ConsumerStatefulWidget {
-  final ScrollController? scrollController;
-
-  const GradeStructureTab({super.key, this.scrollController});
+  const GradeStructureTab({super.key});
 
   @override
   ConsumerState<GradeStructureTab> createState() => _GradeStructureTabState();
 }
 
-class _GradeStructureTabState extends ConsumerState<GradeStructureTab> with ScrollPaginationMixin {
-  @override
-  ScrollController? get scrollController => widget.scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(gradeNotifierProvider.notifier).loadFirstPage();
-    });
-  }
-
-  @override
-  void onLoadMore() {
-    final state = ref.read(gradeNotifierProvider);
-    if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(gradeNotifierProvider.notifier).loadNextPage();
-    }
-  }
-
+class _GradeStructureTabState extends ConsumerState<GradeStructureTab> {
   @override
   Widget build(BuildContext context) {
     final gradeState = ref.watch(gradeNotifierProvider);
