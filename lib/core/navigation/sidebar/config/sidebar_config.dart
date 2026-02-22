@@ -36,8 +36,8 @@ class SidebarConfig {
         id: 'quickAccess',
         labelKey: 'quickAccess',
         children: [
-          SidebarItem(id: 'payrollFlows', labelKey: 'payrollFlows', route: '/payroll'),
-          SidebarItem(id: 'absenceRequests', labelKey: 'absenceRequests', route: '/leave-management'),
+          SidebarItem(id: 'payrollFlows', labelKey: 'payrollFlows'),
+          SidebarItem(id: 'absenceRequests', labelKey: 'absenceRequests'),
         ],
       ),
       SidebarItem(id: 'home', labelKey: 'home', route: AppRoutes.dashboard),
