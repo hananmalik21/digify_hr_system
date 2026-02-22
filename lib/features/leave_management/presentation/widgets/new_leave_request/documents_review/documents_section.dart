@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/bulk_upload_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/bulk_upload_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/document_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/new_leave_request/documents_review/document_item.dart';

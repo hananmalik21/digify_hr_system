@@ -8,12 +8,7 @@ class OrgUnitListItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const OrgUnitListItem({
-    super.key,
-    required this.unit,
-    required this.isSelected,
-    required this.onTap,
-  });
+  const OrgUnitListItem({super.key, required this.unit, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,24 +19,14 @@ class OrgUnitListItem extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.08)
-              : Colors.white,
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.08) : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : AppColors.borderGrey.withValues(alpha: 0.5),
+            color: isSelected ? AppColors.primary : AppColors.borderGrey.withValues(alpha: 0.5),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
+              ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 2))]
               : null,
         ),
         child: Row(
@@ -70,20 +55,14 @@ class OrgUnitListItem extends StatelessWidget {
                     unit.orgUnitNameEn,
                     style: TextStyle(
                       fontSize: 15.sp,
-                      fontWeight: isSelected
-                          ? FontWeight.w700
-                          : FontWeight.w600,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     unit.orgUnitCode,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -91,15 +70,8 @@ class OrgUnitListItem extends StatelessWidget {
             if (isSelected)
               Container(
                 padding: EdgeInsets.all(6.w),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.check_rounded,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
+                decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: Icon(Icons.check_rounded, color: Colors.white, size: 16.sp),
               ),
           ],
         ),

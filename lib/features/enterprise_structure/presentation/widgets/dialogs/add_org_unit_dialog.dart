@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/extensions/string_extensions.dart';
+import 'package:go_router/go_router.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
@@ -9,7 +10,8 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_unit_form_provider.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/parent_org_unit_picker_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/parent_org_unit_picker_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/parent_org_unit_selection_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,6 +71,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
       context,
       structureId: widget.structureId,
       levelCode: widget.levelCode,
+      selectedParentId: ref.read(orgUnitFormProvider).parentId,
     );
     if (selected != null && mounted) {
       ref.read(orgUnitFormProvider.notifier).updateParent(selected);
@@ -95,7 +98,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
 
     ref.listen<OrgUnitFormState>(orgUnitFormProvider, (previous, next) {
       if (next.success && mounted) {
-        Navigator.of(context).pop();
+        context.pop();
         ToastService.success(
           context,
           widget.initialValue != null ? 'Org unit updated successfully' : 'Org unit created successfully',
@@ -111,10 +114,7 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
           : 'Edit ${widget.levelCode.capitalizeEachWord}',
       width: 862.w,
       actions: [
-        AppButton.outline(
-          label: localizations.cancel,
-          onPressed: formState.isLoading ? null : () => Navigator.of(context).pop(),
-        ),
+        AppButton.outline(label: localizations.cancel, onPressed: formState.isLoading ? null : () => context.pop()),
         Gap(12.w),
         AppButton.primary(
           label: localizations.saveConfiguration,
@@ -196,13 +196,10 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
           ),
           if (widget.levelCode.toUpperCase() != 'COMPANY') ...[
             Gap(24.h),
-            DigifyTextField(
-              controller: _parentController,
-              labelText: 'Parent',
-              hintText: 'Select parent org unit',
-              readOnly: true,
-              onTap: formState.isLoading ? null : _selectParent,
-              enabled: !formState.isLoading,
+            ParentOrgUnitSelectionField(
+              parentName: formState.parentName,
+              onTap: _selectParent,
+              isLoading: formState.isLoading,
             ),
           ],
           Gap(24.h),

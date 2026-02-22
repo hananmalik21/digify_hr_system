@@ -1,11 +1,10 @@
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/enterprise_structure_dialog_widgets/create_enterprise_structure_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/enterprise_structure_dialog_widgets/edit_enterprise_structure_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/enterprise_structure_dialog_widgets/view_enterprise_structure_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'enterprise_structure_dialog_widgets/create_enterprise_structure_dialog.dart';
-import 'enterprise_structure_dialog_widgets/edit_enterprise_structure_dialog.dart';
-import 'enterprise_structure_dialog_widgets/view_enterprise_structure_dialog.dart';
-export 'enterprise_structure_dialog_widgets/enterprise_structure_dialog_mode.dart';
 
 class EnterpriseStructureDialog {
   EnterpriseStructureDialog._();

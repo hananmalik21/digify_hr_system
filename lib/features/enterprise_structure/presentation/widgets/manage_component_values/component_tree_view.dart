@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/component_tree_node.dart'
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_component_values/component_tree_node.dart'
     show ComponentTreeNodeWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

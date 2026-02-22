@@ -7,7 +7,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/add_org_unit_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/add_org_unit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
