@@ -4,12 +4,14 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/config/workforce_positions_table_config.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/position_badges.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PositionTableRow extends StatelessWidget {
+class PositionTableRow extends ConsumerWidget {
   final Position position;
   final AppLocalizations localizations;
   final Function(Position) onView;
@@ -26,7 +28,12 @@ class PositionTableRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final deletingId = ref.watch(
+      positionNotifierProvider.select((_) => ref.read(positionNotifierProvider.notifier).deletingPositionId),
+    );
+    final isDeleting = deletingId == position.id;
+
     final textStyle = context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle);
     return Container(
       decoration: BoxDecoration(
@@ -110,7 +117,11 @@ class PositionTableRow extends StatelessWidget {
                 children: [
                   DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => onView(position)),
                   DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(position)),
-                  DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(position)),
+                  DigifyAssetButton(
+                    assetPath: Assets.icons.redDeleteIcon.path,
+                    onTap: isDeleting ? null : () => onDelete(position),
+                    isLoading: isDeleting,
+                  ),
                 ],
               ),
               WorkforcePositionsTableConfig.actionsWidth.w,

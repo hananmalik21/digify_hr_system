@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_families_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_job_family_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_create_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
@@ -20,41 +21,29 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(baseUrl: ApiConfig.baseUrl);
 });
 
-final jobFamilyRemoteDataSourceProvider = Provider<JobFamilyRemoteDataSource>((
-  ref,
-) {
+final jobFamilyRemoteDataSourceProvider = Provider<JobFamilyRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return JobFamilyRemoteDataSourceImpl(apiClient: apiClient);
 });
 
 final jobFamilyRepositoryProvider = Provider<JobFamilyRepository>((ref) {
-  return JobFamilyRepositoryImpl(
-    remoteDataSource: ref.read(jobFamilyRemoteDataSourceProvider),
-  );
+  return JobFamilyRepositoryImpl(remoteDataSource: ref.read(jobFamilyRemoteDataSourceProvider));
 });
 
 final getJobFamiliesUseCaseProvider = Provider<GetJobFamiliesUseCase>((ref) {
-  return GetJobFamiliesUseCase(
-    repository: ref.read(jobFamilyRepositoryProvider),
-  );
+  return GetJobFamiliesUseCase(repository: ref.read(jobFamilyRepositoryProvider));
 });
 
 final createJobFamilyUseCaseProvider = Provider<CreateJobFamilyUseCase>((ref) {
-  return CreateJobFamilyUseCase(
-    repository: ref.read(jobFamilyRepositoryProvider),
-  );
+  return CreateJobFamilyUseCase(repository: ref.read(jobFamilyRepositoryProvider));
 });
 
 final updateJobFamilyUseCaseProvider = Provider<UpdateJobFamilyUseCase>((ref) {
-  return UpdateJobFamilyUseCase(
-    repository: ref.read(jobFamilyRepositoryProvider),
-  );
+  return UpdateJobFamilyUseCase(repository: ref.read(jobFamilyRepositoryProvider));
 });
 
 final deleteJobFamilyUseCaseProvider = Provider<DeleteJobFamilyUseCase>((ref) {
-  return DeleteJobFamilyUseCase(
-    repository: ref.read(jobFamilyRepositoryProvider),
-  );
+  return DeleteJobFamilyUseCase(repository: ref.read(jobFamilyRepositoryProvider));
 });
 
 // Job Family Notifier with pagination
@@ -64,8 +53,9 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
   final GetJobFamiliesUseCase _getJobFamiliesUseCase;
   final CreateJobFamilyUseCase _createJobFamilyUseCase;
   final _debouncer = Debouncer();
+  final int? tenantId;
 
-  JobFamilyNotifier(this._getJobFamiliesUseCase, this._createJobFamilyUseCase)
+  JobFamilyNotifier(this._getJobFamiliesUseCase, this._createJobFamilyUseCase, this.tenantId)
     : super(const PaginationState());
 
   @override
@@ -79,11 +69,10 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
         page: 1,
         pageSize: state.pageSize,
         search: state.searchQuery,
+        tenantId: tenantId,
       );
 
-      final jobFamilies = response.data
-          .map((data) => data.toJobFamily())
-          .toList();
+      final jobFamilies = response.data.map((data) => data.toJobFamily()).toList();
 
       state = handleSuccessState(
         currentState: state,
@@ -113,11 +102,10 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
         page: nextPage,
         pageSize: state.pageSize,
         search: state.searchQuery,
+        tenantId: tenantId,
       );
 
-      final jobFamilies = response.data
-          .map((data) => data.toJobFamily())
-          .toList();
+      final jobFamilies = response.data.map((data) => data.toJobFamily()).toList();
 
       state = handleSuccessState(
         currentState: state,
@@ -135,6 +123,37 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     }
   }
 
+  Future<void> goToPage(int page) async {
+    if (state.isLoading || page == state.currentPage || page < 1 || page > state.totalPages) return;
+
+    state = handleLoadingState(state, false);
+
+    try {
+      final response = await _getJobFamiliesUseCase(
+        page: page,
+        pageSize: state.pageSize,
+        search: state.searchQuery,
+        tenantId: tenantId,
+      );
+
+      final jobFamilies = response.data.map((data) => data.toJobFamily()).toList();
+
+      state = handleSuccessState(
+        currentState: state,
+        newItems: jobFamilies,
+        currentPage: response.meta.pagination.page,
+        pageSize: response.meta.pagination.pageSize,
+        totalItems: response.meta.pagination.total,
+        totalPages: response.meta.pagination.totalPages,
+        hasNextPage: response.meta.pagination.hasNext,
+        hasPreviousPage: response.meta.pagination.hasPrevious,
+        isFirstPage: true, // we replace items like in page 1
+      );
+    } catch (e) {
+      state = handleErrorState(state, e.toString());
+    }
+  }
+
   Future<JobFamily> createJobFamily(
     WidgetRef ref, {
     required String code,
@@ -142,8 +161,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     required String nameArabic,
     required String description,
   }) async {
-    ref.read(jobFamilyCreateStateProvider.notifier).state =
-        const JobFamilyCreateState(isCreating: true);
+    ref.read(jobFamilyCreateStateProvider.notifier).state = const JobFamilyCreateState(isCreating: true);
 
     try {
       final newJobFamily = await _createJobFamilyUseCase(
@@ -154,21 +172,19 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
         status: 'ACTIVE',
       );
 
-      ref.read(jobFamilyCreateStateProvider.notifier).state =
-          const JobFamilyCreateState(isCreating: false);
+      ref.read(jobFamilyCreateStateProvider.notifier).state = const JobFamilyCreateState(isCreating: false);
 
       final currentItems = state.items;
       final updatedItems = [newJobFamily, ...currentItems];
 
-      state = state.copyWith(
-        items: updatedItems,
-        totalItems: state.totalItems + 1,
-      );
+      state = state.copyWith(items: updatedItems, totalItems: state.totalItems + 1);
 
       return newJobFamily;
     } catch (e) {
-      ref.read(jobFamilyCreateStateProvider.notifier).state =
-          JobFamilyCreateState(isCreating: false, error: e.toString());
+      ref.read(jobFamilyCreateStateProvider.notifier).state = JobFamilyCreateState(
+        isCreating: false,
+        error: e.toString(),
+      );
       rethrow;
     }
   }
@@ -179,8 +195,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     required int id,
     bool hard = true,
   }) async {
-    ref.read(jobFamilyDeleteStateProvider.notifier).state =
-        JobFamilyDeleteState(isDeleting: true, deletingId: id);
+    ref.read(jobFamilyDeleteStateProvider.notifier).state = JobFamilyDeleteState(isDeleting: true, deletingId: id);
 
     try {
       await deleteUseCase(id: id, hard: hard);
@@ -188,16 +203,14 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
       final currentItems = state.items;
       final updatedItems = currentItems.where((item) => item.id != id).toList();
 
-      state = state.copyWith(
-        items: updatedItems,
-        totalItems: state.totalItems - 1,
-      );
+      state = state.copyWith(items: updatedItems, totalItems: state.totalItems - 1);
 
-      ref.read(jobFamilyDeleteStateProvider.notifier).state =
-          const JobFamilyDeleteState(isDeleting: false);
+      ref.read(jobFamilyDeleteStateProvider.notifier).state = const JobFamilyDeleteState(isDeleting: false);
     } catch (e) {
-      ref.read(jobFamilyDeleteStateProvider.notifier).state =
-          JobFamilyDeleteState(isDeleting: false, error: e.toString());
+      ref.read(jobFamilyDeleteStateProvider.notifier).state = JobFamilyDeleteState(
+        isDeleting: false,
+        error: e.toString(),
+      );
       rethrow;
     }
   }
@@ -212,8 +225,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     required String description,
     String status = 'ACTIVE',
   }) async {
-    ref.read(jobFamilyUpdateStateProvider.notifier).state =
-        JobFamilyUpdateState(isUpdating: true, updatingId: id);
+    ref.read(jobFamilyUpdateStateProvider.notifier).state = JobFamilyUpdateState(isUpdating: true, updatingId: id);
 
     try {
       final updatedJobFamily = await updateUseCase(
@@ -232,13 +244,14 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
 
       state = state.copyWith(items: updatedItems);
 
-      ref.read(jobFamilyUpdateStateProvider.notifier).state =
-          const JobFamilyUpdateState(isUpdating: false);
+      ref.read(jobFamilyUpdateStateProvider.notifier).state = const JobFamilyUpdateState(isUpdating: false);
 
       return updatedJobFamily;
     } catch (e) {
-      ref.read(jobFamilyUpdateStateProvider.notifier).state =
-          JobFamilyUpdateState(isUpdating: false, error: e.toString());
+      ref.read(jobFamilyUpdateStateProvider.notifier).state = JobFamilyUpdateState(
+        isUpdating: false,
+        error: e.toString(),
+      );
       rethrow;
     }
   }
@@ -279,13 +292,14 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
 }
 
 // Provider for the notifier
-final jobFamilyNotifierProvider =
-    StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((ref) {
-      return JobFamilyNotifier(
-        ref.read(getJobFamiliesUseCaseProvider),
-        ref.read(createJobFamilyUseCaseProvider),
-      );
-    });
+final jobFamilyNotifierProvider = StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((ref) {
+  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  return JobFamilyNotifier(
+    ref.watch(getJobFamiliesUseCaseProvider),
+    ref.watch(createJobFamilyUseCaseProvider),
+    tenantId,
+  );
+});
 
 // Convenience providers
 final jobFamilyListProvider = Provider<List<JobFamily>>((ref) {
@@ -325,22 +339,15 @@ extension JobFamilyProviderExtensions on WidgetRef {
     required String nameArabic,
     required String description,
   }) {
-    return read(jobFamilyNotifierProvider.notifier).createJobFamily(
-      this,
-      code: code,
-      nameEnglish: nameEnglish,
-      nameArabic: nameArabic,
-      description: description,
-    );
+    return read(
+      jobFamilyNotifierProvider.notifier,
+    ).createJobFamily(this, code: code, nameEnglish: nameEnglish, nameArabic: nameArabic, description: description);
   }
 
   Future<void> deleteJobFamily({required int id, bool hard = true}) {
-    return read(jobFamilyNotifierProvider.notifier).deleteJobFamily(
-      this,
-      read(deleteJobFamilyUseCaseProvider),
-      id: id,
-      hard: hard,
-    );
+    return read(
+      jobFamilyNotifierProvider.notifier,
+    ).deleteJobFamily(this, read(deleteJobFamilyUseCaseProvider), id: id, hard: hard);
   }
 
   Future<JobFamily> updateJobFamily({

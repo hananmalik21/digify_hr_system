@@ -9,9 +9,9 @@ class WorkforceStatsRepositoryImpl implements WorkforceStatsRepository {
   const WorkforceStatsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<WorkforceStats> getWorkforceStats() async {
+  Future<WorkforceStats> getWorkforceStats({int? tenantId}) async {
     try {
-      return await remoteDataSource.getWorkforceStats();
+      return await remoteDataSource.getWorkforceStats(tenantId: tenantId);
     } on AppException {
       rethrow;
     } catch (e) {

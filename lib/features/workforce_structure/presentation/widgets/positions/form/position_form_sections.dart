@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
-import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
+import 'package:digify_hr_system/core/widgets/forms/position_search_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/dialog_components.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/enterprise_structure_fields.dart';
@@ -253,16 +253,16 @@ class SalarySection extends StatelessWidget {
 
 class ReportingSection extends StatelessWidget {
   final AppLocalizations localizations;
-  final int enterpriseId;
-  final Employee? selectedReportsToEmployee;
-  final ValueChanged<Employee> onReportsToEmployeeSelected;
+  final int? tenantId;
+  final Position? selectedReportsToPosition;
+  final ValueChanged<Position> onReportsToPositionSelected;
 
   const ReportingSection({
     super.key,
     required this.localizations,
-    required this.enterpriseId,
-    required this.onReportsToEmployeeSelected,
-    this.selectedReportsToEmployee,
+    required this.onReportsToPositionSelected,
+    this.tenantId,
+    this.selectedReportsToPosition,
   });
 
   @override
@@ -272,15 +272,13 @@ class ReportingSection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            Expanded(
-              child: EmployeeSearchField(
-                label: localizations.reportsTo,
-                isRequired: true,
-                enterpriseId: enterpriseId,
-                selectedEmployee: selectedReportsToEmployee,
-                onEmployeeSelected: onReportsToEmployeeSelected,
-                hintText: localizations.typeToSearchEmployees,
-              ),
+            PositionSearchField(
+              label: localizations.reportsTo,
+              isRequired: true,
+              tenantId: tenantId,
+              selectedPosition: selectedReportsToPosition,
+              onPositionSelected: onReportsToPositionSelected,
+              hintText: 'Type to search positions',
             ),
           ],
         ),

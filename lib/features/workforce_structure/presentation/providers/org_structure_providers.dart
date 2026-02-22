@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/ge
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_org_structures_by_enterprise_id_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Dependency Injection Providers
@@ -27,7 +28,11 @@ final getOrgStructuresByEnterpriseIdUseCaseProvider = Provider<GetOrgStructuresB
 
 // State Notifier Provider
 final orgStructureNotifierProvider = StateNotifierProvider<OrgStructureNotifier, OrgStructureState>((ref) {
-  return OrgStructureNotifier(getActiveOrgStructureLevelsUseCase: ref.read(getActiveOrgStructureLevelsUseCaseProvider));
+  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  return OrgStructureNotifier(
+    getActiveOrgStructureLevelsUseCase: ref.read(getActiveOrgStructureLevelsUseCaseProvider),
+    tenantId: tenantId,
+  );
 });
 
 // Convenience Providers

@@ -6,7 +6,7 @@ class CreatePositionUseCase {
 
   CreatePositionUseCase({required this.repository});
 
-  Future<Position> call(Map<String, dynamic> positionData) async {
-    return await repository.createPosition(positionData);
+  Future<Position> call(Map<String, dynamic> positionData, {int? tenantId}) async {
+    return await repository.createPosition(positionData, tenantId: tenantId);
   }
 }

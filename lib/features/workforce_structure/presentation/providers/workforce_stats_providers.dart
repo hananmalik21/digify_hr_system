@@ -4,6 +4,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/work
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/workforce_stats_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_workforce_stats_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Dependency Injection Providers
@@ -28,14 +29,16 @@ final workforceStatsNotifierProvider = AsyncNotifierProvider<WorkforceStatsNotif
 class WorkforceStatsNotifier extends AsyncNotifier<WorkforceStats?> {
   @override
   Future<WorkforceStats?> build() async {
-    final useCase = ref.read(getWorkforceStatsUseCaseProvider);
-    return await useCase();
+    final useCase = ref.watch(getWorkforceStatsUseCaseProvider);
+    final tenantId = ref.watch(workforceEnterpriseIdProvider);
+    return await useCase(tenantId: tenantId);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     final useCase = ref.read(getWorkforceStatsUseCaseProvider);
-    state = await AsyncValue.guard(() => useCase());
+    final tenantId = ref.read(workforceEnterpriseIdProvider);
+    state = await AsyncValue.guard(() => useCase(tenantId: tenantId));
   }
 }
 

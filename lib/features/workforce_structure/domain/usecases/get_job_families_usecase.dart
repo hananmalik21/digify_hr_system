@@ -6,15 +6,7 @@ class GetJobFamiliesUseCase {
 
   const GetJobFamiliesUseCase({required this.repository});
 
-  Future<JobFamilyResponse> call({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    return await repository.getJobFamilies(
-      page: page,
-      pageSize: pageSize,
-      search: search,
-    );
+  Future<JobFamilyResponse> call({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    return await repository.getJobFamilies(page: page, pageSize: pageSize, search: search, tenantId: tenantId);
   }
 }

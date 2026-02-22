@@ -11,6 +11,7 @@ class GetOrgUnitsByLevelUseCase {
     required String levelCode,
     String? parentOrgUnitId,
     String? search,
+    int? tenantId,
     int page = 1,
     int pageSize = 100,
   }) async {
@@ -19,6 +20,7 @@ class GetOrgUnitsByLevelUseCase {
       levelCode: levelCode,
       parentOrgUnitId: parentOrgUnitId,
       search: search,
+      tenantId: tenantId,
       page: page,
       pageSize: pageSize,
     );

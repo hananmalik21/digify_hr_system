@@ -6,7 +6,7 @@ class CreateJobLevelUseCase {
 
   CreateJobLevelUseCase(this.repository);
 
-  Future<JobLevel> execute(JobLevel jobLevel) {
-    return repository.createJobLevel(jobLevel);
+  Future<JobLevel> execute(JobLevel jobLevel, {int? tenantId}) {
+    return repository.createJobLevel(jobLevel, tenantId: tenantId);
   }
 }
