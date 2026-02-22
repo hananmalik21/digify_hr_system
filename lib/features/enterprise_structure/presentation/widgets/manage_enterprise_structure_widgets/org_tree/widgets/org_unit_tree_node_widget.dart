@@ -1,8 +1,9 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/enums/enterprise_structure_enums.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/utils/responsive_helper.dart';
+import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_tree.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,184 +25,119 @@ class OrgUnitTreeNodeWidget extends StatelessWidget {
     required this.level,
   });
 
-  String _getLevelCodeIcon(String levelCode) {
-    switch (levelCode.toUpperCase()) {
-      case 'COMPANY':
-        return Assets.icons.companyTreeIcon.path;
-      case 'DIVISION':
-        return Assets.icons.divisionTreeIcon.path;
-      case 'BUSINESS_UNIT':
-        return Assets.icons.businessUnitTreeIcon.path;
-      case 'DEPARTMENT':
-        return Assets.icons.departmentTreeIcon.path;
-      case 'SECTION':
-        return Assets.icons.sectionTreeIcon.path;
-      default:
-        return Assets.icons.companyTreeIcon.path;
-    }
-  }
-
-  Color _getLevelCodeIconBg(String levelCode, bool isDark) {
-    switch (levelCode.toUpperCase()) {
-      case 'COMPANY':
-        return isDark ? AppColors.purpleBgDark : const Color(0xFFF3E8FF);
-      case 'DIVISION':
-        return isDark ? AppColors.infoBgDark : const Color(0xFFDBEAFE);
-      case 'BUSINESS_UNIT':
-        return isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7);
-      case 'DEPARTMENT':
-        return isDark ? AppColors.warningBgDark : const Color(0xFFFFEDD4);
-      case 'SECTION':
-        return isDark ? AppColors.grayBgDark : const Color(0xFFF3F4F6);
-      default:
-        return isDark ? AppColors.grayBgDark : const Color(0xFFF3F4F6);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final isTablet = ResponsiveHelper.isTablet(context);
+    final textTheme = context.textTheme;
     final isExpanded = expandedNodes.contains(node.orgUnitId);
     final hasChildren = node.children.isNotEmpty;
+    final orgLevel = node.level;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 10.w : 12.w, vertical: 8.h),
+          padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
           child: Row(
             children: [
               SizedBox(
-                width: isTablet ? 22.w : 24.w,
-                height: isTablet ? 22.h : 24.h,
+                width: 24.w,
+                height: 24.h,
                 child: hasChildren
                     ? GestureDetector(
                         onTap: () => onToggle(node.orgUnitId),
-                        child: Icon(
-                          isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
-                          size: isTablet ? 18.sp : 16.sp,
-                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                        child: AnimatedRotation(
+                          turns: isExpanded ? 0.25 : 0,
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          child: Icon(
+                            Icons.keyboard_arrow_right,
+                            size: 16.sp,
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                          ),
                         ),
                       )
                     : const SizedBox.shrink(),
               ),
-              Gap(isTablet ? 6.w : 8.w),
-              _buildIconContainer(isDark, isTablet ? 30.w : 32.w),
-              Gap(isTablet ? 6.w : 8.w),
+              const Gap(8),
+              _buildIconContainer(isDark, 32.w, orgLevel),
+              const Gap(8),
               Expanded(
                 child: Row(
+                  spacing: 8.w,
                   children: [
                     Flexible(
                       child: Text(
                         node.displayName,
-                        style: TextStyle(
-                          fontSize: isTablet ? 14.5.sp : 15.4.sp,
-                          fontWeight: FontWeight.w500,
-                          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-                          height: 1.5,
+                        style: textTheme.titleSmall?.copyWith(
+                          fontSize: 15.sp,
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (node.orgUnitNameAr.isNotEmpty) ...[
-                      Gap(isTablet ? 6.w : 8.w),
                       Flexible(
                         child: Text(
                           '(${node.orgUnitNameAr})',
-                          style: TextStyle(
-                            fontSize: isTablet ? 13.sp : 14.sp,
-                            color: isDark ? AppColors.textSecondaryDark : const Color(0xFF6A7282),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.sidebarSecondaryText,
                           ),
                           textDirection: TextDirection.rtl,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
-                    Gap(isTablet ? 6.w : 8.w),
-                    _buildCodeBadge(isDark, isTablet: isTablet),
-                    Gap(isTablet ? 6.w : 8.w),
-                    _buildStatusBadge(localizations, isDark, isTablet: isTablet),
+                    DigifySquareCapsule(height: 20.h, label: node.orgUnitCode),
+                    DigifySquareCapsule(
+                      height: 20.h,
+                      label: node.isActive ? localizations.active : localizations.inactive,
+                      backgroundColor: node.isActive
+                          ? (isDark ? AppColors.successBgDark : AppColors.shiftActiveStatusBg)
+                          : (isDark ? AppColors.grayBgDark : AppColors.grayBg),
+                      textColor: node.isActive
+                          ? (isDark ? AppColors.successTextDark : AppColors.activeStatusTextLight)
+                          : (isDark ? AppColors.grayTextDark : AppColors.grayText),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        if (hasChildren && isExpanded)
-          Padding(
-            padding: EdgeInsetsDirectional.only(start: isTablet ? 22.w : 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: node.children.map((child) {
-                return OrgUnitTreeNodeWidget(
-                  node: child,
-                  expandedNodes: expandedNodes,
-                  onToggle: onToggle,
-                  isDark: isDark,
-                  level: level + 1,
-                );
-              }).toList(),
-            ),
-          ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          alignment: Alignment.topCenter,
+          child: isExpanded && hasChildren
+              ? Padding(
+                  padding: EdgeInsetsDirectional.only(start: 24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: node.children.map((child) {
+                      return OrgUnitTreeNodeWidget(
+                        node: child,
+                        expandedNodes: expandedNodes,
+                        onToggle: onToggle,
+                        isDark: isDark,
+                        level: level + 1,
+                      );
+                    }).toList(),
+                  ),
+                )
+              : const SizedBox(width: double.infinity, height: 0),
+        ),
       ],
     );
   }
 
-  Widget _buildIconContainer(bool isDark, double size) {
+  Widget _buildIconContainer(bool isDark, double size, OrganizationLevel level) {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: _getLevelCodeIconBg(node.levelCode, isDark),
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Center(
-        child: DigifyAsset(
-          assetPath: _getLevelCodeIcon(node.levelCode),
-          width: size / 2,
-          height: size / 2,
-          color: isDark ? AppColors.textPrimaryDark : const Color(0xFF101828),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCodeBadge(bool isDark, {bool isTablet = false}) {
-    return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 6.w : 8.w, vertical: 2.h),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundGreyDark : const Color(0xFFF3F4F6),
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Text(
-        node.orgUnitCode,
-        style: TextStyle(
-          fontSize: isTablet ? 11.sp : 12.sp,
-          color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusBadge(AppLocalizations localizations, bool isDark, {bool isTablet = false}) {
-    return Container(
-      padding: EdgeInsetsDirectional.symmetric(horizontal: isTablet ? 6.w : 8.w, vertical: 2.h),
-      decoration: BoxDecoration(
-        color: node.isActive
-            ? (isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7))
-            : (isDark ? AppColors.grayBgDark : AppColors.grayBg),
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Text(
-        node.isActive ? localizations.active : localizations.inactive,
-        style: TextStyle(
-          fontSize: isTablet ? 11.sp : 11.8.sp,
-          color: node.isActive
-              ? (isDark ? AppColors.successTextDark : const Color(0xFF008236))
-              : (isDark ? AppColors.grayTextDark : AppColors.grayText),
-        ),
-      ),
+      decoration: BoxDecoration(color: AppColors.authBadgeBorder, borderRadius: BorderRadius.circular(4.r)),
+      alignment: Alignment.center,
+      child: DigifyAsset(assetPath: level.iconPath, color: AppColors.primary),
     );
   }
 }

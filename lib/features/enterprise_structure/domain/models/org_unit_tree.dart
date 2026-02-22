@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/enterprise_structure_enums.dart';
 import 'package:flutter/foundation.dart';
 
 /// Domain model for a single node in the org unit tree
@@ -25,6 +26,9 @@ class OrgUnitTreeNode {
 
   /// Preferred display name
   String get displayName => orgUnitNameEn.isNotEmpty ? orgUnitNameEn : orgUnitNameAr;
+
+  /// Organization level enum
+  OrganizationLevel get level => OrganizationLevel.fromCode(levelCode);
 }
 
 /// Domain model for the complete org unit tree response
