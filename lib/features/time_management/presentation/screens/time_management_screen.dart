@@ -6,7 +6,6 @@ import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/shifts_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/work_patterns_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/work_schedules_tab.dart';
@@ -67,15 +66,6 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
               subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'
                   : 'Select an enterprise to view data',
-            ),
-            Gap(24.h),
-            TimeManagementTabBar(
-              localizations: localizations,
-              selectedTabIndex: currentTabIndex,
-              onTabSelected: (index) {
-                ref.read(timeManagementTabStateProvider.notifier).setTabIndex(index);
-              },
-              isDark: isDark,
             ),
             Gap(24.h),
             _buildTabContent(currentTabIndex),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/datasources/org_unit_remote_data_source.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/dto/org_unit_tree_dto.dart';
@@ -8,7 +6,6 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/org
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/paginated_org_units_response.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/org_unit_repository.dart';
 
-/// Implementation of OrgUnitRepository
 class OrgUnitRepositoryImpl implements OrgUnitRepository {
   final OrgUnitRemoteDataSource remoteDataSource;
 
@@ -72,10 +69,7 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
   Future<List<OrgStructureLevel>> getParentOrgUnits(String structureId, String levelCode) async {
     try {
       final dtos = await remoteDataSource.getParentOrgUnits(structureId, levelCode);
-      return dtos.map((dto) {
-        log("dto is ${dto.orgUnitId}");
-        return dto.toDomain();
-      }).toList();
+      return dtos.map((dto) => dto.toDomain()).toList();
     } on AppException {
       rethrow;
     } catch (e) {
@@ -123,7 +117,6 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     try {
       final dto = await remoteDataSource.getOrgUnitsTree();
 
-      // Convert DTO tree nodes to domain tree nodes recursively
       OrgUnitTreeNode convertTreeNode(OrgUnitTreeNodeDto nodeDto) {
         return OrgUnitTreeNode(
           orgUnitId: nodeDto.orgUnitId,
@@ -132,6 +125,10 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
           orgUnitNameAr: nodeDto.orgUnitNameAr,
           levelCode: nodeDto.levelCode,
           parentOrgUnitId: nodeDto.parentOrgUnitId,
+          parentName: nodeDto.parentName ?? '-',
+          managerName: nodeDto.managerName ?? '-',
+          location: nodeDto.location ?? '-',
+          lastUpdatedDate: nodeDto.lastUpdatedDate ?? '-',
           isActive: nodeDto.isActive.toUpperCase() == 'Y',
           children: nodeDto.children.map((child) => convertTreeNode(child)).toList(),
         );

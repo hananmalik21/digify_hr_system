@@ -8,7 +8,6 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_form_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_stats_cards.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_bar.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_config.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_structure_tab.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_families_tab.dart';
@@ -77,15 +76,6 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
                   Gap(24.h),
                   WorkforceStatsCards(localizations: localizations, isDark: isDark),
                   Gap(24.h),
-                  WorkforceTabBar(
-                    localizations: localizations,
-                    selectedTabIndex: currentTabIndex,
-                    onTabSelected: (index) {
-                      ref.read(workforceTabStateProvider.notifier).setTabIndex(index);
-                    },
-                    isDark: isDark,
-                  ),
-                  Gap(16.h),
                 ],
               ),
             ),

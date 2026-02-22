@@ -1,20 +1,15 @@
-import 'dart:developer';
-
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
+import 'package:intl/intl.dart';
 
-/// Simple parent unit model for dropdown/tree display
 class ParentUnitDto {
   final String id;
   final String name;
 
-  /// ✅ Parent LEVEL_CODE (e.g. COMPANY, BUSINESS_UNIT, DEPARTMENT)
   final String? level;
 
   const ParentUnitDto({required this.id, required this.name, this.level});
 
   factory ParentUnitDto.fromJson(Map<String, dynamic> json) {
-    log("parent is $json");
-    // Helper to convert id to String (handles both num and String)
     final idValue = json['id'];
     final idString = idValue is String
         ? idValue
@@ -28,7 +23,6 @@ class ParentUnitDto {
   Map<String, dynamic> toJson() => {'id': id, 'name': name, if (level != null) 'level': level};
 }
 
-/// DTO for Organization Structure Level
 class OrgStructureLevelDto {
   final String orgUnitId;
   final String orgStructureId;
@@ -39,10 +33,8 @@ class OrgStructureLevelDto {
   final String orgUnitNameEn;
   final String orgUnitNameAr;
 
-  /// Raw FK (still useful internally)
   final String? parentOrgUnitId;
 
-  /// ✅ New: parent object for UI (id + name)
   final ParentUnitDto? parentUnit;
 
   final String isActive;
@@ -85,25 +77,6 @@ class OrgStructureLevelDto {
     this.lastUpdateLogin,
   });
 
-  /// Helper method to safely parse ID from JSON (handles both num and String)
-  // static int _parseId(dynamic value) {
-  //   if (value == null) return 0;
-  //   if (value is num) return value.toInt();
-  //   if (value is String) {
-  //     // Try to parse as int if it's a numeric string
-  //     final parsed = int.tryParse(value);
-  //     if (parsed != null) return parsed;
-  //     // If it's a UUID or non-numeric string, use a deterministic hash
-  //     // This ensures the same UUID always maps to the same int value
-  //     // Note: This is a workaround - ideally the model should support String IDs
-  //     log('Warning: Received non-numeric ID string: $value. Using hash as fallback.');
-  //     // Use absolute value to ensure positive int, and take modulo to keep it reasonable
-  //     return value.hashCode.abs() % 2147483647; // Max int32 value
-  //   }
-  //   return 0;
-  // }
-
-  /// Helper to safely convert ID to String (handles both num and String)
   static String _parseIdToString(dynamic value) {
     if (value == null) return '';
     if (value is String) return value;
@@ -111,17 +84,14 @@ class OrgStructureLevelDto {
     return value.toString();
   }
 
-  /// Creates DTO from JSON
   factory OrgStructureLevelDto.fromJson(Map<String, dynamic> json) {
     final parentId = _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId']);
 
-    // ✅ parent_unit object (preferred)
     ParentUnitDto? parentUnit;
     final parentUnitJson = json['parent_unit'];
     if (parentUnitJson is Map<String, dynamic>) {
       parentUnit = ParentUnitDto.fromJson(parentUnitJson);
     } else {
-      // backward compatibility if API sends parent_id / parent_name
       final fallbackParentId = _parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId']);
       final fallbackParentName = json['parent_name'] as String?;
       if (fallbackParentId.isNotEmpty) {
@@ -149,15 +119,22 @@ class OrgStructureLevelDto {
       address: json['address'] as String?,
       description: json['description'] as String?,
       createdBy: json['created_by'] as String? ?? json['createdBy'] as String?,
-      createdDate: json['created_date'] as String? ?? json['createdDate'] as String?,
+      createdDate: json['created_date'] as String? ?? json['created_date'] as String?,
       lastUpdatedBy: json['last_updated_by'] as String? ?? json['lastUpdatedBy'] as String?,
-      lastUpdatedDate: json['last_updated_date'] as String? ?? json['lastUpdatedDate'] as String?,
+      lastUpdatedDate: json['last_updated_date'] as String? ?? json['last_updated_date'] as String?,
       lastUpdateLogin: json['last_update_login'] as String? ?? json['lastUpdateLogin'] as String?,
     );
   }
 
-  /// Converts DTO to domain model
   OrgStructureLevel toDomain() {
+    String formattedLastUpdatedDate = lastUpdatedDate ?? '';
+    if (formattedLastUpdatedDate.isNotEmpty) {
+      try {
+        final dateTime = DateTime.parse(formattedLastUpdatedDate);
+        formattedLastUpdatedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+      } catch (_) {}
+    }
+
     return OrgStructureLevel(
       orgUnitId: orgUnitId,
       orgStructureId: orgStructureId,
@@ -169,8 +146,6 @@ class OrgStructureLevelDto {
       orgUnitNameAr: orgUnitNameAr,
       parentOrgUnitId: parentOrgUnitId,
       parentUnit: parentUnit,
-
-      // ✅ if you want to show parent name in UI, you can use parentUnit?.name in widgets
       isActive: isActive.toUpperCase() == 'Y',
       managerName: managerName ?? '',
       managerEmail: managerEmail ?? '',
@@ -182,12 +157,11 @@ class OrgStructureLevelDto {
       createdBy: createdBy ?? '',
       createdDate: createdDate ?? '',
       lastUpdatedBy: lastUpdatedBy ?? '',
-      lastUpdatedDate: lastUpdatedDate ?? '',
+      lastUpdatedDate: formattedLastUpdatedDate,
       lastUpdateLogin: lastUpdateLogin ?? '',
     );
   }
 
-  /// Creates JSON from DTO
   Map<String, dynamic> toJson() {
     return {
       'org_unit_id': orgUnitId,
@@ -197,13 +171,8 @@ class OrgStructureLevelDto {
       'org_unit_code': orgUnitCode,
       'org_unit_name_en': orgUnitNameEn,
       'org_unit_name_ar': orgUnitNameAr,
-
-      // keep FK if present
       if (parentOrgUnitId != null) 'parentId': parentOrgUnitId,
-
-      // ✅ send parent object if present (optional)
       if (parentUnit != null) 'parent_unit': parentUnit!.toJson(),
-
       'is_active': isActive,
       if (managerName != null) 'manager_name': managerName,
       if (managerEmail != null) 'manager_email': managerEmail,

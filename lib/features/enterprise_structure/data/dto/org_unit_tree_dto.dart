@@ -8,6 +8,10 @@ class OrgUnitTreeNodeDto {
   final String orgUnitNameAr;
   final String levelCode;
   final String? parentOrgUnitId;
+  final String? parentName;
+  final String? managerName;
+  final String? location;
+  final String? lastUpdatedDate;
   final String isActive;
   final List<OrgUnitTreeNodeDto> children;
 
@@ -18,6 +22,10 @@ class OrgUnitTreeNodeDto {
     required this.orgUnitNameAr,
     required this.levelCode,
     this.parentOrgUnitId,
+    this.parentName,
+    this.managerName,
+    this.location,
+    this.lastUpdatedDate,
     required this.isActive,
     required this.children,
   });
@@ -46,6 +54,10 @@ class OrgUnitTreeNodeDto {
       parentOrgUnitId: json['parent_org_unit_id'] != null
           ? parseIdToString(json['parent_org_unit_id'] ?? json['parentOrgUnitId'])
           : null,
+      parentName: json['parent_org_unit_name_en'] as String? ?? json['parentName'] as String?,
+      managerName: json['manager_name'] as String? ?? json['managerName'] as String?,
+      location: json['location'] as String? ?? json['city'] as String? ?? json['cityName'] as String?,
+      lastUpdatedDate: json['last_updated_date'] as String? ?? json['lastUpdatedDate'] as String?,
       isActive: json['is_active'] as String? ?? json['isActive'] as String? ?? 'N',
       children: children,
     );

@@ -1,0 +1,118 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/table/org_units_table_header.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/table/org_units_table_row.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/table/org_units_table_skeleton.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+class OrgUnitsTableWidget extends StatelessWidget {
+  final List<OrgStructureLevel> units;
+  final bool isLoading;
+  final bool isDark;
+  final AppLocalizations localizations;
+  final PaginationInfo? paginationInfo;
+  final int currentPage;
+  final int pageSize;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final Function(OrgStructureLevel)? onView;
+  final Function(OrgStructureLevel)? onEdit;
+  final Function(OrgStructureLevel)? onDelete;
+  final bool? paginationIsLoading;
+
+  const OrgUnitsTableWidget({
+    super.key,
+    required this.units,
+    required this.isLoading,
+    required this.isDark,
+    required this.localizations,
+    this.paginationInfo,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.onPrevious,
+    this.onNext,
+    this.onView,
+    this.onEdit,
+    this.onDelete,
+    this.paginationIsLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 400.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Skeletonizer(
+                enabled: isLoading,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    OrgUnitsTableHeader(isDark: isDark),
+                    if (isLoading && units.isEmpty)
+                      const OrgUnitsTableSkeleton()
+                    else if (units.isEmpty && !isLoading)
+                      SizedBox(
+                        width: 1200.w,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 48.h),
+                          child: Center(
+                            child: Text(
+                              localizations.noResultsFound,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      ...units.asMap().entries.map(
+                        (entry) => OrgUnitsTableRow(
+                          unit: entry.value,
+                          index: ((currentPage - 1) * pageSize) + entry.key + 1,
+                          isDark: isDark,
+                          localizations: localizations,
+                          onView: onView,
+                          onEdit: onEdit,
+                          onDelete: onDelete,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (paginationInfo != null) ...[
+            PaginationControls.fromPaginationInfo(
+              paginationInfo: paginationInfo!,
+              currentPage: currentPage,
+              pageSize: pageSize,
+              onPrevious: onPrevious,
+              onNext: onNext,
+              isLoading: false,
+              style: PaginationStyle.simple,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

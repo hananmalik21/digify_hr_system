@@ -8,7 +8,7 @@ import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_lab
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_form_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/location_picker_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/location_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

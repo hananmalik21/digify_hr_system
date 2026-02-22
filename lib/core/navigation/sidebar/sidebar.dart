@@ -12,6 +12,7 @@ import 'package:digify_hr_system/core/navigation/sidebar/widgets/sidebar_search_
 import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_structure_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
@@ -45,6 +46,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         if (tabIndex != null) {
           ref.read(employeeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
         }
+      } else if (item.route == AppRoutes.enterpriseStructure) {
+        final tabIndex = getEnterpriseStructureTabIndex(item.id);
+        if (tabIndex != null) {
+          ref.read(enterpriseStructureTabStateProvider.notifier).setTabIndex(tabIndex);
+        }
       } else if (item.route == AppRoutes.timeManagement) {
         final tabIndex = getTimeManagementTabIndex(item.id);
         if (tabIndex != null) {
@@ -73,19 +79,28 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
     if (route == AppRoutes.employees) {
       final state = ref.watch(employeeManagementTabStateProvider);
       final itemTabIndex = getEmployeeManagementTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
+    } else if (route == AppRoutes.enterpriseStructure) {
+      final state = ref.watch(enterpriseStructureTabStateProvider);
+      final itemTabIndex = getEnterpriseStructureTabIndex(itemId);
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.timeManagement) {
       final state = ref.watch(timeManagementTabStateProvider);
       final itemTabIndex = getTimeManagementTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.workforceStructure) {
       final state = ref.watch(workforceTabStateProvider);
       final itemTabIndex = getWorkforceStructureTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     } else if (route == AppRoutes.leaveManagement) {
       final state = ref.watch(leaveManagementTabStateProvider);
       final itemTabIndex = getLeaveManagementTabIndex(itemId);
-      return itemTabIndex == null || itemTabIndex == state.currentTabIndex;
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     }
     return true;
   }
@@ -116,6 +131,7 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         if (!mounted) return;
         String? itemToExpand;
         for (final item in menuItems) {
+          if (item.id == 'quickAccess') continue;
           if (item.children != null) {
             final hasActiveChild = item.children!.any((child) => child.route == currentRoute);
             if (hasActiveChild) {
