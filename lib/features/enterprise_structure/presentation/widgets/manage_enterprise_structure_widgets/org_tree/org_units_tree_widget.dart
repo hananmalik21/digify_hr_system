@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_tree_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_tree/widgets/org_tree_header.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_tree/widgets/org_tree_skeleton.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_tree/widgets/org_tree_table_header.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure_widgets/org_tree/widgets/org_unit_tree_node_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,15 +56,18 @@ class OrgUnitsTreeWidget extends ConsumerWidget {
                     )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: tree.tree.map((node) {
-                        return OrgUnitTreeNodeWidget(
-                          node: node,
-                          expandedNodes: expandedNodes,
-                          onToggle: notifier.toggleNode,
-                          isDark: isDark,
-                          level: 0,
-                        );
-                      }).toList(),
+                      children: [
+                        OrgTreeTableHeader(isDark: isDark),
+                        ...tree.tree.map((node) {
+                          return OrgUnitTreeNodeWidget(
+                            node: node,
+                            expandedNodes: expandedNodes,
+                            onToggle: notifier.toggleNode,
+                            isDark: isDark,
+                            level: 0,
+                          );
+                        }),
+                      ],
                     ),
             ),
           ],

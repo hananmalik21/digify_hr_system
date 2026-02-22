@@ -92,8 +92,29 @@ class OrgUnitsTableRow extends StatelessWidget {
         ),
       );
     }
+    if (ManageOrgUnitsTableConfig.showManager) {
+      rowCells.add(_buildDataCell(Text(unit.managerName, style: textStyle), ManageOrgUnitsTableConfig.managerWidth.w));
+    }
+    if (ManageOrgUnitsTableConfig.showLocation) {
+      rowCells.add(_buildDataCell(Text(unit.location, style: textStyle), ManageOrgUnitsTableConfig.locationWidth.w));
+    }
     if (ManageOrgUnitsTableConfig.showActive) {
       rowCells.add(_buildDataCell(_buildStatusBadge(), ManageOrgUnitsTableConfig.activeWidth.w));
+    }
+    if (ManageOrgUnitsTableConfig.showLastUpdated) {
+      rowCells.add(
+        _buildDataCell(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(unit.lastUpdatedDate, style: textStyle),
+              Text('by HR Admin', style: secondaryStyle),
+            ],
+          ),
+          ManageOrgUnitsTableConfig.lastUpdatedWidth.w,
+        ),
+      );
     }
     if (ManageOrgUnitsTableConfig.showActions) {
       rowCells.add(

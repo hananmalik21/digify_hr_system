@@ -39,8 +39,17 @@ class OrgUnitsTableHeader extends StatelessWidget {
     if (ManageOrgUnitsTableConfig.showParent) {
       headerCells.add(_buildHeaderCell(context, 'Parent', ManageOrgUnitsTableConfig.parentWidth.w));
     }
+    if (ManageOrgUnitsTableConfig.showManager) {
+      headerCells.add(_buildHeaderCell(context, 'Manager', ManageOrgUnitsTableConfig.managerWidth.w));
+    }
+    if (ManageOrgUnitsTableConfig.showLocation) {
+      headerCells.add(_buildHeaderCell(context, 'Location', ManageOrgUnitsTableConfig.locationWidth.w));
+    }
     if (ManageOrgUnitsTableConfig.showActive) {
       headerCells.add(_buildHeaderCell(context, 'Active', ManageOrgUnitsTableConfig.activeWidth.w));
+    }
+    if (ManageOrgUnitsTableConfig.showLastUpdated) {
+      headerCells.add(_buildHeaderCell(context, 'Last Updated', ManageOrgUnitsTableConfig.lastUpdatedWidth.w));
     }
     if (ManageOrgUnitsTableConfig.showActions) {
       headerCells.add(_buildHeaderCell(context, 'Actions', ManageOrgUnitsTableConfig.actionsWidth.w));
