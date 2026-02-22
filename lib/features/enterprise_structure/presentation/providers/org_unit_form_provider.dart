@@ -144,17 +144,22 @@ class OrgUnitFormNotifier extends StateNotifier<OrgUnitFormState> {
 
       final requestData = formData.toJson(isEdit: isEdit);
 
+      late final OrgStructureLevel result;
       if (isEdit) {
         final updateUseCase = ref.read(updateOrgUnitUseCaseProvider);
-        await updateUseCase.call(structureId, orgUnitId, requestData);
+        result = await updateUseCase.call(structureId, orgUnitId, requestData);
       } else {
         final createUseCase = ref.read(createOrgUnitUseCaseProvider);
-        await createUseCase.call(structureId, requestData);
+        result = await createUseCase.call(structureId, requestData);
       }
 
       state = state.copyWith(isLoading: false, success: true);
 
-      ref.read(orgUnitsProvider(levelCode).notifier).refresh();
+      if (isEdit) {
+        ref.read(orgUnitsProvider(levelCode).notifier).updateUnitLocal(result);
+      } else {
+        ref.read(orgUnitsProvider(levelCode).notifier).refresh();
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
