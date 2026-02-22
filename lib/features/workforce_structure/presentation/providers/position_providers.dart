@@ -55,11 +55,13 @@ final positionNotifierProvider = StateNotifierProvider<PositionNotifier, Paginat
   final updatePositionUseCase = ref.watch(updatePositionUseCaseProvider);
   final tenantId = ref.watch(workforceEnterpriseIdProvider);
   final deletePositionUseCase = ref.watch(deletePositionUseCaseProvider);
-  return PositionNotifier(
+  final notifier = PositionNotifier(
     getPositionsUseCase,
     createPositionUseCase,
     updatePositionUseCase,
     deletePositionUseCase,
     tenantId,
   );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
 });

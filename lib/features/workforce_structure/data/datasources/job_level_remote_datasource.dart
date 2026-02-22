@@ -9,7 +9,7 @@ abstract class JobLevelRemoteDataSource {
   Future<JobLevelResponse> getJobLevels({int page = 1, int pageSize = 10, String? search, int? tenantId});
   Future<JobLevel> createJobLevel(Map<String, dynamic> data);
   Future<JobLevel> updateJobLevel(int id, Map<String, dynamic> data);
-  Future<void> deleteJobLevel(int id, {bool hard = true});
+  Future<void> deleteJobLevel(int id, {bool hard = true, int? tenantId});
 }
 
 class JobLevelRemoteDataSourceImpl implements JobLevelRemoteDataSource {
@@ -49,7 +49,9 @@ class JobLevelRemoteDataSourceImpl implements JobLevelRemoteDataSource {
   }
 
   @override
-  Future<void> deleteJobLevel(int id, {bool hard = true}) async {
-    await apiClient.delete('${ApiEndpoints.jobLevels}/$id', queryParameters: {'hard': hard.toString()});
+  Future<void> deleteJobLevel(int id, {bool hard = true, int? tenantId}) async {
+    final queryParams = <String, String>{'hard': hard.toString()};
+    if (tenantId != null) queryParams['tenant_id'] = tenantId.toString();
+    await apiClient.delete('${ApiEndpoints.jobLevels}/$id', queryParameters: queryParams);
   }
 }

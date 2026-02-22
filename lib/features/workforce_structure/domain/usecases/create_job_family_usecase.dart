@@ -12,6 +12,7 @@ class CreateJobFamilyUseCase {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
     return await repository.createJobFamily(
       code: code,
@@ -19,6 +20,7 @@ class CreateJobFamilyUseCase {
       nameArabic: nameArabic,
       description: description,
       status: status,
+      tenantId: tenantId,
     );
   }
 }

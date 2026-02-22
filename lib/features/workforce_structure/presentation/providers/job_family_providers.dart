@@ -170,6 +170,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
         nameArabic: nameArabic,
         description: description,
         status: 'ACTIVE',
+        tenantId: tenantId,
       );
 
       ref.read(jobFamilyCreateStateProvider.notifier).state = const JobFamilyCreateState(isCreating: false);
@@ -198,7 +199,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
     ref.read(jobFamilyDeleteStateProvider.notifier).state = JobFamilyDeleteState(isDeleting: true, deletingId: id);
 
     try {
-      await deleteUseCase(id: id, hard: hard);
+      await deleteUseCase(id: id, hard: hard, tenantId: tenantId);
 
       final currentItems = state.items;
       final updatedItems = currentItems.where((item) => item.id != id).toList();
@@ -235,6 +236,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
         nameArabic: nameArabic,
         description: description,
         status: status,
+        tenantId: tenantId,
       );
 
       final currentItems = state.items;
@@ -294,11 +296,13 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
 // Provider for the notifier
 final jobFamilyNotifierProvider = StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((ref) {
   final tenantId = ref.watch(workforceEnterpriseIdProvider);
-  return JobFamilyNotifier(
+  final notifier = JobFamilyNotifier(
     ref.watch(getJobFamiliesUseCaseProvider),
     ref.watch(createJobFamilyUseCaseProvider),
     tenantId,
   );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
 });
 
 // Convenience providers

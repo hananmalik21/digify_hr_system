@@ -22,15 +22,6 @@ class JobFamiliesTab extends ConsumerStatefulWidget {
 
 class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> {
   @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;

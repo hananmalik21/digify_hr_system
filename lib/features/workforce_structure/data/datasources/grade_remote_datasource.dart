@@ -9,7 +9,7 @@ abstract class GradeRemoteDataSource {
   Future<GradeResponse> getGrades({int page = 1, int pageSize = 10, String? search, int? tenantId});
   Future<Grade> createGrade(Map<String, dynamic> data);
   Future<Grade> updateGrade(int gradeId, Map<String, dynamic> data);
-  Future<void> deleteGrade(int gradeId);
+  Future<void> deleteGrade(int gradeId, {int? tenantId});
 }
 
 class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
@@ -49,7 +49,9 @@ class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
   }
 
   @override
-  Future<void> deleteGrade(int gradeId) async {
-    await apiClient.delete('${ApiEndpoints.grades}/$gradeId', queryParameters: {'hard': 'true'});
+  Future<void> deleteGrade(int gradeId, {int? tenantId}) async {
+    final queryParams = <String, String>{'hard': 'true'};
+    if (tenantId != null) queryParams['tenant_id'] = tenantId.toString();
+    await apiClient.delete('${ApiEndpoints.grades}/$gradeId', queryParameters: queryParams);
   }
 }

@@ -236,7 +236,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> createGrade(Grade grade) async {
     state = state.copyWith(isCreating: true);
     try {
-      final createdGrade = await _createGradeUseCase.execute(grade);
+      final createdGrade = await _createGradeUseCase.execute(grade, tenantId: tenantId);
       // Add the new grade to the beginning of the list
       state = state.copyWith(
         items: [createdGrade, ...state.items],
@@ -252,7 +252,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> deleteGrade(int gradeId) async {
     state = state.copyWith(deletingGradeId: gradeId);
     try {
-      await _deleteGradeUseCase.execute(gradeId);
+      await _deleteGradeUseCase.execute(gradeId, tenantId: tenantId);
       // Remove the grade from the list optimistically
       state = state.copyWith(
         items: state.items.where((g) => g.id != gradeId).toList(),
@@ -268,7 +268,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> updateGrade(int gradeId, Grade updatedGrade) async {
     state = state.copyWith(updatingGradeId: gradeId);
     try {
-      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade);
+      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade, tenantId: tenantId);
       // Update the grade in the list optimistically
       state = state.copyWith(
         items: state.items.map((g) => g.id == gradeId ? grade : g).toList(),
@@ -300,13 +300,15 @@ class GradeNotifier extends StateNotifier<GradeState>
 // Provider for the notifier
 final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((ref) {
   final tenantId = ref.watch(workforceEnterpriseIdProvider);
-  return GradeNotifier(
+  final notifier = GradeNotifier(
     ref.read(getGradesUseCaseProvider),
     ref.read(createGradeUseCaseProvider),
     ref.read(deleteGradeUseCaseProvider),
     ref.read(updateGradeUseCaseProvider),
     tenantId,
   );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
 });
 
 // Convenience providers

@@ -5,5 +5,5 @@ abstract class JobLevelRepository {
   Future<JobLevelResponse> getJobLevels({int page = 1, int pageSize = 10, String? search, int? tenantId});
   Future<JobLevel> createJobLevel(JobLevel jobLevel, {int? tenantId});
   Future<JobLevel> updateJobLevel(JobLevel jobLevel, {int? tenantId});
-  Future<void> deleteJobLevel(int id);
+  Future<void> deleteJobLevel(int id, {int? tenantId});
 }

@@ -9,6 +9,7 @@ abstract class JobFamilyRepository {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   });
   Future<JobFamily> updateJobFamily({
     required int id,
@@ -17,6 +18,7 @@ abstract class JobFamilyRepository {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   });
-  Future<void> deleteJobFamily({required int id, bool hard = true});
+  Future<void> deleteJobFamily({required int id, bool hard = true, int? tenantId});
 }
