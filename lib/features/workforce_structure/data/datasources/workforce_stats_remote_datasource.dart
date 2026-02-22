@@ -5,7 +5,7 @@ import 'package:digify_hr_system/features/workforce_structure/data/dtos/workforc
 import 'package:digify_hr_system/features/workforce_structure/domain/models/workforce_stats.dart';
 
 abstract class WorkforceStatsRemoteDataSource {
-  Future<WorkforceStats> getWorkforceStats();
+  Future<WorkforceStats> getWorkforceStats({int? tenantId});
 }
 
 class WorkforceStatsRemoteDataSourceImpl implements WorkforceStatsRemoteDataSource {
@@ -14,9 +14,14 @@ class WorkforceStatsRemoteDataSourceImpl implements WorkforceStatsRemoteDataSour
   const WorkforceStatsRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<WorkforceStats> getWorkforceStats() async {
+  Future<WorkforceStats> getWorkforceStats({int? tenantId}) async {
     try {
-      final response = await apiClient.get(ApiEndpoints.workforceStats);
+      final queryParams = <String, String>{};
+      if (tenantId != null) {
+        queryParams['tenant_id'] = tenantId.toString();
+      }
+
+      final response = await apiClient.get(ApiEndpoints.workforceStats, queryParameters: queryParams);
 
       final dto = WorkforceStatsDto.fromJson(response['data'] as Map<String, dynamic>);
       return dto.toDomain();

@@ -2,16 +2,23 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/core/services/pagination_service.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/config/job_levels_table_config.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_level_row.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class JobLevelsTable extends StatelessWidget {
   final List<JobLevel> jobLevels;
+  final PaginationState<JobLevel>? paginationState;
 
-  const JobLevelsTable({super.key, required this.jobLevels});
+  const JobLevelsTable({super.key, required this.jobLevels, this.paginationState});
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +30,49 @@ class JobLevelsTable extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
-      child: ScrollableSingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          children: [
-            _buildTableHeader(context, isDark),
-            ...jobLevels.map((level) => JobLevelRow(level: level)),
+      child: Column(
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                children: [
+                  _buildTableHeader(context, isDark),
+                  ...jobLevels.map((level) => JobLevelRow(level: level)),
+                ],
+              ),
+            ),
+          ),
+          if (paginationState != null && paginationState!.totalPages > 0) ...[
+            Gap(24.h),
+            Consumer(
+              builder: (context, ref, _) {
+                return PaginationControls.fromPaginationInfo(
+                  paginationInfo: PaginationInfo(
+                    currentPage: paginationState!.currentPage,
+                    totalPages: paginationState!.totalPages,
+                    totalItems: paginationState!.totalItems,
+                    pageSize: paginationState!.pageSize,
+                    hasNext: paginationState!.hasNextPage,
+                    hasPrevious: paginationState!.hasPreviousPage,
+                  ),
+                  currentPage: paginationState!.currentPage,
+                  pageSize: paginationState!.pageSize,
+                  onPrevious: paginationState!.hasPreviousPage
+                      ? () => ref.read(jobLevelNotifierProvider.notifier).goToPage(paginationState!.currentPage - 1)
+                      : null,
+                  onNext: paginationState!.hasNextPage
+                      ? () => ref.read(jobLevelNotifierProvider.notifier).goToPage(paginationState!.currentPage + 1)
+                      : null,
+                  isLoading: paginationState!.isLoading,
+                  style: PaginationStyle.simple,
+                );
+              },
+            ),
+            Gap(24.h),
           ],
-        ),
+        ],
       ),
     );
   }

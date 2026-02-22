@@ -6,7 +6,7 @@ class GetWorkforceStatsUseCase {
 
   const GetWorkforceStatsUseCase({required this.repository});
 
-  Future<WorkforceStats> call() async {
-    return await repository.getWorkforceStats();
+  Future<WorkforceStats> call({int? tenantId}) async {
+    return await repository.getWorkforceStats(tenantId: tenantId);
   }
 }

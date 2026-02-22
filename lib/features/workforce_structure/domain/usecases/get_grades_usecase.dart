@@ -6,11 +6,7 @@ class GetGradesUseCase {
 
   GetGradesUseCase(this.repository);
 
-  Future<GradeResponse> execute({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) {
-    return repository.getGrades(page: page, pageSize: pageSize, search: search);
+  Future<GradeResponse> execute({int page = 1, int pageSize = 10, String? search, int? tenantId}) {
+    return repository.getGrades(page: page, pageSize: pageSize, search: search, tenantId: tenantId);
   }
 }

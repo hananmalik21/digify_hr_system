@@ -61,11 +61,19 @@ class PositionSalarySection extends StatelessWidget {
       children: [
         PositionFormRow(
           children: [
-            PositionDetailCard(label: localizations.budgetedMin, value: position.budgetedMin, width: double.infinity),
-            PositionDetailCard(label: localizations.budgetedMax, value: position.budgetedMax, width: double.infinity),
+            PositionDetailCard(
+              label: localizations.budgetedMin,
+              value: position.budgetedMin.isNotEmpty ? '${position.budgetedMin} KD' : '-',
+              width: double.infinity,
+            ),
+            PositionDetailCard(
+              label: localizations.budgetedMax,
+              value: position.budgetedMax.isNotEmpty ? '${position.budgetedMax} KD' : '-',
+              width: double.infinity,
+            ),
             PositionDetailCard(
               label: localizations.actualAverage,
-              value: position.actualAverage,
+              value: position.actualAverage.isNotEmpty ? '${position.actualAverage} KD' : '-',
               width: double.infinity,
             ),
           ],

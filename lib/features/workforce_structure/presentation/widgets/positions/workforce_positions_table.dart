@@ -10,7 +10,6 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/table/position_table_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkforcePositionsTable extends StatelessWidget {
@@ -55,9 +54,9 @@ class WorkforcePositionsTable extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
             child: ScrollableSingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Skeletonizer(
@@ -97,7 +96,6 @@ class WorkforcePositionsTable extends StatelessWidget {
             ),
           ),
           if (paginationInfo != null) ...[
-            Gap(16.h),
             PaginationControls.fromPaginationInfo(
               paginationInfo: paginationInfo!,
               currentPage: currentPage,

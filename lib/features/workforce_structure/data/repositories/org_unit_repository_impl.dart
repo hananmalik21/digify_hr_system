@@ -13,6 +13,7 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
     required String levelCode,
     String? parentOrgUnitId,
     String? search,
+    int? tenantId,
     int page = 1,
     int pageSize = 100,
   }) async {
@@ -21,6 +22,7 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
       levelCode: levelCode,
       parentOrgUnitId: parentOrgUnitId,
       search: search,
+      tenantId: tenantId,
       page: page,
       pageSize: pageSize,
     );

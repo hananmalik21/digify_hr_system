@@ -1,18 +1,15 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
+
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_empty_state.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_list.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/components/job_family_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 
 class JobFamiliesTab extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -23,10 +20,7 @@ class JobFamiliesTab extends ConsumerStatefulWidget {
   ConsumerState<JobFamiliesTab> createState() => _JobFamiliesTabState();
 }
 
-class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPaginationMixin {
-  @override
-  ScrollController? get scrollController => widget.scrollController;
-
+class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> {
   @override
   void initState() {
     super.initState();
@@ -37,28 +31,13 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPagi
   }
 
   @override
-  void onLoadMore() {
-    final state = ref.read(jobFamilyNotifierProvider);
-    if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(jobFamilyNotifierProvider.notifier).loadNextPage();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final paginationState = ref.watch(jobFamilyNotifierProvider);
     final jobLevels = ref.watch(jobLevelListProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        JobFamilyHeader(localizations: localizations),
-        Gap(24.h),
-        _buildContent(context, localizations, paginationState, jobLevels, isDark),
-      ],
-    );
+    return _buildContent(context, localizations, paginationState, jobLevels, isDark);
   }
 
   Widget _buildContent(
@@ -86,12 +65,17 @@ class _JobFamiliesTabState extends ConsumerState<JobFamiliesTab> with ScrollPagi
       return const JobFamilyEmptyState();
     }
 
-    // Show list with pagination
     return JobFamilyList(
       paginationState: paginationState,
       jobLevels: jobLevels,
       localizations: localizations,
       isDark: isDark,
+      onPrevious: paginationState.hasPreviousPage
+          ? () => ref.read(jobFamilyNotifierProvider.notifier).goToPage(paginationState.currentPage - 1)
+          : null,
+      onNext: paginationState.hasNextPage
+          ? () => ref.read(jobFamilyNotifierProvider.notifier).goToPage(paginationState.currentPage + 1)
+          : null,
     );
   }
 }
