@@ -255,7 +255,7 @@ class ReportingSection extends StatelessWidget {
   final AppLocalizations localizations;
   final int? tenantId;
   final Position? selectedReportsToPosition;
-  final ValueChanged<Position> onReportsToPositionSelected;
+  final ValueChanged<Position?> onReportsToPositionSelected;
 
   const ReportingSection({
     super.key,
@@ -274,7 +274,7 @@ class ReportingSection extends StatelessWidget {
           children: [
             PositionSearchField(
               label: localizations.reportsTo,
-              isRequired: true,
+              isRequired: false,
               tenantId: tenantId,
               selectedPosition: selectedReportsToPosition,
               onPositionSelected: onReportsToPositionSelected,

@@ -17,7 +17,7 @@ class PositionSearchField extends ConsumerStatefulWidget {
   final String label;
   final bool isRequired;
   final Position? selectedPosition;
-  final ValueChanged<Position> onPositionSelected;
+  final ValueChanged<Position?> onPositionSelected;
   final String? hintText;
   final int? tenantId;
   final Color? fillColor;

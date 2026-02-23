@@ -149,9 +149,6 @@ class PositionFormNotifier extends StateNotifier<PositionFormState> {
     if (!hasOrgUnitSelected) {
       return 'Please select at least one organizational unit';
     }
-    if (!hasReportsToEmployeeSelected) {
-      return 'Please select a reporting manager';
-    }
     final budgetedMin = budgetedMinStr.trim();
     if (budgetedMin.isEmpty) {
       return '${l.budgetedMin} ${l.fieldRequired}';
