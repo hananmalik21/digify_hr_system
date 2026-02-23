@@ -44,11 +44,18 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     final notifier = ref.read(timesheetNotifierProvider.notifier);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            padding: EdgeInsets.only(left: 27.w, right: 21.w, top: 61.h, bottom: 48.h),
+            padding: EdgeInsets.only(
+              left: 27.w,
+              right: 21.w,
+              top: 61.h,
+              bottom: 48.h,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,12 +64,19 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [_buildHeaderTitle(context, isDark), Gap(16.h), _buildHeaderActions(context.isMobile)],
+                        children: [
+                          _buildHeaderTitle(context, isDark),
+                          Gap(16.h),
+                          _buildHeaderActions(context.isMobile),
+                        ],
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [_buildHeaderTitle(context, isDark), _buildHeaderActions(context.isMobile)],
+                        children: [
+                          _buildHeaderTitle(context, isDark),
+                          _buildHeaderActions(context.isMobile),
+                        ],
                       ),
                 Gap(21.h),
 
@@ -78,19 +92,8 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                 Gap(21.h),
 
                 // Statistics Grid
-                Builder(
-                  builder: (context) {
-                    final screenWidth = context.screenWidth;
-                    final padding = 48.w; // Left + right padding
-                    final availableWidth = screenWidth - padding;
-                    final spacing = 16.w;
-                    final minCardWidth = 150.w;
-                    final maxCardWidth = 200.w;
-
-                    // Calculate how many cards can fit per row
-                    final cardsPerRow = ((availableWidth + spacing) / (maxCardWidth + spacing)).floor();
-                    final cardWidth = cardsPerRow > 0 ? ((availableWidth - (spacing * (cardsPerRow - 1))) / cardsPerRow).clamp(minCardWidth, maxCardWidth) : availableWidth;
-
+                LayoutBuilder(
+                  builder: (context, constraints) {
                     final cards = [
                       AttendanceStatCard(
                         label: 'Total',
@@ -149,11 +152,35 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                         isDark: isDark,
                       ),
                     ];
+                    final screenWidth = constraints.maxWidth;
+                    final horizontalPadding = 48.w;
+                    final spacing = 16.w;
+                    final minWidth = 150.w;
+
+                    final availableWidth = screenWidth - horizontalPadding;
+                    final totalItems = cards.length;
+
+                    int maxItemsPerRow =
+                        ((availableWidth + spacing) / (minWidth + spacing))
+                            .floor();
+                    if (maxItemsPerRow < 1) maxItemsPerRow = 1;
+
+                    final itemsInRow = totalItems < maxItemsPerRow
+                        ? totalItems
+                        : maxItemsPerRow;
+
+                    final totalSpacing = (itemsInRow - 1) * spacing;
+                    final itemWidth =
+                        (availableWidth - totalSpacing) / itemsInRow;
 
                     return Wrap(
                       spacing: spacing,
-                      runSpacing: 16.h,
-                      children: cards.map((card) => SizedBox(width: cardWidth, child: card)).toList(),
+                      runSpacing: spacing,
+                      children: cards
+                          .map(
+                            (card) => SizedBox(width: itemWidth, child: card),
+                          )
+                          .toList(),
                     );
                   },
                 ),
@@ -162,42 +189,68 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                 // Enterprise Structure Filters Section
                 EnterpriseFiltersCard(isDark: isDark),
                 Gap(21.h),
+
                 // Search and Status Filter
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-                    borderRadius: BorderRadius.circular(7.r),
-                    border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.cardBorderDark
+                          : AppColors.cardBorder,
+                      width: 1,
+                    ),
                   ),
                   child: context.isMobile
                       ? Column(
                           children: [
-                            DigifyTextField(
-                              hintText: 'Search timesheets...',
+                            DigifyTextField.search(
                               controller: _searchController,
-                              fillColor: AppColors.cardBackground,
                               showBorder: false,
-                              filled: true,
-                              prefixIcon: Icon(Icons.search, size: 20.r, color: AppColors.textSecondary),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                              onChanged: (value) => notifier.setSearchQuery(value),
+                              onChanged: (value) =>
+                                  notifier.setSearchQuery(value),
                             ),
-                            Gap(12.h),
-                            Container(height: 1, color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-                            Gap(12.h),
+                            Gap(16.h),
+                            Container(
+                              height: 1,
+                              color: isDark
+                                  ? AppColors.cardBorderDark
+                                  : AppColors.cardBorder,
+                            ),
+                            Gap(16.h),
                             Row(
                               children: [
-                                Gap(8.w),
-                                DigifyAsset(assetPath: Assets.icons.leaveManagement.filter.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
-                                Gap(8.w),
+                                DigifyAsset(
+                                  assetPath:
+                                      Assets.icons.leaveManagement.filter.path,
+                                  width: 24.w,
+                                  height: 24.h,
+                                  color: isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.dialogCloseIcon,
+                                ),
+                                Gap(16.w),
                                 Expanded(
                                   child: DigifySelectField<TimesheetStatus?>(
                                     hint: 'All Status',
                                     value: state.statusFilter,
-                                    items: [null, TimesheetStatus.draft, TimesheetStatus.submitted, TimesheetStatus.approved, TimesheetStatus.rejected],
-                                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
-                                    onChanged: (value) => notifier.setStatusFilter(value),
+                                    items: [
+                                      null,
+                                      TimesheetStatus.draft,
+                                      TimesheetStatus.submitted,
+                                      TimesheetStatus.approved,
+                                      TimesheetStatus.rejected,
+                                    ],
+                                    itemLabelBuilder: (item) => item == null
+                                        ? 'All Status'
+                                        : item.displayName,
+                                    onChanged: (value) =>
+                                        notifier.setStatusFilter(value),
                                   ),
                                 ),
                               ],
@@ -207,34 +260,45 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                       : Row(
                           children: [
                             Expanded(
-                              child: DigifyTextField(
-                                hintText: 'Search timesheets...',
-                                showBorder: false,
+                              child: DigifyTextField.search(
                                 controller: _searchController,
-                                fillColor: AppColors.cardBackground,
-                                filled: true,
-                                prefixIcon: Icon(Icons.search, size: 20.r, color: AppColors.textSecondary),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                                onChanged: (value) => notifier.setSearchQuery(value),
+                                borderColor: Colors.transparent,
+                                showBorder: false,
+                                hintText: 'Search...',
+                                onChanged: (value) =>
+                                    notifier.setSearchQuery(value),
                               ),
-                              // flex: 3,
                             ),
-                            Row(
-                              children: [
-                                DigifyAsset(assetPath: Assets.icons.leaveManagement.filter.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
-                                Gap(8.w),
-                                SizedBox(
-                                  width: context.screenWidth*.3,
-                                  height: 35.h,
-                                  child: DigifySelectField<TimesheetStatus?>(
-                                    hint: 'All Status',
-                                    value: state.statusFilter,
-                                    items: [null, TimesheetStatus.draft, TimesheetStatus.submitted, TimesheetStatus.approved, TimesheetStatus.rejected],
-                                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
-                                    onChanged: (value) => notifier.setStatusFilter(value),
-                                  ),
-                                ),
-                              ],
+                            Gap(16.w),
+                            DigifyAsset(
+                              assetPath:
+                                  Assets.icons.leaveManagement.filter.path,
+                              width: 24.w,
+                              height: 24.h,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.dialogCloseIcon,
+                            ),
+                            Gap(16.w),
+                            SizedBox(
+                              width: context.screenWidth * .3,
+
+                              child: DigifySelectField<TimesheetStatus?>(
+                                hint: 'All Status',
+                                value: state.statusFilter,
+                                items: [
+                                  null,
+                                  TimesheetStatus.draft,
+                                  TimesheetStatus.submitted,
+                                  TimesheetStatus.approved,
+                                  TimesheetStatus.rejected,
+                                ],
+                                itemLabelBuilder: (item) => item == null
+                                    ? 'All Status'
+                                    : item.displayName,
+                                onChanged: (value) =>
+                                    notifier.setStatusFilter(value),
+                              ),
                             ),
                           ],
                         ),
@@ -271,12 +335,19 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
       children: [
         Text(
           'Time Sheets',
-          style: context.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w600, color: isDark ? null : AppColors.dialogTitle, fontFamily: 'Inter'),
+          style: context.textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: isDark ? null : AppColors.dialogTitle,
+            fontFamily: 'Inter',
+          ),
         ),
         Gap(2.h),
         Text(
           'Track and manage employee time entries',
-          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? null : AppColors.textSecondary, fontFamily: 'Inter'),
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: isDark ? null : AppColors.textSecondary,
+            fontFamily: 'Inter',
+          ),
         ),
       ],
     );
@@ -291,9 +362,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
       AppButton(
         fontSize: 14.sp,
         label: 'New Timesheet',
-        onPressed: () {
-          NewTimesheetDialog.show(context);
-        },
+        onPressed: () => NewTimesheetDialog.show(context),
         icon: Icons.add,
         height: 35.h,
         type: AppButtonType.primary,
@@ -302,7 +371,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     ];
 
     if (isMobile) {
-      return Wrap(spacing: 12.w, runSpacing: 12.h, children: actions.where((w) => w is! Gap).toList());
+      return Wrap(
+        spacing: 12.w,
+        runSpacing: 12.h,
+        children: actions.where((w) => w is! Gap).toList(),
+      );
     }
 
     return Row(children: actions);
