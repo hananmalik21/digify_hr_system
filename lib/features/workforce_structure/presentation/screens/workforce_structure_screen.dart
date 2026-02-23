@@ -44,7 +44,6 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
         ? tabs[currentTabIndex]
         : WorkforceTab.positions;
     final headerTitle = currentTab.label(localizations);
-    final headerDescription = localizations.managePositions;
     final Widget? headerTrailing = WorkforceHeaderActions.getTrailingAction(context, currentTab);
 
     return Container(
@@ -57,7 +56,7 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            DigifyTabHeader(title: headerTitle, description: headerDescription, trailing: headerTrailing),
+            DigifyTabHeader(title: headerTitle, trailing: headerTrailing),
             Gap(24.h),
             WorkforceStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
