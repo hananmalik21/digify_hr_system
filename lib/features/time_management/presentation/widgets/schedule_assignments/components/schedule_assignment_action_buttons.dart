@@ -1,3 +1,4 @@
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -17,20 +18,12 @@ class ScheduleAssignmentActionButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (onView != null)
-          DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: onView, width: 15, height: 15),
-        if (onView != null && (onEdit != null || onDelete != null)) SizedBox(width: 4.w),
-        if (onEdit != null)
-          DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit, width: 15, height: 15),
-        if (onEdit != null && onDelete != null) SizedBox(width: 4.w),
+        if (onView != null) DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: onView),
+        if (onView != null && (onEdit != null || onDelete != null)) Gap(4.w),
+        if (onEdit != null) DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit),
+        if (onEdit != null && onDelete != null) Gap(4.w),
         if (onDelete != null)
-          DigifyAssetButton(
-            assetPath: Assets.icons.redDeleteIcon.path,
-            onTap: onDelete,
-            width: 15,
-            height: 15,
-            isLoading: isDeleting,
-          ),
+          DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: onDelete, isLoading: isDeleting),
       ],
     );
   }

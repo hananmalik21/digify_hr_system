@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class HolidayTypeBadge extends StatelessWidget {
   final HolidayType type;
@@ -14,11 +15,7 @@ class HolidayTypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildTypeBadge(context),
-        SizedBox(width: 8.w),
-        _buildPaymentBadge(context),
-      ],
+      children: [_buildTypeBadge(context), Gap(8.w), _buildPaymentBadge(context)],
     );
   }
 

@@ -40,17 +40,10 @@ class GradeActionButtons extends ConsumerWidget {
 
     return Row(
       children: [
-        DigifyAssetButton(
-          assetPath: Assets.icons.editIcon.path,
-          width: 16,
-          height: 16,
-          onTap: isDeleting ? null : () => _handleEdit(context),
-        ),
+        DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: isDeleting ? null : () => _handleEdit(context)),
         Gap(4.w),
         DigifyAssetButton(
           assetPath: Assets.icons.redDeleteIcon.path,
-          width: 16,
-          height: 16,
           color: AppColors.error,
           isLoading: isDeleting,
           onTap: () async {

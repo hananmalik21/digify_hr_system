@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
-import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
@@ -39,11 +39,10 @@ class ViewScheduleAssignmentDialog extends ConsumerWidget {
       width: 768.w,
       onClose: () => context.pop(),
       actions: [
-        AppButton.outline(label: 'Close', width: null, onPressed: () => context.pop()),
+        AppButton.outline(label: 'Close', onPressed: () => context.pop()),
         Gap(8.w),
         AppButton(
           label: 'Edit Assignment',
-          width: null,
           onPressed: enterpriseId != null
               ? () {
                   context.pop();
@@ -118,11 +117,7 @@ class ViewScheduleAssignmentDialog extends ConsumerWidget {
                 isDark,
                 label: 'Status',
                 value: '',
-                customWidget: CustomStatusCell(
-                  isActive: assignment.isActive,
-                  activeLabel: 'ACTIVE',
-                  inactiveLabel: 'INACTIVE',
-                ),
+                customWidget: ShiftStatusBadge(isActive: assignment.isActive),
               ),
             ),
             Gap(24.w),

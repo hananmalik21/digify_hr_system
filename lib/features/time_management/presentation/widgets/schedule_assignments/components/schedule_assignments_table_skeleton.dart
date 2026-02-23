@@ -13,7 +13,9 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final headerColor = isDark ? AppColors.cardBackgroundDark : const Color(0xFFF9FAFB);
+    final headerColor = isDark
+        ? AppColors.cardBackgroundDark
+        : AppColors.tableHeaderBackground;
 
     final columnWidths = <double>[];
     if (ScheduleAssignmentsTableConfig.showAssignedTo) {
@@ -45,7 +47,11 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
         color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.10), offset: const Offset(0, 1), blurRadius: 3),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.10),
+            offset: const Offset(0, 1),
+            blurRadius: 3,
+          ),
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.10),
             offset: const Offset(0, 1),
@@ -61,16 +67,24 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
           children: [
             Container(
               color: headerColor,
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: 24.w,
+                vertical: 12.h,
+              ),
               child: Row(
                 children: List.generate(
                   columnCount,
                   (index) => Container(
                     width: columnWidths[index].w,
-                    padding: EdgeInsetsDirectional.only(end: index < columnCount - 1 ? 24.w : 0),
+                    padding: EdgeInsetsDirectional.only(
+                      end: index < columnCount - 1 ? 24.w : 0,
+                    ),
                     child: Container(
                       height: 16.h,
-                      decoration: BoxDecoration(color: AppColors.cardBorder, borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(
+                        color: AppColors.cardBorder,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
                     ),
                   ),
                 ),
@@ -84,7 +98,10 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
                   (index) => Container(
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
+                        bottom: BorderSide(
+                          color: AppColors.cardBorder,
+                          width: 1.w,
+                        ),
                       ),
                     ),
                     child: Row(
@@ -92,7 +109,10 @@ class ScheduleAssignmentsTableSkeleton extends StatelessWidget {
                         columnCount,
                         (colIndex) => Container(
                           width: columnWidths[colIndex].w,
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 24.w,
+                            vertical: 16.h,
+                          ),
                           child: Container(
                             height: 12.h,
                             decoration: BoxDecoration(

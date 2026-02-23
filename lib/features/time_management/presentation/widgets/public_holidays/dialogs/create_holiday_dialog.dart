@@ -12,11 +12,11 @@ import 'package:digify_hr_system/features/time_management/data/config/public_hol
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 class CreateHolidayDialog {
   static Future<void> show(BuildContext context, {PublicHoliday? holiday}) {
@@ -41,7 +41,6 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameEnController;
   late final TextEditingController _nameArController;
-  late final TextEditingController _dateController;
   late final TextEditingController _descriptionEnController;
   late final TextEditingController _descriptionArController;
   late final TextEditingController _yearController;
@@ -58,7 +57,6 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
     final holiday = widget.holiday;
     _nameEnController = TextEditingController(text: holiday?.nameEn ?? '');
     _nameArController = TextEditingController(text: holiday?.nameAr ?? '');
-    _dateController = TextEditingController(text: holiday != null ? DateFormat('dd/MM/yyyy').format(holiday.date) : '');
     _descriptionEnController = TextEditingController(text: holiday?.descriptionEn ?? '');
     _descriptionArController = TextEditingController(text: holiday?.descriptionAr ?? '');
     _yearController = TextEditingController(text: (holiday?.year ?? DateTime.now().year).toString());
@@ -74,46 +72,10 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
   void dispose() {
     _nameEnController.dispose();
     _nameArController.dispose();
-    _dateController.dispose();
     _descriptionEnController.dispose();
     _descriptionArController.dispose();
     _yearController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime now = DateTime.now();
-    final DateTime firstDate = DateTime(now.year - 10);
-    final DateTime lastDate = DateTime(now.year + 10);
-
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? now,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      builder: (context, child) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.cardBackground,
-              surface: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-              onSurface: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = DateFormat('dd/MM/yyyy').format(picked);
-        _yearController.text = picked.year.toString();
-      });
-    }
   }
 
   Future<void> _handleSubmitInternal() async {
@@ -201,9 +163,9 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
     return AppDialog(
       title: widget.holiday != null ? 'Edit Holiday' : 'Add New Holiday',
       width: 768.w,
-      onClose: () => Navigator.of(context).pop(),
+      onClose: () => context.pop(),
       actions: [
-        AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: () => Navigator.of(context).pop()),
+        AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: () => context.pop()),
         Gap(12.w),
         AppButton(
           label: widget.holiday != null ? 'Update' : 'Create',
@@ -259,23 +221,15 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
             Row(
               children: [
                 Expanded(
-                  child: DigifyTextField(
-                    controller: _dateController,
-                    labelText: 'Date',
+                  child: DigifyDateField(
+                    label: 'Date',
                     hintText: 'dd/mm/yyyy',
-                    isRequired: true,
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
-                    suffixIcon: Icon(
-                      Icons.calendar_today,
-                      size: 20.sp,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty || _selectedDate == null) {
-                        return 'Date is required';
-                      }
-                      return null;
+                    initialDate: _selectedDate,
+                    onDateSelected: (date) {
+                      setState(() {
+                        _selectedDate = date;
+                        _yearController.text = date.year.toString();
+                      });
                     },
                   ),
                 ),

@@ -227,8 +227,18 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
 
   @override
   Future<void> loadNextPage() async {
-    if (_currentEnterpriseId == null) return;
-    if (state.isLoadingMore || !state.hasNextPage) return;
+    if (_currentEnterpriseId == null || state.isLoadingMore || !state.hasNextPage) {
+      return;
+    }
+    await goToPage(state.currentPage + 1);
+  }
+
+  Future<void> goToPage(int page) async {
+    if (_currentEnterpriseId == null ||
+        state.isLoadingMore ||
+        (page < 1 || page > state.totalPages && state.totalPages > 0)) {
+      return;
+    }
 
     final loadingState = handleLoadingState(state, false);
     state = ScheduleAssignmentState(
@@ -248,10 +258,9 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     );
 
     try {
-      final nextPage = state.currentPage + 1;
       final result = await _getScheduleAssignmentsUseCase.call(
         tenantId: _currentEnterpriseId!,
-        page: nextPage,
+        page: page,
         pageSize: state.pageSize,
       );
 
@@ -299,6 +308,12 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
         isCreating: state.isCreating,
       );
     }
+  }
+
+  Future<void> changePageSize(int newSize) async {
+    if (state.pageSize == newSize) return;
+    state = state.copyWith(pageSize: newSize);
+    await loadFirstPage();
   }
 
   @override

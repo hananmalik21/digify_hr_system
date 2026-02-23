@@ -58,8 +58,8 @@ class ShiftRepositoryImpl implements ShiftRepository {
         totalPages: validTotalPages,
         totalItems: validTotal,
         pageSize: validPageSize,
-        hasNext: dto.meta.pagination.hasNext && validPage < validTotalPages,
-        hasPrevious: dto.meta.pagination.hasPrevious && validPage > 1,
+        hasNext: dto.meta.pagination.hasNext,
+        hasPrevious: dto.meta.pagination.hasPrevious,
       );
 
       return PaginatedShifts(shifts: shifts, pagination: pagination);

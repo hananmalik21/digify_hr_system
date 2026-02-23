@@ -195,7 +195,7 @@ class PaginatedShiftsDto {
   const PaginatedShiftsDto({required this.success, required this.data, required this.meta});
 
   factory PaginatedShiftsDto.fromJson(Map<String, dynamic> json) {
-    final success = json['success'] as bool? ?? true;
+    final success = (json['success'] ?? json['status']) as bool? ?? true;
 
     final dataValue = json['data'];
     List<ShiftDto> shifts = [];
@@ -319,14 +319,15 @@ class PaginationInfoDto {
 
     final page = parseInt(json['page'], defaultValue: 1, min: 1);
 
-    final pageSize = parseInt(json['page_size'], defaultValue: 10, min: 1);
+    final pageSize = parseInt(json['page_size'] ?? json['limit'], defaultValue: 10, min: 1);
 
     final total = parseInt(json['total'], defaultValue: 0, min: 0);
 
-    final totalPages = parseInt(json['total_pages'], defaultValue: 0, min: 0);
+    final apiTotalPages = parseInt(json['total_pages'], defaultValue: 0, min: 0);
+    final totalPages = apiTotalPages > 0 ? apiTotalPages : (total > 0 && pageSize > 0 ? (total / pageSize).ceil() : 0);
 
-    final hasNext = parseBool(json['has_next'], defaultValue: false);
-    final hasPrevious = parseBool(json['has_previous'], defaultValue: false);
+    final hasNext = parseBool(json['has_next'] ?? json['hasMore'], defaultValue: false);
+    final hasPrevious = page > 1;
 
     return PaginationInfoDto(
       page: page,

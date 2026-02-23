@@ -308,15 +308,10 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
         ),
       ),
       actions: [
-        AppButton.outline(
-          label: 'Cancel',
-          width: 100.w,
-          onPressed: _isUpdating ? null : () => Navigator.of(context).pop(),
-        ),
+        AppButton.outline(label: 'Cancel', onPressed: _isUpdating ? null : () => Navigator.of(context).pop()),
         Gap(12.w),
         AppButton(
           label: 'Save Changes',
-          width: 179.w,
           onPressed: _isUpdating ? null : _handleUpdate,
           isLoading: _isUpdating,
           svgPath: Assets.icons.saveIcon.path,

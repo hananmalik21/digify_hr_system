@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class PublicHolidaysComplianceBanner extends StatelessWidget {
@@ -28,7 +29,7 @@ class PublicHolidaysComplianceBanner extends StatelessWidget {
             height: 20,
             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           ),
-          SizedBox(width: 12.w),
+          Gap(12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +43,7 @@ class PublicHolidaysComplianceBanner extends StatelessWidget {
                     fontFamily: 'Inter',
                   ),
                 ),
-                SizedBox(height: 8.h),
+                Gap(8.h),
                 Text(
                   'According to Kuwait Labor Law No. 6/2010, employees are entitled to paid public holidays. Islamic holidays follow the Hijri calendar and dates may vary.',
                   style: TextStyle(
@@ -53,7 +54,7 @@ class PublicHolidaysComplianceBanner extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                Gap(8.h),
                 Text(
                   '، يحق للموظفين الحصول على إجازات عطلة رسمية مدفوعة الأجر. الأعياد الإسلامية تتبع التقويم الهجري وقد تختلف التواريخ.',
                   style: TextStyle(

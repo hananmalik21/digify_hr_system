@@ -3,9 +3,9 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-/// Skeleton loader for public holidays list
 class PublicHolidaysSkeleton extends StatelessWidget {
   final int groupCount;
   final int holidaysPerGroup;
@@ -27,7 +27,7 @@ class PublicHolidaysSkeleton extends StatelessWidget {
             children: [
               _buildGroupSkeleton(context, isDark, holidaysPerGroup),
               if (groupIndex < groupCount - 1)
-                SizedBox(height: ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+                Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
             ],
           ),
         ),
@@ -46,7 +46,6 @@ class PublicHolidaysSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header skeleton
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
@@ -60,7 +59,6 @@ class PublicHolidaysSkeleton extends StatelessWidget {
               decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
             ),
           ),
-          // Holidays skeleton
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
             child: Column(
@@ -70,9 +68,9 @@ class PublicHolidaysSkeleton extends StatelessWidget {
                   children: [
                     _buildHolidayCardSkeleton(isDark),
                     if (index < holidayCount - 1) ...[
-                      SizedBox(height: 16.h),
+                      Gap(16.h),
                       Container(height: 1, color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-                      SizedBox(height: 16.h),
+                      Gap(16.h),
                     ],
                   ],
                 ),
@@ -95,39 +93,34 @@ class PublicHolidaysSkeleton extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Date badge skeleton
           Container(
             width: 64.w,
             height: 64.h,
             decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10.r)),
           ),
-          SizedBox(width: 16.w),
-          // Content skeleton
+          Gap(16.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Name skeleton
                 Container(
                   height: 20.h,
                   width: 200.w,
                   decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                 ),
-                SizedBox(height: 8.h),
-                // Description skeleton
+                Gap(8.h),
                 Container(
                   height: 16.h,
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                 ),
-                SizedBox(height: 4.h),
+                Gap(4.h),
                 Container(
                   height: 16.h,
                   width: 150.w,
                   decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                 ),
-                SizedBox(height: 12.h),
-                // Metadata skeleton
+                Gap(12.h),
                 Row(
                   children: [
                     Container(
@@ -135,7 +128,7 @@ class PublicHolidaysSkeleton extends StatelessWidget {
                       width: 100.w,
                       decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                     ),
-                    SizedBox(width: 16.w),
+                    Gap(16.w),
                     Container(
                       height: 14.h,
                       width: 80.w,
@@ -146,8 +139,7 @@ class PublicHolidaysSkeleton extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 12.w),
-          // Action buttons skeleton
+          Gap(12.w),
           Row(
             children: [
               Container(
@@ -155,13 +147,13 @@ class PublicHolidaysSkeleton extends StatelessWidget {
                 height: 18.h,
                 decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
               ),
-              SizedBox(width: 8.w),
+              Gap(8.w),
               Container(
                 width: 18.w,
                 height: 18.h,
                 decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
               ),
-              SizedBox(width: 8.w),
+              Gap(8.w),
               Container(
                 width: 18.w,
                 height: 18.h,

@@ -9,25 +9,15 @@ class CustomStatusCell extends StatelessWidget {
   final String? activeLabel;
   final String? inactiveLabel;
 
-  const CustomStatusCell({
-    super.key,
-    required this.isActive,
-    this.activeLabel,
-    this.inactiveLabel,
-  });
+  const CustomStatusCell({super.key, required this.isActive, this.activeLabel, this.inactiveLabel});
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final label = isActive
-        ? (activeLabel ?? 'Active')
-        : (inactiveLabel ?? 'Inactive');
+    final label = isActive ? (activeLabel ?? 'Active') : (inactiveLabel ?? 'Inactive');
 
     return Container(
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 8.w,
-        vertical: 3.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
         color: isActive
             ? (isDark ? AppColors.successBgDark : const Color(0xFFDCFCE7))
@@ -49,4 +39,3 @@ class CustomStatusCell extends StatelessWidget {
     );
   }
 }
-

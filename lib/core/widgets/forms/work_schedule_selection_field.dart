@@ -73,10 +73,10 @@ class WorkScheduleSelectionField extends StatelessWidget {
             }
           },
           child: Container(
-            height: 40.h,
+            height: 48.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
-              color: AppColors.inputBg,
+              color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: AppColors.borderGrey),
             ),

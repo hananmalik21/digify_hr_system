@@ -1,10 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -18,9 +16,6 @@ class PublicHolidaysActionBar extends StatelessWidget {
   final ValueChanged<String?> onYearChanged;
   final ValueChanged<String?> onTypeChanged;
   final ValueChanged<String> onSearchChanged;
-  final VoidCallback onAddHoliday;
-  final VoidCallback onImport;
-  final VoidCallback onExport;
 
   const PublicHolidaysActionBar({
     super.key,
@@ -32,9 +27,6 @@ class PublicHolidaysActionBar extends StatelessWidget {
     required this.onYearChanged,
     required this.onTypeChanged,
     required this.onSearchChanged,
-    required this.onAddHoliday,
-    required this.onImport,
-    required this.onExport,
   });
 
   @override
@@ -82,19 +74,6 @@ class PublicHolidaysActionBar extends StatelessWidget {
                   itemLabelBuilder: (type) => type,
                   onChanged: onTypeChanged,
                 ),
-              ),
-              AppButton(label: 'Add Holiday', onPressed: onAddHoliday, svgPath: Assets.icons.addDivisionIcon.path),
-              AppButton(
-                label: 'Import',
-                onPressed: onImport,
-                svgPath: Assets.icons.bulkUploadIconFigma.path,
-                backgroundColor: AppColors.shiftUploadButton,
-              ),
-              AppButton(
-                label: 'Export',
-                onPressed: onExport,
-                svgPath: Assets.icons.downloadIcon.path,
-                backgroundColor: AppColors.shiftExportButton,
               ),
             ],
           ),

@@ -203,6 +203,15 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
     if (_currentEnterpriseId == null || state.isLoadingMore || !state.hasNextPage) {
       return;
     }
+    await goToPage(state.currentPage + 1);
+  }
+
+  Future<void> goToPage(int page) async {
+    if (_currentEnterpriseId == null ||
+        state.isLoadingMore ||
+        (page < 1 || page > state.totalPages && state.totalPages > 0)) {
+      return;
+    }
 
     final loadingState = handleLoadingState(state, false);
     state = WorkScheduleState(
@@ -220,8 +229,7 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
     );
 
     try {
-      final nextPage = state.currentPage + 1;
-      final result = await _getWorkSchedulesUseCase(page: nextPage, pageSize: state.pageSize);
+      final result = await _getWorkSchedulesUseCase(page: page, pageSize: state.pageSize);
 
       final newState = handleSuccessState(
         currentState: state,

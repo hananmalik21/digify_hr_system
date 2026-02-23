@@ -263,6 +263,69 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
     await loadFirstPage();
   }
 
+  Future<void> goToPage(int page) async {
+    if (state.isLoading || page == state.currentPage || page < 1 || page > state.totalPages) return;
+
+    final loadingState = handleLoadingState(state, false);
+    state = WorkPatternState(
+      items: loadingState.items,
+      isLoading: loadingState.isLoading,
+      isLoadingMore: loadingState.isLoadingMore,
+      hasError: loadingState.hasError,
+      errorMessage: loadingState.errorMessage,
+      currentPage: loadingState.currentPage,
+      pageSize: loadingState.pageSize,
+      totalItems: loadingState.totalItems,
+      totalPages: loadingState.totalPages,
+      hasNextPage: loadingState.hasNextPage,
+      hasPreviousPage: loadingState.hasPreviousPage,
+    );
+
+    try {
+      final result = await _getWorkPatternsUseCase(page: page, pageSize: state.pageSize);
+
+      final newState = handleSuccessState(
+        currentState: state,
+        newItems: result.workPatterns,
+        currentPage: result.pagination.currentPage,
+        pageSize: result.pagination.pageSize,
+        totalItems: result.pagination.totalItems,
+        totalPages: result.pagination.totalPages,
+        hasNextPage: result.pagination.hasNext,
+        hasPreviousPage: result.pagination.hasPrevious,
+        isFirstPage: true,
+      );
+      state = WorkPatternState(
+        items: newState.items,
+        isLoading: newState.isLoading,
+        isLoadingMore: newState.isLoadingMore,
+        hasError: newState.hasError,
+        errorMessage: newState.errorMessage,
+        currentPage: newState.currentPage,
+        pageSize: newState.pageSize,
+        totalItems: newState.totalItems,
+        totalPages: newState.totalPages,
+        hasNextPage: newState.hasNextPage,
+        hasPreviousPage: newState.hasPreviousPage,
+      );
+    } catch (e) {
+      final errorState = handleErrorState(state, e.toString());
+      state = WorkPatternState(
+        items: errorState.items,
+        isLoading: errorState.isLoading,
+        isLoadingMore: errorState.isLoadingMore,
+        hasError: errorState.hasError,
+        errorMessage: errorState.errorMessage,
+        currentPage: errorState.currentPage,
+        pageSize: errorState.pageSize,
+        totalItems: errorState.totalItems,
+        totalPages: errorState.totalPages,
+        hasNextPage: errorState.hasNextPage,
+        hasPreviousPage: errorState.hasPreviousPage,
+      );
+    }
+  }
+
   @override
   void reset() {
     state = const WorkPatternState();

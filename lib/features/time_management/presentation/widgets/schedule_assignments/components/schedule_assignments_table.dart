@@ -3,6 +3,8 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table_skeleton.dart';
@@ -23,6 +25,12 @@ class ScheduleAssignmentsTable extends ConsumerWidget {
   final bool hasError;
   final String? errorMessage;
   final VoidCallback? onRetry;
+  final PaginationInfo? paginationInfo;
+  final int currentPage;
+  final int pageSize;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final bool paginationIsLoading;
 
   const ScheduleAssignmentsTable({
     super.key,
@@ -36,6 +44,12 @@ class ScheduleAssignmentsTable extends ConsumerWidget {
     this.hasError = false,
     this.errorMessage,
     this.onRetry,
+    this.paginationInfo,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.onPrevious,
+    this.onNext,
+    this.paginationIsLoading = false,
   });
 
   @override
@@ -43,85 +57,108 @@ class ScheduleAssignmentsTable extends ConsumerWidget {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
 
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: AppShadows.primaryShadow,
-        ),
-        child: ScrollableSingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Skeletonizer(
-            enabled: isLoading && assignments.isEmpty,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ScheduleAssignmentTableHeader(isDark: isDark, localizations: localizations),
-                if (isLoading && assignments.isEmpty)
-                  ScheduleAssignmentsTableSkeleton(itemCount: 5)
-                else if (hasError && assignments.isEmpty)
-                  _buildErrorState(isDark, localizations)
-                else if (assignments.isEmpty && !isLoading)
-                  _buildEmptyState(isDark, localizations)
-                else ...[
-                  ...assignments.map(
-                    (assignment) => ScheduleAssignmentTableRow(
-                      data: assignment,
-                      onView: onView != null ? () => onView!(assignment) : null,
-                      onEdit: onEdit != null ? () => onEdit!(assignment) : null,
-                      onDelete: onDelete != null ? () => onDelete!(assignment) : null,
-                      isDeleting: deletingAssignmentId == assignment.scheduleAssignmentId,
-                    ),
-                  ),
-                  if (isLoadingMore) _buildLoadingMoreState(),
-                ],
-              ],
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: AppShadows.primaryShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Skeletonizer(
+                enabled: isLoading && assignments.isEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ScheduleAssignmentTableHeader(isDark: isDark, localizations: localizations),
+                    if (isLoading && assignments.isEmpty)
+                      const ScheduleAssignmentsTableSkeleton(itemCount: 5)
+                    else if (hasError && assignments.isEmpty)
+                      _buildErrorState(isDark)
+                    else if (assignments.isEmpty && !isLoading)
+                      _buildEmptyState(isDark, localizations)
+                    else ...[
+                      ...assignments.map(
+                        (assignment) => ScheduleAssignmentTableRow(
+                          data: assignment,
+                          onView: onView != null ? () => onView!(assignment) : null,
+                          onEdit: onEdit != null ? () => onEdit!(assignment) : null,
+                          onDelete: onDelete != null ? () => onDelete!(assignment) : null,
+                          isDeleting: deletingAssignmentId == assignment.scheduleAssignmentId,
+                        ),
+                      ),
+                      if (isLoadingMore) _buildLoadingMoreState(),
+                    ],
+                  ],
+                ),
+              ),
             ),
+          ),
+          if (paginationInfo != null) ...[
+            PaginationControls.fromPaginationInfo(
+              paginationInfo: paginationInfo!,
+              currentPage: currentPage,
+              pageSize: pageSize,
+              onPrevious: onPrevious,
+              onNext: onNext,
+              isLoading: paginationIsLoading || isLoading,
+              style: PaginationStyle.simple,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(bool isDark) {
+    return SizedBox(
+      width: 900.w,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 48.h),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                errorMessage ?? 'Something went wrong',
+                style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
+                textAlign: TextAlign.center,
+              ),
+              if (onRetry != null) ...[Gap(16.h), ElevatedButton(onPressed: onRetry, child: const Text('Retry'))],
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildErrorState(bool isDark, AppLocalizations localizations) {
-    return Container(
-      width: 1200.w,
-      padding: EdgeInsets.symmetric(vertical: 48.h),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              errorMessage ?? 'Something went wrong',
-              style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
-              textAlign: TextAlign.center,
-            ),
-            if (onRetry != null) ...[Gap(16.h), ElevatedButton(onPressed: onRetry, child: const Text('Retry'))],
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildEmptyState(bool isDark, AppLocalizations localizations) {
-    return Container(
-      width: 1200.w,
-      padding: EdgeInsets.symmetric(vertical: 48.h),
-      child: Center(
-        child: Text(
-          localizations.noResultsFound,
-          style: TextStyle(fontSize: 16.sp, color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted),
+    return SizedBox(
+      width: 900.w,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 48.h),
+        child: Center(
+          child: Text(
+            localizations.noResultsFound,
+            style: TextStyle(fontSize: 16.sp, color: AppColors.textMuted),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildLoadingMoreState() {
-    return Container(
-      width: 1200.w,
-      padding: EdgeInsets.symmetric(vertical: 16.h),
-      child: const Center(child: CircularProgressIndicator()),
+    return SizedBox(
+      width: 900.w,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        child: const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

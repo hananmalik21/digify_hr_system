@@ -1,13 +1,14 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/features/time_management/data/config/work_patterns_table_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_action_buttons.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_type_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkPatternTableRow extends StatelessWidget {
   final WorkPattern workPattern;
@@ -52,7 +53,7 @@ class WorkPatternTableRow extends StatelessWidget {
                     ),
                   ),
                   if (workPattern.patternNameAr.isNotEmpty) ...[
-                    SizedBox(height: 2.h),
+                    Gap(2.h),
                     Text(
                       workPattern.patternNameAr,
                       textDirection: TextDirection.rtl,
@@ -66,7 +67,14 @@ class WorkPatternTableRow extends StatelessWidget {
               WorkPatternsTableConfig.nameWidth.w,
             ),
           if (WorkPatternsTableConfig.showType)
-            _buildDataCell(WorkPatternTypeBadge(type: workPattern.patternType), WorkPatternsTableConfig.typeWidth.w),
+            _buildDataCell(
+              DigifySquareCapsule(
+                label: workPattern.patternType,
+                backgroundColor: isDark ? AppColors.workPatternBadgeBgDark : AppColors.workPatternBadgeBgLight,
+                textColor: isDark ? AppColors.workPatternBadgeTextDark : AppColors.workPatternBadgeTextLight,
+              ),
+              WorkPatternsTableConfig.typeWidth.w,
+            ),
           if (WorkPatternsTableConfig.showWorkingDays)
             _buildDataCell(
               Text(
@@ -99,11 +107,7 @@ class WorkPatternTableRow extends StatelessWidget {
             ),
           if (WorkPatternsTableConfig.showStatus)
             _buildDataCell(
-              CustomStatusCell(
-                isActive: workPattern.status == PositionStatus.active,
-                activeLabel: 'ACTIVE',
-                inactiveLabel: 'INACTIVE',
-              ),
+              ShiftStatusBadge(isActive: workPattern.status == PositionStatus.active),
               WorkPatternsTableConfig.statusWidth.w,
             ),
           if (WorkPatternsTableConfig.showActions)

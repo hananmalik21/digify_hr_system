@@ -8,6 +8,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/public_h
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ViewHolidayDialog {
@@ -34,7 +35,7 @@ class _ViewHolidayDialogContent extends StatelessWidget {
     return AppDialog(
       title: 'Holiday Details',
       width: 672.w,
-      onClose: () => Navigator.of(context).pop(),
+      onClose: () => context.pop(),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

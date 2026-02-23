@@ -6,14 +6,14 @@ class ScheduleAssignmentsTableConfig {
   static const bool showStartDate = true;
   static const bool showEndDate = true;
   static const bool showStatus = true;
-  static const bool showAssignedBy = false;
+  static const bool showAssignedBy = true;
   static const bool showActions = true;
 
-  static const double assignedToWidth = 274.86;
-  static const double scheduleWidth = 297.46;
-  static const double startDateWidth = 139.55;
-  static const double endDateWidth = 136.6;
-  static const double statusWidth = 117.47;
-  static const double assignedByWidth = 197.22;
-  static const double actionsWidth = 150.0;
+  static const double assignedToWidth = 250.0;
+  static const double scheduleWidth = 320.0;
+  static const double startDateWidth = 160.0;
+  static const double endDateWidth = 160.0;
+  static const double statusWidth = 140.0;
+  static const double assignedByWidth = 220.0;
+  static const double actionsWidth = 180.0;
 }

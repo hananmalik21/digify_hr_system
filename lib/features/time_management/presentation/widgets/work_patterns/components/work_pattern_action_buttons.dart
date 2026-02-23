@@ -22,11 +22,9 @@ class WorkPatternActionButtons extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (onView != null)
-          DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: onView, width: 16, height: 16),
+        if (onView != null) DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: onView),
         if (onView != null && (onEdit != null || onDelete != null)) SizedBox(width: 8.w),
-        if (onEdit != null)
-          DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit, width: 16, height: 16),
+        if (onEdit != null) DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit),
         if (onEdit != null && onDelete != null) SizedBox(width: 8.w),
         // Copy option - commented out for now
         // if (onCopy != null)
@@ -37,8 +35,7 @@ class WorkPatternActionButtons extends StatelessWidget {
         //     height: 16,
         //   ),
         // if (onCopy != null && onDelete != null) SizedBox(width: 8.w),
-        if (onDelete != null)
-          DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: onDelete, width: 16, height: 16),
+        if (onDelete != null) DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: onDelete),
       ],
     );
   }

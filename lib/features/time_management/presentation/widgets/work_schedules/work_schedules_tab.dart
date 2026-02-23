@@ -1,16 +1,13 @@
-import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:gap/gap.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list_skeleton.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/create_work_schedule_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/update_work_schedule_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/dialogs/view_work_schedule_dialog.dart';
 import 'package:flutter/material.dart';
@@ -24,39 +21,7 @@ class WorkSchedulesTab extends ConsumerStatefulWidget {
   ConsumerState<WorkSchedulesTab> createState() => _WorkSchedulesTabState();
 }
 
-class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with ScrollPaginationMixin {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  ScrollController? get scrollController => _scrollController;
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (enterpriseId == null) return;
-
-    final state = ref.read(workSchedulesNotifierProvider(enterpriseId));
-    if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).loadNextPage();
-    }
-  }
-
-  void _handleCreateSchedule() {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (enterpriseId == null) return;
-    CreateWorkScheduleDialog.show(context, enterpriseId);
-  }
-
-  void _handleUpload() {}
-
-  void _handleExport() {}
-
+class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
   void _handleViewDetails(WorkSchedule schedule) {
     ViewWorkScheduleDialog.show(context, schedule: schedule);
   }
@@ -129,15 +94,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: [
-        WorkScheduleActionBar(
-          onCreateSchedule: _handleCreateSchedule,
-          onUpload: _handleUpload,
-          onExport: _handleExport,
-        ),
-        Gap(24.h),
-        _buildContent(workSchedulesState),
-      ],
+      children: [Gap(24.h), _buildContent(workSchedulesState)],
     );
   }
 
@@ -175,8 +132,24 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
       );
     }
 
+    final paginationInfo = workSchedulesState.totalPages > 0
+        ? PaginationInfo(
+            currentPage: workSchedulesState.currentPage,
+            totalPages: workSchedulesState.totalPages,
+            totalItems: workSchedulesState.totalItems,
+            pageSize: workSchedulesState.pageSize,
+            hasNext: workSchedulesState.hasNextPage,
+            hasPrevious: workSchedulesState.hasPreviousPage,
+          )
+        : null;
+
+    final notifier = ref.read(
+      timeManagementEnterpriseIdProvider.select((id) {
+        return id != null ? ref.read(workSchedulesNotifierProvider(id).notifier) : null;
+      }),
+    );
+
     return SingleChildScrollView(
-      controller: _scrollController,
       child: Column(
         children: [
           WorkSchedulesList(
@@ -194,12 +167,17 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> with Scroll
               final schedule = workSchedulesState.items.firstWhere((s) => s.workScheduleId == item.workScheduleId);
               _handleDelete(schedule);
             },
+            paginationInfo: paginationInfo,
+            currentPage: workSchedulesState.currentPage,
+            pageSize: workSchedulesState.pageSize,
+            onPrevious: workSchedulesState.hasPreviousPage && notifier != null
+                ? () => notifier.goToPage(workSchedulesState.currentPage - 1)
+                : null,
+            onNext: workSchedulesState.hasNextPage && notifier != null
+                ? () => notifier.goToPage(workSchedulesState.currentPage + 1)
+                : null,
+            paginationIsLoading: workSchedulesState.isLoading || workSchedulesState.isLoadingMore,
           ),
-          if (workSchedulesState.isLoadingMore)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.h),
-              child: const Center(child: AppLoadingIndicator(type: LoadingType.threeBounce, size: 20)),
-            ),
         ],
       ),
     );

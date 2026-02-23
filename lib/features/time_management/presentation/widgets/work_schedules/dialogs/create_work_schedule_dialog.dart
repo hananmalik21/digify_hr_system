@@ -35,8 +35,6 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
   final _scheduleCodeController = TextEditingController();
   final _scheduleNameEnController = TextEditingController();
   final _scheduleNameArController = TextEditingController();
-  final _effectiveStartDateController = TextEditingController();
-  final _effectiveEndDateController = TextEditingController();
 
   @override
   void initState() {
@@ -53,43 +51,7 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
     _scheduleCodeController.dispose();
     _scheduleNameEnController.dispose();
     _scheduleNameArController.dispose();
-    _effectiveStartDateController.dispose();
-    _effectiveEndDateController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(TextEditingController controller, {DateTime? initialDate}) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.cardBackground,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
-      controller.text = formattedDate;
-
-      final notifier = ref.read(workScheduleCreateNotifierProvider(widget.enterpriseId).notifier);
-      if (controller == _effectiveStartDateController) {
-        notifier.setEffectiveStartDate(formattedDate);
-      } else if (controller == _effectiveEndDateController) {
-        notifier.setEffectiveEndDate(formattedDate);
-      }
-    }
   }
 
   Future<void> _handleCreate() async {
@@ -138,8 +100,8 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
                 scheduleCodeController: _scheduleCodeController,
                 scheduleNameEnController: _scheduleNameEnController,
                 scheduleNameArController: _scheduleNameArController,
-                effectiveStartDateController: _effectiveStartDateController,
-                effectiveEndDateController: _effectiveEndDateController,
+                initialStartDate: null,
+                initialEndDate: null,
                 selectedWorkPattern: createState.selectedWorkPattern,
                 enterpriseId: widget.enterpriseId,
                 selectedStatus: createState.selectedStatus,
@@ -158,8 +120,12 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
                 onStatusChanged: (value) {
                   notifier.setSelectedStatus(value);
                 },
-                onStartDateTap: () => _selectDate(_effectiveStartDateController),
-                onEndDateTap: () => _selectDate(_effectiveEndDateController),
+                onStartDateSelected: (date) {
+                  notifier.setEffectiveStartDate(DateFormat('yyyy-MM-dd').format(date));
+                },
+                onEndDateSelected: (date) {
+                  notifier.setEffectiveEndDate(DateFormat('yyyy-MM-dd').format(date));
+                },
               ),
               Gap(24.h),
               WeeklyScheduleSection(
@@ -185,15 +151,10 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
         ),
       ),
       actions: [
-        AppButton.outline(
-          label: 'Cancel',
-          width: 100.w,
-          onPressed: createState.isCreating ? null : () => context.pop(),
-        ),
+        AppButton.outline(label: 'Cancel', onPressed: createState.isCreating ? null : () => context.pop()),
         Gap(12.w),
         AppButton(
           label: 'Save Changes',
-          width: 179.w,
           onPressed: createState.isCreating ? null : _handleCreate,
           isLoading: createState.isCreating,
           svgPath: Assets.icons.saveIcon.path,

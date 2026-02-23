@@ -12,13 +12,28 @@ class ViewScheduleAssignmentDialogHeader extends StatelessWidget {
   final String? titleArabic;
   final String code;
 
-  const ViewScheduleAssignmentDialogHeader({super.key, required this.title, this.titleArabic, required this.code});
+  const ViewScheduleAssignmentDialogHeader({
+    super.key,
+    required this.title,
+    this.titleArabic,
+    required this.code,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final titleFontSize = ResponsiveHelper.getResponsiveFontSize(context, mobile: 13, tablet: 14, web: 15.6);
-    final subtitleFontSize = ResponsiveHelper.getResponsiveFontSize(context, mobile: 11, tablet: 12, web: 14);
+    final titleFontSize = ResponsiveHelper.getResponsiveFontSize(
+      context,
+      mobile: 13,
+      tablet: 14,
+      web: 15.6,
+    );
+    final subtitleFontSize = ResponsiveHelper.getResponsiveFontSize(
+      context,
+      mobile: 11,
+      tablet: 12,
+      web: 14,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +45,10 @@ class ViewScheduleAssignmentDialogHeader extends StatelessWidget {
             Container(
               width: 64.w,
               height: 64.h,
-              decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(14.r)),
+              decoration: BoxDecoration(
+                color: AppColors.jobRoleBg,
+                borderRadius: BorderRadius.circular(14.r),
+              ),
               alignment: Alignment.center,
               child: DigifyAsset(
                 assetPath: Assets.icons.timeManagement.scheduleAssignment.path,
@@ -50,7 +68,9 @@ class ViewScheduleAssignmentDialogHeader extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.titleMedium?.copyWith(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.dialogTitle,
                       fontSize: titleFontSize,
                     ),
                   ),
@@ -59,27 +79,45 @@ class ViewScheduleAssignmentDialogHeader extends StatelessWidget {
                     Text(
                       titleArabic!,
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondary,
                         fontSize: subtitleFontSize,
                       ),
                     ),
                     Gap(9.5.h),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(4.r)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.jobRoleBg,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
                       child: Text(
                         code.toUpperCase(),
-                        style: context.textTheme.labelMedium?.copyWith(color: AppColors.infoText),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: AppColors.infoText,
+                        ),
                       ),
                     ),
                   ] else ...[
                     Gap(9.5.h),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(4.r)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.jobRoleBg,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
                       child: Text(
                         code.toUpperCase(),
-                        style: context.textTheme.labelMedium?.copyWith(color: AppColors.infoText),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: AppColors.infoText,
+                        ),
                       ),
                     ),
                   ],

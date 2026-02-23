@@ -88,9 +88,8 @@ class OrgUnitTreeNodeWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                    DigifySquareCapsule(height: 20.h, label: node.orgUnitCode),
+                    DigifySquareCapsule(label: node.orgUnitCode),
                     DigifySquareCapsule(
-                      height: 20.h,
                       label: node.isActive ? localizations.active : localizations.inactive,
                       backgroundColor: node.isActive
                           ? (isDark ? AppColors.successBgDark : AppColors.shiftActiveStatusBg)

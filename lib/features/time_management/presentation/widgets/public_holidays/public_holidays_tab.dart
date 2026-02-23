@@ -2,8 +2,9 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
@@ -131,9 +132,6 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
               notifier.setSelectedType(_selectedType == PublicHolidaysConfig.defaultType ? null : _selectedType);
             },
             onSearchChanged: (query) => notifier.setSearchQuery(query),
-            onAddHoliday: () => CreateHolidayDialog.show(context),
-            onImport: () {},
-            onExport: () {},
           ),
           Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
           if (state.isLoading && state.holidays.isEmpty)
@@ -180,18 +178,26 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
                 ],
               ),
             ),
-          if (state.hasMore && !state.isLoadingMore)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: ElevatedButton(onPressed: () => notifier.loadNextPage(), child: const Text('Load More')),
+          Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+          if (state.totalPages > 0) ...[
+            PaginationControls.fromPaginationInfo(
+              paginationInfo: PaginationInfo(
+                currentPage: state.currentPage,
+                totalPages: state.totalPages,
+                totalItems: state.totalItems,
+                pageSize: state.pageSize,
+                hasNext: state.hasNextPage,
+                hasPrevious: state.hasPreviousPage,
               ),
-            )
-          else if (state.isLoadingMore)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 24.h),
-              child: const Center(child: AppLoadingIndicator(type: LoadingType.threeBounce, size: 20)),
+              currentPage: state.currentPage,
+              pageSize: state.pageSize,
+              onPrevious: state.hasPreviousPage ? () => notifier.goToPage(state.currentPage - 1) : null,
+              onNext: state.hasNextPage ? () => notifier.goToPage(state.currentPage + 1) : null,
+              isLoading: state.isLoadingMore || (state.isLoading && state.items.isNotEmpty),
+              style: PaginationStyle.simple,
             ),
+            Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
+          ],
         ],
       ),
     );

@@ -1,6 +1,9 @@
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedule_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkSchedulesList extends StatelessWidget {
   final List<WorkScheduleItem> schedules;
@@ -8,6 +11,12 @@ class WorkSchedulesList extends StatelessWidget {
   final Function(WorkScheduleItem) onEdit;
   final Function(WorkScheduleItem) onDelete;
   final Set<int> deletingScheduleIds;
+  final PaginationInfo? paginationInfo;
+  final int currentPage;
+  final int pageSize;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final bool paginationIsLoading;
 
   const WorkSchedulesList({
     super.key,
@@ -16,6 +25,12 @@ class WorkSchedulesList extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.deletingScheduleIds = const {},
+    this.paginationInfo,
+    required this.currentPage,
+    required this.pageSize,
+    this.onPrevious,
+    this.onNext,
+    this.paginationIsLoading = false,
   });
 
   @override
@@ -24,33 +39,57 @@ class WorkSchedulesList extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      children: schedules.asMap().entries.map((entry) {
-        final index = entry.key;
-        final schedule = entry.value;
-        return Column(
-          children: [
-            WorkScheduleCard(
-              title: schedule.title,
-              titleArabic: schedule.titleArabic,
-              year: schedule.year,
-              code: schedule.code,
-              isActive: schedule.isActive,
-              workPatternName: schedule.workPatternName,
-              assignmentMode: schedule.assignmentMode,
-              effectiveStartDate: schedule.effectiveStartDate,
-              effectiveEndDate: schedule.effectiveEndDate,
-              weeklySchedule: schedule.weeklySchedule,
-              onViewDetails: () => onViewDetails(schedule),
-              onEdit: () => onEdit(schedule),
-              onDelete: () => onDelete(schedule),
-              isDeleting: deletingScheduleIds.contains(schedule.workScheduleId),
-            ),
-            if (index < schedules.length - 1) SizedBox(height: 20.h),
-          ],
-        );
-      }).toList(),
-    );
+    final List<Widget> children = schedules
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+          final schedule = entry.value;
+          return Column(
+            children: [
+              WorkScheduleCard(
+                title: schedule.title,
+                titleArabic: schedule.titleArabic,
+                year: schedule.year,
+                code: schedule.code,
+                isActive: schedule.isActive,
+                workPatternName: schedule.workPatternName,
+                assignmentMode: schedule.assignmentMode,
+                effectiveStartDate: schedule.effectiveStartDate,
+                effectiveEndDate: schedule.effectiveEndDate,
+                weeklySchedule: schedule.weeklySchedule,
+                onViewDetails: () => onViewDetails(schedule),
+                onEdit: () => onEdit(schedule),
+                onDelete: () => onDelete(schedule),
+                isDeleting: deletingScheduleIds.contains(schedule.workScheduleId),
+              ),
+              if (index < schedules.length - 1) Gap(20.h),
+            ],
+          );
+        })
+        .cast<Widget>()
+        .toList();
+
+    if (paginationInfo != null) {
+      children.add(
+        Padding(
+          padding: EdgeInsets.only(top: 24.h),
+          child: PaginationControls(
+            currentPage: currentPage,
+            totalPages: paginationInfo!.totalPages,
+            totalItems: paginationInfo!.totalItems,
+            pageSize: pageSize,
+            hasNext: paginationInfo!.hasNext,
+            hasPrevious: paginationInfo!.hasPrevious,
+            onPrevious: onPrevious,
+            onNext: onNext,
+            isLoading: paginationIsLoading,
+          ),
+        ),
+      );
+    }
+
+    return Column(children: children.toList());
   }
 }
 

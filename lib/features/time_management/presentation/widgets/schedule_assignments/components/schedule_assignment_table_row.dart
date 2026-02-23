@@ -52,7 +52,10 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.w),
+          bottom: BorderSide(
+            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
+            width: 1.w,
+          ),
         ),
       ),
       child: Row(
@@ -66,14 +69,18 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
                   Text(
                     data.assignedToName,
                     style: context.textTheme.titleSmall?.copyWith(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary,
                     ),
                   ),
                   Gap(2.h),
                   Text(
                     data.assignedToCode,
                     style: context.textTheme.bodyMedium?.copyWith(
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -85,7 +92,9 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
               Text(
                 data.scheduleName,
                 style: context.textTheme.titleSmall?.copyWith(
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.textPrimary,
                 ),
               ),
               ScheduleAssignmentsTableConfig.scheduleWidth.w,
@@ -95,7 +104,9 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
               Text(
                 data.startDate,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
                 ),
               ),
               ScheduleAssignmentsTableConfig.startDateWidth.w,
@@ -105,19 +116,26 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
               Text(
                 data.endDate,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
                 ),
               ),
               ScheduleAssignmentsTableConfig.endDateWidth.w,
             ),
           if (ScheduleAssignmentsTableConfig.showStatus)
-            _buildDataCell(ShiftStatusBadge(isActive: data.isActive), ScheduleAssignmentsTableConfig.statusWidth.w),
+            _buildDataCell(
+              ShiftStatusBadge(isActive: data.isActive),
+              ScheduleAssignmentsTableConfig.statusWidth.w,
+            ),
           if (ScheduleAssignmentsTableConfig.showAssignedBy)
             _buildDataCell(
               Text(
                 data.assignedByName,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
                 ),
               ),
               ScheduleAssignmentsTableConfig.assignedByWidth.w,
@@ -141,7 +159,10 @@ class ScheduleAssignmentTableRow extends StatelessWidget {
     return Container(
       width: width,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 16.h),
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 24.w,
+        vertical: 16.h,
+      ),
       child: child,
     );
   }

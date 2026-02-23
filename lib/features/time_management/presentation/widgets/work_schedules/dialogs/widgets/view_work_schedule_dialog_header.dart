@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,26 +72,13 @@ class ViewWorkScheduleDialogHeader extends StatelessWidget {
                         fontSize: subtitleFontSize,
                       ),
                     ),
-                    Gap(9.5.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(4.r)),
-                      child: Text(
-                        code.toUpperCase(),
-                        style: context.textTheme.labelMedium?.copyWith(color: AppColors.infoText),
-                      ),
-                    ),
-                  ] else ...[
-                    Gap(9.5.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                      decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(4.r)),
-                      child: Text(
-                        code.toUpperCase(),
-                        style: context.textTheme.labelMedium?.copyWith(color: AppColors.infoText),
-                      ),
-                    ),
                   ],
+                  Gap(9.5.h),
+                  DigifySquareCapsule(
+                    label: code.toUpperCase(),
+                    backgroundColor: AppColors.jobRoleBg,
+                    textColor: AppColors.infoText,
+                  ),
                 ],
               ),
             ),

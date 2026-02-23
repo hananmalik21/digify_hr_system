@@ -74,7 +74,7 @@ class WorkPatternSelectionField extends ConsumerWidget {
             }
           },
           child: Container(
-            height: 40.h,
+            height: 48.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
               color: AppColors.cardBackground,

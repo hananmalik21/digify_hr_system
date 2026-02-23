@@ -12,6 +12,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 
+import 'package:go_router/go_router.dart';
+import 'package:gap/gap.dart';
+
 class ShiftSelectionDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
   final ShiftOverview? selectedShift;
@@ -118,7 +121,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
                 ),
                 child: Icon(Icons.access_time, color: AppColors.primary, size: 24.sp),
               ),
-              SizedBox(width: 12.w),
+              Gap(12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +130,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
                       'Select Shift',
                       style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     ),
-                    SizedBox(height: 2.h),
+                    Gap(2.h),
                     Text(
                       'Choose a shift from the list',
                       style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
@@ -136,7 +139,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
                 ),
               ),
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.close_rounded, size: 24.sp),
                 padding: EdgeInsets.all(8.w),
                 constraints: const BoxConstraints(),
@@ -147,7 +150,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SearchField(
             hintText: 'Search shifts...',
             onChanged: (value) {
@@ -189,7 +192,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: items.length + (isLoadingMore ? 1 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index == items.length) {
           return Center(
@@ -203,7 +206,7 @@ class _ShiftSelectionDialogState extends ConsumerState<ShiftSelectionDialog> {
         final shift = items[index];
         final isSelected = widget.selectedShift?.id == shift.id;
 
-        return ShiftListItem(shift: shift, isSelected: isSelected, onTap: () => Navigator.of(context).pop(shift));
+        return ShiftListItem(shift: shift, isSelected: isSelected, onTap: () => context.pop(shift));
       },
     );
   }

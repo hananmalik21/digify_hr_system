@@ -1,3 +1,4 @@
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
@@ -8,6 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_error_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
@@ -16,7 +18,11 @@ class WorkScheduleSelectionDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
   final int? selectedScheduleId;
 
-  const WorkScheduleSelectionDialog({super.key, required this.enterpriseId, this.selectedScheduleId});
+  const WorkScheduleSelectionDialog({
+    super.key,
+    required this.enterpriseId,
+    this.selectedScheduleId,
+  });
 
   static Future<WorkSchedule?> show({
     required BuildContext context,
@@ -26,16 +32,20 @@ class WorkScheduleSelectionDialog extends ConsumerStatefulWidget {
     return await showDialog<WorkSchedule>(
       context: context,
       barrierDismissible: false,
-      builder: (context) =>
-          WorkScheduleSelectionDialog(enterpriseId: enterpriseId, selectedScheduleId: selectedScheduleId),
+      builder: (context) => WorkScheduleSelectionDialog(
+        enterpriseId: enterpriseId,
+        selectedScheduleId: selectedScheduleId,
+      ),
     );
   }
 
   @override
-  ConsumerState<WorkScheduleSelectionDialog> createState() => _WorkScheduleSelectionDialogState();
+  ConsumerState<WorkScheduleSelectionDialog> createState() =>
+      _WorkScheduleSelectionDialogState();
 }
 
-class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelectionDialog> {
+class _WorkScheduleSelectionDialogState
+    extends ConsumerState<WorkScheduleSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -43,7 +53,9 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
     super.initState();
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final notifier = ref.read(workSchedulesNotifierProvider(widget.enterpriseId).notifier);
+      final notifier = ref.read(
+        workSchedulesNotifierProvider(widget.enterpriseId).notifier,
+      );
       notifier.setEnterpriseId(widget.enterpriseId);
       notifier.reset();
       await notifier.loadFirstPage();
@@ -58,12 +70,18 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
-      ref.read(workSchedulesNotifierProvider(widget.enterpriseId).notifier).loadNextPage();
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
+      ref
+          .read(workSchedulesNotifierProvider(widget.enterpriseId).notifier)
+          .loadNextPage();
     }
   }
 
-  List<WorkSchedule> _filterSchedules(List<WorkSchedule> schedules, String? searchQuery) {
+  List<WorkSchedule> _filterSchedules(
+    List<WorkSchedule> schedules,
+    String? searchQuery,
+  ) {
     if (searchQuery == null || searchQuery.isEmpty) {
       return schedules;
     }
@@ -77,8 +95,12 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
 
   @override
   Widget build(BuildContext context) {
-    final schedulesState = ref.watch(workSchedulesNotifierProvider(widget.enterpriseId));
-    final allActiveItems = schedulesState.items.where((s) => s.isActive).toList();
+    final schedulesState = ref.watch(
+      workSchedulesNotifierProvider(widget.enterpriseId),
+    );
+    final allActiveItems = schedulesState.items
+        .where((s) => s.isActive)
+        .toList();
     final items = _filterSchedules(allActiveItems, schedulesState.searchQuery);
     final isLoading = schedulesState.isLoading;
     final errorMessage = schedulesState.errorMessage;
@@ -88,17 +110,30 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       child: Dialog(
         backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         elevation: 8,
         child: Container(
           width: 550.w,
           constraints: BoxConstraints(maxHeight: 650.h),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.r),
+            color: Colors.white,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(context),
-              Flexible(child: _buildContent(context, items, isLoading, errorMessage, isLoadingMore)),
+              Flexible(
+                child: _buildContent(
+                  context,
+                  items,
+                  isLoading,
+                  errorMessage,
+                  isLoadingMore,
+                ),
+              ),
             ],
           ),
         ),
@@ -111,12 +146,23 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.primary.withValues(alpha: 0.05),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
-        border: Border(bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 1)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,47 +176,72 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(Icons.calendar_today, color: AppColors.primary, size: 24.sp),
+                child: Icon(
+                  Icons.calendar_today,
+                  color: AppColors.primary,
+                  size: 24.sp,
+                ),
               ),
-              SizedBox(width: 12.w),
+              Gap(12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Select Work Schedule',
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
-                    SizedBox(height: 2.h),
+                    Gap(2.h),
                     Text(
                       'Choose a work schedule from the list',
-                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               ),
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.close_rounded, size: 24.sp),
                 padding: EdgeInsets.all(8.w),
                 constraints: const BoxConstraints(),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SearchField(
             hintText: 'Search work schedules...',
             onChanged: (value) {
-              ref.read(workSchedulesNotifierProvider(widget.enterpriseId).notifier).search(value);
+              ref
+                  .read(
+                    workSchedulesNotifierProvider(widget.enterpriseId).notifier,
+                  )
+                  .search(value);
             },
             onClear: () {
-              ref.read(workSchedulesNotifierProvider(widget.enterpriseId).notifier).search('');
+              ref
+                  .read(
+                    workSchedulesNotifierProvider(widget.enterpriseId).notifier,
+                  )
+                  .search('');
             },
-            initialValue: ref.read(workSchedulesNotifierProvider(widget.enterpriseId)).searchQuery ?? '',
+            initialValue:
+                ref
+                    .read(workSchedulesNotifierProvider(widget.enterpriseId))
+                    .searchQuery ??
+                '',
           ),
         ],
       ),
@@ -191,19 +262,23 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
     if (error != null && items.isEmpty) {
       return OrgUnitSelectionErrorState(
         error: error,
-        onRetry: () => ref.read(workSchedulesNotifierProvider(widget.enterpriseId).notifier).refresh(),
+        onRetry: () => ref
+            .read(workSchedulesNotifierProvider(widget.enterpriseId).notifier)
+            .refresh(),
       );
     }
 
     if (items.isEmpty) {
-      return const TimeManagementEmptyStateWidget(message: 'No Work Schedules found');
+      return const TimeManagementEmptyStateWidget(
+        message: 'No Work Schedules found',
+      );
     }
 
     return ListView.separated(
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: items.length + (isLoadingMore ? 1 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index == items.length) {
           return Center(
@@ -220,7 +295,7 @@ class _WorkScheduleSelectionDialogState extends ConsumerState<WorkScheduleSelect
         return WorkScheduleListItem(
           schedule: schedule,
           isSelected: isSelected,
-          onTap: () => Navigator.of(context).pop(schedule),
+          onTap: () => context.pop(schedule),
         );
       },
     );

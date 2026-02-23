@@ -1,7 +1,7 @@
 class WorkPatternsTableConfig {
   WorkPatternsTableConfig._();
 
-  static const bool showCode = false;
+  static const bool showCode = true;
   static const bool showName = true;
   static const bool showType = true;
   static const bool showWorkingDays = true;
@@ -10,12 +10,12 @@ class WorkPatternsTableConfig {
   static const bool showStatus = true;
   static const bool showActions = true;
 
-  static const double codeWidth = 166.5;
-  static const double nameWidth = 200.42;
-  static const double typeWidth = 150.0;
-  static const double workingDaysWidth = 150.0;
-  static const double restDaysWidth = 150.0;
-  static const double hoursPerWeekWidth = 150.0;
-  static const double statusWidth = 146.07;
-  static const double actionsWidth = 150.0;
+  static const double codeWidth = 186.5;
+  static const double nameWidth = 240.42;
+  static const double typeWidth = 180.0;
+  static const double workingDaysWidth = 180.0;
+  static const double restDaysWidth = 180.0;
+  static const double hoursPerWeekWidth = 180.0;
+  static const double statusWidth = 170.0;
+  static const double actionsWidth = 180.0;
 }

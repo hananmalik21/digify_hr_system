@@ -1,65 +1,51 @@
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_action_bar.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_grid_skeleton.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_error_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/shift_details_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/update_shift_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// Widget for the main shifts content section
-class ShiftsContentWidget extends StatelessWidget {
-  final ValueChanged<String> onSearchChanged;
-  final ValueChanged<String?> onStatusChanged;
-  final ShiftState shiftsState;
+class ShiftsContentWidget extends ConsumerWidget {
   final int enterpriseId;
   final ValueChanged<ShiftOverview> onDelete;
 
-  const ShiftsContentWidget({
-    super.key,
-    required this.onSearchChanged,
-    required this.onStatusChanged,
-    required this.shiftsState,
-    required this.enterpriseId,
-    required this.onDelete,
-  });
+  const ShiftsContentWidget({super.key, required this.enterpriseId, required this.onDelete});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shiftsState = ref.watch(shiftsNotifierProvider(enterpriseId));
+    final notifier = ref.read(shiftsNotifierProvider(enterpriseId).notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Action Bar
-        ShiftActionBar(
-          onSearchChanged: onSearchChanged,
-          selectedStatus: shiftsState.statusString,
-          onStatusChanged: onStatusChanged,
-          onCreateShift: () => CreateShiftDialog.show(context, enterpriseId: enterpriseId),
-          onUpload: () {},
-          onExport: () {},
-        ),
-
-        // Spacing
+        ShiftActionBar(enterpriseId: enterpriseId),
         Gap(24.h),
-
-        // Shifts Grid
-        _buildShiftsGrid(context),
+        _buildContent(context, shiftsState, notifier),
       ],
     );
   }
 
-  Widget _buildShiftsGrid(BuildContext context) {
-    if (shiftsState.isLoading) {
+  Widget _buildContent(BuildContext context, ShiftState shiftsState, ShiftsNotifier notifier) {
+    if (shiftsState.isLoading && shiftsState.items.isEmpty) {
       return const ShiftsGridSkeleton();
     }
 
-    if (shiftsState.hasError) {
-      return ShiftsErrorWidget(shiftsState: shiftsState);
+    if (shiftsState.hasError && shiftsState.items.isEmpty) {
+      return DigifyErrorState(
+        message: shiftsState.errorMessage ?? 'Failed to load shifts',
+        onRetry: () => notifier.refresh(),
+      );
     }
 
     if (shiftsState.items.isEmpty) {
@@ -72,13 +58,37 @@ class ShiftsContentWidget extends StatelessWidget {
       );
     }
 
-    return ShiftsGrid(
-      shifts: shiftsState.items,
-      onView: (shift) => ShiftDetailsDialog.show(context, shift),
-      onEdit: (shift) => UpdateShiftDialog.show(context, shift, enterpriseId: enterpriseId),
-      onCopy: (shift) {},
-      onDelete: onDelete,
-      deletingShiftId: shiftsState.deletingShiftId,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ShiftsGrid(
+          shifts: shiftsState.items,
+          onView: (shift) => ShiftDetailsDialog.show(context, shift),
+          onEdit: (shift) => UpdateShiftDialog.show(context, shift, enterpriseId: enterpriseId),
+          onCopy: (shift) {},
+          onDelete: onDelete,
+          deletingShiftId: shiftsState.deletingShiftId,
+        ),
+        if (shiftsState.totalPages > 0) ...[
+          PaginationControls.fromPaginationInfo(
+            paginationInfo: PaginationInfo(
+              currentPage: shiftsState.currentPage,
+              totalPages: shiftsState.totalPages,
+              totalItems: shiftsState.totalItems,
+              pageSize: shiftsState.pageSize,
+              hasNext: shiftsState.hasNextPage,
+              hasPrevious: shiftsState.hasPreviousPage,
+            ),
+            currentPage: shiftsState.currentPage,
+            pageSize: shiftsState.pageSize,
+            onPrevious: shiftsState.hasPreviousPage ? () => notifier.goToPage(shiftsState.currentPage - 1) : null,
+            onNext: shiftsState.hasNextPage ? () => notifier.goToPage(shiftsState.currentPage + 1) : null,
+            isLoading: shiftsState.isLoading || shiftsState.isLoadingMore,
+            style: PaginationStyle.simple,
+          ),
+          Gap(24.h),
+        ],
+      ],
     );
   }
 }

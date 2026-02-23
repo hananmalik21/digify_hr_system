@@ -19,18 +19,6 @@ class ShiftsTab extends ConsumerStatefulWidget {
 }
 
 class _ShiftsTabState extends ConsumerState<ShiftsTab> {
-  void _onSearchChanged(String searchText) {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (enterpriseId == null) return;
-    ref.read(shiftsNotifierProvider(enterpriseId).notifier).search(searchText);
-  }
-
-  void _onStatusChanged(String? status) {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (status == null || enterpriseId == null) return;
-    ref.read(shiftsNotifierProvider(enterpriseId).notifier).setStatusFilterFromString(status);
-  }
-
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
     final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
     if (enterpriseId == null) return;
@@ -70,9 +58,6 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
   @override
   Widget build(BuildContext context) {
     final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
-    final shiftsState = effectiveEnterpriseId != null
-        ? ref.watch(shiftsNotifierProvider(effectiveEnterpriseId))
-        : const ShiftState();
 
     if (effectiveEnterpriseId == null) {
       return Padding(
@@ -85,12 +70,6 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
       );
     }
 
-    return ShiftsContentWidget(
-      onSearchChanged: _onSearchChanged,
-      onStatusChanged: _onStatusChanged,
-      shiftsState: shiftsState,
-      enterpriseId: effectiveEnterpriseId,
-      onDelete: (shift) => _handleDelete(context, shift),
-    );
+    return ShiftsContentWidget(enterpriseId: effectiveEnterpriseId, onDelete: (shift) => _handleDelete(context, shift));
   }
 }

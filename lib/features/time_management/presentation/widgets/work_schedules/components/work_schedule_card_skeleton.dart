@@ -1,9 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:gap/gap.dart';
 
 class WorkScheduleCardSkeleton extends StatelessWidget {
   const WorkScheduleCardSkeleton({super.key});
@@ -12,23 +14,16 @@ class WorkScheduleCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final padding = ResponsiveHelper.getCardPadding(context);
+    final skeletonColor = isDark ? null : Colors.grey[300];
 
     return Skeletonizer(
       enabled: true,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
-          boxShadow: [
-            BoxShadow(color: const Color(0xFF000000).withValues(alpha: 0.1), blurRadius: 3, offset: const Offset(0, 1)),
-            BoxShadow(
-              color: const Color(0xFF000000).withValues(alpha: 0.1),
-              blurRadius: 2,
-              offset: const Offset(0, 1),
-              spreadRadius: -1,
-            ),
-          ],
+          boxShadow: AppShadows.primaryShadow,
         ),
         child: Padding(
           padding: EdgeInsets.all(padding),
@@ -46,13 +41,13 @@ class WorkScheduleCardSkeleton extends StatelessWidget {
                         Container(
                           height: 18.h,
                           width: 200.w,
-                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                          decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                         ),
-                        SizedBox(height: 4.h),
+                        Gap(4.h),
                         Container(
                           height: 14.h,
                           width: 150.w,
-                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                          decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                         ),
                       ],
                     ),
@@ -60,44 +55,44 @@ class WorkScheduleCardSkeleton extends StatelessWidget {
                   Container(
                     height: 24.h,
                     width: 60.w,
-                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(12.r)),
+                    decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(12.r)),
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
+              Gap(16.h),
               // Content skeleton
               Row(
                 children: [
                   Expanded(
                     child: Container(
                       height: 60.h,
-                      decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                     ),
                   ),
-                  SizedBox(width: 16.w),
+                  Gap(16.w),
                   Expanded(
                     child: Container(
                       height: 60.h,
-                      decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                     ),
                   ),
-                  SizedBox(width: 16.w),
+                  Gap(16.w),
                   Expanded(
                     child: Container(
                       height: 60.h,
-                      decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
+              Gap(16.h),
               // Weekly schedule skeleton
               Container(
                 height: 14.h,
                 width: 120.w,
-                decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
               ),
-              SizedBox(height: 8.h),
+              Gap(8.h),
               Row(
                 children: List.generate(
                   7,
@@ -105,16 +100,16 @@ class WorkScheduleCardSkeleton extends StatelessWidget {
                     child: Container(
                       height: 52.h,
                       margin: EdgeInsets.only(right: index < 6 ? 8.w : 0),
-                      decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(4.r)),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 16.h),
+              Gap(16.h),
               // Actions skeleton
               Container(
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Color(0xFFE5E7EB))),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder)),
                 ),
                 padding: EdgeInsets.only(top: 17.h),
                 child: Row(
@@ -122,14 +117,14 @@ class WorkScheduleCardSkeleton extends StatelessWidget {
                     Expanded(
                       child: Container(
                         height: 36.h,
-                        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8.r)),
+                        decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(8.r)),
                       ),
                     ),
-                    SizedBox(width: 8.w),
+                    Gap(8.w),
                     Expanded(
                       child: Container(
                         height: 36.h,
-                        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8.r)),
+                        decoration: BoxDecoration(color: skeletonColor, borderRadius: BorderRadius.circular(8.r)),
                       ),
                     ),
                   ],

@@ -39,8 +39,6 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
   final _scheduleCodeController = TextEditingController();
   final _scheduleNameEnController = TextEditingController();
   final _scheduleNameArController = TextEditingController();
-  final _effectiveStartDateController = TextEditingController();
-  final _effectiveEndDateController = TextEditingController();
 
   @override
   void initState() {
@@ -59,8 +57,6 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
         _scheduleCodeController.text = widget.schedule.scheduleCode;
         _scheduleNameEnController.text = widget.schedule.scheduleNameEn;
         _scheduleNameArController.text = widget.schedule.scheduleNameAr;
-        _effectiveStartDateController.text = widget.schedule.formattedStartDate;
-        _effectiveEndDateController.text = widget.schedule.formattedEndDate;
       }
     });
   }
@@ -70,48 +66,7 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
     _scheduleCodeController.dispose();
     _scheduleNameEnController.dispose();
     _scheduleNameArController.dispose();
-    _effectiveStartDateController.dispose();
-    _effectiveEndDateController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(TextEditingController controller, {DateTime? initialDate}) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.cardBackground,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textPrimary,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(picked);
-      controller.text = formattedDate;
-
-      final notifier = ref.read(
-        workScheduleUpdateNotifierProvider((
-          enterpriseId: widget.enterpriseId,
-          scheduleId: widget.schedule.workScheduleId,
-        )).notifier,
-      );
-      if (controller == _effectiveStartDateController) {
-        notifier.setEffectiveStartDate(formattedDate);
-      } else if (controller == _effectiveEndDateController) {
-        notifier.setEffectiveEndDate(formattedDate);
-      }
-    }
   }
 
   Future<void> _handleUpdate() async {
@@ -182,8 +137,8 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
                 scheduleCodeController: _scheduleCodeController,
                 scheduleNameEnController: _scheduleNameEnController,
                 scheduleNameArController: _scheduleNameArController,
-                effectiveStartDateController: _effectiveStartDateController,
-                effectiveEndDateController: _effectiveEndDateController,
+                initialStartDate: widget.schedule.effectiveStartDate,
+                initialEndDate: widget.schedule.effectiveEndDate,
                 selectedWorkPattern: updateState.selectedWorkPattern,
                 enterpriseId: widget.enterpriseId,
                 selectedStatus: updateState.selectedStatus,
@@ -203,10 +158,12 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
                 onStatusChanged: (value) {
                   notifier.setSelectedStatus(value);
                 },
-                onStartDateTap: () =>
-                    _selectDate(_effectiveStartDateController, initialDate: widget.schedule.effectiveStartDate),
-                onEndDateTap: () =>
-                    _selectDate(_effectiveEndDateController, initialDate: widget.schedule.effectiveEndDate),
+                onStartDateSelected: (date) {
+                  notifier.setEffectiveStartDate(DateFormat('yyyy-MM-dd').format(date));
+                },
+                onEndDateSelected: (date) {
+                  notifier.setEffectiveEndDate(DateFormat('yyyy-MM-dd').format(date));
+                },
               ),
               Gap(24.h),
               WeeklyScheduleSection(
@@ -232,15 +189,10 @@ class _UpdateWorkScheduleDialogState extends ConsumerState<UpdateWorkScheduleDia
         ),
       ),
       actions: [
-        AppButton.outline(
-          label: 'Cancel',
-          width: 100.w,
-          onPressed: updateState.isUpdating ? null : () => context.pop(),
-        ),
+        AppButton.outline(label: 'Cancel', onPressed: updateState.isUpdating ? null : () => context.pop()),
         Gap(12.w),
         AppButton(
           label: 'Save Changes',
-          width: 179.w,
           onPressed: updateState.isUpdating ? null : _handleUpdate,
           isLoading: updateState.isUpdating,
           svgPath: Assets.icons.saveIcon.path,

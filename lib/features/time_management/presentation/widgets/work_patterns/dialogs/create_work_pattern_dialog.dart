@@ -283,15 +283,10 @@ class _CreateWorkPatternDialogState extends ConsumerState<CreateWorkPatternDialo
         ),
       ),
       actions: [
-        AppButton.outline(
-          label: 'Cancel',
-          width: 100.w,
-          onPressed: isCreating ? null : () => Navigator.of(context).pop(),
-        ),
+        AppButton.outline(label: 'Cancel', onPressed: isCreating ? null : () => Navigator.of(context).pop()),
         Gap(12.w),
         AppButton(
           label: 'Create Pattern',
-          width: 181.w,
           onPressed: isCreating ? null : _handleCreate,
           isLoading: isCreating,
           svgPath: Assets.icons.saveIcon.path,
