@@ -10,7 +10,7 @@ class MenuFeatureConfig {
     'businessUnit': false,
     'department': false,
     'section': false,
-    'reportingStructure': false,
+    'reportingStructure': true,
     'forfeitPolicy': false,
     'myLeaveBalance': false,
     'teamLeaveRisk': false,

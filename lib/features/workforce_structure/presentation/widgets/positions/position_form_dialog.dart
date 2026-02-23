@@ -163,7 +163,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       "budgeted_max_kd": double.tryParse(_formControllers['budgetedMax']!.text) ?? 0.0,
       "actual_avg_kd": double.tryParse(_formControllers['actualAverage']!.text) ?? 0.0,
       "last_update_login": "HR_ADMIN",
-      if (_selectedReportsToPosition != null) "reports_to_position_id": _selectedReportsToPosition!.id,
+      "reports_to_position_id": _selectedReportsToPosition?.id,
     };
 
     setState(() => _isSaving = true);

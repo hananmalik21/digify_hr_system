@@ -40,6 +40,12 @@ class WorkforceHeaderActions {
           svgPath: Assets.icons.addNewIconFigma.path,
           onPressed: () => CreateGradeDialog.show(context),
         );
+      case WorkforceTab.reportingStructure:
+        return AppButton.primary(
+          label: localizations.exportTable,
+          svgPath: Assets.icons.downloadIcon.path,
+          onPressed: () {},
+        );
       default:
         return null;
     }
