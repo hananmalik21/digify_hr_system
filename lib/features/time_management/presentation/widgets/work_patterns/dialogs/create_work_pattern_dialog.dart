@@ -185,17 +185,12 @@ class _CreateWorkPatternDialogState extends ConsumerState<CreateWorkPatternDialo
                   child: DigifyTextField(
                     controller: _patternNameArController,
                     labelText: 'Pattern Name (Arabic)',
-                    hintText: 'أيام',
-                    isRequired: true,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
+                    hintText: 'Enter pattern name in Arabic (Optional)',
+                    isRequired: false,
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Pattern name (Arabic) is required';
-                      }
                       return null;
                     },
-                    inputFormatters: [AppInputFormatters.nameAr],
+                    inputFormatters: [AppInputFormatters.nameAny],
                   ),
                 ),
                 Gap(24.w),

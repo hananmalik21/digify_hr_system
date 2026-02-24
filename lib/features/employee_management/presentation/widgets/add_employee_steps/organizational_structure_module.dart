@@ -174,22 +174,18 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
 
   void _ensureOrgStructureLoaded(int enterpriseId, dynamic orgState) {
     if (orgState?.error != null) _ensureLoadScheduledForEnterpriseId = null;
-    final needsLoad =
-        orgState?.isLoading != true &&
-        ((orgState?.allStructures.isEmpty ?? true) ||
-            (orgState?.orgStructure == null && (orgState?.allStructures.isNotEmpty ?? false)));
+    final bool hasAttemptedLoad = orgState?.hasAttemptedLoad ?? false;
+    final needsLoad = orgState?.isLoading != true && !hasAttemptedLoad;
+
     if (!needsLoad || _ensureLoadScheduledForEnterpriseId == enterpriseId) return;
     _ensureLoadScheduledForEnterpriseId = enterpriseId;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
       final currentState = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
-      if (currentState.isLoading) return;
-      if (currentState.allStructures.isEmpty) {
-        notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
-      } else if (currentState.orgStructure == null && currentState.allStructures.isNotEmpty) {
-        notifier.selectStructure(currentState.allStructures.first.structureId);
-      }
+      if (currentState.isLoading || currentState.hasAttemptedLoad) return;
+
+      notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
     });
   }
 }

@@ -70,36 +70,30 @@ class ComponentFormState {
   }
 
   bool get isValid {
-    return code.isNotEmpty &&
-        name.isNotEmpty &&
-        arabicName.isNotEmpty &&
-        type != null &&
-        errors.isEmpty;
+    return code.isNotEmpty && type != null && errors.isEmpty;
   }
 }
 
 /// StateNotifier for managing component form
 class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
-  ComponentFormNotifier({
-    ComponentValue? initialValue,
-    ComponentType? defaultType,
-  }) : super(
-         initialValue != null
-             ? ComponentFormState(
-                 mode: ComponentFormMode.edit,
-                 id: initialValue.id,
-                 code: initialValue.code,
-                 name: initialValue.name,
-                 arabicName: initialValue.arabicName,
-                 type: initialValue.type,
-                 parentId: initialValue.parentId,
-                 managerId: initialValue.managerId,
-                 location: initialValue.location,
-                 status: initialValue.status,
-                 description: initialValue.description,
-               )
-             : ComponentFormState(type: defaultType),
-       );
+  ComponentFormNotifier({ComponentValue? initialValue, ComponentType? defaultType})
+    : super(
+        initialValue != null
+            ? ComponentFormState(
+                mode: ComponentFormMode.edit,
+                id: initialValue.id,
+                code: initialValue.code,
+                name: initialValue.name,
+                arabicName: initialValue.arabicName,
+                type: initialValue.type,
+                parentId: initialValue.parentId,
+                managerId: initialValue.managerId,
+                location: initialValue.location,
+                status: initialValue.status,
+                description: initialValue.description,
+              )
+            : ComponentFormState(type: defaultType),
+      );
 
   /// Update field
   void updateField(String field, dynamic value) {
@@ -149,10 +143,6 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
       errors['name'] = 'Name is required';
     }
 
-    if (state.arabicName.isEmpty) {
-      errors['arabicName'] = 'Arabic name is required';
-    }
-
     if (state.type == null) {
       errors['type'] = 'Type is required';
     }
@@ -175,10 +165,7 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
       state = state.copyWith(isLoading: false);
       return true;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errors: {'general': e.toString()},
-      );
+      state = state.copyWith(isLoading: false, errors: {'general': e.toString()});
       return false;
     }
   }
@@ -190,7 +177,6 @@ class ComponentFormNotifier extends StateNotifier<ComponentFormState> {
 }
 
 /// Provider for component form (non-family for simplicity)
-final componentFormProvider =
-    StateNotifierProvider<ComponentFormNotifier, ComponentFormState>(
-      (ref) => ComponentFormNotifier(),
-    );
+final componentFormProvider = StateNotifierProvider<ComponentFormNotifier, ComponentFormState>(
+  (ref) => ComponentFormNotifier(),
+);

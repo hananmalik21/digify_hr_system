@@ -172,6 +172,7 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
       final requestData = {
         'tenant_id': _enterpriseId,
         'schedule_name_en': state.scheduleNameEn.trim(),
+        'schedule_name_ar': state.scheduleNameAr.trim(),
         'weekly_lines': weeklyLines,
       };
 

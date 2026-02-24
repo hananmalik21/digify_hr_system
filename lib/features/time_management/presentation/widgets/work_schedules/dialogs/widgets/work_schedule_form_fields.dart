@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'dart:ui' as ui;
 
 class WorkScheduleFormFields extends StatefulWidget {
   final TextEditingController scheduleCodeController;
@@ -108,18 +107,13 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
               child: DigifyTextField(
                 controller: widget.scheduleNameArController,
                 labelText: 'Schedule Name (Arabic)',
-                hintText: 'جدول الدوام القياسي',
-                isRequired: true,
-                textDirection: ui.TextDirection.rtl,
-                textAlign: TextAlign.right,
+                hintText: 'Enter schedule name in Arabic (Optional)',
+                isRequired: false,
                 onChanged: widget.onScheduleNameArChanged,
                 validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Schedule name (Arabic) is required';
-                  }
                   return null;
                 },
-                inputFormatters: [AppInputFormatters.nameAr],
+                inputFormatters: [AppInputFormatters.nameAny],
               ),
             ),
             Gap(24.w),

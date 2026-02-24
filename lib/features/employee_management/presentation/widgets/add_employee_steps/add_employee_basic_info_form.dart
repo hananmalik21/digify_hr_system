@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
@@ -161,24 +159,18 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
     return [
       DigifyTextField(
         labelText: l10n.firstNameArabic,
-        isRequired: true,
         prefixIcon: personIcon,
         hintText: l10n.hintFirstNameArabic,
-        textDirection: ui.TextDirection.rtl,
         initialValue: form.firstNameAr,
         onChanged: notifier.setFirstNameAr,
-        inputFormatters: FieldFormat.arabicOnlyFormatters,
       ),
       Gap(16.h),
       DigifyTextField(
         labelText: l10n.lastNameArabic,
         prefixIcon: personIcon,
         hintText: l10n.hintLastNameArabic,
-        textDirection: ui.TextDirection.rtl,
         initialValue: form.lastNameAr,
         onChanged: notifier.setLastNameAr,
-        inputFormatters: FieldFormat.arabicOnlyFormatters,
-        isRequired: true,
       ),
       Gap(16.h),
       DigifyTextField(
@@ -187,8 +179,6 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         hintText: l10n.hintMiddleNameArabic,
         initialValue: form.middleNameAr,
         onChanged: notifier.setMiddleNameAr,
-        textDirection: ui.TextDirection.rtl,
-        inputFormatters: FieldFormat.arabicOnlyFormatters,
       ),
       Gap(16.h),
       DigifyTextField(

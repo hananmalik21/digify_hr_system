@@ -7,12 +7,14 @@ class EnterpriseOrgStructureState {
   final OrgStructure? orgStructure;
   final List<OrgStructure> allStructures;
   final bool isLoading;
+  final bool hasAttemptedLoad;
   final String? error;
 
   const EnterpriseOrgStructureState({
     this.orgStructure,
     this.allStructures = const [],
     this.isLoading = false,
+    this.hasAttemptedLoad = false,
     this.error,
   });
 
@@ -20,12 +22,14 @@ class EnterpriseOrgStructureState {
     OrgStructure? orgStructure,
     List<OrgStructure>? allStructures,
     bool? isLoading,
+    bool? hasAttemptedLoad,
     String? error,
   }) {
     return EnterpriseOrgStructureState(
       orgStructure: orgStructure ?? this.orgStructure,
       allStructures: allStructures ?? this.allStructures,
       isLoading: isLoading ?? this.isLoading,
+      hasAttemptedLoad: hasAttemptedLoad ?? this.hasAttemptedLoad,
       error: error,
     );
   }
@@ -40,7 +44,7 @@ class EnterpriseOrgStructureNotifier extends StateNotifier<EnterpriseOrgStructur
 
   Future<void> fetchOrgStructureByEnterpriseId(int enterpriseId) async {
     if (state.isLoading) return;
-    if (_currentEnterpriseId == enterpriseId && state.allStructures.isNotEmpty) {
+    if (_currentEnterpriseId == enterpriseId && state.hasAttemptedLoad) {
       return;
     }
 
@@ -50,9 +54,9 @@ class EnterpriseOrgStructureNotifier extends StateNotifier<EnterpriseOrgStructur
     try {
       final structures = await getOrgStructuresByEnterpriseIdUseCase(enterpriseId);
 
-      state = state.copyWith(orgStructure: null, allStructures: structures, isLoading: false);
+      state = state.copyWith(orgStructure: null, allStructures: structures, isLoading: false, hasAttemptedLoad: true);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(isLoading: false, error: e.toString(), hasAttemptedLoad: true);
     }
   }
 

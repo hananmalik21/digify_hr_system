@@ -1,6 +1,4 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
@@ -110,12 +108,6 @@ class _EditEnterpriseStructureDialogState extends ConsumerState<EditEnterpriseSt
     return AppDialog(
       title: localizations.editEnterpriseStructureConfiguration,
       subtitle: localizations.defineOrganizationalHierarchy,
-      icon: DigifyAsset(
-        assetPath: 'assets/icons/edit_enterprise_icon.svg',
-        width: 20,
-        height: 20,
-        color: AppColors.buttonTextLight,
-      ),
       width: 900.w,
       onClose: () => context.pop(),
       content: EditFormBody(
