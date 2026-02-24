@@ -4013,4 +4013,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get encashmentOptionDescription =>
       'Consider approving encashment requests for employees who cannot take leave';
+
+  @override
+  String get overtimeManagment => 'Overtime Management';
+
+  @override
+  String get overtimeManagmentDescription =>
+      'Track and manage overtime hours and approvals';
+
+  @override
+  String get requestOvertime => 'Request Overtime';
 }

@@ -319,19 +319,56 @@ class SidebarConfig {
           ),
         ],
       ),
+
       SidebarItem(
-        id: 'attendance',
-        svgPath: Assets.icons.attendanceIcon.path,
-        labelKey: 'attendance',
-        route: '/attendance',
+        id: 'timeTrackingAttendance',
+        svgPath: Assets.icons.timeManagementMainIcon.path,
+        labelKey: 'timeTrackingAttendance',
+        children: [
+          SidebarItem(
+            id: 'attendance',
+            svgPath: Assets.icons.timeManagementMainIcon.path,
+            labelKey: 'attendance',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'timesheet',
+            svgPath: Assets.icons.attendanceIcon.path,
+            labelKey: 'timesheet',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'overtime',
+            svgPath: Assets.icons.attendanceIcon.path,
+            labelKey: 'overtime',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'overtimeConfiguration',
+            svgPath: Assets.icons.settingsIcon.path,
+            labelKey: 'overtimeConfiguration',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'geoLocations',
+            svgPath: Assets.icons.locationIcon.path,
+            labelKey: 'geoLocations',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'employeeLocations',
+            svgPath: Assets.icons.locationCardIcon.path,
+            labelKey: 'employeeLocations',
+            route: '/time-tracking-and-attendance',
+          ),
+        ],
       ),
       SidebarItem(
-        id: 'timesheet',
-        svgPath: Assets.icons.attendanceIcon.path,
-        labelKey: 'timesheet',
-        route: '/timesheet',
+        id: 'payroll',
+        svgPath: Assets.icons.payrollIcon.path,
+        labelKey: 'payroll',
+        route: '/payroll',
       ),
-      SidebarItem(id: 'payroll', svgPath: Assets.icons.payrollIcon.path, labelKey: 'payroll', route: '/payroll'),
       SidebarItem(
         id: 'compliance',
         svgPath: Assets.icons.complianceIcon.path,
@@ -344,7 +381,12 @@ class SidebarConfig {
         labelKey: 'eosCalculator',
         route: '/eos-calculator',
       ),
-      SidebarItem(id: 'reports', svgPath: Assets.icons.reportsIcon.path, labelKey: 'reports', route: '/reports'),
+      SidebarItem(
+        id: 'reports',
+        svgPath: Assets.icons.reportsIcon.path,
+        labelKey: 'reports',
+        route: '/reports',
+      ),
       SidebarItem(
         id: 'governmentForms',
         svgPath: Assets.icons.governmentFormsIcon.path,
@@ -502,10 +544,8 @@ class SidebarConfig {
         return localizations.forfeitReports;
       case 'leaveCalendar':
         return localizations.leaveCalendar;
-      case 'attendance':
-        return localizations.attendance;
-      case 'timesheet':
-        return 'Time Sheets';
+      case 'timeTrackingAttendance':
+        return 'Time Tracking & Attendance';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':

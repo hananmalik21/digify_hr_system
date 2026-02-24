@@ -54,7 +54,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       }
     }
 
-    if (match != null && match.children != null && match.children!.isNotEmpty) {
+    if (match != null && (match.children?.isNotEmpty ?? false)) {
       context.go(AppRoutes.dashboardModuleSelectionPath(btn.id));
     } else {
       context.go(btn.route);

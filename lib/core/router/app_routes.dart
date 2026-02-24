@@ -11,7 +11,8 @@ class AppRoutes {
   static const String dashboard = '/dashboard';
   static const String dashboardModuleSelection = '$dashboard/module-selection';
   static const String dashboardModuleSelectionParam = 'moduleId';
-  static String dashboardModuleSelectionPath(String moduleId) => '$dashboardModuleSelection/$moduleId';
+  static String dashboardModuleSelectionPath(String moduleId) =>
+      '$dashboardModuleSelection/$moduleId';
   static const String dashboardOverview = '$dashboard/overview';
   static const String dashboardAnalytics = '$dashboard/analytics';
   static const String dashboardQuickActions = '$dashboard/quick-actions';
@@ -25,12 +26,18 @@ class AppRoutes {
   // Enterprise Structure routes
   static const String enterpriseStructure = '/enterprise-structure';
   static const String enterpriseStructureManage = '$enterpriseStructure/manage';
-  static const String enterpriseStructureComponentValues = '$enterpriseStructure/component-values';
-  static const String enterpriseStructureCompany = '$enterpriseStructure/company';
-  static const String enterpriseStructureDivision = '$enterpriseStructure/division';
-  static const String enterpriseStructureBusinessUnit = '$enterpriseStructure/business-unit';
-  static const String enterpriseStructureDepartment = '$enterpriseStructure/department';
-  static const String enterpriseStructureSection = '$enterpriseStructure/section';
+  static const String enterpriseStructureComponentValues =
+      '$enterpriseStructure/component-values';
+  static const String enterpriseStructureCompany =
+      '$enterpriseStructure/company';
+  static const String enterpriseStructureDivision =
+      '$enterpriseStructure/division';
+  static const String enterpriseStructureBusinessUnit =
+      '$enterpriseStructure/business-unit';
+  static const String enterpriseStructureDepartment =
+      '$enterpriseStructure/department';
+  static const String enterpriseStructureSection =
+      '$enterpriseStructure/section';
 
   // Workforce Structure routes
   static const String workforceStructure = '/workforce-structure';
@@ -44,21 +51,31 @@ class AppRoutes {
   static const String employeesAdd = '$employees/add';
   static const String employeesActions = '$employees/actions';
   static const String employeesOrgStructure = '$employees/org-structure';
-  static const String employeesWorkforcePlanning = '$employees/workforce-planning';
+  static const String employeesWorkforcePlanning =
+      '$employees/workforce-planning';
   static const String employeesPositions = '$employees/positions';
   static const String employeesContracts = '$employees/contracts';
   static const String employeeDetail = '$employees/detail';
 
+  // Time Tracking and Attendance routes
+  static const String timeTrackingAndAttendance =
+      '/time-tracking-and-attendance';
+  static const String attendance = '$timeTrackingAndAttendance/attendance';
+  static const String timesheet = '$timeTrackingAndAttendance/timesheet';
+  static const String overtime = '$timeTrackingAndAttendance/overtime';
+
   // Other routes
   static const String leaveManagement = '/leave-management';
-  static const String leaveManagementLeaveRequests = '$leaveManagement/leave-requests';
-  static const String leaveManagementEmployeeLeaveHistorySegment = 'employee-leave-history';
+  static const String leaveManagementLeaveRequests =
+      '$leaveManagement/leave-requests';
+  static const String leaveManagementEmployeeLeaveHistorySegment =
+      'employee-leave-history';
   static const String leaveManagementEmployeeLeaveHistory =
       '$leaveManagement/$leaveManagementEmployeeLeaveHistorySegment';
-  static const String leaveManagementLeaveBalance = '$leaveManagement/leave-balance';
-  static const String leaveManagementMyLeaveBalance = '$leaveManagement/my-leave-balance';
-  static const String attendance = '/attendance';
-  static const String timesheet = '/timesheet';
+  static const String leaveManagementLeaveBalance =
+      '$leaveManagement/leave-balance';
+  static const String leaveManagementMyLeaveBalance =
+      '$leaveManagement/my-leave-balance';
   static const String payroll = '/payroll';
   static const String compliance = '/compliance';
   static const String eosCalculator = '/eos-calculator';

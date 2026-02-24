@@ -1323,5 +1323,8 @@
   "approvePendingRequests": "الموافقة على الطلبات المعلقة",
   "approvePendingRequestsDescription": "مراجعة والموافقة على طلبات الإجازة المعلقة لمساعدة الموظفين على استخدام رصيدهم",
   "encashmentOption": "خيار التحصيل",
-  "encashmentOptionDescription": "النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة"
+  "encashmentOptionDescription": "النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة",
+  "overtimeManagment": "إدارة الوقت الإضافي",
+  "overtimeManagmentDescription": "تتبع وإدارة ساعات العمل الإضافي والموافقات",
+  "requestOvertime": "طلب وقت إضافي"
 }
