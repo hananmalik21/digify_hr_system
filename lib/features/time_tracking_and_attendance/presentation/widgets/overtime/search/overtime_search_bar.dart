@@ -7,12 +7,7 @@ class OvertimeSearchBar extends ConsumerStatefulWidget {
   final bool isDark;
   final double? width;
 
-  const OvertimeSearchBar({
-    super.key,
-    required this.hintText,
-    required this.isDark,
-    this.width,
-  });
+  const OvertimeSearchBar({super.key, required this.hintText, required this.isDark, this.width});
 
   @override
   ConsumerState<OvertimeSearchBar> createState() => _OvertimeSearchBarState();
@@ -37,9 +32,7 @@ class _OvertimeSearchBarState extends ConsumerState<OvertimeSearchBar> {
   Widget build(BuildContext context) {
     final searchQuery = "";
 
-    if (searchQuery == null && _controller.text.isNotEmpty) {
-      _controller.clear();
-    } else if (searchQuery != null && _controller.text.isEmpty) {
+    if (_controller.text.isEmpty) {
       _controller.text = searchQuery;
     }
 
@@ -47,7 +40,7 @@ class _OvertimeSearchBarState extends ConsumerState<OvertimeSearchBar> {
       controller: _controller,
       hintText: widget.hintText,
       onSubmitted: (value) {
-        final query = value.trim();
+        value.trim();
       },
     );
   }

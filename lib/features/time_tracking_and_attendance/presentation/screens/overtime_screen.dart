@@ -30,9 +30,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
     final isDark = context.isDark;
 
     return Container(
-      color: isDark
-          ? AppColors.backgroundDark
-          : AppColors.tableHeaderBackground,
+      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
@@ -40,8 +38,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DigifyTabHeader(
-              title: localizations.overtimeManagment,
-              description: localizations.overtimeManagmentDescription,
+              title: 'Overtime',
               trailing: AppButton.primary(
                 label: localizations.requestOvertime,
                 svgPath: Assets.icons.addNewIconFigma.path,
@@ -55,15 +52,11 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
             Gap(24.h),
             Consumer(
               builder: (context, ref, child) {
-                final selectedEnterpriseId = ref.watch(
-                  workforceEnterpriseIdProvider,
-                );
+                final selectedEnterpriseId = ref.watch(workforceEnterpriseIdProvider);
                 return EnterpriseSelectorWidget(
                   selectedEnterpriseId: selectedEnterpriseId,
                   onEnterpriseChanged: (id) {
-                    ref
-                        .read(workforceSelectedEnterpriseProvider.notifier)
-                        .setEnterpriseId(id);
+                    ref.read(workforceSelectedEnterpriseProvider.notifier).setEnterpriseId(id);
                   },
                   subtitle: selectedEnterpriseId != null
                       ? 'Viewing data for selected enterprise'
@@ -72,10 +65,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
               },
             ),
             Gap(24.h),
-            OvertimeSearchAndActions(
-              localizations: localizations,
-              isDark: isDark,
-            ),
+            OvertimeSearchAndActions(localizations: localizations, isDark: isDark),
             Gap(24.h),
             OvertimeTable(
               localizations: localizations,
