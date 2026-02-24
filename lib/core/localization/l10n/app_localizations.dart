@@ -7771,6 +7771,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Consider approving encashment requests for employees who cannot take leave'**
   String get encashmentOptionDescription;
+
+  /// No description provided for @overtimeManagment.
+  ///
+  /// In en, this message translates to:
+  /// **'Overtime Management'**
+  String get overtimeManagment;
+
+  /// No description provided for @overtimeManagmentDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Track and manage overtime hours and approvals'**
+  String get overtimeManagmentDescription;
+
+  /// No description provided for @requestOvertime.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Overtime'**
+  String get requestOvertime;
 }
 
 class _AppLocalizationsDelegate

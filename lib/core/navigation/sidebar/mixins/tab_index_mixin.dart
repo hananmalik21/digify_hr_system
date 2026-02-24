@@ -99,4 +99,23 @@ mixin TabIndexMixin {
         return null;
     }
   }
+
+  int? getTimeTrackingAndAttendanceTabIndex(String itemId) {
+    switch (itemId) {
+      case 'attendance':
+        return 0;
+      case 'timesheet':
+        return 1;
+      case 'overtime':
+        return 2;
+      case 'overtimeConfiguration':
+        return 3;
+      case 'geoLocations':
+        return 4;
+      case 'employeeLocations':
+        return 5;
+      default:
+        return null;
+    }
+  }
 }

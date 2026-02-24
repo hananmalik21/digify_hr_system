@@ -75,11 +75,12 @@ List<DashboardButton> getDashboardButtons(AppLocalizations loc) {
       isMultiLine: true,
     ),
     DashboardButton(
-      id: 'attendance',
+      id: 'time-tracking-attendance',
       icon: Assets.icons.timeManagementMainIcon.path,
-      label: loc.attendance,
+      label: 'Time Tracking & Attendance',
+      isMultiLine: true,
       color: AppColors.dashAttendance,
-      route: '/attendance',
+      route: '/time-tracking-attendance',
     ),
     DashboardButton(
       id: 'payroll',
