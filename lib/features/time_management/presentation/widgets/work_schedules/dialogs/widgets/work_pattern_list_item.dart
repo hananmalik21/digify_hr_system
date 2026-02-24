@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkPatternListItem extends StatelessWidget {
   final WorkPattern workPattern;
@@ -40,7 +41,7 @@ class WorkPatternListItem extends StatelessWidget {
               ),
               child: Icon(Icons.schedule, color: isSelected ? Colors.white : AppColors.textSecondary, size: 20.sp),
             ),
-            SizedBox(width: 16.w),
+            Gap(16.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class WorkPatternListItem extends StatelessWidget {
                       color: isSelected ? AppColors.primary : AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  Gap(2.h),
                   Text(
                     workPattern.patternCode,
                     style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary.withValues(alpha: 0.7)),

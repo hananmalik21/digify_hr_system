@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/date_selection_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/work_schedule_selection_field.dart';
@@ -212,7 +211,6 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
           label: 'Assign Schedule',
           type: AppButtonType.primary,
           onPressed: isCreating ? null : _handleAssign,
-          width: null,
           svgPath: Assets.icons.saveIcon.path,
           isLoading: isCreating,
         ),
@@ -225,10 +223,10 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        DateSelectionField(
+        DigifyDateField(
           label: 'Effective Start Date',
           isRequired: true,
-          date: _effectiveStartDate,
+          initialDate: _effectiveStartDate,
           onDateSelected: (date) {
             setState(() {
               _effectiveStartDate = date;
@@ -238,10 +236,10 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
           lastDate: DateTime(2100),
         ),
         Gap(24.h),
-        DateSelectionField(
+        DigifyDateField(
           label: 'Effective End Date',
           isRequired: true,
-          date: _effectiveEndDate,
+          initialDate: _effectiveEndDate,
           onDateSelected: (date) {
             setState(() {
               _effectiveEndDate = date;
@@ -259,7 +257,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       label: 'Status',
       isRequired: true,
       hint: 'Select Status',
-      items: const ['Pending', 'Active', 'Inactive'],
+      items: const ['Active', 'Inactive'],
       itemLabelBuilder: (item) => item,
       value: _selectedStatus,
       onChanged: (value) {

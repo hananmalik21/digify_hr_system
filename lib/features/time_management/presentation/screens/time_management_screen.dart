@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_header_actions.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_config.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/core/widgets/page_header_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
@@ -12,7 +14,6 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/w
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/schedule_assignments_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/view_calendar/view_calendar_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/public_holidays_tab.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,21 +41,24 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
     final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final tabs = TimeManagementTab.values;
+    final currentTab = (currentTabIndex >= 0 && currentTabIndex < tabs.length)
+        ? tabs[currentTabIndex]
+        : TimeManagementTab.shifts;
+    final headerTitle = currentTab.label(localizations);
+    final Widget? headerTrailing = TimeManagementHeaderActions.getTrailingAction(context, currentTab);
 
     return Container(
       color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsetsDirectional.only(top: 15.h, start: 32.w, end: 32.w, bottom: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(top: 47.h, bottom: 24.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            PageHeaderWidget(
-              localizations: localizations,
-              title: localizations.timeManagement,
-              icon: Assets.icons.timeManagementMainIcon.path,
-            ),
+            DigifyTabHeader(title: headerTitle, trailing: headerTrailing),
             Gap(24.h),
             TimeManagementStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),

@@ -9,6 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,9 +20,7 @@ final gradeRemoteDataSourceProvider = Provider<GradeRemoteDataSource>((ref) {
 });
 
 final gradeRepositoryProvider = Provider<GradeRepository>((ref) {
-  return GradeRepositoryImpl(
-    remoteDataSource: ref.read(gradeRemoteDataSourceProvider),
-  );
+  return GradeRepositoryImpl(remoteDataSource: ref.read(gradeRemoteDataSourceProvider));
 });
 
 final getGradesUseCaseProvider = Provider<GetGradesUseCase>((ref) {
@@ -102,12 +101,8 @@ class GradeState extends PaginationState<Grade> {
       searchQuery: searchQuery ?? this.searchQuery,
       status: clearStatus ? null : (status ?? this.status),
       isCreating: isCreating ?? this.isCreating,
-      deletingGradeId: clearDeletingGradeId
-          ? null
-          : (deletingGradeId ?? this.deletingGradeId),
-      updatingGradeId: clearUpdatingGradeId
-          ? null
-          : (updatingGradeId ?? this.updatingGradeId),
+      deletingGradeId: clearDeletingGradeId ? null : (deletingGradeId ?? this.deletingGradeId),
+      updatingGradeId: clearUpdatingGradeId ? null : (updatingGradeId ?? this.updatingGradeId),
     );
   }
 }
@@ -121,12 +116,14 @@ class GradeNotifier extends StateNotifier<GradeState>
   final DeleteGradeUseCase _deleteGradeUseCase;
   final UpdateGradeUseCase _updateGradeUseCase;
   final _debouncer = Debouncer();
+  final int? tenantId;
 
   GradeNotifier(
     this._getGradesUseCase,
     this._createGradeUseCase,
     this._deleteGradeUseCase,
     this._updateGradeUseCase,
+    this.tenantId,
   ) : super(const GradeState());
 
   @override
@@ -140,6 +137,7 @@ class GradeNotifier extends StateNotifier<GradeState>
         page: 1,
         pageSize: state.pageSize,
         search: state.searchQuery,
+        tenantId: tenantId,
       );
 
       state =
@@ -172,6 +170,7 @@ class GradeNotifier extends StateNotifier<GradeState>
         page: nextPage,
         pageSize: state.pageSize,
         search: state.searchQuery,
+        tenantId: tenantId,
       );
 
       state =
@@ -185,6 +184,37 @@ class GradeNotifier extends StateNotifier<GradeState>
                 hasNextPage: response.meta.pagination.hasNext,
                 hasPreviousPage: response.meta.pagination.hasPrevious,
                 isFirstPage: false,
+              )
+              as GradeState;
+    } catch (e) {
+      state = handleErrorState(state, e.toString()) as GradeState;
+    }
+  }
+
+  Future<void> goToPage(int targetPage) async {
+    if (state.isLoading || state.currentPage == targetPage) return;
+
+    state = handleLoadingState(state, true) as GradeState;
+
+    try {
+      final response = await _getGradesUseCase.execute(
+        page: targetPage,
+        pageSize: state.pageSize,
+        search: state.searchQuery,
+        tenantId: tenantId,
+      );
+
+      state =
+          handleSuccessState(
+                currentState: state,
+                newItems: response.data,
+                currentPage: response.meta.pagination.page,
+                pageSize: response.meta.pagination.pageSize,
+                totalItems: response.meta.pagination.total,
+                totalPages: response.meta.pagination.totalPages,
+                hasNextPage: response.meta.pagination.hasNext,
+                hasPreviousPage: response.meta.pagination.hasPrevious,
+                isFirstPage: true, // Replace entire list
               )
               as GradeState;
     } catch (e) {
@@ -206,7 +236,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> createGrade(Grade grade) async {
     state = state.copyWith(isCreating: true);
     try {
-      final createdGrade = await _createGradeUseCase.execute(grade);
+      final createdGrade = await _createGradeUseCase.execute(grade, tenantId: tenantId);
       // Add the new grade to the beginning of the list
       state = state.copyWith(
         items: [createdGrade, ...state.items],
@@ -222,7 +252,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> deleteGrade(int gradeId) async {
     state = state.copyWith(deletingGradeId: gradeId);
     try {
-      await _deleteGradeUseCase.execute(gradeId);
+      await _deleteGradeUseCase.execute(gradeId, tenantId: tenantId);
       // Remove the grade from the list optimistically
       state = state.copyWith(
         items: state.items.where((g) => g.id != gradeId).toList(),
@@ -238,7 +268,7 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> updateGrade(int gradeId, Grade updatedGrade) async {
     state = state.copyWith(updatingGradeId: gradeId);
     try {
-      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade);
+      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade, tenantId: tenantId);
       // Update the grade in the list optimistically
       state = state.copyWith(
         items: state.items.map((g) => g.id == gradeId ? grade : g).toList(),
@@ -268,15 +298,17 @@ class GradeNotifier extends StateNotifier<GradeState>
 }
 
 // Provider for the notifier
-final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((
-  ref,
-) {
-  return GradeNotifier(
+final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((ref) {
+  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final notifier = GradeNotifier(
     ref.read(getGradesUseCaseProvider),
     ref.read(createGradeUseCaseProvider),
     ref.read(deleteGradeUseCaseProvider),
     ref.read(updateGradeUseCaseProvider),
+    tenantId,
   );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
 });
 
 // Convenience providers

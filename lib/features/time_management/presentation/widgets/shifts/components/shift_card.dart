@@ -41,9 +41,9 @@ class ShiftCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           ShiftCardContent(shift: shift, isDark: isDark),
-          const Spacer(),
           DigifyDivider(
             height: 1,
             color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,

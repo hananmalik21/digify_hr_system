@@ -14,12 +14,14 @@ class GetPositionsUseCase {
     int pageSize = 10,
     String? search,
     PositionStatus? status,
+    int? tenantId,
   }) async {
     return await repository.getPositions(
       page: page,
       pageSize: pageSize,
       search: search,
       status: status,
+      tenantId: tenantId,
     );
   }
 }

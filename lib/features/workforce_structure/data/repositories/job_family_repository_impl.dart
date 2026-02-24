@@ -9,16 +9,8 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
   const JobFamilyRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<JobFamilyResponse> getJobFamilies({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    return await remoteDataSource.getJobFamilies(
-      page: page,
-      pageSize: pageSize,
-      search: search,
-    );
+  Future<JobFamilyResponse> getJobFamilies({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    return await remoteDataSource.getJobFamilies(page: page, pageSize: pageSize, search: search, tenantId: tenantId);
   }
 
   @override
@@ -28,6 +20,7 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
     return await remoteDataSource.createJobFamily(
       code: code,
@@ -35,6 +28,7 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
       nameArabic: nameArabic,
       description: description,
       status: status,
+      tenantId: tenantId,
     );
   }
 
@@ -46,6 +40,7 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
     required String nameArabic,
     required String description,
     String status = 'ACTIVE',
+    int? tenantId,
   }) async {
     return await remoteDataSource.updateJobFamily(
       id: id,
@@ -54,11 +49,12 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
       nameArabic: nameArabic,
       description: description,
       status: status,
+      tenantId: tenantId,
     );
   }
 
   @override
-  Future<void> deleteJobFamily({required int id, bool hard = true}) async {
-    return await remoteDataSource.deleteJobFamily(id: id, hard: hard);
+  Future<void> deleteJobFamily({required int id, bool hard = true, int? tenantId}) async {
+    return await remoteDataSource.deleteJobFamily(id: id, hard: hard, tenantId: tenantId);
   }
 }

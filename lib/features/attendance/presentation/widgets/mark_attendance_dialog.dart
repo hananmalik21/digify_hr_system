@@ -62,22 +62,22 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
 
   void _syncControllersWithState() {
     final state = ref.read(markAttendanceFormProvider);
-    if (_employeeSearchController.text != (state.employeeName ?? '')) {
-      _employeeSearchController.text = state.employeeName ?? '';
-    }
-    if (_durationController.text !=
-        (state.scheduleDuration?.toString() ?? '8')) {
-      _durationController.text = state.scheduleDuration?.toString() ?? '8';
-    }
-    if (_overtimeController.text != (state.overtimeHours?.toString() ?? '0')) {
-      _overtimeController.text = state.overtimeHours?.toString() ?? '0';
-    }
-    if (_locationController.text != (state.location ?? 'Kuwait City HQ')) {
-      _locationController.text = state.location ?? 'Kuwait City HQ';
-    }
-    if (_notesController.text != (state.notes ?? '')) {
-      _notesController.text = state.notes ?? '';
-    }
+    _employeeSearchController.text = state.employeeName ?? '';
+    _durationController.text = state.scheduleDuration?.toString() ?? '8';
+    _overtimeController.text = state.overtimeHours?.toString() ?? '0';
+    _locationController.text = state.location ?? 'Kuwait City HQ';
+    _notesController.text = state.notes ?? '';
+    // if (_employeeSearchController.text != (state.employeeName ?? '')) {
+    // }
+    // if (_durationController.text !=
+    //     (state.scheduleDuration?.toString() ?? '8')) {
+    // }
+    // if (_overtimeController.text != (state.overtimeHours?.toString() ?? '0')) {
+    // }
+    // if (_locationController.text != (state.location ?? 'Kuwait City HQ')) {
+    // }
+    // if (_notesController.text != (state.notes ?? '')) {
+    // }
   }
 
   @override

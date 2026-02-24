@@ -6,14 +6,10 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/grad
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade_response.dart';
 
 abstract class GradeRemoteDataSource {
-  Future<GradeResponse> getGrades({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  });
+  Future<GradeResponse> getGrades({int page = 1, int pageSize = 10, String? search, int? tenantId});
   Future<Grade> createGrade(Map<String, dynamic> data);
   Future<Grade> updateGrade(int gradeId, Map<String, dynamic> data);
-  Future<void> deleteGrade(int gradeId);
+  Future<void> deleteGrade(int gradeId, {int? tenantId});
 }
 
 class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
@@ -22,24 +18,18 @@ class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
   const GradeRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<GradeResponse> getGrades({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    final queryParams = {
-      'page': page.toString(),
-      'page_size': pageSize.toString(),
-    };
+  Future<GradeResponse> getGrades({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    final queryParams = {'page': page.toString(), 'page_size': pageSize.toString()};
 
     if (search != null && search.isNotEmpty) {
       queryParams['search'] = search;
     }
 
-    final response = await apiClient.get(
-      ApiEndpoints.grades,
-      queryParameters: queryParams,
-    );
+    if (tenantId != null) {
+      queryParams['tenant_id'] = tenantId.toString();
+    }
+
+    final response = await apiClient.get(ApiEndpoints.grades, queryParameters: queryParams);
 
     return GradeResponseModel.fromJson(response).toEntity();
   }
@@ -48,28 +38,20 @@ class GradeRemoteDataSourceImpl implements GradeRemoteDataSource {
   Future<Grade> createGrade(Map<String, dynamic> data) async {
     final response = await apiClient.post(ApiEndpoints.grades, body: data);
 
-    return GradeModel.fromJson(
-      response['data'] as Map<String, dynamic>,
-    ).toEntity();
+    return GradeModel.fromJson(response['data'] as Map<String, dynamic>).toEntity();
   }
 
   @override
   Future<Grade> updateGrade(int gradeId, Map<String, dynamic> data) async {
-    final response = await apiClient.put(
-      '${ApiEndpoints.grades}/$gradeId',
-      body: data,
-    );
+    final response = await apiClient.put('${ApiEndpoints.grades}/$gradeId', body: data);
 
-    return GradeModel.fromJson(
-      response['data'] as Map<String, dynamic>,
-    ).toEntity();
+    return GradeModel.fromJson(response['data'] as Map<String, dynamic>).toEntity();
   }
 
   @override
-  Future<void> deleteGrade(int gradeId) async {
-    await apiClient.delete(
-      '${ApiEndpoints.grades}/$gradeId',
-      queryParameters: {'hard': 'true'},
-    );
+  Future<void> deleteGrade(int gradeId, {int? tenantId}) async {
+    final queryParams = <String, String>{'hard': 'true'};
+    if (tenantId != null) queryParams['tenant_id'] = tenantId.toString();
+    await apiClient.delete('${ApiEndpoints.grades}/$gradeId', queryParameters: queryParams);
   }
 }

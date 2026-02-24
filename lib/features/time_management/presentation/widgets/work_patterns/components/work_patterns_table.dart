@@ -2,7 +2,9 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_table_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_table_row.dart';
@@ -25,6 +27,12 @@ class WorkPatternsTable extends ConsumerWidget {
   final String? errorMessage;
   final VoidCallback? onRetry;
   final ScrollController? scrollController;
+  final PaginationInfo? paginationInfo;
+  final int currentPage;
+  final int pageSize;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final bool? paginationIsLoading;
 
   const WorkPatternsTable({
     super.key,
@@ -38,6 +46,12 @@ class WorkPatternsTable extends ConsumerWidget {
     this.errorMessage,
     this.onRetry,
     this.scrollController,
+    this.paginationInfo,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.onPrevious,
+    this.onNext,
+    this.paginationIsLoading,
   });
 
   @override
@@ -51,36 +65,55 @@ class WorkPatternsTable extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
-      child: ScrollableSingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Skeletonizer(
-          enabled: isLoading && workPatterns.isEmpty,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              WorkPatternTableHeader(isDark: isDark, localizations: localizations),
-              if (isLoading && workPatterns.isEmpty)
-                WorkPatternTableSkeleton(localizations: localizations)
-              else if (hasError && workPatterns.isEmpty)
-                _buildErrorState(isDark, localizations)
-              else if (workPatterns.isEmpty && !isLoading)
-                _buildEmptyState(isDark, localizations)
-              else ...[
-                ...workPatterns.map(
-                  (pattern) => WorkPatternTableRow(
-                    workPattern: pattern,
-                    onView: onView != null
-                        ? () => onView!(pattern)
-                        : () => WorkPatternDetailsDialog.show(context, pattern),
-                    onEdit: onEdit != null ? () => onEdit!(pattern) : null,
-                    onDelete: onDelete != null ? () => onDelete!(pattern) : null,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: ScrollableSingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Skeletonizer(
+                enabled: isLoading && workPatterns.isEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    WorkPatternTableHeader(isDark: isDark, localizations: localizations),
+                    if (isLoading && workPatterns.isEmpty)
+                      WorkPatternTableSkeleton(localizations: localizations)
+                    else if (hasError && workPatterns.isEmpty)
+                      _buildErrorState(isDark, localizations)
+                    else if (workPatterns.isEmpty && !isLoading)
+                      _buildEmptyState(isDark, localizations)
+                    else ...[
+                      ...workPatterns.map(
+                        (pattern) => WorkPatternTableRow(
+                          workPattern: pattern,
+                          onView: onView != null
+                              ? () => onView!(pattern)
+                              : () => WorkPatternDetailsDialog.show(context, pattern),
+                          onEdit: onEdit != null ? () => onEdit!(pattern) : null,
+                          onDelete: onDelete != null ? () => onDelete!(pattern) : null,
+                        ),
+                      ),
+                      if (isLoadingMore) _buildLoadingMoreState(),
+                    ],
+                  ],
                 ),
-                if (isLoadingMore) _buildLoadingMoreState(),
-              ],
-            ],
+              ),
+            ),
           ),
-        ),
+          if (paginationInfo != null) ...[
+            PaginationControls.fromPaginationInfo(
+              paginationInfo: paginationInfo!,
+              currentPage: currentPage,
+              pageSize: pageSize,
+              onPrevious: onPrevious,
+              onNext: onNext,
+              isLoading: paginationIsLoading ?? isLoading,
+              style: PaginationStyle.simple,
+            ),
+          ],
+        ],
       ),
     );
   }

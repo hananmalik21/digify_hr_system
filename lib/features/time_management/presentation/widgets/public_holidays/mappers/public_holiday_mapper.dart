@@ -5,11 +5,9 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/p
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/monthly_holiday_group.dart';
 import 'package:intl/intl.dart';
 
-/// Mapper for converting PublicHoliday domain models to UI models
 class PublicHolidayMapper {
   PublicHolidayMapper._();
 
-  /// Convert PublicHoliday to HolidayCardData
   static HolidayCardData toCardData(PublicHoliday holiday) {
     final dateFormat = DateFormat('dd/MM/yyyy');
     final monthFormat = DateFormat('MMM');
@@ -42,7 +40,6 @@ class PublicHolidayMapper {
       }
     }
 
-    // Sort by date (most recent first)
     final sortedKeys = grouped.keys.toList()
       ..sort((a, b) {
         try {
@@ -56,13 +53,11 @@ class PublicHolidayMapper {
 
     return sortedKeys.map((key) {
       final holidays = grouped[key]!;
-      // Sort holidays within the month by day
       holidays.sort((a, b) => a.day.compareTo(b.day));
       return MonthlyHolidayGroupData(monthYear: key, holidays: holidays);
     }).toList();
   }
 
-  /// Calculate stats from holidays
   static PublicHolidaysStats calculateStats(List<PublicHoliday> holidays) {
     int fixedCount = 0;
     int islamicCount = 0;

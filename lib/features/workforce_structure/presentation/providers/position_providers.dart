@@ -9,12 +9,11 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/ge
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_notifier.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Position remote data source provider
-final positionRemoteDataSourceProvider = Provider<PositionRemoteDataSource>((
-  ref,
-) {
+final positionRemoteDataSourceProvider = Provider<PositionRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return PositionRemoteDataSourceImpl(apiClient: apiClient);
 });
@@ -50,16 +49,19 @@ final deletePositionUseCaseProvider = Provider<DeletePositionUseCase>((ref) {
 });
 
 /// Position notifier provider
-final positionNotifierProvider =
-    StateNotifierProvider<PositionNotifier, PaginationState<Position>>((ref) {
-      final getPositionsUseCase = ref.watch(getPositionsUseCaseProvider);
-      final createPositionUseCase = ref.watch(createPositionUseCaseProvider);
-      final updatePositionUseCase = ref.watch(updatePositionUseCaseProvider);
-      final deletePositionUseCase = ref.watch(deletePositionUseCaseProvider);
-      return PositionNotifier(
-        getPositionsUseCase,
-        createPositionUseCase,
-        updatePositionUseCase,
-        deletePositionUseCase,
-      );
-    });
+final positionNotifierProvider = StateNotifierProvider<PositionNotifier, PaginationState<Position>>((ref) {
+  final getPositionsUseCase = ref.watch(getPositionsUseCaseProvider);
+  final createPositionUseCase = ref.watch(createPositionUseCaseProvider);
+  final updatePositionUseCase = ref.watch(updatePositionUseCaseProvider);
+  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final deletePositionUseCase = ref.watch(deletePositionUseCaseProvider);
+  final notifier = PositionNotifier(
+    getPositionsUseCase,
+    createPositionUseCase,
+    updatePositionUseCase,
+    deletePositionUseCase,
+    tenantId,
+  );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
+});

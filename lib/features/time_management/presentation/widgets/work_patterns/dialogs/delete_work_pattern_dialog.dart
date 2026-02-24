@@ -4,6 +4,7 @@ import 'package:digify_hr_system/features/time_management/domain/models/work_pat
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class DeleteWorkPatternDialog extends ConsumerStatefulWidget {
   final WorkPattern workPattern;
@@ -35,7 +36,7 @@ class _DeleteWorkPatternDialogState extends ConsumerState<DeleteWorkPatternDialo
           .deleteWorkPattern(workPatternId: widget.workPattern.workPatternId, hard: true);
 
       if (mounted) {
-        Navigator.of(context).pop(true);
+        context.pop(true);
         ToastService.success(context, 'Work pattern deleted successfully', title: 'Deleted');
       }
     } catch (e) {
@@ -56,7 +57,7 @@ class _DeleteWorkPatternDialogState extends ConsumerState<DeleteWorkPatternDialo
       cancelLabel: 'Cancel',
       isLoading: _isDeleting,
       onConfirm: _handleDelete,
-      onCancel: () => Navigator.of(context).pop(false),
+      onCancel: () => context.pop(false),
     );
   }
 }

@@ -25,27 +25,32 @@ class ShiftsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final columns = ResponsiveHelper.getGridColumns(context);
+
     return Column(
       children: [
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: shifts.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: ResponsiveHelper.getGridColumns(context),
-            mainAxisSpacing: 24.h,
-            crossAxisSpacing: 24.w,
-            mainAxisExtent: ResponsiveHelper.getShiftCardExtent(context),
-          ),
-          itemBuilder: (context, index) {
-            final shift = shifts[index];
-            return ShiftCard(
-              shift: shift,
-              onView: () => onView(shift),
-              onEdit: () => onEdit(shift),
-              onCopy: () => onCopy(shift),
-              onDelete: onDelete != null ? () => onDelete!(shift) : null,
-              isDeleting: deletingShiftId == shift.id,
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final spacing = 24.w;
+            final totalSpacing = spacing * (columns - 1);
+            final cardWidth = (constraints.maxWidth - totalSpacing) / columns;
+
+            return Wrap(
+              spacing: spacing,
+              runSpacing: 24.h,
+              children: shifts.map((shift) {
+                return SizedBox(
+                  width: cardWidth,
+                  child: ShiftCard(
+                    shift: shift,
+                    onView: () => onView(shift),
+                    onEdit: () => onEdit(shift),
+                    onCopy: () => onCopy(shift),
+                    onDelete: onDelete != null ? () => onDelete!(shift) : null,
+                    isDeleting: deletingShiftId == shift.id,
+                  ),
+                );
+              }).toList(),
             );
           },
         ),

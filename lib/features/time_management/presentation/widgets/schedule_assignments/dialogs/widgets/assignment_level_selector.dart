@@ -12,7 +12,11 @@ class AssignmentLevelSelector extends StatelessWidget {
   final AssignmentLevel? selectedLevel;
   final ValueChanged<AssignmentLevel> onLevelChanged;
 
-  const AssignmentLevelSelector({super.key, required this.selectedLevel, required this.onLevelChanged});
+  const AssignmentLevelSelector({
+    super.key,
+    required this.selectedLevel,
+    required this.onLevelChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +29,18 @@ class AssignmentLevelSelector extends StatelessWidget {
             Text(
               'Assignment Level',
               style: context.textTheme.titleSmall?.copyWith(
-                color: context.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                color: context.isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.inputLabel,
               ),
             ),
             Gap(4.w),
-            Text('*', style: context.textTheme.titleSmall?.copyWith(color: AppColors.deleteIconRed)),
+            Text(
+              '*',
+              style: context.textTheme.titleSmall?.copyWith(
+                color: AppColors.deleteIconRed,
+              ),
+            ),
           ],
         ),
         Gap(12.h),
@@ -91,11 +102,15 @@ class _LevelCard extends StatelessWidget {
         padding: EdgeInsets.all(18.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? AppColors.primary.withValues(alpha: 0.1) : AppColors.primary.withValues(alpha: 0.05))
+              ? (isDark
+                    ? AppColors.primary.withValues(alpha: 0.1)
+                    : AppColors.primary.withValues(alpha: 0.05))
               : (isDark ? AppColors.cardBackgroundDark : Colors.white),
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: isSelected ? AppColors.primary : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+            color: isSelected
+                ? AppColors.primary
+                : (isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -116,7 +131,11 @@ class _LevelCard extends StatelessWidget {
                   assetPath: icon,
                   width: 24,
                   height: 24,
-                  color: isSelected ? AppColors.primary : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
+                  color: isSelected
+                      ? AppColors.primary
+                      : (isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimary),
                 ),
               ),
             ),
@@ -126,7 +145,9 @@ class _LevelCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w500,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimary,
               ),
             ),
             Gap(4.h),

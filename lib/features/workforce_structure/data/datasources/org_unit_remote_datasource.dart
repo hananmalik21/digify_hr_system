@@ -8,6 +8,7 @@ abstract class OrgUnitRemoteDataSource {
     required String levelCode,
     String? parentOrgUnitId,
     String? search,
+    int? tenantId,
     int page = 1,
     int pageSize = 100,
   });
@@ -24,10 +25,11 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     required String levelCode,
     String? parentOrgUnitId,
     String? search,
+    int? tenantId,
     int page = 1,
     int pageSize = 100,
   }) async {
-    final queryParams = {'level': levelCode, 'page': page.toString(), 'page_size': pageSize.toString()};
+    final queryParams = <String, String>{'level': levelCode, 'page': page.toString(), 'page_size': pageSize.toString()};
 
     if (parentOrgUnitId != null) {
       queryParams['parentId'] = parentOrgUnitId.toString();
@@ -35,6 +37,10 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
 
     if (search != null && search.isNotEmpty) {
       queryParams['search'] = search;
+    }
+
+    if (tenantId != null) {
+      queryParams['tenant_id'] = tenantId.toString();
     }
 
     final response = await apiClient.get('/api/hr-org-structures/$structureId/org-units', queryParameters: queryParams);

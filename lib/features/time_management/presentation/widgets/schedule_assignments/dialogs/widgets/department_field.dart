@@ -1,3 +1,4 @@
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -12,7 +13,12 @@ class DepartmentField extends StatelessWidget {
   final AssignmentLevel? selectedLevel;
   final String? Function(String?)? validator;
 
-  const DepartmentField({super.key, required this.controller, this.selectedLevel, this.validator});
+  const DepartmentField({
+    super.key,
+    required this.controller,
+    this.selectedLevel,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,30 +33,42 @@ class DepartmentField extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.8.sp,
                 fontWeight: FontWeight.w500,
-                color: context.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
+                color: context.isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.inputLabel,
               ),
             ),
-            SizedBox(width: 4.w),
+            Gap(4.w),
             Text(
               '*',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.deleteIconRed),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.deleteIconRed,
+              ),
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         DigifyTextField(
           controller: controller,
           hintText: 'Type to search departments...',
-          suffixIcon: DigifyAsset(assetPath: Assets.icons.arrowIcon.path, width: 18, height: 18),
+          suffixIcon: DigifyAsset(
+            assetPath: Assets.icons.arrowIcon.path,
+            width: 18,
+            height: 18,
+          ),
           validator: validator,
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         Text(
           'The schedule will be applied to all employees in the selected department',
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w400,
-            color: context.isDark ? AppColors.textMutedDark : AppColors.textMuted,
+            color: context.isDark
+                ? AppColors.textMutedDark
+                : AppColors.textMuted,
           ),
         ),
       ],

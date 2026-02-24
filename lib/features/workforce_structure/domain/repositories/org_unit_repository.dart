@@ -6,6 +6,7 @@ abstract class OrgUnitRepository {
     required String levelCode,
     String? parentOrgUnitId,
     String? search,
+    int? tenantId,
     int page = 1,
     int pageSize = 100,
   });

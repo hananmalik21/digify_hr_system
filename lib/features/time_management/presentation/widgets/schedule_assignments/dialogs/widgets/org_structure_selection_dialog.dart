@@ -1,9 +1,11 @@
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/search_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_empty_state.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -14,7 +16,12 @@ class OrgStructureSelectionDialog extends ConsumerStatefulWidget {
   final List<OrgStructure> structures;
   final int? enterpriseId;
 
-  const OrgStructureSelectionDialog({super.key, this.selectedStructure, required this.structures, this.enterpriseId});
+  const OrgStructureSelectionDialog({
+    super.key,
+    this.selectedStructure,
+    required this.structures,
+    this.enterpriseId,
+  });
 
   static Future<OrgStructure?> show({
     required BuildContext context,
@@ -34,10 +41,12 @@ class OrgStructureSelectionDialog extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<OrgStructureSelectionDialog> createState() => _OrgStructureSelectionDialogState();
+  ConsumerState<OrgStructureSelectionDialog> createState() =>
+      _OrgStructureSelectionDialogState();
 }
 
-class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelectionDialog> {
+class _OrgStructureSelectionDialogState
+    extends ConsumerState<OrgStructureSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
   String _searchQuery = '';
 
@@ -49,7 +58,9 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
 
   List<OrgStructure> _getStructures() {
     if (widget.enterpriseId != null) {
-      final enterpriseState = ref.watch(enterpriseOrgStructureNotifierProvider(widget.enterpriseId!));
+      final enterpriseState = ref.watch(
+        enterpriseOrgStructureNotifierProvider(widget.enterpriseId!),
+      );
       return enterpriseState.allStructures;
     }
     return widget.structures;
@@ -61,12 +72,18 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
       return structures;
     }
     final query = _searchQuery.toLowerCase();
-    return structures.where((structure) => structure.structureName.toLowerCase().contains(query)).toList();
+    return structures
+        .where(
+          (structure) => structure.structureName.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   bool get _isLoading {
     if (widget.enterpriseId != null) {
-      final enterpriseState = ref.watch(enterpriseOrgStructureNotifierProvider(widget.enterpriseId!));
+      final enterpriseState = ref.watch(
+        enterpriseOrgStructureNotifierProvider(widget.enterpriseId!),
+      );
       return enterpriseState.isLoading;
     }
     return false;
@@ -81,17 +98,24 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       child: Dialog(
         backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         elevation: 8,
         child: Container(
           width: 550.w,
           constraints: BoxConstraints(maxHeight: 650.h),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.r),
+            color: Colors.white,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(context),
-              Flexible(child: _buildContent(context, filteredStructures, isLoading)),
+              Flexible(
+                child: _buildContent(context, filteredStructures, isLoading),
+              ),
             ],
           ),
         ),
@@ -104,12 +128,23 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.primary.withValues(alpha: 0.05),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20.r), topRight: Radius.circular(20.r)),
-        border: Border(bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 1)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,38 +158,51 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(Icons.account_tree_rounded, color: AppColors.primary, size: 24.sp),
+                child: Icon(
+                  Icons.account_tree_rounded,
+                  color: AppColors.primary,
+                  size: 24.sp,
+                ),
               ),
-              SizedBox(width: 12.w),
+              Gap(12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Select Organizational Structure',
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
-                    SizedBox(height: 2.h),
+                    Gap(2.h),
                     Text(
                       'Choose a structure from the list',
-                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               ),
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.close_rounded, size: 24.sp),
                 padding: EdgeInsets.all(8.w),
                 constraints: const BoxConstraints(),
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SearchField(
             hintText: 'Search structures...',
             onChanged: (value) {
@@ -174,7 +222,11 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
     );
   }
 
-  Widget _buildContent(BuildContext context, List<OrgStructure> structures, bool isLoading) {
+  Widget _buildContent(
+    BuildContext context,
+    List<OrgStructure> structures,
+    bool isLoading,
+  ) {
     if (isLoading && structures.isEmpty) {
       return _buildLoadingSkeleton();
     }
@@ -189,14 +241,16 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: structures.length + (isLoading ? 3 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index >= structures.length) {
           return _buildStructureListItemSkeleton();
         }
 
         final structure = structures[index];
-        final isSelected = shouldShowSelection && widget.selectedStructure?.structureId == structure.structureId;
+        final isSelected =
+            shouldShowSelection &&
+            widget.selectedStructure?.structureId == structure.structureId;
 
         return _buildStructureListItem(context, structure, isSelected);
       },
@@ -209,7 +263,7 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
       child: ListView.separated(
         padding: EdgeInsets.all(16.w),
         itemCount: 6,
-        separatorBuilder: (context, index) => SizedBox(height: 8.h),
+        separatorBuilder: (context, index) => Gap(8.h),
         itemBuilder: (context, index) {
           return _buildStructureListItemSkeleton();
         },
@@ -230,9 +284,12 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
           Container(
             width: 40.w,
             height: 40.h,
-            decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8.r)),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8.r),
+            ),
           ),
-          SizedBox(width: 12.w),
+          Gap(12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,13 +297,19 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
                 Container(
                   width: double.infinity,
                   height: 16.h,
-                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
                 ),
-                SizedBox(height: 8.h),
+                Gap(8.h),
                 Container(
                   width: 200.w,
                   height: 12.h,
-                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
                 ),
               ],
             ),
@@ -256,23 +319,34 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
     );
   }
 
-  Widget _buildStructureListItem(BuildContext context, OrgStructure structure, bool isSelected) {
+  Widget _buildStructureListItem(
+    BuildContext context,
+    OrgStructure structure,
+    bool isSelected,
+  ) {
     return InkWell(
-      onTap: () => Navigator.of(context).pop(structure),
+      onTap: () => context.pop(structure),
       borderRadius: BorderRadius.circular(10.r),
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.white,
+          color: isSelected
+              ? AppColors.primary.withValues(alpha: 0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: isSelected ? AppColors.primary : AppColors.borderGrey, width: isSelected ? 2 : 1),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.borderGrey,
+            width: isSelected ? 2 : 1,
+          ),
         ),
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.primary.withValues(alpha: 0.1),
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
@@ -281,7 +355,7 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
                 size: 20.sp,
               ),
             ),
-            SizedBox(width: 12.w),
+            Gap(12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,14 +365,20 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                      color: isSelected
+                          ? AppColors.primary
+                          : AppColors.textPrimary,
                     ),
                   ),
-                  if (structure.description != null && structure.description!.isNotEmpty) ...[
-                    SizedBox(height: 4.h),
+                  if (structure.description != null &&
+                      structure.description!.isNotEmpty) ...[
+                    Gap(4.h),
                     Text(
                       structure.description!,
-                      style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textSecondary,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -306,7 +386,12 @@ class _OrgStructureSelectionDialogState extends ConsumerState<OrgStructureSelect
                 ],
               ),
             ),
-            if (isSelected) Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 24.sp),
+            if (isSelected)
+              Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.primary,
+                size: 24.sp,
+              ),
           ],
         ),
       ),

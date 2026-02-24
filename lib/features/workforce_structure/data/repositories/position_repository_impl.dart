@@ -17,30 +17,29 @@ class PositionRepositoryImpl implements PositionRepository {
     int pageSize = 10,
     String? search,
     PositionStatus? status,
+    int? tenantId,
   }) async {
     return await remoteDataSource.getPositions(
       page: page,
       pageSize: pageSize,
       search: search,
       status: status,
+      tenantId: tenantId,
     );
   }
 
   @override
-  Future<Position> createPosition(Map<String, dynamic> positionData) async {
-    return await remoteDataSource.createPosition(positionData);
+  Future<Position> createPosition(Map<String, dynamic> positionData, {int? tenantId}) async {
+    return await remoteDataSource.createPosition(positionData, tenantId: tenantId);
   }
 
   @override
-  Future<Position> updatePosition(
-    String id,
-    Map<String, dynamic> positionData,
-  ) async {
-    return await remoteDataSource.updatePosition(id, positionData);
+  Future<Position> updatePosition(String id, Map<String, dynamic> positionData, {int? tenantId}) async {
+    return await remoteDataSource.updatePosition(id, positionData, tenantId: tenantId);
   }
 
   @override
-  Future<void> deletePosition(String id, {bool hard = true}) async {
-    await remoteDataSource.deletePosition(id, hard: hard);
+  Future<void> deletePosition(String id, {bool hard = true, int? tenantId}) async {
+    await remoteDataSource.deletePosition(id, hard: hard, tenantId: tenantId);
   }
 }

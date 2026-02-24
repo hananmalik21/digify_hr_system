@@ -261,6 +261,42 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
     });
   }
 
+  Future<void> goToPage(int page) async {
+    if (state.isLoading || page == state.currentPage || page < 1 || page > state.totalPages) return;
+
+    state = handleLoadingState(state, false) as ShiftState;
+
+    try {
+      final response = await _getShiftsUseCase(
+        search: state.searchQuery,
+        isActive: _getActiveStatusFilter(),
+        page: page,
+        pageSize: state.pageSize.clamp(1, 100),
+      );
+
+      final shifts = response.shifts.isEmpty ? <ShiftOverview>[] : response.shifts;
+      final pagination = response.pagination;
+
+      state =
+          handleSuccessState(
+                currentState: state,
+                newItems: shifts,
+                currentPage: pagination.currentPage < 1 ? page : pagination.currentPage,
+                pageSize: pagination.pageSize < 1 ? state.pageSize : pagination.pageSize,
+                totalItems: pagination.totalItems < 0 ? state.totalItems : pagination.totalItems,
+                totalPages: pagination.totalPages < 0 ? state.totalPages : pagination.totalPages,
+                hasNextPage: pagination.hasNext && pagination.currentPage < pagination.totalPages,
+                hasPreviousPage: pagination.hasPrevious && pagination.currentPage > 1,
+                isFirstPage: true,
+              )
+              as ShiftState;
+    } catch (e) {
+      final errorMessage = e.toString();
+      state =
+          handleErrorState(state, errorMessage.isEmpty ? 'An unexpected error occurred' : errorMessage) as ShiftState;
+    }
+  }
+
   void setStatusFilter(bool? isActive) {
     final status = isActive == null ? null : (isActive ? PositionStatus.active : PositionStatus.inactive);
 

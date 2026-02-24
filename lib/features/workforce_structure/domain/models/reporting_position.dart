@@ -1,6 +1,7 @@
 /// ReportingPosition domain model
 /// Represents a position in the reporting structure
 class ReportingPosition {
+  final String positionId;
   final String positionCode;
   final String titleEnglish;
   final String titleArabic;
@@ -13,6 +14,7 @@ class ReportingPosition {
   final String status;
 
   const ReportingPosition({
+    required this.positionId,
     required this.positionCode,
     required this.titleEnglish,
     required this.titleArabic,
@@ -29,6 +31,7 @@ class ReportingPosition {
   bool get hasDirectReports => directReportsCount > 0;
 
   ReportingPosition copyWith({
+    String? positionId,
     String? positionCode,
     String? titleEnglish,
     String? titleArabic,
@@ -41,6 +44,7 @@ class ReportingPosition {
     String? status,
   }) {
     return ReportingPosition(
+      positionId: positionId ?? this.positionId,
       positionCode: positionCode ?? this.positionCode,
       titleEnglish: titleEnglish ?? this.titleEnglish,
       titleArabic: titleArabic ?? this.titleArabic,
@@ -68,4 +72,3 @@ class ReportingPosition {
     return 'ReportingPosition(positionCode: $positionCode, titleEnglish: $titleEnglish)';
   }
 }
-

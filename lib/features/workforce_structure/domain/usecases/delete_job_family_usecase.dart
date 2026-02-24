@@ -5,7 +5,7 @@ class DeleteJobFamilyUseCase {
 
   const DeleteJobFamilyUseCase({required this.repository});
 
-  Future<void> call({required int id, bool hard = true}) async {
-    return await repository.deleteJobFamily(id: id, hard: hard);
+  Future<void> call({required int id, bool hard = true, int? tenantId}) async {
+    return await repository.deleteJobFamily(id: id, hard: hard, tenantId: tenantId);
   }
 }

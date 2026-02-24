@@ -79,6 +79,7 @@ class DigifyTextField extends StatefulWidget {
     bool filled = false,
     Color? fillColor,
     Color? borderColor,
+    bool showBorder = true,
     ValueChanged<String>? onChanged,
     ValueChanged<String>? onSubmitted,
   }) {
@@ -88,6 +89,7 @@ class DigifyTextField extends StatefulWidget {
       filled: filled,
       fillColor: fillColor ?? Colors.transparent,
       borderColor: borderColor,
+      showBorder: showBorder,
       prefixIcon: Padding(
         padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
         child: DigifyAsset(assetPath: Assets.icons.searchIcon.path, width: 20, height: 20, color: AppColors.textMuted),

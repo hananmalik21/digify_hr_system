@@ -2,37 +2,24 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import '../../../../../../gen/assets.gen.dart';
 
-class ShiftActionBar extends StatefulWidget {
-  final ValueChanged<String> onSearchChanged;
-  final String selectedStatus;
-  final ValueChanged<String?> onStatusChanged;
-  final VoidCallback onCreateShift;
-  final VoidCallback onUpload;
-  final VoidCallback onExport;
+class ShiftActionBar extends ConsumerStatefulWidget {
+  final int enterpriseId;
 
-  const ShiftActionBar({
-    super.key,
-    required this.onSearchChanged,
-    required this.selectedStatus,
-    required this.onStatusChanged,
-    required this.onCreateShift,
-    required this.onUpload,
-    required this.onExport,
-  });
+  const ShiftActionBar({super.key, required this.enterpriseId});
 
   @override
-  State<ShiftActionBar> createState() => _ShiftActionBarState();
+  ConsumerState<ShiftActionBar> createState() => _ShiftActionBarState();
 }
 
-class _ShiftActionBarState extends State<ShiftActionBar> {
+class _ShiftActionBarState extends ConsumerState<ShiftActionBar> {
   late final TextEditingController _searchController;
 
   @override
@@ -50,6 +37,14 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final currentStatus = ref.watch(shiftsNotifierProvider(widget.enterpriseId).select((s) => s.status));
+    final searchQuery = ref.watch(shiftsNotifierProvider(widget.enterpriseId).select((s) => s.searchQuery));
+
+    if (searchQuery == null && _searchController.text.isNotEmpty) {
+      _searchController.clear();
+    } else if (searchQuery != null && _searchController.text.isEmpty) {
+      _searchController.text = searchQuery;
+    }
 
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -64,7 +59,9 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
           DigifyTextField.search(
             controller: _searchController,
             hintText: 'Search shifts...',
-            onChanged: widget.onSearchChanged,
+            onChanged: (value) {
+              ref.read(shiftsNotifierProvider(widget.enterpriseId).notifier).search(value);
+            },
           ),
           Gap(16.h),
           Wrap(
@@ -77,42 +74,20 @@ class _ShiftActionBarState extends State<ShiftActionBar> {
                 width: 144.w,
                 child: DigifySelectField<PositionStatus?>(
                   hint: 'All Status',
-                  value: _getStatusFromString(widget.selectedStatus),
+                  value: currentStatus,
                   items: [null, ...PositionStatus.values],
                   itemLabelBuilder: (status) => status?.label ?? 'All Status',
                   onChanged: (newValue) {
-                    final statusString = newValue == null ? 'All Status' : newValue.label;
-                    widget.onStatusChanged(statusString);
+                    ref
+                        .read(shiftsNotifierProvider(widget.enterpriseId).notifier)
+                        .setStatusFilter(newValue == null ? null : newValue == PositionStatus.active);
                   },
                 ),
-              ),
-              AppButton(
-                label: 'Create Shift',
-                onPressed: widget.onCreateShift,
-                svgPath: Assets.icons.addDivisionIcon.path,
-              ),
-              AppButton(
-                label: 'Upload',
-                onPressed: widget.onUpload,
-                svgPath: Assets.icons.bulkUploadIconFigma.path,
-                backgroundColor: AppColors.shiftUploadButton,
-              ),
-              AppButton(
-                label: 'Export',
-                onPressed: widget.onExport,
-                svgPath: Assets.icons.downloadIcon.path,
-                backgroundColor: AppColors.shiftExportButton,
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  PositionStatus? _getStatusFromString(String statusString) {
-    if (statusString == 'All Status') return null;
-    if (statusString == 'Active') return PositionStatus.active;
-    return PositionStatus.inactive;
   }
 }

@@ -5,11 +5,11 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
-import 'package:digify_hr_system/core/widgets/data/custom_status_cell.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_type_badge.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +112,11 @@ class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMix
                 ),
               ],
               Gap(4.h),
-              WorkPatternTypeBadge(type: workPattern.patternType),
+              DigifySquareCapsule(
+                label: workPattern.patternType,
+                backgroundColor: isDark ? AppColors.workPatternBadgeBgDark : AppColors.workPatternBadgeBgLight,
+                textColor: isDark ? AppColors.workPatternBadgeTextDark : AppColors.workPatternBadgeTextLight,
+              ),
             ],
           ),
         ),
@@ -134,11 +138,7 @@ class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMix
           context,
           'Status',
           '',
-          widget: CustomStatusCell(
-            isActive: workPattern.status == PositionStatus.active,
-            activeLabel: 'ACTIVE',
-            inactiveLabel: 'INACTIVE',
-          ),
+          widget: ShiftStatusBadge(isActive: workPattern.status == PositionStatus.active),
         ),
         _buildDetailItem(context, 'Total Hours/Week', '${workPattern.totalHoursPerWeek} hours'),
         _buildDetailItem(context, 'Created Date', formatDateFromDateTime(workPattern.creationDate)),

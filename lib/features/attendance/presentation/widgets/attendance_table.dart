@@ -224,7 +224,7 @@ class _AttendanceTableState extends State<AttendanceTable> {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Expand Icon
             SizedBox(
@@ -233,7 +233,9 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 isExpanded
                     ? Icons.keyboard_arrow_up
                     : Icons.keyboard_arrow_down,
-                color: widget.isDark
+                color: isExpanded
+                    ? AppColors.statIconBlue
+                    : widget.isDark
                     ? AppColors.textTertiaryDark
                     : AppColors.dialogCloseIcon,
                 size: 20.r,
@@ -355,7 +357,6 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 ],
               ),
             ),
-
             // Status
             SizedBox(
               width: 150.w,
@@ -364,7 +365,6 @@ class _AttendanceTableState extends State<AttendanceTable> {
                 children: [Gap(10.w), _buildStatusChip(record.status)],
               ),
             ),
-
             // Actions
             SizedBox(
               width: 50.w,

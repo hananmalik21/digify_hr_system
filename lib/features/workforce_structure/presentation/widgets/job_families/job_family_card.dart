@@ -112,7 +112,6 @@ class JobFamilyCard extends ConsumerWidget {
                 iconPath: Assets.icons.deleteIconRed.path,
                 bgColor: AppColors.errorBg,
                 iconColor: AppColors.error,
-                height: 40.h,
                 onPressed: isDeleting ? null : () => _handleDelete(context, ref),
                 isLoading: isDeleting,
               ),

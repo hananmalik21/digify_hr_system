@@ -37,7 +37,7 @@ enum WorkforceTab {
       case WorkforceTab.gradeStructure:
         return Assets.icons.gradeIcon.path;
       case WorkforceTab.reportingStructure:
-        return Assets.icons.companyFilterIcon.path;
+        return Assets.icons.hierarchyIconDepartment.path;
       case WorkforceTab.positionTree:
         return Assets.icons.hierarchyIconDepartment.path;
     }

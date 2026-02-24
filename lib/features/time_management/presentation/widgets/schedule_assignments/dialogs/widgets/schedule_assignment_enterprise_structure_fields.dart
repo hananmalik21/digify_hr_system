@@ -1,3 +1,4 @@
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -54,12 +55,9 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitle(),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           _buildStructureSelector(enterpriseState.allStructures, selectedStructure),
-          if (selectedStructure != null) ...[
-            SizedBox(height: 16.h),
-            _buildStructureFieldsForStructure(selectedStructure),
-          ],
+          if (selectedStructure != null) ...[Gap(16.h), _buildStructureFieldsForStructure(selectedStructure)],
         ],
       ),
     );
@@ -100,7 +98,7 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
                 color: AppColors.inputLabel,
               ),
             ),
-            SizedBox(width: 4.w),
+            Gap(4.w),
             Text(
               '*',
               style: TextStyle(
@@ -113,7 +111,7 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
             ),
           ],
         ),
-        SizedBox(height: 8.h),
+        Gap(8.h),
         InkWell(
           onTap: () async {
             final currentState = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId));
@@ -146,10 +144,10 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
           },
           borderRadius: BorderRadius.circular(10.r),
           child: Container(
-            height: 40.h,
+            height: 48.h,
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
-              color: AppColors.inputBg,
+              color: AppColors.cardBackground,
               borderRadius: BorderRadius.circular(10.r),
               border: Border.all(color: AppColors.inputBorder),
             ),
@@ -214,7 +212,7 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
             selectionProvider: selectionProvider,
             onSelectionChanged: widget.onSelectionChanged,
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
         ],
         if (activeLevels.length > 1) ...[
           BusinessUnitSelectionField(
@@ -223,7 +221,7 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
             isEnabled: selectionState.getSelection(activeLevels[0].levelCode) != null,
             onSelectionChanged: widget.onSelectionChanged,
           ),
-          if (activeLevels.length > 2) SizedBox(height: 16.h),
+          if (activeLevels.length > 2) Gap(16.h),
         ],
         if (activeLevels.length > 2)
           ...activeLevels.asMap().entries.skip(2).map((entry) {
@@ -240,7 +238,7 @@ class _ScheduleAssignmentEnterpriseStructureFieldsState
                   isEnabled: isEnabled,
                   onSelectionChanged: widget.onSelectionChanged,
                 ),
-                if (index < activeLevels.length - 1) SizedBox(height: 16.h),
+                if (index < activeLevels.length - 1) Gap(16.h),
               ],
             );
           }),

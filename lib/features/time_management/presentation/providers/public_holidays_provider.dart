@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
+import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/public_holiday_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/public_holiday_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
@@ -10,6 +11,7 @@ import 'package:digify_hr_system/features/time_management/domain/usecases/create
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_public_holiday_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_public_holidays_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_public_holiday_usecase.dart';
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,20 +49,7 @@ final deletePublicHolidayUseCaseProvider = Provider<DeletePublicHolidayUseCase>(
   return DeletePublicHolidayUseCase(repository: repository);
 });
 
-/// State for public holidays
-class PublicHolidaysState {
-  final List<PublicHoliday> holidays;
-  final bool isLoading;
-  final bool isLoadingMore;
-  final bool hasError;
-  final String? errorMessage;
-  final int currentPage;
-  final int pageSize;
-  final int totalHolidays;
-  final bool hasMore;
-  final String? searchQuery;
-  final String? selectedYear;
-  final String? selectedType;
+class PublicHolidaysState extends PaginationState<PublicHoliday> {
   final String? deleteSuccessMessage;
   final String? deleteErrorMessage;
   final String? createSuccessMessage;
@@ -68,36 +57,47 @@ class PublicHolidaysState {
   final int? deletingHolidayId;
 
   const PublicHolidaysState({
-    this.holidays = const [],
-    this.isLoading = false,
-    this.isLoadingMore = false,
-    this.hasError = false,
-    this.errorMessage,
-    this.currentPage = 1,
-    this.pageSize = 10,
-    this.totalHolidays = 0,
-    this.hasMore = false,
-    this.searchQuery,
-    this.selectedYear,
-    this.selectedType,
+    super.items = const [],
+    super.isLoading = false,
+    super.isLoadingMore = false,
+    super.hasError = false,
+    super.errorMessage,
+    super.currentPage = 1,
+    super.pageSize = 10,
+    super.totalItems = 0,
+    super.totalPages = 0,
+    super.hasNextPage = false,
+    super.hasPreviousPage = false,
+    super.searchQuery,
+    super.status,
     this.deleteSuccessMessage,
     this.deleteErrorMessage,
     this.createSuccessMessage,
     this.createErrorMessage,
     this.deletingHolidayId,
+    this.selectedYear,
+    this.selectedType,
   });
 
+  final String? selectedYear;
+  final String? selectedType;
+
+  @override
   PublicHolidaysState copyWith({
-    List<PublicHoliday>? holidays,
+    List<PublicHoliday>? items,
     bool? isLoading,
     bool? isLoadingMore,
     bool? hasError,
     String? errorMessage,
     int? currentPage,
     int? pageSize,
-    int? totalHolidays,
-    bool? hasMore,
+    int? totalItems,
+    int? totalPages,
+    bool? hasNextPage,
+    bool? hasPreviousPage,
     String? searchQuery,
+    PositionStatus? status,
+    bool clearStatus = false,
     String? selectedYear,
     String? selectedType,
     String? deleteSuccessMessage,
@@ -111,16 +111,19 @@ class PublicHolidaysState {
     bool clearDeletingHolidayId = false,
   }) {
     return PublicHolidaysState(
-      holidays: holidays ?? this.holidays,
+      items: items ?? this.items,
       isLoading: isLoading ?? this.isLoading,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       hasError: clearError ? false : (hasError ?? this.hasError),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,
-      totalHolidays: totalHolidays ?? this.totalHolidays,
-      hasMore: hasMore ?? this.hasMore,
+      totalItems: totalItems ?? this.totalItems,
+      totalPages: totalPages ?? this.totalPages,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       searchQuery: clearSearch ? null : (searchQuery ?? this.searchQuery),
+      status: clearStatus ? null : (status ?? this.status),
       selectedYear: selectedYear ?? this.selectedYear,
       selectedType: selectedType ?? this.selectedType,
       deleteSuccessMessage: clearSideEffects ? null : (deleteSuccessMessage ?? this.deleteSuccessMessage),
@@ -130,10 +133,15 @@ class PublicHolidaysState {
       deletingHolidayId: clearDeletingHolidayId ? null : (deletingHolidayId ?? this.deletingHolidayId),
     );
   }
+
+  List<PublicHoliday> get holidays => items;
+  int get totalHolidays => totalItems;
+  bool get hasMore => hasNextPage;
 }
 
-/// Notifier for public holidays
-class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
+class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
+    with PaginationMixin<PublicHoliday>
+    implements PaginationController<PublicHoliday> {
   final GetPublicHolidaysUseCase getHolidaysUseCase;
   final DeletePublicHolidayUseCase deleteHolidayUseCase;
   final CreatePublicHolidayUseCase createHolidayUseCase;
@@ -153,46 +161,50 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
     super.dispose();
   }
 
-  /// Load holidays
   Future<void> loadHolidays({bool refresh = false}) async {
-    if (refresh) {
-      state = state.copyWith(isLoading: true, clearError: true, currentPage: 1);
-    } else {
-      state = state.copyWith(isLoading: true, clearError: true);
-    }
+    await loadFirstPage();
+  }
+
+  @override
+  Future<void> loadFirstPage() async {
+    if (state.isLoading) return;
+
+    state = handleLoadingState(state, true) as PublicHolidaysState;
 
     try {
       final result = await getHolidaysUseCase(
-        page: refresh ? 1 : state.currentPage,
+        page: 1,
         pageSize: state.pageSize,
         search: state.searchQuery,
         year: state.selectedYear,
         type: state.selectedType,
       );
 
-      state = state.copyWith(
-        holidays: refresh ? result.holidays : [...state.holidays, ...result.holidays],
-        isLoading: false,
-        currentPage: result.pagination.currentPage,
-        totalHolidays: result.pagination.totalItems,
-        hasMore: result.pagination.hasNext,
-      );
+      state =
+          handleSuccessState(
+                currentState: state,
+                newItems: result.holidays,
+                currentPage: result.pagination.currentPage,
+                pageSize: result.pagination.pageSize,
+                totalItems: result.pagination.totalItems,
+                totalPages: result.pagination.totalPages,
+                hasNextPage: result.pagination.hasNext,
+                hasPreviousPage: result.pagination.hasPrevious,
+                isFirstPage: true,
+              )
+              as PublicHolidaysState;
     } on AppException catch (e) {
-      state = state.copyWith(isLoading: false, hasError: true, errorMessage: e.message);
+      state = handleErrorState(state, e.message) as PublicHolidaysState;
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        hasError: true,
-        errorMessage: 'Failed to load holidays: ${e.toString()}',
-      );
+      state = handleErrorState(state, 'Failed to load holidays: ${e.toString()}') as PublicHolidaysState;
     }
   }
 
-  /// Load next page
+  @override
   Future<void> loadNextPage() async {
-    if (state.isLoadingMore || !state.hasMore) return;
+    if (state.isLoadingMore || !state.hasNextPage) return;
 
-    state = state.copyWith(isLoadingMore: true);
+    state = handleLoadingState(state, false) as PublicHolidaysState;
 
     try {
       final nextPage = state.currentPage + 1;
@@ -204,79 +216,110 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
         type: state.selectedType,
       );
 
-      state = state.copyWith(
-        holidays: [...state.holidays, ...result.holidays],
-        isLoadingMore: false,
-        currentPage: result.pagination.currentPage,
-        hasMore: result.pagination.hasNext,
-      );
+      state =
+          handleSuccessState(
+                currentState: state,
+                newItems: result.holidays,
+                currentPage: result.pagination.currentPage,
+                pageSize: result.pagination.pageSize,
+                totalItems: result.pagination.totalItems,
+                totalPages: result.pagination.totalPages,
+                hasNextPage: result.pagination.hasNext,
+                hasPreviousPage: result.pagination.hasPrevious,
+                isFirstPage: false,
+              )
+              as PublicHolidaysState;
     } on AppException catch (e) {
-      state = state.copyWith(isLoadingMore: false, hasError: true, errorMessage: e.message);
+      state = handleErrorState(state, e.message) as PublicHolidaysState;
     } catch (e) {
-      state = state.copyWith(
-        isLoadingMore: false,
-        hasError: true,
-        errorMessage: 'Failed to load more holidays: ${e.toString()}',
-      );
+      state = handleErrorState(state, 'Failed to load more holidays: ${e.toString()}') as PublicHolidaysState;
     }
   }
 
-  /// Set search query
+  Future<void> goToPage(int page) async {
+    if (state.isLoading || page == state.currentPage || page < 1 || page > state.totalPages) return;
+
+    state = handleLoadingState(state, false) as PublicHolidaysState;
+
+    try {
+      final result = await getHolidaysUseCase(
+        page: page,
+        pageSize: state.pageSize,
+        search: state.searchQuery,
+        year: state.selectedYear,
+        type: state.selectedType,
+      );
+
+      state =
+          handleSuccessState(
+                currentState: state,
+                newItems: result.holidays,
+                currentPage: result.pagination.currentPage,
+                pageSize: result.pagination.pageSize,
+                totalItems: result.pagination.totalItems,
+                totalPages: result.pagination.totalPages,
+                hasNextPage: result.pagination.hasNext,
+                hasPreviousPage: result.pagination.hasPrevious,
+                isFirstPage: true,
+              )
+              as PublicHolidaysState;
+    } on AppException catch (e) {
+      state = handleErrorState(state, e.message) as PublicHolidaysState;
+    } catch (e) {
+      state = handleErrorState(state, 'Failed to load page $page: ${e.toString()}') as PublicHolidaysState;
+    }
+  }
+
+  @override
+  void reset() {
+    state = PublicHolidaysState(pageSize: state.pageSize);
+  }
+
   void setSearchQuery(String query) {
     final trimmedQuery = query.trim();
     if (state.searchQuery == trimmedQuery) return;
 
-    if (trimmedQuery.isEmpty) {
-      clearSearch();
-      return;
-    }
-
-    state = state.copyWith(searchQuery: trimmedQuery, currentPage: 1, isLoading: true, clearError: true);
+    state = state.copyWith(searchQuery: trimmedQuery, currentPage: 1);
     _debouncer.run(() async {
-      await loadHolidays(refresh: true);
+      await loadFirstPage();
     });
   }
 
-  /// Clear search query
   void clearSearch() {
     if (state.searchQuery == null || state.searchQuery!.isEmpty) return;
     state = state.copyWith(clearSearch: true, currentPage: 1);
     loadHolidays(refresh: true);
   }
 
-  /// Set selected year
   void setSelectedYear(String? year) {
     if (state.selectedYear == year) return;
     state = state.copyWith(selectedYear: year, currentPage: 1);
     loadHolidays(refresh: true);
   }
 
-  /// Set selected type
   void setSelectedType(String? type) {
     if (state.selectedType == type) return;
     state = state.copyWith(selectedType: type, currentPage: 1);
     loadHolidays(refresh: true);
   }
 
-  /// Refresh holidays
+  @override
   Future<void> refresh() async {
     await loadHolidays(refresh: true);
   }
 
-  /// Add holiday optimistically
   void addHolidayOptimistically(PublicHoliday holiday) {
-    state = state.copyWith(holidays: [holiday, ...state.holidays], totalHolidays: state.totalHolidays + 1);
+    final newHolidays = [holiday, ...state.items];
+    state = state.copyWith(items: newHolidays, totalItems: state.totalItems + 1);
   }
 
-  /// Remove holiday optimistically
   void removeHolidayOptimistically(int holidayId) {
     state = state.copyWith(
-      holidays: state.holidays.where((h) => h.id != holidayId).toList(),
-      totalHolidays: state.totalHolidays > 0 ? state.totalHolidays - 1 : 0,
+      items: state.items.where((h) => h.id != holidayId).toList(),
+      totalItems: state.totalItems > 0 ? state.totalItems - 1 : 0,
     );
   }
 
-  /// Delete holiday
   Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
     state = state.copyWith(deletingHolidayId: holidayId);
 
@@ -285,29 +328,26 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
       state = state.copyWith(
         deletingHolidayId: null,
         deleteSuccessMessage: 'Holiday deleted successfully',
-        holidays: state.holidays.where((h) => h.id != holidayId).toList(),
-        totalHolidays: state.totalHolidays > 0 ? state.totalHolidays - 1 : 0,
+        items: state.items.where((h) => h.id != holidayId).toList(),
+        totalItems: state.totalItems > 0 ? state.totalItems - 1 : 0,
       );
     } catch (e) {
       state = state.copyWith(deletingHolidayId: null, deleteErrorMessage: 'Failed to delete holiday: ${e.toString()}');
     }
   }
 
-  /// Clear side effects
   void clearSideEffects() {
     state = state.copyWith(clearSideEffects: true);
   }
 
-  /// Get holiday by ID
   PublicHoliday? getHolidayById(int holidayId) {
     try {
-      return state.holidays.firstWhere((h) => h.id == holidayId);
+      return state.items.firstWhere((h) => h.id == holidayId);
     } catch (e) {
       return null;
     }
   }
 
-  /// Create holiday
   Future<void> createHoliday({
     required int tenantId,
     required String nameEn,
@@ -335,8 +375,8 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
       );
 
       state = state.copyWith(
-        holidays: [createdHoliday, ...state.holidays],
-        totalHolidays: state.totalHolidays + 1,
+        items: [createdHoliday, ...state.items],
+        totalItems: state.totalItems + 1,
         createSuccessMessage: 'Holiday created successfully',
       );
     } catch (e) {
@@ -344,7 +384,6 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
     }
   }
 
-  /// Update holiday
   Future<void> updateHoliday({
     required int holidayId,
     required int tenantId,
@@ -382,7 +421,6 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState> {
   }
 }
 
-/// Provider for public holidays notifier
 final publicHolidaysNotifierProvider = StateNotifierProvider<PublicHolidaysNotifier, PublicHolidaysState>((ref) {
   final getHolidaysUseCase = ref.watch(getPublicHolidaysUseCaseProvider);
   final deleteHolidayUseCase = ref.watch(deletePublicHolidayUseCaseProvider);

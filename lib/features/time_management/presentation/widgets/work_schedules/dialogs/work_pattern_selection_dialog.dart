@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
+import 'package:go_router/go_router.dart';
+import 'package:gap/gap.dart';
 
 class WorkPatternSelectionDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
@@ -119,7 +121,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
                 ),
                 child: Icon(Icons.schedule, color: AppColors.primary, size: 24.sp),
               ),
-              SizedBox(width: 12.w),
+              Gap(12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,7 +130,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
                       'Select Work Pattern',
                       style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     ),
-                    SizedBox(height: 2.h),
+                    Gap(2.h),
                     Text(
                       'Choose a work pattern from the list',
                       style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary),
@@ -137,7 +139,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
                 ),
               ),
               IconButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
                 icon: Icon(Icons.close_rounded, size: 24.sp),
                 padding: EdgeInsets.all(8.w),
                 constraints: const BoxConstraints(),
@@ -148,7 +150,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          Gap(16.h),
           SearchField(
             hintText: 'Search work patterns...',
             onChanged: (value) {
@@ -190,7 +192,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
       controller: _scrollController,
       padding: EdgeInsets.all(16.w),
       itemCount: items.length + (isLoadingMore ? 1 : 0),
-      separatorBuilder: (context, index) => SizedBox(height: 8.h),
+      separatorBuilder: (context, index) => Gap(8.h),
       itemBuilder: (context, index) {
         if (index == items.length) {
           return Center(
@@ -207,7 +209,7 @@ class _WorkPatternSelectionDialogState extends ConsumerState<WorkPatternSelectio
         return WorkPatternListItem(
           workPattern: workPattern,
           isSelected: isSelected,
-          onTap: () => Navigator.of(context).pop(workPattern),
+          onTap: () => context.pop(workPattern),
         );
       },
     );

@@ -4,7 +4,6 @@ import 'package:digify_hr_system/core/services/initialization/providers/initiali
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
@@ -39,12 +38,20 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
   late final Map<String, TextEditingController> _formControllers;
   late final Map<String, String?> _selectedUnitIds;
   bool _isSaving = false;
-  Employee? _selectedReportsToEmployee;
+  Position? _selectedReportsToPosition;
 
   @override
   void initState() {
     super.initState();
     final position = widget.initialPosition;
+
+    if (widget.isEdit && position.reportsToPositionId != null && position.reportsToPositionId!.isNotEmpty) {
+      _selectedReportsToPosition = Position.empty().copyWith(
+        id: position.reportsToPositionId,
+        titleEnglish: position.reportsToTitle ?? '',
+        code: position.reportsToCode ?? '',
+      );
+    }
 
     _selectedUnitIds = Map<String, String?>.from(position.orgPathIds ?? {});
     _formControllers = {
@@ -115,7 +122,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
           budgetedMaxStr: _formControllers['budgetedMax']!.text,
           actualAverageStr: _formControllers['actualAverage']!.text,
           hasOrgUnitSelected: _hasOrgUnitSelected(),
-          hasReportsToEmployeeSelected: _selectedReportsToEmployee != null,
+          hasReportsToEmployeeSelected: _selectedReportsToPosition != null,
           isEdit: widget.isEdit,
           l: localizations,
         );
@@ -156,7 +163,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       "budgeted_max_kd": double.tryParse(_formControllers['budgetedMax']!.text) ?? 0.0,
       "actual_avg_kd": double.tryParse(_formControllers['actualAverage']!.text) ?? 0.0,
       "last_update_login": "HR_ADMIN",
-      if (_selectedReportsToEmployee != null) "reports_to_user_guid": _selectedReportsToEmployee!.guid,
+      "reports_to_position_id": _selectedReportsToPosition?.id,
     };
 
     setState(() => _isSaving = true);
@@ -243,24 +250,23 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
             Gap(24.h),
             ReportingSection(
               localizations: localizations,
-              enterpriseId: ref.watch(activeEnterpriseIdProvider) ?? 0,
-              selectedReportsToEmployee: _selectedReportsToEmployee,
-              onReportsToEmployeeSelected: (employee) {
-                setState(() => _selectedReportsToEmployee = employee);
+              tenantId: ref.watch(activeEnterpriseIdProvider),
+              selectedReportsToPosition: _selectedReportsToPosition,
+              onReportsToPositionSelected: (position) {
+                setState(() => _selectedReportsToPosition = position);
               },
             ),
           ],
         ),
       ),
       actions: [
-        AppButton.outline(label: localizations.cancel, onPressed: _isSaving ? null : () => context.pop(), width: 100.w),
+        AppButton.outline(label: localizations.cancel, onPressed: _isSaving ? null : () => context.pop()),
         Gap(12.w),
         AppButton.primary(
           label: widget.isEdit ? localizations.saveUpdates : localizations.saveChanges,
           svgPath: _isSaving ? null : Assets.icons.saveIcon.path,
           isLoading: _isSaving,
           onPressed: _isSaving ? null : _handleSave,
-          width: 180.w,
         ),
       ],
     );

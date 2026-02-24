@@ -51,7 +51,7 @@ class _ViewWorkScheduleDialogContent extends ConsumerWidget {
     return AppDialog(
       title: 'Work Schedule Details',
       width: 800.w,
-      onClose: () => Navigator.of(context).pop(),
+      onClose: () => context.pop(),
       actions: [
         AppButton.outline(label: 'Close', width: null, onPressed: () => context.pop()),
         Gap(8.w),

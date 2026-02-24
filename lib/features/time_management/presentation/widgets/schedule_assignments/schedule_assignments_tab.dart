@@ -1,14 +1,14 @@
-import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_action_bar.dart';
+
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
+
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
@@ -23,25 +23,7 @@ class ScheduleAssignmentsTab extends ConsumerStatefulWidget {
   ConsumerState<ScheduleAssignmentsTab> createState() => _ScheduleAssignmentsTabState();
 }
 
-class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab> with ScrollPaginationMixin {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  ScrollController? get scrollController => _scrollController;
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (enterpriseId == null) return;
-    ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).loadNextPage();
-  }
-
+class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab> {
   Future<void> _handleDelete(
     BuildContext context,
     ScheduleAssignmentTableRowData item,
@@ -104,13 +86,6 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ScheduleAssignmentActionBar(
-          onAssignSchedule: () {
-            CreateScheduleAssignmentDialog.show(context, effectiveEnterpriseId);
-          },
-          onBulkUpload: () {},
-          onExport: () {},
-        ),
         Gap(ResponsiveHelper.getResponsiveHeight(context, mobile: 16, tablet: 24, web: 24)),
         _buildContent(scheduleAssignmentsState),
       ],
@@ -126,6 +101,21 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       deletingAssignmentId: scheduleAssignmentsState.deletingAssignmentId,
       isLoading: scheduleAssignmentsState.isLoading && scheduleAssignmentsState.items.isEmpty,
       isLoadingMore: scheduleAssignmentsState.isLoadingMore,
+      paginationIsLoading: scheduleAssignmentsState.isLoading || scheduleAssignmentsState.isLoadingMore,
+      paginationInfo: PaginationInfo(
+        currentPage: scheduleAssignmentsState.currentPage,
+        pageSize: scheduleAssignmentsState.pageSize,
+        totalItems: scheduleAssignmentsState.totalItems,
+        totalPages: scheduleAssignmentsState.totalPages,
+        hasNext: scheduleAssignmentsState.hasNextPage,
+        hasPrevious: scheduleAssignmentsState.hasPreviousPage,
+      ),
+      currentPage: scheduleAssignmentsState.currentPage,
+      pageSize: scheduleAssignmentsState.pageSize,
+      onNext: () => ref.read(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId).notifier).loadNextPage(),
+      onPrevious: () => ref
+          .read(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId).notifier)
+          .goToPage(scheduleAssignmentsState.currentPage - 1),
       hasError: scheduleAssignmentsState.hasError && scheduleAssignmentsState.items.isEmpty,
       errorMessage: scheduleAssignmentsState.errorMessage,
       onRetry: () {

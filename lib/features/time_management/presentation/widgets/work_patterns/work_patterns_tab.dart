@@ -1,9 +1,8 @@
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_header.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/delete_work_pattern_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
@@ -12,82 +11,85 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class WorkPatternsTab extends ConsumerStatefulWidget {
+class WorkPatternsTab extends ConsumerWidget {
   const WorkPatternsTab({super.key});
 
   @override
-  ConsumerState<WorkPatternsTab> createState() => _WorkPatternsTabState();
-}
-
-class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> with ScrollPaginationMixin {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  ScrollController? get scrollController => _scrollController;
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void onLoadMore() {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-    if (enterpriseId == null) return;
-
-    final state = ref.read(workPatternsNotifierProvider(enterpriseId));
-    if (state.hasNextPage && !state.isLoadingMore) {
-      ref.read(workPatternsNotifierProvider(enterpriseId).notifier).loadNextPage();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+  Widget build(BuildContext context, WidgetRef ref) {
     final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
-    final workPatternsState = effectiveEnterpriseId != null
-        ? ref.watch(workPatternsNotifierProvider(effectiveEnterpriseId))
-        : const WorkPatternState();
 
     if (effectiveEnterpriseId == null) {
-      return const TimeManagementEmptyStateWidget(message: 'Please select an enterprise to view work patterns');
+      return Padding(
+        padding: EdgeInsets.only(top: 24.h),
+        child: EmptyStateWidget(
+          icon: Icons.business_outlined,
+          title: 'Select an Enterprise',
+          message: 'Please select an enterprise from above to view and manage work patterns',
+        ),
+      );
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableHeight = constraints.maxHeight;
-        final minHeight = 400.h;
-        final maxHeight = 800.h;
-        final tableHeight = availableHeight > 0 ? (availableHeight * 0.6).clamp(minHeight, maxHeight) : maxHeight;
+    final state = ref.watch(workPatternsNotifierProvider(effectiveEnterpriseId));
+    final notifier = ref.read(workPatternsNotifierProvider(effectiveEnterpriseId).notifier);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            WorkPatternHeader(localizations: localizations),
-            Gap(24.h),
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: tableHeight, minHeight: 200.h),
-                child: WorkPatternsTable(
-                  workPatterns: workPatternsState.items,
-                  isLoading: workPatternsState.isLoading,
-                  isLoadingMore: workPatternsState.isLoadingMore,
-                  hasError: workPatternsState.hasError,
-                  errorMessage: workPatternsState.errorMessage,
-                  scrollController: _scrollController,
-                  onRetry: () {
-                    ref.read(workPatternsNotifierProvider(effectiveEnterpriseId).notifier).refresh();
-                  },
-                  onEdit: (pattern) => EditWorkPatternDialog.show(context, effectiveEnterpriseId, pattern),
-                  onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, effectiveEnterpriseId),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [Gap(24.h), _buildContent(context, state, notifier, effectiveEnterpriseId)],
+    );
+  }
+
+  Widget _buildContent(BuildContext context, WorkPatternState state, WorkPatternsNotifier notifier, int enterpriseId) {
+    if (state.isLoading && state.items.isEmpty) {
+      return WorkPatternsTable(workPatterns: const [], isLoading: true, onRetry: () => notifier.refresh());
+    }
+
+    if (state.hasError && state.items.isEmpty) {
+      return DigifyErrorState(
+        message: state.errorMessage ?? 'Failed to load work patterns',
+        onRetry: () => notifier.refresh(),
+      );
+    }
+
+    if (state.items.isEmpty) {
+      return EmptyStateWidget(
+        icon: Icons.calendar_view_week_outlined,
+        title: 'No Work Patterns Found',
+        message: 'There are no work patterns available for this enterprise.',
+      );
+    }
+
+    final paginationInfo = state.totalPages > 0
+        ? PaginationInfo(
+            currentPage: state.currentPage,
+            totalPages: state.totalPages,
+            totalItems: state.totalItems,
+            pageSize: state.pageSize,
+            hasNext: state.hasNextPage,
+            hasPrevious: state.hasPreviousPage,
+          )
+        : null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        WorkPatternsTable(
+          workPatterns: state.items,
+          isLoading: state.isLoading,
+          isLoadingMore: state.isLoadingMore,
+          hasError: state.hasError,
+          errorMessage: state.errorMessage,
+          onRetry: () => notifier.refresh(),
+          onEdit: (pattern) => EditWorkPatternDialog.show(context, enterpriseId, pattern),
+          onDelete: (pattern) => DeleteWorkPatternDialog.show(context, pattern, enterpriseId),
+          paginationInfo: paginationInfo,
+          currentPage: state.currentPage,
+          pageSize: state.pageSize,
+          onPrevious: state.hasPreviousPage ? () => notifier.goToPage(state.currentPage - 1) : null,
+          onNext: state.hasNextPage ? () => notifier.goToPage(state.currentPage + 1) : null,
+          paginationIsLoading: state.isLoading || state.isLoadingMore,
+        ),
+        Gap(24.h),
+      ],
     );
   }
 }

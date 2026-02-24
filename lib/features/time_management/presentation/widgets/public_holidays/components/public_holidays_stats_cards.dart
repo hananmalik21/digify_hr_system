@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/data/stats_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 
 class PublicHolidaysStatsCards extends StatelessWidget {
@@ -62,15 +63,15 @@ class PublicHolidaysStatsCards extends StatelessWidget {
           Row(
             children: [
               Expanded(child: StatsCard(data: stats[0])),
-              SizedBox(width: spacing),
+              Gap(spacing),
               Expanded(child: StatsCard(data: stats[1])),
             ],
           ),
-          SizedBox(height: spacing),
+          Gap(spacing),
           Row(
             children: [
               Expanded(child: StatsCard(data: stats[2])),
-              SizedBox(width: spacing),
+              Gap(spacing),
               Expanded(child: StatsCard(data: stats[3])),
             ],
           ),
@@ -81,11 +82,11 @@ class PublicHolidaysStatsCards extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: StatsCard(data: stats[0])),
-        SizedBox(width: spacing),
+        Gap(spacing),
         Expanded(child: StatsCard(data: stats[1])),
-        SizedBox(width: spacing),
+        Gap(spacing),
         Expanded(child: StatsCard(data: stats[2])),
-        SizedBox(width: spacing),
+        Gap(spacing),
         Expanded(child: StatsCard(data: stats[3])),
       ],
     );

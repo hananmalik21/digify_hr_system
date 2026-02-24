@@ -9,20 +9,12 @@ class JobLevelRepositoryImpl implements JobLevelRepository {
   const JobLevelRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<JobLevelResponse> getJobLevels({
-    int page = 1,
-    int pageSize = 10,
-    String? search,
-  }) async {
-    return await remoteDataSource.getJobLevels(
-      page: page,
-      pageSize: pageSize,
-      search: search,
-    );
+  Future<JobLevelResponse> getJobLevels({int page = 1, int pageSize = 10, String? search, int? tenantId}) async {
+    return await remoteDataSource.getJobLevels(page: page, pageSize: pageSize, search: search, tenantId: tenantId);
   }
 
   @override
-  Future<JobLevel> createJobLevel(JobLevel jobLevel) async {
+  Future<JobLevel> createJobLevel(JobLevel jobLevel, {int? tenantId}) async {
     final data = {
       'level_name_en': jobLevel.nameEn,
       'level_code': jobLevel.code,
@@ -32,21 +24,27 @@ class JobLevelRepositoryImpl implements JobLevelRepository {
       'status': jobLevel.status,
       'last_update_login': 'SYSTEM',
     };
+    if (tenantId != null) {
+      data['tenant_id'] = tenantId;
+    }
     return await remoteDataSource.createJobLevel(data);
   }
 
   @override
-  Future<JobLevel> updateJobLevel(JobLevel jobLevel) async {
+  Future<JobLevel> updateJobLevel(JobLevel jobLevel, {int? tenantId}) async {
     final data = {
       'description': jobLevel.description,
       'min_grade_id': jobLevel.minGradeId,
       'max_grade_id': jobLevel.maxGradeId,
     };
+    if (tenantId != null) {
+      data['tenant_id'] = tenantId;
+    }
     return await remoteDataSource.updateJobLevel(jobLevel.id, data);
   }
 
   @override
-  Future<void> deleteJobLevel(int id) async {
-    await remoteDataSource.deleteJobLevel(id, hard: true);
+  Future<void> deleteJobLevel(int id, {int? tenantId}) async {
+    await remoteDataSource.deleteJobLevel(id, hard: true, tenantId: tenantId);
   }
 }

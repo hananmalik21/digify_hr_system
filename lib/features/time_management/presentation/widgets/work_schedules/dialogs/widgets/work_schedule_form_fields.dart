@@ -16,8 +16,8 @@ class WorkScheduleFormFields extends StatefulWidget {
   final TextEditingController scheduleCodeController;
   final TextEditingController scheduleNameEnController;
   final TextEditingController scheduleNameArController;
-  final TextEditingController effectiveStartDateController;
-  final TextEditingController effectiveEndDateController;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
   final WorkPattern? selectedWorkPattern;
   final int enterpriseId;
   final PositionStatus selectedStatus;
@@ -27,16 +27,16 @@ class WorkScheduleFormFields extends StatefulWidget {
   final ValueChanged<String>? onScheduleNameArChanged;
   final ValueChanged<WorkPattern?> onWorkPatternChanged;
   final ValueChanged<PositionStatus> onStatusChanged;
-  final VoidCallback onStartDateTap;
-  final VoidCallback onEndDateTap;
+  final ValueChanged<DateTime>? onStartDateSelected;
+  final ValueChanged<DateTime>? onEndDateSelected;
 
   const WorkScheduleFormFields({
     super.key,
     required this.scheduleCodeController,
     required this.scheduleNameEnController,
     required this.scheduleNameArController,
-    required this.effectiveStartDateController,
-    required this.effectiveEndDateController,
+    this.initialStartDate,
+    this.initialEndDate,
     this.selectedWorkPattern,
     required this.enterpriseId,
     required this.selectedStatus,
@@ -46,8 +46,8 @@ class WorkScheduleFormFields extends StatefulWidget {
     this.onScheduleNameArChanged,
     required this.onWorkPatternChanged,
     required this.onStatusChanged,
-    required this.onStartDateTap,
-    required this.onEndDateTap,
+    this.onStartDateSelected,
+    this.onEndDateSelected,
   });
 
   @override
@@ -138,39 +138,24 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
         Row(
           children: [
             Expanded(
-              child: DigifyTextField(
-                controller: widget.effectiveStartDateController,
-                labelText: 'Effective Start Date',
+              child: DigifyDateField(
+                label: 'Effective Start Date',
                 hintText: 'YYYY-MM-DD',
                 isRequired: true,
-                readOnly: true,
-                onTap: widget.onStartDateTap,
-                suffixIcon: Icon(
-                  Icons.calendar_today,
-                  size: 20.sp,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Effective start date is required';
-                  }
-                  return null;
-                },
+                initialDate: widget.initialStartDate,
+                onDateSelected: widget.onStartDateSelected,
+                fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
               ),
             ),
             Gap(24.w),
             Expanded(
-              child: DigifyTextField(
-                controller: widget.effectiveEndDateController,
-                labelText: 'Effective End Date',
+              child: DigifyDateField(
+                label: 'Effective End Date',
                 hintText: 'YYYY-MM-DD (optional)',
-                readOnly: true,
-                onTap: widget.onEndDateTap,
-                suffixIcon: Icon(
-                  Icons.calendar_today,
-                  size: 20.sp,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                ),
+                isRequired: false,
+                initialDate: widget.initialEndDate,
+                onDateSelected: widget.onEndDateSelected,
+                fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
               ),
             ),
           ],

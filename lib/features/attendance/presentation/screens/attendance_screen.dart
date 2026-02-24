@@ -27,12 +27,15 @@ class AttendanceScreen extends ConsumerStatefulWidget {
 }
 
 class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
-  final TextEditingController _employeeNumberController = TextEditingController();
+  final TextEditingController _employeeNumberController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _employeeNumberController.text = ref.read(attendanceNotifierProvider).employeeNumber;
+    _employeeNumberController.text = ref
+        .read(attendanceNotifierProvider)
+        .employeeNumber;
   }
 
   @override
@@ -48,9 +51,16 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     final notifier = ref.read(attendanceNotifierProvider.notifier);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(left: 27.w, right: 21.w, top: 61.h, bottom: 48.h),
+        padding: EdgeInsets.only(
+          left: 27.w,
+          right: 21.w,
+          top: 61.h,
+          bottom: 48.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,12 +69,19 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [_buildHeaderTitle(context, isDark), Gap(16.h), _buildHeaderActions(context.isMobile)],
+                    children: [
+                      _buildHeaderTitle(context, isDark),
+                      Gap(16.h),
+                      _buildHeaderActions(context.isMobile),
+                    ],
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [_buildHeaderTitle(context, isDark), _buildHeaderActions(context.isMobile)],
+                    children: [
+                      _buildHeaderTitle(context, isDark),
+                      _buildHeaderActions(context.isMobile),
+                    ],
                   ),
             Gap(21.h),
 
@@ -73,14 +90,20 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
               decoration: BoxDecoration(
                 color: isDark ? AppColors.cardBackgroundDark : Colors.white,
                 borderRadius: BorderRadius.circular(7.r),
-                border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                border: Border.all(
+                  color: isDark
+                      ? AppColors.cardBorderDark
+                      : AppColors.cardBorder,
+                  width: 1,
+                ),
               ),
               child: context.isMobile
                   ? Column(
                       children: [
                         DateSelectionFieldHorizontal(
                           label: 'From Date',
-                          labelIconPath: Assets.icons.attendance.emptyCalander.path,
+                          labelIconPath:
+                              Assets.icons.attendance.emptyCalander.path,
                           date: state.fromDate,
                           onDateSelected: (date) => notifier.setFromDate(date),
                         ),
@@ -89,13 +112,22 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                           label: 'To Date',
                           date: state.toDate,
                           onDateSelected: (date) => notifier.setToDate(date),
-                          labelIconPath: Assets.icons.attendance.emptyCalander.path,
+                          labelIconPath:
+                              Assets.icons.attendance.emptyCalander.path,
                         ),
                         Gap(16.h),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
+                            DigifyAsset(
+                              assetPath:
+                                  Assets.icons.sidebar.scheduleAssignments.path,
+                              width: 16.w,
+                              height: 16.h,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.dialogCloseIcon,
+                            ),
                             Gap(4.w),
                             Expanded(
                               child: Column(
@@ -107,7 +139,14 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                       children: [
                                         TextSpan(
                                           text: 'Employee Number',
-                                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: isDark ? context.themeTextSecondary : AppColors.inputLabel, fontFamily: 'Inter'),
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: isDark
+                                                ? context.themeTextSecondary
+                                                : AppColors.inputLabel,
+                                            fontFamily: 'Inter',
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -118,8 +157,12 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                     controller: _employeeNumberController,
                                     fillColor: AppColors.cardBackground,
                                     filled: true,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                                    onChanged: (value) => notifier.setEmployeeNumber(value),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 12.h,
+                                    ),
+                                    onChanged: (value) =>
+                                        notifier.setEmployeeNumber(value),
                                   ),
                                 ],
                               ),
@@ -134,8 +177,10 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                           child: DateSelectionFieldHorizontal(
                             label: 'From Date',
                             date: state.fromDate,
-                            onDateSelected: (date) => notifier.setFromDate(date),
-                            labelIconPath: Assets.icons.attendance.emptyCalander.path,
+                            onDateSelected: (date) =>
+                                notifier.setFromDate(date),
+                            labelIconPath:
+                                Assets.icons.attendance.emptyCalander.path,
                           ),
                         ),
                         Gap(14.w),
@@ -144,7 +189,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                             label: 'To Date',
                             date: state.toDate,
                             onDateSelected: (date) => notifier.setToDate(date),
-                            labelIconPath: Assets.icons.attendance.emptyCalander.path,
+                            labelIconPath:
+                                Assets.icons.attendance.emptyCalander.path,
                           ),
                         ),
                         Gap(14.w),
@@ -152,7 +198,18 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DigifyAsset(assetPath: Assets.icons.sidebar.scheduleAssignments.path, width: 16.w, height: 16.h, color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon),
+                              DigifyAsset(
+                                assetPath: Assets
+                                    .icons
+                                    .sidebar
+                                    .scheduleAssignments
+                                    .path,
+                                width: 16.w,
+                                height: 16.h,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.dialogCloseIcon,
+                              ),
                               Gap(4.w),
                               Expanded(
                                 child: Column(
@@ -164,7 +221,14 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                         children: [
                                           TextSpan(
                                             text: 'Employee Number',
-                                            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: isDark ? context.themeTextSecondary : AppColors.inputLabel, fontFamily: 'Inter'),
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: isDark
+                                                  ? context.themeTextSecondary
+                                                  : AppColors.inputLabel,
+                                              fontFamily: 'Inter',
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -175,8 +239,12 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                                       controller: _employeeNumberController,
                                       fillColor: AppColors.cardBackground,
                                       filled: true,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                                      onChanged: (value) => notifier.setEmployeeNumber(value),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 12.h,
+                                      ),
+                                      onChanged: (value) =>
+                                          notifier.setEmployeeNumber(value),
                                     ),
                                   ],
                                 ),
@@ -250,7 +318,9 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                     children: cards
                         .map(
                           (card) => SizedBox(
-                            width: (context.screenWidth - 64.w) / 2, // 2 cards per row
+                            width:
+                                (context.screenWidth - 64.w) /
+                                2, // 2 cards per row
                             child: card,
                           ),
                         )
@@ -263,7 +333,9 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                       .map(
                         (card) => Expanded(
                           child: Padding(
-                            padding: EdgeInsets.only(right: card == cards.last ? 0 : 16.w),
+                            padding: EdgeInsets.only(
+                              right: card == cards.last ? 0 : 16.w,
+                            ),
                             child: card,
                           ),
                         ),
@@ -306,12 +378,19 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
       children: [
         Text(
           'Daily Attendance',
-          style: context.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w600, color: isDark ? null : AppColors.dialogTitle, fontFamily: 'Inter'),
+          style: context.textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: isDark ? null : AppColors.dialogTitle,
+            fontFamily: 'Inter',
+          ),
         ),
         Gap(2.h),
         Text(
           'Track and manage employee attendance records',
-          style: context.textTheme.bodyMedium?.copyWith(color: isDark ? null : AppColors.textSecondary, fontFamily: 'Inter'),
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: isDark ? null : AppColors.textSecondary,
+            fontFamily: 'Inter',
+          ),
         ),
       ],
     );
@@ -326,9 +405,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
       AppButton(
         fontSize: 14.sp,
         label: 'Mark Attendance',
-        onPressed: () {
-          MarkAttendanceDialog.show(context);
-        },
+        onPressed: () => MarkAttendanceDialog.show(context),
         icon: Icons.add,
         height: 35.h,
         type: AppButtonType.primary,
@@ -337,7 +414,11 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     ];
 
     if (isMobile) {
-      return Wrap(spacing: 12.w, runSpacing: 12.h, children: actions.where((w) => w is! Gap).toList());
+      return Wrap(
+        spacing: 12.w,
+        runSpacing: 12.h,
+        children: actions.where((w) => w is! Gap).toList(),
+      );
     }
 
     return Row(children: actions);

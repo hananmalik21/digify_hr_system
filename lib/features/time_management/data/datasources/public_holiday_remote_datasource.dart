@@ -42,7 +42,7 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
         throw ValidationException('page_size must be between 1 and 100');
       }
 
-      final queryParameters = <String, String>{'page': page.toString(), 'page_size': pageSize.toString()};
+      final queryParameters = <String, String>{'page': page.toString(), 'limit': pageSize.toString()};
 
       if (search != null && search.trim().isNotEmpty) {
         queryParameters['search'] = search.trim();
