@@ -109,16 +109,13 @@ class OrgUnitFormNotifier extends StateNotifier<OrgUnitFormState> {
   }
 
   Future<void> submit({required String structureId, String? orgUnitId, required String levelCode}) async {
-    if (_controllers['orgUnitCode']!.text.trim().isEmpty) {
-      state = state.copyWith(error: 'Org Unit Code is required');
+    if (_controllers['orgUnitCode']!.text.trim().isEmpty || _controllers['nameEn']!.text.trim().isEmpty) {
+      state = state.copyWith(error: 'Please fill in all required fields.');
       return;
     }
-    if (_controllers['nameEn']!.text.trim().isEmpty) {
-      state = state.copyWith(error: 'Name in English is required');
-      return;
-    }
-    if (_controllers['nameAr']!.text.trim().isEmpty) {
-      state = state.copyWith(error: 'Name in Arabic is required');
+
+    if (levelCode.toUpperCase() != 'COMPANY' && state.parentId == null) {
+      state = state.copyWith(error: 'Parent Org Unit is required.');
       return;
     }
 

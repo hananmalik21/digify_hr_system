@@ -100,12 +100,11 @@ class ShiftFormContent extends ConsumerWidget {
               Expanded(
                 child: DigifyTextField(
                   labelText: 'Shift Name (Arabic)',
-                  hintText: 'الدوام النهاري',
+                  hintText: 'Enter shift name in Arabic (Optional)',
                   controller: nameArController,
-                  isRequired: true,
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  validator: (value) => FormValidators.requiredWithStateError(value, formState.errors, 'nameAr'),
+                  isRequired: false,
+                  inputFormatters: [AppInputFormatters.nameAny],
+                  validator: (value) => null,
                   onChanged: (value) => formNotifier.updateNameAr(value),
                 ),
               ),

@@ -66,7 +66,7 @@ class ScheduleAssignmentParentUnit {
 
   factory ScheduleAssignmentParentUnit.fromJson(Map<String, dynamic> json) {
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) {
         final trimmed = value.trim();
         return trimmed.isEmpty ? defaultValue : trimmed;
@@ -114,7 +114,7 @@ class ScheduleAssignmentWorkSchedule {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
@@ -150,7 +150,7 @@ class ScheduleAssignmentEnterprise {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
@@ -181,7 +181,7 @@ class ScheduleAssignmentOrgPathItem {
 
   factory ScheduleAssignmentOrgPathItem.fromJson(Map<String, dynamic> json) {
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) {
         final trimmed = value.trim();
         return trimmed.isEmpty ? defaultValue : trimmed;
@@ -223,7 +223,7 @@ class ScheduleAssignmentOrgStructure {
 
   factory ScheduleAssignmentOrgStructure.fromJson(Map<String, dynamic> json) {
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
@@ -295,7 +295,7 @@ class ScheduleAssignment {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }

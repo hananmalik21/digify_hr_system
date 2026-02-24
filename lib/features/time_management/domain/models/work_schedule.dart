@@ -56,7 +56,7 @@ class WorkScheduleShift {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
@@ -174,7 +174,7 @@ class WorkSchedule {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }

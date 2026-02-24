@@ -72,12 +72,11 @@ class BasicInfoSection extends StatelessWidget {
             ),
             PositionLabeledField(
               label: '${localizations.positionTitle} (Arabic)',
-              isRequired: true,
+              isRequired: false,
               child: PositionFormHelpers.buildFormField(
                 controller: titleArabicController,
-                hint: 'مثال: مدير مالي',
-                textDirection: TextDirection.rtl,
-                inputFormatters: FieldFormat.arabicOnlyFormatters,
+                hint: 'e.g. Finance Manager (Optional)',
+                inputFormatters: [AppInputFormatters.nameAny],
               ),
             ),
           ],

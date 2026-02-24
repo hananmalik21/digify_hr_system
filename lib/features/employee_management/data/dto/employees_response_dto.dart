@@ -96,15 +96,21 @@ class OrgStructureItemDto {
   });
 
   factory OrgStructureItemDto.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null || value == 'null') return null;
+      if (value is String) return value.trim().isEmpty ? null : value.trim();
+      return value.toString().trim();
+    }
+
     return OrgStructureItemDto(
       level: (json['level'] as num?)?.toInt() ?? 0,
-      orgUnitId: json['org_unit_id'] as String? ?? '',
-      orgUnitCode: json['org_unit_code'] as String? ?? '',
-      orgUnitNameEn: json['org_unit_name_en'] as String?,
-      orgUnitNameAr: json['org_unit_name_ar'] as String?,
-      levelCode: json['level_code'] as String? ?? '',
-      status: json['status'] as String?,
-      isActive: json['is_active'] as String?,
+      orgUnitId: parseString(json['org_unit_id']) ?? '',
+      orgUnitCode: parseString(json['org_unit_code']) ?? '',
+      orgUnitNameEn: parseString(json['org_unit_name_en']),
+      orgUnitNameAr: parseString(json['org_unit_name_ar']),
+      levelCode: parseString(json['level_code']) ?? '',
+      status: parseString(json['status']),
+      isActive: parseString(json['is_active']),
     );
   }
 }
@@ -119,12 +125,18 @@ class PositionObjDto {
   const PositionObjDto({this.positionId, this.positionCode, this.positionTitleEn, this.positionTitleAr, this.status});
 
   factory PositionObjDto.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null || value == 'null') return null;
+      if (value is String) return value.trim().isEmpty ? null : value.trim();
+      return value.toString().trim();
+    }
+
     return PositionObjDto(
-      positionId: json['position_id'] as String?,
-      positionCode: json['position_code'] as String?,
-      positionTitleEn: json['position_title_en'] as String?,
-      positionTitleAr: json['position_title_ar'] as String?,
-      status: json['status'] as String?,
+      positionId: parseString(json['position_id']),
+      positionCode: parseString(json['position_code']),
+      positionTitleEn: parseString(json['position_title_en']),
+      positionTitleAr: parseString(json['position_title_ar']),
+      status: parseString(json['status']),
     );
   }
 }
@@ -213,47 +225,53 @@ class EmployeeListItemDto {
   });
 
   factory EmployeeListItemDto.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null || value == 'null') return null;
+      if (value is String) return value.trim().isEmpty ? null : value.trim();
+      return value.toString().trim();
+    }
+
     final orgList = json['org_structure_list'] as List<dynamic>? ?? [];
     final positionObjJson = json['position'] as Map<String, dynamic>?;
     return EmployeeListItemDto(
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
-      employeeGuid: json['employee_guid'] as String? ?? '',
-      firstNameEn: json['first_name_en'] as String?,
-      middleNameEn: json['middle_name_en'] as String?,
-      lastNameEn: json['last_name_en'] as String?,
-      firstNameAr: json['first_name_ar'] as String?,
-      middleNameAr: json['middle_name_ar'] as String?,
-      lastNameAr: json['last_name_ar'] as String?,
-      familyNameAr: json['family_name_ar'] as String?,
-      email: json['email'] as String?,
-      phoneNumber: json['phone_number'] as String?,
-      mobileNumber: json['mobile_number'] as String?,
-      dateOfBirth: json['date_of_birth'] as String?,
-      employeeStatus: json['employee_status'] as String?,
-      employeeIsActive: json['employee_is_active'] as String?,
-      creationDate: json['creation_date'] as String?,
-      lastUpdateDate: json['last_update_date'] as String?,
+      employeeGuid: parseString(json['employee_guid']) ?? '',
+      firstNameEn: parseString(json['first_name_en']),
+      middleNameEn: parseString(json['middle_name_en']),
+      lastNameEn: parseString(json['last_name_en']),
+      firstNameAr: parseString(json['first_name_ar']),
+      middleNameAr: parseString(json['middle_name_ar']),
+      lastNameAr: parseString(json['last_name_ar']),
+      familyNameAr: parseString(json['family_name_ar']),
+      email: parseString(json['email']),
+      phoneNumber: parseString(json['phone_number']),
+      mobileNumber: parseString(json['mobile_number']),
+      dateOfBirth: parseString(json['date_of_birth']),
+      employeeStatus: parseString(json['employee_status']),
+      employeeIsActive: parseString(json['employee_is_active']),
+      creationDate: parseString(json['creation_date']),
+      lastUpdateDate: parseString(json['last_update_date']),
       assignmentId: (json['assignment_id'] as num?)?.toInt(),
-      assignmentGuid: json['assignment_guid'] as String?,
-      employeeNumber: json['employee_number'] as String?,
-      orgUnitId: json['org_unit_id'] as String?,
+      assignmentGuid: parseString(json['assignment_guid']),
+      employeeNumber: parseString(json['employee_number']),
+      orgUnitId: parseString(json['org_unit_id']),
       orgStructureList: orgList.map((e) => OrgStructureItemDto.fromJson(e as Map<String, dynamic>)).toList(),
       workLocationId: (json['work_location_id'] as num?)?.toInt(),
-      positionId: json['position_id'] as String?,
+      positionId: parseString(json['position_id']),
       positionObj: positionObjJson != null ? PositionObjDto.fromJson(positionObjJson) : null,
       jobFamilyId: (json['job_family_id'] as num?)?.toInt(),
       jobLevelId: (json['job_level_id'] as num?)?.toInt(),
       gradeId: (json['grade_id'] as num?)?.toInt(),
-      enterpriseHireDate: json['enterprise_hire_date'] as String?,
-      contractTypeCode: json['contract_type_code'] as String?,
+      enterpriseHireDate: parseString(json['enterprise_hire_date']),
+      contractTypeCode: parseString(json['contract_type_code']),
       probationDays: (json['probation_days'] as num?)?.toInt(),
       reportingToEmpId: (json['reporting_to_emp_id'] as num?)?.toInt(),
-      employmentStatus: json['employment_status'] as String?,
-      effectiveStartDate: json['effective_start_date'] as String?,
-      effectiveEndDate: json['effective_end_date'] as String?,
-      assignmentStatus: json['assignment_status'] as String?,
-      assignmentIsActive: json['assignment_is_active'] as String?,
+      employmentStatus: parseString(json['employment_status']),
+      effectiveStartDate: parseString(json['effective_start_date']),
+      effectiveEndDate: parseString(json['effective_end_date']),
+      assignmentStatus: parseString(json['assignment_status']),
+      assignmentIsActive: parseString(json['assignment_is_active']),
       rn: (json['rn'] as num?)?.toInt(),
     );
   }

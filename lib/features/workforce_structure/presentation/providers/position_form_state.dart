@@ -112,9 +112,6 @@ class PositionFormNotifier extends StateNotifier<PositionFormState> {
     if (titleEnglish.trim().isEmpty) {
       return '${l.positionTitle} (English) ${l.fieldRequired}';
     }
-    if (titleArabic.trim().isEmpty) {
-      return '${l.positionTitle} (Arabic) ${l.fieldRequired}';
-    }
     if (costCenter.trim().isEmpty) {
       return '${l.costCenter} ${l.fieldRequired}';
     }

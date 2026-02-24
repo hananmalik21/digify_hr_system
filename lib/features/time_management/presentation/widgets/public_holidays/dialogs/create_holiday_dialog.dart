@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
@@ -198,21 +197,15 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
                 ),
                 Gap(16.w),
                 Expanded(
-                  child: Directionality(
-                    textDirection: ui.TextDirection.rtl,
-                    child: DigifyTextField(
-                      controller: _nameArController,
-                      labelText: 'Holiday Name (Arabic)',
-                      hintText: 'اليوم الوطني',
-                      isRequired: true,
-                      inputFormatters: [AppInputFormatters.nameAr],
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Holiday name in Arabic is required';
-                        }
-                        return null;
-                      },
-                    ),
+                  child: DigifyTextField(
+                    controller: _nameArController,
+                    labelText: 'Holiday Name (Arabic)',
+                    hintText: 'Enter holiday name in Arabic (Optional)',
+                    isRequired: false,
+                    inputFormatters: [AppInputFormatters.nameAny],
+                    validator: (value) {
+                      return null;
+                    },
                   ),
                 ),
               ],
@@ -270,17 +263,12 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
             DigifyTextArea(
               controller: _descriptionArController,
               labelText: 'Description (Arabic)',
-              hintText: 'أدخل وصف العطلة بالعربية',
-              isRequired: true,
+              hintText: 'Enter holiday description in Arabic (Optional)',
+              isRequired: false,
               maxLines: 3,
               minLines: 3,
-              textDirection: ui.TextDirection.rtl,
-              textAlign: TextAlign.right,
-              inputFormatters: [AppInputFormatters.nameAr],
+              inputFormatters: [AppInputFormatters.nameAny],
               validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Description in Arabic is required';
-                }
                 return null;
               },
             ),

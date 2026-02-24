@@ -6,7 +6,7 @@ abstract class JobFamilyRepository {
   Future<JobFamily> createJobFamily({
     required String code,
     required String nameEnglish,
-    required String nameArabic,
+    String nameArabic = '',
     required String description,
     String status = 'ACTIVE',
     int? tenantId,
@@ -15,7 +15,7 @@ abstract class JobFamilyRepository {
     required int id,
     required String code,
     required String nameEnglish,
-    required String nameArabic,
+    String nameArabic = '',
     required String description,
     String status = 'ACTIVE',
     int? tenantId,

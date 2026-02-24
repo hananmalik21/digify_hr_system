@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
@@ -134,10 +135,11 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
             SizedBox(height: 12.h),
             _buildField(
               label: localizations.jobFamilyNameArabic,
-              hint: localizations.jobFamilyNameArabicHint,
+              hint: 'e.g. Finance Manager (Optional)',
               controller: arabicController,
-              isRtl: true,
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\u0600-\u06FF\s]'))],
+              isRequired: false,
+              inputFormatters: [AppInputFormatters.nameAny],
+              validator: (value) => null,
             ),
             SizedBox(height: 12.h),
             DigifyTextArea(
@@ -176,7 +178,9 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
     bool readOnly = false,
+    bool isRequired = true,
     List<TextInputFormatter>? inputFormatters,
+    String? Function(String?)? validator,
   }) {
     return DigifyTextField(
       labelText: label,
@@ -185,16 +189,18 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
       textAlign: isRtl ? TextAlign.right : TextAlign.start,
       maxLines: maxLines,
-      isRequired: true,
+      isRequired: isRequired,
       readOnly: readOnly,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
-      validator: (value) {
-        if ((value ?? '').isEmpty) {
-          return '';
-        }
-        return null;
-      },
+      validator:
+          validator ??
+          (value) {
+            if ((value ?? '').isEmpty) {
+              return '';
+            }
+            return null;
+          },
     );
   }
 }

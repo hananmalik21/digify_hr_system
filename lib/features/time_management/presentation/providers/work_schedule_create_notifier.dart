@@ -89,11 +89,6 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
       return false;
     }
 
-    if (state.scheduleNameAr.trim().isEmpty) {
-      state = state.copyWith(error: 'Schedule name (Arabic) is required');
-      return false;
-    }
-
     if (state.selectedWorkPattern == null) {
       state = state.copyWith(error: 'Please select a work pattern');
       return false;
