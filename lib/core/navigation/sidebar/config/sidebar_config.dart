@@ -333,19 +333,19 @@ class SidebarConfig {
           ),
           SidebarItem(
             id: 'timesheet',
-            svgPath: Assets.icons.attendanceIcon.path,
+            svgPath: Assets.icons.viewIconBlueFigma.path,
             labelKey: 'timesheet',
             route: '/time-tracking-and-attendance',
           ),
           SidebarItem(
             id: 'overtime',
-            svgPath: Assets.icons.attendanceIcon.path,
+            svgPath: Assets.icons.attendance.halfDay.path,
             labelKey: 'overtime',
             route: '/time-tracking-and-attendance',
           ),
           SidebarItem(
             id: 'overtimeConfiguration',
-            svgPath: Assets.icons.settingsIcon.path,
+            svgPath: Assets.icons.structureConfigurationIcon.path,
             labelKey: 'overtimeConfiguration',
             route: '/time-tracking-and-attendance',
           ),
@@ -357,18 +357,13 @@ class SidebarConfig {
           ),
           SidebarItem(
             id: 'employeeLocations',
-            svgPath: Assets.icons.locationCardIcon.path,
+            svgPath: Assets.icons.attendance.mapPin.path,
             labelKey: 'employeeLocations',
             route: '/time-tracking-and-attendance',
           ),
         ],
       ),
-      SidebarItem(
-        id: 'payroll',
-        svgPath: Assets.icons.payrollIcon.path,
-        labelKey: 'payroll',
-        route: '/payroll',
-      ),
+      SidebarItem(id: 'payroll', svgPath: Assets.icons.payrollIcon.path, labelKey: 'payroll', route: '/payroll'),
       SidebarItem(
         id: 'compliance',
         svgPath: Assets.icons.complianceIcon.path,
@@ -381,12 +376,7 @@ class SidebarConfig {
         labelKey: 'eosCalculator',
         route: '/eos-calculator',
       ),
-      SidebarItem(
-        id: 'reports',
-        svgPath: Assets.icons.reportsIcon.path,
-        labelKey: 'reports',
-        route: '/reports',
-      ),
+      SidebarItem(id: 'reports', svgPath: Assets.icons.reportsIcon.path, labelKey: 'reports', route: '/reports'),
       SidebarItem(
         id: 'governmentForms',
         svgPath: Assets.icons.governmentFormsIcon.path,
@@ -546,6 +536,18 @@ class SidebarConfig {
         return localizations.leaveCalendar;
       case 'timeTrackingAttendance':
         return 'Time Tracking & Attendance';
+      case 'attendance':
+        return 'Daily Attendance';
+      case 'timesheet':
+        return 'Time Sheets';
+      case 'overtime':
+        return 'Overtime';
+      case 'overtimeConfiguration':
+        return 'Overtime Configuration';
+      case 'geoLocations':
+        return 'Geo Locations';
+      case 'employeeLocations':
+        return 'View Employee Location';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':

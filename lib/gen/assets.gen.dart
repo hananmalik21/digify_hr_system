@@ -1220,6 +1220,9 @@ class $AssetsIconsAttendanceGen {
   /// File path: assets/icons/attendance/leave.svg
   SvgGenImage get leave => const SvgGenImage('assets/icons/attendance/leave.svg');
 
+  /// File path: assets/icons/attendance/map-pin.svg
+  SvgGenImage get mapPin => const SvgGenImage('assets/icons/attendance/map-pin.svg');
+
   /// File path: assets/icons/attendance/present.svg
   SvgGenImage get present => const SvgGenImage('assets/icons/attendance/present.svg');
 
@@ -1227,7 +1230,7 @@ class $AssetsIconsAttendanceGen {
   SvgGenImage get staff => const SvgGenImage('assets/icons/attendance/staff.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [absent, emptyCalander, enterprise, halfDay, late, leave, present, staff];
+  List<SvgGenImage> get values => [absent, emptyCalander, enterprise, halfDay, late, leave, mapPin, present, staff];
 }
 
 class $AssetsIconsAuthGen {
