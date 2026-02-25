@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/navigation/app_layout.dart';
 import 'package:digify_hr_system/core/navigation/root_navigator_key.dart';
 import 'package:digify_hr_system/core/router/app_routes.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:flutter/material.dart';
 import 'package:digify_hr_system/core/widgets/feedback/placeholder_screen.dart';
 import 'package:digify_hr_system/features/auth/presentation/providers/auth_provider.dart';
@@ -14,7 +15,6 @@ import 'package:digify_hr_system/features/employee_management/domain/models/empl
 import 'package:digify_hr_system/features/employee_management/presentation/screens/employee_management_screens.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_management_screen.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/screens/leave_request_employee_detail_screen.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/screens/timesheet_detail_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/timesheet/timesheet_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
