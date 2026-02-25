@@ -19,6 +19,8 @@ class Employee {
   final String? createdBy;
   final DateTime? updatedAt;
   final String? updatedBy;
+  final String? positionTitle;
+  final String? departmentName;
 
   const Employee({
     required this.id,
@@ -41,6 +43,8 @@ class Employee {
     this.createdBy,
     this.updatedAt,
     this.updatedBy,
+    this.positionTitle,
+    this.departmentName,
   });
 
   String get fullName => [firstName, middleName, lastName].where((n) => n != null && n.isNotEmpty).join(' ').trim();

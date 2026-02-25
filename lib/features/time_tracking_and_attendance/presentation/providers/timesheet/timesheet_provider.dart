@@ -1,12 +1,22 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/utils/date_time_utils.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/timesheet_repository_impl.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/timesheet_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/usecases/timesheet/get_timesheet_statistics_usecase.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/usecases/timesheet/get_timesheets_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Repository provider
+final timesheetApiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient(baseUrl: ApiConfig.baseUrl);
+});
+
 final timesheetRepositoryProvider = Provider<TimesheetRepository>((ref) {
-  return TimesheetRepositoryImpl();
+  final client = ref.watch(timesheetApiClientProvider);
+  return TimesheetRepositoryImpl(apiClient: client);
 });
 
 class TimesheetState {
@@ -18,6 +28,8 @@ class TimesheetState {
   final String? divisionId;
   final String? departmentId;
   final String? sectionId;
+  final String? orgUnitId;
+  final String? levelCode;
   final int total;
   final int draft;
   final int submitted;
@@ -26,11 +38,14 @@ class TimesheetState {
   final double regularHours;
   final double overtimeHours;
   final bool isLoading;
+  final String? approvingTimesheetGuid;
+  final String? rejectingTimesheetGuid;
   final String? error;
   final List<Timesheet> records;
   final int currentPage;
   final int pageSize;
   final int totalItems;
+  final bool isCurrentWeek;
 
   const TimesheetState({
     required this.weekStartDate,
@@ -41,6 +56,8 @@ class TimesheetState {
     this.divisionId,
     this.departmentId,
     this.sectionId,
+    this.orgUnitId,
+    this.levelCode,
     this.total = 0,
     this.draft = 0,
     this.submitted = 0,
@@ -49,11 +66,14 @@ class TimesheetState {
     this.regularHours = 0.0,
     this.overtimeHours = 0.0,
     this.isLoading = false,
+    this.approvingTimesheetGuid,
+    this.rejectingTimesheetGuid,
     this.error,
     this.records = const [],
     this.currentPage = 1,
     this.pageSize = 10,
     this.totalItems = 0,
+    this.isCurrentWeek = true,
   });
 
   TimesheetState copyWith({
@@ -65,6 +85,8 @@ class TimesheetState {
     String? divisionId,
     String? departmentId,
     String? sectionId,
+    String? orgUnitId,
+    String? levelCode,
     int? total,
     int? draft,
     int? submitted,
@@ -73,6 +95,8 @@ class TimesheetState {
     double? regularHours,
     double? overtimeHours,
     bool? isLoading,
+    String? approvingTimesheetGuid,
+    String? rejectingTimesheetGuid,
     String? error,
     List<Timesheet>? records,
     int? currentPage,
@@ -80,6 +104,11 @@ class TimesheetState {
     int? totalItems,
     bool clearError = false,
     bool clearStatusFilter = false,
+    bool clearOrgUnitId = false,
+    bool clearLevelCode = false,
+    bool clearApprovingTimesheetGuid = false,
+    bool clearRejectingTimesheetGuid = false,
+    bool? isCurrentWeek,
   }) {
     return TimesheetState(
       weekStartDate: weekStartDate ?? this.weekStartDate,
@@ -92,6 +121,8 @@ class TimesheetState {
       divisionId: divisionId ?? this.divisionId,
       departmentId: departmentId ?? this.departmentId,
       sectionId: sectionId ?? this.sectionId,
+      orgUnitId: clearOrgUnitId ? null : (orgUnitId ?? this.orgUnitId),
+      levelCode: clearLevelCode ? null : (levelCode ?? this.levelCode),
       total: total ?? this.total,
       draft: draft ?? this.draft,
       submitted: submitted ?? this.submitted,
@@ -100,36 +131,46 @@ class TimesheetState {
       regularHours: regularHours ?? this.regularHours,
       overtimeHours: overtimeHours ?? this.overtimeHours,
       isLoading: isLoading ?? this.isLoading,
+      approvingTimesheetGuid: clearApprovingTimesheetGuid
+          ? null
+          : (approvingTimesheetGuid ?? this.approvingTimesheetGuid),
+      rejectingTimesheetGuid: clearRejectingTimesheetGuid
+          ? null
+          : (rejectingTimesheetGuid ?? this.rejectingTimesheetGuid),
       error: clearError ? null : (error ?? this.error),
       records: records ?? this.records,
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,
       totalItems: totalItems ?? this.totalItems,
+      isCurrentWeek: isCurrentWeek ?? this.isCurrentWeek,
     );
   }
 }
 
 class TimesheetNotifier extends StateNotifier<TimesheetState> {
+  final GetTimesheetsUseCase _getTimesheets;
+  final GetTimesheetStatisticsUseCase _getStatistics;
   final TimesheetRepository _repository;
+  Debouncer? _searchDebouncer;
 
-  TimesheetNotifier(this._repository)
-    : super(
-        TimesheetState(
-          weekStartDate: _getWeekStart(DateTime.now()),
-          weekEndDate: _getWeekEnd(DateTime.now()),
-        ),
-      ) {
+  TimesheetNotifier({
+    required GetTimesheetsUseCase getTimesheetsUseCase,
+    required GetTimesheetStatisticsUseCase getTimesheetStatisticsUseCase,
+    required TimesheetRepository repository,
+  }) : _getTimesheets = getTimesheetsUseCase,
+       _getStatistics = getTimesheetStatisticsUseCase,
+       _repository = repository,
+       super(
+         TimesheetState(
+           weekStartDate: DateTimeUtils.getWeekStart(DateTime.now()),
+           weekEndDate: DateTimeUtils.getWeekEnd(DateTime.now()),
+         ),
+       ) {
     loadTimesheets();
   }
 
-  static DateTime _getWeekStart(DateTime date) {
-    final weekday = date.weekday;
-    return date.subtract(Duration(days: weekday - 1));
-  }
-
-  static DateTime _getWeekEnd(DateTime date) {
-    final weekday = date.weekday;
-    return date.add(Duration(days: 7 - weekday));
+  static bool _isCurrentWeekRange(DateTime start, DateTime end) {
+    return DateTimeUtils.isDateInRange(start: start, end: end);
   }
 
   /// Loads timesheets from repository
@@ -137,8 +178,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     state = state.copyWith(isLoading: true, clearError: true);
 
     try {
-      // Load statistics
-      final stats = await _repository.getTimesheetStatistics(
+      final stats = await _getStatistics(
         weekStartDate: state.weekStartDate,
         weekEndDate: state.weekEndDate,
         companyId: state.companyId,
@@ -147,8 +187,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
         sectionId: state.sectionId,
       );
 
-      // Load timesheets
-      final timesheets = await _repository.getTimesheets(
+      final pageResult = await _getTimesheets(
         weekStartDate: state.weekStartDate,
         weekEndDate: state.weekEndDate,
         searchQuery: state.searchQuery.isEmpty ? null : state.searchQuery,
@@ -157,13 +196,15 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
         divisionId: state.divisionId,
         departmentId: state.departmentId,
         sectionId: state.sectionId,
+        orgUnitId: state.orgUnitId,
+        levelCode: state.levelCode,
         page: state.currentPage,
         pageSize: state.pageSize,
       );
 
       state = state.copyWith(
-        records: timesheets,
-        totalItems: timesheets.length,
+        records: pageResult.items,
+        totalItems: pageResult.total,
         total: stats['total'] as int? ?? 0,
         draft: stats['draft'] as int? ?? 0,
         submitted: stats['submitted'] as int? ?? 0,
@@ -189,14 +230,19 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   }
 
   void setWeek(DateTime weekStart) {
-    final weekEnd = weekStart.add(const Duration(days: 6));
-    state = state.copyWith(weekStartDate: weekStart, weekEndDate: weekEnd);
+    final normalizedStart = DateTimeUtils.getWeekStart(weekStart);
+    final weekEnd = normalizedStart.add(const Duration(days: 6));
+    state = state.copyWith(
+      weekStartDate: normalizedStart,
+      weekEndDate: weekEnd,
+      isCurrentWeek: _isCurrentWeekRange(normalizedStart, weekEnd),
+    );
     loadTimesheets();
   }
 
   void goToCurrentWeek() {
     final now = DateTime.now();
-    setWeek(_getWeekStart(now));
+    setWeek(DateTimeUtils.getWeekStart(now));
   }
 
   void goToPreviousWeek() {
@@ -210,8 +256,12 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   }
 
   void setSearchQuery(String query) {
-    state = state.copyWith(searchQuery: query);
-    loadTimesheets();
+    _searchDebouncer ??= Debouncer(delay: const Duration(milliseconds: 400));
+    final trimmed = query.trim();
+    _searchDebouncer!.run(() {
+      state = state.copyWith(searchQuery: trimmed, currentPage: 1);
+      loadTimesheets();
+    });
   }
 
   void setStatusFilter(TimesheetStatus? status) {
@@ -248,6 +298,16 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     loadTimesheets();
   }
 
+  void setOrgFilter(String? orgUnitId, String? levelCode) {
+    state = state.copyWith(
+      orgUnitId: orgUnitId,
+      levelCode: levelCode,
+      clearOrgUnitId: orgUnitId == null,
+      clearLevelCode: levelCode == null,
+    );
+    loadTimesheets();
+  }
+
   void setPage(int page) {
     state = state.copyWith(currentPage: page);
     loadTimesheets();
@@ -258,27 +318,132 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     loadTimesheets();
   }
 
-  Future<void> approveTimesheet(int timesheetId) async {
+  /// Approves a timesheet by GUID. Returns null on success, error message on failure.
+  Future<String?> approveTimesheet(String timesheetGuid) async {
+    state = state.copyWith(approvingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.approveTimesheet(timesheetId);
-      await loadTimesheets();
+      await _repository.approveTimesheet(timesheetGuid);
+      final records = [...state.records];
+      final index = records.indexWhere((t) => t.guid == timesheetGuid);
+
+      if (index != -1) {
+        final current = records[index];
+
+        final updated = Timesheet(
+          id: current.id,
+          guid: current.guid,
+          employeeId: current.employeeId,
+          employeeName: current.employeeName,
+          employeeNumber: current.employeeNumber,
+          departmentName: current.departmentName,
+          weekStartDate: current.weekStartDate,
+          weekEndDate: current.weekEndDate,
+          regularHours: current.regularHours,
+          overtimeHours: current.overtimeHours,
+          totalHours: current.totalHours,
+          status: TimesheetStatus.approved,
+          description: current.description,
+          createdAt: current.createdAt,
+          updatedAt: DateTime.now(),
+          submittedAt: current.submittedAt,
+          approvedAt: DateTime.now(),
+          rejectedAt: null,
+          rejectionReason: null,
+          lines: current.lines,
+        );
+
+        records[index] = updated;
+
+        var submitted = state.submitted;
+        var approved = state.approved;
+
+        if (current.status == TimesheetStatus.submitted) {
+          submitted = submitted > 0 ? submitted - 1 : 0;
+          approved = approved + 1;
+        }
+
+        state = state.copyWith(
+          records: records,
+          submitted: submitted,
+          approved: approved,
+        );
+      }
+
+      return null;
     } catch (e) {
-      state = state.copyWith(
-        error: 'Failed to approve timesheet: ${e.toString()}',
-        clearError: false,
-      );
+      final message = 'Failed to approve timesheet: ${e.toString()}';
+      state = state.copyWith(error: message, clearError: false);
+      return message;
+    } finally {
+      state = state.copyWith(clearApprovingTimesheetGuid: true);
     }
   }
 
-  Future<void> rejectTimesheet(int timesheetId, String reason) async {
+  Future<String?> rejectTimesheet(
+    String timesheetGuid, {
+    required String rejectReason,
+  }) async {
+    state = state.copyWith(rejectingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.rejectTimesheet(timesheetId, reason: reason);
-      await loadTimesheets();
-    } catch (e) {
-      state = state.copyWith(
-        error: 'Failed to reject timesheet: ${e.toString()}',
-        clearError: false,
+      await _repository.rejectTimesheet(
+        timesheetGuid,
+        rejectReason: rejectReason,
       );
+
+      // Optimistically update the rejected timesheet in the current list
+      final records = [...state.records];
+      final index = records.indexWhere((t) => t.guid == timesheetGuid);
+
+      if (index != -1) {
+        final current = records[index];
+
+        final updated = Timesheet(
+          id: current.id,
+          guid: current.guid,
+          employeeId: current.employeeId,
+          employeeName: current.employeeName,
+          employeeNumber: current.employeeNumber,
+          departmentName: current.departmentName,
+          weekStartDate: current.weekStartDate,
+          weekEndDate: current.weekEndDate,
+          regularHours: current.regularHours,
+          overtimeHours: current.overtimeHours,
+          totalHours: current.totalHours,
+          status: TimesheetStatus.rejected,
+          description: current.description,
+          createdAt: current.createdAt,
+          updatedAt: DateTime.now(),
+          submittedAt: current.submittedAt,
+          approvedAt: current.approvedAt,
+          rejectedAt: DateTime.now(),
+          rejectionReason: rejectReason,
+          lines: current.lines,
+        );
+
+        records[index] = updated;
+
+        var submitted = state.submitted;
+        var rejected = state.rejected;
+
+        if (current.status == TimesheetStatus.submitted) {
+          submitted = submitted > 0 ? submitted - 1 : 0;
+          rejected = rejected + 1;
+        }
+
+        state = state.copyWith(
+          records: records,
+          submitted: submitted,
+          rejected: rejected,
+        );
+      }
+
+      return null;
+    } catch (e) {
+      final message = 'Failed to reject timesheet: ${e.toString()}';
+      state = state.copyWith(error: message, clearError: false);
+      return message;
+    } finally {
+      state = state.copyWith(clearRejectingTimesheetGuid: true);
     }
   }
 }
@@ -287,5 +452,12 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
 final timesheetNotifierProvider =
     StateNotifierProvider<TimesheetNotifier, TimesheetState>((ref) {
       final repository = ref.watch(timesheetRepositoryProvider);
-      return TimesheetNotifier(repository);
+      final getTimesheets = GetTimesheetsUseCase(repository: repository);
+      final getStats = GetTimesheetStatisticsUseCase(repository: repository);
+
+      return TimesheetNotifier(
+        getTimesheetsUseCase: getTimesheets,
+        getTimesheetStatisticsUseCase: getStats,
+        repository: repository,
+      );
     });

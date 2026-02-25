@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/theme/theme_extensions.dart';
 import '../../../../../core/widgets/assets/digify_asset.dart';
-import '../../../domain/domain/models/overtime/overtime.dart';
+import '../../../domain/models/overtime/overtime_management.dart';
 import '../../providers/overtime/overtime_provider.dart';
 
 class ComponentOvertimeStats extends ConsumerWidget {

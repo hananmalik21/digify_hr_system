@@ -56,9 +56,14 @@ class ApiEndpoints {
   static String tmWorkScheduleById(int scheduleId) => '$tmWorkSchedules/$scheduleId';
   static const String tmScheduleAssignments = '$api/tm/schedule-assignments';
   static String tmScheduleAssignmentById(int scheduleAssignmentId) => '$tmScheduleAssignments/$scheduleAssignmentId';
+  static const String tmTimesheets = '$api/tm/timesheets';
+  static String tmTimesheetByGuid(String guid) => '$tmTimesheets/$guid';
+  static String tmTimesheetApprove(String guid) => '$tmTimesheets/$guid/approve';
+  static String tmTimesheetReject(String guid) => '$tmTimesheets/$guid/reject';
   static const String tmPublicHolidays = '$api/holidays';
   static String tmPublicHolidayById(int holidayId) => '$tmPublicHolidays/$holidayId';
   static const String tmStats = '$api/tm/stats';
+  static const String tmProjects = '$api/tm/projects';
 
   // Leave Management (ABS) endpoints
   static const String absLeaveRequests = '$api/abs/leave-requests';

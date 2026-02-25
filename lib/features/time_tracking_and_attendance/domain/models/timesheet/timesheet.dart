@@ -1,8 +1,10 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_line.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 
 /// Domain model for Timesheet
 class Timesheet {
   final int id;
+  final String guid;
   final int employeeId;
   final String employeeName;
   final String employeeNumber;
@@ -13,15 +15,18 @@ class Timesheet {
   final double overtimeHours;
   final double totalHours;
   final TimesheetStatus status;
+  final String? description;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? submittedAt;
   final DateTime? approvedAt;
   final DateTime? rejectedAt;
   final String? rejectionReason;
+  final List<TimesheetLine> lines;
 
   const Timesheet({
     required this.id,
+    required this.guid,
     required this.employeeId,
     required this.employeeName,
     required this.employeeNumber,
@@ -32,17 +37,20 @@ class Timesheet {
     required this.overtimeHours,
     required this.totalHours,
     required this.status,
+    this.description,
     this.createdAt,
     this.updatedAt,
     this.submittedAt,
     this.approvedAt,
     this.rejectedAt,
     this.rejectionReason,
+    this.lines = const [],
   });
 
   factory Timesheet.fromJson(Map<String, dynamic> json) {
     return Timesheet(
       id: json['id'] as int,
+      guid: (json['guid'] ?? json['timesheet_guid']) as String? ?? '',
       employeeId: json['employee_id'] as int,
       employeeName: json['employee_name'] as String? ?? '',
       employeeNumber: json['employee_number'] as String? ?? '',
@@ -55,6 +63,7 @@ class Timesheet {
       status: TimesheetStatusExtension.fromString(
         json['status'] as String? ?? 'draft',
       ),
+      description: json['description'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'] as String)
           : null,
@@ -77,6 +86,7 @@ class Timesheet {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'guid': guid,
       'employee_id': employeeId,
       'employee_name': employeeName,
       'employee_number': employeeNumber,

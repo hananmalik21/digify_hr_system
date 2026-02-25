@@ -1,10 +1,10 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_page.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 
 /// Repository interface for timesheet operations
 abstract class TimesheetRepository {
-  /// Gets paginated list of timesheets
-  Future<List<Timesheet>> getTimesheets({
+  Future<TimesheetPage> getTimesheets({
     DateTime? weekStartDate,
     DateTime? weekEndDate,
     String? employeeNumber,
@@ -14,11 +14,12 @@ abstract class TimesheetRepository {
     String? divisionId,
     String? departmentId,
     String? sectionId,
+    String? orgUnitId,
+    String? levelCode,
     int page = 1,
     int pageSize = 10,
   });
 
-  /// Gets timesheet statistics
   Future<Map<String, dynamic>> getTimesheetStatistics({
     DateTime? weekStartDate,
     DateTime? weekEndDate,
@@ -35,20 +36,20 @@ abstract class TimesheetRepository {
   /// Creates a new timesheet
   Future<Timesheet> createTimesheet(Map<String, dynamic> timesheetData);
 
-  /// Updates an existing timesheet
   Future<Timesheet> updateTimesheet(
-    int timesheetId,
+    String timesheetGuid,
     Map<String, dynamic> timesheetData,
   );
 
   /// Submits a timesheet for approval
   Future<Timesheet> submitTimesheet(int timesheetId);
 
-  /// Approves a timesheet
-  Future<Timesheet> approveTimesheet(int timesheetId, {String? notes});
+  Future<void> approveTimesheet(String timesheetGuid);
 
-  /// Rejects a timesheet
-  Future<Timesheet> rejectTimesheet(int timesheetId, {required String reason});
+  Future<void> rejectTimesheet(
+    String timesheetGuid, {
+    required String rejectReason,
+  });
 
   /// Deletes a timesheet
   Future<void> deleteTimesheet(int timesheetId);

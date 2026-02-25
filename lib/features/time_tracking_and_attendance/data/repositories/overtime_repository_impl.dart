@@ -1,5 +1,5 @@
-import '../../domain/domain/models/overtime/overtime_record.dart';
-import '../../domain/domain/repositories/overtime_repository.dart';
+import '../../domain/models/overtime/overtime_record.dart';
+import '../../domain/repositories/overtime_repository.dart';
 
 /// Mock implementation of OvertimeRepository
 class OvertimeRepositoryImpl implements OvertimeRepository {
@@ -13,16 +13,82 @@ class OvertimeRepositoryImpl implements OvertimeRepository {
     // Mock data matching Figma design
     final mockOvertimeRecords = [
       OvertimeRecord(
-        name: "Sarah Jonshon",
         employeeId: "EMP-001",
-        type: "Regular",
-        overtimeHours: "2",
-        regularHours: "8",
         date: DateTime(2026, 2, 2),
         requestedDate: DateTime(2026, 2, 2),
-        status: "Approved",
-        rate: "10",
         amount: "100",
+        employeeDetail: EmployeeDetail(
+          name: "Sarah Jonshon",
+          employeeId: "EMP-001",
+          position: "Software Engineer",
+          department: "IT",
+          lineManager: "John Doe",
+        ),
+        overtimeDetail: OvertimeDetail(
+          type: "Regular",
+          overtimeHours: "2",
+          regularHours: "8",
+          rate: "10",
+          amount: "100",
+        ),
+        approvalInformation: ApprovalInformation(
+          status: "Approved",
+          byUser: "John Doe",
+          date: DateTime(2026, 2, 2),
+          reason: "Approved",
+        ),
+      ),
+      OvertimeRecord(
+        employeeId: "EMP-002",
+        date: DateTime(2026, 2, 2),
+        requestedDate: DateTime(2026, 2, 2),
+        amount: "100",
+        employeeDetail: EmployeeDetail(
+          name: "Vivian",
+          employeeId: "EMP-002",
+          position: "Software Engineer",
+          department: "IT",
+          lineManager: "John Doe",
+        ),
+        overtimeDetail: OvertimeDetail(
+          type: "Regular",
+          overtimeHours: "2",
+          regularHours: "8",
+          rate: "10",
+          amount: "100",
+        ),
+        approvalInformation: ApprovalInformation(
+          status: "Approved",
+          byUser: "John Doe",
+          date: DateTime(2026, 2, 2),
+          reason: "Approved",
+        ),
+      ),
+      OvertimeRecord(
+        employeeId: "EMP-003",
+        date: DateTime(2026, 2, 2),
+        requestedDate: DateTime(2026, 2, 2),
+        amount: "100",
+        employeeDetail: EmployeeDetail(
+          name: "Sara",
+          employeeId: "EMP-003",
+          position: "Software Engineer",
+          department: "IT",
+          lineManager: "John Doe",
+        ),
+        overtimeDetail: OvertimeDetail(
+          type: "Regular",
+          overtimeHours: "2",
+          regularHours: "8",
+          rate: "10",
+          amount: "100",
+        ),
+        approvalInformation: ApprovalInformation(
+          status: "Approved",
+          byUser: "John Doe",
+          date: DateTime(2026, 2, 2),
+          reason: "Approved",
+        ),
       ),
     ];
 

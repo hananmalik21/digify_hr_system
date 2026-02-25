@@ -364,4 +364,5 @@ class AppColors {
   static const Color authSocialBtnBorder = Color(0xFFE2E8F0);
   static const Color authButton = Color(0xFF2563EB);
   static const Color authLinkText = Color(0xFF62748E);
+  static const Color transparent = Colors.transparent;
 }

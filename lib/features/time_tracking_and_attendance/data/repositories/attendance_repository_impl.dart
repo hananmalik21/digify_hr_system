@@ -1,5 +1,5 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/attendance_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
 
 /// Mock implementation of AttendanceRepository
 class AttendanceRepositoryImpl implements AttendanceRepository {

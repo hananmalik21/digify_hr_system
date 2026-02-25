@@ -3743,6 +3743,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reject => 'Reject';
 
   @override
+  String get rejectTimesheetTitle => 'Reject Timesheet';
+
+  @override
+  String get rejectReason => 'Reject reason';
+
+  @override
+  String get rejectReasonRequired => 'Please enter a reason for rejection';
+
+  @override
+  String get approveTimesheetConfirmTitle => 'Approve timesheet';
+
+  @override
+  String get approveTimesheetConfirmMessage =>
+      'Are you sure you want to approve this timesheet?';
+
+  @override
+  String get rejectTimesheetConfirmTitle => 'Reject timesheet';
+
+  @override
+  String get rejectTimesheetConfirmMessage =>
+      'Are you sure you want to reject this timesheet? You will need to provide a reason.';
+
+  @override
   String get totalRequests => 'Total Requests';
 
   @override
