@@ -32,56 +32,49 @@ class AttendanceStatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-          width: 1,
-        ),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: context.textTheme.labelLarge?.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : Color(0xFF4A5565),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Gap(8.h),
-                Text(
+          // Title row (full width)
+          Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.labelLarge?.copyWith(
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Gap(8.h),
+          // Value + icon row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
                   value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: context.textTheme.headlineLarge?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : Color(0xFF0F172B),
+                    color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            width: 48.w,
-            height: 48.h,
-            decoration: BoxDecoration(
-              color: iconBackgroundColor,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            alignment: Alignment.center,
-            child: iconPath != null
-                ? DigifyAsset(
-                    assetPath: iconPath!,
-                    color: iconColor,
-                    width: 24,
-                    height: 24,
-                  )
-                : Icon(
-                    icon,
-                    size: 24.sp,
-                    color: iconColor,
-                  ),
+              ),
+              Container(
+                width: 48.w,
+                height: 48.h,
+                decoration: BoxDecoration(color: iconBackgroundColor, borderRadius: BorderRadius.circular(8.r)),
+                alignment: Alignment.center,
+                child: iconPath != null
+                    ? DigifyAsset(assetPath: iconPath!, color: iconColor, width: 24, height: 24)
+                    : Icon(icon, size: 24.sp, color: iconColor),
+              ),
+            ],
           ),
         ],
       ),

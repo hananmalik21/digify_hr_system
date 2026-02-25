@@ -213,8 +213,8 @@ class LeaveRequestsTableRow extends StatelessWidget {
           DigifyAssetButton(
             assetPath: Assets.icons.checkIconGreen.path,
             onTap: onApprove,
-            width: 15.w,
-            height: 15.h,
+            width: 17.w,
+            height: 17.h,
             color: AppColors.success,
             isLoading: isApproveLoading,
           ),
@@ -222,8 +222,8 @@ class LeaveRequestsTableRow extends StatelessWidget {
           DigifyAssetButton(
             assetPath: Assets.icons.closeIcon.path,
             onTap: onReject,
-            width: 15.w,
-            height: 15.h,
+            width: 17.w,
+            height: 17.h,
             color: AppColors.error,
             isLoading: isRejectLoading,
           ),

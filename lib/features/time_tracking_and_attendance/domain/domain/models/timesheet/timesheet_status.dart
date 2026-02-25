@@ -1,10 +1,5 @@
 /// Timesheet status enum matching Figma design
-enum TimesheetStatus {
-  draft,
-  submitted,
-  approved,
-  rejected,
-}
+enum TimesheetStatus { draft, submitted, approved, rejected }
 
 extension TimesheetStatusExtension on TimesheetStatus {
   String get displayName {
@@ -12,7 +7,7 @@ extension TimesheetStatusExtension on TimesheetStatus {
       case TimesheetStatus.draft:
         return 'Draft';
       case TimesheetStatus.submitted:
-        return 'Submitted';
+        return 'Pending';
       case TimesheetStatus.approved:
         return 'Approved';
       case TimesheetStatus.rejected:
@@ -48,4 +43,3 @@ extension TimesheetStatusExtension on TimesheetStatus {
     }
   }
 }
-
