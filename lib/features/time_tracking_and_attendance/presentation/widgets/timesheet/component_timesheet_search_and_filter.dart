@@ -7,13 +7,11 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_enterprise_provider.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_filter_org_param_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_enterprise_selection_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +41,17 @@ class TimesheetSearchAndFilter extends ConsumerStatefulWidget {
 
 class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFilter> {
   bool _showFilters = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orgState = ref.read(timesheetOrgStructureNotifierProvider);
+      if (!orgState.isLoading && orgState.orgStructure == null) {
+        ref.read(timesheetOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,37 +195,15 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
   }
 
   List<Widget> _buildOrgFilters(BuildContext context) {
-    final enterpriseId = ref.watch(timesheetEnterpriseIdProvider);
     final notifier = ref.read(timesheetNotifierProvider.notifier);
+    final orgState = ref.watch(timesheetOrgStructureNotifierProvider);
+    final org = orgState.orgStructure;
 
-    if (enterpriseId == null) {
-      return [
-        Text(
-          'Select an enterprise to use filters',
-          style: context.textTheme.labelSmall?.copyWith(
-            fontSize: 12.sp,
-            color: widget.isDark ? AppColors.textTertiaryDark : AppColors.tableHeaderText,
-          ),
-        ),
-      ];
-    }
-
-    final param = ref.watch(timesheetFilterOrgParamProvider(enterpriseId));
-
-    if (param == null) {
-      final orgState = ref.watch(enterpriseOrgStructureNotifierProvider(enterpriseId));
-
-      if (!orgState.isLoading && !orgState.hasAttemptedLoad) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ref
-              .read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier)
-              .fetchOrgStructureByEnterpriseId(enterpriseId);
-        });
-      }
-
+    if (org == null) {
       return _buildOrgFiltersLoadingPlaceholders();
     }
 
+    final param = (levels: org.activeLevels, structureId: org.structureId);
     return _buildOrgCascade(param, notifier);
   }
 
@@ -263,7 +250,7 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
     ({List<OrgStructureLevel> levels, String structureId}) param,
     TimesheetNotifier notifier,
   ) {
-    final selectionProvider = enterpriseSelectionNotifierProvider(param);
+    final selectionProvider = timesheetEnterpriseSelectionNotifierProvider(param.structureId);
     final selectionState = ref.watch(selectionProvider);
     final levels = param.levels;
 
@@ -281,6 +268,7 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
           showLabel: false,
           onSelectionChanged: (levelCode, unit) {
             final id = unit?.orgUnitId;
+            ref.read(selectionProvider.notifier).selectUnit(levelCode, unit);
             if (id == null) {
               return;
             }
@@ -292,12 +280,10 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
   }
 
   void _resetOrgFilters() {
-    final enterpriseId = ref.read(timesheetEnterpriseIdProvider);
-    if (enterpriseId != null) {
-      final param = ref.read(timesheetFilterOrgParamProvider(enterpriseId));
-      if (param != null) {
-        ref.read(enterpriseSelectionNotifierProvider(param).notifier).reset();
-      }
+    final orgState = ref.read(timesheetOrgStructureNotifierProvider);
+    final org = orgState.orgStructure;
+    if (org != null) {
+      ref.read(timesheetEnterpriseSelectionNotifierProvider(org.structureId).notifier).reset();
     }
 
     final notifier = ref.read(timesheetNotifierProvider.notifier);

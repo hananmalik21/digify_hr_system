@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/timesheet_dto.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
@@ -39,17 +40,19 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
         query['search'] = searchQuery.trim();
       }
 
+      if (status != null) {
+        query['status'] = status.toApiString();
+      }
+
       if (orgUnitId != null && orgUnitId.isNotEmpty) {
         query['orgUnitId'] = orgUnitId;
-        query['org_unit_id'] = orgUnitId;
       }
 
       if (levelCode != null && levelCode.isNotEmpty) {
         query['levelCode'] = levelCode;
-        query['level_code'] = levelCode;
       }
 
-      final response = await _apiClient.get('/api/tm/timesheets', queryParameters: query);
+      final response = await _apiClient.get(ApiEndpoints.tmTimesheets, queryParameters: query);
 
       final data = response['data'] as List<dynamic>? ?? [];
       final pagination = (response['meta']?['pagination'] as Map<String, dynamic>?) ?? {};
