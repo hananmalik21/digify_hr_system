@@ -1,6 +1,6 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_line.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_line.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 
 class TimesheetDto {
   final int timesheetId;
@@ -57,12 +57,16 @@ class TimesheetDto {
       middleNameEn: json['middle_name_en'] as String?,
       lastNameEn: json['last_name_en'] as String?,
       employeeNumber: json['employee_number'] as String? ?? '',
-      orgStructureList: (json['org_structure_list'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
+      orgStructureList: (json['org_structure_list'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList(),
       weekStartDate: json['week_start_date'] as String? ?? '',
       weekEndDate: json['week_end_date'] as String? ?? '',
       statusCode: json['status_code'] as String? ?? 'DRAFT',
       description: json['description'] as String?,
-      timesheetLines: (json['timesheet_lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
+      timesheetLines: (json['timesheet_lines'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList(),
       creationDate: json['creation_date'] as String?,
       lastUpdateDate: json['last_update_date'] as String?,
       submittedDate: json['submitted_date'] as String?,
@@ -124,7 +128,8 @@ class TimesheetDto {
 
   static TimesheetLine _lineFromMap(Map<String, dynamic> l) {
     final workDate = l['work_date'] as String? ?? '';
-    final taskText = (l['project_task_text'] ?? l['line_notes']) as String? ?? '';
+    final taskText =
+        (l['project_task_text'] ?? l['line_notes']) as String? ?? '';
     return TimesheetLine(
       workDate: workDate,
       projectId: (l['project_id'] as num?)?.toInt(),

@@ -1,13 +1,13 @@
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../../../core/theme/app_shadows.dart';
-import '../../../../../../core/widgets/common/scrollable_wrapper.dart';
+import '../../../../../../core/theme/theme_extensions.dart';
 import '../../../../../enterprise_structure/domain/models/structure_list_item.dart';
-import '../../../../domain/domain/models/overtime/overtime_record.dart';
+import '../../../../domain/models/overtime/overtime_record.dart';
 import 'overtime_table_header.dart';
 import 'overtime_table_row.dart';
 import 'overtime_table_skeleton.dart';
@@ -47,6 +47,8 @@ class OvertimeTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: context.screenWidth,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
         borderRadius: BorderRadius.circular(10.r),
@@ -61,6 +63,7 @@ class OvertimeTable extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Skeletonizer(
                 enabled: isLoading,
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -68,6 +71,7 @@ class OvertimeTable extends StatelessWidget {
                       isDark: isDark,
                       localizations: localizations,
                     ),
+
                     if (isLoading && records.isEmpty)
                       OvertimeTableSkeleton(localizations: localizations)
                     else if (records.isEmpty && !isLoading)

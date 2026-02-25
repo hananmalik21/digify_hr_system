@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,7 +70,8 @@ class NewTimesheetFormState {
       description: description ?? this.description,
       isLoading: isLoading ?? this.isLoading,
       isSavingDraft: isSavingDraft ?? this.isSavingDraft,
-      isSubmittingForApproval: isSubmittingForApproval ?? this.isSubmittingForApproval,
+      isSubmittingForApproval:
+          isSubmittingForApproval ?? this.isSubmittingForApproval,
       weekDays: weekDays ?? this.weekDays,
       regularHours: regularHours ?? this.regularHours,
       overtimeHours: overtimeHours ?? this.overtimeHours,
@@ -78,9 +79,11 @@ class NewTimesheetFormState {
     );
   }
 
-  double get totalRegularHours => regularHours.fold(0.0, (sum, value) => sum + value);
+  double get totalRegularHours =>
+      regularHours.fold(0.0, (sum, value) => sum + value);
 
-  double get totalOvertimeHours => overtimeHours.fold(0.0, (sum, value) => sum + value);
+  double get totalOvertimeHours =>
+      overtimeHours.fold(0.0, (sum, value) => sum + value);
 }
 
 class MissingTimesheetRequiredDataException implements Exception {
@@ -168,7 +171,10 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
     state = state.copyWith(endDate: end);
 
     if (startDate != null) {
-      final weekDays = List.generate(7, (index) => startDate.add(Duration(days: index)));
+      final weekDays = List.generate(
+        7,
+        (index) => startDate.add(Duration(days: index)),
+      );
 
       state = state.copyWith(
         weekDays: weekDays,
@@ -203,14 +209,26 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
     final isDraft = status == TimesheetStatus.draft;
     final isSubmitted = status == TimesheetStatus.submitted;
 
-    state = state.copyWith(isLoading: true, isSavingDraft: isDraft, isSubmittingForApproval: isSubmitted);
+    state = state.copyWith(
+      isLoading: true,
+      isSavingDraft: isDraft,
+      isSubmittingForApproval: isSubmitted,
+    );
     try {
-      final body = _buildCreateRequestBody(state: currentState, enterpriseId: enterpriseId, status: status);
+      final body = _buildCreateRequestBody(
+        state: currentState,
+        enterpriseId: enterpriseId,
+        status: status,
+      );
 
       await repository.createTimesheet(body);
       await timesheetNotifier.refresh();
     } finally {
-      state = state.copyWith(isLoading: false, isSavingDraft: false, isSubmittingForApproval: false);
+      state = state.copyWith(
+        isLoading: false,
+        isSavingDraft: false,
+        isSubmittingForApproval: false,
+      );
     }
   }
 
@@ -238,8 +256,12 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
     final lines = <Map<String, dynamic>>[];
     for (var i = 0; i < state.weekDays.length; i++) {
       final workDate = state.weekDays[i];
-      final regular = i < state.regularHours.length ? state.regularHours[i] : 0.0;
-      final overtime = i < state.overtimeHours.length ? state.overtimeHours[i] : 0.0;
+      final regular = i < state.regularHours.length
+          ? state.regularHours[i]
+          : 0.0;
+      final overtime = i < state.overtimeHours.length
+          ? state.overtimeHours[i]
+          : 0.0;
       final taskText = i < state.taskTexts.length ? state.taskTexts[i] : '';
 
       if (regular == 0 && overtime == 0 && taskText.isEmpty) {
@@ -284,6 +306,7 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
   }
 }
 
-final newTimesheetProvider = StateNotifierProvider<NewTimesheetNotifier, NewTimesheetFormState>(
-  (ref) => NewTimesheetNotifier(ref),
-);
+final newTimesheetProvider =
+    StateNotifierProvider<NewTimesheetNotifier, NewTimesheetFormState>(
+      (ref) => NewTimesheetNotifier(ref),
+    );

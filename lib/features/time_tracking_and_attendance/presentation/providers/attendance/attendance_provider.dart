@@ -2,9 +2,9 @@ import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/attendance_repository_impl.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance_record.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/attendance_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Dependency Injection Providers
