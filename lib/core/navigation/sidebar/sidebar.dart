@@ -21,6 +21,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../features/time_tracking_and_attendance/presentation/providers/time_tracking_and_attendance_tab_state_provider.dart';
+
 class Sidebar extends ConsumerStatefulWidget {
   const Sidebar({super.key});
 
@@ -44,17 +46,23 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
       if (item.route == AppRoutes.employees) {
         final tabIndex = getEmployeeManagementTabIndex(item.id);
         if (tabIndex != null) {
-          ref.read(employeeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+          ref
+              .read(employeeManagementTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.enterpriseStructure) {
         final tabIndex = getEnterpriseStructureTabIndex(item.id);
         if (tabIndex != null) {
-          ref.read(enterpriseStructureTabStateProvider.notifier).setTabIndex(tabIndex);
+          ref
+              .read(enterpriseStructureTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.timeManagement) {
         final tabIndex = getTimeManagementTabIndex(item.id);
         if (tabIndex != null) {
-          ref.read(timeManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+          ref
+              .read(timeManagementTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
         }
       } else if (item.route == AppRoutes.workforceStructure) {
         final tabIndex = getWorkforceStructureTabIndex(item.id);
@@ -64,7 +72,16 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
       } else if (item.route == AppRoutes.leaveManagement) {
         final tabIndex = getLeaveManagementTabIndex(item.id);
         if (tabIndex != null) {
-          ref.read(leaveManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+          ref
+              .read(leaveManagementTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
+        }
+      } else if (item.route == AppRoutes.timeTrackingAndAttendance) {
+        final tabIndex = getTimeTrackingAndAttendanceTabIndex(item.id);
+        if (tabIndex != null) {
+          ref
+              .read(timeTrackingAndAttendanceTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
         }
       }
       context.go(item.route!);
@@ -101,6 +118,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
       final itemTabIndex = getLeaveManagementTabIndex(itemId);
       if (itemTabIndex == null) return false;
       return itemTabIndex == state.currentTabIndex;
+    } else if (route == AppRoutes.timeTrackingAndAttendance) {
+      final state = ref.watch(timeTrackingAndAttendanceTabStateProvider);
+      final itemTabIndex = getTimeTrackingAndAttendanceTabIndex(itemId);
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
     }
     return true;
   }
@@ -110,7 +132,9 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
       final isCurrentlyExpanded = _expandedItems[id] ?? false;
       if (!isCurrentlyExpanded) {
         for (final item in allItems) {
-          if (item.id != id && item.children != null && item.children!.isNotEmpty) {
+          if (item.id != id &&
+              item.children != null &&
+              item.children!.isNotEmpty) {
             _expandedItems[item.id] = false;
           }
         }
@@ -133,7 +157,9 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
         for (final item in menuItems) {
           if (item.id == 'quickAccess') continue;
           if (item.children != null) {
-            final hasActiveChild = item.children!.any((child) => child.route == currentRoute);
+            final hasActiveChild = item.children!.any(
+              (child) => child.route == currentRoute,
+            );
             if (hasActiveChild) {
               itemToExpand = item.id;
               break;
@@ -163,7 +189,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
             color: Colors.white,
             border: Border(right: BorderSide(color: AppColors.cardBorder)),
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(2, 0)),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(2, 0),
+              ),
             ],
           ),
           child: Column(
@@ -178,7 +208,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.fastOutSlowIn,
                     opacity: isExpanded ? 1.0 : 0.0,
-                    child: ClipRect(child: isExpanded ? const SidebarSearchSection() : const SizedBox.shrink()),
+                    child: ClipRect(
+                      child: isExpanded
+                          ? const SidebarSearchSection()
+                          : const SizedBox.shrink(),
+                    ),
                   ),
                 ),
               ),
@@ -187,8 +221,14 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                   items: menuItems,
                   isExpanded: isExpanded,
                   scrollController: _menuScrollController,
-                  itemBuilder: (context, item, index) =>
-                      _buildMenuItem(context, item, menuItems, isExpanded, currentRoute, localizations),
+                  itemBuilder: (context, item, index) => _buildMenuItem(
+                    context,
+                    item,
+                    menuItems,
+                    isExpanded,
+                    currentRoute,
+                    localizations,
+                  ),
                 ),
               ),
               AnimatedSize(
@@ -200,7 +240,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.fastOutSlowIn,
                     opacity: isExpanded ? 1.0 : 0.0,
-                    child: ClipRect(child: isExpanded ? const SidebarFooter() : const SizedBox.shrink()),
+                    child: ClipRect(
+                      child: isExpanded
+                          ? const SidebarFooter()
+                          : const SizedBox.shrink(),
+                    ),
                   ),
                 ),
               ),
@@ -221,10 +265,15 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
   ) {
     final hasChildren = item.children != null && item.children!.isNotEmpty;
     final isQuickAccessHeader = item.id == 'quickAccess';
-    final isSectionExpanded = isQuickAccessHeader ? true : (_expandedItems[item.id] ?? false);
+    final isSectionExpanded = isQuickAccessHeader
+        ? true
+        : (_expandedItems[item.id] ?? false);
     final isRouteMatch =
-        item.route == currentRoute || (hasChildren && item.children!.any((child) => child.route == currentRoute));
-    final isActive = isRouteMatch && _isTabIndexActive(item.id, item.route ?? '');
+        item.route == currentRoute ||
+        (hasChildren &&
+            item.children!.any((child) => child.route == currentRoute));
+    final isActive =
+        isRouteMatch && _isTabIndexActive(item.id, item.route ?? '');
 
     VoidCallback onRowTap;
     if (!isExpanded) {
@@ -252,7 +301,9 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
       onRowTap: onRowTap,
       onToggleSection: () => _toggleExpanded(item.id, allItems),
       onChildTap: _handleNavigation,
-      isChildActive: (child) => child.route == currentRoute && _isTabIndexActive(child.id, child.route ?? ''),
+      isChildActive: (child) =>
+          child.route == currentRoute &&
+          _isTabIndexActive(child.id, child.route ?? ''),
       localizations: localizations,
     );
   }

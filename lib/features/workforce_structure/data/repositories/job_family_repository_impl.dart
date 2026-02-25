@@ -17,7 +17,7 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
   Future<JobFamily> createJobFamily({
     required String code,
     required String nameEnglish,
-    required String nameArabic,
+    String nameArabic = '',
     required String description,
     String status = 'ACTIVE',
     int? tenantId,
@@ -37,7 +37,7 @@ class JobFamilyRepositoryImpl implements JobFamilyRepository {
     required int id,
     required String code,
     required String nameEnglish,
-    required String nameArabic,
+    String nameArabic = '',
     required String description,
     String status = 'ACTIVE',
     int? tenantId,

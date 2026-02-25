@@ -83,7 +83,7 @@ class WorkSchedulesList extends StatelessWidget {
             hasPrevious: paginationInfo!.hasPrevious,
             onPrevious: onPrevious,
             onNext: onNext,
-            isLoading: paginationIsLoading,
+            isLoading: false,
           ),
         ),
       );

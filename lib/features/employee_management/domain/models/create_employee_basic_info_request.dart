@@ -320,8 +320,6 @@ class CreateEmployeeBasicInfoRequest {
   bool get isStep1Valid =>
       (firstNameEn?.trim().isNotEmpty ?? false) &&
       (lastNameEn?.trim().isNotEmpty ?? false) &&
-      (firstNameAr?.trim().isNotEmpty ?? false) &&
-      (lastNameAr?.trim().isNotEmpty ?? false) &&
       isEmailValid &&
       isPhoneValid &&
       isMobileValid &&

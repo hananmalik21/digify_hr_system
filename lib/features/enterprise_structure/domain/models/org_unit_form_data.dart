@@ -19,7 +19,7 @@ class OrgUnitFormData {
   const OrgUnitFormData({
     required this.orgUnitCode,
     required this.orgUnitNameEn,
-    required this.orgUnitNameAr,
+    this.orgUnitNameAr = '',
     this.parentOrgUnitId,
     required this.isActive,
     this.managerName = '',

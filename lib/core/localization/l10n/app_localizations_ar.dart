@@ -3985,4 +3985,14 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get encashmentOptionDescription =>
       'النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة';
+
+  @override
+  String get overtimeManagment => 'إدارة الوقت الإضافي';
+
+  @override
+  String get overtimeManagmentDescription =>
+      'تتبع وإدارة ساعات العمل الإضافي والموافقات';
+
+  @override
+  String get requestOvertime => 'طلب وقت إضافي';
 }

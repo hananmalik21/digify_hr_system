@@ -62,6 +62,12 @@ class EmployeeFullDetailsDataDto {
     return null;
   }
 
+  static String? _optionalString(dynamic value) {
+    if (value == null || value == 'null') return null;
+    if (value is String) return value.trim().isEmpty ? null : value.trim();
+    return value.toString().trim();
+  }
+
   final EmployeeDetailSectionDto? employee;
   final AssignmentDetailSectionDto? assignment;
   final DemographicsDetailSectionDto? demographics;
@@ -123,21 +129,21 @@ class EmployeeDetailSectionDto {
     return EmployeeDetailSectionDto(
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
-      employeeGuid: json['employee_guid'] as String? ?? '',
-      firstNameEn: json['first_name_en'] as String?,
-      middleNameEn: json['middle_name_en'] as String?,
-      lastNameEn: json['last_name_en'] as String?,
-      firstNameAr: json['first_name_ar'] as String?,
-      middleNameAr: json['middle_name_ar'] as String?,
-      lastNameAr: json['last_name_ar'] as String?,
-      familyNameAr: json['family_name_ar'] as String?,
-      email: json['email'] as String?,
-      phoneNumber: json['phone_number'] as String?,
-      mobileNumber: json['mobile_number'] as String?,
-      dateOfBirth: json['date_of_birth'] as String?,
-      employeeStatus: json['employee_status'] as String?,
-      employeeIsActive: json['employee_is_active'] as String?,
-      employeeNumber: json['employee_number'] as String?,
+      employeeGuid: EmployeeFullDetailsDataDto._optionalString(json['employee_guid']) ?? '',
+      firstNameEn: EmployeeFullDetailsDataDto._optionalString(json['first_name_en']),
+      middleNameEn: EmployeeFullDetailsDataDto._optionalString(json['middle_name_en']),
+      lastNameEn: EmployeeFullDetailsDataDto._optionalString(json['last_name_en']),
+      firstNameAr: EmployeeFullDetailsDataDto._optionalString(json['first_name_ar']),
+      middleNameAr: EmployeeFullDetailsDataDto._optionalString(json['middle_name_ar']),
+      lastNameAr: EmployeeFullDetailsDataDto._optionalString(json['last_name_ar']),
+      familyNameAr: EmployeeFullDetailsDataDto._optionalString(json['family_name_ar']),
+      email: EmployeeFullDetailsDataDto._optionalString(json['email']),
+      phoneNumber: EmployeeFullDetailsDataDto._optionalString(json['phone_number']),
+      mobileNumber: EmployeeFullDetailsDataDto._optionalString(json['mobile_number']),
+      dateOfBirth: EmployeeFullDetailsDataDto._optionalString(json['date_of_birth']),
+      employeeStatus: EmployeeFullDetailsDataDto._optionalString(json['employee_status']),
+      employeeIsActive: EmployeeFullDetailsDataDto._optionalString(json['employee_is_active']),
+      employeeNumber: EmployeeFullDetailsDataDto._optionalString(json['employee_number']),
       workLocationId: EmployeeFullDetailsDataDto._optionalInt(json['work_location_id']),
       jobFamilyId: EmployeeFullDetailsDataDto._optionalInt(json['job_family_id']),
       jobLevelId: EmployeeFullDetailsDataDto._optionalInt(json['job_level_id']),

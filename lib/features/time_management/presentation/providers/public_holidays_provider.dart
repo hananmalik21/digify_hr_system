@@ -351,7 +351,7 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   Future<void> createHoliday({
     required int tenantId,
     required String nameEn,
-    required String nameAr,
+    String? nameAr,
     required DateTime date,
     required int year,
     required HolidayType type,
@@ -364,7 +364,7 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
       final createdHoliday = await createHolidayUseCase.execute(
         tenantId: tenantId,
         nameEn: nameEn,
-        nameAr: nameAr,
+        nameAr: nameAr ?? '',
         date: date,
         year: year,
         type: type,

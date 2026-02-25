@@ -1445,5 +1445,8 @@
   "approvePendingRequests": "Approve Pending Requests",
   "approvePendingRequestsDescription": "Review and approve pending leave requests to help employees utilize their balance",
   "encashmentOption": "Encashment Option",
-  "encashmentOptionDescription": "Consider approving encashment requests for employees who cannot take leave"
+  "encashmentOptionDescription": "Consider approving encashment requests for employees who cannot take leave",
+  "overtimeManagment": "Overtime Management",
+  "overtimeManagmentDescription": "Track and manage overtime hours and approvals",
+  "requestOvertime": "Request Overtime"
 }

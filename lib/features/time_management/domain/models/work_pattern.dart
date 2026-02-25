@@ -57,9 +57,9 @@ class WorkPattern {
     return WorkPattern(
       workPatternId: json['work_pattern_id'] as int,
       tenantId: json['tenant_id'] as int,
-      patternCode: json['pattern_code'] as String,
-      patternNameEn: json['pattern_name_en'] as String,
-      patternNameAr: json['pattern_name_ar'] as String,
+      patternCode: json['pattern_code'] == 'null' ? '' : json['pattern_code'] as String? ?? '',
+      patternNameEn: json['pattern_name_en'] == 'null' ? '' : json['pattern_name_en'] as String? ?? '',
+      patternNameAr: json['pattern_name_ar'] == 'null' ? '' : json['pattern_name_ar'] as String? ?? '',
       patternType: json['pattern_type'] as String,
       totalHoursPerWeek: json['total_hours_per_week'] as int,
       status: status,

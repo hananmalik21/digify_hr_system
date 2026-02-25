@@ -1,15 +1,15 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_dialog_params.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
+import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/configuration_summary_widget.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_area.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/shared/enterprise_structure_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import 'active_switch_section.dart';
 import 'enterprise_dropdown_section.dart';
 import 'enterprise_structure_dialog_mode.dart';
 import 'enterprise_structure_dialog_providers.dart';
@@ -43,27 +43,36 @@ class EditFormBody extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EnterpriseDropdownSection(formState: editState, formNotifier: formNotifier, initialEnterpriseId: enterpriseId),
-        EnterpriseStructureTextField(
-          label: localizations.structureName,
+        DigifyTextField(
+          labelText: localizations.structureName,
           isRequired: true,
           controller: nameController,
-          value: null,
-          readOnly: false,
-          hintText: null,
+          hintText: localizations.structureNamePlaceholder,
           onChanged: formNotifier.updateStructureName,
         ),
         Gap(16.h),
-        EnterpriseStructureTextArea(
-          label: localizations.description,
+        DigifyTextArea(
+          labelText: localizations.description,
           isRequired: true,
           controller: descriptionController,
-          value: null,
-          readOnly: false,
-          hintText: null,
+          hintText: localizations.descriptionPlaceholder,
           onChanged: formNotifier.updateDescription,
+          maxLines: 4,
         ),
         Gap(16.h),
-        ActiveSwitchSection(formState: editState, formNotifier: formNotifier),
+        DigifySelectFieldWithLabel<PositionStatus>(
+          label: localizations.status,
+          value: editState.isActive ? PositionStatus.active : PositionStatus.inactive,
+          items: const [PositionStatus.active, PositionStatus.inactive],
+          itemLabelBuilder: (s) => s == PositionStatus.active ? 'Active' : 'Inactive',
+          onChanged: (value) {
+            if (value != null) {
+              formNotifier.updateIsActive(value == PositionStatus.active);
+            }
+          },
+          isRequired: true,
+        ),
+        Gap(16.h),
         OrganizationalHierarchyLevelsSection(
           mode: EnterpriseStructureDialogMode.edit,
           levels: levels,

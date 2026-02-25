@@ -63,7 +63,7 @@ class ShiftDto {
     }
 
     String parseString(dynamic value, {String defaultValue = ''}) {
-      if (value == null) return defaultValue;
+      if (value == null || value == 'null') return defaultValue;
       if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
       return value.toString().trim();
     }
@@ -88,7 +88,7 @@ class ShiftDto {
       throw FormatException('shift_name_en is required and cannot be empty');
     }
 
-    final shiftNameAr = parseString(json['shift_name_ar'], defaultValue: shiftNameEn);
+    final shiftNameAr = parseString(json['shift_name_ar']);
 
     final shiftType = parseString(json['shift_type'], defaultValue: 'DAY');
 

@@ -319,17 +319,49 @@ class SidebarConfig {
           ),
         ],
       ),
+
       SidebarItem(
-        id: 'attendance',
-        svgPath: Assets.icons.attendanceIcon.path,
-        labelKey: 'attendance',
-        route: '/attendance',
-      ),
-      SidebarItem(
-        id: 'timesheet',
-        svgPath: Assets.icons.attendanceIcon.path,
-        labelKey: 'timesheet',
-        route: '/timesheet',
+        id: 'timeTrackingAttendance',
+        svgPath: Assets.icons.timeManagementMainIcon.path,
+        labelKey: 'timeTrackingAttendance',
+        children: [
+          SidebarItem(
+            id: 'attendance',
+            svgPath: Assets.icons.timeManagementMainIcon.path,
+            labelKey: 'attendance',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'timesheet',
+            svgPath: Assets.icons.viewIconBlueFigma.path,
+            labelKey: 'timesheet',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'overtime',
+            svgPath: Assets.icons.attendance.halfDay.path,
+            labelKey: 'overtime',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'overtimeConfiguration',
+            svgPath: Assets.icons.structureConfigurationIcon.path,
+            labelKey: 'overtimeConfiguration',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'geoLocations',
+            svgPath: Assets.icons.locationIcon.path,
+            labelKey: 'geoLocations',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
+            id: 'employeeLocations',
+            svgPath: Assets.icons.attendance.mapPin.path,
+            labelKey: 'employeeLocations',
+            route: '/time-tracking-and-attendance',
+          ),
+        ],
       ),
       SidebarItem(id: 'payroll', svgPath: Assets.icons.payrollIcon.path, labelKey: 'payroll', route: '/payroll'),
       SidebarItem(
@@ -502,10 +534,20 @@ class SidebarConfig {
         return localizations.forfeitReports;
       case 'leaveCalendar':
         return localizations.leaveCalendar;
+      case 'timeTrackingAttendance':
+        return 'Time Tracking & Attendance';
       case 'attendance':
-        return localizations.attendance;
+        return 'Daily Attendance';
       case 'timesheet':
         return 'Time Sheets';
+      case 'overtime':
+        return 'Overtime';
+      case 'overtimeConfiguration':
+        return 'Overtime Configuration';
+      case 'geoLocations':
+        return 'Geo Locations';
+      case 'employeeLocations':
+        return 'View Employee Location';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':

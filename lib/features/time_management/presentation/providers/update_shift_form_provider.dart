@@ -85,7 +85,6 @@ class UpdateShiftFormState {
 
   bool get isValid {
     return nameEn.isNotEmpty &&
-        nameAr.isNotEmpty &&
         shiftType != null &&
         startTime != null &&
         endTime != null &&
@@ -222,10 +221,6 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
 
     if (state.nameEn.isEmpty) {
       errors['nameEn'] = 'Required';
-    }
-
-    if (state.nameAr.isEmpty) {
-      errors['nameAr'] = 'Required';
     }
 
     if (state.shiftType == null) {

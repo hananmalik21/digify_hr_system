@@ -13,7 +13,7 @@ class LeaveEntitlementsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DigifyTabHeader(
-      title: localizations.kuwaitLaborLawLeaveEntitlements,
+      title: localizations.leaveRequests,
       description: localizations.manageEmployeeLeaveRequests,
       trailing: AppButton.primary(
         label: localizations.newLeaveRequest,

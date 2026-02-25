@@ -10,7 +10,7 @@ class UpdateJobFamilyUseCase {
     required int id,
     required String code,
     required String nameEnglish,
-    required String nameArabic,
+    String nameArabic = '',
     required String description,
     String status = 'ACTIVE',
     int? tenantId,
