@@ -3,11 +3,11 @@ import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/utils/date_time_utils.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/timesheet_repository_impl.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/timesheet_repository.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/usecases/timesheet/get_timesheet_statistics_usecase.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/usecases/timesheet/get_timesheets_usecase.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/usecases/timesheet/get_timesheet_statistics_usecase.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/usecases/timesheet/get_timesheets_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final timesheetApiClientProvider = Provider<ApiClient>((ref) {
@@ -114,7 +114,9 @@ class TimesheetState {
       weekStartDate: weekStartDate ?? this.weekStartDate,
       weekEndDate: weekEndDate ?? this.weekEndDate,
       searchQuery: searchQuery ?? this.searchQuery,
-      statusFilter: clearStatusFilter ? null : (statusFilter ?? this.statusFilter),
+      statusFilter: clearStatusFilter
+          ? null
+          : (statusFilter ?? this.statusFilter),
       companyId: companyId ?? this.companyId,
       divisionId: divisionId ?? this.divisionId,
       departmentId: departmentId ?? this.departmentId,
@@ -214,7 +216,11 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
         clearError: true,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to load timesheets: ${e.toString()}', clearError: false);
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load timesheets: ${e.toString()}',
+        clearError: false,
+      );
     }
   }
 
@@ -264,12 +270,21 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   }
 
   void setCompanyId(String? companyId) {
-    state = state.copyWith(companyId: companyId, divisionId: null, departmentId: null, sectionId: null);
+    state = state.copyWith(
+      companyId: companyId,
+      divisionId: null,
+      departmentId: null,
+      sectionId: null,
+    );
     loadTimesheets();
   }
 
   void setDivisionId(String? divisionId) {
-    state = state.copyWith(divisionId: divisionId, departmentId: null, sectionId: null);
+    state = state.copyWith(
+      divisionId: divisionId,
+      departmentId: null,
+      sectionId: null,
+    );
     loadTimesheets();
   }
 
@@ -347,7 +362,11 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           approved = approved + 1;
         }
 
-        state = state.copyWith(records: records, submitted: submitted, approved: approved);
+        state = state.copyWith(
+          records: records,
+          submitted: submitted,
+          approved: approved,
+        );
       }
 
       return null;
@@ -360,10 +379,16 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     }
   }
 
-  Future<String?> rejectTimesheet(String timesheetGuid, {required String rejectReason}) async {
+  Future<String?> rejectTimesheet(
+    String timesheetGuid, {
+    required String rejectReason,
+  }) async {
     state = state.copyWith(rejectingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.rejectTimesheet(timesheetGuid, rejectReason: rejectReason);
+      await _repository.rejectTimesheet(
+        timesheetGuid,
+        rejectReason: rejectReason,
+      );
 
       // Optimistically update the rejected timesheet in the current list
       final records = [...state.records];
@@ -405,7 +430,11 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           rejected = rejected + 1;
         }
 
-        state = state.copyWith(records: records, submitted: submitted, rejected: rejected);
+        state = state.copyWith(
+          records: records,
+          submitted: submitted,
+          rejected: rejected,
+        );
       }
 
       return null;
@@ -420,14 +449,15 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
 }
 
 // State Notifier Provider
-final timesheetNotifierProvider = StateNotifierProvider<TimesheetNotifier, TimesheetState>((ref) {
-  final repository = ref.watch(timesheetRepositoryProvider);
-  final getTimesheets = GetTimesheetsUseCase(repository: repository);
-  final getStats = GetTimesheetStatisticsUseCase(repository: repository);
+final timesheetNotifierProvider =
+    StateNotifierProvider<TimesheetNotifier, TimesheetState>((ref) {
+      final repository = ref.watch(timesheetRepositoryProvider);
+      final getTimesheets = GetTimesheetsUseCase(repository: repository);
+      final getStats = GetTimesheetStatisticsUseCase(repository: repository);
 
-  return TimesheetNotifier(
-    getTimesheetsUseCase: getTimesheets,
-    getTimesheetStatisticsUseCase: getStats,
-    repository: repository,
-  );
-});
+      return TimesheetNotifier(
+        getTimesheetsUseCase: getTimesheets,
+        getTimesheetStatisticsUseCase: getStats,
+        repository: repository,
+      );
+    });

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../core/localization/l10n/app_localizations.dart';
-import '../../../../domain/domain/models/overtime/overtime_record.dart';
+import '../../../../domain/models/overtime/overtime_record.dart';
 import 'overtime_table_row.dart';
 
 class OvertimeTableSkeleton extends StatelessWidget {

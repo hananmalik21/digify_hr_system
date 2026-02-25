@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
 
 class MarkAttendanceFormState {
   final int? employeeId;

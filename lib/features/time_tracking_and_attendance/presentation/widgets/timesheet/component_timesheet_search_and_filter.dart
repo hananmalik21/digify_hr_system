@@ -6,7 +6,7 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
@@ -36,10 +36,12 @@ class TimesheetSearchAndFilter extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<TimesheetSearchAndFilter> createState() => _TimesheetSearchAndFilterState();
+  ConsumerState<TimesheetSearchAndFilter> createState() =>
+      _TimesheetSearchAndFilterState();
 }
 
-class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFilter> {
+class _TimesheetSearchAndFilterState
+    extends ConsumerState<TimesheetSearchAndFilter> {
   bool _showFilters = false;
 
   @override
@@ -48,7 +50,9 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final orgState = ref.read(timesheetOrgStructureNotifierProvider);
       if (!orgState.isLoading && orgState.orgStructure == null) {
-        ref.read(timesheetOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
+        ref
+            .read(timesheetOrgStructureNotifierProvider.notifier)
+            .fetchOrgStructureLevels();
       }
     });
   }
@@ -83,7 +87,8 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                     hint: 'All Status',
                     value: widget.statusFilter,
                     items: timesheetStatusFilterItems,
-                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
+                    itemLabelBuilder: (item) =>
+                        item == null ? 'All Status' : item.displayName,
                     onChanged: widget.onStatusFilterChanged,
                   ),
                 ),
@@ -107,7 +112,8 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                     hint: 'All Status',
                     value: widget.statusFilter,
                     items: timesheetStatusFilterItems,
-                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
+                    itemLabelBuilder: (item) =>
+                        item == null ? 'All Status' : item.displayName,
                     onChanged: widget.onStatusFilterChanged,
                   ),
                 ),
@@ -131,9 +137,15 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
-                color: widget.isDark ? AppColors.backgroundDark : AppColors.cardBackgroundGrey,
+                color: widget.isDark
+                    ? AppColors.backgroundDark
+                    : AppColors.cardBackgroundGrey,
                 borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                border: Border.all(
+                  color: widget.isDark
+                      ? AppColors.cardBorderDark
+                      : AppColors.cardBorder,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +158,11 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           DigifyAsset(
-                            assetPath: Assets.icons.employeeManagement.filterSecondary.path,
+                            assetPath: Assets
+                                .icons
+                                .employeeManagement
+                                .filterSecondary
+                                .path,
                             width: 20,
                             height: 20,
                           ),
@@ -154,7 +170,9 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                           Text(
                             'Advanced Filters',
                             style: context.textTheme.headlineMedium?.copyWith(
-                              color: widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                              color: widget.isDark
+                                  ? AppColors.textPrimaryDark
+                                  : AppColors.textPrimary,
                               fontSize: 14.sp,
                             ),
                           ),
@@ -167,9 +185,11 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                           children: [
                             Text(
                               'Reset filters',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.labelLarge?.copyWith(color: AppColors.brandRed, fontWeight: FontWeight.w500),
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(
+                                    color: AppColors.brandRed,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                             Gap(6.w),
                             DigifyAsset(
@@ -184,7 +204,11 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
                     ],
                   ),
                   Gap(16.h),
-                  Wrap(spacing: 14.w, runSpacing: 14.h, children: _buildOrgFilters(context)),
+                  Wrap(
+                    spacing: 14.w,
+                    runSpacing: 14.h,
+                    children: _buildOrgFilters(context),
+                  ),
                 ],
               ),
             ),
@@ -219,23 +243,35 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
-                color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
+                color: widget.isDark
+                    ? AppColors.inputBgDark
+                    : AppColors.inputBg,
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
+                border: Border.all(
+                  color: widget.isDark
+                      ? AppColors.cardBorderDark
+                      : AppColors.borderGrey,
+                ),
               ),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
                       height: 14.h,
-                      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
                     ),
                   ),
                   Gap(8.w),
                   Container(
                     width: 16.w,
                     height: 16.h,
-                    decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
                   ),
                 ],
               ),
@@ -250,14 +286,18 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
     ({List<OrgStructureLevel> levels, String structureId}) param,
     TimesheetNotifier notifier,
   ) {
-    final selectionProvider = timesheetEnterpriseSelectionNotifierProvider(param.structureId);
+    final selectionProvider = timesheetEnterpriseSelectionNotifierProvider(
+      param.structureId,
+    );
     final selectionState = ref.watch(selectionProvider);
     final levels = param.levels;
 
     return levels.asMap().entries.map((entry) {
       final index = entry.key;
       final level = entry.value;
-      final isEnabled = index == 0 || selectionState.getSelection(levels[index - 1].levelCode) != null;
+      final isEnabled =
+          index == 0 ||
+          selectionState.getSelection(levels[index - 1].levelCode) != null;
 
       return SizedBox(
         width: 180.w,
@@ -283,7 +323,13 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
     final orgState = ref.read(timesheetOrgStructureNotifierProvider);
     final org = orgState.orgStructure;
     if (org != null) {
-      ref.read(timesheetEnterpriseSelectionNotifierProvider(org.structureId).notifier).reset();
+      ref
+          .read(
+            timesheetEnterpriseSelectionNotifierProvider(
+              org.structureId,
+            ).notifier,
+          )
+          .reset();
     }
 
     final notifier = ref.read(timesheetNotifierProvider.notifier);

@@ -1,7 +1,6 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/overtime/overtime_record.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_colors.dart';
+import 'overtime_record.dart';
 
 enum OvertimeCategory {
   all('All Staff'),
@@ -53,18 +52,41 @@ class OvertimeManagement {
   List<OvertimeCategory>? categories;
   List<OvertimeStat>? stats;
   List<OvertimeRecord>? records;
+  String? expandedRecord;
+  bool isLoading;
+  bool clearError;
+  String? error;
 
-  OvertimeManagement({this.selectedCategory, this.categories, this.stats});
+  OvertimeManagement({
+    this.selectedCategory,
+    this.categories,
+    this.stats,
+    this.records,
+    this.isLoading = false,
+    this.clearError = true,
+    this.error,
+    this.expandedRecord,
+  });
 
   OvertimeManagement copyWith({
     OvertimeCategory? selectedCategory,
     List<OvertimeCategory>? categories,
     List<OvertimeStat>? stats,
+    List<OvertimeRecord>? records,
+    bool? isLoading,
+    bool? clearError,
+    String? error,
+    String? expandedRecord,
   }) {
     return OvertimeManagement(
       selectedCategory: selectedCategory ?? this.selectedCategory,
       categories: categories ?? this.categories,
       stats: stats ?? this.stats,
+      records: records ?? this.records,
+      isLoading: isLoading ?? this.isLoading,
+      clearError: clearError ?? this.clearError,
+      error: error ?? this.error,
+      expandedRecord: expandedRecord,
     );
   }
 }
