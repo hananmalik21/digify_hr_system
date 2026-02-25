@@ -486,6 +486,7 @@ class DigifyDateField extends StatefulWidget {
   final DateTime? lastDate;
   final ValueChanged<DateTime>? onDateSelected;
   final Color? fillColor;
+  final bool enabled;
 
   const DigifyDateField({
     super.key,
@@ -498,6 +499,7 @@ class DigifyDateField extends StatefulWidget {
     this.lastDate,
     this.onDateSelected,
     this.fillColor,
+    this.enabled = true,
   });
 
   @override
@@ -550,7 +552,7 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
       controller: _controller,
       hintText: widget.hintText,
       readOnly: true,
-      onTap: _openDatePicker,
+      onTap: widget.enabled ? _openDatePicker : null,
       filled: widget.fillColor != null,
       fillColor: widget.fillColor,
       prefixIcon: Padding(

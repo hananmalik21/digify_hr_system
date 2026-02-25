@@ -27,6 +27,7 @@ class TimesheetTable extends ConsumerWidget {
 
   static final Timesheet _skeletonTimesheet = Timesheet(
     id: 0,
+    guid: '',
     employeeId: 0,
     employeeName: 'Loading Name',
     employeeNumber: 'EMP-000',

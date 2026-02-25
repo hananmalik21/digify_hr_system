@@ -5,6 +5,8 @@ import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/config/timesheet_table_config.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/dialogs/edit_timesheet_dialog.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_actions_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/timesheet/timesheet_status_chip.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -21,6 +23,7 @@ class TimesheetTableRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(timesheetNotifierProvider);
     final textStyle = context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle);
     final secondaryStyle = context.textTheme.bodySmall?.copyWith(fontSize: 12.sp, color: AppColors.tableHeaderText);
 
@@ -84,7 +87,7 @@ class TimesheetTableRow extends ConsumerWidget {
           if (TimesheetTableConfig.showStatus)
             _buildDataCell(TimesheetStatusChip(status: timesheet.status), TimesheetTableConfig.statusWidth.w),
           if (TimesheetTableConfig.showActions)
-            _buildDataCell(_buildActionsCell(ref), TimesheetTableConfig.actionsWidth.w),
+            _buildDataCell(_buildActionsCell(context, ref, state), TimesheetTableConfig.actionsWidth.w),
         ],
       ),
     );
@@ -102,8 +105,26 @@ class TimesheetTableRow extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionsCell(WidgetRef ref) {
+  Widget _buildActionsCell(BuildContext context, WidgetRef ref, TimesheetState state) {
+    if (timesheet.status == TimesheetStatus.draft) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.editIconGreen.path,
+            onTap: () => EditTimesheetDialog.show(context, timesheet),
+            width: 17.w,
+            height: 17.h,
+            color: AppColors.editIconGreen,
+          ),
+        ],
+      );
+    }
+
     if (timesheet.status == TimesheetStatus.submitted) {
+      final isApproving = state.approvingTimesheetGuid == timesheet.guid;
+      final isRejecting = state.rejectingTimesheetGuid == timesheet.guid;
+
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -111,9 +132,8 @@ class TimesheetTableRow extends ConsumerWidget {
           Gap(8.w),
           DigifyAssetButton(
             assetPath: Assets.icons.checkIconGreen.path,
-            onTap: () {
-              ref.read(timesheetNotifierProvider.notifier).approveTimesheet(timesheet.id);
-            },
+            isLoading: isApproving,
+            onTap: isApproving || isRejecting ? null : () => TimesheetActions.approveTimesheet(context, ref, timesheet),
             width: 17.w,
             height: 17.h,
             color: AppColors.success,
@@ -121,9 +141,8 @@ class TimesheetTableRow extends ConsumerWidget {
           Gap(8.w),
           DigifyAssetButton(
             assetPath: Assets.icons.closeIcon.path,
-            onTap: () {
-              ref.read(timesheetNotifierProvider.notifier).rejectTimesheet(timesheet.id, 'Rejected by manager');
-            },
+            isLoading: isRejecting,
+            onTap: isApproving || isRejecting ? null : () => TimesheetActions.rejectTimesheet(context, ref, timesheet),
             width: 17.w,
             height: 17.h,
             color: AppColors.error,

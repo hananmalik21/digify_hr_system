@@ -21,6 +21,8 @@ class EmployeeDto {
   final String? createdBy;
   final DateTime? updatedAt;
   final String? updatedBy;
+  final String? positionTitleEn;
+  final String? departmentNameEn;
 
   const EmployeeDto({
     required this.employeeId,
@@ -43,9 +45,31 @@ class EmployeeDto {
     this.createdBy,
     this.updatedAt,
     this.updatedBy,
+    this.positionTitleEn,
+    this.departmentNameEn,
   });
 
   factory EmployeeDto.fromJson(Map<String, dynamic> json) {
+    String? departmentNameEn;
+    final orgList = json['org_structure_list'];
+    if (orgList is List) {
+      for (final item in orgList) {
+        if (item is Map<String, dynamic>) {
+          final levelCode = (item['level_code'] as String?) ?? '';
+          if (levelCode.toUpperCase() == 'DEPARTMENT') {
+            departmentNameEn = item['org_unit_name_en'] as String?;
+            break;
+          }
+        }
+      }
+    }
+
+    String? positionTitleEn;
+    final positionJson = json['position'] as Map<String, dynamic>?;
+    if (positionJson != null) {
+      positionTitleEn = positionJson['position_title_en'] as String?;
+    }
+
     return EmployeeDto(
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
       employeeGuid: json['employee_guid'] as String? ?? '',
@@ -73,6 +97,8 @@ class EmployeeDto {
           ? DateTime.tryParse(json['last_update_date'] as String)
           : (json['updated_at'] != null ? DateTime.tryParse(json['updated_at'] as String) : null),
       updatedBy: (json['last_updated_by'] ?? json['updated_by']) as String?,
+      positionTitleEn: positionTitleEn,
+      departmentNameEn: departmentNameEn,
     );
   }
 
@@ -98,6 +124,8 @@ class EmployeeDto {
       createdBy: createdBy,
       updatedAt: updatedAt,
       updatedBy: updatedBy,
+      positionTitle: positionTitleEn,
+      departmentName: departmentNameEn,
     );
   }
 }

@@ -3,7 +3,9 @@ import 'package:digify_hr_system/features/time_tracking_and_attendance/presentat
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewTimesheetFormState {
+class EditTimesheetFormState {
+  final int timesheetId;
+  final String timesheetGuid;
   final int? employeeId;
   final String? employeeName;
   final String? projectName;
@@ -20,8 +22,12 @@ class NewTimesheetFormState {
   final List<double> regularHours;
   final List<double> overtimeHours;
   final List<String> taskTexts;
+  final List<int?> lineIds;
+  final List<int?> taskIds;
 
-  const NewTimesheetFormState({
+  const EditTimesheetFormState({
+    required this.timesheetId,
+    required this.timesheetGuid,
     this.employeeId,
     this.employeeName,
     this.projectName,
@@ -38,9 +44,13 @@ class NewTimesheetFormState {
     this.regularHours = const [],
     this.overtimeHours = const [],
     this.taskTexts = const [],
+    this.lineIds = const [],
+    this.taskIds = const [],
   });
 
-  NewTimesheetFormState copyWith({
+  EditTimesheetFormState copyWith({
+    int? timesheetId,
+    String? timesheetGuid,
     int? employeeId,
     String? employeeName,
     String? projectName,
@@ -57,8 +67,12 @@ class NewTimesheetFormState {
     List<double>? regularHours,
     List<double>? overtimeHours,
     List<String>? taskTexts,
+    List<int?>? lineIds,
+    List<int?>? taskIds,
   }) {
-    return NewTimesheetFormState(
+    return EditTimesheetFormState(
+      timesheetId: timesheetId ?? this.timesheetId,
+      timesheetGuid: timesheetGuid ?? this.timesheetGuid,
       employeeId: employeeId ?? this.employeeId,
       employeeName: employeeName ?? this.employeeName,
       projectName: projectName ?? this.projectName,
@@ -75,6 +89,8 @@ class NewTimesheetFormState {
       regularHours: regularHours ?? this.regularHours,
       overtimeHours: overtimeHours ?? this.overtimeHours,
       taskTexts: taskTexts ?? this.taskTexts,
+      lineIds: lineIds ?? this.lineIds,
+      taskIds: taskIds ?? this.taskIds,
     );
   }
 
@@ -83,21 +99,12 @@ class NewTimesheetFormState {
   double get totalOvertimeHours => overtimeHours.fold(0.0, (sum, value) => sum + value);
 }
 
-class MissingTimesheetRequiredDataException implements Exception {
-  const MissingTimesheetRequiredDataException();
+class MissingEditTimesheetRequiredDataException implements Exception {
+  const MissingEditTimesheetRequiredDataException();
 }
 
-class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
-  NewTimesheetNotifier(this._ref)
-    : super(
-        NewTimesheetFormState(
-          startDate: DateTime.now(),
-          endDate: DateTime.now().add(const Duration(days: 6)),
-          weekDays: _generateWeekDays(DateTime.now()),
-          regularHours: List<double>.filled(7, 0),
-          overtimeHours: List<double>.filled(7, 0),
-        ),
-      );
+class EditTimesheetNotifier extends StateNotifier<EditTimesheetFormState> {
+  EditTimesheetNotifier(this._ref, EditTimesheetFormState initialState) : super(initialState);
 
   final Ref _ref;
 
@@ -162,16 +169,11 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
 
   void setStartDate(DateTime? startDate) {
     state = state.copyWith(startDate: startDate);
-
     final end = startDate?.add(const Duration(days: 6));
-
     state = state.copyWith(endDate: end);
-
     if (startDate != null) {
-      final weekDays = List.generate(7, (index) => startDate.add(Duration(days: index)));
-
       state = state.copyWith(
-        weekDays: weekDays,
+        weekDays: _generateWeekDays(startDate),
         regularHours: List<double>.filled(7, 0),
         overtimeHours: List<double>.filled(7, 0),
         taskTexts: List<String>.filled(7, ''),
@@ -183,11 +185,15 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
     state = state.copyWith(endDate: endDate);
   }
 
-  void setLoading(bool loading) {
-    state = state.copyWith(isLoading: loading);
+  Future<void> saveDraft() async {
+    await _updateWithStatus(TimesheetStatus.draft);
   }
 
-  Future<void> submit(TimesheetStatus status) async {
+  Future<void> submitForApproval() async {
+    await _updateWithStatus(TimesheetStatus.submitted);
+  }
+
+  Future<void> _updateWithStatus(TimesheetStatus status) async {
     final enterpriseId = _ref.read(timesheetEnterpriseIdProvider);
     final repository = _ref.read(timesheetRepositoryProvider);
     final timesheetNotifier = _ref.read(timesheetNotifierProvider.notifier);
@@ -197,25 +203,23 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
         currentState.employeeId == null ||
         currentState.startDate == null ||
         currentState.endDate == null) {
-      throw const MissingTimesheetRequiredDataException();
+      throw const MissingEditTimesheetRequiredDataException();
     }
 
     final isDraft = status == TimesheetStatus.draft;
     final isSubmitted = status == TimesheetStatus.submitted;
-
     state = state.copyWith(isLoading: true, isSavingDraft: isDraft, isSubmittingForApproval: isSubmitted);
     try {
-      final body = _buildCreateRequestBody(state: currentState, enterpriseId: enterpriseId, status: status);
-
-      await repository.createTimesheet(body);
+      final body = _buildUpdateRequestBody(state: currentState, enterpriseId: enterpriseId, status: status);
+      await repository.updateTimesheet(currentState.timesheetGuid, body);
       await timesheetNotifier.refresh();
     } finally {
       state = state.copyWith(isLoading: false, isSavingDraft: false, isSubmittingForApproval: false);
     }
   }
 
-  Map<String, dynamic> _buildCreateRequestBody({
-    required NewTimesheetFormState state,
+  Map<String, dynamic> _buildUpdateRequestBody({
+    required EditTimesheetFormState state,
     required int enterpriseId,
     required TimesheetStatus status,
   }) {
@@ -241,19 +245,26 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
       final regular = i < state.regularHours.length ? state.regularHours[i] : 0.0;
       final overtime = i < state.overtimeHours.length ? state.overtimeHours[i] : 0.0;
       final taskText = i < state.taskTexts.length ? state.taskTexts[i] : '';
+      final lineId = i < state.lineIds.length ? state.lineIds[i] : null;
+      final taskId = i < state.taskIds.length ? state.taskIds[i] : null;
 
       if (regular == 0 && overtime == 0 && taskText.isEmpty) {
         continue;
       }
 
-      lines.add({
+      final line = <String, dynamic>{
         'work_date': formatDate(workDate),
         'project_id': state.projectId,
+        'task_id': taskId,
         'project_task_text': taskText.isEmpty ? null : taskText,
         'regular_hours': regular,
         'ot_hours': overtime,
         'line_notes': taskText.isEmpty ? null : taskText,
-      });
+      };
+      if (lineId != null) {
+        line['line_id'] = lineId;
+      }
+      lines.add(line);
     }
 
     return {
@@ -271,19 +282,8 @@ class NewTimesheetNotifier extends StateNotifier<NewTimesheetFormState> {
       'lines': lines,
     };
   }
-
-  void reset() {
-    state = NewTimesheetFormState(
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(const Duration(days: 6)),
-      weekDays: _generateWeekDays(DateTime.now()),
-      regularHours: List<double>.filled(7, 0),
-      overtimeHours: List<double>.filled(7, 0),
-      taskTexts: List<String>.filled(7, ''),
-    );
-  }
 }
 
-final newTimesheetProvider = StateNotifierProvider<NewTimesheetNotifier, NewTimesheetFormState>(
-  (ref) => NewTimesheetNotifier(ref),
+final editTimesheetProvider = StateNotifierProvider<EditTimesheetNotifier, EditTimesheetFormState>(
+  (ref) => throw StateError('editTimesheetProvider must be overridden via EditTimesheetDialog.show'),
 );

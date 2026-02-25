@@ -99,6 +99,7 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     // Mock implementation
     return Timesheet(
       id: timesheetId,
+      guid: '',
       employeeId: 1,
       employeeName: 'Ahmed Al-Mutairi',
       employeeNumber: 'EMP-001',
@@ -114,37 +115,156 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
 
   @override
   Future<Timesheet> createTimesheet(Map<String, dynamic> timesheetData) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Mock implementation
-    throw UnimplementedError('createTimesheet not implemented');
+    try {
+      final response = await _apiClient.post(ApiEndpoints.tmTimesheets, body: timesheetData);
+
+      final status = response['status'] as bool? ?? true;
+      if (!status) {
+        final message = response['message'] as String? ?? 'Failed to create timesheet';
+        throw UnknownException(message);
+      }
+
+      final data = response['data'] as Map<String, dynamic>? ?? {};
+
+      DateTime parseDate(String? value) {
+        if (value == null || value.isEmpty) {
+          return DateTime.now();
+        }
+        try {
+          return DateTime.parse(value);
+        } catch (_) {
+          return DateTime.now();
+        }
+      }
+
+      final weekStart = parseDate(timesheetData['week_start_date'] as String?);
+      final weekEnd = parseDate(timesheetData['week_end_date'] as String?);
+
+      final lines = (timesheetData['lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
+
+      final regularHours = lines
+          .map((l) => (l['regular_hours'] as num?)?.toDouble() ?? 0.0)
+          .fold<double>(0.0, (a, b) => a + b);
+      final overtimeHours = lines
+          .map((l) => (l['ot_hours'] as num?)?.toDouble() ?? 0.0)
+          .fold<double>(0.0, (a, b) => a + b);
+      final totalHours = regularHours + overtimeHours;
+
+      final statusCode = (timesheetData['status_code'] as String?) ?? 'draft';
+
+      return Timesheet(
+        id: (data['timesheet_id'] as num?)?.toInt() ?? 0,
+        guid: data['timesheet_guid'] as String? ?? '',
+        employeeId: (timesheetData['employee_id'] as num?)?.toInt() ?? 0,
+        employeeName: '',
+        employeeNumber: '',
+        departmentName: '',
+        weekStartDate: weekStart,
+        weekEndDate: weekEnd,
+        regularHours: regularHours,
+        overtimeHours: overtimeHours,
+        totalHours: totalHours,
+        status: TimesheetStatusExtension.fromString(statusCode),
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create timesheet: ${e.toString()}', originalError: e);
+    }
   }
 
   @override
-  Future<Timesheet> updateTimesheet(int timesheetId, Map<String, dynamic> timesheetData) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Mock implementation
-    throw UnimplementedError('updateTimesheet not implemented');
+  Future<Timesheet> updateTimesheet(String timesheetGuid, Map<String, dynamic> timesheetData) async {
+    try {
+      final response = await _apiClient.put(ApiEndpoints.tmTimesheetByGuid(timesheetGuid), body: timesheetData);
+      final status = response['status'] as bool? ?? true;
+      if (!status) {
+        final message = response['message'] as String? ?? 'Failed to update timesheet';
+        throw UnknownException(message);
+      }
+      final data = response['data'] as Map<String, dynamic>? ?? {};
+      DateTime parseDate(String? value) {
+        if (value == null || value.isEmpty) return DateTime.now();
+        try {
+          return DateTime.parse(value);
+        } catch (_) {
+          return DateTime.now();
+        }
+      }
+
+      final weekStart = parseDate(timesheetData['week_start_date'] as String?);
+      final weekEnd = parseDate(timesheetData['week_end_date'] as String?);
+      final lines = (timesheetData['lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
+      final regularHours = lines
+          .map((l) => (l['regular_hours'] as num?)?.toDouble() ?? 0.0)
+          .fold<double>(0.0, (a, b) => a + b);
+      final overtimeHours = lines
+          .map((l) => (l['ot_hours'] as num?)?.toDouble() ?? 0.0)
+          .fold<double>(0.0, (a, b) => a + b);
+      final statusCode = (timesheetData['status_code'] as String?) ?? 'draft';
+      return Timesheet(
+        id: (data['timesheet_id'] as num?)?.toInt() ?? 0,
+        guid: (data['timesheet_guid'] as String?) ?? timesheetGuid,
+        employeeId: (timesheetData['employee_id'] as num?)?.toInt() ?? 0,
+        employeeName: '',
+        employeeNumber: '',
+        departmentName: '',
+        weekStartDate: weekStart,
+        weekEndDate: weekEnd,
+        regularHours: regularHours,
+        overtimeHours: overtimeHours,
+        totalHours: regularHours + overtimeHours,
+        status: TimesheetStatusExtension.fromString(statusCode),
+      );
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update timesheet: ${e.toString()}', originalError: e);
+    }
   }
 
   @override
   Future<Timesheet> submitTimesheet(int timesheetId) async {
     await Future.delayed(const Duration(milliseconds: 500));
-    // Mock implementation
     throw UnimplementedError('submitTimesheet not implemented');
   }
 
   @override
-  Future<Timesheet> approveTimesheet(int timesheetId, {String? notes}) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Mock implementation
-    throw UnimplementedError('approveTimesheet not implemented');
+  Future<void> approveTimesheet(String timesheetGuid) async {
+    try {
+      final response = await _apiClient.post(
+        ApiEndpoints.tmTimesheetApprove(timesheetGuid),
+        body: {'updated_by': 'API_USER'},
+      );
+      final status = response['status'] as bool? ?? true;
+      if (!status) {
+        final message = response['message'] as String? ?? 'Failed to approve timesheet';
+        throw UnknownException(message);
+      }
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to approve timesheet: ${e.toString()}', originalError: e);
+    }
   }
 
   @override
-  Future<Timesheet> rejectTimesheet(int timesheetId, {required String reason}) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Mock implementation
-    throw UnimplementedError('rejectTimesheet not implemented');
+  Future<void> rejectTimesheet(String timesheetGuid, {required String rejectReason}) async {
+    try {
+      final response = await _apiClient.post(
+        ApiEndpoints.tmTimesheetReject(timesheetGuid),
+        body: {'updated_by': 'admin', 'reject_reason': rejectReason},
+      );
+      final status = response['status'] as bool? ?? true;
+      if (!status) {
+        final message = response['message'] as String? ?? 'Failed to reject timesheet';
+        throw UnknownException(message);
+      }
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to reject timesheet: ${e.toString()}', originalError: e);
+    }
   }
 
   @override
