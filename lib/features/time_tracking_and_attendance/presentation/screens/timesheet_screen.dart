@@ -3,7 +3,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/attendance/component_attendance_pagination.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/attendance/component_attendance_stat_card.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/attendance/component_enterprise_filters_card.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/dialogs/new_timesheet_dialog.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/timesheet/component_timesheet_table.dart';
@@ -44,11 +44,18 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     final notifier = ref.read(timesheetNotifierProvider.notifier);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
-            padding: EdgeInsets.only(left: 27.w, right: 21.w, top: 61.h, bottom: 48.h),
+            padding: EdgeInsets.only(
+              left: 27.w,
+              right: 21.w,
+              top: 61.h,
+              bottom: 48.h,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,7 +73,10 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [_buildHeaderTitle(context, isDark), _buildHeaderActions(context.isMobile)],
+                        children: [
+                          _buildHeaderTitle(context, isDark),
+                          _buildHeaderActions(context.isMobile),
+                        ],
                       ),
                 Gap(21.h),
 
@@ -150,18 +160,27 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                     final availableWidth = screenWidth - horizontalPadding;
                     final totalItems = cards.length;
 
-                    int maxItemsPerRow = ((availableWidth + spacing) / (minWidth + spacing)).floor();
+                    int maxItemsPerRow =
+                        ((availableWidth + spacing) / (minWidth + spacing))
+                            .floor();
                     if (maxItemsPerRow < 1) maxItemsPerRow = 1;
 
-                    final itemsInRow = totalItems < maxItemsPerRow ? totalItems : maxItemsPerRow;
+                    final itemsInRow = totalItems < maxItemsPerRow
+                        ? totalItems
+                        : maxItemsPerRow;
 
                     final totalSpacing = (itemsInRow - 1) * spacing;
-                    final itemWidth = (availableWidth - totalSpacing) / itemsInRow;
+                    final itemWidth =
+                        (availableWidth - totalSpacing) / itemsInRow;
 
                     return Wrap(
                       spacing: spacing,
                       runSpacing: spacing,
-                      children: cards.map((card) => SizedBox(width: itemWidth, child: card)).toList(),
+                      children: cards
+                          .map(
+                            (card) => SizedBox(width: itemWidth, child: card),
+                          )
+                          .toList(),
                     );
                   },
                 ),
@@ -173,11 +192,19 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
 
                 // Search and Status Filter
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 14.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.cardBackgroundDark : Colors.white,
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.cardBorderDark
+                          : AppColors.cardBorder,
+                      width: 1,
+                    ),
                   ),
                   child: context.isMobile
                       ? Column(
@@ -185,18 +212,27 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                             DigifyTextField.search(
                               controller: _searchController,
                               showBorder: false,
-                              onChanged: (value) => notifier.setSearchQuery(value),
+                              onChanged: (value) =>
+                                  notifier.setSearchQuery(value),
                             ),
                             Gap(16.h),
-                            Container(height: 1, color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                            Container(
+                              height: 1,
+                              color: isDark
+                                  ? AppColors.cardBorderDark
+                                  : AppColors.cardBorder,
+                            ),
                             Gap(16.h),
                             Row(
                               children: [
                                 DigifyAsset(
-                                  assetPath: Assets.icons.leaveManagement.filter.path,
+                                  assetPath:
+                                      Assets.icons.leaveManagement.filter.path,
                                   width: 24.w,
                                   height: 24.h,
-                                  color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
+                                  color: isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.dialogCloseIcon,
                                 ),
                                 Gap(16.w),
                                 Expanded(
@@ -210,8 +246,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                                       TimesheetStatus.approved,
                                       TimesheetStatus.rejected,
                                     ],
-                                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
-                                    onChanged: (value) => notifier.setStatusFilter(value),
+                                    itemLabelBuilder: (item) => item == null
+                                        ? 'All Status'
+                                        : item.displayName,
+                                    onChanged: (value) =>
+                                        notifier.setStatusFilter(value),
                                   ),
                                 ),
                               ],
@@ -226,15 +265,19 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                                 borderColor: Colors.transparent,
                                 showBorder: false,
                                 hintText: 'Search...',
-                                onChanged: (value) => notifier.setSearchQuery(value),
+                                onChanged: (value) =>
+                                    notifier.setSearchQuery(value),
                               ),
                             ),
                             Gap(16.w),
                             DigifyAsset(
-                              assetPath: Assets.icons.leaveManagement.filter.path,
+                              assetPath:
+                                  Assets.icons.leaveManagement.filter.path,
                               width: 24.w,
                               height: 24.h,
-                              color: isDark ? AppColors.textSecondaryDark : AppColors.dialogCloseIcon,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.dialogCloseIcon,
                             ),
                             Gap(16.w),
                             SizedBox(
@@ -250,8 +293,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
                                   TimesheetStatus.approved,
                                   TimesheetStatus.rejected,
                                 ],
-                                itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
-                                onChanged: (value) => notifier.setStatusFilter(value),
+                                itemLabelBuilder: (item) => item == null
+                                    ? 'All Status'
+                                    : item.displayName,
+                                onChanged: (value) =>
+                                    notifier.setStatusFilter(value),
                               ),
                             ),
                           ],
@@ -317,7 +363,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     ];
 
     if (isMobile) {
-      return Wrap(spacing: 12.w, runSpacing: 12.h, children: actions.where((w) => w is! Gap).toList());
+      return Wrap(
+        spacing: 12.w,
+        runSpacing: 12.h,
+        children: actions.where((w) => w is! Gap).toList(),
+      );
     }
 
     return Row(children: actions);

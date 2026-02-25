@@ -56,7 +56,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final email = _usernameController.text.trim();
     final rememberMe = ref.read(loginFormStateProvider).rememberMe;
 
-    await ref.read(authProvider.notifier).login(email, _passwordController.text.trim(), rememberMe: rememberMe);
+    await ref
+        .read(authProvider.notifier)
+        .login(email, _passwordController.text.trim(), rememberMe: rememberMe);
   }
 
   void _showForgotPasswordDialog() {
@@ -82,8 +84,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen<LoginFormState>(loginFormStateProvider, (prev, next) {
       if (!next.initialLoadDone || next.savedEmailConsumed) return;
-      final email = ref.read(loginFormStateProvider.notifier).consumeSavedEmailForPrefill();
-      if (email != null && email.isNotEmpty && (kReleaseMode || _usernameController.text.isEmpty)) {
+      final email = ref
+          .read(loginFormStateProvider.notifier)
+          .consumeSavedEmailForPrefill();
+      if (email != null &&
+          email.isNotEmpty &&
+          (kReleaseMode || _usernameController.text.isEmpty)) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _usernameController.text = email;
         });
@@ -104,7 +110,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             'network_error' => localizations.connectionError,
             _ => localizations.invalidCredentials,
           };
-          ToastService.error(context, message, title: localizations.loginFailed);
+          ToastService.error(
+            context,
+            message,
+            title: localizations.loginFailed,
+          );
         }
         return;
       }
@@ -144,7 +154,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         usernameFocusNode: _usernameFocusNode,
                         passwordFocusNode: _passwordFocusNode,
                         rememberMe: formState.rememberMe,
-                        onRememberMeChanged: (value) => ref.read(loginFormStateProvider.notifier).setRememberMe(value),
+                        onRememberMeChanged: (value) => ref
+                            .read(loginFormStateProvider.notifier)
+                            .setRememberMe(value),
                         onLogin: _handleLogin,
                         onForgotPasswordTap: _showForgotPasswordDialog,
                       );

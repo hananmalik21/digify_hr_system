@@ -23,14 +23,14 @@ class OvertimeTableHeader extends StatelessWidget {
     final headerCells = <Widget>[];
 
     headerCells.addAll([
-      _buildHeaderCell(context, 'EMPLOYEE'),
-      _buildHeaderCell(context, 'DATE'),
-      _buildHeaderCell(context, 'TYPE'),
-      _buildHeaderCell(context, 'HOURS'),
-      _buildHeaderCell(context, "RATE"),
-      _buildHeaderCell(context, "AMOUNT"),
-      _buildHeaderCell(context, "STATUS"),
-      _buildHeaderCell(context, "ACTION"),
+      _buildHeaderCell(context, 'EMPLOYEE', 250.w),
+      _buildHeaderCell(context, 'DATE', 200.w),
+      _buildHeaderCell(context, 'TYPE', 150.w),
+      _buildHeaderCell(context, 'HOURS', 150.w),
+      _buildHeaderCell(context, "RATE", 100.w),
+      _buildHeaderCell(context, "AMOUNT", 150.w),
+      _buildHeaderCell(context, "STATUS", 150.w),
+      _buildHeaderCell(context, "ACTION", 150.w),
     ]);
 
     return Container(
@@ -40,19 +40,17 @@ class OvertimeTableHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCell(BuildContext context, String text) {
-    return Flexible(
-      child: Container(
-        padding: EdgeInsetsDirectional.symmetric(
-          horizontal: 20.w,
-          vertical: 12.h,
-        ),
-
-        child: Text(
-          text.toUpperCase(),
-          style: context.textTheme.labelSmall?.copyWith(
-            color: AppColors.tableHeaderText,
-          ),
+  Widget _buildHeaderCell(BuildContext context, String text, double width) {
+    return Container(
+      width: width,
+      padding: EdgeInsetsDirectional.symmetric(
+        horizontal: 20.w,
+        vertical: 12.h,
+      ),
+      child: Text(
+        text.toUpperCase(),
+        style: context.textTheme.labelSmall?.copyWith(
+          color: AppColors.tableHeaderText,
         ),
       ),
     );

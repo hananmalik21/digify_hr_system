@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_time_picker_dialog.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/attendance/mark_attendance_form_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
 
 abstract class AttendanceRepository {
   Future<List<Attendance>> getAttendance({

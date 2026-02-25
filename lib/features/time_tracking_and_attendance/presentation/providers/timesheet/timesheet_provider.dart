@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/timesheet_repository_impl.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/timesheet_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Repository provider
