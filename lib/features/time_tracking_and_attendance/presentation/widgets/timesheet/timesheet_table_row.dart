@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/router/app_routes.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/config/timesheet_table_config.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class TimesheetTableRow extends ConsumerWidget {
   final Timesheet timesheet;
@@ -27,68 +29,76 @@ class TimesheetTableRow extends ConsumerWidget {
     final textStyle = context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle);
     final secondaryStyle = context.textTheme.bodySmall?.copyWith(fontSize: 12.sp, color: AppColors.tableHeaderText);
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
-        ),
-      ),
-      child: Row(
-        children: [
-          if (TimesheetTableConfig.showEmployee)
-            _buildDataCell(
-              Row(
-                children: [
-                  AppAvatar(image: null, fallbackInitial: timesheet.employeeName, size: 35.w),
-                  Gap(11.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          timesheet.employeeName.toUpperCase(),
-                          style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          context.push(AppRoutes.timeTrackingTimesheetDetail, extra: timesheet);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
+            ),
+          ),
+          child: Row(
+            children: [
+              if (TimesheetTableConfig.showEmployee)
+                _buildDataCell(
+                  Row(
+                    children: [
+                      AppAvatar(image: null, fallbackInitial: timesheet.employeeName, size: 35.w),
+                      Gap(11.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              timesheet.employeeName.toUpperCase(),
+                              style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
+                            ),
+                            Gap(2.h),
+                            Text(timesheet.employeeNumber, style: secondaryStyle),
+                          ],
                         ),
-                        Gap(2.h),
-                        Text(timesheet.employeeNumber, style: secondaryStyle),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              TimesheetTableConfig.employeeWidth.w,
-            ),
-          if (TimesheetTableConfig.showDepartment)
-            _buildDataCell(
-              Text(timesheet.departmentName.toUpperCase(), style: textStyle),
-              TimesheetTableConfig.departmentWidth.w,
-            ),
-          if (TimesheetTableConfig.showWeekPeriod)
-            _buildDataCell(
-              Text(timesheet.formattedWeekPeriod, style: textStyle),
-              TimesheetTableConfig.weekPeriodWidth.w,
-            ),
-          if (TimesheetTableConfig.showRegularHours)
-            _buildDataCell(
-              Text('${timesheet.regularHours.toInt()}h', style: textStyle),
-              TimesheetTableConfig.regularHoursWidth.w,
-            ),
-          if (TimesheetTableConfig.showOvertimeHours)
-            _buildDataCell(
-              Text('${timesheet.overtimeHours.toInt()}h', style: textStyle),
-              TimesheetTableConfig.overtimeHoursWidth.w,
-            ),
-          if (TimesheetTableConfig.showTotalHours)
-            _buildDataCell(
-              Text('${timesheet.totalHours.toInt()}h', style: textStyle),
-              TimesheetTableConfig.totalHoursWidth.w,
-            ),
-          if (TimesheetTableConfig.showStatus)
-            _buildDataCell(TimesheetStatusChip(status: timesheet.status), TimesheetTableConfig.statusWidth.w),
-          if (TimesheetTableConfig.showActions)
-            _buildDataCell(_buildActionsCell(context, ref, state), TimesheetTableConfig.actionsWidth.w),
-        ],
+                  TimesheetTableConfig.employeeWidth.w,
+                ),
+              if (TimesheetTableConfig.showDepartment)
+                _buildDataCell(
+                  Text(timesheet.departmentName.toUpperCase(), style: textStyle),
+                  TimesheetTableConfig.departmentWidth.w,
+                ),
+              if (TimesheetTableConfig.showWeekPeriod)
+                _buildDataCell(
+                  Text(timesheet.formattedWeekPeriod, style: textStyle),
+                  TimesheetTableConfig.weekPeriodWidth.w,
+                ),
+              if (TimesheetTableConfig.showRegularHours)
+                _buildDataCell(
+                  Text('${timesheet.regularHours.toInt()}h', style: textStyle),
+                  TimesheetTableConfig.regularHoursWidth.w,
+                ),
+              if (TimesheetTableConfig.showOvertimeHours)
+                _buildDataCell(
+                  Text('${timesheet.overtimeHours.toInt()}h', style: textStyle),
+                  TimesheetTableConfig.overtimeHoursWidth.w,
+                ),
+              if (TimesheetTableConfig.showTotalHours)
+                _buildDataCell(
+                  Text('${timesheet.totalHours.toInt()}h', style: textStyle),
+                  TimesheetTableConfig.totalHoursWidth.w,
+                ),
+              if (TimesheetTableConfig.showStatus)
+                _buildDataCell(TimesheetStatusChip(status: timesheet.status), TimesheetTableConfig.statusWidth.w),
+              if (TimesheetTableConfig.showActions)
+                _buildDataCell(_buildActionsCell(context, ref, state), TimesheetTableConfig.actionsWidth.w),
+            ],
+          ),
+        ),
       ),
     );
   }
