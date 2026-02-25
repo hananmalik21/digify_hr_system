@@ -1,11 +1,19 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/timesheet_dto.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_page.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/timesheet_repository.dart';
 
-/// Mock implementation of TimesheetRepository
 class TimesheetRepositoryImpl implements TimesheetRepository {
+  final ApiClient _apiClient;
+
+  TimesheetRepositoryImpl({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient(baseUrl: ApiConfig.baseUrl);
+
   @override
-  Future<List<Timesheet>> getTimesheets({
+  Future<TimesheetPage> getTimesheets({
     DateTime? weekStartDate,
     DateTime? weekEndDate,
     String? employeeNumber,
@@ -15,85 +23,50 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     String? divisionId,
     String? departmentId,
     String? sectionId,
+    String? orgUnitId,
+    String? levelCode,
     int page = 1,
     int pageSize = 10,
   }) async {
-    // Mock data - replace with actual API call
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      final query = <String, String>{
+        'enterpriseId': companyId ?? '1',
+        'page': page.toString(),
+        'limit': pageSize.toString(),
+      };
 
-    final mockTimesheets = [
-      Timesheet(
-        id: 1,
-        employeeId: 1,
-        employeeName: 'Ahmed Al-Mutairi',
-        employeeNumber: 'EMP-001',
-        departmentName: 'IT',
-        weekStartDate: DateTime(2024, 12, 9),
-        weekEndDate: DateTime(2024, 12, 15),
-        regularHours: 40.0,
-        overtimeHours: 2.0,
-        totalHours: 42.0,
-        status: TimesheetStatus.approved,
-        createdAt: DateTime(2024, 12, 8),
-        approvedAt: DateTime(2024, 12, 16),
-      ),
-      Timesheet(
-        id: 2,
-        employeeId: 2,
-        employeeName: 'Fatima Al-Sabah',
-        employeeNumber: 'EMP-002',
-        departmentName: 'HR',
-        weekStartDate: DateTime(2024, 12, 9),
-        weekEndDate: DateTime(2024, 12, 15),
-        regularHours: 40.0,
-        overtimeHours: 0.0,
-        totalHours: 40.0,
-        status: TimesheetStatus.submitted,
-        createdAt: DateTime(2024, 12, 8),
-        submittedAt: DateTime(2024, 12, 15),
-      ),
-    ];
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        query['search'] = searchQuery.trim();
+      }
 
-    // Apply filters
-    var filtered = mockTimesheets;
+      if (orgUnitId != null && orgUnitId.isNotEmpty) {
+        query['orgUnitId'] = orgUnitId;
+        query['org_unit_id'] = orgUnitId;
+      }
 
-    if (employeeNumber != null && employeeNumber.isNotEmpty) {
-      filtered = filtered
-          .where((t) => t.employeeNumber.contains(employeeNumber))
-          .toList();
+      if (levelCode != null && levelCode.isNotEmpty) {
+        query['levelCode'] = levelCode;
+        query['level_code'] = levelCode;
+      }
+
+      final response = await _apiClient.get('/api/tm/timesheets', queryParameters: query);
+
+      final data = response['data'] as List<dynamic>? ?? [];
+      final pagination = (response['meta']?['pagination'] as Map<String, dynamic>?) ?? {};
+
+      final items = data.whereType<Map<String, dynamic>>().map((e) => TimesheetDto.fromJson(e).toDomain()).toList();
+
+      final total = pagination['total'] as int? ?? items.length;
+      final currentPage = pagination['page'] as int? ?? page;
+      final limit = pagination['limit'] as int? ?? pageSize;
+      final hasMore = pagination['hasMore'] as bool? ?? false;
+
+      return TimesheetPage(items: items, total: total, page: currentPage, pageSize: limit, hasMore: hasMore);
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to load timesheets: ${e.toString()}', originalError: e);
     }
-
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      filtered = filtered
-          .where(
-            (t) =>
-                t.employeeName.toLowerCase().contains(
-                  searchQuery.toLowerCase(),
-                ) ||
-                t.employeeNumber.toLowerCase().contains(
-                  searchQuery.toLowerCase(),
-                ) ||
-                t.departmentName.toLowerCase().contains(
-                  searchQuery.toLowerCase(),
-                ),
-          )
-          .toList();
-    }
-
-    if (status != null) {
-      filtered = filtered.where((t) => t.status == status).toList();
-    }
-
-    // Apply pagination
-    final startIndex = (page - 1) * pageSize;
-    final endIndex = startIndex + pageSize;
-    if (startIndex >= filtered.length) {
-      return [];
-    }
-    return filtered.sublist(
-      startIndex,
-      endIndex > filtered.length ? filtered.length : endIndex,
-    );
   }
 
   @override
@@ -106,17 +79,14 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     String? departmentId,
     String? sectionId,
   }) async {
-    // Mock statistics - replace with actual API call
-    await Future.delayed(const Duration(milliseconds: 300));
-
     return {
-      'total': 2,
+      'total': 0,
       'draft': 0,
-      'submitted': 1,
-      'approved': 1,
+      'submitted': 0,
+      'approved': 0,
       'rejected': 0,
-      'regularHours': 80.0,
-      'overtimeHours': 2.0,
+      'regularHours': 0.0,
+      'overtimeHours': 0.0,
     };
   }
 
@@ -147,10 +117,7 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
   }
 
   @override
-  Future<Timesheet> updateTimesheet(
-    int timesheetId,
-    Map<String, dynamic> timesheetData,
-  ) async {
+  Future<Timesheet> updateTimesheet(int timesheetId, Map<String, dynamic> timesheetData) async {
     await Future.delayed(const Duration(milliseconds: 500));
     // Mock implementation
     throw UnimplementedError('updateTimesheet not implemented');
@@ -171,10 +138,7 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
   }
 
   @override
-  Future<Timesheet> rejectTimesheet(
-    int timesheetId, {
-    required String reason,
-  }) async {
+  Future<Timesheet> rejectTimesheet(int timesheetId, {required String reason}) async {
     await Future.delayed(const Duration(milliseconds: 500));
     // Mock implementation
     throw UnimplementedError('rejectTimesheet not implemented');
