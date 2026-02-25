@@ -1,13 +1,17 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TimesheetActions {
-  static Future<void> approveTimesheet(BuildContext context, WidgetRef ref, Timesheet timesheet) async {
+  static Future<void> approveTimesheet(
+    BuildContext context,
+    WidgetRef ref,
+    Timesheet timesheet,
+  ) async {
     final localizations = AppLocalizations.of(context)!;
 
     final confirmed = await AppConfirmationDialog.show(
@@ -30,11 +34,19 @@ class TimesheetActions {
     if (error == null) {
       ToastService.success(context, 'Timesheet approved', title: 'Success');
     } else {
-      ToastService.error(context, error.replaceFirst('Exception: ', ''), title: 'Error');
+      ToastService.error(
+        context,
+        error.replaceFirst('Exception: ', ''),
+        title: 'Error',
+      );
     }
   }
 
-  static Future<void> rejectTimesheet(BuildContext context, WidgetRef ref, Timesheet timesheet) async {
+  static Future<void> rejectTimesheet(
+    BuildContext context,
+    WidgetRef ref,
+    Timesheet timesheet,
+  ) async {
     final localizations = AppLocalizations.of(context)!;
 
     final reason = await AppConfirmationDialog.showWithInput(
@@ -57,14 +69,21 @@ class TimesheetActions {
     if (!context.mounted || reason == null || reason.trim().isEmpty) return;
 
     final notifier = ref.read(timesheetNotifierProvider.notifier);
-    final error = await notifier.rejectTimesheet(timesheet.guid, rejectReason: reason.trim());
+    final error = await notifier.rejectTimesheet(
+      timesheet.guid,
+      rejectReason: reason.trim(),
+    );
 
     if (!context.mounted) return;
 
     if (error == null) {
       ToastService.success(context, 'Timesheet rejected', title: 'Success');
     } else {
-      ToastService.error(context, error.replaceFirst('Exception: ', ''), title: 'Error');
+      ToastService.error(
+        context,
+        error.replaceFirst('Exception: ', ''),
+        title: 'Error',
+      );
     }
   }
 }

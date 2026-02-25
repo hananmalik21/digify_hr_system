@@ -1,4 +1,3 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/overtime/table/component_overtime_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,9 +11,12 @@ import '../../../../core/widgets/common/digify_tab_header.dart';
 import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import '../dialogs/new_overtime_request_dialog.dart';
+import '../providers/overtime/overtime_provider.dart';
 import '../widgets/overtime/component_overtime_filter_bar.dart';
 import '../widgets/overtime/search/component_overtime_search_and_actions.dart';
 import '../widgets/overtime/component_overtime_stats.dart';
+import '../widgets/overtime/table/component_overtime_table.dart';
 
 class OvertimeScreen extends ConsumerStatefulWidget {
   const OvertimeScreen({super.key});
@@ -28,9 +30,12 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final state = ref.watch(overtimeManagementProvider);
 
     return Container(
-      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      color: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
@@ -42,7 +47,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
               trailing: AppButton.primary(
                 label: localizations.requestOvertime,
                 svgPath: Assets.icons.addNewIconFigma.path,
-                onPressed: () {},
+                onPressed: () => NewOvertimeRequestDialog.show(context),
               ),
             ),
             Gap(24.h),
@@ -52,11 +57,15 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
             Gap(24.h),
             Consumer(
               builder: (context, ref, child) {
-                final selectedEnterpriseId = ref.watch(workforceEnterpriseIdProvider);
+                final selectedEnterpriseId = ref.watch(
+                  workforceEnterpriseIdProvider,
+                );
                 return EnterpriseSelectorWidget(
                   selectedEnterpriseId: selectedEnterpriseId,
                   onEnterpriseChanged: (id) {
-                    ref.read(workforceSelectedEnterpriseProvider.notifier).setEnterpriseId(id);
+                    ref
+                        .read(workforceSelectedEnterpriseProvider.notifier)
+                        .setEnterpriseId(id);
                   },
                   subtitle: selectedEnterpriseId != null
                       ? 'Viewing data for selected enterprise'
@@ -65,11 +74,14 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
               },
             ),
             Gap(24.h),
-            OvertimeSearchAndActions(localizations: localizations, isDark: isDark),
+            OvertimeSearchAndActions(
+              localizations: localizations,
+              isDark: isDark,
+            ),
             Gap(24.h),
             OvertimeTable(
               localizations: localizations,
-              records: [],
+              records: state.records ?? [],
               isDark: isDark,
               onView: (_) {},
               onEdit: (_) {},

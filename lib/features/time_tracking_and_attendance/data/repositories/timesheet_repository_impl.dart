@@ -3,15 +3,16 @@ import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/timesheet_dto.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_page.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/repositories/timesheet_repository.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_page.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
 
 class TimesheetRepositoryImpl implements TimesheetRepository {
   final ApiClient _apiClient;
 
-  TimesheetRepositoryImpl({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient(baseUrl: ApiConfig.baseUrl);
+  TimesheetRepositoryImpl({ApiClient? apiClient})
+    : _apiClient = apiClient ?? ApiClient(baseUrl: ApiConfig.baseUrl);
 
   @override
   Future<TimesheetPage> getTimesheets({
@@ -52,23 +53,39 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
         query['levelCode'] = levelCode;
       }
 
-      final response = await _apiClient.get(ApiEndpoints.tmTimesheets, queryParameters: query);
+      final response = await _apiClient.get(
+        ApiEndpoints.tmTimesheets,
+        queryParameters: query,
+      );
 
       final data = response['data'] as List<dynamic>? ?? [];
-      final pagination = (response['meta']?['pagination'] as Map<String, dynamic>?) ?? {};
+      final pagination =
+          (response['meta']?['pagination'] as Map<String, dynamic>?) ?? {};
 
-      final items = data.whereType<Map<String, dynamic>>().map((e) => TimesheetDto.fromJson(e).toDomain()).toList();
+      final items = data
+          .whereType<Map<String, dynamic>>()
+          .map((e) => TimesheetDto.fromJson(e).toDomain())
+          .toList();
 
       final total = pagination['total'] as int? ?? items.length;
       final currentPage = pagination['page'] as int? ?? page;
       final limit = pagination['limit'] as int? ?? pageSize;
       final hasMore = pagination['hasMore'] as bool? ?? false;
 
-      return TimesheetPage(items: items, total: total, page: currentPage, pageSize: limit, hasMore: hasMore);
+      return TimesheetPage(
+        items: items,
+        total: total,
+        page: currentPage,
+        pageSize: limit,
+        hasMore: hasMore,
+      );
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException('Failed to load timesheets: ${e.toString()}', originalError: e);
+      throw UnknownException(
+        'Failed to load timesheets: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -116,11 +133,15 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
   @override
   Future<Timesheet> createTimesheet(Map<String, dynamic> timesheetData) async {
     try {
-      final response = await _apiClient.post(ApiEndpoints.tmTimesheets, body: timesheetData);
+      final response = await _apiClient.post(
+        ApiEndpoints.tmTimesheets,
+        body: timesheetData,
+      );
 
       final status = response['status'] as bool? ?? true;
       if (!status) {
-        final message = response['message'] as String? ?? 'Failed to create timesheet';
+        final message =
+            response['message'] as String? ?? 'Failed to create timesheet';
         throw UnknownException(message);
       }
 
@@ -140,7 +161,9 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
       final weekStart = parseDate(timesheetData['week_start_date'] as String?);
       final weekEnd = parseDate(timesheetData['week_end_date'] as String?);
 
-      final lines = (timesheetData['lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
+      final lines = (timesheetData['lines'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList();
 
       final regularHours = lines
           .map((l) => (l['regular_hours'] as num?)?.toDouble() ?? 0.0)
@@ -169,17 +192,27 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException('Failed to create timesheet: ${e.toString()}', originalError: e);
+      throw UnknownException(
+        'Failed to create timesheet: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
   @override
-  Future<Timesheet> updateTimesheet(String timesheetGuid, Map<String, dynamic> timesheetData) async {
+  Future<Timesheet> updateTimesheet(
+    String timesheetGuid,
+    Map<String, dynamic> timesheetData,
+  ) async {
     try {
-      final response = await _apiClient.put(ApiEndpoints.tmTimesheetByGuid(timesheetGuid), body: timesheetData);
+      final response = await _apiClient.put(
+        ApiEndpoints.tmTimesheetByGuid(timesheetGuid),
+        body: timesheetData,
+      );
       final status = response['status'] as bool? ?? true;
       if (!status) {
-        final message = response['message'] as String? ?? 'Failed to update timesheet';
+        final message =
+            response['message'] as String? ?? 'Failed to update timesheet';
         throw UnknownException(message);
       }
       final data = response['data'] as Map<String, dynamic>? ?? {};
@@ -194,7 +227,9 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
 
       final weekStart = parseDate(timesheetData['week_start_date'] as String?);
       final weekEnd = parseDate(timesheetData['week_end_date'] as String?);
-      final lines = (timesheetData['lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList();
+      final lines = (timesheetData['lines'] as List<dynamic>? ?? [])
+          .whereType<Map<String, dynamic>>()
+          .toList();
       final regularHours = lines
           .map((l) => (l['regular_hours'] as num?)?.toDouble() ?? 0.0)
           .fold<double>(0.0, (a, b) => a + b);
@@ -219,7 +254,10 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException('Failed to update timesheet: ${e.toString()}', originalError: e);
+      throw UnknownException(
+        'Failed to update timesheet: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
@@ -238,18 +276,25 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
       );
       final status = response['status'] as bool? ?? true;
       if (!status) {
-        final message = response['message'] as String? ?? 'Failed to approve timesheet';
+        final message =
+            response['message'] as String? ?? 'Failed to approve timesheet';
         throw UnknownException(message);
       }
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException('Failed to approve timesheet: ${e.toString()}', originalError: e);
+      throw UnknownException(
+        'Failed to approve timesheet: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 
   @override
-  Future<void> rejectTimesheet(String timesheetGuid, {required String rejectReason}) async {
+  Future<void> rejectTimesheet(
+    String timesheetGuid, {
+    required String rejectReason,
+  }) async {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.tmTimesheetReject(timesheetGuid),
@@ -257,13 +302,17 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
       );
       final status = response['status'] as bool? ?? true;
       if (!status) {
-        final message = response['message'] as String? ?? 'Failed to reject timesheet';
+        final message =
+            response['message'] as String? ?? 'Failed to reject timesheet';
         throw UnknownException(message);
       }
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException('Failed to reject timesheet: ${e.toString()}', originalError: e);
+      throw UnknownException(
+        'Failed to reject timesheet: ${e.toString()}',
+        originalError: e,
+      );
     }
   }
 

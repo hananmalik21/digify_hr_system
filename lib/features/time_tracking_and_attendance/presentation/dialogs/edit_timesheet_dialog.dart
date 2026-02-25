@@ -8,7 +8,7 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/edit_timesheet_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/dialogs/edit_timesheet_basic_form.dart';
@@ -49,7 +49,9 @@ class EditTimesheetDialog extends ConsumerStatefulWidget {
     final taskIds = List<int?>.filled(7, null);
 
     for (final line in t.lines) {
-      final lineDate = line.workDate.length >= 10 ? line.workDate.substring(0, 10) : line.workDate;
+      final lineDate = line.workDate.length >= 10
+          ? line.workDate.substring(0, 10)
+          : line.workDate;
       final idx = weekDays.indexWhere((d) => dateKey(d) == lineDate);
       if (idx >= 0 && idx < 7) {
         regularHours[idx] = line.regularHours;
@@ -91,7 +93,8 @@ class EditTimesheetDialog extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<EditTimesheetDialog> createState() => _EditTimesheetDialogState();
+  ConsumerState<EditTimesheetDialog> createState() =>
+      _EditTimesheetDialogState();
 }
 
 class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
@@ -110,8 +113,14 @@ class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
     _positionController = TextEditingController();
     _departmentController = TextEditingController();
     _descriptionController = TextEditingController();
-    _regularHoursControllers = List.generate(7, (_) => TextEditingController(text: '0'));
-    _overtimeHoursControllers = List.generate(7, (_) => TextEditingController(text: '0'));
+    _regularHoursControllers = List.generate(
+      7,
+      (_) => TextEditingController(text: '0'),
+    );
+    _overtimeHoursControllers = List.generate(
+      7,
+      (_) => TextEditingController(text: '0'),
+    );
   }
 
   @override
@@ -142,9 +151,15 @@ class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
     _descriptionController.text = state.description ?? '';
 
     for (var i = 0; i < state.weekDays.length && i < 7; i++) {
-      final regular = (i < state.regularHours.length) ? state.regularHours[i] : 0.0;
-      final overtime = (i < state.overtimeHours.length) ? state.overtimeHours[i] : 0.0;
-      final regularText = regular == regular.roundToDouble() ? regular.toInt().toString() : regular.toStringAsFixed(2);
+      final regular = (i < state.regularHours.length)
+          ? state.regularHours[i]
+          : 0.0;
+      final overtime = (i < state.overtimeHours.length)
+          ? state.overtimeHours[i]
+          : 0.0;
+      final regularText = regular == regular.roundToDouble()
+          ? regular.toInt().toString()
+          : regular.toStringAsFixed(2);
       final overtimeText = overtime == overtime.roundToDouble()
           ? overtime.toInt().toString()
           : overtime.toStringAsFixed(2);
@@ -197,7 +212,9 @@ class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
         AppButton(
           label: 'Save as Draft',
           isLoading: state.isSavingDraft,
-          onPressed: (state.isSavingDraft || state.isSubmittingForApproval) ? null : () => _handleSaveDraft(ref),
+          onPressed: (state.isSavingDraft || state.isSubmittingForApproval)
+              ? null
+              : () => _handleSaveDraft(ref),
           type: AppButtonType.outline,
           backgroundColor: AppColors.cardBackground,
           foregroundColor: AppColors.primary,
@@ -229,7 +246,10 @@ class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
       ToastService.error(context, 'Missing required data to update timesheet.');
     } catch (e) {
       if (!mounted) return;
-      ToastService.error(context, 'Failed to update timesheet. Please try again.');
+      ToastService.error(
+        context,
+        'Failed to update timesheet. Please try again.',
+      );
     }
   }
 
@@ -245,7 +265,10 @@ class _EditTimesheetDialogState extends ConsumerState<EditTimesheetDialog> {
       ToastService.error(context, 'Missing required data to update timesheet.');
     } catch (e) {
       if (!mounted) return;
-      ToastService.error(context, 'Failed to update timesheet. Please try again.');
+      ToastService.error(
+        context,
+        'Failed to update timesheet. Please try again.',
+      );
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:flutter/widgets.dart';
 
 class TimesheetStatusChip extends StatelessWidget {
@@ -12,7 +12,11 @@ class TimesheetStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = _TimesheetStatusChipStyle.fromStatus(status);
 
-    return DigifyCapsule(label: status.displayName, backgroundColor: style.backgroundColor, textColor: style.textColor);
+    return DigifyCapsule(
+      label: status.displayName,
+      backgroundColor: style.backgroundColor,
+      textColor: style.textColor,
+    );
   }
 }
 
@@ -20,7 +24,10 @@ class _TimesheetStatusChipStyle {
   final Color backgroundColor;
   final Color textColor;
 
-  const _TimesheetStatusChipStyle({required this.backgroundColor, required this.textColor});
+  const _TimesheetStatusChipStyle({
+    required this.backgroundColor,
+    required this.textColor,
+  });
 
   static _TimesheetStatusChipStyle fromStatus(TimesheetStatus status) {
     switch (status) {
@@ -30,11 +37,20 @@ class _TimesheetStatusChipStyle {
           textColor: AppColors.grayText,
         );
       case TimesheetStatus.submitted:
-        return const _TimesheetStatusChipStyle(backgroundColor: AppColors.infoBg, textColor: AppColors.infoText);
+        return const _TimesheetStatusChipStyle(
+          backgroundColor: AppColors.infoBg,
+          textColor: AppColors.infoText,
+        );
       case TimesheetStatus.approved:
-        return const _TimesheetStatusChipStyle(backgroundColor: AppColors.successBg, textColor: AppColors.successText);
+        return const _TimesheetStatusChipStyle(
+          backgroundColor: AppColors.successBg,
+          textColor: AppColors.successText,
+        );
       case TimesheetStatus.rejected:
-        return const _TimesheetStatusChipStyle(backgroundColor: AppColors.errorBg, textColor: AppColors.errorText);
+        return const _TimesheetStatusChipStyle(
+          backgroundColor: AppColors.errorBg,
+          textColor: AppColors.errorText,
+        );
       case TimesheetStatus.withdrawn:
         return const _TimesheetStatusChipStyle(
           backgroundColor: AppColors.cardBackgroundGrey,

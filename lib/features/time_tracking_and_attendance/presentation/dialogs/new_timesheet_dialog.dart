@@ -8,7 +8,7 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/new_timesheet_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/dialogs/new_timesheet_basic_form.dart';
@@ -22,7 +22,9 @@ class NewTimesheetDialog extends ConsumerStatefulWidget {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => ProviderScope(
-        overrides: [newTimesheetProvider.overrideWith((ref) => NewTimesheetNotifier(ref))],
+        overrides: [
+          newTimesheetProvider.overrideWith((ref) => NewTimesheetNotifier(ref)),
+        ],
         child: const NewTimesheetDialog(),
       ),
     );
@@ -48,8 +50,14 @@ class _NewTimesheetDialogState extends ConsumerState<NewTimesheetDialog> {
     _positionController = TextEditingController();
     _departmentController = TextEditingController();
     _descriptionController = TextEditingController();
-    _regularHoursControllers = List.generate(7, (_) => TextEditingController(text: '0'));
-    _overtimeHoursControllers = List.generate(7, (_) => TextEditingController(text: '0'));
+    _regularHoursControllers = List.generate(
+      7,
+      (_) => TextEditingController(text: '0'),
+    );
+    _overtimeHoursControllers = List.generate(
+      7,
+      (_) => TextEditingController(text: '0'),
+    );
   }
 
   @override
@@ -80,10 +88,16 @@ class _NewTimesheetDialogState extends ConsumerState<NewTimesheetDialog> {
     _descriptionController.text = state.description ?? '';
 
     for (var i = 0; i < state.weekDays.length && i < 7; i++) {
-      final regular = (i < state.regularHours.length) ? state.regularHours[i] : 0.0;
-      final overtime = (i < state.overtimeHours.length) ? state.overtimeHours[i] : 0.0;
+      final regular = (i < state.regularHours.length)
+          ? state.regularHours[i]
+          : 0.0;
+      final overtime = (i < state.overtimeHours.length)
+          ? state.overtimeHours[i]
+          : 0.0;
 
-      final regularText = regular == regular.roundToDouble() ? regular.toInt().toString() : regular.toStringAsFixed(2);
+      final regularText = regular == regular.roundToDouble()
+          ? regular.toInt().toString()
+          : regular.toStringAsFixed(2);
       final overtimeText = overtime == overtime.roundToDouble()
           ? overtime.toInt().toString()
           : overtime.toStringAsFixed(2);
@@ -137,7 +151,9 @@ class _NewTimesheetDialogState extends ConsumerState<NewTimesheetDialog> {
         AppButton(
           label: 'Save as Draft',
           isLoading: state.isSavingDraft,
-          onPressed: state.isSavingDraft ? null : () => _handleSubmit(ref, TimesheetStatus.draft),
+          onPressed: state.isSavingDraft
+              ? null
+              : () => _handleSubmit(ref, TimesheetStatus.draft),
           type: AppButtonType.outline,
           svgPath: Assets.icons.saveDivisionIcon.path,
           backgroundColor: AppColors.cardBackground,
@@ -147,7 +163,9 @@ class _NewTimesheetDialogState extends ConsumerState<NewTimesheetDialog> {
         AppButton(
           label: 'Submit for Approval',
           isLoading: state.isSubmittingForApproval,
-          onPressed: state.isSubmittingForApproval ? null : () => _handleSubmit(ref, TimesheetStatus.submitted),
+          onPressed: state.isSubmittingForApproval
+              ? null
+              : () => _handleSubmit(ref, TimesheetStatus.submitted),
           svgPath: Assets.icons.submitted.path,
           type: AppButtonType.primary,
         ),
@@ -168,7 +186,10 @@ class _NewTimesheetDialogState extends ConsumerState<NewTimesheetDialog> {
       ToastService.error(context, 'Missing required data to create timesheet.');
     } catch (e) {
       if (!mounted) return;
-      ToastService.error(context, 'Failed to save timesheet. Please try again.');
+      ToastService.error(
+        context,
+        'Failed to save timesheet. Please try again.',
+      );
     }
   }
 }

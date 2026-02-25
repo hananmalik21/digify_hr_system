@@ -1,6 +1,6 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_page.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_page.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 
 /// Repository interface for timesheet operations
 abstract class TimesheetRepository {
@@ -36,14 +36,20 @@ abstract class TimesheetRepository {
   /// Creates a new timesheet
   Future<Timesheet> createTimesheet(Map<String, dynamic> timesheetData);
 
-  Future<Timesheet> updateTimesheet(String timesheetGuid, Map<String, dynamic> timesheetData);
+  Future<Timesheet> updateTimesheet(
+    String timesheetGuid,
+    Map<String, dynamic> timesheetData,
+  );
 
   /// Submits a timesheet for approval
   Future<Timesheet> submitTimesheet(int timesheetId);
 
   Future<void> approveTimesheet(String timesheetGuid);
 
-  Future<void> rejectTimesheet(String timesheetGuid, {required String rejectReason});
+  Future<void> rejectTimesheet(
+    String timesheetGuid, {
+    required String rejectReason,
+  });
 
   /// Deletes a timesheet
   Future<void> deleteTimesheet(int timesheetId);

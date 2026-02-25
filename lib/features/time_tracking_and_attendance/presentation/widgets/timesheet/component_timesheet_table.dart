@@ -4,8 +4,8 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -78,7 +78,10 @@ class TimesheetTable extends ConsumerWidget {
                       5,
                       (_) => Skeletonizer(
                         enabled: true,
-                        child: TimesheetTableRow(timesheet: _skeletonTimesheet, isDark: isDark),
+                        child: TimesheetTableRow(
+                          timesheet: _skeletonTimesheet,
+                          isDark: isDark,
+                        ),
                       ),
                     )
                   else if (records.isEmpty)
@@ -89,7 +92,10 @@ class TimesheetTable extends ConsumerWidget {
                         child: Center(
                           child: Text(
                             localizations.noResultsFound,
-                            style: TextStyle(fontSize: 16.sp, color: AppColors.textMuted),
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.textMuted,
+                            ),
                           ),
                         ),
                       ),
@@ -98,7 +104,10 @@ class TimesheetTable extends ConsumerWidget {
                     ...records.map(
                       (timesheet) => Skeletonizer(
                         enabled: isLoading,
-                        child: TimesheetTableRow(timesheet: timesheet, isDark: isDark),
+                        child: TimesheetTableRow(
+                          timesheet: timesheet,
+                          isDark: isDark,
+                        ),
                       ),
                     ),
                 ],

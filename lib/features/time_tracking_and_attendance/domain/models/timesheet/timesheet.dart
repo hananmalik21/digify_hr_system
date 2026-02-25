@@ -1,5 +1,5 @@
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_line.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_line.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 
 /// Domain model for Timesheet
 class Timesheet {
@@ -60,13 +60,25 @@ class Timesheet {
       regularHours: (json['regular_hours'] as num?)?.toDouble() ?? 0.0,
       overtimeHours: (json['overtime_hours'] as num?)?.toDouble() ?? 0.0,
       totalHours: (json['total_hours'] as num?)?.toDouble() ?? 0.0,
-      status: TimesheetStatusExtension.fromString(json['status'] as String? ?? 'draft'),
+      status: TimesheetStatusExtension.fromString(
+        json['status'] as String? ?? 'draft',
+      ),
       description: json['description'] as String?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
-      submittedAt: json['submitted_at'] != null ? DateTime.parse(json['submitted_at'] as String) : null,
-      approvedAt: json['approved_at'] != null ? DateTime.parse(json['approved_at'] as String) : null,
-      rejectedAt: json['rejected_at'] != null ? DateTime.parse(json['rejected_at'] as String) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : null,
+      submittedAt: json['submitted_at'] != null
+          ? DateTime.parse(json['submitted_at'] as String)
+          : null,
+      approvedAt: json['approved_at'] != null
+          ? DateTime.parse(json['approved_at'] as String)
+          : null,
+      rejectedAt: json['rejected_at'] != null
+          ? DateTime.parse(json['rejected_at'] as String)
+          : null,
       rejectionReason: json['rejection_reason'] as String?,
     );
   }
@@ -96,7 +108,9 @@ class Timesheet {
 
   /// Gets formatted week period string (e.g., "Dec 9 - Dec 15, 2024")
   String get formattedWeekPeriod {
-    final startFormat = weekStartDate.month == weekEndDate.month ? 'MMM d' : 'MMM d, yyyy';
+    final startFormat = weekStartDate.month == weekEndDate.month
+        ? 'MMM d'
+        : 'MMM d, yyyy';
     final endFormat = 'MMM d, yyyy';
     final startStr = _formatDate(weekStartDate, startFormat);
     final endStr = _formatDate(weekEndDate, endFormat);
@@ -104,7 +118,20 @@ class Timesheet {
   }
 
   String _formatDate(DateTime date, String format) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final month = months[date.month - 1];
     final day = date.day;
     final year = date.year;
