@@ -1,5 +1,6 @@
-/// Timesheet status enum matching Figma design
-enum TimesheetStatus { draft, submitted, approved, rejected }
+/// Timesheet status enum.
+/// API codes: DRAFT, SUBMITTED, APPROVED, REJECTED, WITHDRAWN
+enum TimesheetStatus { draft, submitted, approved, rejected, withdrawn }
 
 extension TimesheetStatusExtension on TimesheetStatus {
   String get displayName {
@@ -12,6 +13,8 @@ extension TimesheetStatusExtension on TimesheetStatus {
         return 'Approved';
       case TimesheetStatus.rejected:
         return 'Rejected';
+      case TimesheetStatus.withdrawn:
+        return 'Withdrawn';
     }
   }
 
@@ -20,11 +23,14 @@ extension TimesheetStatusExtension on TimesheetStatus {
       case 'draft':
         return TimesheetStatus.draft;
       case 'submitted':
+      case 'pending':
         return TimesheetStatus.submitted;
       case 'approved':
         return TimesheetStatus.approved;
       case 'rejected':
         return TimesheetStatus.rejected;
+      case 'withdrawn':
+        return TimesheetStatus.withdrawn;
       default:
         return TimesheetStatus.draft;
     }
@@ -40,6 +46,8 @@ extension TimesheetStatusExtension on TimesheetStatus {
         return 'approved';
       case TimesheetStatus.rejected:
         return 'rejected';
+      case TimesheetStatus.withdrawn:
+        return 'withdrawn';
     }
   }
 }

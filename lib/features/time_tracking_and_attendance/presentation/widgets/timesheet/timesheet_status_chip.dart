@@ -35,6 +35,11 @@ class _TimesheetStatusChipStyle {
         return const _TimesheetStatusChipStyle(backgroundColor: AppColors.successBg, textColor: AppColors.successText);
       case TimesheetStatus.rejected:
         return const _TimesheetStatusChipStyle(backgroundColor: AppColors.errorBg, textColor: AppColors.errorText);
+      case TimesheetStatus.withdrawn:
+        return const _TimesheetStatusChipStyle(
+          backgroundColor: AppColors.cardBackgroundGrey,
+          textColor: AppColors.textSecondary,
+        );
     }
   }
 }

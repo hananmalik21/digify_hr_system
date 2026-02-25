@@ -7280,6 +7280,48 @@ abstract class AppLocalizations {
   /// **'Reject'**
   String get reject;
 
+  /// No description provided for @rejectTimesheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Timesheet'**
+  String get rejectTimesheetTitle;
+
+  /// No description provided for @rejectReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject reason'**
+  String get rejectReason;
+
+  /// No description provided for @rejectReasonRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a reason for rejection'**
+  String get rejectReasonRequired;
+
+  /// No description provided for @approveTimesheetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve timesheet'**
+  String get approveTimesheetConfirmTitle;
+
+  /// No description provided for @approveTimesheetConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to approve this timesheet?'**
+  String get approveTimesheetConfirmMessage;
+
+  /// No description provided for @rejectTimesheetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject timesheet'**
+  String get rejectTimesheetConfirmTitle;
+
+  /// No description provided for @rejectTimesheetConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject this timesheet? You will need to provide a reason.'**
+  String get rejectTimesheetConfirmMessage;
+
   /// No description provided for @totalRequests.
   ///
   /// In en, this message translates to:

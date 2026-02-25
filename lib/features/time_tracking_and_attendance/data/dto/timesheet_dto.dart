@@ -1,8 +1,10 @@
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_line.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/domain/models/timesheet/timesheet_status.dart';
 
 class TimesheetDto {
   final int timesheetId;
+  final String timesheetGuid;
   final int enterpriseId;
   final int employeeId;
   final String? firstNameEn;
@@ -13,6 +15,7 @@ class TimesheetDto {
   final String weekStartDate;
   final String weekEndDate;
   final String statusCode;
+  final String? description;
   final List<Map<String, dynamic>> timesheetLines;
   final String? creationDate;
   final String? lastUpdateDate;
@@ -23,6 +26,7 @@ class TimesheetDto {
 
   const TimesheetDto({
     required this.timesheetId,
+    required this.timesheetGuid,
     required this.enterpriseId,
     required this.employeeId,
     required this.firstNameEn,
@@ -33,6 +37,7 @@ class TimesheetDto {
     required this.weekStartDate,
     required this.weekEndDate,
     required this.statusCode,
+    this.description,
     required this.timesheetLines,
     required this.creationDate,
     required this.lastUpdateDate,
@@ -45,6 +50,7 @@ class TimesheetDto {
   factory TimesheetDto.fromJson(Map<String, dynamic> json) {
     return TimesheetDto(
       timesheetId: (json['timesheet_id'] as num?)?.toInt() ?? 0,
+      timesheetGuid: json['timesheet_guid'] as String? ?? '',
       enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
       employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
       firstNameEn: json['first_name_en'] as String?,
@@ -55,6 +61,7 @@ class TimesheetDto {
       weekStartDate: json['week_start_date'] as String? ?? '',
       weekEndDate: json['week_end_date'] as String? ?? '',
       statusCode: json['status_code'] as String? ?? 'DRAFT',
+      description: json['description'] as String?,
       timesheetLines: (json['timesheet_lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
       creationDate: json['creation_date'] as String?,
       lastUpdateDate: json['last_update_date'] as String?,
@@ -89,8 +96,11 @@ class TimesheetDto {
 
     final departmentName = (department['org_unit_name_en'] as String?) ?? '';
 
+    final lines = timesheetLines.map(_lineFromMap).toList();
+
     return Timesheet(
       id: timesheetId,
+      guid: timesheetGuid,
       employeeId: employeeId,
       employeeName: employeeName,
       employeeNumber: employeeNumber,
@@ -101,12 +111,29 @@ class TimesheetDto {
       overtimeHours: overtimeHours,
       totalHours: totalHours,
       status: _mapStatus(statusCode),
+      description: description,
       createdAt: _parseDate(creationDate),
       updatedAt: _parseDate(lastUpdateDate),
       submittedAt: _parseDate(submittedDate),
       approvedAt: _parseDate(approvedDate),
       rejectedAt: _parseDate(rejectedDate),
       rejectionReason: rejectReason,
+      lines: lines,
+    );
+  }
+
+  static TimesheetLine _lineFromMap(Map<String, dynamic> l) {
+    final workDate = l['work_date'] as String? ?? '';
+    final taskText = (l['project_task_text'] ?? l['line_notes']) as String? ?? '';
+    return TimesheetLine(
+      workDate: workDate,
+      projectId: (l['project_id'] as num?)?.toInt(),
+      taskId: (l['task_id'] as num?)?.toInt(),
+      taskText: taskText,
+      regularHours: (l['regular_hours'] as num?)?.toDouble() ?? 0.0,
+      overtimeHours: (l['ot_hours'] as num?)?.toDouble() ?? 0.0,
+      lineId: (l['line_id'] as num?)?.toInt(),
+      projectName: l['project_name'] as String?,
     );
   }
 
@@ -115,11 +142,14 @@ class TimesheetDto {
       case 'DRAFT':
         return TimesheetStatus.draft;
       case 'SUBMITTED':
+      case 'PENDING':
         return TimesheetStatus.submitted;
       case 'APPROVED':
         return TimesheetStatus.approved;
       case 'REJECTED':
         return TimesheetStatus.rejected;
+      case 'WITHDRAWN':
+        return TimesheetStatus.withdrawn;
       default:
         return TimesheetStatus.draft;
     }

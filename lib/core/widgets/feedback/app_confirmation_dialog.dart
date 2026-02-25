@@ -3,6 +3,8 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +23,9 @@ class AppConfirmationDialog extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final String? svgPath;
+  final bool hasTextField;
+  final String? textFieldLabel;
+  final TextEditingController? textController;
 
   const AppConfirmationDialog({
     super.key,
@@ -35,6 +40,9 @@ class AppConfirmationDialog extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.svgPath,
+    this.hasTextField = false,
+    this.textFieldLabel,
+    this.textController,
   });
 
   factory AppConfirmationDialog.delete({
@@ -92,6 +100,52 @@ class AppConfirmationDialog extends StatelessWidget {
     );
   }
 
+  static Future<String?> showWithInput(
+    BuildContext context, {
+    required String title,
+    required String message,
+    String? itemName,
+    String confirmLabel = 'Confirm',
+    String cancelLabel = 'Cancel',
+    ConfirmationType type = ConfirmationType.danger,
+    IconData? icon,
+    String? svgPath,
+    required String textFieldLabel,
+    String? initialValue,
+    String? Function(String?)? validator,
+  }) {
+    final controller = TextEditingController(text: initialValue);
+
+    return showDialog<String>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.45),
+      builder: (dialogContext) => AppConfirmationDialog(
+        title: title,
+        message: message,
+        itemName: itemName,
+        confirmLabel: confirmLabel,
+        cancelLabel: cancelLabel,
+        onConfirm: () {
+          final text = controller.text;
+          final error = validator?.call(text);
+          if (error != null && error.isNotEmpty) {
+            ToastService.error(dialogContext, error);
+            return;
+          }
+          Navigator.of(dialogContext).pop(text);
+        },
+        onCancel: () => Navigator.of(dialogContext).pop(null),
+        type: type,
+        isLoading: false,
+        icon: icon,
+        svgPath: svgPath,
+        hasTextField: true,
+        textFieldLabel: textFieldLabel,
+        textController: controller,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
@@ -101,108 +155,120 @@ class AppConfirmationDialog extends StatelessWidget {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       child: Center(
-        child: Container(
-          width: 0.85.sw,
-          constraints: BoxConstraints(maxWidth: 340.w),
-          margin: EdgeInsets.symmetric(horizontal: 24.w),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 28.h),
-              Container(
-                width: 56.w,
-                height: 56.w,
-                decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-                child: Center(
-                  child: svgPath != null
-                      ? DigifyAsset(assetPath: svgPath!, width: 28.w, height: 28.w, color: color)
-                      : Icon(icon ?? _getDefaultIcon(), color: color, size: 28.sp),
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            width: 0.85.sw,
+            constraints: BoxConstraints(maxWidth: 340.w),
+            margin: EdgeInsets.symmetric(horizontal: 24.w),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 28.h),
+                Container(
+                  width: 56.w,
+                  height: 56.w,
+                  decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+                  child: Center(
+                    child: svgPath != null
+                        ? DigifyAsset(assetPath: svgPath!, width: 28.w, height: 28.w, color: color)
+                        : Icon(icon ?? _getDefaultIcon(), color: color, size: 28.sp),
+                  ),
                 ),
-              ),
-              SizedBox(height: 16.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                        letterSpacing: -0.5,
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    children: [
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                          letterSpacing: -0.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      message,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13.5.sp,
-                        fontWeight: FontWeight.w400,
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                        height: 1.4,
+                      SizedBox(height: 8.h),
+                      Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                          height: 1.4,
+                        ),
                       ),
-                    ),
-                    if (itemName != null) ...[
-                      SizedBox(height: 16.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.grayBg,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.08)
-                                : AppColors.grayBorder.withValues(alpha: 0.5),
+                      if (itemName != null) ...[
+                        SizedBox(height: 16.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.grayBg,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.08)
+                                  : AppColors.grayBorder.withValues(alpha: 0.5),
+                            ),
+                          ),
+                          child: Text(
+                            itemName!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                            ),
                           ),
                         ),
-                        child: Text(
-                          itemName!,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                          ),
+                      ],
+                      if (hasTextField && textController != null) ...[
+                        SizedBox(height: 16.h),
+                        DigifyTextField(
+                          controller: textController!,
+                          labelText: textFieldLabel ?? '',
+                          maxLines: 3,
+                          minLines: 2,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 24.h),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: AppButton(
+                          label: cancelLabel,
+                          type: AppButtonType.outline,
+                          height: 42.h,
+                          onPressed: isLoading ? null : (onCancel ?? () => Navigator.of(context).pop()),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: AppButton(
+                          label: confirmLabel,
+                          type: type == ConfirmationType.danger ? AppButtonType.danger : AppButtonType.primary,
+                          height: 42.h,
+                          isLoading: isLoading,
+                          onPressed: onConfirm,
                         ),
                       ),
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 24.h),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 24.h),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        label: cancelLabel,
-                        type: AppButtonType.outline,
-                        height: 42.h,
-                        onPressed: isLoading ? null : (onCancel ?? () => Navigator.of(context).pop()),
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: AppButton(
-                        label: confirmLabel,
-                        type: type == ConfirmationType.danger ? AppButtonType.danger : AppButtonType.primary,
-                        height: 42.h,
-                        isLoading: isLoading,
-                        onPressed: onConfirm,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

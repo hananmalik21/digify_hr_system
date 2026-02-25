@@ -3721,6 +3721,29 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reject => 'رفض';
 
   @override
+  String get rejectTimesheetTitle => 'رفض بطاقة الوقت';
+
+  @override
+  String get rejectReason => 'سبب الرفض';
+
+  @override
+  String get rejectReasonRequired => 'يرجى إدخال سبب الرفض';
+
+  @override
+  String get approveTimesheetConfirmTitle => 'الموافقة على بطاقة الوقت';
+
+  @override
+  String get approveTimesheetConfirmMessage =>
+      'هل أنت متأكد أنك تريد الموافقة على بطاقة الوقت هذه؟';
+
+  @override
+  String get rejectTimesheetConfirmTitle => 'رفض بطاقة الوقت';
+
+  @override
+  String get rejectTimesheetConfirmMessage =>
+      'هل أنت متأكد أنك تريد رفض بطاقة الوقت هذه؟ ستحتاج إلى تقديم سبب.';
+
+  @override
   String get totalRequests => 'إجمالي الطلبات';
 
   @override

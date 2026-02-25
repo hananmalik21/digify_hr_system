@@ -38,6 +38,8 @@ class TimesheetState {
   final double regularHours;
   final double overtimeHours;
   final bool isLoading;
+  final String? approvingTimesheetGuid;
+  final String? rejectingTimesheetGuid;
   final String? error;
   final List<Timesheet> records;
   final int currentPage;
@@ -64,6 +66,8 @@ class TimesheetState {
     this.regularHours = 0.0,
     this.overtimeHours = 0.0,
     this.isLoading = false,
+    this.approvingTimesheetGuid,
+    this.rejectingTimesheetGuid,
     this.error,
     this.records = const [],
     this.currentPage = 1,
@@ -91,6 +95,8 @@ class TimesheetState {
     double? regularHours,
     double? overtimeHours,
     bool? isLoading,
+    String? approvingTimesheetGuid,
+    String? rejectingTimesheetGuid,
     String? error,
     List<Timesheet>? records,
     int? currentPage,
@@ -100,6 +106,8 @@ class TimesheetState {
     bool clearStatusFilter = false,
     bool clearOrgUnitId = false,
     bool clearLevelCode = false,
+    bool clearApprovingTimesheetGuid = false,
+    bool clearRejectingTimesheetGuid = false,
     bool? isCurrentWeek,
   }) {
     return TimesheetState(
@@ -121,6 +129,12 @@ class TimesheetState {
       regularHours: regularHours ?? this.regularHours,
       overtimeHours: overtimeHours ?? this.overtimeHours,
       isLoading: isLoading ?? this.isLoading,
+      approvingTimesheetGuid: clearApprovingTimesheetGuid
+          ? null
+          : (approvingTimesheetGuid ?? this.approvingTimesheetGuid),
+      rejectingTimesheetGuid: clearRejectingTimesheetGuid
+          ? null
+          : (rejectingTimesheetGuid ?? this.rejectingTimesheetGuid),
       error: clearError ? null : (error ?? this.error),
       records: records ?? this.records,
       currentPage: currentPage ?? this.currentPage,
@@ -289,21 +303,118 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     loadTimesheets();
   }
 
-  Future<void> approveTimesheet(int timesheetId) async {
+  /// Approves a timesheet by GUID. Returns null on success, error message on failure.
+  Future<String?> approveTimesheet(String timesheetGuid) async {
+    state = state.copyWith(approvingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.approveTimesheet(timesheetId);
-      await loadTimesheets();
+      await _repository.approveTimesheet(timesheetGuid);
+      final records = [...state.records];
+      final index = records.indexWhere((t) => t.guid == timesheetGuid);
+
+      if (index != -1) {
+        final current = records[index];
+
+        final updated = Timesheet(
+          id: current.id,
+          guid: current.guid,
+          employeeId: current.employeeId,
+          employeeName: current.employeeName,
+          employeeNumber: current.employeeNumber,
+          departmentName: current.departmentName,
+          weekStartDate: current.weekStartDate,
+          weekEndDate: current.weekEndDate,
+          regularHours: current.regularHours,
+          overtimeHours: current.overtimeHours,
+          totalHours: current.totalHours,
+          status: TimesheetStatus.approved,
+          description: current.description,
+          createdAt: current.createdAt,
+          updatedAt: DateTime.now(),
+          submittedAt: current.submittedAt,
+          approvedAt: DateTime.now(),
+          rejectedAt: null,
+          rejectionReason: null,
+          lines: current.lines,
+        );
+
+        records[index] = updated;
+
+        var submitted = state.submitted;
+        var approved = state.approved;
+
+        if (current.status == TimesheetStatus.submitted) {
+          submitted = submitted > 0 ? submitted - 1 : 0;
+          approved = approved + 1;
+        }
+
+        state = state.copyWith(records: records, submitted: submitted, approved: approved);
+      }
+
+      return null;
     } catch (e) {
-      state = state.copyWith(error: 'Failed to approve timesheet: ${e.toString()}', clearError: false);
+      final message = 'Failed to approve timesheet: ${e.toString()}';
+      state = state.copyWith(error: message, clearError: false);
+      return message;
+    } finally {
+      state = state.copyWith(clearApprovingTimesheetGuid: true);
     }
   }
 
-  Future<void> rejectTimesheet(int timesheetId, String reason) async {
+  Future<String?> rejectTimesheet(String timesheetGuid, {required String rejectReason}) async {
+    state = state.copyWith(rejectingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.rejectTimesheet(timesheetId, reason: reason);
-      await loadTimesheets();
+      await _repository.rejectTimesheet(timesheetGuid, rejectReason: rejectReason);
+
+      // Optimistically update the rejected timesheet in the current list
+      final records = [...state.records];
+      final index = records.indexWhere((t) => t.guid == timesheetGuid);
+
+      if (index != -1) {
+        final current = records[index];
+
+        final updated = Timesheet(
+          id: current.id,
+          guid: current.guid,
+          employeeId: current.employeeId,
+          employeeName: current.employeeName,
+          employeeNumber: current.employeeNumber,
+          departmentName: current.departmentName,
+          weekStartDate: current.weekStartDate,
+          weekEndDate: current.weekEndDate,
+          regularHours: current.regularHours,
+          overtimeHours: current.overtimeHours,
+          totalHours: current.totalHours,
+          status: TimesheetStatus.rejected,
+          description: current.description,
+          createdAt: current.createdAt,
+          updatedAt: DateTime.now(),
+          submittedAt: current.submittedAt,
+          approvedAt: current.approvedAt,
+          rejectedAt: DateTime.now(),
+          rejectionReason: rejectReason,
+          lines: current.lines,
+        );
+
+        records[index] = updated;
+
+        var submitted = state.submitted;
+        var rejected = state.rejected;
+
+        if (current.status == TimesheetStatus.submitted) {
+          submitted = submitted > 0 ? submitted - 1 : 0;
+          rejected = rejected + 1;
+        }
+
+        state = state.copyWith(records: records, submitted: submitted, rejected: rejected);
+      }
+
+      return null;
     } catch (e) {
-      state = state.copyWith(error: 'Failed to reject timesheet: ${e.toString()}', clearError: false);
+      final message = 'Failed to reject timesheet: ${e.toString()}';
+      state = state.copyWith(error: message, clearError: false);
+      return message;
+    } finally {
+      state = state.copyWith(clearRejectingTimesheetGuid: true);
     }
   }
 }
