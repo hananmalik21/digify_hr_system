@@ -1,170 +1,67 @@
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/network/api_endpoints.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/attendance_log_dto.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_log_page.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
 
-/// Mock implementation of AttendanceRepository
 class AttendanceRepositoryImpl implements AttendanceRepository {
+  final ApiClient _apiClient;
+
+  AttendanceRepositoryImpl({ApiClient? apiClient}) : _apiClient = apiClient ?? ApiClient(baseUrl: ApiConfig.baseUrl);
   @override
   Future<List<Attendance>> getAttendance({
     required DateTime fromDate,
     required DateTime toDate,
+    String? companyId,
+    String? orgUnitId,
+    String? levelCode,
     String? employeeNumber,
   }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    return [];
+  }
 
-    // Mock data matching Figma design
-    final mockAttendances = [
-      Attendance(
-        id: 1,
-        employeeId: 1,
-        employeeName: 'Ahmed Al-Mutairi',
-        employeeNumber: 'EMP-001',
-        departmentName: 'IT',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 8, 5),
-        clockOut: DateTime(2026, 2, 2, 17, 10),
-        status: AttendanceStatus.present,
-        workedHours: 9.08,
-        checkInLocation: AttendanceLocation(
-          latitude: 29.375900,
-          longitude: 47.977400,
-          address: 'Kuwait City HQ - Main Entrance',
-          city: 'Kuwait City',
-          country: 'Kuwait',
-        ),
-        checkOutLocation: AttendanceLocation(
-          latitude: 29.376100,
-          longitude: 47.977600,
-          address: 'Kuwait City HQ - Parking Exit',
-          city: 'Kuwait City',
-          country: 'Kuwait',
-        ),
-        notes: 'Regular day with 1 hour overtime',
-      ),
-      Attendance(
-        id: 2,
-        employeeId: 2,
-        employeeName: 'Fatima Al-Sabah',
-        employeeNumber: 'EMP-002',
-        departmentName: 'HR',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 8, 30),
-        clockOut: DateTime(2026, 2, 2, 16, 45),
-        status: AttendanceStatus.late,
-        workedHours: 8.25,
-      ),
-      Attendance(
-        id: 3,
-        employeeId: 3,
-        employeeName: 'Mohammed Al-Rashid',
-        employeeNumber: 'EMP-003',
-        departmentName: 'Finance',
-        date: DateTime(2026, 2, 2),
-        clockIn: null,
-        clockOut: null,
-        status: AttendanceStatus.absent,
-      ),
-      Attendance(
-        id: 4,
-        employeeId: 4,
-        employeeName: 'Sara Al-Kandari',
-        employeeNumber: 'EMP-004',
-        departmentName: 'IT',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 7, 55),
-        clockOut: DateTime(2026, 2, 2, 15, 30),
-        status: AttendanceStatus.early,
-        workedHours: 7.58,
-      ),
-      Attendance(
-        id: 5,
-        employeeId: 5,
-        employeeName: 'Ali Al-Ajmi',
-        employeeNumber: 'EMP-005',
-        departmentName: 'Operations',
-        date: DateTime(2026, 2, 2),
-        clockIn: null,
-        clockOut: null,
-        status: AttendanceStatus.onLeave,
-      ),
-      Attendance(
-        id: 6,
-        employeeId: 6,
-        employeeName: 'Noor Al-Shammari',
-        employeeNumber: 'EMP-006',
-        departmentName: 'Sales',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 9, 0),
-        clockOut: DateTime(2026, 2, 2, 17, 0),
-        status: AttendanceStatus.officialWork,
-        workedHours: 8.0,
-      ),
-      Attendance(
-        id: 7,
-        employeeId: 7,
-        employeeName: 'Khaled Al-Ibrahim',
-        employeeNumber: 'EMP-007',
-        departmentName: 'IT',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 6, 0),
-        clockOut: DateTime(2026, 2, 2, 14, 0),
-        status: AttendanceStatus.businessTrip,
-        workedHours: 8.0,
-      ),
-      Attendance(
-        id: 8,
-        employeeId: 8,
-        employeeName: 'Yousef Al-Mutawa',
-        employeeNumber: 'EMP-008',
-        departmentName: 'Security',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 22, 10),
-        clockOut: DateTime(2026, 2, 3, 6, 5),
-        status: AttendanceStatus.present,
-        workedHours: 7.92,
-      ),
-      Attendance(
-        id: 9,
-        employeeId: 9,
-        employeeName: 'Layla Al-Fahad',
-        employeeNumber: 'EMP-009',
-        departmentName: 'Operations',
-        date: DateTime(2026, 2, 2),
-        clockIn: DateTime(2026, 2, 2, 22, 55),
-        clockOut: DateTime(2026, 2, 3, 7, 10),
-        status: AttendanceStatus.present,
-        workedHours: 8.25,
-      ),
-    ];
+  @override
+  Future<AttendanceLogPage> getAttendanceLogs({
+    required int enterpriseId,
+    int page = 1,
+    int pageSize = 25,
+    String? orgUnitId,
+    String? levelCode,
+  }) async {
+    try {
+      final query = <String, String>{
+        'enterpriseId': enterpriseId.toString(),
+        'page': page.toString(),
+        'pageSize': pageSize.toString(),
+      };
+      if (orgUnitId != null && orgUnitId.isNotEmpty) {
+        query['orgUnitId'] = orgUnitId;
+      }
+      if (levelCode != null && levelCode.isNotEmpty) {
+        query['levelCode'] = levelCode;
+      }
 
-    // Filter by date range (compare only date part, ignore time)
-    final fromDateOnly = DateTime(fromDate.year, fromDate.month, fromDate.day);
-    final toDateOnly = DateTime(toDate.year, toDate.month, toDate.day);
+      final response = await _apiClient.get(ApiEndpoints.tmAttendanceLogs, queryParameters: query);
 
-    var filtered = mockAttendances.where((a) {
-      final attendanceDateOnly = DateTime(
-        a.date.year,
-        a.date.month,
-        a.date.day,
+      final dto = AttendanceLogsResponseDto.fromJson(response);
+      final records = dto.items.map((e) => e.toDomain()).toList();
+
+      return AttendanceLogPage(
+        records: records,
+        page: dto.pagination.page,
+        pageSize: dto.pagination.pageSize,
+        total: dto.pagination.total,
+        totalPages: dto.pagination.totalPages,
+        hasNext: dto.pagination.hasNext,
+        hasPrevious: dto.pagination.hasPrevious,
       );
-      // Check if attendance date is within the range (inclusive)
-      return (attendanceDateOnly.isAtSameMomentAs(fromDateOnly) ||
-              attendanceDateOnly.isAfter(fromDateOnly)) &&
-          (attendanceDateOnly.isAtSameMomentAs(toDateOnly) ||
-              attendanceDateOnly.isBefore(toDateOnly));
-    }).toList();
-
-    // Filter by employee number if provided
-    if (employeeNumber != null && employeeNumber.isNotEmpty) {
-      filtered = filtered
-          .where(
-            (a) => a.employeeNumber.toLowerCase().contains(
-              employeeNumber.toLowerCase(),
-            ),
-          )
-          .toList();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to load attendance logs: ${e.toString()}', originalError: e);
     }
-
-    return filtered;
   }
 }
