@@ -1,0 +1,218 @@
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
+
+class AttendanceLogPaginationDto {
+  final int page;
+  final int pageSize;
+  final int total;
+  final int totalPages;
+  final bool hasNext;
+  final bool hasPrevious;
+
+  const AttendanceLogPaginationDto({
+    required this.page,
+    required this.pageSize,
+    required this.total,
+    required this.totalPages,
+    required this.hasNext,
+    required this.hasPrevious,
+  });
+
+  factory AttendanceLogPaginationDto.fromJson(Map<String, dynamic> json) {
+    return AttendanceLogPaginationDto(
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      pageSize: (json['page_size'] as num?)?.toInt() ?? 25,
+      total: (json['total'] as num?)?.toInt() ?? 0,
+      totalPages: (json['total_pages'] as num?)?.toInt() ?? 0,
+      hasNext: json['has_next'] as bool? ?? false,
+      hasPrevious: json['has_previous'] as bool? ?? false,
+    );
+  }
+}
+
+class AttendanceLogItemDto {
+  final int attendanceDayId;
+  final String attendanceDayGuid;
+  final int enterpriseId;
+  final int employeeId;
+  final String attendanceDate;
+  final String? attendanceStatus;
+  final String? inState;
+  final String? outState;
+  final String employeeName;
+  final String employeeNumber;
+  final List<Map<String, dynamic>> orgStructureList;
+  final Map<String, dynamic>? scheduleObj;
+  final Map<String, dynamic>? actualObj;
+
+  const AttendanceLogItemDto({
+    required this.attendanceDayId,
+    required this.attendanceDayGuid,
+    required this.enterpriseId,
+    required this.employeeId,
+    required this.attendanceDate,
+    this.attendanceStatus,
+    this.inState,
+    this.outState,
+    required this.employeeName,
+    required this.employeeNumber,
+    required this.orgStructureList,
+    this.scheduleObj,
+    this.actualObj,
+  });
+
+  factory AttendanceLogItemDto.fromJson(Map<String, dynamic> json) {
+    final actualObj = json['actual_obj'];
+    return AttendanceLogItemDto(
+      attendanceDayId: (json['attendance_day_id'] as num?)?.toInt() ?? 0,
+      attendanceDayGuid: json['attendance_day_guid'] as String? ?? '',
+      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? 0,
+      employeeId: (json['employee_id'] as num?)?.toInt() ?? 0,
+      attendanceDate: json['attendance_date'] as String? ?? '',
+      attendanceStatus: json['attendance_status'] as String?,
+      inState: json['in_state'] as String?,
+      outState: json['out_state'] as String?,
+      employeeName: json['employee_name'] as String? ?? '',
+      employeeNumber: json['employee_number'] as String? ?? '',
+      orgStructureList: (json['org_structure_list'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
+      scheduleObj: json['schedule_obj'] as Map<String, dynamic>?,
+      actualObj: actualObj is Map<String, dynamic> && actualObj.isNotEmpty ? actualObj : null,
+    );
+  }
+
+  String _getDepartmentName() {
+    for (final unit in orgStructureList) {
+      if (unit['level_code'] == 'DEPARTMENT') {
+        return unit['org_unit_name_en'] as String? ?? '';
+      }
+    }
+    return '';
+  }
+
+  String? _formatTime(String? isoString) {
+    if (isoString == null || isoString.isEmpty) return null;
+    try {
+      final dt = DateTime.parse(isoString);
+      final h = dt.hour.toString().padLeft(2, '0');
+      final m = dt.minute.toString().padLeft(2, '0');
+      return '$h:$m';
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _resolveStatus() {
+    if (attendanceStatus != null && attendanceStatus!.isNotEmpty) {
+      switch (attendanceStatus!.toUpperCase()) {
+        case 'PRESENT':
+          return 'Present';
+        case 'MISSING_OUT':
+          return 'Missing Out';
+        case 'ABSENT':
+          return 'Absent';
+        case 'ON_LEAVE':
+        case 'ON LEAVE':
+          return 'On Leave';
+        case 'LATE':
+          return 'Late';
+        case 'EARLY':
+          return 'Early';
+        case 'HALF_DAY':
+        case 'HALF DAY':
+          return 'Half Day';
+        default:
+          break;
+      }
+    }
+    if (inState != null || outState != null) {
+      final inUpper = inState?.toUpperCase() ?? '';
+      final outUpper = outState?.toUpperCase() ?? '';
+      if (inUpper.contains('LATE') || outUpper.contains('LATE')) return 'Late';
+      if (inUpper.contains('EARLY')) return 'Early';
+      if (inUpper.contains('ON-TIME') || inUpper.contains('ONTIME')) return 'Present';
+      if (outUpper.contains('MISSING')) return 'Missing Out';
+    }
+    return '-';
+  }
+
+  String _avatarInitials() {
+    final names = employeeName.trim().split(RegExp(r'\s+'));
+    if (names.isEmpty) return '?';
+    if (names.length == 1) return names[0].isNotEmpty ? names[0][0].toUpperCase() : '?';
+    return '${names[0][0]}${names[1][0]}'.toUpperCase();
+  }
+
+  AttendanceRecord toDomain() {
+    String? checkIn;
+    String? checkOut;
+    if (actualObj != null) {
+      checkIn = _formatTime(actualObj!['check_in_time'] as String?);
+      checkOut = _formatTime(actualObj!['check_out_time'] as String?);
+    }
+
+    DateTime date;
+    try {
+      date = DateTime.parse(attendanceDate);
+    } catch (_) {
+      date = DateTime.now();
+    }
+
+    return AttendanceRecord(
+      employeeName: employeeName,
+      employeeId: employeeNumber,
+      departmentName: _getDepartmentName(),
+      date: date,
+      checkIn: checkIn,
+      checkOut: checkOut,
+      status: _resolveStatus(),
+      avatarInitials: _avatarInitials(),
+      attendance: null,
+    );
+  }
+}
+
+class AttendanceLogsResponseDto {
+  final int enterpriseId;
+  final AttendanceLogPaginationDto pagination;
+  final List<AttendanceLogItemDto> items;
+
+  const AttendanceLogsResponseDto({required this.enterpriseId, required this.pagination, required this.items});
+
+  factory AttendanceLogsResponseDto.fromJson(Map<String, dynamic> json) {
+    final data = json['data'];
+    if (data == null || data is! Map<String, dynamic>) {
+      return const AttendanceLogsResponseDto(
+        enterpriseId: 0,
+        pagination: AttendanceLogPaginationDto(
+          page: 1,
+          pageSize: 25,
+          total: 0,
+          totalPages: 0,
+          hasNext: false,
+          hasPrevious: false,
+        ),
+        items: [],
+      );
+    }
+
+    final paginationMap = data['pagination'] as Map<String, dynamic>?;
+    final pagination = paginationMap != null
+        ? AttendanceLogPaginationDto.fromJson(paginationMap)
+        : const AttendanceLogPaginationDto(
+            page: 1,
+            pageSize: 25,
+            total: 0,
+            totalPages: 0,
+            hasNext: false,
+            hasPrevious: false,
+          );
+
+    final list = data['data'] as List<dynamic>? ?? [];
+    final items = list.whereType<Map<String, dynamic>>().map((e) => AttendanceLogItemDto.fromJson(e)).toList();
+
+    return AttendanceLogsResponseDto(
+      enterpriseId: (data['enterprise_id'] as num?)?.toInt() ?? 0,
+      pagination: pagination,
+      items: items,
+    );
+  }
+}
