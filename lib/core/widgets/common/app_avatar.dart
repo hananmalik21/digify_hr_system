@@ -28,11 +28,7 @@ class AppAvatar extends StatelessWidget {
   });
 
   String? _initialsFromName(String name) {
-    final words = name
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((w) => w.isNotEmpty)
-        .toList();
+    final words = name.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
     if (words.isEmpty) return null;
     final first = words[0];
     final firstLetter = first.isNotEmpty ? first[0].toUpperCase() : '';
@@ -71,12 +67,7 @@ class AppAvatar extends StatelessWidget {
             fit: BoxFit.cover,
             width: size,
             height: size,
-            errorBuilder: (_, __, ___) => _buildInitial(
-              context,
-              initial,
-              effectiveBg,
-              textColor: textColor,
-            ),
+            errorBuilder: (_, __, ___) => _buildInitial(context, initial, effectiveBg, textColor: textColor),
           )
         : _buildInitial(context, initial, effectiveBg, textColor: textColor);
 
@@ -106,10 +97,7 @@ class AppAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: effectiveDotColor,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context).canvasColor,
-                  width: 1.5,
-                ),
+                border: Border.all(color: Theme.of(context).canvasColor, width: 1.5),
               ),
             ),
           ),
@@ -119,22 +107,18 @@ class AppAvatar extends StatelessWidget {
     return SizedBox(width: size, height: size, child: avatar);
   }
 
-  Widget _buildInitial(
-    BuildContext context,
-    String? initial,
-    Color backgroundColor, {
-    Color? textColor,
-  }) {
+  Widget _buildInitial(BuildContext context, String? initial, Color backgroundColor, {Color? textColor}) {
     return Container(
-      width: size,
-      height: size,
+      width: size.w,
+      height: size.h,
+      padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       alignment: Alignment.center,
       child: Text(
         initial ?? '?',
         style: context.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w600,
-          fontSize: (size * 0.45).sp,
+          fontSize: (size * 0.40).sp,
           color: textColor,
         ),
       ),

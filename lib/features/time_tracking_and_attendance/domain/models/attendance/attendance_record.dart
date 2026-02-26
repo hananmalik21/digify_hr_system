@@ -9,7 +9,17 @@ class AttendanceRecord {
   final String? checkOut;
   final String status;
   final String avatarInitials;
-  final Attendance? attendance; // Full attendance data for expanded view
+  final Attendance? attendance;
+
+  final String? scheduleDate;
+  final String? scheduleStartTime;
+  final String? scheduleEndTime;
+  final String? scheduledHours;
+  final String? hoursWorked;
+  final String? overtimeHours;
+  final String? checkInLocation;
+  final String? checkOutLocation;
+  final String? notes;
 
   AttendanceRecord({
     required this.employeeName,
@@ -21,9 +31,21 @@ class AttendanceRecord {
     required this.status,
     required this.avatarInitials,
     this.attendance,
+    this.scheduleDate,
+    this.scheduleStartTime,
+    this.scheduleEndTime,
+    this.scheduledHours,
+    this.hoursWorked,
+    this.overtimeHours,
+    this.checkInLocation,
+    this.checkOutLocation,
+    this.notes,
   });
 
-  /// Factory method to create AttendanceRecord from Attendance domain model
+  static const String _placeholder = '--';
+
+  String displayValue(String? value) => value != null && value.isNotEmpty ? value : _placeholder;
+
   factory AttendanceRecord.fromAttendance(Attendance attendance) {
     return AttendanceRecord(
       employeeName: attendance.employeeName,
@@ -34,7 +56,7 @@ class AttendanceRecord {
       checkOut: attendance.formattedCheckOut,
       status: attendance.statusString,
       avatarInitials: attendance.avatarInitials,
-      attendance: attendance, // Store full attendance data
+      attendance: attendance,
     );
   }
 }

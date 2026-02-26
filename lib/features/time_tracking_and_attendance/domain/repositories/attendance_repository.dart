@@ -17,5 +17,6 @@ abstract class AttendanceRepository {
     int pageSize = 25,
     String? orgUnitId,
     String? levelCode,
+    String? employeeNumber,
   });
 }

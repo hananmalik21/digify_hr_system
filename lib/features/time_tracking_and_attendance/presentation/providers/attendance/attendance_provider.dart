@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/attendance_repository_impl.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
@@ -104,6 +105,9 @@ class AttendanceState {
 
 class AttendanceNotifier extends StateNotifier<AttendanceState> {
   final AttendanceRepository _repository;
+  Debouncer? _searchDebouncer;
+
+  static const _searchDebounceDuration = Duration(milliseconds: 400);
 
   AttendanceNotifier(this._repository)
     : super(AttendanceState(fromDate: DateTime(2026, 2, 2), toDate: DateTime(2026, 2, 2)));
@@ -129,12 +133,15 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
     state = state.copyWith(isLoading: true, clearError: true);
 
     try {
+      final employeeNumber = state.employeeNumber.trim().isEmpty ? null : state.employeeNumber.trim();
+
       final page = await _repository.getAttendanceLogs(
         enterpriseId: enterpriseId,
         page: state.currentPage,
         pageSize: state.pageSize,
         orgUnitId: state.orgUnitId,
         levelCode: state.levelCode,
+        employeeNumber: employeeNumber,
       );
 
       final stats = _calculateStatsFromRecords(page.records);
@@ -221,8 +228,10 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
   }
 
   void setEmployeeNumber(String number) {
-    state = state.copyWith(employeeNumber: number);
-    loadAttendance();
+    final trimmed = number.trim();
+    state = state.copyWith(employeeNumber: trimmed, currentPage: 1);
+    _searchDebouncer ??= Debouncer(delay: _searchDebounceDuration);
+    _searchDebouncer!.run(() => loadAttendance());
   }
 
   void setCompanyId(String companyId) {

@@ -52,15 +52,15 @@ class AttendanceExpandedPanel extends StatelessWidget {
       assetIcon: Assets.icons.auditTrailIconDepartment.path,
       child: Column(
         children: [
-          _buildInfoRow(context, 'Schedule Date:', 'Mon, Jan 15, 2024'),
+          _buildInfoRow(context, 'Schedule Date:', record.displayValue(record.scheduleDate)),
           Gap(10.h),
-          _buildInfoRow(context, 'Schedule Start:', 'Jan 15 @ 08:00'),
+          _buildInfoRow(context, 'Schedule Start:', record.displayValue(record.scheduleStartTime)),
           Gap(10.h),
-          _buildInfoRow(context, 'Schedule End:', 'Jan 15 @ 16:00'),
+          _buildInfoRow(context, 'Schedule End:', record.displayValue(record.scheduleEndTime)),
           Gap(10.h),
           DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 10.h)),
           Gap(10.h),
-          _buildInfoRow(context, 'Duration:', '8 hours'),
+          _buildInfoRow(context, 'Duration:', record.displayValue(record.scheduledHours)),
         ],
       ),
     );
@@ -73,15 +73,15 @@ class AttendanceExpandedPanel extends StatelessWidget {
       assetIcon: Assets.icons.priceUpItem.path,
       child: Column(
         children: [
-          _buildInfoRow(context, 'Check In Time:', '09:00 AM'),
+          _buildInfoRow(context, 'Check In Time:', record.displayValue(record.checkIn)),
           Gap(10.h),
-          _buildInfoRow(context, 'Check Out Time:', '05:30 PM'),
+          _buildInfoRow(context, 'Check Out Time:', record.displayValue(record.checkOut)),
           Gap(10.h),
           DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 10.h)),
           Gap(10.h),
-          _buildInfoRow(context, 'Hours Worked:', '8h 30m'),
+          _buildInfoRow(context, 'Hours Worked:', record.displayValue(record.hoursWorked)),
           Gap(10.h),
-          _buildInfoRow(context, 'Overtime Hours:', '30m'),
+          _buildInfoRow(context, 'Overtime Hours:', record.displayValue(record.overtimeHours)),
         ],
       ),
     );
@@ -98,13 +98,18 @@ class AttendanceExpandedPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoRow(context, 'Location:', 'Kuwait City HQ', spaceBetween: false),
+          _buildInfoRow(
+            context,
+            'Location:',
+            record.displayValue(record.checkInLocation ?? record.checkOutLocation),
+            spaceBetween: false,
+          ),
           Gap(10.h),
-          _buildCompoundInfoRow(context, 'Check-In GPS:', '123 Main Street, Kuwait City', '📍 29.3759, 47.9774'),
+          _buildCompoundInfoRow(context, 'Check-In GPS:', record.displayValue(record.checkInLocation), ''),
           Gap(10.h),
-          _buildCompoundInfoRow(context, 'Check-Out GPS:', '123 Main Street, Kuwait City', '📍 29.3759, 47.9774'),
+          _buildCompoundInfoRow(context, 'Check-Out GPS:', record.displayValue(record.checkOutLocation), ''),
           Gap(10.h),
-          _buildInfoRow(context, 'Notes:', 'Sample notes placeholder', spaceBetween: false),
+          _buildInfoRow(context, 'Notes:', record.displayValue(record.notes), spaceBetween: false),
         ],
       ),
     );

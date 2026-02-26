@@ -25,6 +25,12 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
   void initState() {
     super.initState();
     _employeeNumberController.text = ref.read(attendanceNotifierProvider).employeeNumber;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(attendanceEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(attendanceNotifierProvider.notifier).setCompanyId(enterpriseId.toString());
+      }
+    });
   }
 
   @override
