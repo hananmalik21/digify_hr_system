@@ -1,8 +1,8 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/repositories/attendance_repository_impl.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,13 +14,17 @@ final apiClientProvider = Provider<ApiClient>((ref) {
 
 // Repository provider
 final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
-  return AttendanceRepositoryImpl();
+  final apiClient = ref.watch(apiClientProvider);
+  return AttendanceRepositoryImpl(apiClient: apiClient);
 });
 
 class AttendanceState {
   final DateTime fromDate;
   final DateTime toDate;
   final String employeeNumber;
+  final String? companyId;
+  final String? orgUnitId;
+  final String? levelCode;
   final int totalStaff;
   final int present;
   final int lateCount;
@@ -38,6 +42,9 @@ class AttendanceState {
     required this.fromDate,
     required this.toDate,
     this.employeeNumber = '',
+    this.companyId,
+    this.orgUnitId,
+    this.levelCode,
     this.totalStaff = 0,
     this.present = 0,
     this.lateCount = 0,
@@ -56,6 +63,9 @@ class AttendanceState {
     DateTime? fromDate,
     DateTime? toDate,
     String? employeeNumber,
+    String? companyId,
+    String? orgUnitId,
+    String? levelCode,
     int? totalStaff,
     int? present,
     int? lateCount,
@@ -74,6 +84,9 @@ class AttendanceState {
       fromDate: fromDate ?? this.fromDate,
       toDate: toDate ?? this.toDate,
       employeeNumber: employeeNumber ?? this.employeeNumber,
+      companyId: companyId ?? this.companyId,
+      orgUnitId: orgUnitId ?? this.orgUnitId,
+      levelCode: levelCode ?? this.levelCode,
       totalStaff: totalStaff ?? this.totalStaff,
       present: present ?? this.present,
       lateCount: lateCount ?? this.lateCount,
@@ -92,42 +105,52 @@ class AttendanceState {
 
 class AttendanceNotifier extends StateNotifier<AttendanceState> {
   final AttendanceRepository _repository;
+  Debouncer? _searchDebouncer;
+
+  static const _searchDebounceDuration = Duration(milliseconds: 400);
 
   AttendanceNotifier(this._repository)
-    : super(
-        AttendanceState(
-          fromDate: DateTime(2026, 2, 2),
-          toDate: DateTime(2026, 2, 2),
-        ),
-      ) {
-    // Load initial data
-    loadAttendance();
-  }
+    : super(AttendanceState(fromDate: DateTime(2026, 2, 2), toDate: DateTime(2026, 2, 2)));
 
-  /// Loads attendance records from repository
   Future<void> loadAttendance() async {
+    final enterpriseId = state.companyId != null ? int.tryParse(state.companyId!) : null;
+    if (enterpriseId == null) {
+      state = state.copyWith(
+        records: [],
+        totalItems: 0,
+        totalStaff: 0,
+        present: 0,
+        lateCount: 0,
+        absent: 0,
+        halfDay: 0,
+        onLeave: 0,
+        isLoading: false,
+        clearError: true,
+      );
+      return;
+    }
+
     state = state.copyWith(isLoading: true, clearError: true);
 
     try {
-      final attendances = await _repository.getAttendance(
-        fromDate: state.fromDate,
-        toDate: state.toDate,
-        employeeNumber: state.employeeNumber.isEmpty
-            ? null
-            : state.employeeNumber,
+      final employeeNumber = state.employeeNumber.trim().isEmpty ? null : state.employeeNumber.trim();
+
+      final page = await _repository.getAttendanceLogs(
+        enterpriseId: enterpriseId,
+        page: state.currentPage,
+        pageSize: state.pageSize,
+        orgUnitId: state.orgUnitId,
+        levelCode: state.levelCode,
+        employeeNumber: employeeNumber,
       );
 
-      // Convert Attendance domain models to AttendanceRecord for UI
-      final records = attendances
-          .map((a) => AttendanceRecord.fromAttendance(a))
-          .toList();
-
-      // Calculate statistics
-      final stats = _calculateStatistics(attendances);
+      final stats = _calculateStatsFromRecords(page.records);
 
       state = state.copyWith(
-        records: records,
-        totalItems: records.length,
+        records: page.records,
+        totalItems: page.total,
+        currentPage: page.page,
+        pageSize: page.pageSize,
         totalStaff: stats['totalStaff']!,
         present: stats['present']!,
         lateCount: stats['late']!,
@@ -138,24 +161,15 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
         clearError: true,
       );
     } on AppException catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.message,
-        clearError: false,
-      );
+      state = state.copyWith(isLoading: false, error: e.message, clearError: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Failed to load attendance: ${e.toString()}',
-        clearError: false,
-      );
+      state = state.copyWith(isLoading: false, error: 'Failed to load attendance: ${e.toString()}', clearError: false);
     }
   }
 
-  /// Calculates attendance statistics from list of attendances
-  Map<String, int> _calculateStatistics(List<Attendance> attendances) {
+  Map<String, int> _calculateStatsFromRecords(List<AttendanceRecord> records) {
     final stats = <String, int>{
-      'totalStaff': attendances.length,
+      'totalStaff': records.length,
       'present': 0,
       'late': 0,
       'absent': 0,
@@ -163,29 +177,25 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
       'onLeave': 0,
     };
 
-    for (final attendance in attendances) {
-      switch (attendance.status) {
-        case AttendanceStatus.present:
-          stats['present'] = (stats['present'] ?? 0) + 1;
-          break;
-        case AttendanceStatus.late:
-          stats['late'] = (stats['late'] ?? 0) + 1;
-          break;
-        case AttendanceStatus.absent:
-          stats['absent'] = (stats['absent'] ?? 0) + 1;
-          break;
-        case AttendanceStatus.halfDay:
-          stats['halfDay'] = (stats['halfDay'] ?? 0) + 1;
-          break;
-        case AttendanceStatus.onLeave:
-          stats['onLeave'] = (stats['onLeave'] ?? 0) + 1;
-          break;
-        case AttendanceStatus.early:
-        case AttendanceStatus.officialWork:
-        case AttendanceStatus.businessTrip:
-          // These can be counted as present for statistics
-          stats['present'] = (stats['present'] ?? 0) + 1;
-          break;
+    for (final r in records) {
+      final s = r.status.toUpperCase();
+      if (s.contains('PRESENT') ||
+          s.contains('ON-TIME') ||
+          s.contains('ONTIME') ||
+          s.contains('EARLY') ||
+          s.contains('OFFICIAL') ||
+          s.contains('BUSINESS')) {
+        stats['present'] = (stats['present'] ?? 0) + 1;
+      } else if (s.contains('LATE')) {
+        stats['late'] = (stats['late'] ?? 0) + 1;
+      } else if (s.contains('ABSENT')) {
+        stats['absent'] = (stats['absent'] ?? 0) + 1;
+      } else if (s.contains('HALF')) {
+        stats['halfDay'] = (stats['halfDay'] ?? 0) + 1;
+      } else if (s.contains('LEAVE')) {
+        stats['onLeave'] = (stats['onLeave'] ?? 0) + 1;
+      } else if (s != '-' && s.isNotEmpty) {
+        stats['present'] = (stats['present'] ?? 0) + 1;
       }
     }
 
@@ -199,6 +209,7 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
 
   void setPage(int page) {
     state = state.copyWith(currentPage: page);
+    loadAttendance();
   }
 
   void setPageSize(int size) {
@@ -217,17 +228,28 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
   }
 
   void setEmployeeNumber(String number) {
-    state = state.copyWith(employeeNumber: number);
+    final trimmed = number.trim();
+    state = state.copyWith(employeeNumber: trimmed, currentPage: 1);
+    _searchDebouncer ??= Debouncer(delay: _searchDebounceDuration);
+    _searchDebouncer!.run(() => loadAttendance());
+  }
+
+  void setCompanyId(String companyId) {
+    state = state.copyWith(companyId: companyId);
+    loadAttendance();
+  }
+
+  void setOrgFilter(String? orgUnitId, String? levelCode) {
+    state = state.copyWith(orgUnitId: orgUnitId, levelCode: levelCode);
     loadAttendance();
   }
 }
 
 // State Notifier Provider
-final attendanceNotifierProvider =
-    StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
-      final repository = ref.watch(attendanceRepositoryProvider);
-      return AttendanceNotifier(repository);
-    });
+final attendanceNotifierProvider = StateNotifierProvider<AttendanceNotifier, AttendanceState>((ref) {
+  final repository = ref.watch(attendanceRepositoryProvider);
+  return AttendanceNotifier(repository);
+});
 
 // Convenience Providers
 final attendanceProvider = Provider<AttendanceState>((ref) {
@@ -257,3 +279,5 @@ final attendanceStatsProvider = Provider<Map<String, int>>((ref) {
     'onLeave': state.onLeave,
   };
 });
+
+final attendanceExpandedIndexProvider = StateProvider<int?>((ref) => null);

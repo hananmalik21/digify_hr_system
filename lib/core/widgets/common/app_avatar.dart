@@ -67,9 +67,9 @@ class AppAvatar extends StatelessWidget {
             fit: BoxFit.cover,
             width: size,
             height: size,
-            errorBuilder: (_, __, ___) => _buildInitial(context, initial, effectiveBg),
+            errorBuilder: (_, __, ___) => _buildInitial(context, initial, effectiveBg, textColor: textColor),
           )
-        : _buildInitial(context, initial, effectiveBg);
+        : _buildInitial(context, initial, effectiveBg, textColor: textColor);
 
     Widget avatar = ClipOval(
       child: SizedBox(width: size, height: size, child: content),
@@ -107,15 +107,20 @@ class AppAvatar extends StatelessWidget {
     return SizedBox(width: size, height: size, child: avatar);
   }
 
-  Widget _buildInitial(BuildContext context, String? initial, Color backgroundColor) {
+  Widget _buildInitial(BuildContext context, String? initial, Color backgroundColor, {Color? textColor}) {
     return Container(
-      width: size,
-      height: size,
+      width: size.w,
+      height: size.h,
+      padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       alignment: Alignment.center,
       child: Text(
         initial ?? '?',
-        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: (size * 0.45).sp),
+        style: context.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: (size * 0.40).sp,
+          color: textColor,
+        ),
       ),
     );
   }

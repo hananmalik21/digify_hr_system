@@ -36,12 +36,10 @@ class TimesheetSearchAndFilter extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<TimesheetSearchAndFilter> createState() =>
-      _TimesheetSearchAndFilterState();
+  ConsumerState<TimesheetSearchAndFilter> createState() => _TimesheetSearchAndFilterState();
 }
 
-class _TimesheetSearchAndFilterState
-    extends ConsumerState<TimesheetSearchAndFilter> {
+class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFilter> {
   bool _showFilters = false;
 
   @override
@@ -50,9 +48,7 @@ class _TimesheetSearchAndFilterState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final orgState = ref.read(timesheetOrgStructureNotifierProvider);
       if (!orgState.isLoading && orgState.orgStructure == null) {
-        ref
-            .read(timesheetOrgStructureNotifierProvider.notifier)
-            .fetchOrgStructureLevels();
+        ref.read(timesheetOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
       }
     });
   }
@@ -87,8 +83,7 @@ class _TimesheetSearchAndFilterState
                     hint: 'All Status',
                     value: widget.statusFilter,
                     items: timesheetStatusFilterItems,
-                    itemLabelBuilder: (item) =>
-                        item == null ? 'All Status' : item.displayName,
+                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
                     onChanged: widget.onStatusFilterChanged,
                   ),
                 ),
@@ -112,8 +107,7 @@ class _TimesheetSearchAndFilterState
                     hint: 'All Status',
                     value: widget.statusFilter,
                     items: timesheetStatusFilterItems,
-                    itemLabelBuilder: (item) =>
-                        item == null ? 'All Status' : item.displayName,
+                    itemLabelBuilder: (item) => item == null ? 'All Status' : item.displayName,
                     onChanged: widget.onStatusFilterChanged,
                   ),
                 ),
@@ -137,15 +131,9 @@ class _TimesheetSearchAndFilterState
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
-                color: widget.isDark
-                    ? AppColors.backgroundDark
-                    : AppColors.cardBackgroundGrey,
+                color: widget.isDark ? AppColors.backgroundDark : AppColors.cardBackgroundGrey,
                 borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(
-                  color: widget.isDark
-                      ? AppColors.cardBorderDark
-                      : AppColors.cardBorder,
-                ),
+                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,11 +146,7 @@ class _TimesheetSearchAndFilterState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           DigifyAsset(
-                            assetPath: Assets
-                                .icons
-                                .employeeManagement
-                                .filterSecondary
-                                .path,
+                            assetPath: Assets.icons.employeeManagement.filterSecondary.path,
                             width: 20,
                             height: 20,
                           ),
@@ -170,9 +154,7 @@ class _TimesheetSearchAndFilterState
                           Text(
                             'Advanced Filters',
                             style: context.textTheme.headlineMedium?.copyWith(
-                              color: widget.isDark
-                                  ? AppColors.textPrimaryDark
-                                  : AppColors.textPrimary,
+                              color: widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                               fontSize: 14.sp,
                             ),
                           ),
@@ -185,11 +167,9 @@ class _TimesheetSearchAndFilterState
                           children: [
                             Text(
                               'Reset filters',
-                              style: Theme.of(context).textTheme.labelLarge
-                                  ?.copyWith(
-                                    color: AppColors.brandRed,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelLarge?.copyWith(color: AppColors.brandRed, fontWeight: FontWeight.w500),
                             ),
                             Gap(6.w),
                             DigifyAsset(
@@ -204,11 +184,7 @@ class _TimesheetSearchAndFilterState
                     ],
                   ),
                   Gap(16.h),
-                  Wrap(
-                    spacing: 14.w,
-                    runSpacing: 14.h,
-                    children: _buildOrgFilters(context),
-                  ),
+                  Wrap(spacing: 14.w, runSpacing: 14.h, children: _buildOrgFilters(context)),
                 ],
               ),
             ),
@@ -243,35 +219,23 @@ class _TimesheetSearchAndFilterState
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
-                color: widget.isDark
-                    ? AppColors.inputBgDark
-                    : AppColors.inputBg,
+                color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
                 borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(
-                  color: widget.isDark
-                      ? AppColors.cardBorderDark
-                      : AppColors.borderGrey,
-                ),
+                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
               ),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
                       height: 14.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
+                      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
                     ),
                   ),
                   Gap(8.w),
                   Container(
                     width: 16.w,
                     height: 16.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
                   ),
                 ],
               ),
@@ -286,18 +250,14 @@ class _TimesheetSearchAndFilterState
     ({List<OrgStructureLevel> levels, String structureId}) param,
     TimesheetNotifier notifier,
   ) {
-    final selectionProvider = timesheetEnterpriseSelectionNotifierProvider(
-      param.structureId,
-    );
+    final selectionProvider = timesheetEnterpriseSelectionNotifierProvider(param.structureId);
     final selectionState = ref.watch(selectionProvider);
     final levels = param.levels;
 
     return levels.asMap().entries.map((entry) {
       final index = entry.key;
       final level = entry.value;
-      final isEnabled =
-          index == 0 ||
-          selectionState.getSelection(levels[index - 1].levelCode) != null;
+      final isEnabled = index == 0 || selectionState.getSelection(levels[index - 1].levelCode) != null;
 
       return SizedBox(
         width: 180.w,
@@ -323,13 +283,7 @@ class _TimesheetSearchAndFilterState
     final orgState = ref.read(timesheetOrgStructureNotifierProvider);
     final org = orgState.orgStructure;
     if (org != null) {
-      ref
-          .read(
-            timesheetEnterpriseSelectionNotifierProvider(
-              org.structureId,
-            ).notifier,
-          )
-          .reset();
+      ref.read(timesheetEnterpriseSelectionNotifierProvider(org.structureId).notifier).reset();
     }
 
     final notifier = ref.read(timesheetNotifierProvider.notifier);

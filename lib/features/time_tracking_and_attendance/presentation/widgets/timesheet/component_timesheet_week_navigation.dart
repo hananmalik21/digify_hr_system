@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,9 @@ class WeekNavigation extends StatelessWidget {
   final VoidCallback onPreviousWeek;
   final VoidCallback onNextWeek;
   final VoidCallback onCurrentWeek;
+  final VoidCallback onClearFilter;
+  final VoidCallback onApplyFilter;
+  final bool isWeekFilterEnabled;
   final bool isDark;
   final bool isCurrentWeek;
 
@@ -23,6 +27,9 @@ class WeekNavigation extends StatelessWidget {
     required this.onPreviousWeek,
     required this.onNextWeek,
     required this.onCurrentWeek,
+    required this.onClearFilter,
+    required this.onApplyFilter,
+    required this.isWeekFilterEnabled,
     required this.isDark,
     required this.isCurrentWeek,
   });
@@ -139,25 +146,41 @@ class WeekNavigation extends StatelessWidget {
   }
 
   Widget _buildCurrentWeekIndicator(BuildContext context) {
-    const label = 'Current Week';
+    const currentWeekLabel = 'Current Week';
+    const clearLabel = 'Clear';
+    const applyLabel = 'Apply';
 
-    if (!isCurrentWeek) {
-      return const SizedBox.shrink();
-    }
+    final applyButton = AppButton.primary(label: applyLabel, onPressed: onApplyFilter, height: 32.h);
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.jobRoleBg,
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: Text(
-        label,
-        style: context.textTheme.labelMedium?.copyWith(
-          color: isDark ? AppColors.textPrimaryDark : AppColors.primary,
-          fontSize: 14.sp,
-        ),
-      ),
+    final clearButton = AppButton.outline(
+      label: clearLabel,
+      onPressed: isWeekFilterEnabled ? onClearFilter : null,
+      height: 32.h,
+    );
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (isCurrentWeek)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.cardBackgroundGreyDark : AppColors.jobRoleBg,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Text(
+              currentWeekLabel,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: isDark ? AppColors.textPrimaryDark : AppColors.primary,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        if (isCurrentWeek) Gap(8.w),
+        applyButton,
+        if (isWeekFilterEnabled) Gap(8.w),
+        if (isWeekFilterEnabled) clearButton,
+      ],
     );
   }
 }
