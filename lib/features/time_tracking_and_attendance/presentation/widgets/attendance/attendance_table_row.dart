@@ -87,7 +87,10 @@ class AttendanceTableRow extends StatelessWidget {
               ),
             if (AttendanceTableConfig.showDepartment)
               _buildDataCell(
-                Text(record.departmentName.toUpperCase(), style: textStyle),
+                Text(
+                  (record.departmentName.isEmpty ? record.displayValue(null) : record.departmentName).toUpperCase(),
+                  style: textStyle,
+                ),
                 AttendanceTableConfig.departmentWidth.w,
               ),
             if (AttendanceTableConfig.showDate)
@@ -96,9 +99,15 @@ class AttendanceTableRow extends StatelessWidget {
                 AttendanceTableConfig.dateWidth.w,
               ),
             if (AttendanceTableConfig.showCheckIn)
-              _buildDataCell(Text(record.checkIn ?? '-', style: textStyle), AttendanceTableConfig.checkInWidth.w),
+              _buildDataCell(
+                Text(record.displayValue(record.checkIn), style: textStyle),
+                AttendanceTableConfig.checkInWidth.w,
+              ),
             if (AttendanceTableConfig.showCheckOut)
-              _buildDataCell(Text(record.checkOut ?? '-', style: textStyle), AttendanceTableConfig.checkOutWidth.w),
+              _buildDataCell(
+                Text(record.displayValue(record.checkOut), style: textStyle),
+                AttendanceTableConfig.checkOutWidth.w,
+              ),
             if (AttendanceTableConfig.showStatus)
               _buildDataCell(AttendanceStatusChip(status: record.status), AttendanceTableConfig.statusWidth.w),
             if (AttendanceTableConfig.showActions)

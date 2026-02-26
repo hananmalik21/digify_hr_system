@@ -30,6 +30,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
     int pageSize = 25,
     String? orgUnitId,
     String? levelCode,
+    String? employeeNumber,
   }) async {
     try {
       final query = <String, String>{
@@ -42,6 +43,9 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       }
       if (levelCode != null && levelCode.isNotEmpty) {
         query['levelCode'] = levelCode;
+      }
+      if (employeeNumber != null && employeeNumber.trim().isNotEmpty) {
+        query['employeeNumber'] = employeeNumber.trim();
       }
 
       final response = await _apiClient.get(ApiEndpoints.tmAttendanceLogs, queryParameters: query);

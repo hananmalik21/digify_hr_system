@@ -100,6 +100,54 @@ class AttendanceLogItemDto {
     }
   }
 
+  String? _formatDate(String? isoString) {
+    if (isoString == null || isoString.isEmpty) return null;
+    try {
+      final dt = DateTime.parse(isoString);
+      final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      final day = days[dt.weekday - 1];
+      final month = _monthName(dt.month);
+      return '$day, $month ${dt.day}, ${dt.year}';
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _monthName(int month) {
+    const names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return names[month - 1];
+  }
+
+  String? _formatDateAtTime(String? dateIso, String? timeIso) {
+    if (dateIso == null || dateIso.isEmpty) return null;
+    try {
+      final dt = DateTime.parse(dateIso);
+      final month = _monthName(dt.month);
+      String timePart = '';
+      if (timeIso != null && timeIso.isNotEmpty) {
+        try {
+          final t = DateTime.parse(timeIso);
+          timePart = ' @ ${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+        } catch (_) {}
+      }
+      return '$month ${dt.day}$timePart';
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String? _formatDuration(num? hours) {
+    if (hours == null) return null;
+    if (hours >= 1) {
+      final h = hours.floor();
+      final m = ((hours - h) * 60).round();
+      if (m > 0) return '${h}h ${m}m';
+      return '$h hour${h == 1 ? '' : 's'}';
+    }
+    final m = (hours * 60).round();
+    return '${m}m';
+  }
+
   String _resolveStatus() {
     if (attendanceStatus != null && attendanceStatus!.isNotEmpty) {
       switch (attendanceStatus!.toUpperCase()) {
@@ -144,9 +192,47 @@ class AttendanceLogItemDto {
   AttendanceRecord toDomain() {
     String? checkIn;
     String? checkOut;
+    String? hoursWorked;
+    String? overtimeHours;
     if (actualObj != null) {
       checkIn = _formatTime(actualObj!['check_in_time'] as String?);
       checkOut = _formatTime(actualObj!['check_out_time'] as String?);
+      final hw = actualObj!['hours_worked'];
+      if (hw != null) {
+        if (hw is num) {
+          hoursWorked = _formatDuration(hw);
+        } else if (hw is String && hw.isNotEmpty) {
+          hoursWorked = hw;
+        }
+      }
+      final ot = actualObj!['overtime_hours'];
+      if (ot != null) {
+        if (ot is num) {
+          overtimeHours = _formatDuration(ot);
+        } else if (ot is String && ot.isNotEmpty) {
+          overtimeHours = ot;
+        }
+      }
+    }
+
+    String? scheduleDate;
+    String? scheduleStartTime;
+    String? scheduleEndTime;
+    String? scheduledHours;
+    if (scheduleObj != null) {
+      scheduleDate = _formatDate(scheduleObj!['schedule_date'] as String?);
+      final start = scheduleObj!['schedule_start_time'] as String?;
+      final end = scheduleObj!['schedule_end_time'] as String?;
+      scheduleStartTime = _formatDateAtTime(scheduleObj!['schedule_date'] as String?, start);
+      scheduleEndTime = _formatDateAtTime(scheduleObj!['schedule_date'] as String?, end);
+      final sh = scheduleObj!['scheduled_hours'];
+      if (sh != null) {
+        if (sh is num) {
+          scheduledHours = _formatDuration(sh);
+        } else if (sh is String && sh.isNotEmpty) {
+          scheduledHours = sh;
+        }
+      }
     }
 
     DateTime date;
@@ -166,6 +252,12 @@ class AttendanceLogItemDto {
       status: _resolveStatus(),
       avatarInitials: _avatarInitials(),
       attendance: null,
+      scheduleDate: scheduleDate,
+      scheduleStartTime: scheduleStartTime,
+      scheduleEndTime: scheduleEndTime,
+      scheduledHours: scheduledHours,
+      hoursWorked: hoursWorked,
+      overtimeHours: overtimeHours,
     );
   }
 }

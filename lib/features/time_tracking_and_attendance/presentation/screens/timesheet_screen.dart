@@ -27,6 +27,17 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(timesheetEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(timesheetNotifierProvider.notifier).setCompanyId(enterpriseId.toString());
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     _searchController.dispose();
