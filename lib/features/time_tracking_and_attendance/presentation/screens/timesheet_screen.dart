@@ -41,9 +41,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     final state = ref.watch(timesheetNotifierProvider);
     final notifier = ref.read(timesheetNotifierProvider.notifier);
 
-    final totalPages = state.totalItems == 0
-        ? 1
-        : (state.totalItems / state.pageSize).ceil();
+    final totalPages = state.totalItems == 0 ? 1 : (state.totalItems / state.pageSize).ceil();
     final paginationInfo = PaginationInfo(
       currentPage: state.currentPage,
       totalPages: totalPages,
@@ -54,28 +52,20 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
     );
 
     return Container(
-      color: isDark
-          ? AppColors.backgroundDark
-          : AppColors.tableHeaderBackground,
+      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: 24.w,
-        ).copyWith(top: 47.h, bottom: 24.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w).copyWith(top: 47.h, bottom: 24.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24.h,
           children: [
-            TimesheetScreenHeader(
-              onNewTimesheet: () => NewTimesheetDialog.show(context),
-            ),
+            TimesheetScreenHeader(onNewTimesheet: () => NewTimesheetDialog.show(context)),
             EnterpriseSelectorWidget(
               selectedEnterpriseId: effectiveEnterpriseId,
               onEnterpriseChanged: (enterpriseId) {
-                ref
-                    .read(timesheetSelectedEnterpriseProvider.notifier)
-                    .setEnterpriseId(enterpriseId);
+                ref.read(timesheetSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
               },
               subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'
@@ -87,8 +77,11 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
               onPreviousWeek: notifier.goToPreviousWeek,
               onNextWeek: notifier.goToNextWeek,
               onCurrentWeek: notifier.goToCurrentWeek,
+              onClearFilter: notifier.clearWeekFilter,
+              onApplyFilter: notifier.applyWeekFilter,
               isDark: isDark,
               isCurrentWeek: state.isCurrentWeek,
+              isWeekFilterEnabled: state.isWeekFilterEnabled,
             ),
             TimesheetStatsGrid(
               total: state.total,
@@ -115,12 +108,8 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
               paginationInfo: paginationInfo,
               currentPage: state.currentPage,
               pageSize: state.pageSize,
-              onPrevious: state.currentPage > 1
-                  ? () => notifier.setPage(state.currentPage - 1)
-                  : null,
-              onNext: state.currentPage < totalPages
-                  ? () => notifier.setPage(state.currentPage + 1)
-                  : null,
+              onPrevious: state.currentPage > 1 ? () => notifier.setPage(state.currentPage - 1) : null,
+              onNext: state.currentPage < totalPages ? () => notifier.setPage(state.currentPage + 1) : null,
             ),
           ],
         ),

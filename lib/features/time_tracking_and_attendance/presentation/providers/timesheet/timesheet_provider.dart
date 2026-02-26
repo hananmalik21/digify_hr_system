@@ -22,6 +22,7 @@ final timesheetRepositoryProvider = Provider<TimesheetRepository>((ref) {
 class TimesheetState {
   final DateTime weekStartDate;
   final DateTime weekEndDate;
+  final bool isWeekFilterEnabled;
   final String searchQuery;
   final TimesheetStatus? statusFilter;
   final String? companyId;
@@ -50,6 +51,7 @@ class TimesheetState {
   const TimesheetState({
     required this.weekStartDate,
     required this.weekEndDate,
+    this.isWeekFilterEnabled = true,
     this.searchQuery = '',
     this.statusFilter,
     this.companyId,
@@ -109,10 +111,12 @@ class TimesheetState {
     bool clearApprovingTimesheetGuid = false,
     bool clearRejectingTimesheetGuid = false,
     bool? isCurrentWeek,
+    bool? isWeekFilterEnabled,
   }) {
     return TimesheetState(
       weekStartDate: weekStartDate ?? this.weekStartDate,
       weekEndDate: weekEndDate ?? this.weekEndDate,
+      isWeekFilterEnabled: isWeekFilterEnabled ?? this.isWeekFilterEnabled,
       searchQuery: searchQuery ?? this.searchQuery,
       statusFilter: clearStatusFilter ? null : (statusFilter ?? this.statusFilter),
       companyId: companyId ?? this.companyId,
@@ -176,9 +180,12 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     state = state.copyWith(isLoading: true, clearError: true);
 
     try {
+      final weekStart = state.isWeekFilterEnabled ? state.weekStartDate : null;
+      final weekEnd = state.isWeekFilterEnabled ? state.weekEndDate : null;
+
       final stats = await _getStatistics(
-        weekStartDate: state.weekStartDate,
-        weekEndDate: state.weekEndDate,
+        weekStartDate: weekStart,
+        weekEndDate: weekEnd,
         companyId: state.companyId,
         divisionId: state.divisionId,
         departmentId: state.departmentId,
@@ -186,8 +193,8 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
       );
 
       final pageResult = await _getTimesheets(
-        weekStartDate: state.weekStartDate,
-        weekEndDate: state.weekEndDate,
+        weekStartDate: weekStart,
+        weekEndDate: weekEnd,
         searchQuery: state.searchQuery.isEmpty ? null : state.searchQuery,
         status: state.statusFilter,
         companyId: state.companyId,
@@ -231,12 +238,21 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
       weekEndDate: weekEnd,
       isCurrentWeek: _isCurrentWeekRange(normalizedStart, weekEnd),
     );
-    loadTimesheets();
   }
 
   void goToCurrentWeek() {
     final now = DateTime.now();
     setWeek(DateTimeUtils.getWeekStart(now));
+  }
+
+  void clearWeekFilter() {
+    state = state.copyWith(isWeekFilterEnabled: false);
+    loadTimesheets();
+  }
+
+  void applyWeekFilter() {
+    state = state.copyWith(isWeekFilterEnabled: true);
+    loadTimesheets();
   }
 
   void goToPreviousWeek() {
@@ -259,7 +275,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   }
 
   void setStatusFilter(TimesheetStatus? status) {
-    state = state.copyWith(statusFilter: status);
+    state = state.copyWith(statusFilter: status, clearStatusFilter: status == null);
     loadTimesheets();
   }
 
