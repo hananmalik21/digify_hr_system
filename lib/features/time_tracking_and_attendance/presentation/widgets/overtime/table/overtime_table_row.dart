@@ -62,7 +62,7 @@ class OvertimeTableRow extends ConsumerWidget {
                         assetPath: Assets.icons.arrowIcon.path,
                         color: expandedRecord == record.employeeId
                             ? AppColors.primary
-                            : null,
+                            : Theme.of(context).iconTheme.color,
                         onTap: () {
                           if (expandedRecord == record.employeeId) {
                             notifier.toggleOvertimeRecord(null);
@@ -76,6 +76,7 @@ class OvertimeTableRow extends ConsumerWidget {
                     AppAvatar(
                       size: 40.r,
                       fallbackInitial: record.employeeDetail?.name,
+                      textColor: AppColors.textPrimary,
                     ),
                     Gap(12.w),
                     Column(
@@ -189,7 +190,7 @@ class OvertimeTableRow extends ConsumerWidget {
             Container(
               width: context.screenWidth,
               color: context.isDark
-                  ? AppColors.cardBackgroundDark
+                  ? AppColors.backgroundDark
                   : AppColors.tableHeaderBackground,
               padding: EdgeInsetsDirectional.symmetric(
                 horizontal: 20.w,
