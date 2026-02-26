@@ -9,6 +9,8 @@ class Timesheet {
   final String employeeName;
   final String employeeNumber;
   final String departmentName;
+  final String? companyName;
+  final String? divisionName;
   final DateTime weekStartDate;
   final DateTime weekEndDate;
   final double regularHours;
@@ -31,6 +33,8 @@ class Timesheet {
     required this.employeeName,
     required this.employeeNumber,
     required this.departmentName,
+    this.companyName,
+    this.divisionName,
     required this.weekStartDate,
     required this.weekEndDate,
     required this.regularHours,
@@ -55,30 +59,20 @@ class Timesheet {
       employeeName: json['employee_name'] as String? ?? '',
       employeeNumber: json['employee_number'] as String? ?? '',
       departmentName: json['department_name'] as String? ?? '',
+      companyName: json['company_name'] as String?,
+      divisionName: json['division_name'] as String?,
       weekStartDate: DateTime.parse(json['week_start_date'] as String),
       weekEndDate: DateTime.parse(json['week_end_date'] as String),
       regularHours: (json['regular_hours'] as num?)?.toDouble() ?? 0.0,
       overtimeHours: (json['overtime_hours'] as num?)?.toDouble() ?? 0.0,
       totalHours: (json['total_hours'] as num?)?.toDouble() ?? 0.0,
-      status: TimesheetStatusExtension.fromString(
-        json['status'] as String? ?? 'draft',
-      ),
+      status: TimesheetStatusExtension.fromString(json['status'] as String? ?? 'draft'),
       description: json['description'] as String?,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'] as String)
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'] as String)
-          : null,
-      submittedAt: json['submitted_at'] != null
-          ? DateTime.parse(json['submitted_at'] as String)
-          : null,
-      approvedAt: json['approved_at'] != null
-          ? DateTime.parse(json['approved_at'] as String)
-          : null,
-      rejectedAt: json['rejected_at'] != null
-          ? DateTime.parse(json['rejected_at'] as String)
-          : null,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
+      submittedAt: json['submitted_at'] != null ? DateTime.parse(json['submitted_at'] as String) : null,
+      approvedAt: json['approved_at'] != null ? DateTime.parse(json['approved_at'] as String) : null,
+      rejectedAt: json['rejected_at'] != null ? DateTime.parse(json['rejected_at'] as String) : null,
       rejectionReason: json['rejection_reason'] as String?,
     );
   }
@@ -91,6 +85,8 @@ class Timesheet {
       'employee_name': employeeName,
       'employee_number': employeeNumber,
       'department_name': departmentName,
+      'company_name': companyName,
+      'division_name': divisionName,
       'week_start_date': weekStartDate.toIso8601String(),
       'week_end_date': weekEndDate.toIso8601String(),
       'regular_hours': regularHours,
@@ -108,9 +104,7 @@ class Timesheet {
 
   /// Gets formatted week period string (e.g., "Dec 9 - Dec 15, 2024")
   String get formattedWeekPeriod {
-    final startFormat = weekStartDate.month == weekEndDate.month
-        ? 'MMM d'
-        : 'MMM d, yyyy';
+    final startFormat = weekStartDate.month == weekEndDate.month ? 'MMM d' : 'MMM d, yyyy';
     final endFormat = 'MMM d, yyyy';
     final startStr = _formatDate(weekStartDate, startFormat);
     final endStr = _formatDate(weekEndDate, endFormat);
@@ -118,20 +112,7 @@ class Timesheet {
   }
 
   String _formatDate(DateTime date, String format) {
-    final months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     final month = months[date.month - 1];
     final day = date.day;
     final year = date.year;

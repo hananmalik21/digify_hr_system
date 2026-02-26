@@ -57,16 +57,12 @@ class TimesheetDto {
       middleNameEn: json['middle_name_en'] as String?,
       lastNameEn: json['last_name_en'] as String?,
       employeeNumber: json['employee_number'] as String? ?? '',
-      orgStructureList: (json['org_structure_list'] as List<dynamic>? ?? [])
-          .whereType<Map<String, dynamic>>()
-          .toList(),
+      orgStructureList: (json['org_structure_list'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
       weekStartDate: json['week_start_date'] as String? ?? '',
       weekEndDate: json['week_end_date'] as String? ?? '',
       statusCode: json['status_code'] as String? ?? 'DRAFT',
       description: json['description'] as String?,
-      timesheetLines: (json['timesheet_lines'] as List<dynamic>? ?? [])
-          .whereType<Map<String, dynamic>>()
-          .toList(),
+      timesheetLines: (json['timesheet_lines'] as List<dynamic>? ?? []).whereType<Map<String, dynamic>>().toList(),
       creationDate: json['creation_date'] as String?,
       lastUpdateDate: json['last_update_date'] as String?,
       submittedDate: json['submitted_date'] as String?,
@@ -93,12 +89,9 @@ class TimesheetDto {
       lastNameEn?.trim() ?? '',
     ].where((p) => p.isNotEmpty).join(' ');
 
-    final department = orgStructureList.firstWhere(
-      (s) => (s['level_code'] as String?) == 'DEPARTMENT',
-      orElse: () => const {},
-    );
-
-    final departmentName = (department['org_unit_name_en'] as String?) ?? '';
+    final companyName = _orgNameByLevel(orgStructureList, 'COMPANY');
+    final divisionName = _orgNameByLevel(orgStructureList, 'DIVISION');
+    final departmentName = _orgNameByLevel(orgStructureList, 'DEPARTMENT');
 
     final lines = timesheetLines.map(_lineFromMap).toList();
 
@@ -109,6 +102,8 @@ class TimesheetDto {
       employeeName: employeeName,
       employeeNumber: employeeNumber,
       departmentName: departmentName,
+      companyName: companyName.isEmpty ? null : companyName,
+      divisionName: divisionName.isEmpty ? null : divisionName,
       weekStartDate: DateTime.parse(weekStartDate),
       weekEndDate: DateTime.parse(weekEndDate),
       regularHours: regularHours,
@@ -126,10 +121,19 @@ class TimesheetDto {
     );
   }
 
+  static String _orgNameByLevel(List<Map<String, dynamic>> orgStructureList, String levelCode) {
+    for (final s in orgStructureList) {
+      final code = (s['level_code'] as String?)?.toUpperCase();
+      if (code == levelCode) {
+        return (s['org_unit_name_en'] as String?) ?? (s['org_unit_name'] as String?) ?? '';
+      }
+    }
+    return '';
+  }
+
   static TimesheetLine _lineFromMap(Map<String, dynamic> l) {
     final workDate = l['work_date'] as String? ?? '';
-    final taskText =
-        (l['project_task_text'] ?? l['line_notes']) as String? ?? '';
+    final taskText = (l['project_task_text'] ?? l['line_notes']) as String? ?? '';
     return TimesheetLine(
       workDate: workDate,
       projectId: (l['project_id'] as num?)?.toInt(),

@@ -114,9 +114,7 @@ class TimesheetState {
       weekStartDate: weekStartDate ?? this.weekStartDate,
       weekEndDate: weekEndDate ?? this.weekEndDate,
       searchQuery: searchQuery ?? this.searchQuery,
-      statusFilter: clearStatusFilter
-          ? null
-          : (statusFilter ?? this.statusFilter),
+      statusFilter: clearStatusFilter ? null : (statusFilter ?? this.statusFilter),
       companyId: companyId ?? this.companyId,
       divisionId: divisionId ?? this.divisionId,
       departmentId: departmentId ?? this.departmentId,
@@ -216,11 +214,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
         clearError: true,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Failed to load timesheets: ${e.toString()}',
-        clearError: false,
-      );
+      state = state.copyWith(isLoading: false, error: 'Failed to load timesheets: ${e.toString()}', clearError: false);
     }
   }
 
@@ -270,21 +264,12 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
   }
 
   void setCompanyId(String? companyId) {
-    state = state.copyWith(
-      companyId: companyId,
-      divisionId: null,
-      departmentId: null,
-      sectionId: null,
-    );
+    state = state.copyWith(companyId: companyId, divisionId: null, departmentId: null, sectionId: null);
     loadTimesheets();
   }
 
   void setDivisionId(String? divisionId) {
-    state = state.copyWith(
-      divisionId: divisionId,
-      departmentId: null,
-      sectionId: null,
-    );
+    state = state.copyWith(divisionId: divisionId, departmentId: null, sectionId: null);
     loadTimesheets();
   }
 
@@ -336,6 +321,8 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           employeeName: current.employeeName,
           employeeNumber: current.employeeNumber,
           departmentName: current.departmentName,
+          companyName: current.companyName,
+          divisionName: current.divisionName,
           weekStartDate: current.weekStartDate,
           weekEndDate: current.weekEndDate,
           regularHours: current.regularHours,
@@ -362,11 +349,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           approved = approved + 1;
         }
 
-        state = state.copyWith(
-          records: records,
-          submitted: submitted,
-          approved: approved,
-        );
+        state = state.copyWith(records: records, submitted: submitted, approved: approved);
       }
 
       return null;
@@ -379,16 +362,10 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
     }
   }
 
-  Future<String?> rejectTimesheet(
-    String timesheetGuid, {
-    required String rejectReason,
-  }) async {
+  Future<String?> rejectTimesheet(String timesheetGuid, {required String rejectReason}) async {
     state = state.copyWith(rejectingTimesheetGuid: timesheetGuid);
     try {
-      await _repository.rejectTimesheet(
-        timesheetGuid,
-        rejectReason: rejectReason,
-      );
+      await _repository.rejectTimesheet(timesheetGuid, rejectReason: rejectReason);
 
       // Optimistically update the rejected timesheet in the current list
       final records = [...state.records];
@@ -404,6 +381,8 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           employeeName: current.employeeName,
           employeeNumber: current.employeeNumber,
           departmentName: current.departmentName,
+          companyName: current.companyName,
+          divisionName: current.divisionName,
           weekStartDate: current.weekStartDate,
           weekEndDate: current.weekEndDate,
           regularHours: current.regularHours,
@@ -430,11 +409,7 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
           rejected = rejected + 1;
         }
 
-        state = state.copyWith(
-          records: records,
-          submitted: submitted,
-          rejected: rejected,
-        );
+        state = state.copyWith(records: records, submitted: submitted, rejected: rejected);
       }
 
       return null;
@@ -449,15 +424,14 @@ class TimesheetNotifier extends StateNotifier<TimesheetState> {
 }
 
 // State Notifier Provider
-final timesheetNotifierProvider =
-    StateNotifierProvider<TimesheetNotifier, TimesheetState>((ref) {
-      final repository = ref.watch(timesheetRepositoryProvider);
-      final getTimesheets = GetTimesheetsUseCase(repository: repository);
-      final getStats = GetTimesheetStatisticsUseCase(repository: repository);
+final timesheetNotifierProvider = StateNotifierProvider<TimesheetNotifier, TimesheetState>((ref) {
+  final repository = ref.watch(timesheetRepositoryProvider);
+  final getTimesheets = GetTimesheetsUseCase(repository: repository);
+  final getStats = GetTimesheetStatisticsUseCase(repository: repository);
 
-      return TimesheetNotifier(
-        getTimesheetsUseCase: getTimesheets,
-        getTimesheetStatisticsUseCase: getStats,
-        repository: repository,
-      );
-    });
+  return TimesheetNotifier(
+    getTimesheetsUseCase: getTimesheets,
+    getTimesheetStatisticsUseCase: getStats,
+    repository: repository,
+  );
+});
