@@ -38,6 +38,7 @@ class _OvertimeRateDialogState
     extends ConsumerState<OvertimeRateMultiplierDialog> {
   final _formKey = GlobalKey<FormState>();
 
+  final _rateCodeController = TextEditingController();
   final _rateTypeNameController = TextEditingController();
   final _multiplierController = TextEditingController();
   final _categoryController = TextEditingController();
@@ -46,10 +47,17 @@ class _OvertimeRateDialogState
   @override
   void initState() {
     super.initState();
-    _rateTypeNameController.text = widget.rateMultiplier?.name ?? '';
+    _rateCodeController.text = widget.rateMultiplier?.rateCode ?? '';
+    _rateTypeNameController.text = widget.rateMultiplier?.rateName ?? '';
     _multiplierController.text = widget.rateMultiplier?.multiplier ?? '';
-    _categoryController.text = widget.rateMultiplier?.category ?? '';
-    _descriptionController.text = widget.rateMultiplier?.description ?? '';
+    _categoryController.text = widget.rateMultiplier?.categoryCode ?? '';
+    _descriptionController.text = widget.rateMultiplier?.rateDescription ?? '';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(rateMultiplierDialogProvider.notifier)
+          .setInitialData(widget.rateMultiplier);
+    });
   }
 
   @override
@@ -63,9 +71,14 @@ class _OvertimeRateDialogState
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(
+      rateMultiplierDialogProvider.select((state) => state.isLoading),
+    );
     final notifier = ref.read(rateMultiplierDialogProvider.notifier);
     return AppDialog(
-      title: 'Add Custom Overtime Rate',
+      title: widget.rateMultiplier != null
+          ? 'Edit Rate'
+          : 'Add Custom Overtime Rate',
       icon: DigifyAsset(
         assetPath: Assets.icons.addNewIconFigma.path,
         color: AppColors.buttonTextLight,
@@ -77,6 +90,13 @@ class _OvertimeRateDialogState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            DigifyTextField(
+              controller: _rateCodeController,
+              labelText: 'Rate Type Code',
+              onChanged: (value) => notifier.updateRateCode(value),
+              hintText: 'e.g. OT-001',
+            ),
+            Gap(16.h),
             DigifyTextField(
               controller: _rateTypeNameController,
               labelText: 'Rate Type Name',
@@ -136,14 +156,16 @@ class _OvertimeRateDialogState
         AppButton(
           label: 'Cancel',
           onPressed: () => context.pop(),
+
           type: AppButtonType.outline,
           backgroundColor: AppColors.cardBackground,
           foregroundColor: AppColors.textSecondary,
         ),
         Gap(12.w),
         AppButton(
-          label: 'Save Rate',
-          isLoading: false,
+          label:
+              '${widget.rateMultiplier != null ? 'Update' : 'Save'} Rate Type',
+          isLoading: isLoading,
           onPressed: () => _handleSubmit(ref),
           svgPath: Assets.icons.saveConfigIcon.path,
           type: AppButtonType.primary,
@@ -158,13 +180,17 @@ class _OvertimeRateDialogState
     try {
       await notifier.handleSubmit(ref);
       if (!mounted) return;
-      ToastService.success(context, 'Rate Multiplier saved successfully.');
+      ToastService.success(
+        context,
+        'Rate Multiplier ${widget.rateMultiplier != null ? 'updated' : 'saved'} successfully.',
+      );
       context.pop();
     } catch (e) {
+      print(e);
       if (!mounted) return;
       ToastService.error(
         context,
-        'Failed to save rate multiplier. Please try again.',
+        'Failed to ${widget.rateMultiplier != null ? 'update' : 'save'} rate multiplier. Please try again.',
       );
     }
   }
