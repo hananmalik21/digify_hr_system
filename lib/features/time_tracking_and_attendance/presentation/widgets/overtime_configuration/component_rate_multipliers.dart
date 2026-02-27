@@ -13,7 +13,7 @@ import '../../../../../core/widgets/common/scrollable_wrapper.dart';
 import '../../../../../core/widgets/forms/digify_text_field.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../../../domain/models/overtime_configuration/rate_multiplier.dart';
-import '../../dialogs/overtime_rate_dialog.dart';
+import '../../dialogs/overtime_rate_multiplier_dialog.dart';
 import '../../providers/overtime_configuration/overtime_configuration_provider.dart';
 
 class ComponentRateMultipliers extends ConsumerWidget {
@@ -21,9 +21,14 @@ class ComponentRateMultipliers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final isLoading = ref.watch(
+    //   overtimeConfigurationProvider.select((state) => state.isLoading),
+    // );
     final rateMultipliers = ref.watch(
       overtimeConfigurationProvider.select((state) => state.rateMultipliers),
     );
+    final notifier = ref.read(overtimeConfigurationProvider.notifier);
+
     return Container(
       decoration: BoxDecoration(
         color: context.isDark
@@ -86,8 +91,26 @@ class ComponentRateMultipliers extends ConsumerWidget {
                   constraints: BoxConstraints(minHeight: 300.h),
                   child: Column(
                     children: [
+                      if (rateMultipliers.isEmpty)
+                        Center(
+                          child: Text(
+                            'No rate multipliers found',
+                            style: context.textTheme.titleMedium?.copyWith(),
+                          ),
+                        ),
                       ...rateMultipliers
-                          .map((e) => _buildTableDataRow(context, e))
+                          .map(
+                            (e) => _buildTableDataRow(
+                              context,
+                              e,
+                              onEdit: () => OvertimeRateMultiplierDialog.show(
+                                context,
+                                rateMultiplier: e,
+                              ),
+                              onDelete: () =>
+                                  notifier.deleteRateMultiplier(e.otRateTypeId),
+                            ),
+                          )
                           .toList(),
                     ],
                   ),
@@ -131,7 +154,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                     : AppColors.textTertiary,
               ),
             ),
-            120.w,
+            150.w,
           ),
           _buildCell(
             context,
@@ -166,8 +189,10 @@ class ComponentRateMultipliers extends ConsumerWidget {
 
   Widget _buildTableDataRow(
     BuildContext context,
-    RateMultiplier rateMultiplier,
-  ) {
+    RateMultiplier rateMultiplier, {
+    VoidCallback? onEdit,
+    VoidCallback? onDelete,
+  }) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -187,12 +212,12 @@ class ComponentRateMultipliers extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  rateMultiplier.name,
+                  rateMultiplier.rateName,
                   style: context.textTheme.titleMedium?.copyWith(),
                 ),
                 Gap(4.h),
                 Text(
-                  rateMultiplier.description,
+                  rateMultiplier.rateDescription,
                   style: context.textTheme.labelSmall?.copyWith(),
                 ),
               ],
@@ -204,12 +229,12 @@ class ComponentRateMultipliers extends ConsumerWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: DigifySquareCapsule(
-                label: rateMultiplier.category,
+                label: rateMultiplier.categoryCode,
                 textColor: AppColors.primary,
                 backgroundColor: AppColors.primary.withValues(alpha: .1),
               ),
             ),
-            120.w,
+            150.w,
           ),
           _buildCell(
             context,
@@ -217,6 +242,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
               children: [
                 Expanded(
                   child: DigifyTextField(
+                    key: ValueKey(rateMultiplier.multiplier),
                     initialValue: rateMultiplier.multiplier,
                     enabled: false,
                     filled: true,
@@ -248,11 +274,11 @@ class ComponentRateMultipliers extends ConsumerWidget {
               children: [
                 DigifyAssetButton(
                   assetPath: Assets.icons.editIcon.path,
-                  onTap: () {},
+                  onTap: onEdit,
                 ),
                 DigifyAssetButton(
                   assetPath: Assets.icons.redDeleteIcon.path,
-                  onTap: () {},
+                  onTap: onDelete,
                 ),
               ],
             ),

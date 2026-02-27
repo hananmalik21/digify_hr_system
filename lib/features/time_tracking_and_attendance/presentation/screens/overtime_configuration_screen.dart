@@ -8,13 +8,14 @@ import '../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/common/digify_tab_header.dart';
+import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
+import '../providers/overtime_configuration/overtime_configuration_enterprise_provider.dart';
 import '../providers/overtime_configuration/overtime_configuration_provider.dart';
 import '../widgets/overtime_configuration/component_approval_workflow.dart';
 import '../widgets/overtime_configuration/component_compliance_score.dart';
 import '../widgets/overtime_configuration/component_labor_law_limits.dart';
 import '../widgets/overtime_configuration/component_rate_multipliers.dart';
-// import '../providers/overtime/overtime_provider.dart';
 
 class OvertimeConfigurationScreen extends ConsumerStatefulWidget {
   const OvertimeConfigurationScreen({super.key});
@@ -30,6 +31,9 @@ class _OvertimeConfigurationScreenState
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    final effectiveEnterpriseId = ref.watch(
+      overtimeConfigurationEnterpriseIdProvider,
+    );
     final _formKey = ref.read(overtimeConfigurationProvider).formKey;
 
     return Container(
@@ -62,6 +66,20 @@ class _OvertimeConfigurationScreenState
                   ),
                 ],
               ),
+            ),
+            Gap(24.h),
+            EnterpriseSelectorWidget(
+              selectedEnterpriseId: effectiveEnterpriseId,
+              onEnterpriseChanged: (enterpriseId) {
+                ref
+                    .read(
+                      overtimeConfigurationSelectedEnterpriseProvider.notifier,
+                    )
+                    .setEnterpriseId(enterpriseId);
+              },
+              subtitle: effectiveEnterpriseId != null
+                  ? 'Viewing data for selected enterprise'
+                  : 'Select an enterprise to view data',
             ),
             Gap(24.h),
             Form(
