@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../providers/time_tracking_and_attendance_tab_state_provider.dart';
 import 'attendance_screen.dart';
+import 'overtime_configuration_screen.dart';
 import 'overtime_screen.dart';
 import 'timesheet_screen.dart';
 
@@ -13,10 +14,16 @@ class TimeTrackingAndAttendanceScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final currentTabIndex = ref.watch(timeTrackingAndAttendanceTabStateProvider.select((s) => s.currentTabIndex));
+    final currentTabIndex = ref.watch(
+      timeTrackingAndAttendanceTabStateProvider.select(
+        (s) => s.currentTabIndex,
+      ),
+    );
 
     return Container(
-      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      color: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       child: _buildTabContent(context, currentTabIndex),
     );
   }
@@ -29,6 +36,8 @@ class TimeTrackingAndAttendanceScreen extends ConsumerWidget {
         return const TimesheetScreen();
       case 2:
         return const OvertimeScreen();
+      case 3:
+        return const OvertimeConfigurationScreen();
       default:
         return const SizedBox();
     }
