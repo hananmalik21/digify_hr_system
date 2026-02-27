@@ -4,8 +4,11 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/timesheet/timesheet_status_chip.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +35,7 @@ class TimesheetDetailScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Header(timesheet: timesheet, isDark: isDark),
-              Gap(28.h),
+              Gap(24.h),
               LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth > 800) {
@@ -110,16 +113,14 @@ class _Header extends StatelessWidget {
             children: [
               Text(
                 'Timesheet Details',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: context.textTheme.headlineMedium?.copyWith(
                   fontSize: 21.sp,
                   color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
                 ),
               ),
               Text(
                 'Reference: TS-${timesheet.id.toString().padLeft(3, '0')}',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
+                style: context.textTheme.titleSmall?.copyWith(
                   fontSize: 12.sp,
                   color: isDark ? AppColors.textMuted : AppColors.tableHeaderText,
                 ),
@@ -143,7 +144,7 @@ class _EmployeeProfile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(22.r),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.inputBg),
         boxShadow: AppShadows.cardShadow,
@@ -153,20 +154,24 @@ class _EmployeeProfile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.person_outline, size: 14.sp, color: AppColors.dialogCloseIcon),
+              DigifyAsset(
+                assetPath: Assets.icons.employeesCyanIcon.path,
+                color: AppColors.primary,
+                width: 14.w,
+                height: 14.h,
+              ),
               Gap(7.w),
               Text(
                 'EMPLOYEE PROFILE',
-                style: context.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10.5.sp,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontSize: 11.sp,
                   letterSpacing: 1.05,
                   color: AppColors.dialogCloseIcon,
                 ),
               ),
             ],
           ),
-          Gap(21.h),
+          Gap(26.h),
           Row(
             children: [
               Container(
@@ -176,7 +181,7 @@ class _EmployeeProfile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   timesheet.avatarInitials,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5.sp, color: AppColors.statIconBlue),
+                  style: context.textTheme.headlineMedium?.copyWith(fontSize: 18.sp, color: AppColors.statIconBlue),
                 ),
               ),
               Gap(14.w),
@@ -186,17 +191,15 @@ class _EmployeeProfile extends StatelessWidget {
                   children: [
                     Text(
                       timesheet.employeeName,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: context.textTheme.headlineMedium?.copyWith(
                         fontSize: 16.sp,
                         color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
                       ),
                     ),
                     Text(
                       timesheet.employeeNumber.isEmpty ? 'EMP-${timesheet.employeeId}' : timesheet.employeeNumber,
-                      style: context.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10.5.sp,
+                      style: context.textTheme.headlineMedium?.copyWith(
+                        fontSize: 11.sp,
                         letterSpacing: 0.525,
                         color: AppColors.tableHeaderText,
                       ),
@@ -204,13 +207,17 @@ class _EmployeeProfile extends StatelessWidget {
                     Gap(3.h),
                     Row(
                       children: [
-                        Icon(Icons.business, size: 12.sp, color: AppColors.sidebarChildItemText),
+                        DigifyAsset(
+                          assetPath: Assets.icons.divisionTreeIcon.path,
+                          color: AppColors.sidebarChildItemText,
+                          width: 12.w,
+                          height: 12.h,
+                        ),
                         Gap(5.w),
                         Text(
                           timesheet.departmentName.isEmpty ? 'General' : timesheet.departmentName,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.3.sp,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            fontSize: 12.sp,
                             color: AppColors.sidebarChildItemText,
                           ),
                         ),
@@ -226,7 +233,7 @@ class _EmployeeProfile extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(10.5.r),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.tableHeaderBackground : AppColors.tableHeaderBackground,
                     borderRadius: BorderRadius.circular(10.r),
@@ -236,18 +243,16 @@ class _EmployeeProfile extends StatelessWidget {
                     children: [
                       Text(
                         'Company',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+                        style: context.textTheme.headlineMedium?.copyWith(
                           fontSize: 10.sp,
                           color: AppColors.dialogCloseIcon,
                         ),
                       ),
-                      Gap(3.5.h),
+                      Gap(4.h),
                       Text(
-                        'Kuwait Holdings',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10.5.sp,
+                        timesheet.companyName?.trim().isNotEmpty == true ? timesheet.companyName! : '—',
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          fontSize: 11.sp,
                           color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
                         ),
                       ),
@@ -258,7 +263,7 @@ class _EmployeeProfile extends StatelessWidget {
               Gap(14.w),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(10.5.r),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.tableHeaderBackground : AppColors.tableHeaderBackground,
                     borderRadius: BorderRadius.circular(10.r),
@@ -274,12 +279,13 @@ class _EmployeeProfile extends StatelessWidget {
                           color: AppColors.dialogCloseIcon,
                         ),
                       ),
-                      Gap(3.5.h),
+                      Gap(4.h),
                       Text(
-                        timesheet.departmentName.isEmpty ? 'Technology' : timesheet.departmentName,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10.5.sp,
+                        timesheet.divisionName?.trim().isNotEmpty == true
+                            ? timesheet.divisionName!
+                            : (timesheet.departmentName.trim().isNotEmpty ? timesheet.departmentName : '—'),
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          fontSize: 11.sp,
                           color: isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
                         ),
                       ),
@@ -315,13 +321,17 @@ class _PeriodSummary extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 14.sp, color: AppColors.dialogCloseIcon),
+              DigifyAsset(
+                assetPath: Assets.icons.attendance.halfDay.path,
+                color: AppColors.primary,
+                width: 14.w,
+                height: 14.h,
+              ),
               Gap(7.w),
               Text(
                 'PERIOD SUMMARY',
-                style: context.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.sp,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontSize: 11.sp,
                   letterSpacing: 1.05,
                   color: AppColors.dialogCloseIcon,
                 ),
@@ -335,12 +345,15 @@ class _PeriodSummary extends StatelessWidget {
             valueColor: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
             isDark: isDark,
           ),
+          DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 7.h)),
           _SummaryRow(
             label: 'Total Overtime',
             value: '${timesheet.overtimeHours.toInt()}h',
             valueColor: AppColors.informationIconColor,
             isDark: isDark,
           ),
+          DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 7.h)),
+          Gap(7.h),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
             decoration: BoxDecoration(color: AppColors.jobRoleBg, borderRadius: BorderRadius.circular(10.r)),
@@ -349,19 +362,11 @@ class _PeriodSummary extends StatelessWidget {
               children: [
                 Text(
                   'GRAND TOTAL',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.3.sp,
-                    color: AppColors.statIconBlue,
-                  ),
+                  style: context.textTheme.headlineMedium?.copyWith(fontSize: 12.sp, color: AppColors.statIconBlue),
                 ),
                 Text(
                   '${timesheet.totalHours.toInt()}h',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.sp,
-                    color: AppColors.statIconBlue,
-                  ),
+                  style: context.textTheme.headlineMedium?.copyWith(fontSize: 18.sp, color: AppColors.statIconBlue),
                 ),
               ],
             ),
@@ -384,28 +389,19 @@ class _SummaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.h),
-      margin: EdgeInsets.only(bottom: 14.h),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.tableHeaderBackground)),
-      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 12.3.sp,
+            style: context.textTheme.titleSmall?.copyWith(
+              fontSize: 12.sp,
               color: isDark ? AppColors.textMuted : AppColors.tableHeaderText,
             ),
           ),
           Text(
             value,
-            style: context.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
-              color: valueColor,
-            ),
+            style: context.textTheme.headlineMedium?.copyWith(fontSize: 16.sp, color: valueColor),
           ),
         ],
       ),
@@ -424,7 +420,7 @@ class _WorkActivityLog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.inputBg),
         boxShadow: AppShadows.cardShadow,
@@ -449,8 +445,7 @@ class _WorkActivityLog extends StatelessWidget {
                   children: [
                     Text(
                       'Work Activity Log',
-                      style: context.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: context.textTheme.headlineMedium?.copyWith(
                         fontSize: 14.sp,
                         color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
                       ),
@@ -458,15 +453,19 @@ class _WorkActivityLog extends StatelessWidget {
                     Gap(4.h),
                     Text(
                       'Breakdown of hours recorded per day',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
+                      style: context.textTheme.titleSmall?.copyWith(
                         fontSize: 12.sp,
                         color: isDark ? AppColors.textMuted : AppColors.tableHeaderText,
                       ),
                     ),
                   ],
                 ),
-                Icon(Icons.calendar_today_outlined, size: 17.5.sp, color: AppColors.dialogCloseIcon),
+                DigifyAsset(
+                  assetPath: Assets.icons.attendance.emptyCalander.path,
+                  width: 17.w,
+                  height: 17.h,
+                  color: AppColors.dialogCloseIcon,
+                ),
               ],
             ),
           ),

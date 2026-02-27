@@ -87,6 +87,7 @@ class ApiEndpoints {
   static String tmOvertimeConfiguration(String companyId) =>
       '$api/tm/overtime/configuration/$companyId';
   static const String tmOvertimeRateMultiplier = '$api/tm/overtime/rate-types';
+  static const String tmAttendanceLogs = '$api/tm/attendance/logs';
 
   // Leave Management (ABS) endpoints
   static const String absLeaveRequests = '$api/abs/leave-requests';
