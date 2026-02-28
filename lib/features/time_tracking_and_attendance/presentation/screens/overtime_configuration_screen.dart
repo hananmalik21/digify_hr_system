@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/l10n/app_localizations.dart';
+import '../../../../core/services/toast_service.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/common/digify_tab_header.dart';
@@ -14,6 +15,7 @@ import '../providers/overtime_configuration/overtime_configuration_enterprise_pr
 import '../providers/overtime_configuration/overtime_configuration_provider.dart';
 import '../widgets/overtime_configuration/component_approval_workflow.dart';
 import '../widgets/overtime_configuration/component_compliance_score.dart';
+import '../widgets/overtime_configuration/component_configuration_information.dart';
 import '../widgets/overtime_configuration/component_labor_law_limits.dart';
 import '../widgets/overtime_configuration/component_rate_multipliers.dart';
 
@@ -34,7 +36,9 @@ class _OvertimeConfigurationScreenState
     final effectiveEnterpriseId = ref.watch(
       overtimeConfigurationEnterpriseIdProvider,
     );
-    final _formKey = ref.read(overtimeConfigurationProvider).formKey;
+    final isLoading = ref.watch(
+      overtimeConfigurationProvider.select((state) => state.isLoading),
+    );
 
     return Container(
       color: isDark
@@ -62,7 +66,8 @@ class _OvertimeConfigurationScreenState
                   AppButton.primary(
                     label: localizations.saveConfiguration,
                     svgPath: Assets.icons.saveConfigIcon.path,
-                    onPressed: () {},
+                    isLoading: isLoading,
+                    onPressed: () => _handleSubmit(ref),
                   ),
                 ],
               ),
@@ -82,35 +87,54 @@ class _OvertimeConfigurationScreenState
                   : 'Select an enterprise to view data',
             ),
             Gap(24.h),
-            Form(
-              key: _formKey,
-              child: StaggeredGrid.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 24.h,
-                crossAxisSpacing: 24.w,
-                children: [
-                  StaggeredGridTile.fit(
-                    crossAxisCellCount: context.isMobile ? 3 : 2,
-                    child: ComponentRateMultipliers(),
-                  ),
-                  StaggeredGridTile.fit(
-                    crossAxisCellCount: context.isMobile ? 3 : 1,
-                    child: ComponentLaborLawLimit(),
-                  ),
-                  StaggeredGridTile.fit(
-                    crossAxisCellCount: context.isMobile ? 3 : 2,
-                    child: ComponentApprovalWorkflow(),
-                  ),
-                  StaggeredGridTile.fit(
-                    crossAxisCellCount: context.isMobile ? 3 : 1,
-                    child: ComponentComplianceScore(),
-                  ),
-                ],
-              ),
+            ComponentConfigurationInformation(),
+            Gap(24.h),
+            StaggeredGrid.count(
+              crossAxisCount: 3,
+              mainAxisSpacing: 24.h,
+              crossAxisSpacing: 24.w,
+              children: [
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 2,
+                  child: ComponentRateMultipliers(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 1,
+                  child: ComponentLaborLawLimit(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 2,
+                  child: ComponentApprovalWorkflow(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 1,
+                  child: ComponentComplianceScore(),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _handleSubmit(WidgetRef ref) async {
+    final notifier = ref.read(overtimeConfigurationProvider.notifier);
+
+    try {
+      await notifier.saveOvertimeConfiguration();
+      if (!mounted) return;
+      ToastService.success(
+        context,
+        'Overtime Configuration saved successfully.',
+      );
+    } catch (e) {
+      print(e);
+      if (!mounted) return;
+      ToastService.error(
+        context,
+        'Failed to save overtime configuration. Please try again.',
+      );
+    }
   }
 }

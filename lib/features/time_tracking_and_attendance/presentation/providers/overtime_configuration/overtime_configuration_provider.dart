@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/network/api_client.dart';
 import '../../../../../core/network/api_config.dart';
@@ -76,6 +77,10 @@ final overtimeConfigurationRepositoryProvider =
       return OvertimeConfigurationRepositoryImpl(apiClient: client);
     });
 
+class MissingOvertimeConfigurationException implements Exception {
+  MissingOvertimeConfigurationException();
+}
+
 class OvertimeConfigurationNotifier
     extends StateNotifier<OvertimeConfiguration> {
   final GetOvertimeConfigurationUseCase _getConfiguration;
@@ -122,15 +127,76 @@ class OvertimeConfigurationNotifier
     await loadOvertimeConfigurations();
   }
 
+  /// Set Company ID
   void setCompanyId(String? companyId) {
     state = state.copyWith(companyId: companyId);
     loadOvertimeConfigurations();
   }
 
+  /// Update Configuration Information
+  void updateConfigurationName(String name) {
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(configName: name),
+    );
+  }
+
+  void updateEffectiveStartDate(DateTime date) {
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(effectiveStartDate: date),
+    );
+  }
+
+  void updateEffectiveEndDate(DateTime date) {
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(effectiveEndDate: date),
+    );
+  }
+
+  /// Update Labor Law Limits
+  void updateLaborLawLimitsMaxDailyOvertime(String maxDailyOvertime) {
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        maxDailyOvertime: maxDailyOvertime,
+      ),
+    );
+  }
+
+  void updateLaborLawLimitsMaxAnnualOvertime(String maxAnnualOvertime) {
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        maxAnnualOvertime: maxAnnualOvertime,
+      ),
+    );
+  }
+
+  void updateLaborLawLimitsMinRestPeriod(String minRestPeriod) {
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        minRestPeriod: minRestPeriod,
+      ),
+    );
+  }
+
+  void updateLaborLawLimitsLawReference(String lawReference) {
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        lawReference: lawReference,
+      ),
+    );
+  }
+
+  void updateLaborLawLimitsNotes(String notes) {
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(notes: notes),
+    );
+  }
+
+  /// Toggle Manager Approval
   void toggleManagerApprovalRequired(bool value) {
     state = state.copyWith(isManagerApprovalRequired: value);
   }
 
+  /// Toggle HR Validation
   void toggleHRValidationRequired(bool value) {
     state = state.copyWith(isHRValidationRequired: value);
   }
@@ -156,6 +222,77 @@ class OvertimeConfigurationNotifier
         clearError: false,
       );
     }
+  }
+
+  /// Save Overtime Configuration
+  Future<void> saveOvertimeConfiguration() async {
+    if (state.companyId.isEmpty ||
+        state.configInfo?.configName.isEmpty == true ||
+        state.configInfo?.effectiveStartDate == null ||
+        state.configInfo?.effectiveEndDate == null ||
+        state.laborLawLimits?.maxDailyOvertime.isEmpty == true ||
+        state.laborLawLimits?.maxAnnualOvertime.isEmpty == true ||
+        state.laborLawLimits?.minRestPeriod.isEmpty == true ||
+        state.laborLawLimits?.lawReference.isEmpty == true ||
+        state.laborLawLimits?.notes.isEmpty == true)
+      throw MissingOvertimeConfigurationException();
+
+    try {
+      state = state.copyWith(isLoading: true, clearError: true);
+
+      final requestBody = _createRequestBody(
+        companyId: state.companyId,
+        configInfo: state.configInfo!,
+        laborLawLimits: state.laborLawLimits!,
+      );
+
+      final isUpdating = state.configInfo?.otConfigId != null;
+
+      if (isUpdating) {
+        requestBody['ot_config_id'] = state.configInfo?.otConfigId;
+        requestBody['ot_labor_limit_id'] = state.laborLawLimits?.otLaborLimitId;
+      }
+
+      await _repository.saveOvertimeConfiguration(
+        companyId: state.companyId,
+        requestBody: requestBody,
+        isUpdating: isUpdating,
+      );
+
+      state = state.copyWith(isLoading: false, clearError: true);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to save overtime configuration: ${e.toString()}',
+        clearError: false,
+      );
+    }
+  }
+
+  Map<String, dynamic> _createRequestBody({
+    required String companyId,
+    required ConfigInfo configInfo,
+    required LaborLawLimit laborLawLimits,
+  }) {
+    return {
+      'enterprise_id': companyId,
+      'config_name': configInfo.configName,
+      'effective_start_date': DateFormat(
+        'yyyy-MM-dd',
+      ).format(configInfo.effectiveStartDate!),
+      'effective_end_date': DateFormat(
+        'yyyy-MM-dd',
+      ).format(configInfo.effectiveEndDate!),
+      'status': "ACTIVE",
+      "labor_limits": {
+        "max_daily_overtime_hours": laborLawLimits.maxDailyOvertime,
+        "max_annual_overtime_hours": laborLawLimits.maxAnnualOvertime,
+        "min_rest_period_hours": laborLawLimits.minRestPeriod,
+        "law_reference": laborLawLimits.lawReference,
+        "notes": laborLawLimits.notes,
+      },
+      "actor": "ADMIN",
+    };
   }
 }
 

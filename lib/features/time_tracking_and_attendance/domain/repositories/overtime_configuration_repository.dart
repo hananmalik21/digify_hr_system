@@ -21,4 +21,11 @@ abstract class OvertimeConfigurationRepository {
     required String companyId,
     required String rateMultiplierId,
   });
+
+  /// Saves or updates the overtime configuration
+  Future<void> saveOvertimeConfiguration({
+    required String companyId,
+    required Map<String, dynamic> requestBody,
+    required bool isUpdating,
+  });
 }

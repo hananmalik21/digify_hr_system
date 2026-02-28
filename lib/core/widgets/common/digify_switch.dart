@@ -10,6 +10,7 @@ class DigifySwitch extends StatelessWidget {
   final Color? activeThumbColor;
   final Color? inactiveTrackColor;
   final Color? inactiveThumbColor;
+  final Color? trackOutlineColor;
   final double? width;
   final double? height;
 
@@ -21,6 +22,7 @@ class DigifySwitch extends StatelessWidget {
     this.activeThumbColor,
     this.inactiveTrackColor,
     this.inactiveThumbColor,
+    this.trackOutlineColor,
     this.width,
     this.height,
   });
@@ -31,7 +33,9 @@ class DigifySwitch extends StatelessWidget {
     final enabled = onChanged != null;
     final activeTrack = activeTrackColor ?? AppColors.success;
     final activeThumb = activeThumbColor ?? AppColors.buttonTextLight;
-    final inactiveTrack = inactiveTrackColor ?? (isDark ? AppColors.cardBorderDark : AppColors.inputBorder);
+    final inactiveTrack =
+        inactiveTrackColor ??
+        (isDark ? AppColors.cardBorderDark : AppColors.inputBorder);
     final inactiveThumb = inactiveThumbColor ?? AppColors.buttonTextLight;
     final w = width ?? 44.w;
     final h = height ?? 24.h;
@@ -42,10 +46,12 @@ class DigifySwitch extends StatelessWidget {
       child: Switch(
         value: value,
         onChanged: enabled ? onChanged : null,
+
         activeTrackColor: activeTrack,
         activeThumbColor: activeThumb,
         inactiveThumbColor: inactiveThumb,
         inactiveTrackColor: inactiveTrack,
+        trackOutlineColor: WidgetStateProperty.all(trackOutlineColor),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );

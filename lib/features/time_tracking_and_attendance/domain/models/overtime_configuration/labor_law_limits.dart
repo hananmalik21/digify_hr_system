@@ -1,22 +1,46 @@
 class LaborLawLimit {
-  final String id;
+  final String? otLaborLimitId;
   final String maxDailyOvertime;
   final String maxAnnualOvertime;
   final String minRestPeriod;
+  final String lawReference;
+  final String notes;
 
   LaborLawLimit({
-    this.id = '',
-    this.maxDailyOvertime = '2',
-    this.maxAnnualOvertime = '40',
-    this.minRestPeriod = '11',
+    this.otLaborLimitId,
+    this.maxDailyOvertime = '',
+    this.maxAnnualOvertime = '',
+    this.minRestPeriod = '',
+    this.lawReference = '',
+    this.notes = '',
   });
 
   factory LaborLawLimit.fromJson(Map<String, dynamic> json) {
     return LaborLawLimit(
-      id: json['ot_labor_limit_id']?.toString() ?? '',
-      maxDailyOvertime: json['max_daily_overtime_hours']?.toString() ?? '2',
-      maxAnnualOvertime: json['max_annual_overtime_hours']?.toString() ?? '40',
-      minRestPeriod: json['min_rest_period_hours']?.toString() ?? '11',
+      otLaborLimitId: json['ot_labor_limit_id']?.toString(),
+      maxDailyOvertime: json['max_daily_overtime_hours']?.toString() ?? '',
+      maxAnnualOvertime: json['max_annual_overtime_hours']?.toString() ?? '',
+      minRestPeriod: json['min_rest_period_hours']?.toString() ?? '',
+      lawReference: json['law_reference']?.toString() ?? '',
+      notes: json['notes']?.toString() ?? '',
+    );
+  }
+
+  LaborLawLimit copyWith({
+    String? otLaborLimitId,
+    String? maxDailyOvertime,
+    String? maxAnnualOvertime,
+    String? minRestPeriod,
+    String? lawReference,
+    String? notes,
+  }) {
+    return LaborLawLimit(
+      otLaborLimitId: otLaborLimitId ?? this.otLaborLimitId,
+      maxDailyOvertime: maxDailyOvertime ?? this.maxDailyOvertime,
+      maxAnnualOvertime: maxAnnualOvertime ?? this.maxAnnualOvertime,
+      minRestPeriod: minRestPeriod ?? this.minRestPeriod,
+      lawReference: lawReference ?? this.lawReference,
+      notes: notes ?? this.notes,
     );
   }
 }

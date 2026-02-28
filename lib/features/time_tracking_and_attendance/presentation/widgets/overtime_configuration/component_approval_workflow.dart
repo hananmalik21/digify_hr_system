@@ -143,7 +143,11 @@ class ApprovalConfigurationTile extends StatelessWidget {
             ),
           ),
           Gap(16.w),
-          DigifySwitch(value: value, onChanged: onChanged),
+          DigifySwitch(
+            value: value,
+            onChanged: onChanged,
+            trackOutlineColor: Colors.transparent,
+          ),
         ],
       ),
     );

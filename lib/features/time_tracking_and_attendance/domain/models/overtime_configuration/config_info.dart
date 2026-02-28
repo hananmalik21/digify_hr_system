@@ -1,21 +1,21 @@
 class ConfigInfo {
   final String otConfigId;
   final String configName;
-  final String effectiveStartDate;
-  final String effectiveEndDate;
+  final DateTime? effectiveStartDate;
+  final DateTime? effectiveEndDate;
 
   ConfigInfo({
     this.otConfigId = '',
     this.configName = '',
-    this.effectiveStartDate = '',
-    this.effectiveEndDate = '',
+    this.effectiveStartDate,
+    this.effectiveEndDate,
   });
 
   ConfigInfo copyWith({
     String? otConfigId,
     String? configName,
-    String? effectiveStartDate,
-    String? effectiveEndDate,
+    DateTime? effectiveStartDate,
+    DateTime? effectiveEndDate,
   }) {
     return ConfigInfo(
       otConfigId: otConfigId ?? this.otConfigId,
@@ -29,8 +29,8 @@ class ConfigInfo {
     return ConfigInfo(
       otConfigId: json['ot_config_id']?.toString() ?? '',
       configName: json['config_name']?.toString() ?? '',
-      effectiveStartDate: json['effective_start_date']?.toString() ?? '',
-      effectiveEndDate: json['effective_end_date']?.toString() ?? '',
+      effectiveStartDate: DateTime.tryParse(json['effective_start_date'] ?? ""),
+      effectiveEndDate: DateTime.tryParse(json['effective_end_date'] ?? ""),
     );
   }
 }
