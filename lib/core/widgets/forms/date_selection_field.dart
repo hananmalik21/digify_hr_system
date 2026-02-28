@@ -8,7 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 class DateSelectionField extends StatelessWidget {
-  final String label;
+  final String? label;
   final bool isRequired;
   final DateTime? date;
   final ValueChanged<DateTime> onDateSelected;
@@ -20,7 +20,7 @@ class DateSelectionField extends StatelessWidget {
 
   const DateSelectionField({
     super.key,
-    required this.label,
+    this.label,
     required this.date,
     required this.onDateSelected,
     this.isRequired = false,
@@ -39,48 +39,52 @@ class DateSelectionField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (labelIconPath != null) ...[
-              DigifyAsset(
-                assetPath: labelIconPath!,
-                width: 16.w,
-                height: 16.h,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.primary,
-              ),
-              Gap(8.w),
-            ],
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: label,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: isDark
-                          ? context.themeTextPrimary
-                          : AppColors.inputLabel,
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  if (isRequired)
+        if (label != null) ...[
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (labelIconPath != null) ...[
+                DigifyAsset(
+                  assetPath: labelIconPath!,
+                  width: 16.w,
+                  height: 16.h,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.primary,
+                ),
+                Gap(8.w),
+              ],
+              RichText(
+                text: TextSpan(
+                  children: [
                     TextSpan(
-                      text: ' *',
+                      text: label,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.error,
+                        color: isDark
+                            ? context.themeTextPrimary
+                            : AppColors.inputLabel,
                         fontFamily: 'Inter',
                       ),
                     ),
-                ],
+                    if (isRequired)
+                      TextSpan(
+                        text: ' *',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.error,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        Gap(6.h),
+            ],
+          ),
+          Gap(6.h),
+        ],
         InkWell(
           onTap: enabled ? () => _selectDate(context) : null,
           child: Container(
