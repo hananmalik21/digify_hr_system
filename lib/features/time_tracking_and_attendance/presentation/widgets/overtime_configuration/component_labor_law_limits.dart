@@ -25,13 +25,17 @@ class _ComponentLaborLawLimitState
   final _maxDailyOvertimeController = TextEditingController();
   final _maxAnnualOvertimeController = TextEditingController();
   final _minRestPeriodController = TextEditingController();
+  final _lawReferenceController = TextEditingController();
+  final _notesController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _maxDailyOvertimeController.text = '2';
-    _maxAnnualOvertimeController.text = '40';
-    _minRestPeriodController.text = '11';
+    _maxDailyOvertimeController.text = '';
+    _maxAnnualOvertimeController.text = '';
+    _minRestPeriodController.text = '';
+    _lawReferenceController.text = '';
+    _notesController.text = '';
   }
 
   @override
@@ -39,6 +43,8 @@ class _ComponentLaborLawLimitState
     _maxDailyOvertimeController.dispose();
     _maxAnnualOvertimeController.dispose();
     _minRestPeriodController.dispose();
+    _lawReferenceController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -47,10 +53,32 @@ class _ComponentLaborLawLimitState
     final laborLawLimits = ref.watch(
       overtimeConfigurationProvider.select((state) => state.laborLawLimits),
     );
+    final notifier = ref.read(overtimeConfigurationProvider.notifier);
 
-    _maxDailyOvertimeController.text = laborLawLimits?.maxDailyOvertime ?? "";
-    _maxAnnualOvertimeController.text = laborLawLimits?.maxAnnualOvertime ?? "";
-    _minRestPeriodController.text = laborLawLimits?.minRestPeriod ?? "";
+    final maxDailyOvertime = laborLawLimits?.maxDailyOvertime ?? "";
+    if (_maxDailyOvertimeController.text != maxDailyOvertime) {
+      _maxDailyOvertimeController.text = maxDailyOvertime;
+    }
+
+    final maxAnnualOvertime = laborLawLimits?.maxAnnualOvertime ?? "";
+    if (_maxAnnualOvertimeController.text != maxAnnualOvertime) {
+      _maxAnnualOvertimeController.text = maxAnnualOvertime;
+    }
+
+    final minRestPeriod = laborLawLimits?.minRestPeriod ?? "";
+    if (_minRestPeriodController.text != minRestPeriod) {
+      _minRestPeriodController.text = minRestPeriod;
+    }
+
+    final lawReference = laborLawLimits?.lawReference ?? "";
+    if (_lawReferenceController.text != lawReference) {
+      _lawReferenceController.text = lawReference;
+    }
+
+    final notes = laborLawLimits?.notes ?? "";
+    if (_notesController.text != notes) {
+      _notesController.text = notes;
+    }
 
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -89,7 +117,10 @@ class _ComponentLaborLawLimitState
                 children: [
                   DigifyTextField(
                     labelText: 'Max Daily Overtime (Hours)',
+                    hintText: "e.g. 2",
                     controller: _maxDailyOvertimeController,
+                    onChanged: (value) =>
+                        notifier.updateLaborLawLimitsMaxDailyOvertime(value),
                     keyboardType: TextInputType.number,
                   ),
                   Gap(4.h),
@@ -108,7 +139,10 @@ class _ComponentLaborLawLimitState
                 children: [
                   DigifyTextField(
                     labelText: 'Max Annual Overtime (Hours)',
+                    hintText: "e.g. 180",
                     controller: _maxAnnualOvertimeController,
+                    onChanged: (value) =>
+                        notifier.updateLaborLawLimitsMaxAnnualOvertime(value),
                     keyboardType: TextInputType.number,
                   ),
                   Gap(4.h),
@@ -127,7 +161,10 @@ class _ComponentLaborLawLimitState
                 children: [
                   DigifyTextField(
                     labelText: 'Min Rest Period (Hours)',
+                    hintText: "e.g. 11",
                     controller: _minRestPeriodController,
+                    onChanged: (value) =>
+                        notifier.updateLaborLawLimitsMinRestPeriod(value),
                     keyboardType: TextInputType.number,
                   ),
                   Gap(4.h),
@@ -138,6 +175,21 @@ class _ComponentLaborLawLimitState
                     ),
                   ),
                 ],
+              ),
+              Gap(16.h),
+              DigifyTextField(
+                labelText: 'Law Reference',
+                hintText: "e.g. Section 123, Labor Law",
+                controller: _lawReferenceController,
+                onChanged: (value) =>
+                    notifier.updateLaborLawLimitsLawReference(value),
+              ),
+              Gap(16.h),
+              DigifyTextArea(
+                labelText: 'Notes',
+                hintText: "Write...",
+                controller: _notesController,
+                onChanged: (value) => notifier.updateLaborLawLimitsNotes(value),
               ),
             ],
           ),

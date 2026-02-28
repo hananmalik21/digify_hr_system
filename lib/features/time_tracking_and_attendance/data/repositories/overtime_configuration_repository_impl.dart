@@ -20,7 +20,7 @@ class OvertimeConfigurationRepositoryImpl
   }) async {
     try {
       final response = await _apiClient?.get(
-        ApiEndpoints.tmOvertimeConfiguration(companyId),
+        ApiEndpoints.tmOvertimeConfigurationById(companyId),
       );
 
       final responseData = response?['data'];
@@ -118,6 +118,34 @@ class OvertimeConfigurationRepositoryImpl
     } catch (e) {
       throw UnknownException(
         'Failed to delete rate multiplier: ${e.toString()}',
+        originalError: e,
+      );
+    }
+  }
+
+  @override
+  Future<void> saveOvertimeConfiguration({
+    required String companyId,
+    required Map<String, dynamic> requestBody,
+    required bool isUpdating,
+  }) async {
+    try {
+      final endpoint = ApiEndpoints.tmOvertimeConfiguration;
+      final response = isUpdating
+          ? await _apiClient?.put(endpoint, body: requestBody)
+          : await _apiClient?.post(endpoint, body: requestBody);
+
+      final status = response?['status'] as bool? ?? true;
+      if (!status) {
+        final message =
+            response?['message'] as String? ?? 'Failed to save configuration';
+        throw UnknownException(message);
+      }
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to save configuration: ${e.toString()}',
         originalError: e,
       );
     }

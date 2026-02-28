@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/theme/app_shadows.dart';
@@ -21,9 +22,9 @@ class ComponentRateMultipliers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final isLoading = ref.watch(
-    //   overtimeConfigurationProvider.select((state) => state.isLoading),
-    // );
+    final isLoading = ref.watch(
+      overtimeConfigurationProvider.select((state) => state.isLoading),
+    );
     final rateMultipliers = ref.watch(
       overtimeConfigurationProvider.select((state) => state.rateMultipliers),
     );
@@ -84,34 +85,73 @@ class ComponentRateMultipliers extends ConsumerWidget {
           ScrollableSingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTableHeaderRow(context),
                 ConstrainedBox(
                   constraints: BoxConstraints(minHeight: 300.h),
                   child: Column(
                     children: [
-                      if (rateMultipliers.isEmpty)
-                        Center(
-                          child: Text(
-                            'No rate multipliers found',
-                            style: context.textTheme.titleMedium?.copyWith(),
-                          ),
-                        ),
-                      ...rateMultipliers
-                          .map(
-                            (e) => _buildTableDataRow(
-                              context,
-                              e,
-                              onEdit: () => OvertimeRateMultiplierDialog.show(
+                      if (isLoading)
+                        Skeletonizer(
+                          enabled: true,
+                          child: Column(
+                            children: List.generate(
+                              3,
+                              (index) => _buildTableDataRow(
                                 context,
-                                rateMultiplier: e,
+                                RateMultiplier(
+                                  rateName: "----------------",
+                                  rateDescription:
+                                      "------------------------------",
+                                  multiplier: "--",
+                                  categoryCode: "-------",
+                                ),
                               ),
-                              onDelete: () =>
-                                  notifier.deleteRateMultiplier(e.otRateTypeId),
                             ),
-                          )
-                          .toList(),
+                          ),
+                        )
+                      else if (rateMultipliers.isEmpty)
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 40.h),
+                          height: 250,
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'No rate multipliers found',
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                              Gap(8.h),
+                              Text(
+                                'Click "Add Custom Rate" to create one.',
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  color: AppColors.textTertiary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        ...rateMultipliers
+                            .map(
+                              (e) => _buildTableDataRow(
+                                context,
+                                e,
+                                onEdit: () => OvertimeRateMultiplierDialog.show(
+                                  context,
+                                  rateMultiplier: e,
+                                ),
+                                onDelete: () => notifier.deleteRateMultiplier(
+                                  e.otRateTypeId,
+                                ),
+                              ),
+                            )
+                            .toList(),
                     ],
                   ),
                 ),
@@ -190,6 +230,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
   Widget _buildTableDataRow(
     BuildContext context,
     RateMultiplier rateMultiplier, {
+
     VoidCallback? onEdit,
     VoidCallback? onDelete,
   }) {
@@ -241,46 +282,53 @@ class ComponentRateMultipliers extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: DigifyTextField(
-                    key: ValueKey(rateMultiplier.multiplier),
-                    initialValue: rateMultiplier.multiplier,
-                    enabled: false,
-                    filled: true,
-                    fillColor: context.isDark
-                        ? AppColors.backgroundDark
-                        : AppColors.tableHeaderBackground,
+                  child: Skeleton.unite(
+                    child: DigifyTextField(
+                      key: ValueKey(rateMultiplier.multiplier),
+                      initialValue: rateMultiplier.multiplier,
+                      enabled: false,
+                      filled: true,
+                      fillColor: context.isDark
+                          ? AppColors.backgroundDark
+                          : AppColors.tableHeaderBackground,
+                    ),
                   ),
                 ),
                 Gap(8.w),
-                Text(
-                  'x',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.isDark
-                        ? AppColors.textMutedDark
-                        : AppColors.textTertiary,
+                Skeleton.keep(
+                  child: Text(
+                    'x',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.isDark
+                          ? AppColors.textMutedDark
+                          : AppColors.textTertiary,
+                    ),
                   ),
                 ),
               ],
             ),
             150.w,
           ),
+
           _buildCell(
             context,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 8.w,
-              children: [
-                DigifyAssetButton(
-                  assetPath: Assets.icons.editIcon.path,
-                  onTap: onEdit,
-                ),
-                DigifyAssetButton(
-                  assetPath: Assets.icons.redDeleteIcon.path,
-                  onTap: onDelete,
-                ),
-              ],
+            Skeleton.unite(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
+                children: [
+                  DigifyAssetButton(
+                    assetPath: Assets.icons.editIcon.path,
+                    onTap: onEdit,
+                  ),
+                  DigifyAssetButton(
+                    assetPath: Assets.icons.redDeleteIcon.path,
+                    onTap: onDelete,
+                  ),
+                ],
+              ),
             ),
             150.w,
           ),

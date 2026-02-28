@@ -570,6 +570,20 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
   }
 
   @override
+  void didUpdateWidget(covariant DigifyDateField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialDate != oldWidget.initialDate) {
+      if (widget.initialDate != null) {
+        _date = widget.initialDate;
+        _controller.text = DateFormat('dd/MM/yyyy').format(widget.initialDate!);
+      } else {
+        _date = null;
+        _controller.text = '';
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
