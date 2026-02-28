@@ -110,10 +110,12 @@ mixin TabIndexMixin {
         return 2;
       case 'overtimeConfiguration':
         return 3;
-      case 'geoLocations':
+      case 'attendanceSummary':
         return 4;
-      case 'employeeLocations':
+      case 'geoLocations':
         return 5;
+      case 'employeeLocations':
+        return 6;
       default:
         return null;
     }

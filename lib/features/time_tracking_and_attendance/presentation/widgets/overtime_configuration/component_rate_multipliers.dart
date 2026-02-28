@@ -85,7 +85,6 @@ class ComponentRateMultipliers extends ConsumerWidget {
           ScrollableSingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTableHeaderRow(context),
                 ConstrainedBox(

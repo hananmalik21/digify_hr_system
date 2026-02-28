@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/theme_extensions.dart';
 import '../providers/time_tracking_and_attendance_tab_state_provider.dart';
 import 'attendance_screen.dart';
+import 'attendance_summary_screen.dart';
 import 'overtime_configuration_screen.dart';
 import 'overtime_screen.dart';
 import 'timesheet_screen.dart';
@@ -38,6 +39,8 @@ class TimeTrackingAndAttendanceScreen extends ConsumerWidget {
         return const OvertimeScreen();
       case 3:
         return const OvertimeConfigurationScreen();
+      case 4:
+        return const AttendanceSummaryScreen();
       default:
         return const SizedBox();
     }
