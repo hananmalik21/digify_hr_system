@@ -7,6 +7,23 @@ class DateTimeUtils {
 
   static DateTime normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
 
+  static DateTime? utcStringToLocal(String? s) {
+    if (s == null || s.isEmpty) return null;
+    try {
+      final trimmed = s.trim();
+      final hasTimezone = trimmed.endsWith('Z') || RegExp(r'[+-]\d{2}:?\d{2}$').hasMatch(trimmed);
+      final toParse = hasTimezone ? trimmed : '$trimmed${trimmed.contains('T') ? '' : 'T00:00:00'}Z';
+      return DateTime.parse(toParse).toLocal();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static String localToUtcIso8601(DateTime local) {
+    final iso = local.toUtc().toIso8601String();
+    return iso.replaceFirst(RegExp(r'\.\d+'), '');
+  }
+
   static String formatYmd(DateTime date) {
     final y = date.year.toString().padLeft(4, '0');
     final m = date.month.toString().padLeft(2, '0');

@@ -10,6 +10,7 @@ class AttendanceRecord {
   final String status;
   final String avatarInitials;
   final Attendance? attendance;
+  final int? attendanceDayId;
 
   final String? scheduleDate;
   final String? scheduleStartTime;
@@ -31,6 +32,7 @@ class AttendanceRecord {
     required this.status,
     required this.avatarInitials,
     this.attendance,
+    this.attendanceDayId,
     this.scheduleDate,
     this.scheduleStartTime,
     this.scheduleEndTime,
@@ -57,6 +59,7 @@ class AttendanceRecord {
       status: attendance.statusString,
       avatarInitials: attendance.avatarInitials,
       attendance: attendance,
+      attendanceDayId: attendance.attendanceDayId,
     );
   }
 }

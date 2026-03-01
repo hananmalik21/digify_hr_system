@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/core/services/initialization/app_initialization_service.dart';
+import 'package:digify_hr_system/core/services/location_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
@@ -30,6 +31,10 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
     });
   }
 
+  void initializeLocation() {
+    ref.read(locationProvider);
+  }
+
   return AppInitializationService(
     getEnterprisesUseCase: getEnterprisesUseCase,
     getActiveLevelsUseCase: getActiveLevelsUseCase,
@@ -38,6 +43,7 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
     loadAbsLookupValues: loadAbsLookupValues,
     onActiveEnterpriseReady: onActiveEnterpriseReady,
     preloadOrgStructureForEnterprise: preloadOrgStructureForEnterprise,
+    initializeLocation: initializeLocation,
   );
 });
 
