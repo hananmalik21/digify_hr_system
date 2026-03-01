@@ -4,7 +4,9 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/time_zone_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/work_pattern_selection_field.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/time_zone.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +30,8 @@ class WorkScheduleFormFields extends StatefulWidget {
   final ValueChanged<PositionStatus> onStatusChanged;
   final ValueChanged<DateTime>? onStartDateSelected;
   final ValueChanged<DateTime>? onEndDateSelected;
+  final TimeZone? selectedTimeZone;
+  final ValueChanged<TimeZone?>? onTimeZoneChanged;
 
   const WorkScheduleFormFields({
     super.key,
@@ -47,6 +51,8 @@ class WorkScheduleFormFields extends StatefulWidget {
     required this.onStatusChanged,
     this.onStartDateSelected,
     this.onEndDateSelected,
+    this.selectedTimeZone,
+    this.onTimeZoneChanged,
   });
 
   @override
@@ -117,6 +123,21 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
               ),
             ),
             Gap(24.w),
+            Expanded(
+              child: TimeZoneSearchField(
+                label: 'Time Zone',
+                isRequired: false,
+                selectedTimeZone: widget.selectedTimeZone,
+                onTimeZoneSelected: (tz) => widget.onTimeZoneChanged?.call(tz),
+                hintText: 'Search time zones (e.g. America, Europe)',
+                fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
+              ),
+            ),
+          ],
+        ),
+        Gap(24.h),
+        Row(
+          children: [
             Expanded(
               child: WorkPatternSelectionField(
                 label: 'Work Pattern',
