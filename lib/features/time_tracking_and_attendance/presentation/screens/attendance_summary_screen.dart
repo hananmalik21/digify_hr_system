@@ -16,20 +16,16 @@ import '../widgets/attendance_summary/component_attendance_summary_filters.dart'
 import '../widgets/attendance_summary/component_attendance_summary_table.dart';
 
 class AttendanceSummaryScreen extends ConsumerWidget {
-  const AttendanceSummaryScreen({Key? key}) : super(key: key);
+  const AttendanceSummaryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(
-      overtimeConfigurationEnterpriseIdProvider,
-    );
+    final effectiveEnterpriseId = ref.watch(overtimeConfigurationEnterpriseIdProvider);
 
     return Container(
-      color: isDark
-          ? AppColors.backgroundDark
-          : AppColors.tableHeaderBackground,
+      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
@@ -38,8 +34,7 @@ class AttendanceSummaryScreen extends ConsumerWidget {
           children: [
             DigifyTabHeader(
               title: 'Time & Labor Management - HR View',
-              description:
-                  'Comprehensive attendance, shifts, overtime and labor cost management',
+              description: 'Comprehensive attendance, shifts, overtime and labor cost management',
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -62,9 +57,7 @@ class AttendanceSummaryScreen extends ConsumerWidget {
             EnterpriseSelectorWidget(
               selectedEnterpriseId: effectiveEnterpriseId,
               onEnterpriseChanged: (enterpriseId) {
-                ref
-                    .read(attendanceSummarySelectedEnterpriseProvider.notifier)
-                    .setEnterpriseId(enterpriseId);
+                ref.read(attendanceSummarySelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
               },
               subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'

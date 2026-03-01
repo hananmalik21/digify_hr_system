@@ -15,15 +15,13 @@ import '../../../domain/models/attendance_summary/attendance_summary_record.dart
 import '../../providers/attendance_summary/attendance_summary_provider.dart';
 
 class ComponentAttendanceSummaryTable extends ConsumerStatefulWidget {
-  const ComponentAttendanceSummaryTable({Key? key}) : super(key: key);
+  const ComponentAttendanceSummaryTable({super.key});
 
   @override
-  ConsumerState<ComponentAttendanceSummaryTable> createState() =>
-      _ComponentAttendanceSummaryTableState();
+  ConsumerState<ComponentAttendanceSummaryTable> createState() => _ComponentAttendanceSummaryTableState();
 }
 
-class _ComponentAttendanceSummaryTableState
-    extends ConsumerState<ComponentAttendanceSummaryTable> {
+class _ComponentAttendanceSummaryTableState extends ConsumerState<ComponentAttendanceSummaryTable> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(attendanceSummaryProvider);
@@ -31,9 +29,7 @@ class _ComponentAttendanceSummaryTableState
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         decoration: BoxDecoration(
-          color: context.isDark
-              ? AppColors.cardBackgroundDark
-              : AppColors.cardBackground,
+          color: context.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           borderRadius: BorderRadius.circular(10.r),
           boxShadow: AppShadows.primaryShadow,
         ),
@@ -47,16 +43,10 @@ class _ComponentAttendanceSummaryTableState
                   Expanded(
                     child: Text(
                       'Attendance Records',
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  AppButton.primary(
-                    label: 'Add Record',
-                    svgPath: Assets.icons.addNewIconFigma.path,
-                    onPressed: () {},
-                  ),
+                  AppButton.primary(label: 'Add Record', svgPath: Assets.icons.addNewIconFigma.path, onPressed: () {}),
                 ],
               ),
             ),
@@ -67,21 +57,13 @@ class _ComponentAttendanceSummaryTableState
                 children: [
                   _buildTableHeaderRow(context),
                   ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: 200.h,
-                      maxHeight: 400.h,
-                    ),
+                    constraints: BoxConstraints(minHeight: 200.h, maxHeight: 400.h),
                     child: Column(
                       children: [
                         if (state.isLoading)
                           Skeletonizer(
                             enabled: true,
-                            child: Column(
-                              children: List.generate(
-                                3,
-                                (index) => _buildTableDataRow(context),
-                              ),
-                            ),
+                            child: Column(children: List.generate(3, (index) => _buildTableDataRow(context))),
                           )
                         else if (state.records.isEmpty)
                           Container(
@@ -95,16 +77,12 @@ class _ComponentAttendanceSummaryTableState
                               children: [
                                 Text(
                                   'No record found',
-                                  style: context.textTheme.titleMedium
-                                      ?.copyWith(
-                                        color: AppColors.textSecondary,
-                                      ),
+                                  style: context.textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
                                 ),
                                 Gap(8.h),
                                 Text(
                                   'Click "Add Record" to create one.',
-                                  style: context.textTheme.labelMedium
-                                      ?.copyWith(color: AppColors.textTertiary),
+                                  style: context.textTheme.labelMedium?.copyWith(color: AppColors.textTertiary),
                                 ),
                               ],
                             ),
@@ -112,13 +90,7 @@ class _ComponentAttendanceSummaryTableState
                         else
                           Column(
                             children: state.records
-                                .map(
-                                  (record) => _buildTableDataRow(
-                                    context,
-                                    record: record,
-                                    onEdit: () {},
-                                  ),
-                                )
+                                .map((record) => _buildTableDataRow(context, record: record, onEdit: () {}))
                                 .toList(),
                           ),
                       ],
@@ -135,9 +107,7 @@ class _ComponentAttendanceSummaryTableState
 
   Widget _buildTableHeaderRow(BuildContext context) {
     return Container(
-      color: context.isDark
-          ? AppColors.backgroundDark
-          : AppColors.tableHeaderBackground,
+      color: context.isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: Row(
         children: [
           _buildCell(
@@ -146,9 +116,7 @@ class _ComponentAttendanceSummaryTableState
               'EMPLOYEE',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             300.w,
@@ -159,9 +127,7 @@ class _ComponentAttendanceSummaryTableState
               'DATE',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -172,9 +138,7 @@ class _ComponentAttendanceSummaryTableState
               'CHECK IN',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -185,9 +149,7 @@ class _ComponentAttendanceSummaryTableState
               'CHECK OUT',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -198,9 +160,7 @@ class _ComponentAttendanceSummaryTableState
               'HOURS',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -211,9 +171,7 @@ class _ComponentAttendanceSummaryTableState
               'OVERTIME',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -224,9 +182,7 @@ class _ComponentAttendanceSummaryTableState
               'STATUS',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -238,9 +194,7 @@ class _ComponentAttendanceSummaryTableState
               'ACTIONS',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -250,75 +204,32 @@ class _ComponentAttendanceSummaryTableState
     );
   }
 
-  Widget _buildTableDataRow(
-    BuildContext context, {
-    AttendanceSummaryRecord? record,
-    VoidCallback? onEdit,
-  }) {
+  Widget _buildTableDataRow(BuildContext context, {AttendanceSummaryRecord? record, VoidCallback? onEdit}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: context.isDark
-                ? AppColors.cardBorderDark
-                : AppColors.cardBorder,
-            width: 1.h,
-          ),
+          bottom: BorderSide(color: context.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.h),
         ),
       ),
       child: Row(
         children: [
           _buildCell(
             context,
-            Text(
-              record?.employeeName ?? '----------------',
-              style: context.textTheme.titleMedium,
-            ),
+            Text(record?.employeeName ?? '----------------', style: context.textTheme.titleMedium),
             300.w,
           ),
-          _buildCell(
-            context,
-            Text(
-              record?.date ?? '--/--/--',
-              style: context.textTheme.bodyMedium,
-            ),
-            150.w,
-          ),
-          _buildCell(
-            context,
-            Text(
-              record?.checkIn ?? '--:--',
-              style: context.textTheme.bodyMedium,
-            ),
-            150.w,
-          ),
-          _buildCell(
-            context,
-            Text(
-              record?.checkOut ?? '--:--',
-              style: context.textTheme.bodyMedium,
-            ),
-            150.w,
-          ),
-          _buildCell(
-            context,
-            Text(record?.hours ?? '--', style: context.textTheme.bodyMedium),
-            150.w,
-          ),
-          _buildCell(
-            context,
-            Text(record?.overtime ?? '--', style: context.textTheme.bodyMedium),
-            150.w,
-          ),
+          _buildCell(context, Text(record?.date ?? '--/--/--', style: context.textTheme.bodyMedium), 150.w),
+          _buildCell(context, Text(record?.checkIn ?? '--:--', style: context.textTheme.bodyMedium), 150.w),
+          _buildCell(context, Text(record?.checkOut ?? '--:--', style: context.textTheme.bodyMedium), 150.w),
+          _buildCell(context, Text(record?.hours ?? '--', style: context.textTheme.bodyMedium), 150.w),
+          _buildCell(context, Text(record?.overtime ?? '--', style: context.textTheme.bodyMedium), 150.w),
           _buildCell(
             context,
             Align(
               alignment: Alignment.centerLeft,
               child: DigifyCapsule(
                 label: record?.status ?? '-------',
-                backgroundColor: _getStatusColor(
-                  record?.status ?? '',
-                ).withValues(alpha: .2),
+                backgroundColor: _getStatusColor(record?.status ?? '').withValues(alpha: .2),
                 textColor: _getStatusColor(record?.status ?? ''),
               ),
             ),
@@ -332,10 +243,7 @@ class _ComponentAttendanceSummaryTableState
               mainAxisSize: MainAxisSize.min,
               spacing: 8.w,
               children: [
-                DigifyAssetButton(
-                  assetPath: Assets.icons.editIcon.path,
-                  onTap: onEdit,
-                ),
+                DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit),
                 // DigifyAssetButton(
                 //   assetPath: Assets.icons.redDeleteIcon.path,
                 //   onTap: () {},

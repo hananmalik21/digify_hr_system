@@ -22,19 +22,13 @@ class ComponentRateMultipliers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(
-      overtimeConfigurationProvider.select((state) => state.isLoading),
-    );
-    final rateMultipliers = ref.watch(
-      overtimeConfigurationProvider.select((state) => state.rateMultipliers),
-    );
+    final isLoading = ref.watch(overtimeConfigurationProvider.select((state) => state.isLoading));
+    final rateMultipliers = ref.watch(overtimeConfigurationProvider.select((state) => state.rateMultipliers));
     final notifier = ref.read(overtimeConfigurationProvider.notifier);
 
     return Container(
       decoration: BoxDecoration(
-        color: context.isDark
-            ? AppColors.cardBackgroundDark
-            : AppColors.cardBackground,
+        color: context.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: AppShadows.primaryShadow,
       ),
@@ -52,12 +46,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                   width: 28.w,
                 ),
                 Gap(8.w),
-                Text(
-                  'Rate Multipliers',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Rate Multipliers', style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                 Spacer(),
                 InkWell(
                   onTap: () => OvertimeRateMultiplierDialog.show(context),
@@ -70,12 +59,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                         width: 24.w,
                       ),
                       Gap(8.w),
-                      Text(
-                        'Add Custom Rate',
-                        style: context.textTheme.labelLarge?.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
+                      Text('Add Custom Rate', style: context.textTheme.labelLarge?.copyWith(color: AppColors.primary)),
                     ],
                   ),
                 ),
@@ -101,8 +85,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                                 context,
                                 RateMultiplier(
                                   rateName: "----------------",
-                                  rateDescription:
-                                      "------------------------------",
+                                  rateDescription: "------------------------------",
                                   multiplier: "--",
                                   categoryCode: "-------",
                                 ),
@@ -121,36 +104,25 @@ class ComponentRateMultipliers extends ConsumerWidget {
                             children: [
                               Text(
                                 'No rate multipliers found',
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
+                                style: context.textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
                               ),
                               Gap(8.h),
                               Text(
                                 'Click "Add Custom Rate" to create one.',
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  color: AppColors.textTertiary,
-                                ),
+                                style: context.textTheme.labelMedium?.copyWith(color: AppColors.textTertiary),
                               ),
                             ],
                           ),
                         )
                       else
-                        ...rateMultipliers
-                            .map(
-                              (e) => _buildTableDataRow(
-                                context,
-                                e,
-                                onEdit: () => OvertimeRateMultiplierDialog.show(
-                                  context,
-                                  rateMultiplier: e,
-                                ),
-                                onDelete: () => notifier.deleteRateMultiplier(
-                                  e.otRateTypeId,
-                                ),
-                              ),
-                            )
-                            .toList(),
+                        ...rateMultipliers.map(
+                          (e) => _buildTableDataRow(
+                            context,
+                            e,
+                            onEdit: () => OvertimeRateMultiplierDialog.show(context, rateMultiplier: e),
+                            onDelete: () => notifier.deleteRateMultiplier(e.otRateTypeId),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -164,9 +136,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
 
   Widget _buildTableHeaderRow(BuildContext context) {
     return Container(
-      color: context.isDark
-          ? AppColors.backgroundDark
-          : AppColors.tableHeaderBackground,
+      color: context.isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
       child: Row(
         children: [
           _buildCell(
@@ -175,9 +145,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
               'RATE TYPE',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             450.w,
@@ -188,9 +156,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
               'CATEGORY',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -201,9 +167,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
               'MULTIPLIER',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -214,9 +178,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
               'ACTIONS',
               style: context.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: context.isDark
-                    ? AppColors.textMutedDark
-                    : AppColors.textTertiary,
+                color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
               ),
             ),
             150.w,
@@ -236,12 +198,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: context.isDark
-                ? AppColors.cardBorderDark
-                : AppColors.cardBorder,
-            width: 1.h,
-          ),
+          bottom: BorderSide(color: context.isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.h),
         ),
       ),
       child: Row(
@@ -251,15 +208,9 @@ class ComponentRateMultipliers extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  rateMultiplier.rateName,
-                  style: context.textTheme.titleMedium?.copyWith(),
-                ),
+                Text(rateMultiplier.rateName, style: context.textTheme.titleMedium?.copyWith()),
                 Gap(4.h),
-                Text(
-                  rateMultiplier.rateDescription,
-                  style: context.textTheme.labelSmall?.copyWith(),
-                ),
+                Text(rateMultiplier.rateDescription, style: context.textTheme.labelSmall?.copyWith()),
               ],
             ),
             450.w,
@@ -287,9 +238,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                       initialValue: rateMultiplier.multiplier,
                       enabled: false,
                       filled: true,
-                      fillColor: context.isDark
-                          ? AppColors.backgroundDark
-                          : AppColors.tableHeaderBackground,
+                      fillColor: context.isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
                     ),
                   ),
                 ),
@@ -299,9 +248,7 @@ class ComponentRateMultipliers extends ConsumerWidget {
                     'x',
                     style: context.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: context.isDark
-                          ? AppColors.textMutedDark
-                          : AppColors.textTertiary,
+                      color: context.isDark ? AppColors.textMutedDark : AppColors.textTertiary,
                     ),
                   ),
                 ),
@@ -318,14 +265,8 @@ class ComponentRateMultipliers extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 8.w,
                 children: [
-                  DigifyAssetButton(
-                    assetPath: Assets.icons.editIcon.path,
-                    onTap: onEdit,
-                  ),
-                  DigifyAssetButton(
-                    assetPath: Assets.icons.redDeleteIcon.path,
-                    onTap: onDelete,
-                  ),
+                  DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: onEdit),
+                  DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: onDelete),
                 ],
               ),
             ),

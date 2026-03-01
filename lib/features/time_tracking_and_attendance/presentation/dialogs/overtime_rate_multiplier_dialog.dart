@@ -24,18 +24,15 @@ class OvertimeRateMultiplierDialog extends ConsumerStatefulWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) =>
-          OvertimeRateMultiplierDialog(rateMultiplier: rateMultiplier),
+      builder: (dialogContext) => OvertimeRateMultiplierDialog(rateMultiplier: rateMultiplier),
     );
   }
 
   @override
-  ConsumerState<OvertimeRateMultiplierDialog> createState() =>
-      _OvertimeRateDialogState();
+  ConsumerState<OvertimeRateMultiplierDialog> createState() => _OvertimeRateDialogState();
 }
 
-class _OvertimeRateDialogState
-    extends ConsumerState<OvertimeRateMultiplierDialog> {
+class _OvertimeRateDialogState extends ConsumerState<OvertimeRateMultiplierDialog> {
   final _formKey = GlobalKey<FormState>();
 
   final _rateCodeController = TextEditingController();
@@ -54,9 +51,7 @@ class _OvertimeRateDialogState
     _descriptionController.text = widget.rateMultiplier?.rateDescription ?? '';
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(rateMultiplierDialogProvider.notifier)
-          .setInitialData(widget.rateMultiplier);
+      ref.read(rateMultiplierDialogProvider.notifier).setInitialData(widget.rateMultiplier);
     });
   }
 
@@ -71,18 +66,11 @@ class _OvertimeRateDialogState
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(
-      rateMultiplierDialogProvider.select((state) => state.isLoading),
-    );
+    final isLoading = ref.watch(rateMultiplierDialogProvider.select((state) => state.isLoading));
     final notifier = ref.read(rateMultiplierDialogProvider.notifier);
     return AppDialog(
-      title: widget.rateMultiplier != null
-          ? 'Edit Rate'
-          : 'Add Custom Overtime Rate',
-      icon: DigifyAsset(
-        assetPath: Assets.icons.addNewIconFigma.path,
-        color: AppColors.buttonTextLight,
-      ),
+      title: widget.rateMultiplier != null ? 'Edit Rate' : 'Add Custom Overtime Rate',
+      icon: DigifyAsset(assetPath: Assets.icons.addNewIconFigma.path, color: AppColors.buttonTextLight),
       width: 500.w,
       onClose: () => context.pop(),
       content: Form(
@@ -163,8 +151,7 @@ class _OvertimeRateDialogState
         ),
         Gap(12.w),
         AppButton(
-          label:
-              '${widget.rateMultiplier != null ? 'Update' : 'Save'} Rate Type',
+          label: '${widget.rateMultiplier != null ? 'Update' : 'Save'} Rate Type',
           isLoading: isLoading,
           onPressed: () => _handleSubmit(ref),
           svgPath: Assets.icons.saveConfigIcon.path,
@@ -186,7 +173,6 @@ class _OvertimeRateDialogState
       );
       context.pop();
     } catch (e) {
-      print(e);
       if (!mounted) return;
       ToastService.error(
         context,
