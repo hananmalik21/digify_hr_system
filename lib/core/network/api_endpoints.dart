@@ -9,19 +9,32 @@ class ApiEndpoints {
   // Enterprise Structure endpoints
   static const String structureLevels = '$api/structure-levels';
   static const String hrOrgStructures = '$api/hr-org-structures';
-  static const String hrOrgStructuresActiveLevels = '$hrOrgStructures/active/levels';
-  static String hrOrgStructuresUnitsByLevel(String levelCode) => '$hrOrgStructuresActiveLevels/$levelCode/units';
-  static String hrOrgStructuresUnitsByStructureAndLevel(String structureId, String levelCode) =>
+  static const String hrOrgStructuresActiveLevels =
+      '$hrOrgStructures/active/levels';
+  static String hrOrgStructuresUnitsByLevel(String levelCode) =>
+      '$hrOrgStructuresActiveLevels/$levelCode/units';
+  static String hrOrgStructuresUnitsByStructureAndLevel(
+    String structureId,
+    String levelCode,
+  ) => '$hrOrgStructures/$structureId/org-units';
+  static String hrOrgStructuresParentUnits(
+    String structureId,
+    String levelCode,
+  ) => '$hrOrgStructures/$structureId/org-units/parents';
+  static String hrOrgStructuresCreateUnit(String structureId) =>
       '$hrOrgStructures/$structureId/org-units';
-  static String hrOrgStructuresParentUnits(String structureId, String levelCode) =>
-      '$hrOrgStructures/$structureId/org-units/parents';
-  static String hrOrgStructuresCreateUnit(String structureId) => '$hrOrgStructures/$structureId/org-units';
-  static String hrOrgStructuresUpdateUnit(String structureId, String orgUnitId) =>
-      '$hrOrgStructures/$structureId/org-units/$orgUnitId';
-  static String hrOrgStructuresDeleteUnit(String structureId, String orgUnitId) =>
-      '$hrOrgStructures/$structureId/org-units/$orgUnitId';
-  static String hrOrgStructuresDelete(String structureId) => '$hrOrgStructures/$structureId';
-  static const String hrOrgStructuresActiveUnits = '$hrOrgStructures/active/units';
+  static String hrOrgStructuresUpdateUnit(
+    String structureId,
+    String orgUnitId,
+  ) => '$hrOrgStructures/$structureId/org-units/$orgUnitId';
+  static String hrOrgStructuresDeleteUnit(
+    String structureId,
+    String orgUnitId,
+  ) => '$hrOrgStructures/$structureId/org-units/$orgUnitId';
+  static String hrOrgStructuresDelete(String structureId) =>
+      '$hrOrgStructures/$structureId';
+  static const String hrOrgStructuresActiveUnits =
+      '$hrOrgStructures/active/units';
   static const String orgUnitsTreeActive = '$api/org-units/tree/active';
   static const String enterprises = '$api/enterprises';
   static const String companies = '$api/companies';
@@ -34,12 +47,15 @@ class ApiEndpoints {
   static const String jobLevels = '$api/job-levels';
   static const String grades = '$api/grades';
   static const String positions = '$api/positions';
-  static const String reportingRelationships = '$positions/reporting-relationships';
+  static const String reportingRelationships =
+      '$positions/reporting-relationships';
   static const String workforceStats = '$api/workforce-stats';
   static const String employees = '$api/employees';
-  static String employeeFullDetails(String employeeGuid) => '$employees/$employeeGuid/full-details';
+  static String employeeFullDetails(String employeeGuid) =>
+      '$employees/$employeeGuid/full-details';
   static const String createEmployee = '$api/create-employee';
-  static String updateEmployee(String employeeGuid) => '$api/update-employee/$employeeGuid';
+  static String updateEmployee(String employeeGuid) =>
+      '$api/update-employee/$employeeGuid';
 
   // Employee (empl) lookups
   static const String emplLookupTypes = '$api/empl/lookup-types';
@@ -53,46 +69,60 @@ class ApiEndpoints {
   static String tmShiftById(int shiftId) => '$tmShifts/$shiftId';
   static const String tmWorkPatterns = '$api/tm/work-patterns';
   static const String tmWorkSchedules = '$api/tm/work-schedules';
-  static String tmWorkScheduleById(int scheduleId) => '$tmWorkSchedules/$scheduleId';
+  static String tmWorkScheduleById(int scheduleId) =>
+      '$tmWorkSchedules/$scheduleId';
   static const String tmScheduleAssignments = '$api/tm/schedule-assignments';
-  static String tmScheduleAssignmentById(int scheduleAssignmentId) => '$tmScheduleAssignments/$scheduleAssignmentId';
+  static String tmScheduleAssignmentById(int scheduleAssignmentId) =>
+      '$tmScheduleAssignments/$scheduleAssignmentId';
   static const String tmTimesheets = '$api/tm/timesheets';
   static String tmTimesheetByGuid(String guid) => '$tmTimesheets/$guid';
-  static String tmTimesheetApprove(String guid) => '$tmTimesheets/$guid/approve';
+  static String tmTimesheetApprove(String guid) =>
+      '$tmTimesheets/$guid/approve';
   static String tmTimesheetReject(String guid) => '$tmTimesheets/$guid/reject';
   static const String tmPublicHolidays = '$api/holidays';
-  static String tmPublicHolidayById(int holidayId) => '$tmPublicHolidays/$holidayId';
+  static String tmPublicHolidayById(int holidayId) =>
+      '$tmPublicHolidays/$holidayId';
   static const String tmStats = '$api/tm/stats';
   static const String tmProjects = '$api/tm/projects';
   static const String tmOvertimeConfiguration = "$api/tm/overtime/configs";
-  static String tmOvertimeConfigurationById(String companyId) => '$api/tm/overtime/configuration/$companyId';
+  static String tmOvertimeConfigurationById(String companyId) =>
+      '$api/tm/overtime/configuration/$companyId';
   static const String tmOvertimeRateMultiplier = '$api/tm/overtime/rate-types';
   static const String tmOvertimeRequests = '$api/tm/overtime/requests';
   static const String tmTimeZones = '$api/time-zones';
   static const String tmAttendanceLogs = '$api/tm/attendance/logs';
-  static const String tmAttendanceLogsByDate = '$api/tm/attendance/logs/by-date';
+  static const String tmAttendanceLogsByDate =
+      '$api/tm/attendance/logs/by-date';
   static const String tmAttendanceManual = '$api/tm/attendance/manual';
+  static const String tmAttendanceSummary = '$api/tm/attendance-summary';
 
   // Leave Management (ABS) endpoints
   static const String absLeaveRequests = '$api/abs/leave-requests';
-  static String absEmployeeLeaveRequests(String employeeGuid) => '$api/abs/employees/$employeeGuid/leave-requests';
+  static String absEmployeeLeaveRequests(String employeeGuid) =>
+      '$api/abs/employees/$employeeGuid/leave-requests';
   static String absEmployeeLeaveRequestStats(String employeeGuid) =>
       '$api/abs/employees/$employeeGuid/leave-requests/stats';
   static String absLeaveRequestById(String guid) => '$absLeaveRequests/$guid';
-  static String absLeaveRequestApprove(String guid) => '$absLeaveRequests/$guid/approve';
-  static String absLeaveRequestReject(String guid) => '$absLeaveRequests/$guid/reject';
+  static String absLeaveRequestApprove(String guid) =>
+      '$absLeaveRequests/$guid/approve';
+  static String absLeaveRequestReject(String guid) =>
+      '$absLeaveRequests/$guid/reject';
   static String absLeaveRequestDelete(String guid) => '$absLeaveRequests/$guid';
   static String absLeaveRequestUpdate(String guid) => '$absLeaveRequests/$guid';
   static const String absLeaveTypes = '$api/abs/leave-types';
-  static const String absLeaveBalanceTransactions = '$api/abs/leave-balance-transactions';
+  static const String absLeaveBalanceTransactions =
+      '$api/abs/leave-balance-transactions';
   static const String absLeaveBalances = '$api/abs/leave-balances';
   static const String absLeaveBalancesAdjust = '$absLeaveBalances/adjust';
-  static String absLeaveBalanceUpdate(String employeeLeaveBalanceGuid) => '$absLeaveBalances/$employeeLeaveBalanceGuid';
+  static String absLeaveBalanceUpdate(String employeeLeaveBalanceGuid) =>
+      '$absLeaveBalances/$employeeLeaveBalanceGuid';
   static const String absLeavePolicies = '$api/abs/leave-policies';
-  static String absLeavePolicyUpdate(String policyGuid) => '$absLeavePolicies/$policyGuid';
+  static String absLeavePolicyUpdate(String policyGuid) =>
+      '$absLeavePolicies/$policyGuid';
   static const String absPolicies = '$api/abs/policies';
   static const String absCreatePolicy = '$api/abs/create-policy';
-  static String absUpdatePolicy(String policyGuid) => '$api/abs/update-policy/$policyGuid';
+  static String absUpdatePolicy(String policyGuid) =>
+      '$api/abs/update-policy/$policyGuid';
   static const String absLookups = '$api/abs/lookups';
   static String absLookupValues(int lookupId) => '$absLookups/$lookupId/values';
 }

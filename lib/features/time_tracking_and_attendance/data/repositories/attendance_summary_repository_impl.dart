@@ -1,63 +1,71 @@
+import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_config.dart';
+import '../../../../core/network/api_endpoints.dart';
+import '../../../../core/network/exceptions.dart';
 import '../../domain/models/attendance_summary/attendance_summary_record.dart';
 import '../../domain/repositories/attendance_summary_repository.dart';
+import '../dto/attendance_summary_dto.dart';
 
 class AttendanceSummaryRepositoryImpl implements AttendanceSummaryRepository {
+  final ApiClient? _apiClient;
+
+  AttendanceSummaryRepositoryImpl({ApiClient? apiClient})
+    : _apiClient = apiClient ?? ApiClient(baseUrl: ApiConfig.baseUrl);
+
   @override
   Future<List<AttendanceSummaryRecord>> getAttendanceSummaryRecords({
     required String companyId,
-    String? department,
+    String? orgUnitId,
+    String? levelCode,
     String? date,
+    int? page,
+    int? pageSize,
   }) async {
-    // Simulate API delay
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final response = await _apiClient?.get(
+        ApiEndpoints.tmAttendanceSummary,
+        queryParameters: {
+          'enterprise_id': companyId,
+          if (orgUnitId != null) 'org_unit_id': orgUnitId,
+          if (levelCode != null) 'level_code': levelCode,
+          if (date != null) 'date': date,
+          if (page != null) 'page': page.toString(),
+          if (pageSize != null) 'page_size': pageSize.toString(),
+        },
+      );
 
-    // Mock data
-    return [
-      AttendanceSummaryRecord(
-        employeeName: 'John Doe',
-        date: '2023-10-25',
-        checkIn: '09:00 AM',
-        checkOut: '06:00 PM',
-        hours: '9h 0m',
-        overtime: '1h 0m',
-        status: 'Present',
-      ),
-      AttendanceSummaryRecord(
-        employeeName: 'Jane Smith',
-        date: '2023-10-25',
-        checkIn: '08:45 AM',
-        checkOut: '05:30 PM',
-        hours: '8h 45m',
-        overtime: '0h 45m',
-        status: 'Present',
-      ),
-      AttendanceSummaryRecord(
-        employeeName: 'Alice Johnson',
-        date: '2023-10-25',
-        checkIn: '--:--',
-        checkOut: '--:--',
-        hours: '0h 0m',
-        overtime: '0h 0m',
-        status: 'Absent',
-      ),
-      AttendanceSummaryRecord(
-        employeeName: 'Bob Brown',
-        date: '2023-10-25',
-        checkIn: '09:15 AM',
-        checkOut: '06:30 PM',
-        hours: '9h 15m',
-        overtime: '1h 15m',
-        status: 'Late In',
-      ),
-      AttendanceSummaryRecord(
-        employeeName: 'Charlie Davis',
-        date: '2023-10-25',
-        checkIn: '09:00 AM',
-        checkOut: '04:00 PM',
-        hours: '7h 0m',
-        overtime: '0h 0m',
-        status: 'Early Out',
-      ),
-    ];
+      final responseData = response?['data'] ?? response;
+      if (responseData == null) {
+        return [];
+      }
+
+      if (responseData is List) {
+        return responseData
+            .where((e) => e is Map && e.isNotEmpty)
+            .map(
+              (e) => AttendanceSummaryDto.fromJson(
+                Map<String, dynamic>.from(e),
+              ).toDomain(),
+            )
+            .toList();
+      } else if (responseData is Map &&
+          responseData.isNotEmpty &&
+          responseData.containsKey('actual_id')) {
+        return [
+          AttendanceSummaryDto.fromJson(
+            Map<String, dynamic>.from(responseData),
+          ).toDomain(),
+        ];
+      }
+
+      return [];
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException(
+        'Failed to load attendance summary: ${e.toString()}',
+        originalError: e,
+      );
+    }
   }
 }

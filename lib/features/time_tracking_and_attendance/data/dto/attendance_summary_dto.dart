@@ -1,4 +1,6 @@
-class AttendanceSummaryRecord {
+import '../../domain/models/attendance_summary/attendance_summary_record.dart';
+
+class AttendanceSummaryDto {
   final int? actualId;
   final int? attendanceDayId;
   final String? checkInTime;
@@ -19,9 +21,9 @@ class AttendanceSummaryRecord {
   final String? attendanceStatus;
   final String? employeeName;
   final String? orgUnitId;
-  final List<OrgStructureSummaryRecord>? orgStructureList;
+  final List<OrgStructureSummaryDto>? orgStructureList;
 
-  AttendanceSummaryRecord({
+  AttendanceSummaryDto({
     this.actualId,
     this.attendanceDayId,
     this.checkInTime,
@@ -45,13 +47,13 @@ class AttendanceSummaryRecord {
     this.orgStructureList,
   });
 
-  factory AttendanceSummaryRecord.fromJson(Map<String, dynamic> json) {
-    return AttendanceSummaryRecord(
-      actualId: json['actual_id'],
+  factory AttendanceSummaryDto.fromJson(Map<String, dynamic> json) {
+    return AttendanceSummaryDto(
+      actualId: int.tryParse(json['actual_id'].toString()),
       attendanceDayId: json['attendance_day_id'],
       checkInTime: json['check_in_time'],
       checkOutTime: json['check_out_time'],
-      hoursWorked: json['hours_worked'],
+      hoursWorked: json['hours_worked']?.toString(),
       overtimeHours: (json['overtime_hours'] as num?)?.toDouble(),
       createdBy: json['created_by'],
       creationDate: json['creation_date'],
@@ -66,15 +68,41 @@ class AttendanceSummaryRecord {
       attendanceDate: json['attendance_date'],
       attendanceStatus: json['attendance_status'],
       employeeName: json['employee_name_en'],
-      orgUnitId: json['org_unit_id'],
+      orgUnitId: json['org_unit_id']?.toString(),
       orgStructureList: (json['org_structure_list'] as List?)
-          ?.map((e) => OrgStructureSummaryRecord.fromJson(e))
+          ?.map((e) => OrgStructureSummaryDto.fromJson(e))
           .toList(),
+    );
+  }
+
+  AttendanceSummaryRecord toDomain() {
+    return AttendanceSummaryRecord(
+      actualId: actualId,
+      attendanceDayId: attendanceDayId,
+      checkInTime: checkInTime,
+      checkOutTime: checkOutTime,
+      hoursWorked: hoursWorked,
+      overtimeHours: overtimeHours,
+      createdBy: createdBy,
+      creationDate: creationDate,
+      lastUpdatedBy: lastUpdatedBy,
+      lastUpdateDate: lastUpdateDate,
+      otRateTypeId: otRateTypeId,
+      otMultiplier: otMultiplier,
+      otConfigId: otConfigId,
+      attendanceActualGuid: attendanceActualGuid,
+      enterpriseId: enterpriseId,
+      employeeId: employeeId,
+      attendanceDate: attendanceDate,
+      attendanceStatus: attendanceStatus,
+      employeeName: employeeName,
+      orgUnitId: orgUnitId,
+      orgStructureList: orgStructureList?.map((e) => e.toDomain()).toList(),
     );
   }
 }
 
-class OrgStructureSummaryRecord {
+class OrgStructureSummaryDto {
   final int? level;
   final String? orgUnitId;
   final String? orgUnitCode;
@@ -84,7 +112,7 @@ class OrgStructureSummaryRecord {
   final String? status;
   final String? isActive;
 
-  OrgStructureSummaryRecord({
+  OrgStructureSummaryDto({
     this.level,
     this.orgUnitId,
     this.orgUnitCode,
@@ -95,16 +123,29 @@ class OrgStructureSummaryRecord {
     this.isActive,
   });
 
-  factory OrgStructureSummaryRecord.fromJson(Map<String, dynamic> json) {
-    return OrgStructureSummaryRecord(
+  factory OrgStructureSummaryDto.fromJson(Map<String, dynamic> json) {
+    return OrgStructureSummaryDto(
       level: json['level'],
-      orgUnitId: json['org_unit_id'],
+      orgUnitId: json['org_unit_id']?.toString(),
       orgUnitCode: json['org_unit_code'],
       orgUnitNameEn: json['org_unit_name_en'],
       orgUnitNameAr: json['org_unit_name_ar'],
       levelCode: json['level_code'],
       status: json['status'],
       isActive: json['is_active'],
+    );
+  }
+
+  OrgStructureSummaryRecord toDomain() {
+    return OrgStructureSummaryRecord(
+      level: level,
+      orgUnitId: orgUnitId,
+      orgUnitCode: orgUnitCode,
+      orgUnitNameEn: orgUnitNameEn,
+      orgUnitNameAr: orgUnitNameAr,
+      levelCode: levelCode,
+      status: status,
+      isActive: isActive,
     );
   }
 }
