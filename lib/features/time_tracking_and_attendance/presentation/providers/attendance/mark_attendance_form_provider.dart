@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/services/location_service.dart';
 import 'package:digify_hr_system/core/utils/date_time_utils.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/manual_attendance_request.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/attendance_repository.dart';
 import 'package:flutter/material.dart';
@@ -106,8 +107,6 @@ class MarkAttendanceFormNotifier extends StateNotifier<MarkAttendanceFormState> 
 
   void initializeFromAttendance(Attendance attendance) {
     final prefilled = <String>{};
-    if (attendance.clockIn != null) prefilled.add(PrefilledFieldKey.scheduleStartTime);
-    if (attendance.workedHours != null) prefilled.add(PrefilledFieldKey.scheduleDuration);
     prefilled.add(PrefilledFieldKey.status);
     if (attendance.clockIn != null) prefilled.add(PrefilledFieldKey.checkInTime);
     if (attendance.clockOut != null) prefilled.add(PrefilledFieldKey.checkOutTime);
@@ -121,8 +120,44 @@ class MarkAttendanceFormNotifier extends StateNotifier<MarkAttendanceFormState> 
       employeeName: attendance.employeeName,
       employeeNumber: attendance.employeeNumber,
       date: attendance.date,
-      scheduleStartTime: attendance.clockIn != null ? TimeOfDay.fromDateTime(attendance.clockIn!) : null,
-      scheduleDuration: attendance.workedHours?.toInt(),
+      scheduleStartTime: null,
+      scheduleDuration: null,
+      status: attendance.status,
+      checkInTime: attendance.clockIn != null ? TimeOfDay.fromDateTime(attendance.clockIn!) : null,
+      checkOutTime: attendance.clockOut != null ? TimeOfDay.fromDateTime(attendance.clockOut!) : null,
+      location: attendance.checkInLocation?.city ?? attendance.checkInLocation?.address,
+      notes: attendance.notes,
+      dateFetchSucceeded: true,
+      prefilledFieldKeys: prefilled,
+    );
+  }
+
+  /// Initializes form from AttendanceRecord (listing API response).
+  /// Schedule fields come only from schedule_obj; actual fields from actual_obj.
+  void initializeFromAttendanceRecord(AttendanceRecord record) {
+    final attendance = record.attendance;
+    if (attendance == null) return;
+
+    final prefilled = <String>{};
+    if (record.scheduleStartTimeAsDateTime != null) prefilled.add(PrefilledFieldKey.scheduleStartTime);
+    if (record.scheduledHoursAsInt != null) prefilled.add(PrefilledFieldKey.scheduleDuration);
+    prefilled.add(PrefilledFieldKey.status);
+    if (attendance.clockIn != null) prefilled.add(PrefilledFieldKey.checkInTime);
+    if (attendance.clockOut != null) prefilled.add(PrefilledFieldKey.checkOutTime);
+    final loc = attendance.checkInLocation?.city ?? attendance.checkInLocation?.address;
+    if (loc != null && loc.isNotEmpty) prefilled.add(PrefilledFieldKey.location);
+    if (attendance.notes != null && attendance.notes!.isNotEmpty) prefilled.add(PrefilledFieldKey.notes);
+
+    state = MarkAttendanceFormState(
+      attendanceDayId: record.attendanceDayId,
+      employeeId: attendance.employeeId,
+      employeeName: attendance.employeeName,
+      employeeNumber: attendance.employeeNumber,
+      date: attendance.date,
+      scheduleStartTime: record.scheduleStartTimeAsDateTime != null
+          ? TimeOfDay.fromDateTime(record.scheduleStartTimeAsDateTime!)
+          : null,
+      scheduleDuration: record.scheduledHoursAsInt,
       status: attendance.status,
       checkInTime: attendance.clockIn != null ? TimeOfDay.fromDateTime(attendance.clockIn!) : null,
       checkOutTime: attendance.clockOut != null ? TimeOfDay.fromDateTime(attendance.clockOut!) : null,
@@ -366,8 +401,8 @@ class MarkAttendanceFormNotifier extends StateNotifier<MarkAttendanceFormState> 
         state.checkOutTime!.hour,
         state.checkOutTime!.minute,
       );
-      final checkInStr = DateTimeUtils.localToUtcIso8601(checkInDt);
-      final checkOutStr = DateTimeUtils.localToUtcIso8601(checkOutDt);
+      final checkInStr = DateTimeUtils.localToIso8601WithOffset(checkInDt);
+      final checkOutStr = DateTimeUtils.localToIso8601WithOffset(checkOutDt);
 
       const fallbackLat = 29.3759;
       const fallbackLon = 47.9774;

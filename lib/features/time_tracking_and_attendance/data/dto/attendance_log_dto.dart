@@ -220,6 +220,8 @@ class AttendanceLogItemDto {
     String? scheduleStartTime;
     String? scheduleEndTime;
     String? scheduledHours;
+    DateTime? scheduleStartTimeAsDateTime;
+    int? scheduledHoursAsInt;
     if (scheduleObj != null) {
       scheduleDate = _formatDate(scheduleObj!['schedule_date'] as String?);
       final start = scheduleObj!['schedule_start_time'] as String?;
@@ -230,9 +232,16 @@ class AttendanceLogItemDto {
       if (sh != null) {
         if (sh is num) {
           scheduledHours = _formatDuration(sh);
+          scheduledHoursAsInt = sh.toInt();
         } else if (sh is String && sh.isNotEmpty) {
           scheduledHours = sh;
+          scheduledHoursAsInt = int.tryParse(sh);
         }
+      }
+      if (start != null && start.isNotEmpty) {
+        try {
+          scheduleStartTimeAsDateTime = DateTime.parse(start);
+        } catch (_) {}
       }
     }
 
@@ -295,6 +304,8 @@ class AttendanceLogItemDto {
       scheduleStartTime: scheduleStartTime,
       scheduleEndTime: scheduleEndTime,
       scheduledHours: scheduledHours,
+      scheduleStartTimeAsDateTime: scheduleStartTimeAsDateTime,
+      scheduledHoursAsInt: scheduledHoursAsInt,
       hoursWorked: hoursWorked,
       overtimeHours: overtimeHours,
     );
