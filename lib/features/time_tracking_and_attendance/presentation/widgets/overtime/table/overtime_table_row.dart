@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
 import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
+import 'package:digify_hr_system/core/enums/overtime_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/overtime/overtime_record.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +11,7 @@ import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/extensions/context_extensions.dart';
 import '../../../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../data/config/overtime_table_config.dart';
+import '../overtime_status_chip.dart';
 
 class OvertimeTableRow extends StatelessWidget {
   final OvertimeRecord record;
@@ -18,7 +19,6 @@ class OvertimeTableRow extends StatelessWidget {
   final bool isDark;
   final bool isExpanded;
   final VoidCallback onToggle;
-  final Function(OvertimeRecord) onView;
   final Function(OvertimeRecord) onEdit;
   final Function(OvertimeRecord) onDelete;
 
@@ -29,7 +29,6 @@ class OvertimeTableRow extends StatelessWidget {
     required this.isDark,
     required this.isExpanded,
     required this.onToggle,
-    required this.onView,
     required this.onEdit,
     required this.onDelete,
   });
@@ -72,7 +71,7 @@ class OvertimeTableRow extends StatelessWidget {
                   children: [
                     AppAvatar(
                       size: 35.w,
-                      fallbackInitial: record.employeeDetail?.name,
+                      fallbackInitial: record.employeeNameDisplay,
                       textColor: AppColors.textPrimary,
                     ),
                     Gap(11.w),
@@ -82,12 +81,12 @@ class OvertimeTableRow extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            (record.employeeDetail?.name ?? "").toUpperCase(),
+                            record.employeeNameDisplay.toUpperCase(),
                             style: context.theme.textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
                           ),
                           Gap(2.h),
                           Text(
-                            record.employeeId,
+                            record.employeeIdDisplay,
                             style: context.theme.textTheme.bodySmall?.copyWith(
                               fontSize: 12.sp,
                               color: AppColors.tableHeaderText,
@@ -107,7 +106,7 @@ class OvertimeTableRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "--/--/--",
+                      record.dateDisplay,
                       style: context.theme.textTheme.labelMedium?.copyWith(
                         fontSize: 14.sp,
                         color: AppColors.dialogTitle,
@@ -115,7 +114,7 @@ class OvertimeTableRow extends StatelessWidget {
                     ),
                     Gap(2.h),
                     Text(
-                      "Requested: --/--/--",
+                      'Requested: ${record.requestedDateDisplay}',
                       style: context.theme.textTheme.bodySmall?.copyWith(
                         fontSize: 12.sp,
                         color: AppColors.tableHeaderText,
@@ -128,7 +127,7 @@ class OvertimeTableRow extends StatelessWidget {
             if (OvertimeTableConfig.showType)
               _buildDataCell(
                 DigifySquareCapsule(
-                  label: record.overtimeDetail?.type ?? "",
+                  label: record.typeDisplay,
                   textColor: AppColors.statIconBlue,
                   backgroundColor: AppColors.statIconBlue.withValues(alpha: 0.1),
                 ),
@@ -141,7 +140,7 @@ class OvertimeTableRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "${record.overtimeDetail?.overtimeHours} hrs",
+                      '${record.overtimeHoursDisplay} hrs',
                       style: context.theme.textTheme.labelMedium?.copyWith(
                         fontSize: 14.sp,
                         color: AppColors.dialogTitle,
@@ -149,7 +148,7 @@ class OvertimeTableRow extends StatelessWidget {
                     ),
                     Gap(2.h),
                     Text(
-                      "Regular: ${record.overtimeDetail?.regularHours} hrs",
+                      'Regular: ${record.regularHoursDisplay} hrs',
                       style: context.theme.textTheme.bodySmall?.copyWith(
                         fontSize: 12.sp,
                         color: AppColors.tableHeaderText,
@@ -162,7 +161,7 @@ class OvertimeTableRow extends StatelessWidget {
             if (OvertimeTableConfig.showRate)
               _buildDataCell(
                 Text(
-                  "${record.overtimeDetail?.rate}x",
+                  '${record.rateDisplay}x',
                   style: context.theme.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
                 ),
                 OvertimeTableConfig.rateWidth.w,
@@ -170,18 +169,14 @@ class OvertimeTableRow extends StatelessWidget {
             if (OvertimeTableConfig.showAmount)
               _buildDataCell(
                 Text(
-                  "KWD ${record.amount}",
+                  'KWD ${record.amountDisplay}',
                   style: context.theme.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
                 ),
                 OvertimeTableConfig.amountWidth.w,
               ),
             if (OvertimeTableConfig.showStatus)
               _buildDataCell(
-                DigifyCapsule(
-                  label: record.approvalInformation?.status ?? "",
-                  textColor: AppColors.statIconGreen,
-                  backgroundColor: AppColors.statIconGreen.withValues(alpha: 0.1),
-                ),
+                OvertimeStatusChip(status: OvertimeStatus.fromString(record.approvalInformation?.status ?? "")),
                 OvertimeTableConfig.statusWidth.w,
               ),
             if (OvertimeTableConfig.showActions)
@@ -190,7 +185,6 @@ class OvertimeTableRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 8.w,
                   children: [
-                    DigifyAssetButton(assetPath: Assets.icons.blueEyeIcon.path, onTap: () => onView(record)),
                     DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(record)),
                     DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(record)),
                   ],

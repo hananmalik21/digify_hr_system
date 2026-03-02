@@ -9,7 +9,7 @@ import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/common/digify_tab_header.dart';
 import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
-import '../../../workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import '../providers/overtime/overtime_enterprise_provider.dart';
 import '../dialogs/new_overtime_request_dialog.dart';
 import '../providers/overtime/overtime_provider.dart';
 import '../widgets/overtime/component_overtime_filter_bar.dart';
@@ -25,6 +25,14 @@ class OvertimeScreen extends ConsumerStatefulWidget {
 }
 
 class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(overtimeManagementProvider.notifier).loadOvertime();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -59,19 +67,12 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
                 ],
               ),
             ),
-            Consumer(
-              builder: (context, ref, child) {
-                final selectedEnterpriseId = ref.watch(workforceEnterpriseIdProvider);
-                return EnterpriseSelectorWidget(
-                  selectedEnterpriseId: selectedEnterpriseId,
-                  onEnterpriseChanged: (id) {
-                    ref.read(workforceSelectedEnterpriseProvider.notifier).setEnterpriseId(id);
-                  },
-                  subtitle: selectedEnterpriseId != null
-                      ? 'Viewing data for selected enterprise'
-                      : 'Select an enterprise to view data',
-                );
-              },
+            EnterpriseSelectorWidget(
+              selectedEnterpriseId: ref.watch(overtimeEnterpriseIdProvider),
+              onEnterpriseChanged: (id) => ref.read(overtimeSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
+              subtitle: ref.watch(overtimeEnterpriseIdProvider) != null
+                  ? 'Viewing data for selected enterprise'
+                  : 'Select an enterprise to view data',
             ),
             const ComponentOvertimeFilterBar(),
             const ComponentOvertimeStats(),
@@ -79,9 +80,17 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
             OvertimeTable(
               localizations: localizations,
               records: state.records ?? [],
-              totalItems: state.records?.length ?? 0,
+              totalItems: state.totalItems,
+              isLoading: state.isLoading,
+              currentPage: state.currentPage,
+              pageSize: state.pageSize,
+              onPrevious: state.currentPage > 1
+                  ? () => ref.read(overtimeManagementProvider.notifier).goToPage(state.currentPage - 1)
+                  : null,
+              onNext: state.hasMore
+                  ? () => ref.read(overtimeManagementProvider.notifier).goToPage(state.currentPage + 1)
+                  : null,
               isDark: isDark,
-              onView: (_) {},
               onEdit: (_) {},
               onDelete: (_) {},
             ),

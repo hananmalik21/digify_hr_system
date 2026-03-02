@@ -67,6 +67,7 @@ class ApiEndpoints {
   static const String tmOvertimeConfiguration = "$api/tm/overtime/configs";
   static String tmOvertimeConfigurationById(String companyId) => '$api/tm/overtime/configuration/$companyId';
   static const String tmOvertimeRateMultiplier = '$api/tm/overtime/rate-types';
+  static const String tmOvertimeRequests = '$api/tm/overtime/requests';
   static const String tmTimeZones = '$api/time-zones';
   static const String tmAttendanceLogs = '$api/tm/attendance/logs';
   static const String tmAttendanceLogsByDate = '$api/tm/attendance/logs/by-date';

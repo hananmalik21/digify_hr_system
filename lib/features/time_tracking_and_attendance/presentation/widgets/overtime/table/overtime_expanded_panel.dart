@@ -1,10 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_divider.dart';
+import 'package:digify_hr_system/core/enums/overtime_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/overtime/overtime_record.dart';
 import '../../../../data/config/overtime_table_config.dart';
+import '../overtime_status_chip.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,11 +48,11 @@ class OvertimeExpandedPanel extends StatelessWidget {
       assetIcon: Assets.icons.userIcon.path,
       child: Column(
         children: [
-          _buildInfoRow(context, 'Position:', record.employeeDetail?.position ?? "--"),
+          _buildInfoRow(context, 'Position:', record.positionDisplay),
           Gap(10.h),
-          _buildInfoRow(context, 'Department:', record.employeeDetail?.department ?? "--"),
+          _buildInfoRow(context, 'Department:', record.departmentDisplay),
           Gap(10.h),
-          _buildInfoRow(context, 'Line Manager:', record.employeeDetail?.lineManager ?? "--"),
+          _buildInfoRow(context, 'Line Manager:', record.lineManagerDisplay),
         ],
       ),
     );
@@ -64,15 +65,15 @@ class OvertimeExpandedPanel extends StatelessWidget {
       assetIcon: Assets.icons.clockIcon.path,
       child: Column(
         children: [
-          _buildInfoRow(context, 'Regular Hours:', "${record.overtimeDetail?.regularHours ?? '--'} hrs"),
+          _buildInfoRow(context, 'Regular Hours:', '${record.regularHoursDisplay} hrs'),
           Gap(10.h),
-          _buildInfoRow(context, 'Overtime Hours:', "${record.overtimeDetail?.overtimeHours ?? '--'} hrs"),
+          _buildInfoRow(context, 'Overtime Hours:', '${record.overtimeHoursDisplay} hrs'),
           Gap(10.h),
-          _buildInfoRow(context, 'Overtime Type:', record.overtimeDetail?.type ?? "--"),
+          _buildInfoRow(context, 'Overtime Type:', record.typeDisplay),
           Gap(10.h),
           DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 10.h)),
           Gap(10.h),
-          _buildInfoRow(context, 'Rate Multiplier:', "${record.overtimeDetail?.rate ?? '--'}x"),
+          _buildInfoRow(context, 'Rate Multiplier:', '${record.rateDisplay}x'),
         ],
       ),
     );
@@ -96,21 +97,17 @@ class OvertimeExpandedPanel extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              DigifyCapsule(
-                label: record.approvalInformation?.status ?? "--",
-                backgroundColor: AppColors.statIconGreen.withValues(alpha: .2),
-                textColor: AppColors.statIconGreen,
-              ),
+              OvertimeStatusChip(status: OvertimeStatus.fromString(record.approvalInformation?.status ?? "")),
             ],
           ),
           Gap(10.h),
-          _buildInfoRow(context, 'Approved By:', record.approvalInformation?.byUser ?? "--"),
+          _buildInfoRow(context, 'Approved By:', record.approvedByDisplay),
           Gap(10.h),
-          _buildInfoRow(context, 'Approved Date:', record.approvalInformation?.date.toString() ?? "--"),
+          _buildInfoRow(context, 'Approved Date:', record.approvedDateDisplay),
           Gap(10.h),
           DigifyDivider.horizontal(margin: EdgeInsets.symmetric(vertical: 10.h)),
           Gap(10.h),
-          _buildInfoRow(context, 'Reason:', record.approvalInformation?.reason ?? "--"),
+          _buildInfoRow(context, 'Reason:', record.reasonDisplay),
         ],
       ),
     );

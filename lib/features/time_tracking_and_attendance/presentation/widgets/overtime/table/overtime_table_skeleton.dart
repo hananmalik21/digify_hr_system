@@ -22,7 +22,6 @@ class OvertimeTableSkeleton extends StatelessWidget {
             isDark: isDark,
             isExpanded: false,
             onToggle: () {},
-            onView: (_) {},
             onEdit: (_) {},
             onDelete: (_) {},
           ),

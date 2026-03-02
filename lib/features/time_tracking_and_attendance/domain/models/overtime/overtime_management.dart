@@ -61,6 +61,10 @@ class OvertimeManagement {
   bool isLoading;
   bool clearError;
   String? error;
+  int currentPage;
+  int pageSize;
+  int totalItems;
+  bool hasMore;
 
   OvertimeManagement({
     this.selectedCategory,
@@ -75,6 +79,10 @@ class OvertimeManagement {
     this.clearError = true,
     this.error,
     this.expandedRecord,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.totalItems = 0,
+    this.hasMore = false,
   });
 
   OvertimeManagement copyWith({
@@ -93,6 +101,10 @@ class OvertimeManagement {
     String? error,
     String? expandedRecord,
     bool clearExpandedRecord = false,
+    int? currentPage,
+    int? pageSize,
+    int? totalItems,
+    bool? hasMore,
   }) {
     return OvertimeManagement(
       selectedCategory: selectedCategory ?? this.selectedCategory,
@@ -107,6 +119,10 @@ class OvertimeManagement {
       clearError: clearError ?? this.clearError,
       error: error ?? this.error,
       expandedRecord: clearExpandedRecord ? null : (expandedRecord ?? this.expandedRecord),
+      currentPage: currentPage ?? this.currentPage,
+      pageSize: pageSize ?? this.pageSize,
+      totalItems: totalItems ?? this.totalItems,
+      hasMore: hasMore ?? this.hasMore,
     );
   }
 }

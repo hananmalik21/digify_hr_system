@@ -25,7 +25,6 @@ class OvertimeTable extends ConsumerWidget {
   final int totalItems;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
-  final Function(OvertimeRecord) onView;
   final Function(OvertimeRecord) onEdit;
   final Function(OvertimeRecord) onDelete;
   final bool? paginationIsLoading;
@@ -41,7 +40,6 @@ class OvertimeTable extends ConsumerWidget {
     required this.totalItems,
     this.onPrevious,
     this.onNext,
-    required this.onView,
     required this.onEdit,
     required this.onDelete,
     this.paginationIsLoading,
@@ -105,7 +103,6 @@ class OvertimeTable extends ConsumerWidget {
                                 notifier.state = index;
                               }
                             },
-                            onView: onView,
                             onEdit: onEdit,
                             onDelete: onDelete,
                           ),
@@ -138,7 +135,7 @@ class OvertimeTable extends ConsumerWidget {
             hasPrevious: currentPage > 1,
             onPrevious: onPrevious,
             onNext: onNext,
-            isLoading: paginationIsLoading ?? false,
+            isLoading: false,
             style: PaginationStyle.simple,
           ),
         ],

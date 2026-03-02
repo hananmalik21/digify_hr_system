@@ -17,7 +17,7 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
     loadOvertime();
   }
 
-  _initializeMockData() {
+  void _initializeMockData() {
     state = state.copyWith(
       categories: OvertimeCategory.values,
       selectedCategory: OvertimeCategory.all,
@@ -51,18 +51,46 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
     );
   }
 
-  /// Loads attendance records from repository
-  Future<void> loadOvertime() async {
+  Future<void> loadOvertime({int? page}) async {
+    final tenantId = state.companyId != null ? int.tryParse(state.companyId!) : null;
+    if (tenantId == null) {
+      state = state.copyWith(records: [], isLoading: false, clearError: true);
+      return;
+    }
+
     state = state.copyWith(isLoading: true, clearError: true);
+    if (page != null) {
+      state = state.copyWith(currentPage: page);
+    }
 
     try {
-      final records = await _repository.getOvertimeRecords();
+      final pageToFetch = page ?? state.currentPage;
+      final result = await _repository.getOvertimeRequests(
+        tenantId: tenantId,
+        status: state.selectedStatus?.apiValue,
+        orgUnitId: state.orgUnitId,
+        levelCode: state.orgLevelCode,
+        page: pageToFetch,
+        pageSize: state.pageSize,
+      );
 
-      state = state.copyWith(records: records, isLoading: false, clearError: true);
+      state = state.copyWith(
+        records: result.records,
+        currentPage: result.page,
+        pageSize: result.pageSize,
+        totalItems: result.total,
+        hasMore: result.hasMore,
+        isLoading: false,
+        clearError: true,
+      );
     } on AppException catch (e) {
       state = state.copyWith(isLoading: false, error: e.message, clearError: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Failed to load attendance: ${e.toString()}', clearError: false);
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to load overtime requests: ${e.toString()}',
+        clearError: false,
+      );
     }
   }
 
@@ -71,7 +99,8 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
   }
 
   void selectStatus(OvertimeStatus? status) {
-    state = state.copyWith(selectedStatus: status, clearStatus: status == null);
+    state = state.copyWith(selectedStatus: status, clearStatus: status == null, currentPage: 1);
+    loadOvertime(page: 1);
   }
 
   void toggleOvertimeRecord(String? id) {
@@ -86,8 +115,12 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
   }
 
   void setOrgFilter(String? unitId, String? levelCode) {
-    state = state.copyWith(orgUnitId: unitId, orgLevelCode: levelCode, clearOrgFilter: unitId == null);
-    loadOvertime();
+    state = state.copyWith(orgUnitId: unitId, orgLevelCode: levelCode, clearOrgFilter: unitId == null, currentPage: 1);
+    loadOvertime(page: 1);
+  }
+
+  void goToPage(int page) {
+    loadOvertime(page: page);
   }
 }
 
