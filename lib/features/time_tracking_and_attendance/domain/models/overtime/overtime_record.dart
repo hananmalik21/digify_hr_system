@@ -1,4 +1,7 @@
 class OvertimeRecord {
+  static const String _placeholder = '--';
+
+  final int? otRequestId;
   final String employeeId;
   final DateTime date;
   final DateTime requestedDate;
@@ -7,46 +10,100 @@ class OvertimeRecord {
   final OvertimeDetail? overtimeDetail;
   final ApprovalInformation? approvalInformation;
 
+  final String dateDisplay;
+  final String requestedDateDisplay;
+  final String approvedDateDisplay;
+
   OvertimeRecord({
+    this.otRequestId,
     required this.employeeId,
     required this.date,
     required this.requestedDate,
-
     required this.amount,
     required this.employeeDetail,
     required this.overtimeDetail,
     required this.approvalInformation,
+    required this.dateDisplay,
+    required this.requestedDateDisplay,
+    required this.approvedDateDisplay,
   });
 
+  String get employeeNameDisplay =>
+      (employeeDetail?.name != null && employeeDetail!.name.isNotEmpty) ? employeeDetail!.name : _placeholder;
+
+  String get employeeIdDisplay => employeeId.isNotEmpty ? employeeId : _placeholder;
+
+  String get positionDisplay => (employeeDetail?.position != null && employeeDetail!.position.isNotEmpty)
+      ? employeeDetail!.position
+      : _placeholder;
+
+  String get departmentDisplay => (employeeDetail?.department != null && employeeDetail!.department.isNotEmpty)
+      ? employeeDetail!.department
+      : _placeholder;
+
+  String get lineManagerDisplay => (employeeDetail?.lineManager != null && employeeDetail!.lineManager.isNotEmpty)
+      ? employeeDetail!.lineManager
+      : _placeholder;
+
+  String get regularHoursDisplay => (overtimeDetail?.regularHours != null && overtimeDetail!.regularHours.isNotEmpty)
+      ? overtimeDetail!.regularHours
+      : _placeholder;
+
+  String get overtimeHoursDisplay => (overtimeDetail?.overtimeHours != null && overtimeDetail!.overtimeHours.isNotEmpty)
+      ? overtimeDetail!.overtimeHours
+      : _placeholder;
+
+  String get typeDisplay =>
+      (overtimeDetail?.type != null && overtimeDetail!.type.isNotEmpty) ? overtimeDetail!.type : _placeholder;
+
+  String get rateDisplay =>
+      (overtimeDetail?.rate != null && overtimeDetail!.rate.isNotEmpty) ? overtimeDetail!.rate : _placeholder;
+
+  String get amountDisplay => amount.isNotEmpty ? amount : _placeholder;
+
+  String get statusDisplay => (approvalInformation?.status != null && approvalInformation!.status.isNotEmpty)
+      ? approvalInformation!.status
+      : _placeholder;
+
+  String get approvedByDisplay => (approvalInformation?.byUser != null && approvalInformation!.byUser.isNotEmpty)
+      ? approvalInformation!.byUser
+      : _placeholder;
+
+  String get reasonDisplay => (approvalInformation?.reason != null && approvalInformation!.reason.isNotEmpty)
+      ? approvalInformation!.reason
+      : _placeholder;
+
   static empty() {
+    final now = DateTime.now();
     return OvertimeRecord(
       employeeId: "",
-      date: DateTime.now(),
-      requestedDate: DateTime.now(),
-
+      date: now,
+      requestedDate: now,
       amount: "",
       employeeDetail: null,
       overtimeDetail: null,
       approvalInformation: null,
+      dateDisplay: _placeholder,
+      requestedDateDisplay: _placeholder,
+      approvedDateDisplay: _placeholder,
     );
   }
 
   OvertimeRecord copyWith({
-    String? name,
+    int? otRequestId,
     String? employeeId,
     DateTime? date,
     DateTime? requestedDate,
-    String? type,
-    String? overtimeHours,
-    String? regularHours,
-    String? rate,
-    String? status,
     String? amount,
     EmployeeDetail? employeeDetail,
     OvertimeDetail? overtimeDetail,
     ApprovalInformation? approvalInformation,
+    String? dateDisplay,
+    String? requestedDateDisplay,
+    String? approvedDateDisplay,
   }) {
     return OvertimeRecord(
+      otRequestId: otRequestId ?? this.otRequestId,
       employeeId: employeeId ?? this.employeeId,
       date: date ?? this.date,
       requestedDate: requestedDate ?? this.requestedDate,
@@ -54,6 +111,9 @@ class OvertimeRecord {
       employeeDetail: employeeDetail ?? this.employeeDetail,
       overtimeDetail: overtimeDetail ?? this.overtimeDetail,
       approvalInformation: approvalInformation ?? this.approvalInformation,
+      dateDisplay: dateDisplay ?? this.dateDisplay,
+      requestedDateDisplay: requestedDateDisplay ?? this.requestedDateDisplay,
+      approvedDateDisplay: approvedDateDisplay ?? this.approvedDateDisplay,
     );
   }
 }
@@ -74,13 +134,7 @@ class EmployeeDetail {
   });
 
   static empty() {
-    return EmployeeDetail(
-      name: "",
-      employeeId: "",
-      position: "",
-      department: "",
-      lineManager: "",
-    );
+    return EmployeeDetail(name: "", employeeId: "", position: "", department: "", lineManager: "");
   }
 
   EmployeeDetail copyWith({
@@ -117,22 +171,10 @@ class OvertimeDetail {
   });
 
   static empty() {
-    return OvertimeDetail(
-      overtimeHours: "",
-      regularHours: "",
-      type: "",
-      rate: "",
-      amount: "",
-    );
+    return OvertimeDetail(overtimeHours: "", regularHours: "", type: "", rate: "", amount: "");
   }
 
-  OvertimeDetail copyWith({
-    String? overtimeHours,
-    String? regularHours,
-    String? type,
-    String? rate,
-    String? amount,
-  }) {
+  OvertimeDetail copyWith({String? overtimeHours, String? regularHours, String? type, String? rate, String? amount}) {
     return OvertimeDetail(
       overtimeHours: overtimeHours ?? this.overtimeHours,
       regularHours: regularHours ?? this.regularHours,
@@ -149,23 +191,13 @@ class ApprovalInformation {
   final DateTime? date;
   final String reason;
 
-  ApprovalInformation({
-    required this.status,
-    required this.byUser,
-    this.date,
-    required this.reason,
-  });
+  ApprovalInformation({required this.status, required this.byUser, this.date, required this.reason});
 
   static empty() {
     return ApprovalInformation(status: "", byUser: "", date: null, reason: "");
   }
 
-  ApprovalInformation copyWith({
-    String? status,
-    String? byUser,
-    DateTime? date,
-    String? reason,
-  }) {
+  ApprovalInformation copyWith({String? status, String? byUser, DateTime? date, String? reason}) {
     return ApprovalInformation(
       status: status ?? this.status,
       byUser: byUser ?? this.byUser,

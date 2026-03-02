@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/enums/overtime_status.dart';
 import 'overtime_record.dart';
 
 enum OvertimeCategory {
@@ -53,19 +54,35 @@ class OvertimeManagement {
   List<OvertimeStat>? stats;
   List<OvertimeRecord>? records;
   String? expandedRecord;
+  OvertimeStatus? selectedStatus;
+  String? companyId;
+  String? orgUnitId;
+  String? orgLevelCode;
   bool isLoading;
   bool clearError;
   String? error;
+  int currentPage;
+  int pageSize;
+  int totalItems;
+  bool hasMore;
 
   OvertimeManagement({
     this.selectedCategory,
     this.categories,
     this.stats,
     this.records,
+    this.selectedStatus,
+    this.companyId,
+    this.orgUnitId,
+    this.orgLevelCode,
     this.isLoading = false,
     this.clearError = true,
     this.error,
     this.expandedRecord,
+    this.currentPage = 1,
+    this.pageSize = 10,
+    this.totalItems = 0,
+    this.hasMore = false,
   });
 
   OvertimeManagement copyWith({
@@ -73,20 +90,39 @@ class OvertimeManagement {
     List<OvertimeCategory>? categories,
     List<OvertimeStat>? stats,
     List<OvertimeRecord>? records,
+    OvertimeStatus? selectedStatus,
+    bool clearStatus = false,
+    String? companyId,
+    String? orgUnitId,
+    String? orgLevelCode,
+    bool clearOrgFilter = false,
     bool? isLoading,
     bool? clearError,
     String? error,
     String? expandedRecord,
+    bool clearExpandedRecord = false,
+    int? currentPage,
+    int? pageSize,
+    int? totalItems,
+    bool? hasMore,
   }) {
     return OvertimeManagement(
       selectedCategory: selectedCategory ?? this.selectedCategory,
       categories: categories ?? this.categories,
       stats: stats ?? this.stats,
       records: records ?? this.records,
+      selectedStatus: clearStatus ? null : (selectedStatus ?? this.selectedStatus),
+      companyId: companyId ?? this.companyId,
+      orgUnitId: clearOrgFilter ? null : (orgUnitId ?? this.orgUnitId),
+      orgLevelCode: clearOrgFilter ? null : (orgLevelCode ?? this.orgLevelCode),
       isLoading: isLoading ?? this.isLoading,
       clearError: clearError ?? this.clearError,
       error: error ?? this.error,
-      expandedRecord: expandedRecord,
+      expandedRecord: clearExpandedRecord ? null : (expandedRecord ?? this.expandedRecord),
+      currentPage: currentPage ?? this.currentPage,
+      pageSize: pageSize ?? this.pageSize,
+      totalItems: totalItems ?? this.totalItems,
+      hasMore: hasMore ?? this.hasMore,
     );
   }
 }

@@ -1,25 +1,24 @@
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/overtime/overtime_provider.dart';
+import 'package:digify_hr_system/core/widgets/assets/digify_asset_button.dart';
+import 'package:digify_hr_system/core/widgets/common/app_avatar.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_square_capsule.dart';
+import 'package:digify_hr_system/core/enums/overtime_status.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/overtime/overtime_record.dart';
+import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/extensions/context_extensions.dart';
 import '../../../../../../core/localization/l10n/app_localizations.dart';
-import '../../../../../../core/theme/app_shadows.dart';
-import '../../../../../../core/widgets/assets/digify_asset_button.dart';
-import '../../../../../../core/widgets/common/app_avatar.dart';
-import '../../../../../../core/widgets/common/digify_capsule.dart';
-import '../../../../../../core/widgets/common/digify_square_capsule.dart';
-import '../../../../../../gen/assets.gen.dart';
-import '../../../../domain/models/overtime/overtime_record.dart';
+import '../../../../data/config/overtime_table_config.dart';
+import '../overtime_status_chip.dart';
 
-class OvertimeTableRow extends ConsumerWidget {
+class OvertimeTableRow extends StatelessWidget {
   final OvertimeRecord record;
   final AppLocalizations localizations;
-  final Function(OvertimeRecord) onView;
+  final bool isDark;
+  final bool isExpanded;
+  final VoidCallback onToggle;
   final Function(OvertimeRecord) onEdit;
   final Function(OvertimeRecord) onDelete;
 
@@ -27,448 +26,173 @@ class OvertimeTableRow extends ConsumerWidget {
     super.key,
     required this.record,
     required this.localizations,
-    required this.onView,
+    required this.isDark,
+    required this.isExpanded,
+    required this.onToggle,
     required this.onEdit,
     required this.onDelete,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final expandedRecord = ref.watch(
-      overtimeManagementProvider.select((value) => value.expandedRecord),
-    );
-    final notifier = ref.watch(overtimeManagementProvider.notifier);
-
-    return Container(
-      width: context.screenWidth,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onToggle,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isExpanded
+              ? (isDark ? AppColors.cardBackgroundGreyDark : AppColors.sidebarActiveBg.withAlpha(128))
+              : null,
+          border: isExpanded
+              ? null
+              : Border(
+                  bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.w),
+                ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
+        child: Row(
+          children: [
+            Gap(24.w),
+            AnimatedRotation(
+              turns: isExpanded ? 0.25 : 0,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeOutCubic,
+              child: Icon(
+                Icons.keyboard_arrow_right,
+                color: isExpanded
+                    ? AppColors.statIconBlue
+                    : isDark
+                    ? AppColors.textTertiaryDark
+                    : AppColors.dialogCloseIcon,
+                size: 20.r,
+              ),
+            ),
+            if (OvertimeTableConfig.showEmployee)
               _buildDataCell(
                 Row(
                   children: [
-                    AnimatedRotation(
-                      duration: const Duration(milliseconds: 200),
-                      turns: expandedRecord == record.employeeId ? 0.5 : 0,
-                      child: DigifyAssetButton(
-                        assetPath: Assets.icons.arrowIcon.path,
-                        color: expandedRecord == record.employeeId
-                            ? AppColors.primary
-                            : Theme.of(context).iconTheme.color,
-                        onTap: () {
-                          if (expandedRecord == record.employeeId) {
-                            notifier.toggleOvertimeRecord(null);
-                          } else {
-                            notifier.toggleOvertimeRecord(record.employeeId);
-                          }
-                        },
-                      ),
-                    ),
-                    Gap(12.w),
                     AppAvatar(
-                      size: 40.r,
-                      fallbackInitial: record.employeeDetail?.name,
+                      size: 35.w,
+                      fallbackInitial: record.employeeNameDisplay,
                       textColor: AppColors.textPrimary,
                     ),
-                    Gap(12.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          record.employeeDetail?.name ?? "",
-                          style: context.theme.textTheme.bodyLarge,
-                        ),
-                        Gap(4.h),
-                        Text(
-                          record.employeeId,
-                          style: context.theme.textTheme.labelSmall,
-                        ),
-                      ],
+                    Gap(11.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            record.employeeNameDisplay.toUpperCase(),
+                            style: context.theme.textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
+                          ),
+                          Gap(2.h),
+                          Text(
+                            record.employeeIdDisplay,
+                            style: context.theme.textTheme.bodySmall?.copyWith(
+                              fontSize: 12.sp,
+                              color: AppColors.tableHeaderText,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                250.w,
+                OvertimeTableConfig.employeeWidth.w,
               ),
+            if (OvertimeTableConfig.showDate)
               _buildDataCell(
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("--/--/--", style: context.theme.textTheme.bodyLarge),
-                    Gap(4.h),
                     Text(
-                      "Requested: --/--/--",
-                      style: context.theme.textTheme.labelSmall,
+                      record.dateDisplay,
+                      style: context.theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 14.sp,
+                        color: AppColors.dialogTitle,
+                      ),
+                    ),
+                    Gap(2.h),
+                    Text(
+                      'Requested: ${record.requestedDateDisplay}',
+                      style: context.theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColors.tableHeaderText,
+                      ),
                     ),
                   ],
                 ),
-                200.w,
+                OvertimeTableConfig.dateWidth.w,
               ),
+            if (OvertimeTableConfig.showType)
               _buildDataCell(
                 DigifySquareCapsule(
-                  label: record.overtimeDetail?.type ?? "",
+                  label: record.typeDisplay,
                   textColor: AppColors.statIconBlue,
-                  backgroundColor: AppColors.statIconBlue.withValues(
-                    alpha: 0.1,
-                  ),
+                  backgroundColor: AppColors.statIconBlue.withValues(alpha: 0.1),
                 ),
-                150.w,
+                OvertimeTableConfig.typeWidth.w,
               ),
+            if (OvertimeTableConfig.showHours)
               _buildDataCell(
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "${record.overtimeDetail?.overtimeHours} hrs",
-                      style: context.theme.textTheme.bodyLarge,
+                      '${record.overtimeHoursDisplay} hrs',
+                      style: context.theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 14.sp,
+                        color: AppColors.dialogTitle,
+                      ),
                     ),
-                    Gap(4.h),
+                    Gap(2.h),
                     Text(
-                      "Regular: ${record.overtimeDetail?.regularHours} hrs",
-                      style: context.theme.textTheme.labelSmall,
+                      'Regular: ${record.regularHoursDisplay} hrs',
+                      style: context.theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 12.sp,
+                        color: AppColors.tableHeaderText,
+                      ),
                     ),
                   ],
                 ),
-                150.w,
+                OvertimeTableConfig.hoursWidth.w,
               ),
+            if (OvertimeTableConfig.showRate)
               _buildDataCell(
                 Text(
-                  "${record.overtimeDetail?.rate}x",
-                  style: context.theme.textTheme.bodyLarge,
+                  '${record.rateDisplay}x',
+                  style: context.theme.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
                 ),
-                100.w,
+                OvertimeTableConfig.rateWidth.w,
               ),
+            if (OvertimeTableConfig.showAmount)
               _buildDataCell(
                 Text(
-                  "KWD ${record.amount}",
-                  style: context.theme.textTheme.bodyLarge,
+                  'KWD ${record.amountDisplay}',
+                  style: context.theme.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
                 ),
-                150.w,
+                OvertimeTableConfig.amountWidth.w,
               ),
+            if (OvertimeTableConfig.showStatus)
               _buildDataCell(
-                DigifyCapsule(
-                  label: record.approvalInformation?.status ?? "",
-                  textColor: AppColors.statIconGreen,
-                  backgroundColor: AppColors.statIconGreen.withValues(
-                    alpha: 0.1,
-                  ),
-                ),
-                150.w,
+                OvertimeStatusChip(status: OvertimeStatus.fromString(record.approvalInformation?.status ?? "")),
+                OvertimeTableConfig.statusWidth.w,
               ),
+            if (OvertimeTableConfig.showActions)
               _buildDataCell(
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   spacing: 8.w,
                   children: [
-                    DigifyAssetButton(
-                      assetPath: Assets.icons.blueEyeIcon.path,
-                      onTap: () => onView(record),
-                    ),
-                    DigifyAssetButton(
-                      assetPath: Assets.icons.editIcon.path,
-                      onTap: () => onEdit(record),
-                    ),
-                    DigifyAssetButton(
-                      assetPath: Assets.icons.redDeleteIcon.path,
-                      onTap: () => onDelete(record),
-                    ),
+                    DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(record)),
+                    DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(record)),
                   ],
                 ),
-                200.w,
+                OvertimeTableConfig.actionsWidth.w,
               ),
-            ],
-          ),
-          if (expandedRecord == record.employeeId) ...[
-            Container(
-              width: context.screenWidth,
-              color: context.isDark
-                  ? AppColors.backgroundDark
-                  : AppColors.tableHeaderBackground,
-              padding: EdgeInsetsDirectional.symmetric(
-                horizontal: 20.w,
-                vertical: 16.h,
-              ),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    /// Employee Details
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: context.isDark
-                              ? AppColors.cardBackgroundDark
-                              : AppColors.dashboardCard,
-                          borderRadius: BorderRadius.circular(10.r),
-                          boxShadow: AppShadows.primaryShadow,
-                        ),
-                        padding: EdgeInsetsDirectional.symmetric(
-                          horizontal: 20.w,
-                          vertical: 16.h,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                DigifyAsset(
-                                  assetPath: Assets.icons.userIcon.path,
-                                  color: AppColors.primary,
-                                ),
-                                Gap(12.w),
-                                Text(
-                                  "Employee Details",
-                                  style: context.theme.textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
-                            Gap(16.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Position:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.employeeDetail?.position ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Department:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.employeeDetail?.department ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Line Manager:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.employeeDetail?.lineManager ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    /// Overtime Details
-                    Gap(16.w),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: context.isDark
-                              ? AppColors.cardBackgroundDark
-                              : AppColors.dashboardCard,
-                          borderRadius: BorderRadius.circular(10.r),
-                          boxShadow: AppShadows.primaryShadow,
-                        ),
-                        padding: EdgeInsetsDirectional.symmetric(
-                          horizontal: 20.w,
-                          vertical: 16.h,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                DigifyAsset(
-                                  assetPath: Assets.icons.clockIcon.path,
-                                ),
-                                Gap(12.w),
-                                Text(
-                                  "Overtime Details",
-                                  style: context.theme.textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
-                            Gap(16.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Regular Hours:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  "${record.overtimeDetail?.regularHours} hrs",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Overtime Hours:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  "${record.overtimeDetail?.overtimeHours} hrs",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Overtime Type:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.overtimeDetail?.type ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Rate Multiplier:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  "${record.overtimeDetail?.rate}x",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    /// Approval Information
-                    Gap(16.w),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: context.isDark
-                              ? AppColors.cardBackgroundDark
-                              : AppColors.dashboardCard,
-                          borderRadius: BorderRadius.circular(10.r),
-                          boxShadow: AppShadows.primaryShadow,
-                        ),
-                        padding: EdgeInsetsDirectional.symmetric(
-                          horizontal: 20.w,
-                          vertical: 16.h,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                // DigifyAsset(assetPath: Assets.icons),
-                                Gap(12.w),
-                                Text(
-                                  "Approval Information",
-                                  style: context.theme.textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
-                            Gap(16.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Status:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                DigifyCapsule(
-                                  label:
-                                      record.approvalInformation?.status ?? "",
-                                  backgroundColor: AppColors.statIconGreen
-                                      .withValues(alpha: .2),
-                                  textColor: AppColors.statIconGreen,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Approved By:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.approvalInformation?.byUser ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Gap(8.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Approved Date:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Text(
-                                  record.approvalInformation?.date.toString() ??
-                                      "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: context.isDark
-                                  ? AppColors.borderGreyDark
-                                  : AppColors.borderGrey,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Reason:",
-                                  style: context.theme.textTheme.labelSmall,
-                                ),
-                                Gap(4.h),
-                                Text(
-                                  record.approvalInformation?.reason ?? "--",
-                                  style: context.theme.textTheme.labelLarge,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -477,10 +201,7 @@ class OvertimeTableRow extends ConsumerWidget {
     return Container(
       width: width,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsetsDirectional.symmetric(
-        horizontal: 20.w,
-        vertical: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.symmetric(horizontal: OvertimeTableConfig.cellPaddingHorizontal.w, vertical: 16.h),
       child: child,
     );
   }
