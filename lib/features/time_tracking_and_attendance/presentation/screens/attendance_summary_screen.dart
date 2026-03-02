@@ -11,7 +11,6 @@ import '../../../../core/widgets/common/digify_tab_header.dart';
 import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../providers/attendance_summary/attendance_summary_enterprise_provider.dart';
-import '../providers/overtime_configuration/overtime_configuration_enterprise_provider.dart';
 import '../widgets/attendance_summary/component_attendance_summary_filters.dart';
 import '../widgets/attendance_summary/component_attendance_summary_table.dart';
 
@@ -22,10 +21,14 @@ class AttendanceSummaryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(overtimeConfigurationEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(
+      attendanceSummaryEnterpriseIdProvider,
+    );
 
     return Container(
-      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      color: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
@@ -34,7 +37,8 @@ class AttendanceSummaryScreen extends ConsumerWidget {
           children: [
             DigifyTabHeader(
               title: 'Time & Labor Management - HR View',
-              description: 'Comprehensive attendance, shifts, overtime and labor cost management',
+              description:
+                  'Comprehensive attendance, shifts, overtime and labor cost management',
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -57,14 +61,16 @@ class AttendanceSummaryScreen extends ConsumerWidget {
             EnterpriseSelectorWidget(
               selectedEnterpriseId: effectiveEnterpriseId,
               onEnterpriseChanged: (enterpriseId) {
-                ref.read(attendanceSummarySelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+                ref
+                    .read(attendanceSummarySelectedEnterpriseProvider.notifier)
+                    .setEnterpriseId(enterpriseId);
               },
               subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'
                   : 'Select an enterprise to view data',
             ),
             Gap(24.h),
-            ComponentAttendanceSummaryFilters(),
+            ComponentAttendanceSummaryFilters(isDark: isDark),
             Gap(24.h),
             ComponentAttendanceSummaryTable(),
           ],
