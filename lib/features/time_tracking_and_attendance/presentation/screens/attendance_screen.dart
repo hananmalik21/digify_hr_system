@@ -71,6 +71,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
               onSearchChanged: notifier.setEmployeeNumber,
               onFromDateSelected: notifier.setFromDate,
               onToDateSelected: notifier.setToDate,
+              onApply: notifier.applyDateFilters,
+              onClear: notifier.clearDateFilters,
               isDark: isDark,
             ),
             AttendanceTable(

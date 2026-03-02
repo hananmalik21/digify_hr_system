@@ -24,6 +24,21 @@ class DateTimeUtils {
     return iso.replaceFirst(RegExp(r'\.\d+'), '');
   }
 
+  static String localToIso8601WithOffset(DateTime local) {
+    final offset = local.timeZoneOffset;
+    final offsetHours = offset.inHours;
+    final offsetMins = offset.inMinutes.remainder(60).abs();
+    final sign = offsetHours >= 0 ? '+' : '-';
+    final offsetStr = '$sign${offsetHours.abs().toString().padLeft(2, '0')}:${offsetMins.toString().padLeft(2, '0')}';
+    final y = local.year.toString().padLeft(4, '0');
+    final m = local.month.toString().padLeft(2, '0');
+    final d = local.day.toString().padLeft(2, '0');
+    final h = local.hour.toString().padLeft(2, '0');
+    final min = local.minute.toString().padLeft(2, '0');
+    final sec = local.second.toString().padLeft(2, '0');
+    return '$y-$m-${d}T$h:$min:$sec$offsetStr';
+  }
+
   static String formatYmd(DateTime date) {
     final y = date.year.toString().padLeft(4, '0');
     final m = date.month.toString().padLeft(2, '0');

@@ -119,7 +119,7 @@ class AttendanceTableRow extends StatelessWidget {
                       assetPath: Assets.icons.editIconGreen.path,
                       onTap: () {
                         if (record.attendance != null) {
-                          MarkAttendanceDialog.show(context, attendance: record.attendance!);
+                          MarkAttendanceDialog.show(context, attendanceRecord: record);
                         }
                       },
                       width: 17.w,

@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart'
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/dialogs/mark_attendance_dialog_widgets/mark_attendance_dialog_widgets.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/attendance/attendance_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/attendance/attendance_provider.dart';
@@ -16,19 +17,19 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class MarkAttendanceDialog extends ConsumerStatefulWidget {
-  final Attendance? attendance;
+  final AttendanceRecord? attendanceRecord;
 
-  const MarkAttendanceDialog({super.key, this.attendance});
+  const MarkAttendanceDialog({super.key, this.attendanceRecord});
 
-  static Future<void> show(BuildContext context, {Attendance? attendance}) async {
+  static Future<void> show(BuildContext context, {AttendanceRecord? attendanceRecord}) async {
     return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => MarkAttendanceDialog(attendance: attendance),
+      builder: (context) => MarkAttendanceDialog(attendanceRecord: attendanceRecord),
     );
   }
 
-  bool get isEditMode => attendance != null;
+  bool get isEditMode => attendanceRecord != null;
 
   @override
   ConsumerState<MarkAttendanceDialog> createState() => _MarkAttendanceDialogState();
@@ -45,8 +46,8 @@ class _MarkAttendanceDialogState extends ConsumerState<MarkAttendanceDialog> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.attendance != null) {
-        ref.read(markAttendanceFormProvider.notifier).initializeFromAttendance(widget.attendance!);
+      if (widget.attendanceRecord != null) {
+        ref.read(markAttendanceFormProvider.notifier).initializeFromAttendanceRecord(widget.attendanceRecord!);
         _syncControllersWithState();
       } else {
         ref.read(markAttendanceFormProvider.notifier).reset();

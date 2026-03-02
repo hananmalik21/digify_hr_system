@@ -16,6 +16,8 @@ class AttendanceRecord {
   final String? scheduleStartTime;
   final String? scheduleEndTime;
   final String? scheduledHours;
+  final DateTime? scheduleStartTimeAsDateTime;
+  final int? scheduledHoursAsInt;
   final String? hoursWorked;
   final String? overtimeHours;
   final String? checkInLocation;
@@ -37,6 +39,8 @@ class AttendanceRecord {
     this.scheduleStartTime,
     this.scheduleEndTime,
     this.scheduledHours,
+    this.scheduleStartTimeAsDateTime,
+    this.scheduledHoursAsInt,
     this.hoursWorked,
     this.overtimeHours,
     this.checkInLocation,
