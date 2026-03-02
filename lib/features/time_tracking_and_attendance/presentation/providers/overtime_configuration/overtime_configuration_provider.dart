@@ -59,8 +59,10 @@ class OvertimeConfiguration {
       error: error ?? this.error,
       rateMultipliers: rateMultipliers ?? this.rateMultipliers,
       laborLawLimits: laborLawLimits ?? this.laborLawLimits,
-      isManagerApprovalRequired: isManagerApprovalRequired ?? this.isManagerApprovalRequired,
-      isHRValidationRequired: isHRValidationRequired ?? this.isHRValidationRequired,
+      isManagerApprovalRequired:
+          isManagerApprovalRequired ?? this.isManagerApprovalRequired,
+      isHRValidationRequired:
+          isHRValidationRequired ?? this.isHRValidationRequired,
     );
   }
 }
@@ -69,16 +71,18 @@ final overtimeConfigurationApiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(baseUrl: ApiConfig.baseUrl);
 });
 
-final overtimeConfigurationRepositoryProvider = Provider<OvertimeConfigurationRepository>((ref) {
-  final client = ref.watch(overtimeConfigurationApiClientProvider);
-  return OvertimeConfigurationRepositoryImpl(apiClient: client);
-});
+final overtimeConfigurationRepositoryProvider =
+    Provider<OvertimeConfigurationRepository>((ref) {
+      final client = ref.watch(overtimeConfigurationApiClientProvider);
+      return OvertimeConfigurationRepositoryImpl(apiClient: client);
+    });
 
 class MissingOvertimeConfigurationException implements Exception {
   MissingOvertimeConfigurationException();
 }
 
-class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration> {
+class OvertimeConfigurationNotifier
+    extends StateNotifier<OvertimeConfiguration> {
   final GetOvertimeConfigurationUseCase _getConfiguration;
   final OvertimeConfigurationRepository _repository;
 
@@ -131,36 +135,60 @@ class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration>
 
   /// Update Configuration Information
   void updateConfigurationName(String name) {
-    state = state.copyWith(configInfo: state.configInfo?.copyWith(configName: name));
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(configName: name),
+    );
   }
 
   void updateEffectiveStartDate(DateTime date) {
-    state = state.copyWith(configInfo: state.configInfo?.copyWith(effectiveStartDate: date));
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(effectiveStartDate: date),
+    );
   }
 
   void updateEffectiveEndDate(DateTime date) {
-    state = state.copyWith(configInfo: state.configInfo?.copyWith(effectiveEndDate: date));
+    state = state.copyWith(
+      configInfo: state.configInfo?.copyWith(effectiveEndDate: date),
+    );
   }
 
   /// Update Labor Law Limits
   void updateLaborLawLimitsMaxDailyOvertime(String maxDailyOvertime) {
-    state = state.copyWith(laborLawLimits: state.laborLawLimits?.copyWith(maxDailyOvertime: maxDailyOvertime));
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        maxDailyOvertime: maxDailyOvertime,
+      ),
+    );
   }
 
   void updateLaborLawLimitsMaxAnnualOvertime(String maxAnnualOvertime) {
-    state = state.copyWith(laborLawLimits: state.laborLawLimits?.copyWith(maxAnnualOvertime: maxAnnualOvertime));
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        maxAnnualOvertime: maxAnnualOvertime,
+      ),
+    );
   }
 
   void updateLaborLawLimitsMinRestPeriod(String minRestPeriod) {
-    state = state.copyWith(laborLawLimits: state.laborLawLimits?.copyWith(minRestPeriod: minRestPeriod));
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        minRestPeriod: minRestPeriod,
+      ),
+    );
   }
 
   void updateLaborLawLimitsLawReference(String lawReference) {
-    state = state.copyWith(laborLawLimits: state.laborLawLimits?.copyWith(lawReference: lawReference));
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(
+        lawReference: lawReference,
+      ),
+    );
   }
 
   void updateLaborLawLimitsNotes(String notes) {
-    state = state.copyWith(laborLawLimits: state.laborLawLimits?.copyWith(notes: notes));
+    state = state.copyWith(
+      laborLawLimits: state.laborLawLimits?.copyWith(notes: notes),
+    );
   }
 
   /// Toggle Manager Approval
@@ -178,13 +206,21 @@ class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration>
     if (state.companyId.isEmpty) return;
 
     try {
-      await _repository.deleteRateMultiplier(companyId: state.companyId, rateMultiplierId: rateMultiplierId);
+      await _repository.deleteRateMultiplier(
+        companyId: state.companyId,
+        rateMultiplierId: rateMultiplierId,
+      );
 
       state = state.copyWith(
-        rateMultipliers: state.rateMultipliers.where((e) => e.otRateTypeId != rateMultiplierId).toList(),
+        rateMultipliers: state.rateMultipliers
+            .where((e) => e.otRateTypeId != rateMultiplierId)
+            .toList(),
       );
     } catch (e) {
-      state = state.copyWith(error: 'Failed to delete rate multiplier: ${e.toString()}', clearError: false);
+      state = state.copyWith(
+        error: 'Failed to delete rate multiplier: ${e.toString()}',
+        clearError: false,
+      );
     }
   }
 
@@ -197,8 +233,7 @@ class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration>
         state.laborLawLimits?.maxDailyOvertime.isEmpty == true ||
         state.laborLawLimits?.maxAnnualOvertime.isEmpty == true ||
         state.laborLawLimits?.minRestPeriod.isEmpty == true ||
-        state.laborLawLimits?.lawReference.isEmpty == true ||
-        state.laborLawLimits?.notes.isEmpty == true) {
+        state.laborLawLimits?.lawReference.isEmpty == true) {
       throw MissingOvertimeConfigurationException();
     }
 
@@ -242,8 +277,12 @@ class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration>
     return {
       'enterprise_id': companyId,
       'config_name': configInfo.configName,
-      'effective_start_date': DateFormat('yyyy-MM-dd').format(configInfo.effectiveStartDate!),
-      'effective_end_date': DateFormat('yyyy-MM-dd').format(configInfo.effectiveEndDate!),
+      'effective_start_date': DateFormat(
+        'yyyy-MM-dd',
+      ).format(configInfo.effectiveStartDate!),
+      'effective_end_date': DateFormat(
+        'yyyy-MM-dd',
+      ).format(configInfo.effectiveEndDate!),
       'status': "ACTIVE",
       "labor_limits": {
         "max_daily_overtime_hours": laborLawLimits.maxDailyOvertime,
@@ -257,10 +296,16 @@ class OvertimeConfigurationNotifier extends StateNotifier<OvertimeConfiguration>
   }
 }
 
-final overtimeConfigurationProvider = StateNotifierProvider<OvertimeConfigurationNotifier, OvertimeConfiguration>((
-  ref,
-) {
-  final repository = ref.watch(overtimeConfigurationRepositoryProvider);
-  final getConfigurationUseCase = GetOvertimeConfigurationUseCase(repository: repository);
-  return OvertimeConfigurationNotifier(repository: repository, getConfiguration: getConfigurationUseCase);
-});
+final overtimeConfigurationProvider =
+    StateNotifierProvider<OvertimeConfigurationNotifier, OvertimeConfiguration>(
+      (ref) {
+        final repository = ref.watch(overtimeConfigurationRepositoryProvider);
+        final getConfigurationUseCase = GetOvertimeConfigurationUseCase(
+          repository: repository,
+        );
+        return OvertimeConfigurationNotifier(
+          repository: repository,
+          getConfiguration: getConfigurationUseCase,
+        );
+      },
+    );

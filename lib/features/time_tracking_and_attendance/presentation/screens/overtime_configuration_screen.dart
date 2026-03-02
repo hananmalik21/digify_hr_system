@@ -23,19 +23,27 @@ class OvertimeConfigurationScreen extends ConsumerStatefulWidget {
   const OvertimeConfigurationScreen({super.key});
 
   @override
-  ConsumerState<OvertimeConfigurationScreen> createState() => _OvertimeConfigurationScreenState();
+  ConsumerState<OvertimeConfigurationScreen> createState() =>
+      _OvertimeConfigurationScreenState();
 }
 
-class _OvertimeConfigurationScreenState extends ConsumerState<OvertimeConfigurationScreen> {
+class _OvertimeConfigurationScreenState
+    extends ConsumerState<OvertimeConfigurationScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(overtimeConfigurationEnterpriseIdProvider);
-    final isLoading = ref.watch(overtimeConfigurationProvider.select((state) => state.isLoading));
+    final effectiveEnterpriseId = ref.watch(
+      overtimeConfigurationEnterpriseIdProvider,
+    );
+    final isLoading = ref.watch(
+      overtimeConfigurationProvider.select((state) => state.isLoading),
+    );
 
     return Container(
-      color: isDark ? AppColors.backgroundDark : AppColors.tableHeaderBackground,
+      color: isDark
+          ? AppColors.backgroundDark
+          : AppColors.tableHeaderBackground,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 47.h),
@@ -44,11 +52,16 @@ class _OvertimeConfigurationScreenState extends ConsumerState<OvertimeConfigurat
           children: [
             DigifyTabHeader(
               title: 'Overtime Configuration',
-              description: 'Configure overtime rates, limits, and compliance rules according to Kuwait Labor Law',
+              description:
+                  'Configure overtime rates, limits, and compliance rules according to Kuwait Labor Law',
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppButton.outline(label: 'Reset Defaults', svgPath: Assets.icons.resetIcon.path, onPressed: () {}),
+                  AppButton.outline(
+                    label: 'Reset Defaults',
+                    svgPath: Assets.icons.resetIcon.path,
+                    onPressed: () {},
+                  ),
                   Gap(12.w),
                   AppButton.primary(
                     label: localizations.saveConfiguration,
@@ -63,7 +76,11 @@ class _OvertimeConfigurationScreenState extends ConsumerState<OvertimeConfigurat
             EnterpriseSelectorWidget(
               selectedEnterpriseId: effectiveEnterpriseId,
               onEnterpriseChanged: (enterpriseId) {
-                ref.read(overtimeConfigurationSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+                ref
+                    .read(
+                      overtimeConfigurationSelectedEnterpriseProvider.notifier,
+                    )
+                    .setEnterpriseId(enterpriseId);
               },
               subtitle: effectiveEnterpriseId != null
                   ? 'Viewing data for selected enterprise'
@@ -77,10 +94,22 @@ class _OvertimeConfigurationScreenState extends ConsumerState<OvertimeConfigurat
               mainAxisSpacing: 24.h,
               crossAxisSpacing: 24.w,
               children: [
-                StaggeredGridTile.fit(crossAxisCellCount: context.isMobile ? 3 : 2, child: ComponentRateMultipliers()),
-                StaggeredGridTile.fit(crossAxisCellCount: context.isMobile ? 3 : 1, child: ComponentLaborLawLimit()),
-                StaggeredGridTile.fit(crossAxisCellCount: context.isMobile ? 3 : 2, child: ComponentApprovalWorkflow()),
-                StaggeredGridTile.fit(crossAxisCellCount: context.isMobile ? 3 : 1, child: ComponentComplianceScore()),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 2,
+                  child: ComponentRateMultipliers(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 1,
+                  child: ComponentLaborLawLimit(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 2,
+                  child: ComponentApprovalWorkflow(),
+                ),
+                StaggeredGridTile.fit(
+                  crossAxisCellCount: context.isMobile ? 3 : 1,
+                  child: ComponentComplianceScore(),
+                ),
               ],
             ),
           ],
@@ -95,10 +124,16 @@ class _OvertimeConfigurationScreenState extends ConsumerState<OvertimeConfigurat
     try {
       await notifier.saveOvertimeConfiguration();
       if (!mounted) return;
-      ToastService.success(context, 'Overtime Configuration saved successfully.');
+      ToastService.success(
+        context,
+        'Overtime Configuration saved successfully.',
+      );
     } catch (e) {
       if (!mounted) return;
-      ToastService.error(context, 'Failed to save overtime configuration. Please try again.');
+      ToastService.error(
+        context,
+        'Failed to save overtime configuration. Please try again.',
+      );
     }
   }
 }
