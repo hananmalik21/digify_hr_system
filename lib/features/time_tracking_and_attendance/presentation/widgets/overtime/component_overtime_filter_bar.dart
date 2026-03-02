@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/extensions/context_extensions.dart';
 import '../../../../../core/theme/app_shadows.dart';
@@ -18,12 +17,15 @@ class ComponentOvertimeFilterBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(overtimeManagementProvider);
     final notifier = ref.read(overtimeManagementProvider.notifier);
+    final isDark = context.isDark;
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsetsDirectional.symmetric(vertical: 8.w, horizontal: 16.w),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: context.isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
         boxShadow: AppShadows.primaryShadow,
       ),
       child: Row(
@@ -31,36 +33,45 @@ class ComponentOvertimeFilterBar extends ConsumerWidget {
         children: [
           DigifyAsset(
             assetPath: Assets.icons.usersIcon.path,
-            width: 16,
-            height: 16,
+            width: 20,
+            height: 20,
+            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
           ),
-          Gap(16.w),
+          Gap(14.w),
           Expanded(
             child: SizedBox(
-              height: 40.h,
+              height: 35.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final category = state.categories![index];
-                  return ChoiceChip(
-                    label: Text(category.name),
-                    selected: state.selectedCategory == category,
-                    selectedColor: context.colorScheme.primary,
-                    showCheckmark: false,
-                    labelStyle: TextStyle(
-                      color: state.selectedCategory == category
-                          ? context.colorScheme.onPrimary
-                          : context.colorScheme.onSurface,
-                      fontWeight: FontWeight.w500,
+                  final isSelected = state.selectedCategory == category;
+
+                  return Material(
+                    color: isSelected
+                        ? (isDark ? context.colorScheme.primary : AppColors.primary)
+                        : (isDark ? AppColors.backgroundDark : AppColors.grayBg),
+                    borderRadius: BorderRadius.circular(10.r),
+                    child: InkWell(
+                      onTap: () => notifier.selectCategory(category),
+                      borderRadius: BorderRadius.circular(10.r),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                        alignment: Alignment.center,
+                        child: Text(
+                          category.name,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: isSelected
+                                ? Colors.white
+                                : (isDark ? AppColors.textPrimaryDark : AppColors.textDarkSlate),
+                          ),
+                        ),
+                      ),
                     ),
-                    backgroundColor: context.isDark
-                        ? AppColors.backgroundDark
-                        : AppColors.grayBg,
-                    side: BorderSide.none,
-                    onSelected: (value) => notifier.selectCategory(category),
                   );
                 },
-                separatorBuilder: (context, index) => Gap(8.w),
+                separatorBuilder: (context, index) => Gap(7.w),
                 itemCount: state.categories?.length ?? 0,
               ),
             ),

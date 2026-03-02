@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/theme/theme_extensions.dart';
 import '../../../../../core/widgets/assets/digify_asset.dart';
 import '../../../domain/models/overtime/overtime_management.dart';
@@ -12,125 +14,108 @@ class ComponentOvertimeStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(overtimeManagementProvider);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final spacing = 16.0.w;
-        if (context.isMobile) {
-          return Column(
-            spacing: spacing,
-            children: List.generate(
-              state.stats?.length ?? 0,
-              (index) => OvertimeStatCard(stat: state.stats![index]),
-            ),
-          );
-        } else {
-          final minCardWidth = 150.0.w;
+    final stats = state.stats ?? [];
 
-          final calcCardWidth =
-              (constraints.maxWidth - (spacing * (state.stats?.length ?? 1))) /
-              (state.stats?.length ?? 1);
-          final cardWidth = calcCardWidth > minCardWidth
-              ? calcCardWidth
-              : minCardWidth;
-          return Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            children: List.generate(
-              state.stats?.length ?? 0,
-              (index) => OvertimeStatCard(
-                stat: state.stats![index],
-                cardWidth: cardWidth,
+    if (stats.isEmpty) return const SizedBox.shrink();
+
+    final isMobile = context.isMobile;
+
+    if (isMobile) {
+      return Wrap(
+        spacing: 16.w,
+        runSpacing: 16.h,
+        children: stats
+            .map(
+              (stat) => SizedBox(
+                width: (context.screenWidth - 64.w) / 2,
+                child: OvertimeStatCard(stat: stat),
+              ),
+            )
+            .toList(),
+      );
+    }
+
+    return Row(
+      children: stats
+          .map(
+            (stat) => Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: stat == stats.last ? 0 : 16.w),
+                child: OvertimeStatCard(stat: stat),
               ),
             ),
-          );
-        }
-      },
+          )
+          .toList(),
     );
   }
 }
 
 class OvertimeStatCard extends StatelessWidget {
-  const OvertimeStatCard({super.key, required this.stat, this.cardWidth});
+  const OvertimeStatCard({super.key, required this.stat});
   final OvertimeStat stat;
-  final double? cardWidth;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.isDark;
+
     return Container(
-      width: cardWidth,
-      padding: EdgeInsets.all(17.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: context.themeCardBackground,
+        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: context.themeCardBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 3,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.10),
-            offset: const Offset(0, 1),
-            blurRadius: 2,
-            spreadRadius: -1,
-          ),
-        ],
+        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          Text(
+            stat.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.labelLarge?.copyWith(
+              color: isDark ? AppColors.textSecondaryDark : const Color(0xFF4A5565),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Gap(8.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 48.r,
-                height: 48.r,
-                decoration: BoxDecoration(
-                  color: stat.iconBackground,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Center(
-                  child: DigifyAsset(
-                    assetPath: stat.icon,
-                    width: 24,
-                    height: 24,
-                    color: stat.iconColor,
-                  ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stat.value,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.headlineLarge?.copyWith(
+                        color: isDark ? AppColors.textPrimaryDark : const Color(0xFF0F172B),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (stat.subTitle.isNotEmpty) ...[
+                      Gap(4.h),
+                      Text(
+                        stat.subTitle,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: isDark ? AppColors.textSecondaryDark : const Color(0xFF64748B),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Text(
-                  stat.title,
-                  style: TextStyle(
-                    fontSize: 15.1.sp,
-                    fontWeight: FontWeight.w400,
-                    color: context.themeTextSecondary,
-                    height: 24 / 15.1,
-                  ),
-                ),
+              Container(
+                width: 48.w,
+                height: 48.h,
+                decoration: BoxDecoration(color: stat.iconBackground, borderRadius: BorderRadius.circular(8.r)),
+                alignment: Alignment.center,
+                child: DigifyAsset(assetPath: stat.icon, color: stat.iconColor, width: 24, height: 24),
               ),
             ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            stat.value,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w900,
-              color: context.themeTextPrimary,
-              height: 24 / 16,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            stat.subTitle,
-            style: TextStyle(
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w400,
-              color: context.themeTextSecondary,
-              height: 24 / 16,
-            ),
           ),
         ],
       ),
