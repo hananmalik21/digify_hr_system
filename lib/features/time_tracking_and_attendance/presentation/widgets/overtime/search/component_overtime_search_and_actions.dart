@@ -230,7 +230,6 @@ class _OvertimeSearchAndActionsState extends ConsumerState<OvertimeSearchAndActi
       ref.read(overtimeEnterpriseSelectionNotifierProvider(org.structureId).notifier).reset();
     }
 
-    final notifier = ref.read(overtimeManagementProvider.notifier);
-    notifier.setOrgFilter(null, null);
+    ref.read(overtimeManagementProvider.notifier).resetFilters();
   }
 }

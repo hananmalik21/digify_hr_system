@@ -65,6 +65,7 @@ class OvertimeManagement {
   int pageSize;
   int totalItems;
   bool hasMore;
+  String? searchQuery;
   String? approvingOvertimeGuid;
   String? rejectingOvertimeGuid;
   String? cancelingOvertimeGuid;
@@ -86,6 +87,7 @@ class OvertimeManagement {
     this.pageSize = 10,
     this.totalItems = 0,
     this.hasMore = false,
+    this.searchQuery,
     this.approvingOvertimeGuid,
     this.rejectingOvertimeGuid,
     this.cancelingOvertimeGuid,
@@ -111,6 +113,8 @@ class OvertimeManagement {
     int? pageSize,
     int? totalItems,
     bool? hasMore,
+    String? searchQuery,
+    bool clearSearchQuery = false,
     String? approvingOvertimeGuid,
     String? rejectingOvertimeGuid,
     String? cancelingOvertimeGuid,
@@ -135,6 +139,7 @@ class OvertimeManagement {
       pageSize: pageSize ?? this.pageSize,
       totalItems: totalItems ?? this.totalItems,
       hasMore: hasMore ?? this.hasMore,
+      searchQuery: clearSearchQuery ? null : (searchQuery ?? this.searchQuery),
       approvingOvertimeGuid: clearApprovingOvertimeGuid ? null : (approvingOvertimeGuid ?? this.approvingOvertimeGuid),
       rejectingOvertimeGuid: clearRejectingOvertimeGuid ? null : (rejectingOvertimeGuid ?? this.rejectingOvertimeGuid),
       cancelingOvertimeGuid: clearCancelingOvertimeGuid ? null : (cancelingOvertimeGuid ?? this.cancelingOvertimeGuid),

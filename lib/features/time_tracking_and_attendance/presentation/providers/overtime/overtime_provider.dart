@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/enums/overtime_status.dart';
@@ -13,6 +15,8 @@ final overtimeRepositoryProvider = Provider<OvertimeRepository>((ref) {
 
 class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
   final OvertimeRepository _repository;
+  Timer? _searchDebounce;
+
   OvertimeManagementNotifier(this._repository) : super(OvertimeManagement()) {
     _initializeMockData();
     loadOvertime();
@@ -66,9 +70,11 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
 
     try {
       final pageToFetch = page ?? state.currentPage;
+      final searchQuery = state.searchQuery?.trim().isEmpty ?? true ? null : state.searchQuery?.trim();
       final result = await _repository.getOvertimeRequests(
         tenantId: tenantId,
         status: state.selectedStatus?.apiValue,
+        searchQuery: searchQuery,
         orgUnitId: state.orgUnitId,
         levelCode: state.orgLevelCode,
         page: pageToFetch,
@@ -104,6 +110,14 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
     loadOvertime(page: 1);
   }
 
+  void setSearchQuery(String value) {
+    state = state.copyWith(searchQuery: value, currentPage: 1);
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      loadOvertime(page: 1);
+    });
+  }
+
   void toggleOvertimeRecord(String? id) {
     state = state.copyWith(expandedRecord: id, clearExpandedRecord: id == null);
   }
@@ -117,6 +131,27 @@ class OvertimeManagementNotifier extends StateNotifier<OvertimeManagement> {
 
   void setOrgFilter(String? unitId, String? levelCode) {
     state = state.copyWith(orgUnitId: unitId, orgLevelCode: levelCode, clearOrgFilter: unitId == null, currentPage: 1);
+    loadOvertime(page: 1);
+  }
+
+  void clearSearchQuery() {
+    _searchDebounce?.cancel();
+    _searchDebounce = null;
+    state = state.copyWith(searchQuery: null, clearSearchQuery: true, currentPage: 1);
+    loadOvertime(page: 1);
+  }
+
+  void resetFilters() {
+    _searchDebounce?.cancel();
+    _searchDebounce = null;
+    state = state.copyWith(
+      orgUnitId: null,
+      orgLevelCode: null,
+      searchQuery: null,
+      clearOrgFilter: true,
+      clearSearchQuery: true,
+      currentPage: 1,
+    );
     loadOvertime(page: 1);
   }
 

@@ -44,6 +44,7 @@ class OvertimeRepositoryImpl implements OvertimeRepository {
   Future<OvertimeRequestsPage> getOvertimeRequests({
     required int tenantId,
     String? status,
+    String? searchQuery,
     String? orgUnitId,
     String? levelCode,
     int page = 1,
@@ -52,6 +53,7 @@ class OvertimeRepositoryImpl implements OvertimeRepository {
     final dto = await _requestsDataSource.getOvertimeRequests(
       tenantId: tenantId,
       status: status,
+      searchQuery: searchQuery,
       orgUnitId: orgUnitId,
       levelCode: levelCode,
       page: page,
