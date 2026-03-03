@@ -17,6 +17,7 @@ abstract class OvertimeRepository {
   Future<OvertimeRequestsPage> getOvertimeRequests({
     required int tenantId,
     String? status,
+    String? searchQuery,
     String? orgUnitId,
     String? levelCode,
     int page = 1,

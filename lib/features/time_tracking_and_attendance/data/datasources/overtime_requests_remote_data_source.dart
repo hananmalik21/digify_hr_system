@@ -31,6 +31,7 @@ abstract class OvertimeRequestsRemoteDataSource {
   Future<OvertimeRequestsResponseDto> getOvertimeRequests({
     required int tenantId,
     String? status,
+    String? searchQuery,
     String? orgUnitId,
     String? levelCode,
     int page = 1,
@@ -130,6 +131,7 @@ class OvertimeRequestsRemoteDataSourceImpl implements OvertimeRequestsRemoteData
   Future<OvertimeRequestsResponseDto> getOvertimeRequests({
     required int tenantId,
     String? status,
+    String? searchQuery,
     String? orgUnitId,
     String? levelCode,
     int page = 1,
@@ -143,6 +145,9 @@ class OvertimeRequestsRemoteDataSourceImpl implements OvertimeRequestsRemoteData
       };
       if (status != null && status.isNotEmpty) {
         queryParameters['status'] = status;
+      }
+      if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+        queryParameters['search'] = searchQuery.trim();
       }
       if (orgUnitId != null && orgUnitId.isNotEmpty) {
         queryParameters['org_unit_id'] = orgUnitId;

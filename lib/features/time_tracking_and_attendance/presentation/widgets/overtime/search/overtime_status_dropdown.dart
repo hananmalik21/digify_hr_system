@@ -21,7 +21,7 @@ class OvertimeStatusDropdown extends ConsumerWidget {
       child: DigifySelectField<OvertimeStatus?>(
         hint: label,
         value: currentStatus,
-        items: [null, ...OvertimeStatus.values],
+        items: [null, ...OvertimeStatus.values.where((s) => s != OvertimeStatus.pending)],
         itemLabelBuilder: (status) => status?.label ?? label,
         onChanged: (newValue) {
           ref.read(overtimeManagementProvider.notifier).selectStatus(newValue);
