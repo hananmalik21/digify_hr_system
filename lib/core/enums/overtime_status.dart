@@ -1,5 +1,6 @@
 enum OvertimeStatus {
-  submitted('Submitted'),
+  draft('Draft'),
+  submitted('Pending'),
   pending('Pending'),
   approved('Approved'),
   rejected('Rejected'),
@@ -10,6 +11,8 @@ enum OvertimeStatus {
 
   static OvertimeStatus fromString(String value) {
     switch (value.toUpperCase()) {
+      case 'DRAFT':
+        return OvertimeStatus.draft;
       case 'SUBMITTED':
         return OvertimeStatus.submitted;
       case 'PENDING':
@@ -27,6 +30,8 @@ enum OvertimeStatus {
 
   String get apiValue {
     switch (this) {
+      case OvertimeStatus.draft:
+        return 'DRAFT';
       case OvertimeStatus.submitted:
         return 'SUBMITTED';
       case OvertimeStatus.pending:

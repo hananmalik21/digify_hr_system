@@ -89,6 +89,10 @@ class ApiEndpoints {
       '$api/tm/overtime/configuration/$companyId';
   static const String tmOvertimeRateMultiplier = '$api/tm/overtime/rate-types';
   static const String tmOvertimeRequests = '$api/tm/overtime/requests';
+  static String tmOvertimeRequestById(String guid) => '$tmOvertimeRequests/$guid';
+  static String tmOvertimeRequestApprove(String guid) => '$tmOvertimeRequests/$guid/approve';
+  static String tmOvertimeRequestReject(String guid) => '$tmOvertimeRequests/$guid/reject';
+  static String tmOvertimeRequestCancel(String guid) => '$tmOvertimeRequests/$guid/cancel';
   static const String tmTimeZones = '$api/time-zones';
   static const String tmAttendanceLogs = '$api/tm/attendance/logs';
   static const String tmAttendanceLogsByDate =

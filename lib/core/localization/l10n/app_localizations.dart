@@ -7322,6 +7322,48 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to reject this timesheet? You will need to provide a reason.'**
   String get rejectTimesheetConfirmMessage;
 
+  /// No description provided for @approveOvertimeConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve overtime request'**
+  String get approveOvertimeConfirmTitle;
+
+  /// No description provided for @approveOvertimeConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to approve this overtime request?'**
+  String get approveOvertimeConfirmMessage;
+
+  /// No description provided for @rejectOvertimeConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject overtime request'**
+  String get rejectOvertimeConfirmTitle;
+
+  /// No description provided for @rejectOvertimeConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject this overtime request? You will need to provide a reason.'**
+  String get rejectOvertimeConfirmMessage;
+
+  /// No description provided for @cancelOvertimeDraftConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel draft overtime request'**
+  String get cancelOvertimeDraftConfirmTitle;
+
+  /// No description provided for @cancelOvertimeDraftConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this draft? This action cannot be undone.'**
+  String get cancelOvertimeDraftConfirmMessage;
+
+  /// No description provided for @overtimeDraftCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft overtime request cancelled successfully'**
+  String get overtimeDraftCancelled;
+
   /// No description provided for @totalRequests.
   ///
   /// In en, this message translates to:

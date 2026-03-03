@@ -129,6 +129,8 @@ class OtRequestItemDto {
 
   String _formatStatus() {
     switch (status.toUpperCase()) {
+      case 'DRAFT':
+        return 'Draft';
       case 'SUBMITTED':
         return 'Submitted';
       case 'APPROVED':
@@ -167,6 +169,7 @@ class OtRequestItemDto {
 
     return OvertimeRecord(
       otRequestId: otRequestId,
+      otRequestGuid: otRequestGuid.isNotEmpty ? otRequestGuid : null,
       employeeId: employeeNumber,
       date: dateForRecord,
       requestedDate: requestedDateForRecord,

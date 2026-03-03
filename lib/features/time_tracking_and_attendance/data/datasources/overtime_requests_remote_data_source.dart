@@ -1,9 +1,33 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/create_overtime_request_dto.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/overtime_requests_dto.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/update_overtime_request_dto.dart';
 
 abstract class OvertimeRequestsRemoteDataSource {
+  Future<void> createOvertimeRequest(CreateOvertimeRequestDto dto);
+
+  Future<Map<String, dynamic>?> updateOvertimeRequest(String otRequestGuid, {required UpdateOvertimeRequestDto dto});
+
+  Future<Map<String, dynamic>?> cancelOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  });
+
+  Future<Map<String, dynamic>?> approveOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  });
+
+  Future<Map<String, dynamic>?> rejectOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  });
+
   Future<OvertimeRequestsResponseDto> getOvertimeRequests({
     required int tenantId,
     String? status,
@@ -18,6 +42,89 @@ class OvertimeRequestsRemoteDataSourceImpl implements OvertimeRequestsRemoteData
   final ApiClient apiClient;
 
   OvertimeRequestsRemoteDataSourceImpl({required this.apiClient});
+
+  @override
+  Future<void> createOvertimeRequest(CreateOvertimeRequestDto dto) async {
+    try {
+      await apiClient.post(ApiEndpoints.tmOvertimeRequests, body: dto.toJson());
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to create overtime request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>?> updateOvertimeRequest(
+    String otRequestGuid, {
+    required UpdateOvertimeRequestDto dto,
+  }) async {
+    try {
+      final response = await apiClient.patch(ApiEndpoints.tmOvertimeRequestById(otRequestGuid), body: dto.toJson());
+      return response['data'] as Map<String, dynamic>?;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to update overtime request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>?> cancelOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  }) async {
+    try {
+      final response = await apiClient.post(
+        ApiEndpoints.tmOvertimeRequestCancel(otRequestGuid),
+        body: {'tenant_id': tenantId, 'actor': actor},
+      );
+      return response['data'] as Map<String, dynamic>?;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to cancel overtime request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>?> approveOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  }) async {
+    try {
+      final response = await apiClient.post(
+        ApiEndpoints.tmOvertimeRequestApprove(otRequestGuid),
+        body: {'tenant_id': tenantId, 'actor': actor},
+      );
+      return response['data'] as Map<String, dynamic>?;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to approve overtime request: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>?> rejectOvertimeRequest(
+    String otRequestGuid, {
+    required int tenantId,
+    String actor = 'manager.user',
+  }) async {
+    try {
+      final response = await apiClient.post(
+        ApiEndpoints.tmOvertimeRequestReject(otRequestGuid),
+        body: {'tenant_id': tenantId, 'actor': actor},
+      );
+      return response['data'] as Map<String, dynamic>?;
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to reject overtime request: ${e.toString()}', originalError: e);
+    }
+  }
 
   @override
   Future<OvertimeRequestsResponseDto> getOvertimeRequests({

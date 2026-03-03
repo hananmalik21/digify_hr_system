@@ -3744,6 +3744,30 @@ class AppLocalizationsAr extends AppLocalizations {
       'هل أنت متأكد أنك تريد رفض بطاقة الوقت هذه؟ ستحتاج إلى تقديم سبب.';
 
   @override
+  String get approveOvertimeConfirmTitle => 'الموافقة على طلب العمل الإضافي';
+
+  @override
+  String get approveOvertimeConfirmMessage =>
+      'هل أنت متأكد أنك تريد الموافقة على طلب العمل الإضافي هذا؟';
+
+  @override
+  String get rejectOvertimeConfirmTitle => 'رفض طلب العمل الإضافي';
+
+  @override
+  String get rejectOvertimeConfirmMessage =>
+      'هل أنت متأكد أنك تريد رفض طلب العمل الإضافي هذا؟ ستحتاج إلى تقديم سبب.';
+
+  @override
+  String get cancelOvertimeDraftConfirmTitle => 'إلغاء مسودة طلب العمل الإضافي';
+
+  @override
+  String get cancelOvertimeDraftConfirmMessage =>
+      'هل أنت متأكد أنك تريد إلغاء هذه المسودة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get overtimeDraftCancelled => 'تم إلغاء مسودة طلب العمل الإضافي بنجاح';
+
+  @override
   String get totalRequests => 'إجمالي الطلبات';
 
   @override

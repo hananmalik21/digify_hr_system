@@ -3766,6 +3766,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to reject this timesheet? You will need to provide a reason.';
 
   @override
+  String get approveOvertimeConfirmTitle => 'Approve overtime request';
+
+  @override
+  String get approveOvertimeConfirmMessage =>
+      'Are you sure you want to approve this overtime request?';
+
+  @override
+  String get rejectOvertimeConfirmTitle => 'Reject overtime request';
+
+  @override
+  String get rejectOvertimeConfirmMessage =>
+      'Are you sure you want to reject this overtime request? You will need to provide a reason.';
+
+  @override
+  String get cancelOvertimeDraftConfirmTitle => 'Cancel draft overtime request';
+
+  @override
+  String get cancelOvertimeDraftConfirmMessage =>
+      'Are you sure you want to cancel this draft? This action cannot be undone.';
+
+  @override
+  String get overtimeDraftCancelled =>
+      'Draft overtime request cancelled successfully';
+
+  @override
   String get totalRequests => 'Total Requests';
 
   @override
