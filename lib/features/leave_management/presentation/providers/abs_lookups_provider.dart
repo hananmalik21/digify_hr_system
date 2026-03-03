@@ -76,9 +76,9 @@ final absLookupValuesByCodeProvider =
 
 class AbsLookupValuesNotifier extends StateNotifier<AsyncValue<Map<String, List<AbsLookupValue>>>> {
   AbsLookupValuesNotifier(this._repository, this._ref) : super(const AsyncValue.data({})) {
-    _ref.listen<AsyncValue<List<AbsLookup>>>(absLookupsNotifierProvider, (_, __) => _maybeFetch());
-    _ref.listen<int?>(leaveManagementEnterpriseIdProvider, (_, __) => _maybeFetch());
-    _maybeFetch();
+    _ref.listen<int?>(leaveManagementEnterpriseIdProvider, (previous, next) {
+      if (previous != next) _maybeFetch();
+    });
   }
 
   final AbsLookupsRepository _repository;

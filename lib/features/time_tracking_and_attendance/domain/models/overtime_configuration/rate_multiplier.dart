@@ -27,11 +27,11 @@ class RateMultiplier {
     String? otRateMultiplierId,
   }) {
     return RateMultiplier(
-      otRateTypeId: id ?? this.otRateTypeId,
-      rateName: name ?? this.rateName,
+      otRateTypeId: id ?? otRateTypeId,
+      rateName: name ?? rateName,
       rateCode: rateCode ?? this.rateCode,
-      rateDescription: description ?? this.rateDescription,
-      categoryCode: category ?? this.categoryCode,
+      rateDescription: description ?? rateDescription,
+      categoryCode: category ?? categoryCode,
       multiplier: multiplier ?? this.multiplier,
       otRateMultiplierId: otRateMultiplierId ?? this.otRateMultiplierId,
     );
@@ -45,8 +45,7 @@ class RateMultiplier {
       final first = multipliers[0] as Map?;
       if (first != null) {
         multiplierVal = first['multiplier']?.toString() ?? '';
-        otRateMultiplierIdVal =
-            first['ot_rate_multiplier_id']?.toString() ?? '';
+        otRateMultiplierIdVal = first['ot_rate_multiplier_id']?.toString() ?? '';
       }
     }
 

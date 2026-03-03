@@ -103,6 +103,7 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
                 initialStartDate: null,
                 initialEndDate: null,
                 selectedWorkPattern: createState.selectedWorkPattern,
+                selectedTimeZone: createState.selectedTimeZone,
                 enterpriseId: widget.enterpriseId,
                 selectedStatus: createState.selectedStatus,
                 onScheduleCodeChanged: (value) {
@@ -119,6 +120,9 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
                 },
                 onStatusChanged: (value) {
                   notifier.setSelectedStatus(value);
+                },
+                onTimeZoneChanged: (value) {
+                  notifier.setSelectedTimeZone(value);
                 },
                 onStartDateSelected: (date) {
                   notifier.setEffectiveStartDate(DateFormat('yyyy-MM-dd').format(date));

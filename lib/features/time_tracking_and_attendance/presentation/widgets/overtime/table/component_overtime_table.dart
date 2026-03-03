@@ -1,28 +1,30 @@
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../../../core/theme/app_shadows.dart';
-import '../../../../../../core/theme/theme_extensions.dart';
-import '../../../../../enterprise_structure/domain/models/structure_list_item.dart';
+import '../../../../../../core/widgets/common/pagination_controls.dart';
 import '../../../../domain/models/overtime/overtime_record.dart';
+import '../../../../data/config/overtime_table_config.dart';
 import 'overtime_table_header.dart';
 import 'overtime_table_row.dart';
+import 'overtime_expanded_panel.dart';
 import 'overtime_table_skeleton.dart';
 
-class OvertimeTable extends StatelessWidget {
+final overtimeExpandedIndexProvider = StateProvider<int?>((ref) => null);
+
+class OvertimeTable extends ConsumerWidget {
   final AppLocalizations localizations;
   final List<OvertimeRecord> records;
   final bool isDark;
   final bool isLoading;
-  final PaginationInfo? paginationInfo;
   final int currentPage;
   final int pageSize;
+  final int totalItems;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
-  final Function(OvertimeRecord) onView;
   final Function(OvertimeRecord) onEdit;
   final Function(OvertimeRecord) onDelete;
   final bool? paginationIsLoading;
@@ -33,22 +35,21 @@ class OvertimeTable extends StatelessWidget {
     required this.records,
     required this.isDark,
     this.isLoading = false,
-    this.paginationInfo,
     this.currentPage = 1,
     this.pageSize = 10,
+    required this.totalItems,
     this.onPrevious,
     this.onNext,
-    required this.onView,
     required this.onEdit,
     required this.onDelete,
     this.paginationIsLoading,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final expandedIndex = ref.watch(overtimeExpandedIndexProvider);
+
     return Container(
-      width: context.screenWidth,
-      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardBackgroundDark : AppColors.dashboardCard,
         borderRadius: BorderRadius.circular(10.r),
@@ -61,61 +62,82 @@ class OvertimeTable extends StatelessWidget {
             constraints: BoxConstraints(minHeight: 500.h),
             child: ScrollableSingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Skeletonizer(
-                enabled: isLoading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  OvertimeTableHeader(isDark: isDark, localizations: localizations),
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    OvertimeTableHeader(
-                      isDark: isDark,
-                      localizations: localizations,
-                    ),
-
-                    if (isLoading && records.isEmpty)
-                      OvertimeTableSkeleton(localizations: localizations)
-                    else if (records.isEmpty && !isLoading)
-                      SizedBox(
-                        width: context.screenWidth,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 48.h),
-                          child: Center(
-                            child: Text(
-                              localizations.noResultsFound,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: AppColors.textMuted,
-                              ),
-                            ),
+                  if (isLoading && records.isEmpty)
+                    OvertimeTableSkeleton(localizations: localizations, isDark: isDark)
+                  else if (records.isEmpty && !isLoading)
+                    SizedBox(
+                      width: OvertimeTableConfig.totalWidth.w,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 48.h),
+                        child: Center(
+                          child: Text(
+                            localizations.noResultsFound,
+                            style: TextStyle(fontSize: 16.sp, color: AppColors.textMuted),
                           ),
                         ),
-                      )
-                    else
-                      ...records.map(
-                        (record) => OvertimeTableRow(
-                          record: record,
-                          localizations: localizations,
-                          onView: onView,
-                          onEdit: onEdit,
-                          onDelete: onDelete,
-                        ),
                       ),
-                  ],
-                ),
+                    )
+                  else
+                    ...List.generate(records.length, (index) {
+                      final record = records[index];
+                      final isExpanded = expandedIndex == index;
+                      final isLast = index == records.length - 1;
+
+                      return Column(
+                        children: [
+                          OvertimeTableRow(
+                            record: record,
+                            localizations: localizations,
+                            isDark: isDark,
+                            isExpanded: isExpanded,
+                            onToggle: () {
+                              final notifier = ref.read(overtimeExpandedIndexProvider.notifier);
+                              if (expandedIndex == index) {
+                                notifier.state = null;
+                              } else {
+                                notifier.state = index;
+                              }
+                            },
+                            onEdit: onEdit,
+                            onDelete: onDelete,
+                          ),
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.easeOutCubic,
+                            alignment: Alignment.topCenter,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (isExpanded) OvertimeExpandedPanel(record: record, isDark: isDark),
+                                if (isExpanded && !isLast)
+                                  Divider(height: 1, color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                ],
               ),
             ),
           ),
-          // if (paginationInfo != null) ...[
-          //   PaginationControls.fromPaginationInfo(
-          //     paginationInfo: paginationInfo!,
-          //     currentPage: currentPage,
-          //     pageSize: pageSize,
-          //     onPrevious: onPrevious,
-          //     onNext: onNext,
-          //     isLoading: paginationIsLoading ?? isLoading,
-          //     style: PaginationStyle.simple,
-          //   ),
-          // ],
+          PaginationControls(
+            currentPage: currentPage,
+            totalPages: totalItems == 0 ? 1 : (totalItems / pageSize).ceil(),
+            totalItems: totalItems,
+            pageSize: pageSize,
+            hasNext: (currentPage * pageSize) < totalItems,
+            hasPrevious: currentPage > 1,
+            onPrevious: onPrevious,
+            onNext: onNext,
+            isLoading: false,
+            style: PaginationStyle.simple,
+          ),
         ],
       ),
     );

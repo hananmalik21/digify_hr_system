@@ -233,9 +233,9 @@ class OvertimeConfigurationNotifier
         state.laborLawLimits?.maxDailyOvertime.isEmpty == true ||
         state.laborLawLimits?.maxAnnualOvertime.isEmpty == true ||
         state.laborLawLimits?.minRestPeriod.isEmpty == true ||
-        state.laborLawLimits?.lawReference.isEmpty == true ||
-        state.laborLawLimits?.notes.isEmpty == true)
+        state.laborLawLimits?.lawReference.isEmpty == true) {
       throw MissingOvertimeConfigurationException();
+    }
 
     try {
       state = state.copyWith(isLoading: true, clearError: true);

@@ -350,6 +350,12 @@ class SidebarConfig {
             route: '/time-tracking-and-attendance',
           ),
           SidebarItem(
+            id: 'attendanceSummary',
+            svgPath: Assets.icons.viewIconBlueFigma.path,
+            labelKey: 'attendanceSummary',
+            route: '/time-tracking-and-attendance',
+          ),
+          SidebarItem(
             id: 'geoLocations',
             svgPath: Assets.icons.locationIcon.path,
             labelKey: 'geoLocations',
@@ -363,7 +369,12 @@ class SidebarConfig {
           ),
         ],
       ),
-      SidebarItem(id: 'payroll', svgPath: Assets.icons.payrollIcon.path, labelKey: 'payroll', route: '/payroll'),
+      SidebarItem(
+        id: 'payroll',
+        svgPath: Assets.icons.payrollIcon.path,
+        labelKey: 'payroll',
+        route: '/payroll',
+      ),
       SidebarItem(
         id: 'compliance',
         svgPath: Assets.icons.complianceIcon.path,
@@ -376,7 +387,12 @@ class SidebarConfig {
         labelKey: 'eosCalculator',
         route: '/eos-calculator',
       ),
-      SidebarItem(id: 'reports', svgPath: Assets.icons.reportsIcon.path, labelKey: 'reports', route: '/reports'),
+      SidebarItem(
+        id: 'reports',
+        svgPath: Assets.icons.reportsIcon.path,
+        labelKey: 'reports',
+        route: '/reports',
+      ),
       SidebarItem(
         id: 'governmentForms',
         svgPath: Assets.icons.governmentFormsIcon.path,
@@ -419,6 +435,9 @@ class SidebarConfig {
       case 'leaveManagement':
       case 'attendance':
       case 'timesheet':
+      case 'overtime':
+      case 'overtimeConfiguration':
+      case 'attendanceSummary':
       case 'payroll':
       case 'reports':
       case 'settingsConfig':
@@ -544,6 +563,8 @@ class SidebarConfig {
         return 'Overtime';
       case 'overtimeConfiguration':
         return 'Overtime Configuration';
+      case 'attendanceSummary':
+        return 'Attendance Summary';
       case 'geoLocations':
         return 'Geo Locations';
       case 'employeeLocations':

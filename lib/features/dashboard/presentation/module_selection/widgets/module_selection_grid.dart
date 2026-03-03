@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_management_tab_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/time_tracking_and_attendance_tab_state_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_tab_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,6 +115,13 @@ class ModuleSelectionGrid extends ConsumerWidget with TabIndexMixin {
       if (tabIndex != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref.read(leaveManagementTabStateProvider.notifier).setTabIndex(tabIndex);
+        });
+      }
+    } else if (route == AppRoutes.timeTrackingAndAttendance) {
+      final tabIndex = getTimeTrackingAndAttendanceTabIndex(itemId);
+      if (tabIndex != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(timeTrackingAndAttendanceTabStateProvider.notifier).setTabIndex(tabIndex);
         });
       }
     }

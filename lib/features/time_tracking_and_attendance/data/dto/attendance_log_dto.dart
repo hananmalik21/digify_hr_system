@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/attendance/attendance_record.dart';
 
 class AttendanceLogPaginationDto {
@@ -219,6 +220,8 @@ class AttendanceLogItemDto {
     String? scheduleStartTime;
     String? scheduleEndTime;
     String? scheduledHours;
+    DateTime? scheduleStartTimeAsDateTime;
+    int? scheduledHoursAsInt;
     if (scheduleObj != null) {
       scheduleDate = _formatDate(scheduleObj!['schedule_date'] as String?);
       final start = scheduleObj!['schedule_start_time'] as String?;
@@ -229,9 +232,16 @@ class AttendanceLogItemDto {
       if (sh != null) {
         if (sh is num) {
           scheduledHours = _formatDuration(sh);
+          scheduledHoursAsInt = sh.toInt();
         } else if (sh is String && sh.isNotEmpty) {
           scheduledHours = sh;
+          scheduledHoursAsInt = int.tryParse(sh);
         }
+      }
+      if (start != null && start.isNotEmpty) {
+        try {
+          scheduleStartTimeAsDateTime = DateTime.parse(start);
+        } catch (_) {}
       }
     }
 
@@ -242,6 +252,43 @@ class AttendanceLogItemDto {
       date = DateTime.now();
     }
 
+    DateTime? clockInDt;
+    DateTime? clockOutDt;
+    if (actualObj != null) {
+      final cin = actualObj!['check_in_time'] as String?;
+      final cout = actualObj!['check_out_time'] as String?;
+      if (cin != null && cin.isNotEmpty) {
+        try {
+          clockInDt = DateTime.parse(cin);
+        } catch (_) {}
+      }
+      if (cout != null && cout.isNotEmpty) {
+        try {
+          clockOutDt = DateTime.parse(cout);
+        } catch (_) {}
+      }
+    }
+
+    final statusStr = _resolveStatus();
+    final attendance = Attendance(
+      id: attendanceDayId,
+      attendanceDayId: attendanceDayId,
+      employeeId: employeeId,
+      employeeName: employeeName,
+      employeeNumber: employeeNumber,
+      departmentName: _getDepartmentName(),
+      date: date,
+      clockIn: clockInDt,
+      clockOut: clockOutDt,
+      status: Attendance.parseStatus(statusStr),
+      checkInLocation: null,
+      checkOutLocation: null,
+      workedHours: actualObj?['hours_worked'] is num ? (actualObj!['hours_worked'] as num).toDouble() : null,
+      notes: null,
+      createdAt: null,
+      updatedAt: null,
+    );
+
     return AttendanceRecord(
       employeeName: employeeName,
       employeeId: employeeNumber,
@@ -249,13 +296,16 @@ class AttendanceLogItemDto {
       date: date,
       checkIn: checkIn,
       checkOut: checkOut,
-      status: _resolveStatus(),
+      status: statusStr,
       avatarInitials: _avatarInitials(),
-      attendance: null,
+      attendance: attendance,
+      attendanceDayId: attendanceDayId,
       scheduleDate: scheduleDate,
       scheduleStartTime: scheduleStartTime,
       scheduleEndTime: scheduleEndTime,
       scheduledHours: scheduledHours,
+      scheduleStartTimeAsDateTime: scheduleStartTimeAsDateTime,
+      scheduledHoursAsInt: scheduledHoursAsInt,
       hoursWorked: hoursWorked,
       overtimeHours: overtimeHours,
     );

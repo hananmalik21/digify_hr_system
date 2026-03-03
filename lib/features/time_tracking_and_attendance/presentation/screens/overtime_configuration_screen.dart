@@ -129,7 +129,6 @@ class _OvertimeConfigurationScreenState
         'Overtime Configuration saved successfully.',
       );
     } catch (e) {
-      print(e);
       if (!mounted) return;
       ToastService.error(
         context,

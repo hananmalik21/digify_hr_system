@@ -19,8 +19,8 @@ final attendanceRepositoryProvider = Provider<AttendanceRepository>((ref) {
 });
 
 class AttendanceState {
-  final DateTime fromDate;
-  final DateTime toDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
   final String employeeNumber;
   final String? companyId;
   final String? orgUnitId;
@@ -39,8 +39,8 @@ class AttendanceState {
   final int totalItems;
 
   const AttendanceState({
-    required this.fromDate,
-    required this.toDate,
+    this.fromDate,
+    this.toDate,
     this.employeeNumber = '',
     this.companyId,
     this.orgUnitId,
@@ -79,14 +79,16 @@ class AttendanceState {
     int? pageSize,
     int? totalItems,
     bool clearError = false,
+    bool clearDates = false,
+    bool clearOrgFilter = false,
   }) {
     return AttendanceState(
-      fromDate: fromDate ?? this.fromDate,
-      toDate: toDate ?? this.toDate,
+      fromDate: clearDates ? null : (fromDate ?? this.fromDate),
+      toDate: clearDates ? null : (toDate ?? this.toDate),
       employeeNumber: employeeNumber ?? this.employeeNumber,
       companyId: companyId ?? this.companyId,
-      orgUnitId: orgUnitId ?? this.orgUnitId,
-      levelCode: levelCode ?? this.levelCode,
+      orgUnitId: clearOrgFilter ? null : (orgUnitId ?? this.orgUnitId),
+      levelCode: clearOrgFilter ? null : (levelCode ?? this.levelCode),
       totalStaff: totalStaff ?? this.totalStaff,
       present: present ?? this.present,
       lateCount: lateCount ?? this.lateCount,
@@ -109,8 +111,7 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
 
   static const _searchDebounceDuration = Duration(milliseconds: 400);
 
-  AttendanceNotifier(this._repository)
-    : super(AttendanceState(fromDate: DateTime(2026, 2, 2), toDate: DateTime(2026, 2, 2)));
+  AttendanceNotifier(this._repository) : super(const AttendanceState());
 
   Future<void> loadAttendance() async {
     final enterpriseId = state.companyId != null ? int.tryParse(state.companyId!) : null;
@@ -139,6 +140,8 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
         enterpriseId: enterpriseId,
         page: state.currentPage,
         pageSize: state.pageSize,
+        fromDate: state.fromDate,
+        toDate: state.toDate,
         orgUnitId: state.orgUnitId,
         levelCode: state.levelCode,
         employeeNumber: employeeNumber,
@@ -219,11 +222,19 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
 
   void setFromDate(DateTime date) {
     state = state.copyWith(fromDate: date);
-    loadAttendance();
   }
 
   void setToDate(DateTime date) {
     state = state.copyWith(toDate: date);
+  }
+
+  void applyDateFilters() {
+    state = state.copyWith(currentPage: 1);
+    loadAttendance();
+  }
+
+  void clearDateFilters() {
+    state = state.copyWith(clearDates: true, currentPage: 1);
     loadAttendance();
   }
 
@@ -240,7 +251,11 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
   }
 
   void setOrgFilter(String? orgUnitId, String? levelCode) {
-    state = state.copyWith(orgUnitId: orgUnitId, levelCode: levelCode);
+    state = state.copyWith(
+      orgUnitId: orgUnitId,
+      levelCode: levelCode,
+      clearOrgFilter: orgUnitId == null && levelCode == null,
+    );
     loadAttendance();
   }
 }

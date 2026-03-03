@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_time_picker_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 class DigifyTextField extends StatefulWidget {
@@ -92,12 +93,7 @@ class DigifyTextField extends StatefulWidget {
       showBorder: showBorder,
       prefixIcon: Padding(
         padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
-        child: DigifyAsset(
-          assetPath: Assets.icons.searchIcon.path,
-          width: 20,
-          height: 20,
-          color: AppColors.textMuted,
-        ),
+        child: DigifyAsset(assetPath: Assets.icons.searchIcon.path, width: 20, height: 20, color: AppColors.textMuted),
       ),
       textInputAction: TextInputAction.search,
       onChanged: onChanged,
@@ -163,8 +159,7 @@ class DigifyTextField extends StatefulWidget {
       onChanged: onChanged,
       validator: validator,
       keyboardType: TextInputType.number,
-      inputFormatters:
-          inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
+      inputFormatters: inputFormatters ?? [FilteringTextInputFormatter.digitsOnly],
       focusNode: focusNode,
       filled: filled ?? true,
       fillColor: fillColor ?? Colors.transparent,
@@ -188,14 +183,9 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final effectiveFillColor =
-        widget.fillColor ??
-        (isDark ? AppColors.inputBgDark : Colors.transparent);
-    final effectiveBorderColor =
-        widget.borderColor ??
-        (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
-    final effectiveFocusedColor =
-        widget.focusedBorderColor ?? AppColors.primary;
+    final effectiveFillColor = widget.fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent);
+    final effectiveBorderColor = widget.borderColor ?? (isDark ? AppColors.inputBorderDark : AppColors.inputBorder);
+    final effectiveFocusedColor = widget.focusedBorderColor ?? AppColors.primary;
 
     Widget field = TextFormField(
       controller: widget.controller,
@@ -224,9 +214,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         suffixIcon: widget.obscureText && widget.suffixIcon == null
             ? IconButton(
                 icon: Icon(
-                  _obscureText
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
+                  _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                   size: 20.sp,
                   color: AppColors.textPlaceholder,
                 ),
@@ -236,21 +224,13 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
         filled: widget.filled,
         fillColor: effectiveFillColor,
         isDense: true,
-        contentPadding:
-            widget.contentPadding ??
-            EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         hintStyle: TextStyle(
           fontSize: widget.fontSize ?? 15.sp,
           height: 1.0,
-          color: isDark
-              ? context.themeTextMuted
-              : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+          color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
         ),
-        errorStyle: TextStyle(
-          fontSize: 12.sp,
-          color: AppColors.error,
-          height: 1.2,
-        ),
+        errorStyle: TextStyle(fontSize: 12.sp, color: AppColors.error, height: 1.2),
         border: _buildBorder(10.r, effectiveBorderColor),
         enabledBorder: _buildBorder(10.r, effectiveBorderColor),
         focusedBorder: _buildBorder(10.r, effectiveFocusedColor, width: 1.5),
@@ -279,9 +259,7 @@ class _DigifyTextFieldState extends State<DigifyTextField> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? context.themeTextPrimary
-                        : AppColors.inputLabel,
+                    color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -415,9 +393,7 @@ class _DigifyTextAreaState extends State<DigifyTextArea> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? context.themeTextPrimary
-                        : AppColors.inputLabel,
+                    color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
                     fontFamily: 'Inter',
                   ),
                 ),
@@ -448,45 +424,26 @@ class _DigifyTextAreaState extends State<DigifyTextArea> {
             }
             widget.onChanged?.call(value);
           },
-          textAlign: widget.textDirection == TextDirection.rtl
-              ? TextAlign.right
-              : widget.textAlign,
+          textAlign: widget.textDirection == TextDirection.rtl ? TextAlign.right : widget.textAlign,
           textDirection: widget.textDirection,
           inputFormatters: widget.inputFormatters,
-          style: TextStyle(
-            fontSize: 15.sp,
-            color: isDark ? context.themeTextPrimary : AppColors.textPrimary,
-          ),
+          style: TextStyle(fontSize: 15.sp, color: isDark ? context.themeTextPrimary : AppColors.textPrimary),
           decoration: InputDecoration(
             hintText: widget.hintText,
             filled: true,
-            fillColor:
-                widget.fillColor ??
-                (isDark ? AppColors.inputBgDark : Colors.transparent),
+            fillColor: widget.fillColor ?? (isDark ? AppColors.inputBgDark : Colors.transparent),
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 12.h,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             hintStyle: TextStyle(
               fontSize: 15.sp,
               height: 1.0,
-              color: isDark
-                  ? context.themeTextMuted
-                  : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
+              color: isDark ? context.themeTextMuted : const Color(0xFF0A0A0A).withValues(alpha: 0.5),
             ),
             border: _buildBorder(isDark, AppColors.inputBorder),
-            enabledBorder: _buildBorder(
-              isDark,
-              isDark ? AppColors.inputBorderDark : AppColors.inputBorder,
-            ),
+            enabledBorder: _buildBorder(isDark, isDark ? AppColors.inputBorderDark : AppColors.inputBorder),
             focusedBorder: _buildBorder(isDark, AppColors.primary, width: 1.5),
             errorBorder: _buildBorder(isDark, AppColors.error),
-            focusedErrorBorder: _buildBorder(
-              isDark,
-              AppColors.error,
-              width: 1.5,
-            ),
+            focusedErrorBorder: _buildBorder(isDark, AppColors.error, width: 1.5),
             counterText: widget.showCharacterCount ? '' : null,
           ),
           validator: widget.validator,
@@ -509,17 +466,11 @@ class _DigifyTextAreaState extends State<DigifyTextArea> {
     );
   }
 
-  OutlineInputBorder _buildBorder(
-    bool isDark,
-    Color color, {
-    double width = 1.0,
-  }) {
+  OutlineInputBorder _buildBorder(bool isDark, Color color, {double width = 1.0}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.r),
       borderSide: BorderSide(
-        color: isDark && color == AppColors.inputBorder
-            ? AppColors.inputBorderDark
-            : color,
+        color: isDark && color == AppColors.inputBorder ? AppColors.inputBorderDark : color,
         width: width.w,
       ),
     );
@@ -536,7 +487,7 @@ class DigifyDateField extends StatefulWidget {
   final DateTime? lastDate;
   final ValueChanged<DateTime>? onDateSelected;
   final Color? fillColor;
-  final bool enabled;
+  final bool readOnly;
 
   const DigifyDateField({
     super.key,
@@ -549,7 +500,7 @@ class DigifyDateField extends StatefulWidget {
     this.lastDate,
     this.onDateSelected,
     this.fillColor,
-    this.enabled = true,
+    this.readOnly = false,
   });
 
   @override
@@ -608,8 +559,7 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final iconPath =
-        widget.calendarIconPath ?? Assets.icons.leaveManagementIcon.path;
+    final iconPath = widget.calendarIconPath ?? Assets.icons.leaveManagementIcon.path;
 
     return DigifyTextField(
       labelText: widget.label,
@@ -617,13 +567,110 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
       controller: _controller,
       hintText: widget.hintText,
       readOnly: true,
-      onTap: widget.enabled ? _openDatePicker : null,
+      onTap: widget.readOnly ? null : _openDatePicker,
       filled: widget.fillColor != null,
       fillColor: widget.fillColor,
       prefixIcon: Padding(
         padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
         child: DigifyAsset(
           assetPath: iconPath,
+          width: 20,
+          height: 20,
+          color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,
+        ),
+      ),
+    );
+  }
+}
+
+class DigifyTimePickerField extends StatefulWidget {
+  final String label;
+  final String? hintText;
+  final bool isRequired;
+  final TimeOfDay? value;
+  final TimeOfDay initialTime;
+  final ValueChanged<TimeOfDay>? onTimeSelected;
+  final Color? fillColor;
+  final bool readOnly;
+
+  const DigifyTimePickerField({
+    super.key,
+    required this.label,
+    this.hintText,
+    this.isRequired = true,
+    this.value,
+    this.initialTime = const TimeOfDay(hour: 8, minute: 0),
+    this.onTimeSelected,
+    this.fillColor,
+    this.readOnly = false,
+  });
+
+  static String formatTimeOfDay(TimeOfDay time) {
+    final hour = time.hour == 0 ? 12 : (time.hour > 12 ? time.hour - 12 : time.hour);
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.hour < 12 ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  @override
+  State<DigifyTimePickerField> createState() => _DigifyTimePickerFieldState();
+}
+
+class _DigifyTimePickerFieldState extends State<DigifyTimePickerField> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _syncController();
+  }
+
+  @override
+  void didUpdateWidget(covariant DigifyTimePickerField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _syncController();
+    }
+  }
+
+  void _syncController() {
+    if (widget.value != null) {
+      _controller.text = DigifyTimePickerField.formatTimeOfDay(widget.value!);
+    } else {
+      _controller.text = '';
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _openTimePicker() async {
+    final picked = await DigifyTimePickerDialog.show(context, initialTime: widget.value ?? widget.initialTime);
+    if (picked != null && mounted) {
+      widget.onTimeSelected?.call(picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.isDark;
+
+    return DigifyTextField(
+      labelText: widget.label,
+      isRequired: widget.isRequired,
+      controller: _controller,
+      hintText: widget.hintText ?? 'Select Time',
+      readOnly: true,
+      onTap: widget.readOnly ? null : _openTimePicker,
+      filled: widget.fillColor != null,
+      fillColor: widget.fillColor,
+      prefixIcon: Padding(
+        padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
+        child: DigifyAsset(
+          assetPath: Assets.icons.clockIcon.path,
           width: 20,
           height: 20,
           color: isDark ? AppColors.textSecondaryDark : AppColors.textMuted,

@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/time_zone.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_work_schedule_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedule_create_state.dart';
@@ -54,6 +55,10 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
 
   void setSelectedStatus(PositionStatus value) {
     state = state.copyWith(selectedStatus: value);
+  }
+
+  void setSelectedTimeZone(TimeZone? value) {
+    state = state.copyWith(selectedTimeZone: value, clearTimeZone: value == null);
   }
 
   void setAssignmentMode(String value) {
@@ -146,6 +151,7 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
         'schedule_code': state.scheduleCode.trim(),
         'schedule_name_en': state.scheduleNameEn.trim(),
         'schedule_name_ar': state.scheduleNameAr.trim(),
+        if (state.selectedTimeZone != null) 'time_zone': state.selectedTimeZone!.tzName,
         'work_pattern_id': state.selectedWorkPattern!.workPatternId,
         'effective_start_date': state.effectiveStartDate.trim(),
         'effective_end_date': state.effectiveEndDate.trim().isEmpty ? null : state.effectiveEndDate.trim(),

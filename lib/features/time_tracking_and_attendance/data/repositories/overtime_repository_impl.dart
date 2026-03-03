@@ -1,101 +1,43 @@
-import '../../domain/models/overtime/overtime_record.dart';
+import 'package:digify_hr_system/core/network/api_client.dart';
+import 'package:digify_hr_system/core/network/api_config.dart';
+import '../../domain/models/overtime/overtime_requests_page.dart';
 import '../../domain/repositories/overtime_repository.dart';
+import '../datasources/overtime_requests_remote_data_source.dart';
 
-/// Mock implementation of OvertimeRepository
 class OvertimeRepositoryImpl implements OvertimeRepository {
+  final OvertimeRequestsRemoteDataSource _requestsDataSource;
+
+  OvertimeRepositoryImpl({OvertimeRequestsRemoteDataSource? requestsDataSource})
+    : _requestsDataSource =
+          requestsDataSource ?? OvertimeRequestsRemoteDataSourceImpl(apiClient: ApiClient(baseUrl: ApiConfig.baseUrl));
+
   @override
-  Future<List<OvertimeRecord>> getOvertimeRecords({
-    String? employeeNumber,
+  Future<OvertimeRequestsPage> getOvertimeRequests({
+    required int tenantId,
+    String? status,
+    String? orgUnitId,
+    String? levelCode,
+    int page = 1,
+    int pageSize = 10,
   }) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
+    final dto = await _requestsDataSource.getOvertimeRequests(
+      tenantId: tenantId,
+      status: status,
+      orgUnitId: orgUnitId,
+      levelCode: levelCode,
+      page: page,
+      pageSize: pageSize,
+    );
 
-    // Mock data matching Figma design
-    final mockOvertimeRecords = [
-      OvertimeRecord(
-        employeeId: "EMP-001",
-        date: DateTime(2026, 2, 2),
-        requestedDate: DateTime(2026, 2, 2),
-        amount: "100",
-        employeeDetail: EmployeeDetail(
-          name: "Sarah Jonshon",
-          employeeId: "EMP-001",
-          position: "Software Engineer",
-          department: "IT",
-          lineManager: "John Doe",
-        ),
-        overtimeDetail: OvertimeDetail(
-          type: "Regular",
-          overtimeHours: "2",
-          regularHours: "8",
-          rate: "10",
-          amount: "100",
-        ),
-        approvalInformation: ApprovalInformation(
-          status: "Approved",
-          byUser: "John Doe",
-          date: DateTime(2026, 2, 2),
-          reason: "Approved",
-        ),
-      ),
-      OvertimeRecord(
-        employeeId: "EMP-002",
-        date: DateTime(2026, 2, 2),
-        requestedDate: DateTime(2026, 2, 2),
-        amount: "100",
-        employeeDetail: EmployeeDetail(
-          name: "Vivian",
-          employeeId: "EMP-002",
-          position: "Software Engineer",
-          department: "IT",
-          lineManager: "John Doe",
-        ),
-        overtimeDetail: OvertimeDetail(
-          type: "Regular",
-          overtimeHours: "2",
-          regularHours: "8",
-          rate: "10",
-          amount: "100",
-        ),
-        approvalInformation: ApprovalInformation(
-          status: "Approved",
-          byUser: "John Doe",
-          date: DateTime(2026, 2, 2),
-          reason: "Approved",
-        ),
-      ),
-      OvertimeRecord(
-        employeeId: "EMP-003",
-        date: DateTime(2026, 2, 2),
-        requestedDate: DateTime(2026, 2, 2),
-        amount: "100",
-        employeeDetail: EmployeeDetail(
-          name: "Sara",
-          employeeId: "EMP-003",
-          position: "Software Engineer",
-          department: "IT",
-          lineManager: "John Doe",
-        ),
-        overtimeDetail: OvertimeDetail(
-          type: "Regular",
-          overtimeHours: "2",
-          regularHours: "8",
-          rate: "10",
-          amount: "100",
-        ),
-        approvalInformation: ApprovalInformation(
-          status: "Approved",
-          byUser: "John Doe",
-          date: DateTime(2026, 2, 2),
-          reason: "Approved",
-        ),
-      ),
-    ];
+    final records = dto.items.map((e) => e.toDomain()).toList();
+    final pag = dto.pagination;
 
-    var filtered = mockOvertimeRecords.where((a) {
-      return true;
-    }).toList();
-
-    return filtered;
+    return OvertimeRequestsPage(
+      records: records,
+      page: pag.page,
+      pageSize: pag.limit,
+      total: pag.total,
+      hasMore: pag.hasMore,
+    );
   }
 }

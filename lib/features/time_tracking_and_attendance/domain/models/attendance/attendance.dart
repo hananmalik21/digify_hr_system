@@ -1,14 +1,5 @@
 /// Attendance status enum matching Figma design
-enum AttendanceStatus {
-  present,
-  late,
-  absent,
-  early,
-  onLeave,
-  halfDay,
-  officialWork,
-  businessTrip,
-}
+enum AttendanceStatus { present, late, absent, early, onLeave, halfDay, officialWork, businessTrip }
 
 /// Location information for check-in/check-out
 class AttendanceLocation {
@@ -18,13 +9,7 @@ class AttendanceLocation {
   final String? city;
   final String? country;
 
-  const AttendanceLocation({
-    this.latitude,
-    this.longitude,
-    this.address,
-    this.city,
-    this.country,
-  });
+  const AttendanceLocation({this.latitude, this.longitude, this.address, this.city, this.country});
 
   factory AttendanceLocation.fromJson(Map<String, dynamic>? json) {
     if (json == null) return const AttendanceLocation();
@@ -38,18 +23,13 @@ class AttendanceLocation {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'latitude': latitude,
-      'longitude': longitude,
-      'address': address,
-      'city': city,
-      'country': country,
-    };
+    return {'latitude': latitude, 'longitude': longitude, 'address': address, 'city': city, 'country': country};
   }
 }
 
 class Attendance {
   final int id;
+  final int? attendanceDayId;
   final int employeeId;
   final String employeeName;
   final String employeeNumber;
@@ -67,6 +47,7 @@ class Attendance {
 
   const Attendance({
     required this.id,
+    this.attendanceDayId,
     required this.employeeId,
     required this.employeeName,
     required this.employeeNumber,
@@ -86,6 +67,7 @@ class Attendance {
   factory Attendance.fromJson(Map<String, dynamic> json) {
     return Attendance(
       id: json['id'] as int,
+      attendanceDayId: (json['attendance_day_id'] as num?)?.toInt(),
       employeeId: json['employee_id'] as int,
       employeeName: json['employee_name'] as String? ?? '',
       employeeNumber: json['employee_number'] as String? ?? '',

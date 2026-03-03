@@ -18,11 +18,13 @@ import 'package:gap/gap.dart';
 
 class AttendanceSearchAndFilter extends ConsumerStatefulWidget {
   final TextEditingController employeeNumberController;
-  final DateTime fromDate;
-  final DateTime toDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
   final ValueChanged<String> onSearchChanged;
   final ValueChanged<DateTime> onFromDateSelected;
   final ValueChanged<DateTime> onToDateSelected;
+  final VoidCallback onApply;
+  final VoidCallback onClear;
   final bool isDark;
 
   const AttendanceSearchAndFilter({
@@ -33,6 +35,8 @@ class AttendanceSearchAndFilter extends ConsumerStatefulWidget {
     required this.onSearchChanged,
     required this.onFromDateSelected,
     required this.onToDateSelected,
+    required this.onApply,
+    required this.onClear,
     required this.isDark,
   });
 
@@ -76,11 +80,14 @@ class _AttendanceSearchAndFilterState extends ConsumerState<AttendanceSearchAndF
           Gap(12.h),
           if (isCompact)
             Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DigifyDateField(
                   label: 'From Date',
                   isRequired: false,
                   initialDate: widget.fromDate,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
                   onDateSelected: widget.onFromDateSelected,
                   hintText: 'Select from date',
                 ),
@@ -89,19 +96,34 @@ class _AttendanceSearchAndFilterState extends ConsumerState<AttendanceSearchAndF
                   label: 'To Date',
                   isRequired: false,
                   initialDate: widget.toDate,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100),
                   onDateSelected: widget.onToDateSelected,
                   hintText: 'Select to date',
+                ),
+                Gap(12.h),
+                Row(
+                  children: [
+                    AppButton(label: 'Apply', type: AppButtonType.primary, onPressed: widget.onApply),
+                    if (widget.fromDate != null || widget.toDate != null) ...[
+                      Gap(12.w),
+                      AppButton.outline(label: 'Clear', onPressed: widget.onClear),
+                    ],
+                  ],
                 ),
               ],
             )
           else
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: DigifyDateField(
                     label: 'From Date',
                     isRequired: false,
                     initialDate: widget.fromDate,
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
                     onDateSelected: widget.onFromDateSelected,
                     hintText: 'Select from date',
                   ),
@@ -112,9 +134,22 @@ class _AttendanceSearchAndFilterState extends ConsumerState<AttendanceSearchAndF
                     label: 'To Date',
                     isRequired: false,
                     initialDate: widget.toDate,
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
                     onDateSelected: widget.onToDateSelected,
                     hintText: 'Select to date',
                   ),
+                ),
+                Gap(16.w),
+                Wrap(
+                  spacing: 12.w,
+                  runSpacing: 8.h,
+                  crossAxisAlignment: WrapCrossAlignment.end,
+                  children: [
+                    AppButton(label: 'Apply', type: AppButtonType.primary, onPressed: widget.onApply),
+                    if (widget.fromDate != null || widget.toDate != null)
+                      AppButton.outline(label: 'Clear', onPressed: widget.onClear),
+                  ],
                 ),
               ],
             ),
