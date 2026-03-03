@@ -15,15 +15,13 @@ class OvertimeTableSkeleton extends StatelessWidget {
       enabled: true,
       child: Column(
         children: List.generate(
-          8,
+          10,
           (index) => OvertimeTableRow(
             record: OvertimeRecord.empty().copyWith(),
             localizations: localizations,
             isDark: isDark,
             isExpanded: false,
             onToggle: () {},
-            onEdit: (_) {},
-            onDelete: (_) {},
           ),
         ),
       ),

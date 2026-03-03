@@ -10,6 +10,7 @@ import '../../../../core/widgets/common/digify_tab_header.dart';
 import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../providers/overtime/overtime_enterprise_provider.dart';
+import '../dialogs/edit_overtime_request_dialog/edit_overtime_request_dialog.dart';
 import '../dialogs/new_overtime_request_dialog.dart';
 import '../providers/overtime/overtime_provider.dart';
 import '../widgets/overtime/component_overtime_filter_bar.dart';
@@ -84,6 +85,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
               isLoading: state.isLoading,
               currentPage: state.currentPage,
               pageSize: state.pageSize,
+              paginationIsLoading: state.isLoading && (state.records?.isNotEmpty ?? false),
               onPrevious: state.currentPage > 1
                   ? () => ref.read(overtimeManagementProvider.notifier).goToPage(state.currentPage - 1)
                   : null,
@@ -91,8 +93,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
                   ? () => ref.read(overtimeManagementProvider.notifier).goToPage(state.currentPage + 1)
                   : null,
               isDark: isDark,
-              onEdit: (_) {},
-              onDelete: (_) {},
+              onEdit: (record) => EditOvertimeRequestDialog.show(context, record),
             ),
           ],
         ),

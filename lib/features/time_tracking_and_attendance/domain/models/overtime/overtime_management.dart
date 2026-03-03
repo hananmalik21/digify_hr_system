@@ -65,6 +65,9 @@ class OvertimeManagement {
   int pageSize;
   int totalItems;
   bool hasMore;
+  String? approvingOvertimeGuid;
+  String? rejectingOvertimeGuid;
+  String? cancelingOvertimeGuid;
 
   OvertimeManagement({
     this.selectedCategory,
@@ -83,6 +86,9 @@ class OvertimeManagement {
     this.pageSize = 10,
     this.totalItems = 0,
     this.hasMore = false,
+    this.approvingOvertimeGuid,
+    this.rejectingOvertimeGuid,
+    this.cancelingOvertimeGuid,
   });
 
   OvertimeManagement copyWith({
@@ -105,6 +111,12 @@ class OvertimeManagement {
     int? pageSize,
     int? totalItems,
     bool? hasMore,
+    String? approvingOvertimeGuid,
+    String? rejectingOvertimeGuid,
+    String? cancelingOvertimeGuid,
+    bool clearApprovingOvertimeGuid = false,
+    bool clearRejectingOvertimeGuid = false,
+    bool clearCancelingOvertimeGuid = false,
   }) {
     return OvertimeManagement(
       selectedCategory: selectedCategory ?? this.selectedCategory,
@@ -123,6 +135,9 @@ class OvertimeManagement {
       pageSize: pageSize ?? this.pageSize,
       totalItems: totalItems ?? this.totalItems,
       hasMore: hasMore ?? this.hasMore,
+      approvingOvertimeGuid: clearApprovingOvertimeGuid ? null : (approvingOvertimeGuid ?? this.approvingOvertimeGuid),
+      rejectingOvertimeGuid: clearRejectingOvertimeGuid ? null : (rejectingOvertimeGuid ?? this.rejectingOvertimeGuid),
+      cancelingOvertimeGuid: clearCancelingOvertimeGuid ? null : (cancelingOvertimeGuid ?? this.cancelingOvertimeGuid),
     );
   }
 }
