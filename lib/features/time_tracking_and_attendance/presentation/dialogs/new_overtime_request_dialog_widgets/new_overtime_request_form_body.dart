@@ -29,15 +29,6 @@ class NewOvertimeRequestFormBody extends ConsumerWidget {
     final hasEmployee = state.selectedEmployee != null;
     final result = attendanceAsync.valueOrNull;
     final hasAttendanceId = (result?.attendanceDayId ?? 0) > 0;
-    final hasOvertimeHoursFromApi = result?.overtimeHours != null;
-
-    ref.listen<AsyncValue<NewOvertimeAttendanceResult>>(newOvertimeAttendanceDayIdProvider, (prev, next) {
-      next.whenData((r) {
-        if (r.overtimeHours != null) {
-          notifier.setNumberOfHours(_formatOvertimeHours(r.overtimeHours!));
-        }
-      });
-    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,20 +61,14 @@ class NewOvertimeRequestFormBody extends ConsumerWidget {
           children: [
             Expanded(
               child: DigifyTextField(
-                key: ValueKey(
-                  hasOvertimeHoursFromApi
-                      ? 'ot_hours_api_${result?.overtimeHours}_${state.date?.toIso8601String().split('T').first}'
-                      : 'ot_hours_manual_${state.date?.toIso8601String().split('T').first ?? ''}',
-                ),
+                key: ValueKey('ot_hours_${state.date?.toIso8601String().split('T').first ?? ''}'),
                 labelText: 'NUMBER OF HOURS',
                 isRequired: true,
                 hintText: 'Type number of hours',
-                initialValue: state.numberOfHours,
                 onChanged: notifier.setNumberOfHours,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 enabled: hasAttendanceId,
-                readOnly: hasOvertimeHoursFromApi,
                 prefixIcon: Padding(
                   padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
                   child: DigifyAsset(
@@ -137,10 +122,6 @@ class NewOvertimeRequestFormBody extends ConsumerWidget {
       readOnly: isDisabled,
     );
   }
-}
-
-String _formatOvertimeHours(double hours) {
-  return hours == hours.truncateToDouble() ? hours.toInt().toString() : hours.toString();
 }
 
 class _DateAttendanceStatus extends ConsumerWidget {

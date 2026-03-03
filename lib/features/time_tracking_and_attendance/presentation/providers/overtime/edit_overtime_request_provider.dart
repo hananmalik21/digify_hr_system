@@ -35,7 +35,7 @@ class EditOvertimeRequestNotifier extends StateNotifier<EditOvertimeRequestState
   void init(OvertimeRecord record) {
     state = EditOvertimeRequestState(
       record: record,
-      numberOfHours: record.overtimeDetail?.overtimeHours ?? record.amount,
+      numberOfHours: record.overtimeDetail?.overtimeHours ?? '',
       reason: record.approvalInformation?.reason ?? '',
     );
   }
