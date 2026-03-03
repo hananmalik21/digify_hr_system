@@ -752,6 +752,7 @@
   "structureConfigurations": "Structure Configurations",
   "manageDifferentConfigurations": "Manage different organizational hierarchy configurations. Only one can be active at a time.",
   "createNewStructure": "Create New Structure",
+  "selectEnterpriseFirst": "Please select an enterprise first",
   "hierarchy": "Hierarchy",
   "levels": "levels",
   "created": "Created",

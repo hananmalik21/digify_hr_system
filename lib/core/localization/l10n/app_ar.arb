@@ -658,6 +658,7 @@
   "structureConfigurations": "تكوينات الهيكل",
   "manageDifferentConfigurations": "إدارة تكوينات التسلسل الهرمي التنظيمي المختلفة. يمكن تنشيط واحد فقط في كل مرة.",
   "createNewStructure": "إنشاء هيكل جديد",
+  "selectEnterpriseFirst": "يرجى تحديد المؤسسة أولاً",
   "hierarchy": "التسلسل الهرمي",
   "levels": "مستويات",
   "created": "تم الإنشاء",

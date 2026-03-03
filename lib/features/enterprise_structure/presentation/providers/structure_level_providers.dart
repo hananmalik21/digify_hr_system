@@ -51,6 +51,8 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/g
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/save_enterprise_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_structure_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/delete_structure_provider.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_enterprise_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart'
     show StructureListNotifier, StructureListState, StructureListViewState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -247,8 +249,24 @@ final businessUnitsDropdownProvider =
 
 final structureListProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
   final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
-  return StructureListNotifier(getStructureListUseCase: getStructureListUseCase);
+  return StructureListNotifier(
+    getStructureListUseCase: getStructureListUseCase,
+    enterpriseIdGetter: () => ref.read(activeEnterpriseIdProvider),
+  );
 });
+
+final manageEnterpriseStructureStructureListProvider =
+    StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
+      final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
+      final notifier = StructureListNotifier(
+        getStructureListUseCase: getStructureListUseCase,
+        enterpriseIdGetter: () => ref.read(manageEnterpriseStructureEnterpriseIdProvider),
+      );
+      ref.listen(manageEnterpriseStructureEnterpriseIdProvider, (previous, next) {
+        if (next != null) notifier.refresh();
+      });
+      return notifier;
+    });
 
 final structureListViewStateProvider = Provider.autoDispose<StructureListViewState>((ref) {
   final state = ref.watch(structureListProvider);
@@ -268,7 +286,11 @@ final orgStructuresDropdownProvider = StateNotifierProvider.autoDispose<Structur
   ref,
 ) {
   final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
-  return StructureListNotifier.withPageSize(getStructureListUseCase: getStructureListUseCase, pageSize: 1000);
+  return StructureListNotifier.withPageSize(
+    getStructureListUseCase: getStructureListUseCase,
+    enterpriseIdGetter: () => ref.read(activeEnterpriseIdProvider),
+    pageSize: 1000,
+  );
 });
 
 final orgStructureLevelRemoteDataSourceProvider = Provider<OrgStructureLevelRemoteDataSource>((ref) {

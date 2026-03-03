@@ -1,8 +1,11 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_enterprise_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/enterprise_structure_dialog.dart';
@@ -36,20 +39,42 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
               trailing: AppButton.primary(
                 label: localizations.createNewStructure,
                 svgPath: Assets.icons.createNewStructureIcon.path,
-                onPressed: () => EnterpriseStructureDialog.showCreate(context, provider: structureListProvider),
+                onPressed: () async {
+                  final enterpriseId = ref.read(manageEnterpriseStructureEnterpriseIdProvider);
+                  if (enterpriseId == null) {
+                    ToastService.warning(context, localizations.selectEnterpriseFirst);
+                    return;
+                  }
+                  final result = await EnterpriseStructureDialog.showCreate(
+                    context,
+                    provider: manageEnterpriseStructureStructureListProvider,
+                  );
+                  if (result == true) {
+                    ref.read(manageEnterpriseStructureStructureListProvider.notifier).refresh();
+                  }
+                },
               ),
+            ),
+            Gap(24.h),
+            EnterpriseSelectorWidget(
+              selectedEnterpriseId: ref.watch(manageEnterpriseStructureEnterpriseIdProvider),
+              onEnterpriseChanged: (id) =>
+                  ref.read(manageEnterpriseStructureSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
+              subtitle: ref.watch(manageEnterpriseStructureEnterpriseIdProvider) != null
+                  ? 'Viewing data for selected enterprise'
+                  : 'Select an enterprise to view data',
             ),
             Gap(24.h),
             StatsCardsWidget(
               localizations: localizations,
               isDark: isDark,
-              structureListProvider: structureListProvider,
+              structureListProvider: manageEnterpriseStructureStructureListProvider,
             ),
             Gap(16.h),
             StructuresListWidget(
               localizations: localizations,
               isDark: isDark,
-              structureListProvider: structureListProvider,
+              structureListProvider: manageEnterpriseStructureStructureListProvider,
               saveEnterpriseStructureProvider: saveEnterpriseStructureProvider,
             ),
           ],
