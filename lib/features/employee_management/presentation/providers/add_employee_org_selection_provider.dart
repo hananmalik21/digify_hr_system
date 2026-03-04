@@ -1,9 +1,9 @@
 import 'package:flutter/scheduler.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,9 +37,9 @@ final addEmployeeOrgSelectionKeyProvider =
       final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
       if (enterpriseId == null) return null;
 
-      final orgState = ref.watch(enterpriseOrgStructureNotifierProvider(enterpriseId));
+      final orgState = ref.watch(addEmployeeOrgStructureNotifierProvider(enterpriseId));
       final structureId = orgState.orgStructure?.structureId;
-      final levels = orgState.orgStructure?.activeLevels ?? <OrgStructureLevel>[];
+      final levels = orgState.activeLevels;
 
       if (structureId == null || structureId.isEmpty || levels.isEmpty) return null;
       return (structureId: structureId, levels: levels);
@@ -51,13 +51,14 @@ final addEmployeeOrgSelectionProvider = StateNotifierProvider.autoDispose
       EnterpriseSelectionState,
       ({String structureId, List<OrgStructureLevel> levels})
     >((ref, param) {
+      final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
       final notifier = EnterpriseSelectionNotifier(
         getOrgUnitsByLevelUseCase: ref.read(getOrgUnitsByLevelUseCaseProvider),
         levels: param.levels,
         structureId: param.structureId,
+        tenantId: enterpriseId,
       );
       final assignment = ref.read(addEmployeeAssignmentProvider);
-      final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
       if (assignment.levelSelections.isNotEmpty && enterpriseId != null) {
         final orderedLevelCodes = param.levels.map((l) => l.levelCode).toList();
         final selections = _selectionsFromAssignment(

@@ -24,7 +24,7 @@ import 'package:digify_hr_system/features/employee_management/data/dto/employees
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_full_details_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_structure_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -364,12 +364,14 @@ class AddEmployeeDialogFlow {
       final assignmentState = _ref.read(addEmployeeAssignmentProvider);
       final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
       final requiredLevelCodes = enterpriseId != null
-          ? _ref
-                .read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier)
-                .activeLevels
-                .map((l) => l.levelCode)
+          ? _ref.read(addEmployeeOrgStructureNotifierProvider(enterpriseId)).activeLevels.map((l) => l.levelCode)
           : <String>[];
       if (!assignmentState.isStepValid(requiredLevelCodes)) {
+        ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+        return;
+      }
+      final jobState = _ref.read(addEmployeeJobEmploymentProvider);
+      if (!jobState.isStepValid) {
         ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
         return;
       }
@@ -426,6 +428,10 @@ class AddEmployeeDialogFlow {
     final compensationState = _ref.read(addEmployeeCompensationProvider);
     final enterpriseId = _ref.read(manageEmployeesEnterpriseIdProvider);
 
+    if (!jobState.isStepValid) {
+      ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
+      return;
+    }
     if (!compensationState.isStepValid) {
       ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
       return;
@@ -435,7 +441,7 @@ class AddEmployeeDialogFlow {
       return;
     }
     final requiredLevelCodes = enterpriseId != null
-        ? _ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier).activeLevels.map((l) => l.levelCode)
+        ? _ref.read(addEmployeeOrgStructureNotifierProvider(enterpriseId)).activeLevels.map((l) => l.levelCode)
         : <String>[];
     if (!assignmentState.isStepValid(requiredLevelCodes)) {
       ToastService.warning(context, localizations.addEmployeeFillRequiredFields);
