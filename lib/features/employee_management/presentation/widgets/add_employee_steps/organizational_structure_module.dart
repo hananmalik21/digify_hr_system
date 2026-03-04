@@ -8,13 +8,13 @@ import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_lab
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_selection_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,16 +29,13 @@ class OrganizationalStructureModule extends ConsumerStatefulWidget {
 }
 
 class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalStructureModule> {
-  int? _ensureLoadScheduledForEnterpriseId;
-
   @override
   Widget build(BuildContext context) {
     final theme = context;
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
-    final orgState = enterpriseId != null ? ref.watch(enterpriseOrgStructureNotifierProvider(enterpriseId)) : null;
+    final orgState = enterpriseId != null ? ref.watch(addEmployeeOrgStructureNotifierProvider(enterpriseId)) : null;
 
     if (enterpriseId == null) {
-      _ensureLoadScheduledForEnterpriseId = null;
       return _AssignmentCard(
         isDark: theme.isDark,
         child: _MessageContent(
@@ -49,7 +46,7 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
       );
     }
 
-    _ensureOrgStructureLoaded(enterpriseId, orgState);
+    _fetchLevelsIfNeeded(enterpriseId, orgState);
 
     if (orgState?.isLoading ?? true) {
       return _AssignmentCard(
@@ -103,7 +100,7 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
       );
     }
 
-    final activeLevels = orgState?.orgStructure?.activeLevels ?? [];
+    final activeLevels = orgState?.activeLevels ?? [];
     if (activeLevels.isEmpty) {
       return _AssignmentCard(
         isDark: theme.isDark,
@@ -172,20 +169,19 @@ class _OrganizationalStructureModuleState extends ConsumerState<OrganizationalSt
     );
   }
 
-  void _ensureOrgStructureLoaded(int enterpriseId, dynamic orgState) {
-    if (orgState?.error != null) _ensureLoadScheduledForEnterpriseId = null;
-    final bool hasAttemptedLoad = orgState?.hasAttemptedLoad ?? false;
+  void _fetchLevelsIfNeeded(int enterpriseId, AddEmployeeOrgStructureState? orgState) {
+    final hasAttemptedLoad = orgState?.hasAttemptedLoad ?? false;
     final needsLoad = orgState?.isLoading != true && !hasAttemptedLoad;
 
-    if (!needsLoad || _ensureLoadScheduledForEnterpriseId == enterpriseId) return;
-    _ensureLoadScheduledForEnterpriseId = enterpriseId;
+    if (!needsLoad) return;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
-      final currentState = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
+      final notifier = ref.read(addEmployeeOrgStructureNotifierProvider(enterpriseId).notifier);
+      final currentState = ref.read(addEmployeeOrgStructureNotifierProvider(enterpriseId));
       if (currentState.isLoading || currentState.hasAttemptedLoad) return;
 
-      notifier.fetchOrgStructureByEnterpriseId(enterpriseId);
+      notifier.fetchLevelsByEnterpriseId(enterpriseId);
     });
   }
 }
