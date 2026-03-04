@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_policies_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policies_filters_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policies_stat_cards.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_policies/leave_policy_cards_grid.dart';
@@ -19,7 +19,7 @@ class LeavePoliciesTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(leavePoliciesTabEnterpriseIdProvider);
     final paginatedAsync = ref.watch(absPoliciesProvider);
     final paginationState = ref.watch(absPoliciesPaginationProvider);
     final notifierState = ref.watch(absPoliciesNotifierProvider);
@@ -41,7 +41,7 @@ class LeavePoliciesTab extends ConsumerWidget {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(leavePoliciesTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

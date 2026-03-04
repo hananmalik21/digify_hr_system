@@ -52,7 +52,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
     _ref.listen(absPoliciesPaginationProvider, (previous, next) {
       if (previous != next) _load();
     });
-    _ref.listen<int?>(leaveManagementSelectedEnterpriseProvider, (previous, next) {
+    _ref.listen<int?>(leaveManagementEnterpriseIdProvider, (previous, next) {
       if (previous != next) {
         state = const AbsPoliciesState(data: null, isLoading: true, error: null);
         final pagination = _ref.read(absPoliciesPaginationProvider);

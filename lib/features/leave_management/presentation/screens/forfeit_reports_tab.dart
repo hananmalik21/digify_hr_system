@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_reports_tab_enterprise_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +13,7 @@ class ForfeitReportsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(forfeitReportsTabEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -24,7 +24,7 @@ class ForfeitReportsTab extends ConsumerWidget {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(forfeitReportsTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

@@ -6,7 +6,7 @@ import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/adjust_leave_balance_dialog.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balance_tab/leave_balance_tab_header.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_table_section.dart';
@@ -30,7 +30,7 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
   }
 
   void _maybeLoadPage() {
-    final enterpriseId = ref.read(leaveManagementEnterpriseIdProvider);
+    final enterpriseId = ref.read(leaveBalanceTabEnterpriseIdProvider);
     final state = ref.read(leaveBalanceSummaryListProvider);
     if (enterpriseId != null && state.items.isEmpty && !state.isLoading && state.error == null) {
       ref.read(leaveBalanceSummaryListProvider.notifier).loadPage(enterpriseId, 1);
@@ -45,7 +45,7 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(leaveBalanceTabEnterpriseIdProvider);
     final listState = ref.watch(leaveBalanceSummaryListProvider);
 
     return SingleChildScrollView(
@@ -59,7 +59,7 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(leaveBalanceTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

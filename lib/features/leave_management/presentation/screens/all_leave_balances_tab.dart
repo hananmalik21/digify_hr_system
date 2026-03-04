@@ -1,8 +1,8 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/all_leave_balances_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_filters_bar.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_balances/leave_balances_summary_cards.dart';
@@ -39,7 +39,7 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(allLeaveBalancesTabEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -52,7 +52,7 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(allLeaveBalancesTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

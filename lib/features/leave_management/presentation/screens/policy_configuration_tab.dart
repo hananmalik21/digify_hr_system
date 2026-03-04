@@ -7,7 +7,8 @@ import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_list_item.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_policies_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_configuration_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_edit_mode_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/add_policy/add_policy_dialog.dart';
@@ -31,7 +32,8 @@ class PolicyConfigurationTab extends ConsumerWidget {
     final policiesAsync = ref.watch(absPoliciesProvider);
     final notifierState = ref.watch(absPoliciesNotifierProvider);
     final pagination = ref.watch(absPoliciesPaginationProvider);
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(policyConfigurationTabEnterpriseIdProvider);
+    ref.watch(policyConfigurationTabLookupsPreloadProvider);
     final selectedPolicy = ref.watch(selectedPolicyConfigurationProvider);
     final setSelectedGuid = ref.read(selectedPolicyGuidProvider.notifier).setSelectedPolicyGuid;
     void onPolicyChange(String? guid) {
@@ -59,7 +61,7 @@ class PolicyConfigurationTab extends ConsumerWidget {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (id) =>
-                ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
+                ref.read(policyConfigurationTabSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',

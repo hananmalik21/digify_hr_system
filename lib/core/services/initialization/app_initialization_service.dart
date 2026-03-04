@@ -8,8 +8,6 @@ class AppInitializationService {
   final GetEnterprisesUseCase getEnterprisesUseCase;
   final GetActiveLevelsUseCase getActiveLevelsUseCase;
   final OrgStructureLevelRemoteDataSource orgStructureLevelRemoteDataSource;
-  final Future<void> Function(int tenantId)? loadAbsLookups;
-  final Future<void> Function(int tenantId)? loadAbsLookupValues;
   final void Function(int?)? onActiveEnterpriseReady;
   final void Function(int enterpriseId)? preloadOrgStructureForEnterprise;
   final void Function()? initializeLocation;
@@ -22,8 +20,6 @@ class AppInitializationService {
     required this.getEnterprisesUseCase,
     required this.getActiveLevelsUseCase,
     required this.orgStructureLevelRemoteDataSource,
-    this.loadAbsLookups,
-    this.loadAbsLookupValues,
     this.onActiveEnterpriseReady,
     this.preloadOrgStructureForEnterprise,
     this.initializeLocation,
@@ -38,8 +34,6 @@ class AppInitializationService {
     final enterpriseId = _activeEnterpriseId;
     if (enterpriseId == null) return;
     preloadOrgStructureForEnterprise?.call(enterpriseId);
-    await _loadAbsLookups();
-    await _loadAbsLookupValues();
   }
 
   void _setEnterpriseIdFromEnterprises() {
@@ -48,22 +42,6 @@ class AppInitializationService {
       _activeEnterpriseId = list.first.id;
       onActiveEnterpriseReady?.call(_activeEnterpriseId);
     }
-  }
-
-  Future<void> _loadAbsLookups() async {
-    final tenantId = _activeEnterpriseId;
-    if (tenantId == null || loadAbsLookups == null) return;
-    try {
-      await loadAbsLookups!(tenantId);
-    } catch (_) {}
-  }
-
-  Future<void> _loadAbsLookupValues() async {
-    final tenantId = _activeEnterpriseId;
-    if (tenantId == null || loadAbsLookupValues == null) return;
-    try {
-      await loadAbsLookupValues!(tenantId);
-    } catch (_) {}
   }
 
   Future<void> _loadEnterprises() async {

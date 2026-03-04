@@ -5,16 +5,12 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/act
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprises_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 
 final appInitializationServiceProvider = Provider<AppInitializationService>((ref) {
   final getEnterprisesUseCase = ref.watch(getEnterprisesUseCaseProvider);
   final getActiveLevelsUseCase = ref.watch(getActiveLevelsUseCaseProvider);
   final orgStructureLevelRemoteDataSource = ref.watch(orgStructureLevelRemoteDataSourceProvider);
-  Future<void> loadAbsLookups(int tenantId) => ref.read(absLookupsNotifierProvider.notifier).fetch(tenantId);
-  Future<void> loadAbsLookupValues(int tenantId) =>
-      ref.read(absLookupValuesByCodeProvider.notifier).fetchForTenant(tenantId);
   void onActiveEnterpriseReady(int? id) {
     if (id != null) {
       ref.read(activeEnterpriseIdNotifierProvider.notifier).setActiveEnterpriseId(id);
@@ -39,8 +35,6 @@ final appInitializationServiceProvider = Provider<AppInitializationService>((ref
     getEnterprisesUseCase: getEnterprisesUseCase,
     getActiveLevelsUseCase: getActiveLevelsUseCase,
     orgStructureLevelRemoteDataSource: orgStructureLevelRemoteDataSource,
-    loadAbsLookups: loadAbsLookups,
-    loadAbsLookupValues: loadAbsLookupValues,
     onActiveEnterpriseReady: onActiveEnterpriseReady,
     preloadOrgStructureForEnterprise: preloadOrgStructureForEnterprise,
     initializeLocation: initializeLocation,
