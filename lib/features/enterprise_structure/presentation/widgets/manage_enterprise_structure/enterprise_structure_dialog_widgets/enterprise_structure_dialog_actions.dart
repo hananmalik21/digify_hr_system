@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_enterprise_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,8 @@ class EnterpriseStructureDialogActions extends ConsumerWidget {
               : () async {
                   final currentEditState = editState;
                   if (currentEditState == null) return;
-
-                  if (currentEditState.selectedEnterpriseId == null) {
+                  final enterpriseId = ref.read(manageEnterpriseStructureEnterpriseIdProvider);
+                  if (enterpriseId == null) {
                     ToastService.error(context, 'Please select an enterprise');
                     return;
                   }
@@ -62,7 +63,7 @@ class EnterpriseStructureDialogActions extends ConsumerWidget {
                       structureName: currentEditState.structureName.trim(),
                       description: currentEditState.description.trim(),
                       levels: currentEditState.levels,
-                      enterpriseId: currentEditState.selectedEnterpriseId,
+                      enterpriseId: enterpriseId,
                       isActive: currentEditState.isActive,
                       structureId: structureId,
                     );

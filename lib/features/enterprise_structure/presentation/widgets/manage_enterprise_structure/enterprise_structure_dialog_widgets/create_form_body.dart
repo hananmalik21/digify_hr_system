@@ -11,7 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import 'enterprise_dropdown_section.dart';
 import 'enterprise_structure_dialog_mode.dart';
 import 'enterprise_structure_dialog_providers.dart';
 import 'hierarchy_loading_placeholder.dart';
@@ -21,7 +20,6 @@ import 'organizational_hierarchy_levels_section.dart';
 class CreateFormBody extends ConsumerWidget {
   final EditEnterpriseStructureState formState;
   final EditEnterpriseStructureNotifier formNotifier;
-  final int? enterpriseId;
   final TextEditingController nameController;
   final TextEditingController descriptionController;
   final AppLocalizations localizations;
@@ -30,7 +28,6 @@ class CreateFormBody extends ConsumerWidget {
     super.key,
     required this.formState,
     required this.formNotifier,
-    this.enterpriseId,
     required this.nameController,
     required this.descriptionController,
     required this.localizations,
@@ -46,7 +43,6 @@ class CreateFormBody extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EnterpriseDropdownSection(formState: formState, formNotifier: formNotifier, initialEnterpriseId: enterpriseId),
         DigifyTextField(
           labelText: localizations.structureName,
           isRequired: true,

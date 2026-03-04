@@ -15,11 +15,11 @@ class CreateEnterpriseStructureDialog extends ConsumerStatefulWidget {
 
   const CreateEnterpriseStructureDialog({super.key, required this.provider});
 
-  static Future<void> show(
+  static Future<T?> show<T>(
     BuildContext context, {
     required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {
-    return showDialog(
+    return showDialog<T>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => ProviderScope(child: CreateEnterpriseStructureDialog(provider: provider)),
@@ -72,7 +72,6 @@ class _CreateEnterpriseStructureDialogState extends ConsumerState<CreateEnterpri
       content: CreateFormBody(
         formState: formState,
         formNotifier: formNotifier,
-        enterpriseId: null,
         nameController: _nameController,
         descriptionController: _descriptionController,
         localizations: localizations,

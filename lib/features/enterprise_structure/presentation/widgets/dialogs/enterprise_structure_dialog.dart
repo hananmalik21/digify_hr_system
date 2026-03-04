@@ -32,7 +32,6 @@ class EnterpriseStructureDialog {
     required String structureName,
     required String description,
     required List<HierarchyLevel> initialLevels,
-    int? enterpriseId,
     String? structureId,
     bool? isActive,
     required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
@@ -42,17 +41,16 @@ class EnterpriseStructureDialog {
       structureName: structureName,
       description: description,
       initialLevels: initialLevels,
-      enterpriseId: enterpriseId,
       structureId: structureId,
       isActive: isActive,
       provider: provider,
     );
   }
 
-  static Future<void> showCreate(
+  static Future<T?> showCreate<T>(
     BuildContext context, {
     required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
   }) {
-    return CreateEnterpriseStructureDialog.show(context, provider: provider);
+    return CreateEnterpriseStructureDialog.show<T>(context, provider: provider);
   }
 }

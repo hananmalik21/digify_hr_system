@@ -35,56 +35,39 @@ class StructureListItemDto {
     final isActiveValue = json['is_active'] ?? json['isActive'] ?? 'Y';
     final isActive = isActiveValue is bool
         ? isActiveValue
-        : (isActiveValue.toString().toUpperCase() == 'Y' ||
-            isActiveValue.toString() == 'true');
+        : (isActiveValue.toString().toUpperCase() == 'Y' || isActiveValue.toString() == 'true');
 
     // Parse dates
-    final createdDateStr = json['created_date'] as String? ??
-        json['createdDate'] as String? ??
-        '';
+    final createdDateStr = json['created_date'] as String? ?? json['createdDate'] as String? ?? '';
     final createdDate = DateTime.tryParse(createdDateStr) ?? DateTime.now();
 
-    final lastUpdatedDateStr = json['last_updated_date'] as String? ??
-        json['lastUpdatedDate'] as String?;
-    final lastUpdatedDate = lastUpdatedDateStr != null
-        ? DateTime.tryParse(lastUpdatedDateStr)
-        : null;
+    final lastUpdatedDateStr = json['last_updated_date'] as String? ?? json['lastUpdatedDate'] as String?;
+    final lastUpdatedDate = lastUpdatedDateStr != null ? DateTime.tryParse(lastUpdatedDateStr) : null;
 
     // Parse levels
     final levelsJson = json['levels'] as List<dynamic>? ?? [];
     final levels = levelsJson
-        .map((levelJson) => StructureLevelItemDto.fromJson(
-            levelJson as Map<String, dynamic>))
+        .map((levelJson) => StructureLevelItemDto.fromJson(levelJson as Map<String, dynamic>))
         .toList();
 
     return StructureListItemDto(
-      structureId: (json['structure_id'] as String?) ??
+      structureId:
+          (json['structure_id'] as String?) ??
           (json['structure_id'] as num?)?.toString() ??
           (json['id'] as String?) ??
           (json['id'] as num?)?.toString() ??
           '',
-      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ??
-          (json['enterpriseId'] as num?)?.toInt() ??
-          0,
-      enterpriseName: json['enterprise_name'] as String? ??
-          json['enterpriseName'] as String?,
-      structureCode: json['structure_code'] as String? ??
-          json['structureCode'] as String? ??
-          '',
-      structureName: json['structure_name'] as String? ??
-          json['structureName'] as String? ??
-          '',
-      structureType: json['structure_type'] as String? ??
-          json['structureType'] as String? ??
-          '',
+      enterpriseId: (json['enterprise_id'] as num?)?.toInt() ?? (json['enterpriseId'] as num?)?.toInt() ?? 0,
+      enterpriseName: json['enterprise_name'] as String? ?? json['enterpriseName'] as String?,
+      structureCode: json['structure_code'] as String? ?? json['structureCode'] as String? ?? '',
+      structureName: json['structure_name'] as String? ?? json['structureName'] as String? ?? '',
+      structureType: json['structure_type'] as String? ?? json['structureType'] as String? ?? '',
       description: json['description'] as String? ?? '',
       isActive: isActive,
       createdDate: createdDate,
       lastUpdatedDate: lastUpdatedDate,
       levels: levels,
-      orgUnitCount: (json['org_unit_count'] as num?)?.toInt() ??
-          (json['orgUnitCount'] as num?)?.toInt() ??
-          0,
+      orgUnitCount: (json['org_unit_count'] as num?)?.toInt() ?? (json['orgUnitCount'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -128,39 +111,23 @@ class StructureLevelItemDto {
 
   factory StructureLevelItemDto.fromJson(Map<String, dynamic> json) {
     // Parse is_mandatory from "Y"/"N" or boolean
-    final isMandatoryValue = json['is_mandatory'] as String? ??
-        json['isMandatory']?.toString() ??
-        'N';
-    final isMandatory = isMandatoryValue.toUpperCase() == 'Y' ||
-        isMandatoryValue == 'true' ||
-        (json['isMandatory'] as bool? ?? false);
+    final isMandatoryValue = json['is_mandatory'] as String? ?? json['isMandatory']?.toString() ?? 'N';
+    final isMandatory =
+        isMandatoryValue.toUpperCase() == 'Y' || isMandatoryValue == 'true' || (json['isMandatory'] as bool? ?? false);
 
     // Parse is_active from "Y"/"N" or boolean
-    final isActiveValue = json['is_active'] as String? ??
-        json['isActive']?.toString() ??
-        'Y';
-    final isActive = isActiveValue.toUpperCase() == 'Y' ||
-        isActiveValue == 'true' ||
-        (json['isActive'] as bool? ?? true);
+    final isActiveValue = json['is_active'] as String? ?? json['isActive']?.toString() ?? 'Y';
+    final isActive =
+        isActiveValue.toUpperCase() == 'Y' || isActiveValue == 'true' || (json['isActive'] as bool? ?? true);
 
     return StructureLevelItemDto(
-      levelId: (json['level_id'] as num?)?.toInt() ??
-          (json['id'] as num?)?.toInt() ??
-          0,
-      levelNumber: (json['level_number'] as num?)?.toInt() ??
-          (json['levelNumber'] as num?)?.toInt() ??
-          0,
-      levelCode: json['level_code'] as String? ??
-          json['levelCode'] as String? ??
-          '',
-      levelName: json['level_name'] as String? ??
-          json['levelName'] as String? ??
-          '',
+      levelId: (json['level_id'] as num?)?.toInt() ?? (json['id'] as num?)?.toInt() ?? 0,
+      levelNumber: (json['level_number'] as num?)?.toInt() ?? (json['levelNumber'] as num?)?.toInt() ?? 0,
+      levelCode: json['level_code'] as String? ?? json['levelCode'] as String? ?? '',
+      levelName: json['level_name'] as String? ?? json['levelName'] as String? ?? '',
       isMandatory: isMandatory,
       isActive: isActive,
-      displayOrder: (json['display_order'] as num?)?.toInt() ??
-          (json['displayOrder'] as num?)?.toInt() ??
-          0,
+      displayOrder: (json['display_order'] as num?)?.toInt() ?? (json['displayOrder'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -192,32 +159,36 @@ class PaginatedStructureListDto {
   });
 
   factory PaginatedStructureListDto.fromJson(Map<String, dynamic> json) {
-    // Extract data array
     final data = json['data'] as List<dynamic>? ?? [];
-    final structures = data
-        .map((item) => StructureListItemDto.fromJson(item as Map<String, dynamic>))
-        .toList();
+    final structures = data.map((item) => StructureListItemDto.fromJson(item as Map<String, dynamic>)).toList();
 
-    // Extract meta information
     final meta = json['meta'] as Map<String, dynamic>? ?? {};
     final paginationJson = meta['pagination'] as Map<String, dynamic>? ?? {};
     final pagination = PaginationInfoDto.fromJson(paginationJson);
 
-    final total = (meta['total'] as num?)?.toInt() ?? 0;
-    final count = (meta['count'] as num?)?.toInt() ?? 0;
+    final count = structures.length;
+    final total = (meta['total'] as num?)?.toInt() ?? _deriveTotal(pagination, count);
 
-    return PaginatedStructureListDto(
-      structures: structures,
-      pagination: pagination,
-      total: total,
-      count: count,
-    );
+    return PaginatedStructureListDto(structures: structures, pagination: pagination, total: total, count: count);
+  }
+
+  static int _deriveTotal(PaginationInfoDto p, int itemCount) {
+    if (p.hasNext) return 0;
+    return (p.page - 1) * p.pageSize + itemCount;
   }
 
   PaginatedStructureList toDomain() {
+    final paginationWithTotal = PaginationInfo(
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      total: total,
+      totalPages: pagination.totalPages,
+      hasNext: pagination.hasNext,
+      hasPrevious: pagination.hasPrevious,
+    );
     return PaginatedStructureList(
       structures: structures.map((s) => s.toDomain()).toList(),
-      pagination: pagination.toDomain(),
+      pagination: paginationWithTotal,
       total: total,
       count: count,
     );
@@ -245,19 +216,11 @@ class PaginationInfoDto {
   factory PaginationInfoDto.fromJson(Map<String, dynamic> json) {
     return PaginationInfoDto(
       page: (json['page'] as num?)?.toInt() ?? 1,
-      pageSize: (json['page_size'] as num?)?.toInt() ??
-          (json['pageSize'] as num?)?.toInt() ??
-          10,
+      pageSize: (json['page_size'] as num?)?.toInt() ?? (json['pageSize'] as num?)?.toInt() ?? 10,
       total: (json['total'] as num?)?.toInt() ?? 0,
-      totalPages: (json['total_pages'] as num?)?.toInt() ??
-          (json['totalPages'] as num?)?.toInt() ??
-          1,
-      hasNext: json['has_next'] as bool? ??
-          json['hasNext'] as bool? ??
-          false,
-      hasPrevious: json['has_previous'] as bool? ??
-          json['hasPrevious'] as bool? ??
-          false,
+      totalPages: (json['total_pages'] as num?)?.toInt() ?? (json['totalPages'] as num?)?.toInt() ?? 1,
+      hasNext: json['has_next'] as bool? ?? json['hasNext'] as bool? ?? false,
+      hasPrevious: json['has_previous'] as bool? ?? json['hasPrevious'] as bool? ?? false,
     );
   }
 
@@ -272,4 +235,3 @@ class PaginationInfoDto {
     );
   }
 }
-

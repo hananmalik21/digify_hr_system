@@ -3,7 +3,6 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/structures_list_skeleton.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/manage_enterprise_structure/manage_enterprise_structure_widgets/structure_card_widget.dart';
@@ -28,9 +27,23 @@ class StructuresListWidget extends ConsumerWidget {
     required this.saveEnterpriseStructureProvider,
   });
 
+  StructureListViewState _viewStateFrom(StructureListState state) {
+    if (state.isLoading && state.structures.isEmpty) {
+      return StructureListViewState.initialLoading();
+    }
+    if (state.hasError && state.structures.isEmpty) {
+      return StructureListViewState.error(state.errorMessage);
+    }
+    if (state.structures.isEmpty) {
+      return StructureListViewState.empty();
+    }
+    return StructureListViewState.content(state);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewState = ref.watch(structureListViewStateProvider);
+    final listState = ref.watch(structureListProvider);
+    final viewState = _viewStateFrom(listState);
 
     switch (viewState.type) {
       case StructureListViewStateType.initialLoading:
@@ -59,7 +72,6 @@ class StructuresListWidget extends ConsumerWidget {
         break;
     }
 
-    final listState = viewState.state!;
     final pagination = listState.pagination;
     final notifier = ref.read(structureListProvider.notifier);
 

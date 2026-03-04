@@ -1,6 +1,8 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/component_values_level_tabs.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/component_values_stat_cards.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/component_values_tab_content.dart';
@@ -22,19 +24,28 @@ class ManageComponentValuesScreen extends ConsumerWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DigifyTabHeader(
+              const DigifyTabHeader(
                 title: 'Manage Component Values',
                 description: 'Manage component values for your enterprise structure.',
               ),
-              Gap(24),
-              ComponentValuesStatCards(),
-              Gap(24),
-              ComponentValuesLevelTabs(),
-              Gap(24),
-              ComponentValuesTabContent(),
+              Gap(24.h),
+              EnterpriseSelectorWidget(
+                selectedEnterpriseId: ref.watch(manageComponentValuesEnterpriseIdProvider),
+                onEnterpriseChanged: (id) =>
+                    ref.read(manageComponentValuesSelectedEnterpriseProvider.notifier).setEnterpriseId(id),
+                subtitle: ref.watch(manageComponentValuesEnterpriseIdProvider) != null
+                    ? 'Viewing component values for selected enterprise'
+                    : 'Select an enterprise to view component values',
+              ),
+              Gap(24.h),
+              const ComponentValuesStatCards(),
+              Gap(24.h),
+              const ComponentValuesLevelTabs(),
+              Gap(24.h),
+              const ComponentValuesTabContent(),
             ],
           ),
         ),

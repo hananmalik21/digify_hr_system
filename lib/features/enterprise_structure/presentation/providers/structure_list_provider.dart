@@ -77,9 +77,11 @@ class StructureListViewState {
 
 class StructureListNotifier extends StateNotifier<StructureListState> {
   final GetStructureListUseCase getStructureListUseCase;
+  final int? Function()? enterpriseIdGetter;
   bool _isDisposed = false;
 
-  StructureListNotifier({required this.getStructureListUseCase}) : super(const StructureListState()) {
+  StructureListNotifier({required this.getStructureListUseCase, this.enterpriseIdGetter})
+    : super(const StructureListState()) {
     Future.microtask(() {
       if (!_isDisposed) {
         loadStructures();
@@ -87,8 +89,11 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     });
   }
 
-  StructureListNotifier.withPageSize({required this.getStructureListUseCase, int pageSize = 1000})
-    : super(StructureListState(pageSize: pageSize)) {
+  StructureListNotifier.withPageSize({
+    required this.getStructureListUseCase,
+    this.enterpriseIdGetter,
+    int pageSize = 1000,
+  }) : super(StructureListState(pageSize: pageSize)) {
     Future.microtask(() {
       if (!_isDisposed) {
         loadStructuresWithPageSize(pageSize: pageSize);
@@ -105,6 +110,19 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   Future<void> loadStructures({bool refresh = false}) async {
     if (_isDisposed) return;
 
+    final enterpriseId = enterpriseIdGetter?.call();
+    if (enterpriseId == null) {
+      state = state.copyWith(
+        structures: const [],
+        isLoading: false,
+        hasError: false,
+        errorMessage: null,
+        total: 0,
+        currentPage: 1,
+      );
+      return;
+    }
+
     if (refresh) {
       if (_isDisposed) return;
       state = state.copyWith(isLoading: true, hasError: false, errorMessage: null, currentPage: 1);
@@ -116,7 +134,11 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     }
 
     try {
-      final result = await getStructureListUseCase(page: refresh ? 1 : state.currentPage, pageSize: state.pageSize);
+      final result = await getStructureListUseCase(
+        enterpriseId: enterpriseId,
+        page: refresh ? 1 : state.currentPage,
+        pageSize: state.pageSize,
+      );
 
       if (_isDisposed) return;
 
@@ -150,7 +172,19 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   }
 
   Future<void> loadStructuresWithPageSize({int pageSize = 1000}) async {
-    if (_isDisposed || state.isLoading) {
+    if (_isDisposed || state.isLoading) return;
+
+    final enterpriseId = enterpriseIdGetter?.call();
+    if (enterpriseId == null) {
+      state = state.copyWith(
+        structures: const [],
+        isLoading: false,
+        hasError: false,
+        errorMessage: null,
+        total: 0,
+        currentPage: 1,
+        pageSize: pageSize,
+      );
       return;
     }
 
@@ -158,7 +192,7 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
     state = state.copyWith(isLoading: true, hasError: false, errorMessage: null, currentPage: 1, pageSize: pageSize);
 
     try {
-      final result = await getStructureListUseCase(page: 1, pageSize: pageSize);
+      final result = await getStructureListUseCase(enterpriseId: enterpriseId, page: 1, pageSize: pageSize);
 
       if (_isDisposed) return;
 
@@ -195,11 +229,18 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   Future<void> loadNextPage() async {
     if (state.isLoadingMore || !state.hasMore) return;
 
+    final enterpriseId = enterpriseIdGetter?.call();
+    if (enterpriseId == null) return;
+
     state = state.copyWith(isLoadingMore: true);
 
     try {
       final nextPage = state.currentPage + 1;
-      final result = await getStructureListUseCase(page: nextPage, pageSize: state.pageSize);
+      final result = await getStructureListUseCase(
+        enterpriseId: enterpriseId,
+        page: nextPage,
+        pageSize: state.pageSize,
+      );
 
       state = state.copyWith(
         structures: [...state.structures, ...result.structures],
@@ -222,11 +263,18 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   Future<void> loadPreviousPage() async {
     if (state.isLoading || !state.hasPrevious) return;
 
+    final enterpriseId = enterpriseIdGetter?.call();
+    if (enterpriseId == null) return;
+
     state = state.copyWith(isLoading: true);
 
     try {
       final previousPage = state.currentPage - 1;
-      final result = await getStructureListUseCase(page: previousPage, pageSize: state.pageSize);
+      final result = await getStructureListUseCase(
+        enterpriseId: enterpriseId,
+        page: previousPage,
+        pageSize: state.pageSize,
+      );
 
       state = state.copyWith(
         structures: result.structures,
@@ -259,18 +307,16 @@ class StructureListNotifier extends StateNotifier<StructureListState> {
   }
 
   Future<void> goToPage(int page) async {
-    if (page < 1 || (state.pagination != null && page > state.pagination!.totalPages)) {
-      return;
-    }
+    if (page < 1 || (state.pagination != null && page > state.pagination!.totalPages)) return;
+    if (page == state.currentPage) return;
 
-    if (page == state.currentPage) {
-      return;
-    }
+    final enterpriseId = enterpriseIdGetter?.call();
+    if (enterpriseId == null) return;
 
     state = state.copyWith(isLoading: true);
 
     try {
-      final result = await getStructureListUseCase(page: page, pageSize: state.pageSize);
+      final result = await getStructureListUseCase(enterpriseId: enterpriseId, page: page, pageSize: state.pageSize);
 
       state = state.copyWith(
         structures: result.structures,
