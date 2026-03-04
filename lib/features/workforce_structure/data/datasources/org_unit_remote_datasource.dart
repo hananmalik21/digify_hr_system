@@ -40,7 +40,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     }
 
     if (tenantId != null) {
-      queryParams['tenant_id'] = tenantId.toString();
+      queryParams['enterprise_id'] = tenantId.toString();
     }
 
     final response = await apiClient.get('/api/hr-org-structures/$structureId/org-units', queryParameters: queryParams);

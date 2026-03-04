@@ -1,32 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
-
-final workforceSelectedEnterpriseProvider = StateNotifierProvider<WorkforceEnterpriseNotifier, int?>((ref) {
-  final notifier = WorkforceEnterpriseNotifier();
-  final initialActive = ref.read(activeEnterpriseIdProvider);
-  if (initialActive != null) {
-    notifier.setEnterpriseId(initialActive);
-  }
-  ref.listen<int?>(activeEnterpriseIdProvider, (previous, next) {
-    if (next != null && !notifier.hasSelection) {
-      notifier.setEnterpriseId(next);
-    }
-  });
-  return notifier;
-});
-
-class WorkforceEnterpriseNotifier extends StateNotifier<int?> {
-  WorkforceEnterpriseNotifier() : super(null);
-
-  bool get hasSelection => state != null;
-
-  void setEnterpriseId(int? enterpriseId) {
-    state = enterpriseId;
-  }
-}
-
-final workforceEnterpriseIdProvider = Provider<int?>((ref) {
-  final selected = ref.watch(workforceSelectedEnterpriseProvider);
-  final active = ref.watch(activeEnterpriseIdProvider);
-  return selected ?? active;
-});
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_families_enterprise_provider.dart';
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/reporting_structure_enterprise_provider.dart';
+export 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_tree_enterprise_provider.dart';

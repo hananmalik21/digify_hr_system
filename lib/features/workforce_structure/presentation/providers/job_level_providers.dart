@@ -8,7 +8,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_level_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_levels_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_job_level_usecase.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_create_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -250,7 +250,7 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
 
 // Provider for the notifier
 final jobLevelNotifierProvider = StateNotifierProvider<JobLevelNotifier, PaginationState<JobLevel>>((ref) {
-  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final tenantId = ref.watch(jobLevelsEnterpriseIdProvider);
   final notifier = JobLevelNotifier(
     ref.read(getJobLevelsUseCaseProvider),
     ref.read(createJobLevelUseCaseProvider),

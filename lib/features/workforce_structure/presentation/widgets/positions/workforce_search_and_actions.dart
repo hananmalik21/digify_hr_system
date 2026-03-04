@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_search_bar.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/search/workforce_status_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class WorkforceSearchAndActions extends ConsumerWidget {
             hintText: localizations.searchPositionsPlaceholder,
             isDark: isDark,
             width: double.infinity,
+            onSearchChanged: (value) => ref.read(positionNotifierProvider.notifier).search(value),
           ),
           Gap(16.h),
           Wrap(
