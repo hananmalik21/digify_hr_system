@@ -30,12 +30,10 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/d
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_division_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/create_department_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_business_units_usecase.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_companies_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_departments_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_department_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_department_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/business_unit_management_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_divisions_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_business_unit_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_company_usecase.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/update_division_usecase.dart';
@@ -54,7 +52,7 @@ import 'package:digify_hr_system/features/enterprise_structure/presentation/prov
 import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_enterprise_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart'
-    show StructureListNotifier, StructureListState, StructureListViewState;
+    show StructureListNotifier, StructureListState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -131,11 +129,6 @@ final companyRepositoryProvider = Provider<CompanyRepositoryImpl>((ref) {
   return CompanyRepositoryImpl(remoteDataSource: remoteDataSource);
 });
 
-final getCompaniesUseCaseProvider = Provider<GetCompaniesUseCase>((ref) {
-  final repository = ref.watch(companyRepositoryProvider);
-  return GetCompaniesUseCase(repository: repository);
-});
-
 final createCompanyUseCaseProvider = Provider<CreateCompanyUseCase>((ref) {
   final repository = ref.watch(companyRepositoryProvider);
   return CreateCompanyUseCase(repository: repository);
@@ -159,11 +152,6 @@ final divisionRemoteDataSourceProvider = Provider<DivisionRemoteDataSource>((ref
 final divisionRepositoryProvider = Provider<DivisionRepositoryImpl>((ref) {
   final remoteDataSource = ref.watch(divisionRemoteDataSourceProvider);
   return DivisionRepositoryImpl(remoteDataSource: remoteDataSource);
-});
-
-final getDivisionsUseCaseProvider = Provider<GetDivisionsUseCase>((ref) {
-  final repository = ref.watch(divisionRepositoryProvider);
-  return GetDivisionsUseCase(repository: repository);
 });
 
 final createDivisionUseCaseProvider = Provider<CreateDivisionUseCase>((ref) {
@@ -247,14 +235,6 @@ final businessUnitsDropdownProvider =
       return BusinessUnitListNotifier.withPageSize(getBusinessUnitsUseCase: getBusinessUnitsUseCase, pageSize: 1000);
     });
 
-final structureListProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
-  final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
-  return StructureListNotifier(
-    getStructureListUseCase: getStructureListUseCase,
-    enterpriseIdGetter: () => ref.read(activeEnterpriseIdProvider),
-  );
-});
-
 final manageEnterpriseStructureStructureListProvider =
     StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((ref) {
       final getStructureListUseCase = ref.watch(getStructureListUseCaseProvider);
@@ -267,20 +247,6 @@ final manageEnterpriseStructureStructureListProvider =
       });
       return notifier;
     });
-
-final structureListViewStateProvider = Provider.autoDispose<StructureListViewState>((ref) {
-  final state = ref.watch(structureListProvider);
-  if (state.isLoading && state.structures.isEmpty) {
-    return StructureListViewState.initialLoading();
-  }
-  if (state.hasError && state.structures.isEmpty) {
-    return StructureListViewState.error(state.errorMessage);
-  }
-  if (state.structures.isEmpty) {
-    return StructureListViewState.empty();
-  }
-  return StructureListViewState.content(state);
-});
 
 final orgStructuresDropdownProvider = StateNotifierProvider.autoDispose<StructureListNotifier, StructureListState>((
   ref,

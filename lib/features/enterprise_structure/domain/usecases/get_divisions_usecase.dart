@@ -12,25 +12,13 @@ class GetDivisionsUseCase {
   ///
   /// Returns a list of [DivisionOverview]
   /// Throws [AppException] if the operation fails
-  Future<List<DivisionOverview>> call({
-    String? search,
-    int? page,
-    int? pageSize,
-  }) async {
+  Future<List<DivisionOverview>> call({int? enterpriseId, String? search, int? page, int? pageSize}) async {
     try {
-      return await repository.getDivisions(
-        search: search,
-        page: page,
-        pageSize: pageSize,
-      );
+      return await repository.getDivisions(enterpriseId: enterpriseId, search: search, page: page, pageSize: pageSize);
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to get divisions: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to get divisions: ${e.toString()}', originalError: e);
     }
   }
 }
-

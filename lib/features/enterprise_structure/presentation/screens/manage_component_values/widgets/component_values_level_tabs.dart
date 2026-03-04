@@ -10,9 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_levels_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_levels_provider.dart'
+    show manageComponentValuesActiveLevelsProvider;
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_screen_provider.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +21,7 @@ class ComponentValuesLevelTabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeLevelsState = ref.watch(activeLevelsProvider);
-    final cvState = ref.watch(componentValuesProvider);
+    final activeLevelsState = ref.watch(manageComponentValuesActiveLevelsProvider);
     final screenState = ref.watch(manageComponentValuesScreenProvider);
     final screenNotifier = ref.read(manageComponentValuesScreenProvider.notifier);
 
@@ -33,7 +31,7 @@ class ComponentValuesLevelTabs extends ConsumerWidget {
     final levelsError = activeLevelsState.errorMessage;
     final isLevelsLoading = activeLevelsState.isLoading;
     final levels = activeLevelsState.levels;
-    final isTreeViewActive = cvState.isTreeView;
+    final isTreeViewActive = screenState.isTreeView;
     final selectedLevel = screenState.selectedLevel;
     final treeViewLabel = localizations.treeView;
 

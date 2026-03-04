@@ -17,6 +17,7 @@ class OrgUnitsTableRow extends StatelessWidget {
   final Function(OrgStructureLevel)? onView;
   final Function(OrgStructureLevel)? onEdit;
   final Function(OrgStructureLevel)? onDelete;
+  final bool isDeleteLoading;
 
   const OrgUnitsTableRow({
     super.key,
@@ -27,6 +28,7 @@ class OrgUnitsTableRow extends StatelessWidget {
     this.onView,
     this.onEdit,
     this.onDelete,
+    this.isDeleteLoading = false,
   });
 
   @override
@@ -132,7 +134,8 @@ class OrgUnitsTableRow extends StatelessWidget {
               ),
               DigifyAssetButton(
                 assetPath: Assets.icons.redDeleteIcon.path,
-                onTap: onDelete != null ? () => onDelete!(unit) : null,
+                onTap: isDeleteLoading ? null : (onDelete != null ? () => onDelete!(unit) : null),
+                isLoading: isDeleteLoading,
               ),
             ],
           ),

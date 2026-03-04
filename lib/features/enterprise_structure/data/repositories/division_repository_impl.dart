@@ -3,20 +3,16 @@ import 'package:digify_hr_system/features/enterprise_structure/data/datasources/
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/division.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/division_repository.dart';
 
-/// Implementation of DivisionRepository
 class DivisionRepositoryImpl implements DivisionRepository {
   final DivisionRemoteDataSource remoteDataSource;
 
   DivisionRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<DivisionOverview>> getDivisions({
-    String? search,
-    int? page,
-    int? pageSize,
-  }) async {
+  Future<List<DivisionOverview>> getDivisions({int? enterpriseId, String? search, int? page, int? pageSize}) async {
     try {
       final dtos = await remoteDataSource.getDivisions(
+        enterpriseId: enterpriseId,
         search: search,
         page: page,
         pageSize: pageSize,
@@ -25,10 +21,7 @@ class DivisionRepositoryImpl implements DivisionRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -40,10 +33,7 @@ class DivisionRepositoryImpl implements DivisionRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -55,10 +45,7 @@ class DivisionRepositoryImpl implements DivisionRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -69,11 +56,7 @@ class DivisionRepositoryImpl implements DivisionRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 }
-

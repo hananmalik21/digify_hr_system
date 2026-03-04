@@ -15,6 +15,7 @@ class GetOrgUnitsPaginatedUseCase {
   Future<PaginatedOrgUnitsResponse> call(
     String structureId,
     String levelCode, {
+    int? enterpriseId,
     String? search,
     int page = 1,
     int pageSize = 10,
@@ -23,6 +24,7 @@ class GetOrgUnitsPaginatedUseCase {
       return await repository.getOrgUnitsByStructureAndLevelPaginated(
         structureId,
         levelCode,
+        enterpriseId: enterpriseId,
         search: search,
         page: page,
         pageSize: pageSize,
@@ -37,4 +39,3 @@ class GetOrgUnitsPaginatedUseCase {
     }
   }
 }
-

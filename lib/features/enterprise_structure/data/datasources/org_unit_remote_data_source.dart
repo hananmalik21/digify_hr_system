@@ -11,6 +11,7 @@ abstract class OrgUnitRemoteDataSource {
   Future<PaginatedOrgUnitsResponseDto> getOrgUnitsByStructureAndLevelPaginated(
     String structureId,
     String levelCode, {
+    int? enterpriseId,
     String? search,
     int page = 1,
     int pageSize = 10,
@@ -19,7 +20,7 @@ abstract class OrgUnitRemoteDataSource {
   Future<OrgStructureLevelDto> createOrgUnit(String structureId, Map<String, dynamic> data);
   Future<OrgStructureLevelDto> updateOrgUnit(String structureId, String orgUnitId, Map<String, dynamic> data);
   Future<void> deleteOrgUnit(String structureId, String orgUnitId, {bool hard = true});
-  Future<OrgUnitTreeResponseDto> getOrgUnitsTree();
+  Future<OrgUnitTreeResponseDto> getOrgUnitsTree({int? enterpriseId});
 }
 
 class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
@@ -99,6 +100,7 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   Future<PaginatedOrgUnitsResponseDto> getOrgUnitsByStructureAndLevelPaginated(
     String structureId,
     String levelCode, {
+    int? enterpriseId,
     String? search,
     int page = 1,
     int pageSize = 10,
@@ -109,7 +111,9 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
         'page': page.toString(),
         'page_size': pageSize.toString(),
       };
-
+      if (enterpriseId != null) {
+        queryParameters['enterprise_id'] = enterpriseId.toString();
+      }
       if (search != null && search.isNotEmpty) {
         queryParameters['search'] = search;
       }
@@ -183,7 +187,6 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     try {
       final response = await apiClient.post(ApiEndpoints.hrOrgStructuresCreateUnit(structureId), body: data);
 
-      // Handle different response formats
       Map<String, dynamic> responseData;
       if (response.containsKey('data')) {
         responseData = response['data'] is Map<String, dynamic> ? response['data'] as Map<String, dynamic> : response;
@@ -204,7 +207,6 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
     try {
       final response = await apiClient.put(ApiEndpoints.hrOrgStructuresUpdateUnit(structureId, orgUnitId), body: data);
 
-      // Handle different response formats
       Map<String, dynamic> responseData;
       if (response.containsKey('data')) {
         responseData = response['data'] is Map<String, dynamic> ? response['data'] as Map<String, dynamic> : response;
@@ -241,9 +243,10 @@ class OrgUnitRemoteDataSourceImpl implements OrgUnitRemoteDataSource {
   }
 
   @override
-  Future<OrgUnitTreeResponseDto> getOrgUnitsTree() async {
+  Future<OrgUnitTreeResponseDto> getOrgUnitsTree({int? enterpriseId}) async {
     try {
-      final response = await apiClient.get(ApiEndpoints.orgUnitsTreeActive);
+      final queryParams = enterpriseId != null ? <String, String>{'enterprise_id': enterpriseId.toString()} : null;
+      final response = await apiClient.get(ApiEndpoints.orgUnitsTreeActive, queryParameters: queryParams);
 
       return OrgUnitTreeResponseDto.fromJson(response);
     } on AppException {

@@ -39,6 +39,7 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
   Future<PaginatedOrgUnitsResponse> getOrgUnitsByStructureAndLevelPaginated(
     String structureId,
     String levelCode, {
+    int? enterpriseId,
     String? search,
     int page = 1,
     int pageSize = 10,
@@ -47,6 +48,7 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
       final dto = await remoteDataSource.getOrgUnitsByStructureAndLevelPaginated(
         structureId,
         levelCode,
+        enterpriseId: enterpriseId,
         search: search,
         page: page,
         pageSize: pageSize,
@@ -113,9 +115,9 @@ class OrgUnitRepositoryImpl implements OrgUnitRepository {
   }
 
   @override
-  Future<OrgUnitTree> getOrgUnitsTree() async {
+  Future<OrgUnitTree> getOrgUnitsTree({int? enterpriseId}) async {
     try {
-      final dto = await remoteDataSource.getOrgUnitsTree();
+      final dto = await remoteDataSource.getOrgUnitsTree(enterpriseId: enterpriseId);
 
       OrgUnitTreeNode convertTreeNode(OrgUnitTreeNodeDto nodeDto) {
         return OrgUnitTreeNode(

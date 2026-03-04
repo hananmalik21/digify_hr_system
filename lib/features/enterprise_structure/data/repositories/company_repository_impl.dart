@@ -3,20 +3,16 @@ import 'package:digify_hr_system/features/enterprise_structure/data/datasources/
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/company.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/company_repository.dart';
 
-/// Implementation of CompanyRepository
 class CompanyRepositoryImpl implements CompanyRepository {
   final CompanyRemoteDataSource remoteDataSource;
 
   CompanyRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<CompanyOverview>> getCompanies({
-    String? search,
-    int? page,
-    int? pageSize,
-  }) async {
+  Future<List<CompanyOverview>> getCompanies({int? enterpriseId, String? search, int? page, int? pageSize}) async {
     try {
       final dtos = await remoteDataSource.getCompanies(
+        enterpriseId: enterpriseId,
         search: search,
         page: page,
         pageSize: pageSize,
@@ -25,10 +21,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -40,10 +33,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -55,10 +45,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 
@@ -69,11 +56,7 @@ class CompanyRepositoryImpl implements CompanyRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 }
-

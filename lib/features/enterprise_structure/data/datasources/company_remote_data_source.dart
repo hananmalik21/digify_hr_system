@@ -3,9 +3,8 @@ import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/features/enterprise_structure/data/dto/company_dto.dart';
 
-/// Remote data source for company operations
 abstract class CompanyRemoteDataSource {
-  Future<List<CompanyDto>> getCompanies({String? search, int? page, int? pageSize});
+  Future<List<CompanyDto>> getCompanies({int? enterpriseId, String? search, int? page, int? pageSize});
   Future<CompanyDto> createCompany(Map<String, dynamic> companyData);
   Future<CompanyDto> updateCompany(int companyId, Map<String, dynamic> companyData);
   Future<void> deleteCompany(int companyId, {bool hard = true});
@@ -17,10 +16,12 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
   CompanyRemoteDataSourceImpl({required this.apiClient});
 
   @override
-  Future<List<CompanyDto>> getCompanies({String? search, int? page, int? pageSize}) async {
+  Future<List<CompanyDto>> getCompanies({int? enterpriseId, String? search, int? page, int? pageSize}) async {
     try {
-      // Build query parameters
       final queryParameters = <String, String>{};
+      if (enterpriseId != null) {
+        queryParameters['enterprise_id'] = enterpriseId.toString();
+      }
       if (search != null && search.trim().isNotEmpty) {
         queryParameters['search'] = search.trim();
       }
@@ -36,7 +37,6 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
         queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
       );
 
-      // Handle different response formats
       List<dynamic> data;
       if (response.containsKey('data') && response['data'] is List) {
         data = response['data'] as List<dynamic>;
@@ -61,7 +61,6 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
     try {
       final response = await apiClient.post(ApiEndpoints.companies, body: companyData);
 
-      // Handle different response formats
       Map<String, dynamic> data;
       if (response.containsKey('data') && response['data'] is Map) {
         data = response['data'] as Map<String, dynamic>;
@@ -82,7 +81,6 @@ class CompanyRemoteDataSourceImpl implements CompanyRemoteDataSource {
     try {
       final response = await apiClient.put('${ApiEndpoints.companies}/$companyId', body: companyData);
 
-      // Handle different response formats
       Map<String, dynamic> data;
       if (response.containsKey('data') && response['data'] is Map) {
         data = response['data'] as Map<String, dynamic>;
