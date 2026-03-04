@@ -17,15 +17,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-/// Self-contained view that fetches and displays org units for a given level.
-/// Each tab owns its own API calls - no orchestration from screen provider.
 class LevelOrgUnitsView extends ConsumerStatefulWidget {
   const LevelOrgUnitsView({super.key, required this.level, required this.searchHint, this.levelCodeOverride});
 
   final OrganizationLevel level;
   final String searchHint;
 
-  /// Use for OrganizationLevel.unknown when level code comes from API.
   final String? levelCodeOverride;
 
   @override

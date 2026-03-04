@@ -1,0 +1,23 @@
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final jobLevelsSelectedEnterpriseProvider = StateNotifierProvider<WorkforceEnterpriseNotifier, int?>((ref) {
+  final notifier = WorkforceEnterpriseNotifier();
+  final initialActive = ref.read(activeEnterpriseIdProvider);
+  if (initialActive != null) {
+    notifier.setEnterpriseId(initialActive);
+  }
+  ref.listen<int?>(activeEnterpriseIdProvider, (previous, next) {
+    if (next != null && !notifier.hasSelection) {
+      notifier.setEnterpriseId(next);
+    }
+  });
+  return notifier;
+});
+
+final jobLevelsEnterpriseIdProvider = Provider<int?>((ref) {
+  final selected = ref.watch(jobLevelsSelectedEnterpriseProvider);
+  final active = ref.watch(activeEnterpriseIdProvider);
+  return selected ?? active;
+});

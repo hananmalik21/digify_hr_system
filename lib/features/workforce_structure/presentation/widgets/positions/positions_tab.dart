@@ -5,6 +5,8 @@ import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_config.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_enterprise_selector.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_details_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/position_form_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/workforce_positions_table.dart';
@@ -47,6 +49,8 @@ class _PositionsTabState extends ConsumerState<PositionsTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
+        const WorkforceTabEnterpriseSelector(tab: WorkforceTab.positions),
+        Gap(24.h),
         WorkforceSearchAndActions(localizations: localizations, isDark: isDark),
         Gap(16.h),
         if (positionState.hasError && positionState.items.isEmpty && !positionState.isLoading)

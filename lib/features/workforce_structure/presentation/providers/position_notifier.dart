@@ -130,10 +130,11 @@ class PositionNotifier extends StateNotifier<PaginationState<Position>>
     state = PaginationState(pageSize: state.pageSize);
   }
 
-  void search(String query) {
-    if (state.searchQuery == query) return;
+  void search(String? query) {
+    final normalized = query?.trim() ?? '';
+    if (state.searchQuery == normalized) return;
 
-    state = state.copyWith(searchQuery: query);
+    state = state.copyWith(searchQuery: normalized);
     refresh();
   }
 

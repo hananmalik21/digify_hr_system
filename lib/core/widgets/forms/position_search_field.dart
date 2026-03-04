@@ -129,9 +129,16 @@ class _PositionSearchFieldState extends ConsumerState<PositionSearchField> {
     final screenHeight = media.size.height;
     final spaceBelow = screenHeight - media.padding.bottom - (pos.dy + size.height + 4.h);
     final spaceAbove = pos.dy - media.padding.top - 4.h;
-    final showAbove = spaceBelow < 150 && spaceAbove > spaceBelow;
+    final itemCount = ref.read(positionNotifierProvider).items.length;
+    final hasFewItems = itemCount <= 3 && itemCount > 0;
+    final showAbove = (hasFewItems && spaceAbove >= 80) || (spaceBelow < 150 && spaceAbove > spaceBelow);
     final maxHeight = showAbove ? (300.h).clamp(0.0, spaceAbove) : (300.h).clamp(0.0, spaceBelow);
-    final offset = showAbove ? Offset(0, -(maxHeight + 4.h)) : Offset(0, size.height + 4.h);
+    final itemHeight = 64.h;
+    final contentHeight = hasFewItems
+        ? (30.h + (itemCount * itemHeight) + ((itemCount - 1).clamp(0, 10) * 1.0)).clamp(0.0, maxHeight)
+        : maxHeight;
+    final overlayHeight = showAbove && hasFewItems ? contentHeight : maxHeight;
+    final offset = showAbove ? Offset(0, -(overlayHeight + 4.h)) : Offset(0, size.height + 4.h);
 
     return OverlayEntry(
       builder: (context) => Consumer(
@@ -151,7 +158,7 @@ class _PositionSearchFieldState extends ConsumerState<PositionSearchField> {
                 borderRadius: BorderRadius.circular(12.r),
                 color: Colors.transparent,
                 child: Container(
-                  constraints: BoxConstraints(maxHeight: maxHeight),
+                  constraints: BoxConstraints(maxHeight: overlayHeight),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
@@ -346,6 +353,15 @@ class _PositionSearchFieldState extends ConsumerState<PositionSearchField> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    ref.listen(positionNotifierProvider, (prev, next) {
+      if (_showSuggestions && prev?.items.length != next.items.length && !next.isLoading) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _showSuggestions && _overlayEntry != null) {
+            _updateOverlay();
+          }
+        });
+      }
+    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

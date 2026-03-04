@@ -17,7 +17,7 @@ class OrgStructureRemoteDataSourceImpl implements OrgStructureRemoteDataSource {
   Future<OrgStructure> getActiveOrgStructureLevels({int? tenantId}) async {
     final queryParams = <String, String>{};
     if (tenantId != null) {
-      queryParams['tenant_id'] = tenantId.toString();
+      queryParams['enterprise_id'] = tenantId.toString();
     }
 
     final response = await apiClient.get(ApiEndpoints.orgStructureLevels, queryParameters: queryParams);
@@ -28,9 +28,6 @@ class OrgStructureRemoteDataSourceImpl implements OrgStructureRemoteDataSource {
   @override
   Future<List<OrgStructure>> getOrgStructuresByEnterpriseId(int enterpriseId, {int? tenantId}) async {
     final queryParams = <String, String>{'enterprise_id': enterpriseId.toString()};
-    if (tenantId != null) {
-      queryParams['tenant_id'] = tenantId.toString();
-    }
 
     final response = await apiClient.get(ApiEndpoints.hrOrgStructures, queryParameters: queryParams);
 
