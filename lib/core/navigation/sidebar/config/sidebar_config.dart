@@ -369,6 +369,21 @@ class SidebarConfig {
           ),
         ],
       ),
+
+      SidebarItem(
+        id: 'compensation',
+        svgPath: Assets.icons.timeManagementMainIcon.path,
+        labelKey: 'compensation',
+        children: [
+          SidebarItem(
+            id: 'gradeStructureManagement',
+            svgPath: Assets.icons.structureConfigurationIcon.path,
+            labelKey: 'gradeStructureManagement',
+            route: '/compensation',
+          ),
+        ],
+      ),
+
       SidebarItem(
         id: 'payroll',
         svgPath: Assets.icons.payrollIcon.path,
@@ -569,6 +584,10 @@ class SidebarConfig {
         return 'Geo Locations';
       case 'employeeLocations':
         return 'View Employee Location';
+      case 'compensation':
+        return 'Compensation';
+      case 'gradeStructureManagement':
+        return 'Grade Structure Management';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':
