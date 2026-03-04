@@ -1,4 +1,3 @@
-import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -8,6 +7,7 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class WorkScheduleField extends StatefulWidget {
   final int? selectedWorkScheduleId;
@@ -35,9 +35,7 @@ class _WorkScheduleFieldState extends State<WorkScheduleField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-      text: widget.selectedWorkScheduleName ?? '',
-    );
+    _controller = TextEditingController(text: widget.selectedWorkScheduleName ?? '');
   }
 
   @override
@@ -67,19 +65,13 @@ class _WorkScheduleFieldState extends State<WorkScheduleField> {
               style: TextStyle(
                 fontSize: 13.8.sp,
                 fontWeight: FontWeight.w500,
-                color: context.isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.inputLabel,
+                color: context.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
               ),
             ),
             Gap(4.w),
             Text(
               '*',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.deleteIconRed,
-              ),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.deleteIconRed),
             ),
           ],
         ),
@@ -122,9 +114,7 @@ class _WorkScheduleFieldState extends State<WorkScheduleField> {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w400,
-            color: context.isDark
-                ? AppColors.textMutedDark
-                : AppColors.textMuted,
+            color: context.isDark ? AppColors.textMutedDark : AppColors.textMuted,
           ),
         ),
       ],
