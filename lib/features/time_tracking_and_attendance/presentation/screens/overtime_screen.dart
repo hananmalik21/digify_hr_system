@@ -38,6 +38,7 @@ class _OvertimeScreenState extends ConsumerState<OvertimeScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    ref.watch(overtimeEnterpriseSyncProvider);
     final state = ref.watch(overtimeManagementProvider);
 
     return Container(

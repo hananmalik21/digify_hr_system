@@ -42,6 +42,7 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    ref.watch(attendanceEnterpriseSyncProvider);
     final state = ref.watch(attendanceNotifierProvider);
     final notifier = ref.read(attendanceNotifierProvider.notifier);
     final selectedEnterpriseId = ref.watch(attendanceEnterpriseIdProvider);

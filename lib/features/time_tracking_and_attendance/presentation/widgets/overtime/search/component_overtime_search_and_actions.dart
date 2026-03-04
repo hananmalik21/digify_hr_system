@@ -32,17 +32,6 @@ class _OvertimeSearchAndActionsState extends ConsumerState<OvertimeSearchAndActi
   bool _showFilters = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orgState = ref.read(overtimeOrgStructureNotifierProvider);
-      if (!orgState.isLoading && orgState.orgStructure == null) {
-        ref.read(overtimeOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.r),
