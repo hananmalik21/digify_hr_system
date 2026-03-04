@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/overtime/overtime_screen_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/org_structure_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/org_structure_repository_impl.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
@@ -64,5 +65,13 @@ class OvertimeOrgStructureNotifier extends StateNotifier<OvertimeOrgStructureSta
 final overtimeOrgStructureNotifierProvider =
     StateNotifierProvider<OvertimeOrgStructureNotifier, OvertimeOrgStructureState>((ref) {
       final useCase = ref.read(overtimeGetActiveOrgStructureLevelsUseCaseProvider);
-      return OvertimeOrgStructureNotifier(getActiveOrgStructureLevelsUseCase: useCase);
+      final enterpriseId = ref.watch(overtimeScreenEnterpriseIdProvider);
+      final notifier = OvertimeOrgStructureNotifier(
+        getActiveOrgStructureLevelsUseCase: useCase,
+        tenantId: enterpriseId,
+      );
+      if (enterpriseId != null) {
+        Future.microtask(() => notifier.fetchOrgStructureLevels());
+      }
+      return notifier;
     });

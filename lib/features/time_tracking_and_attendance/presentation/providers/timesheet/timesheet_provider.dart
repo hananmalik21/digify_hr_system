@@ -51,7 +51,7 @@ class TimesheetState {
   const TimesheetState({
     required this.weekStartDate,
     required this.weekEndDate,
-    this.isWeekFilterEnabled = true,
+    this.isWeekFilterEnabled = false,
     this.searchQuery = '',
     this.statusFilter,
     this.companyId,

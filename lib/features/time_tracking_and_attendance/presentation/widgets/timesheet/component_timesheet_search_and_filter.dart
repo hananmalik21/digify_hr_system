@@ -43,17 +43,6 @@ class _TimesheetSearchAndFilterState extends ConsumerState<TimesheetSearchAndFil
   bool _showFilters = false;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orgState = ref.read(timesheetOrgStructureNotifierProvider);
-      if (!orgState.isLoading && orgState.orgStructure == null) {
-        ref.read(timesheetOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isCompact = MediaQuery.of(context).size.width < 700;
 
