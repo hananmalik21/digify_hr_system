@@ -21,6 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../features/compensation/presentation/providers/compensation_tab_state_provider.dart';
 import '../../../features/time_tracking_and_attendance/presentation/providers/time_tracking_and_attendance_tab_state_provider.dart';
 
 class Sidebar extends ConsumerStatefulWidget {
@@ -121,6 +122,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
     } else if (route == AppRoutes.timeTrackingAndAttendance) {
       final state = ref.watch(timeTrackingAndAttendanceTabStateProvider);
       final itemTabIndex = getTimeTrackingAndAttendanceTabIndex(itemId);
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
+    } else if (route == AppRoutes.compensation) {
+      final state = ref.watch(compensationTabStateProvider);
+      final itemTabIndex = getCompensationTabIndex(itemId);
       if (itemTabIndex == null) return false;
       return itemTabIndex == state.currentTabIndex;
     }

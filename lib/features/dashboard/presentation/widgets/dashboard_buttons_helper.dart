@@ -83,19 +83,20 @@ List<DashboardButton> getDashboardButtons(AppLocalizations loc) {
       route: '/time-tracking-attendance',
     ),
     DashboardButton(
-      id: 'payroll',
-      icon: Assets.icons.websiteIcon.path,
-      label: loc.payroll,
-      color: AppColors.dashPayroll,
-      route: '/payroll',
-    ),
-    DashboardButton(
       id: 'compensation',
       icon: Assets.icons.gradeIcon.path,
       label: 'Compensation',
       color: AppColors.dashCompensation,
       route: '/compensation',
     ),
+    DashboardButton(
+      id: 'payroll',
+      icon: Assets.icons.websiteIcon.path,
+      label: loc.payroll,
+      color: AppColors.dashPayroll,
+      route: '/payroll',
+    ),
+
     DashboardButton(
       id: 'compliance',
       icon: Assets.icons.payrollMainIcon.path,
