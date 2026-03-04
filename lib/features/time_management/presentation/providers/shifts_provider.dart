@@ -128,7 +128,6 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
   ShiftsNotifier(this._getShiftsUseCase, this._updateShiftUseCase, this._deleteShiftUseCase)
     : super(const ShiftState());
 
-  /// Updates the enterprise ID and refreshes data
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
       _currentEnterpriseId = enterpriseId;

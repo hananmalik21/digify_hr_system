@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.d
 import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_content_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class ShiftsTab extends ConsumerStatefulWidget {
 
 class _ShiftsTabState extends ConsumerState<ShiftsTab> {
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    final enterpriseId = ref.read(shiftsTabEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final confirmed = await AppConfirmationDialog.show(
@@ -57,7 +57,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(shiftsTabEnterpriseIdProvider);
 
     if (effectiveEnterpriseId == null) {
       return Padding(

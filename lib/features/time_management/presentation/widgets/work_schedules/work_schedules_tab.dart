@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:gap/gap.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_schedules/components/work_schedules_list.dart';
@@ -27,13 +27,13 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
   }
 
   void _handleEdit(WorkSchedule schedule) {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    final enterpriseId = ref.read(workSchedulesTabEnterpriseIdProvider);
     if (enterpriseId == null) return;
     UpdateWorkScheduleDialog.show(context, enterpriseId, schedule);
   }
 
   Future<void> _handleDelete(WorkSchedule schedule) async {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    final enterpriseId = ref.read(workSchedulesTabEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final confirmed = await AppConfirmationDialog.show(
@@ -69,7 +69,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
       year: schedule.year,
       code: schedule.scheduleCode,
       isActive: schedule.isActive,
-      workPatternName: '',
+      workPatternName: schedule.patternNameEn ?? '',
       assignmentMode: schedule.assignmentMode,
       effectiveStartDate: schedule.formattedStartDate,
       effectiveEndDate: schedule.formattedEndDate,
@@ -80,7 +80,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(workSchedulesTabEnterpriseIdProvider);
     final workSchedulesState = effectiveEnterpriseId != null
         ? ref.watch(workSchedulesNotifierProvider(effectiveEnterpriseId))
         : const WorkScheduleState();
@@ -94,11 +94,11 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: [Gap(24.h), _buildContent(workSchedulesState)],
+      children: [Gap(24.h), _buildContent(workSchedulesState, effectiveEnterpriseId)],
     );
   }
 
-  Widget _buildContent(WorkScheduleState workSchedulesState) {
+  Widget _buildContent(WorkScheduleState workSchedulesState, int enterpriseId) {
     if (workSchedulesState.isLoading && workSchedulesState.items.isEmpty) {
       return const WorkSchedulesListSkeleton(itemCount: 3);
     }
@@ -112,10 +112,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
             Gap(16.h),
             ElevatedButton(
               onPressed: () {
-                final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
-                if (enterpriseId != null) {
-                  ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
-                }
+                ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
               },
               child: const Text('Retry'),
             ),
@@ -143,11 +140,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
           )
         : null;
 
-    final notifier = ref.read(
-      timeManagementEnterpriseIdProvider.select((id) {
-        return id != null ? ref.read(workSchedulesNotifierProvider(id).notifier) : null;
-      }),
-    );
+    final notifier = ref.read(workSchedulesNotifierProvider(enterpriseId).notifier);
 
     return SingleChildScrollView(
       child: Column(
@@ -170,12 +163,10 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
             paginationInfo: paginationInfo,
             currentPage: workSchedulesState.currentPage,
             pageSize: workSchedulesState.pageSize,
-            onPrevious: workSchedulesState.hasPreviousPage && notifier != null
+            onPrevious: workSchedulesState.hasPreviousPage
                 ? () => notifier.goToPage(workSchedulesState.currentPage - 1)
                 : null,
-            onNext: workSchedulesState.hasNextPage && notifier != null
-                ? () => notifier.goToPage(workSchedulesState.currentPage + 1)
-                : null,
+            onNext: workSchedulesState.hasNextPage ? () => notifier.goToPage(workSchedulesState.currentPage + 1) : null,
             paginationIsLoading: workSchedulesState.isLoading || workSchedulesState.isLoadingMore,
           ),
         ],

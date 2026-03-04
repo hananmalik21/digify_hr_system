@@ -69,32 +69,21 @@ class WorkScheduleRemoteDataSourceImpl implements WorkScheduleRemoteDataSource {
         return defaultValue;
       }
 
-      bool parseBool(dynamic value, {bool defaultValue = false}) {
-        if (value == null) return defaultValue;
-        if (value is bool) return value;
-        if (value is String) {
-          return value.toLowerCase() == 'true' || value == '1';
-        }
-        if (value is num) return value != 0;
-        return defaultValue;
-      }
-
       final paginationPage = parseInt(paginationJson['page'], defaultValue: 1);
       final paginationPageSize = parseInt(paginationJson['limit'], defaultValue: pageSize);
       final paginationTotal = parseInt(paginationJson['total'], defaultValue: 0);
-      final paginationHasMore = parseBool(paginationJson['hasMore'], defaultValue: false);
 
       final validPage = paginationPage < 1 ? 1 : paginationPage;
       final validPageSize = paginationPageSize < 1 ? pageSize : paginationPageSize;
       final validTotal = paginationTotal < 0 ? 0 : paginationTotal;
-      final validTotalPages = validPageSize > 0 ? ((validTotal + validPageSize - 1) / validPageSize).ceil() : 0;
+      final validTotalPages = validPageSize > 0 ? (validTotal / validPageSize).ceil() : 0;
 
       final pagination = PaginationInfo(
         currentPage: validPage,
         totalPages: validTotalPages,
         totalItems: validTotal,
         pageSize: validPageSize,
-        hasNext: paginationHasMore && validPage < validTotalPages,
+        hasNext: validPage < validTotalPages,
         hasPrevious: validPage > 1,
       );
 

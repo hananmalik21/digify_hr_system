@@ -8,11 +8,13 @@ import 'package:intl/intl.dart';
 /// Repository implementation for public holiday operations
 class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
   final PublicHolidayRemoteDataSource remoteDataSource;
+  final int tenantId;
 
-  const PublicHolidayRepositoryImpl({required this.remoteDataSource});
+  const PublicHolidayRepositoryImpl({required this.remoteDataSource, required this.tenantId});
 
   @override
   Future<PaginatedHolidays> getHolidays({
+    required int tenantId,
     int page = 1,
     int pageSize = 10,
     String? search,
@@ -20,6 +22,7 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
     String? type,
   }) async {
     final response = await remoteDataSource.getHolidays(
+      tenantId: tenantId,
       page: page,
       pageSize: pageSize,
       search: search,
@@ -104,7 +107,7 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
   }
 
   @override
-  Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
-    await remoteDataSource.deleteHoliday(holidayId, hard: hard);
+  Future<void> deleteHoliday(int holidayId, {required int tenantId, bool hard = true}) async {
+    await remoteDataSource.deleteHoliday(holidayId, tenantId: tenantId, hard: hard);
   }
 }

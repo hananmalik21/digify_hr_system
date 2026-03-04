@@ -88,33 +88,22 @@ class WorkPatternRemoteDataSourceImpl implements WorkPatternRemoteDataSource {
         return defaultValue;
       }
 
-      bool parseBool(dynamic value, {bool defaultValue = false}) {
-        if (value == null) return defaultValue;
-        if (value is bool) return value;
-        if (value is String) {
-          return value.toLowerCase() == 'true' || value == '1';
-        }
-        if (value is num) return value != 0;
-        return defaultValue;
-      }
-
       final paginationPage = parseInt(paginationJson['page'], defaultValue: 1);
       final paginationPageSize = parseInt(paginationJson['page_size'], defaultValue: 10);
       final paginationTotal = parseInt(paginationJson['total'], defaultValue: 0);
-      final paginationTotalPages = parseInt(paginationJson['total_pages'], defaultValue: 0);
 
       final validPage = paginationPage < 1 ? 1 : paginationPage;
       final validPageSize = paginationPageSize < 1 ? pageSize : paginationPageSize;
       final validTotal = paginationTotal < 0 ? 0 : paginationTotal;
-      final validTotalPages = paginationTotalPages < 0 ? 0 : paginationTotalPages;
+      final validTotalPages = validPageSize > 0 ? (validTotal / validPageSize).ceil() : 0;
 
       final pagination = PaginationInfo(
         currentPage: validPage,
         totalPages: validTotalPages,
         totalItems: validTotal,
         pageSize: validPageSize,
-        hasNext: parseBool(paginationJson['has_next'], defaultValue: false) && validPage < validTotalPages,
-        hasPrevious: parseBool(paginationJson['has_previous'], defaultValue: false) && validPage > 1,
+        hasNext: validPage < validTotalPages,
+        hasPrevious: validPage > 1,
       );
 
       return PaginatedWorkPatterns(workPatterns: workPatterns, pagination: pagination);

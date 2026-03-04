@@ -7,7 +7,21 @@ class GetPublicHolidaysUseCase {
 
   const GetPublicHolidaysUseCase({required this.repository});
 
-  Future<PaginatedHolidays> call({int page = 1, int pageSize = 10, String? search, String? year, String? type}) {
-    return repository.getHolidays(page: page, pageSize: pageSize, search: search, year: year, type: type);
+  Future<PaginatedHolidays> call({
+    required int tenantId,
+    int page = 1,
+    int pageSize = 10,
+    String? search,
+    String? year,
+    String? type,
+  }) {
+    return repository.getHolidays(
+      tenantId: tenantId,
+      page: page,
+      pageSize: pageSize,
+      search: search,
+      year: year,
+      type: type,
+    );
   }
 }
