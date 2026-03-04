@@ -1,4 +1,3 @@
-/// ABS lookup type codes. Use with [absLookupValuesForCodeProvider] instead of raw strings.
 enum AbsLookupCode {
   empCategory('EMP_CATEGORY'),
   contractType('CONTRACT_TYPE'),

@@ -2,7 +2,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/team_leave_risk_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/team_leave_risk_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_filters_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/team_leave_risk/team_leave_risk_stat_cards.dart';
@@ -19,7 +19,7 @@ class TeamLeaveRiskTab extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final state = ref.watch(teamLeaveRiskProvider);
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(teamLeaveRiskTabEnterpriseIdProvider);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -35,7 +35,7 @@ class TeamLeaveRiskTab extends ConsumerWidget {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(teamLeaveRiskTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

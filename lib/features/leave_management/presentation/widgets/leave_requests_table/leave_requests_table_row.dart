@@ -208,7 +208,13 @@ class LeaveRequestsTableRow extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DigifyAssetButton(assetPath: Assets.icons.viewIconBlue.path, onTap: onView, color: AppColors.viewIconBlue),
+          DigifyAssetButton(
+            assetPath: Assets.icons.viewIconBlue.path,
+            width: 17.w,
+            height: 17.h,
+            onTap: onView,
+            color: AppColors.viewIconBlue,
+          ),
           Gap(8.w),
           DigifyAssetButton(
             assetPath: Assets.icons.checkIconGreen.path,
@@ -235,10 +241,18 @@ class LeaveRequestsTableRow extends StatelessWidget {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DigifyAssetButton(assetPath: Assets.icons.editIconGreen.path, onTap: onUpdate, color: AppColors.primary),
+          DigifyAssetButton(
+            assetPath: Assets.icons.editIconGreen.path,
+            width: 17.w,
+            height: 17.h,
+            onTap: onUpdate,
+            color: AppColors.primary,
+          ),
           Gap(8.w),
           DigifyAssetButton(
             assetPath: Assets.icons.deleteIconRed.path,
+            width: 17.w,
+            height: 17.h,
             onTap: onDelete,
             color: AppColors.error,
             isLoading: isDeleteLoading,
@@ -251,7 +265,13 @@ class LeaveRequestsTableRow extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        DigifyAssetButton(assetPath: Assets.icons.viewIconBlue.path, onTap: onView, color: AppColors.viewIconBlue),
+        DigifyAssetButton(
+          assetPath: Assets.icons.viewIconBlue.path,
+          width: 17.w,
+          height: 17.h,
+          onTap: onView,
+          color: AppColors.viewIconBlue,
+        ),
       ],
     );
   }

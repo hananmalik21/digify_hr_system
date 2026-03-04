@@ -1,7 +1,7 @@
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility/radio_group_card.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -24,9 +24,9 @@ class GenderReligionMaritalSubsection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final genderValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.gender));
-    final religionValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.religionCode));
-    final maritalValues = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.maritalStatus));
+    final genderValues = ref.watch(policyConfigurationTabLookupValuesForCodeProvider(AbsLookupCode.gender));
+    final religionValues = ref.watch(policyConfigurationTabLookupValuesForCodeProvider(AbsLookupCode.religionCode));
+    final maritalValues = ref.watch(policyConfigurationTabLookupValuesForCodeProvider(AbsLookupCode.maritalStatus));
     final draftNotifier = ref.read(policyDraftProvider.notifier);
 
     final genderOptions = genderValues.map((v) => v.lookupValueName).toList();
