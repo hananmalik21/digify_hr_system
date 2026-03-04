@@ -18,19 +18,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class CreateHolidayDialog {
-  static Future<void> show(BuildContext context, {PublicHoliday? holiday}) {
+  static Future<void> show(BuildContext context, {required int enterpriseId, PublicHoliday? holiday}) {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Consumer(builder: (context, ref, _) => _CreateHolidayDialogContent(holiday: holiday)),
+      builder: (context) => Consumer(
+        builder: (context, ref, _) => _CreateHolidayDialogContent(enterpriseId: enterpriseId, holiday: holiday),
+      ),
     );
   }
 }
 
 class _CreateHolidayDialogContent extends ConsumerStatefulWidget {
+  final int enterpriseId;
   final PublicHoliday? holiday;
 
-  const _CreateHolidayDialogContent({required this.holiday});
+  const _CreateHolidayDialogContent({required this.enterpriseId, required this.holiday});
 
   @override
   ConsumerState<_CreateHolidayDialogContent> createState() => _CreateHolidayDialogState();
@@ -102,12 +105,12 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
     });
 
     final appliesToApiValue = PublicHolidaysConfig.getAppliesToApiValue(_selectedAppliesTo!);
-    final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
+    final notifier = ref.read(publicHolidaysNotifierProvider(widget.enterpriseId).notifier);
 
     if (widget.holiday != null) {
       await notifier.updateHoliday(
         holidayId: widget.holiday!.id,
-        tenantId: widget.holiday!.tenantId,
+        tenantId: widget.enterpriseId,
         nameEn: _nameEnController.text.trim(),
         nameAr: _nameArController.text.trim(),
         date: _selectedDate!,
@@ -120,7 +123,7 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
       );
     } else {
       await notifier.createHoliday(
-        tenantId: 1,
+        tenantId: widget.enterpriseId,
         nameEn: _nameEnController.text.trim(),
         nameAr: _nameArController.text.trim(),
         date: _selectedDate!,
@@ -137,9 +140,9 @@ class _CreateHolidayDialogState extends ConsumerState<_CreateHolidayDialogConten
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final notifier = ref.read(publicHolidaysNotifierProvider.notifier);
+    final notifier = ref.read(publicHolidaysNotifierProvider(widget.enterpriseId).notifier);
 
-    ref.listen<PublicHolidaysState>(publicHolidaysNotifierProvider, (previous, next) {
+    ref.listen<PublicHolidaysState>(publicHolidaysNotifierProvider(widget.enterpriseId), (previous, next) {
       if (previous == null) return;
 
       if (next.createSuccessMessage != null && previous.createSuccessMessage != next.createSuccessMessage) {

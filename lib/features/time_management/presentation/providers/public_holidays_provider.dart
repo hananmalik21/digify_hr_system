@@ -24,28 +24,28 @@ final publicHolidayRemoteDataSourceProvider = Provider<PublicHolidayRemoteDataSo
   return PublicHolidayRemoteDataSourceImpl(apiClient: apiClient);
 });
 
-final publicHolidayRepositoryProvider = Provider<PublicHolidayRepository>((ref) {
+final publicHolidayRepositoryProvider = Provider.family<PublicHolidayRepository, int>((ref, enterpriseId) {
   final remoteDataSource = ref.watch(publicHolidayRemoteDataSourceProvider);
-  return PublicHolidayRepositoryImpl(remoteDataSource: remoteDataSource);
+  return PublicHolidayRepositoryImpl(remoteDataSource: remoteDataSource, tenantId: enterpriseId);
 });
 
-final getPublicHolidaysUseCaseProvider = Provider<GetPublicHolidaysUseCase>((ref) {
-  final repository = ref.watch(publicHolidayRepositoryProvider);
+final getPublicHolidaysUseCaseProvider = Provider.family<GetPublicHolidaysUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(publicHolidayRepositoryProvider(enterpriseId));
   return GetPublicHolidaysUseCase(repository: repository);
 });
 
-final createPublicHolidayUseCaseProvider = Provider<CreatePublicHolidayUseCase>((ref) {
-  final repository = ref.watch(publicHolidayRepositoryProvider);
+final createPublicHolidayUseCaseProvider = Provider.family<CreatePublicHolidayUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(publicHolidayRepositoryProvider(enterpriseId));
   return CreatePublicHolidayUseCase(repository: repository);
 });
 
-final updatePublicHolidayUseCaseProvider = Provider<UpdatePublicHolidayUseCase>((ref) {
-  final repository = ref.watch(publicHolidayRepositoryProvider);
+final updatePublicHolidayUseCaseProvider = Provider.family<UpdatePublicHolidayUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(publicHolidayRepositoryProvider(enterpriseId));
   return UpdatePublicHolidayUseCase(repository);
 });
 
-final deletePublicHolidayUseCaseProvider = Provider<DeletePublicHolidayUseCase>((ref) {
-  final repository = ref.watch(publicHolidayRepositoryProvider);
+final deletePublicHolidayUseCaseProvider = Provider.family<DeletePublicHolidayUseCase, int>((ref, enterpriseId) {
+  final repository = ref.watch(publicHolidayRepositoryProvider(enterpriseId));
   return DeletePublicHolidayUseCase(repository: repository);
 });
 
@@ -147,13 +147,22 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   final CreatePublicHolidayUseCase createHolidayUseCase;
   final UpdatePublicHolidayUseCase updateHolidayUseCase;
   final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
+  int? _currentEnterpriseId;
 
   PublicHolidaysNotifier({
     required this.getHolidaysUseCase,
     required this.deleteHolidayUseCase,
     required this.createHolidayUseCase,
     required this.updateHolidayUseCase,
-  }) : super(const PublicHolidaysState());
+    required int enterpriseId,
+  }) : _currentEnterpriseId = enterpriseId,
+       super(const PublicHolidaysState());
+
+  void setEnterpriseId(int enterpriseId) {
+    if (_currentEnterpriseId == enterpriseId) return;
+    _currentEnterpriseId = enterpriseId;
+    reset();
+  }
 
   @override
   void dispose() {
@@ -167,12 +176,14 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
 
   @override
   Future<void> loadFirstPage() async {
+    if (_currentEnterpriseId == null) return;
     if (state.isLoading) return;
 
     state = handleLoadingState(state, true) as PublicHolidaysState;
 
     try {
       final result = await getHolidaysUseCase(
+        tenantId: _currentEnterpriseId!,
         page: 1,
         pageSize: state.pageSize,
         search: state.searchQuery,
@@ -202,13 +213,14 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
 
   @override
   Future<void> loadNextPage() async {
-    if (state.isLoadingMore || !state.hasNextPage) return;
+    if (_currentEnterpriseId == null || state.isLoadingMore || !state.hasNextPage) return;
 
     state = handleLoadingState(state, false) as PublicHolidaysState;
 
     try {
       final nextPage = state.currentPage + 1;
       final result = await getHolidaysUseCase(
+        tenantId: _currentEnterpriseId!,
         page: nextPage,
         pageSize: state.pageSize,
         search: state.searchQuery,
@@ -237,12 +249,14 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   }
 
   Future<void> goToPage(int page) async {
+    if (_currentEnterpriseId == null) return;
     if (state.isLoading || page == state.currentPage || page < 1 || page > state.totalPages) return;
 
     state = handleLoadingState(state, false) as PublicHolidaysState;
 
     try {
       final result = await getHolidaysUseCase(
+        tenantId: _currentEnterpriseId!,
         page: page,
         pageSize: state.pageSize,
         search: state.searchQuery,
@@ -321,10 +335,11 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   }
 
   Future<void> deleteHoliday(int holidayId, {bool hard = true}) async {
+    if (_currentEnterpriseId == null) return;
     state = state.copyWith(deletingHolidayId: holidayId);
 
     try {
-      await deleteHolidayUseCase.execute(holidayId, hard: hard);
+      await deleteHolidayUseCase.execute(holidayId, tenantId: _currentEnterpriseId!, hard: hard);
       state = state.copyWith(
         deletingHolidayId: null,
         deleteSuccessMessage: 'Holiday deleted successfully',
@@ -421,15 +436,19 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   }
 }
 
-final publicHolidaysNotifierProvider = StateNotifierProvider<PublicHolidaysNotifier, PublicHolidaysState>((ref) {
-  final getHolidaysUseCase = ref.watch(getPublicHolidaysUseCaseProvider);
-  final deleteHolidayUseCase = ref.watch(deletePublicHolidayUseCaseProvider);
-  final createHolidayUseCase = ref.watch(createPublicHolidayUseCaseProvider);
-  final updateHolidayUseCase = ref.watch(updatePublicHolidayUseCaseProvider);
+final publicHolidaysNotifierProvider = StateNotifierProvider.family<PublicHolidaysNotifier, PublicHolidaysState, int>((
+  ref,
+  enterpriseId,
+) {
+  final getHolidaysUseCase = ref.watch(getPublicHolidaysUseCaseProvider(enterpriseId));
+  final deleteHolidayUseCase = ref.watch(deletePublicHolidayUseCaseProvider(enterpriseId));
+  final createHolidayUseCase = ref.watch(createPublicHolidayUseCaseProvider(enterpriseId));
+  final updateHolidayUseCase = ref.watch(updatePublicHolidayUseCaseProvider(enterpriseId));
   return PublicHolidaysNotifier(
     getHolidaysUseCase: getHolidaysUseCase,
     deleteHolidayUseCase: deleteHolidayUseCase,
     createHolidayUseCase: createHolidayUseCase,
     updateHolidayUseCase: updateHolidayUseCase,
+    enterpriseId: enterpriseId,
   );
 });

@@ -1,8 +1,8 @@
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/delete_work_pattern_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
@@ -16,7 +16,7 @@ class WorkPatternsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(workPatternsTabEnterpriseIdProvider);
 
     if (effectiveEnterpriseId == null) {
       return Padding(

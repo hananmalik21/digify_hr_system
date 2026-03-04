@@ -1,6 +1,10 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_config.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/create_shift_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/create_schedule_assignment_dialog.dart';
@@ -19,7 +23,7 @@ class TimeManagementHeaderActions {
       case TimeManagementTab.shifts:
         return Consumer(
           builder: (context, ref, _) {
-            final enterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+            final enterpriseId = ref.watch(shiftsTabEnterpriseIdProvider);
             if (enterpriseId == null) return const SizedBox.shrink();
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -50,7 +54,7 @@ class TimeManagementHeaderActions {
       case TimeManagementTab.workPatterns:
         return Consumer(
           builder: (context, ref, _) {
-            final enterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+            final enterpriseId = ref.watch(workPatternsTabEnterpriseIdProvider);
             if (enterpriseId == null) return const SizedBox.shrink();
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -81,7 +85,7 @@ class TimeManagementHeaderActions {
       case TimeManagementTab.workSchedules:
         return Consumer(
           builder: (context, ref, _) {
-            final enterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+            final enterpriseId = ref.watch(workSchedulesTabEnterpriseIdProvider);
             if (enterpriseId == null) return const SizedBox.shrink();
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -112,7 +116,7 @@ class TimeManagementHeaderActions {
       case TimeManagementTab.scheduleAssignments:
         return Consumer(
           builder: (context, ref, _) {
-            final enterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+            final enterpriseId = ref.watch(scheduleAssignmentsTabEnterpriseIdProvider);
             if (enterpriseId == null) return const SizedBox.shrink();
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -143,7 +147,7 @@ class TimeManagementHeaderActions {
       case TimeManagementTab.publicHolidays:
         return Consumer(
           builder: (context, ref, _) {
-            final enterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+            final enterpriseId = ref.watch(publicHolidaysTabEnterpriseIdProvider);
             if (enterpriseId == null) return const SizedBox.shrink();
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -165,7 +169,7 @@ class TimeManagementHeaderActions {
                 AppButton.primary(
                   label: 'Add Holiday',
                   svgPath: Assets.icons.addDivisionIcon.path,
-                  onPressed: () => CreateHolidayDialog.show(context),
+                  onPressed: () => CreateHolidayDialog.show(context, enterpriseId: enterpriseId),
                 ),
               ],
             );

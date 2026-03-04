@@ -5,7 +5,7 @@ class DeletePublicHolidayUseCase {
 
   const DeletePublicHolidayUseCase({required this.repository});
 
-  Future<void> execute(int holidayId, {bool hard = true}) async {
-    return await repository.deleteHoliday(holidayId, hard: hard);
+  Future<void> execute(int holidayId, {required int tenantId, bool hard = true}) async {
+    return await repository.deleteHoliday(holidayId, tenantId: tenantId, hard: hard);
   }
 }

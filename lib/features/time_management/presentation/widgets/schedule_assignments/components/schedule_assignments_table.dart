@@ -106,7 +106,6 @@ class ScheduleAssignmentsTable extends ConsumerWidget {
               pageSize: pageSize,
               onPrevious: onPrevious,
               onNext: onNext,
-              isLoading: paginationIsLoading || isLoading,
               style: PaginationStyle.simple,
             ),
           ],

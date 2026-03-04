@@ -10,7 +10,7 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_info_box.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/schedule_assignment_enterprise_structure_fields.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/active_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,10 +52,6 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final notifier = ref.read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier);
       notifier.setEnterpriseId(widget.enterpriseId);
-
-      final enterpriseNotifier = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId).notifier);
-      enterpriseNotifier.reset();
-      enterpriseNotifier.fetchOrgStructureByEnterpriseId(widget.enterpriseId);
     });
   }
 
@@ -72,7 +68,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
   }
 
   String? _getLastSelectedOrgUnitId() {
-    final orgStructureState = ref.read(enterpriseOrgStructureNotifierProvider(widget.enterpriseId));
+    final orgStructureState = ref.read(scheduleAssignmentActiveOrgStructureProvider(widget.enterpriseId));
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
 
     String? lastUnitId;
@@ -225,6 +221,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
       children: [
         DigifyDateField(
           label: 'Effective Start Date',
+          hintText: 'e.g. 01/01/2025',
           isRequired: true,
           initialDate: _effectiveStartDate,
           onDateSelected: (date) {
@@ -238,6 +235,7 @@ class _CreateScheduleAssignmentDialogState extends ConsumerState<CreateScheduleA
         Gap(24.h),
         DigifyDateField(
           label: 'Effective End Date',
+          hintText: 'e.g. 31/12/2025',
           isRequired: true,
           initialDate: _effectiveEndDate,
           onDateSelected: (date) {
