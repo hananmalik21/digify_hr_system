@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/component_value.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_stat_counts_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,10 +70,10 @@ class ComponentValuesStatCards extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cvState = ref.watch(componentValuesProvider);
+    final statCounts = ref.watch(manageComponentValuesStatCountsProvider);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final cards = buildStatCardsFromCounts(cvState.statCounts, localizations);
+    final cards = buildStatCardsFromCounts(statCounts, localizations);
 
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);

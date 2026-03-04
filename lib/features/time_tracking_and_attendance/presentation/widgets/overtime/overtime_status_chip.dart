@@ -24,9 +24,17 @@ class _OvertimeStatusChipStyle {
 
   static _OvertimeStatusChipStyle fromStatus(OvertimeStatus status) {
     switch (status) {
+      case OvertimeStatus.draft:
+        return const _OvertimeStatusChipStyle(
+          backgroundColor: AppColors.cardBackgroundGrey,
+          textColor: AppColors.textSecondary,
+        );
       case OvertimeStatus.submitted:
       case OvertimeStatus.pending:
-        return const _OvertimeStatusChipStyle(backgroundColor: AppColors.infoBg, textColor: AppColors.infoText);
+        return const _OvertimeStatusChipStyle(
+          backgroundColor: AppColors.pendingStatusBackground,
+          textColor: AppColors.pendingStatucColor,
+        );
       case OvertimeStatus.approved:
         return const _OvertimeStatusChipStyle(backgroundColor: AppColors.successBg, textColor: AppColors.successText);
       case OvertimeStatus.rejected:

@@ -3,7 +3,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/repo
 import 'package:digify_hr_system/features/workforce_structure/domain/models/reporting_relationship.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/reporting_structure_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/reporting_structure_repositories_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/reporting_structure_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final reportingStatsProvider = Provider<ReportingStats>((ref) {
@@ -40,7 +40,7 @@ class ReportingStats {
 final reportingStructureNotifierProvider =
     StateNotifierProvider<ReportingStructureNotifier, PaginationState<ReportingPosition>>((ref) {
       final repository = ref.watch(reportingStructureRepositoryProvider);
-      final tenantId = ref.watch(workforceEnterpriseIdProvider);
+      final tenantId = ref.watch(reportingStructureEnterpriseIdProvider);
       final notifier = ReportingStructureNotifier(repository, tenantId);
       Future.microtask(() => notifier.loadFirstPage());
       return notifier;

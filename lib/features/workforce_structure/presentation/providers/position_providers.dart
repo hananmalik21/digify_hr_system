@@ -9,7 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/ge
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_position_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_notifier.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Position remote data source provider
@@ -53,7 +53,7 @@ final positionNotifierProvider = StateNotifierProvider<PositionNotifier, Paginat
   final getPositionsUseCase = ref.watch(getPositionsUseCaseProvider);
   final createPositionUseCase = ref.watch(createPositionUseCaseProvider);
   final updatePositionUseCase = ref.watch(updatePositionUseCaseProvider);
-  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final tenantId = ref.watch(positionsEnterpriseIdProvider);
   final deletePositionUseCase = ref.watch(deletePositionUseCaseProvider);
   final notifier = PositionNotifier(
     getPositionsUseCase,

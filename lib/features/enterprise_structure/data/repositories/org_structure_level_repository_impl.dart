@@ -3,17 +3,15 @@ import 'package:digify_hr_system/features/enterprise_structure/data/datasources/
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/active_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/repositories/org_structure_level_repository.dart';
 
-/// Implementation of OrgStructureLevelRepository
 class OrgStructureLevelRepositoryImpl implements OrgStructureLevelRepository {
   final OrgStructureLevelRemoteDataSource remoteDataSource;
 
   OrgStructureLevelRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<ActiveStructureLevel>> getActiveLevels() async {
+  Future<List<ActiveStructureLevel>> getActiveLevels({int? enterpriseId}) async {
     try {
-      final responseDto = await remoteDataSource.getActiveLevels();
-      // Filter only active levels and sort by display_order
+      final responseDto = await remoteDataSource.getActiveLevels(enterpriseId: enterpriseId);
       final activeLevels = responseDto.levels
           .where((dto) => dto.isActive.toUpperCase() == 'Y')
           .map((dto) => dto.toDomain())
@@ -23,11 +21,7 @@ class OrgStructureLevelRepositoryImpl implements OrgStructureLevelRepository {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Repository error: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Repository error: ${e.toString()}', originalError: e);
     }
   }
 }
-

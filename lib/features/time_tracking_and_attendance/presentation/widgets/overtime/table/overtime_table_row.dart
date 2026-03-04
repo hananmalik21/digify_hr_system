@@ -5,22 +5,24 @@ import 'package:digify_hr_system/core/enums/overtime_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/overtime/overtime_record.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import '../../../../../../core/constants/app_colors.dart';
 import '../../../../../../core/extensions/context_extensions.dart';
 import '../../../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../data/config/overtime_table_config.dart';
+import '../../../providers/overtime/overtime_actions_provider.dart';
+import '../../../providers/overtime/overtime_provider.dart';
 import '../overtime_status_chip.dart';
 
-class OvertimeTableRow extends StatelessWidget {
+class OvertimeTableRow extends ConsumerWidget {
   final OvertimeRecord record;
   final AppLocalizations localizations;
   final bool isDark;
   final bool isExpanded;
   final VoidCallback onToggle;
-  final Function(OvertimeRecord) onEdit;
-  final Function(OvertimeRecord) onDelete;
+  final Function(OvertimeRecord)? onEdit;
 
   const OvertimeTableRow({
     super.key,
@@ -29,12 +31,11 @@ class OvertimeTableRow extends StatelessWidget {
     required this.isDark,
     required this.isExpanded,
     required this.onToggle,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: onToggle,
       child: Container(
@@ -180,17 +181,7 @@ class OvertimeTableRow extends StatelessWidget {
                 OvertimeTableConfig.statusWidth.w,
               ),
             if (OvertimeTableConfig.showActions)
-              _buildDataCell(
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 8.w,
-                  children: [
-                    DigifyAssetButton(assetPath: Assets.icons.editIcon.path, onTap: () => onEdit(record)),
-                    DigifyAssetButton(assetPath: Assets.icons.redDeleteIcon.path, onTap: () => onDelete(record)),
-                  ],
-                ),
-                OvertimeTableConfig.actionsWidth.w,
-              ),
+              _buildDataCell(_buildActionsCell(context, ref), OvertimeTableConfig.actionsWidth.w),
           ],
         ),
       ),
@@ -204,5 +195,72 @@ class OvertimeTableRow extends StatelessWidget {
       padding: EdgeInsetsDirectional.symmetric(horizontal: OvertimeTableConfig.cellPaddingHorizontal.w, vertical: 16.h),
       child: child,
     );
+  }
+
+  Widget _buildActionsCell(BuildContext context, WidgetRef ref) {
+    final status = OvertimeStatus.fromString(record.approvalInformation?.status ?? '');
+    final state = ref.watch(overtimeManagementProvider);
+
+    if (status == OvertimeStatus.draft) {
+      final guid = record.otRequestGuid ?? '';
+      final isCanceling = state.cancelingOvertimeGuid == guid;
+
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.editIconGreen.path,
+            onTap: isCanceling ? null : () => onEdit?.call(record),
+            width: 17.w,
+            height: 17.h,
+            color: AppColors.editIconGreen,
+          ),
+          Gap(8.w),
+          DigifyAssetButton(
+            assetPath: Assets.icons.closeIcon.path,
+            isLoading: isCanceling,
+            onTap: isCanceling ? null : () => OvertimeActions.cancelDraftOvertimeRequest(context, ref, record),
+            width: 17.w,
+            height: 17.h,
+            color: AppColors.error,
+          ),
+        ],
+      );
+    }
+
+    if (status == OvertimeStatus.submitted || status == OvertimeStatus.pending) {
+      final guid = record.otRequestGuid ?? '';
+      final isApproving = state.approvingOvertimeGuid == guid;
+      final isRejecting = state.rejectingOvertimeGuid == guid;
+
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigifyAssetButton(
+            assetPath: Assets.icons.checkIconGreen.path,
+            isLoading: isApproving,
+            onTap: isApproving || isRejecting
+                ? null
+                : () => OvertimeActions.approveOvertimeRequest(context, ref, record),
+            width: 17.w,
+            height: 17.h,
+            color: AppColors.success,
+          ),
+          Gap(8.w),
+          DigifyAssetButton(
+            assetPath: Assets.icons.closeIcon.path,
+            isLoading: isRejecting,
+            onTap: isApproving || isRejecting
+                ? null
+                : () => OvertimeActions.rejectOvertimeRequest(context, ref, record),
+            width: 17.w,
+            height: 17.h,
+            color: AppColors.error,
+          ),
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }

@@ -18,9 +18,7 @@ class WorkforceHeaderActions {
         return AppButton.primary(
           label: localizations.addPosition,
           svgPath: Assets.icons.addDivisionIcon.path,
-          onPressed: () {
-            PositionFormDialog.show(context, position: Position.empty(), isEdit: false);
-          },
+          onPressed: () => PositionFormDialog.show(context, position: Position.empty(), isEdit: false),
         );
       case WorkforceTab.jobFamilies:
         return AppButton.primary(

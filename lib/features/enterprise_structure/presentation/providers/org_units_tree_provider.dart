@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_tree.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/get_org_units_tree_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +20,7 @@ final getOrgUnitsTreeUseCaseProvider = Provider<GetOrgUnitsTreeUseCase>((ref) {
   return GetOrgUnitsTreeUseCase(repository: repository);
 });
 
-class OrgUnitsTreeNotifier extends AutoDisposeNotifier<OrgUnitsTreeState> {
+class OrgUnitsTreeNotifier extends Notifier<OrgUnitsTreeState> {
   @override
   OrgUnitsTreeState build() {
     _loadTree();
@@ -28,8 +29,9 @@ class OrgUnitsTreeNotifier extends AutoDisposeNotifier<OrgUnitsTreeState> {
 
   Future<void> _loadTree() async {
     final useCase = ref.watch(getOrgUnitsTreeUseCaseProvider);
+    final enterpriseId = ref.read(manageComponentValuesEnterpriseIdProvider);
     try {
-      final tree = await useCase();
+      final tree = await useCase(enterpriseId: enterpriseId);
       state = state.copyWith(tree: AsyncValue.data(tree));
     } catch (e, stack) {
       state = state.copyWith(tree: AsyncValue.error(e, stack));
@@ -76,6 +78,4 @@ class OrgUnitsTreeNotifier extends AutoDisposeNotifier<OrgUnitsTreeState> {
   }
 }
 
-final orgUnitsTreeProvider = NotifierProvider.autoDispose<OrgUnitsTreeNotifier, OrgUnitsTreeState>(
-  OrgUnitsTreeNotifier.new,
-);
+final orgUnitsTreeProvider = NotifierProvider<OrgUnitsTreeNotifier, OrgUnitsTreeState>(OrgUnitsTreeNotifier.new);

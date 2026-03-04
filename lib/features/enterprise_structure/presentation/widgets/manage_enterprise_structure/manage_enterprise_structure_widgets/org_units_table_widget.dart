@@ -12,6 +12,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+@immutable
+class OrgUnitsDeleteState {
+  const OrgUnitsDeleteState({this.deletingOrgUnitId});
+
+  final String? deletingOrgUnitId;
+
+  bool isDeleting(String orgUnitId) => deletingOrgUnitId == orgUnitId;
+
+  OrgUnitsDeleteState copyWithDeleting(String? orgUnitId) => OrgUnitsDeleteState(deletingOrgUnitId: orgUnitId);
+}
+
 class OrgUnitsTableWidget extends StatelessWidget {
   final List<OrgStructureLevel> units;
   final bool isLoading;
@@ -25,6 +36,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
   final Function(OrgStructureLevel)? onView;
   final Function(OrgStructureLevel)? onEdit;
   final Function(OrgStructureLevel)? onDelete;
+  final OrgUnitsDeleteState deleteState;
   final bool? paginationIsLoading;
 
   const OrgUnitsTableWidget({
@@ -41,6 +53,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
     this.onView,
     this.onEdit,
     this.onDelete,
+    this.deleteState = const OrgUnitsDeleteState(),
     this.paginationIsLoading,
   });
 
@@ -93,6 +106,7 @@ class OrgUnitsTableWidget extends StatelessWidget {
                           onView: onView,
                           onEdit: onEdit,
                           onDelete: onDelete,
+                          isDeleteLoading: deleteState.isDeleting(entry.value.orgUnitId),
                         ),
                       ),
                   ],

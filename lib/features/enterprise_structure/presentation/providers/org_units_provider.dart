@@ -14,6 +14,7 @@ class OrgUnitsState {
   final bool hasError;
   final String? levelCode;
   final String? structureId;
+  final int? enterpriseId;
   final String? searchQuery;
   final int currentPage;
   final int pageSize;
@@ -27,6 +28,7 @@ class OrgUnitsState {
     this.hasError = false,
     this.levelCode,
     this.structureId,
+    this.enterpriseId,
     this.searchQuery,
     this.currentPage = 1,
     this.pageSize = 10,
@@ -41,6 +43,7 @@ class OrgUnitsState {
     bool? hasError,
     String? levelCode,
     String? structureId,
+    int? enterpriseId,
     String? searchQuery,
     int? currentPage,
     int? pageSize,
@@ -54,6 +57,7 @@ class OrgUnitsState {
       hasError: hasError ?? this.hasError,
       levelCode: levelCode ?? this.levelCode,
       structureId: structureId ?? this.structureId,
+      enterpriseId: enterpriseId ?? this.enterpriseId,
       searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
       pageSize: pageSize ?? this.pageSize,
@@ -85,6 +89,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
   Future<void> loadOrgUnits(
     String levelCode, {
     String? structureId,
+    int? enterpriseId,
     String? search,
     int page = 1,
     int pageSize = 10,
@@ -104,6 +109,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
         errorMessage: null,
         levelCode: levelCode,
         structureId: structureId,
+        enterpriseId: enterpriseId,
         searchQuery: search,
         currentPage: page,
         pageSize: pageSize,
@@ -119,6 +125,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
         paginatedResponse = await getOrgUnitsPaginatedUseCase.call(
           structureId,
           levelCode,
+          enterpriseId: enterpriseId,
           search: search,
           page: page,
           pageSize: pageSize,
@@ -170,7 +177,8 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       await loadOrgUnits(
         state.levelCode!,
         structureId: state.structureId,
-        search: query.isEmpty ? null : query,
+        enterpriseId: state.enterpriseId,
+        search: query,
         page: 1,
         pageSize: state.pageSize,
       );
@@ -193,6 +201,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
     await loadOrgUnits(
       state.levelCode!,
       structureId: state.structureId,
+      enterpriseId: state.enterpriseId,
       search: state.searchQuery,
       page: page,
       pageSize: state.pageSize,
@@ -219,6 +228,7 @@ class OrgUnitsNotifier extends StateNotifier<OrgUnitsState> {
       await loadOrgUnits(
         state.levelCode!,
         structureId: state.structureId,
+        enterpriseId: state.enterpriseId,
         search: state.searchQuery,
         page: state.currentPage,
         pageSize: state.pageSize,

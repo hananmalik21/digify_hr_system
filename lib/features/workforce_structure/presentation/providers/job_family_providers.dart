@@ -11,7 +11,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_job_family_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_job_families_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_job_family_usecase.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_families_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_create_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
@@ -295,7 +295,7 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
 
 // Provider for the notifier
 final jobFamilyNotifierProvider = StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((ref) {
-  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final tenantId = ref.watch(jobFamiliesEnterpriseIdProvider);
   final notifier = JobFamilyNotifier(
     ref.watch(getJobFamiliesUseCaseProvider),
     ref.watch(createJobFamilyUseCaseProvider),

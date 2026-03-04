@@ -38,6 +38,17 @@ class AddEmployeeJobEmploymentState {
     this.prefillReportingToEmpId,
   });
 
+  bool get isStepValid {
+    if (selectedPosition == null) return false;
+    final ct = contractTypeCode?.trim();
+    if (ct == null || ct.isEmpty) return false;
+    final es = employmentStatusCode?.trim();
+    if (es == null || es.isEmpty) return false;
+    if (enterpriseHireDate == null) return false;
+    if (probationDays == null || probationDays! < 0) return false;
+    return true;
+  }
+
   AddEmployeeJobEmploymentState copyWith({
     Position? selectedPosition,
     JobFamily? selectedJobFamily,

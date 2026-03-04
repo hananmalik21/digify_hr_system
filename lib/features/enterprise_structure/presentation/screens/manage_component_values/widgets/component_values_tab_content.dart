@@ -1,10 +1,8 @@
 import 'package:digify_hr_system/core/enums/enterprise_structure_enums.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/component_values_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_screen_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/business_unit_values_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/company_values_view.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/component_values_default_view.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/component_values_level_view.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/level_org_units_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/component_values_tree_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/department_values_view.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/screens/manage_component_values/widgets/views/division_values_view.dart';
@@ -17,21 +15,22 @@ class ComponentValuesTabContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cvState = ref.watch(componentValuesProvider);
-    final selectedLevel = ref.watch(manageComponentValuesScreenProvider.select((s) => s.selectedLevel));
+    final screenState = ref.watch(manageComponentValuesScreenProvider);
+    final selectedLevel = screenState.selectedLevel;
+    final selectedLevelCode = screenState.selectedLevelCode;
 
-    if (cvState.isTreeView && selectedLevel == null) {
+    if (screenState.isTreeView && selectedLevel == null) {
       return const ComponentValuesTreeView();
     }
 
     if (selectedLevel != null) {
-      return _buildLevelView(selectedLevel);
+      return _buildLevelView(selectedLevel, selectedLevelCode);
     }
 
-    return const ComponentValuesDefaultView();
+    return const ComponentValuesTreeView();
   }
 
-  Widget _buildLevelView(OrganizationLevel level) {
+  Widget _buildLevelView(OrganizationLevel level, String levelCode) {
     switch (level) {
       case OrganizationLevel.company:
         return const CompanyValuesView();
@@ -44,7 +43,11 @@ class ComponentValuesTabContent extends ConsumerWidget {
       case OrganizationLevel.section:
         return const SectionValuesView();
       case OrganizationLevel.unknown:
-        return const ComponentValuesLevelView();
+        return LevelOrgUnitsView(
+          level: OrganizationLevel.unknown,
+          searchHint: 'Search org units...',
+          levelCodeOverride: levelCode.isNotEmpty ? levelCode : null,
+        );
     }
   }
 }

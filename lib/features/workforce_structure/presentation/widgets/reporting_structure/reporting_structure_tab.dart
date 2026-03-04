@@ -1,6 +1,8 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_config.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_enterprise_selector.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/reporting_structure_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/reporting_structure/components/reporting_legend.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/reporting_structure/components/reporting_structure_table.dart';
@@ -33,8 +35,8 @@ class ReportingStructureTab extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ReportingStatsGrid(stats: stats, localizations: localizations, isDark: isDark),
-          // Gap(24.h),
+          const WorkforceTabEnterpriseSelector(tab: WorkforceTab.reportingStructure),
+          Gap(24.h),
           ReportingStructureTable(
             localizations: localizations,
             positions: state.items,

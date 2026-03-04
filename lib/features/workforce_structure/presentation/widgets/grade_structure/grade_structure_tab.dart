@@ -1,6 +1,8 @@
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_config.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_enterprise_selector.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_structure_card.dart';
@@ -28,6 +30,8 @@ class _GradeStructureTabState extends ConsumerState<GradeStructureTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const WorkforceTabEnterpriseSelector(tab: WorkforceTab.gradeStructure),
+        Gap(24.h),
         if (isLoading && grades.isEmpty)
           const GradeStructureSkeleton()
         else if (errorMessage != null && grades.isEmpty)

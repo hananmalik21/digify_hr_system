@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
 import 'edit_form_body.dart';
 import 'enterprise_structure_dialog_actions.dart';
 import 'enterprise_structure_dialog_providers.dart';
@@ -16,7 +15,6 @@ class EditEnterpriseStructureDialog extends ConsumerStatefulWidget {
   final String structureName;
   final String description;
   final List<HierarchyLevel> initialLevels;
-  final int? enterpriseId;
   final String? structureId;
   final bool? isActive;
   final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider;
@@ -26,7 +24,6 @@ class EditEnterpriseStructureDialog extends ConsumerStatefulWidget {
     required this.structureName,
     required this.description,
     required this.initialLevels,
-    this.enterpriseId,
     this.structureId,
     this.isActive,
     required this.provider,
@@ -37,7 +34,6 @@ class EditEnterpriseStructureDialog extends ConsumerStatefulWidget {
     required String structureName,
     required String description,
     required List<HierarchyLevel> initialLevels,
-    int? enterpriseId,
     String? structureId,
     bool? isActive,
     required AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> provider,
@@ -50,7 +46,6 @@ class EditEnterpriseStructureDialog extends ConsumerStatefulWidget {
           structureName: structureName,
           description: description,
           initialLevels: initialLevels,
-          enterpriseId: enterpriseId,
           structureId: structureId,
           isActive: isActive,
           provider: provider,
@@ -77,16 +72,12 @@ class _EditEnterpriseStructureDialogState extends ConsumerState<EditEnterpriseSt
       structureName: widget.structureName,
       description: widget.description,
       initialLevels: widget.initialLevels,
-      selectedEnterpriseId: widget.enterpriseId,
       isActive: widget.isActive ?? true,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final editNotifier = ref.read(editEnterpriseStructureDialogProvider(_params).notifier);
       editNotifier.setLevels(widget.initialLevels);
-      if (widget.enterpriseId != null) {
-        editNotifier.updateSelectedEnterprise(widget.enterpriseId);
-      }
       if (widget.isActive != null) {
         editNotifier.updateIsActive(widget.isActive!);
       }
@@ -113,7 +104,6 @@ class _EditEnterpriseStructureDialogState extends ConsumerState<EditEnterpriseSt
       content: EditFormBody(
         editState: editState,
         params: _params,
-        enterpriseId: widget.enterpriseId,
         nameController: _nameController,
         descriptionController: _descriptionController,
         localizations: localizations,

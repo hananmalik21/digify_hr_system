@@ -9,7 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -299,7 +299,7 @@ class GradeNotifier extends StateNotifier<GradeState>
 
 // Provider for the notifier
 final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((ref) {
-  final tenantId = ref.watch(workforceEnterpriseIdProvider);
+  final tenantId = ref.watch(gradeStructureEnterpriseIdProvider);
   final notifier = GradeNotifier(
     ref.read(getGradesUseCaseProvider),
     ref.read(createGradeUseCaseProvider),

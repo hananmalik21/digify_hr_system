@@ -9,8 +9,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/grade_structure/grade_structure_tab.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_families/job_families_tab.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/job_levels/job_levels_tab.dart';
-import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/workforce_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_enterprise_selector.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/positions_tab.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/reporting_structure/reporting_structure_tab.dart';
 import 'package:flutter/material.dart';
@@ -60,21 +59,6 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
             Gap(24.h),
             WorkforceStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
-            Consumer(
-              builder: (context, ref, child) {
-                final selectedEnterpriseId = ref.watch(workforceEnterpriseIdProvider);
-                return EnterpriseSelectorWidget(
-                  selectedEnterpriseId: selectedEnterpriseId,
-                  onEnterpriseChanged: (id) {
-                    ref.read(workforceSelectedEnterpriseProvider.notifier).setEnterpriseId(id);
-                  },
-                  subtitle: selectedEnterpriseId != null
-                      ? 'Viewing data for selected enterprise'
-                      : 'Select an enterprise to view data',
-                );
-              },
-            ),
-            Gap(24.h),
             _buildTabContent(currentTabIndex),
           ],
         ),
@@ -92,11 +76,17 @@ class _WorkforceStructureScreenState extends ConsumerState<WorkforceStructureScr
         return JobLevelsTab(scrollController: _scrollController);
       case 3:
         return const GradeStructureTab();
-
       case 4:
         return const ReportingStructureTab();
       case 5:
-        return const Center(child: Text('Position Tree Placeholder'));
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const WorkforceTabEnterpriseSelector(tab: WorkforceTab.positionTree),
+            Gap(24.h),
+            const Center(child: Text('Position Tree Placeholder')),
+          ],
+        );
       default:
         return const PositionsTab();
     }

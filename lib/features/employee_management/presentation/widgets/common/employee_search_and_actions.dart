@@ -13,9 +13,9 @@ import 'package:digify_hr_system/features/employee_management/domain/models/assi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_org_structure_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
@@ -193,13 +193,9 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                     localizations: localizations,
                     isDark: isDark,
                     onEnsureOrgStructureLoaded: (int enterpriseId) {
-                      final notifier = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId).notifier);
-                      notifier.fetchOrgStructureByEnterpriseId(enterpriseId).then((_) {
-                        final state = ref.read(enterpriseOrgStructureNotifierProvider(enterpriseId));
-                        if (state.allStructures.isNotEmpty && state.orgStructure == null) {
-                          notifier.selectStructure(state.allStructures.first.structureId);
-                        }
-                      });
+                      ref
+                          .read(manageEmployeesOrgStructureNotifierProvider(enterpriseId).notifier)
+                          .fetchLevelsByEnterpriseId(enterpriseId);
                     },
                   ),
                 ],
@@ -244,15 +240,16 @@ class _FilterDropdownsSection extends ConsumerStatefulWidget {
 }
 
 class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection> {
-  bool _orgLoadTriggered = false;
+  int? _lastEnterpriseIdForOrgLoad;
+
   @override
   Widget build(BuildContext context) {
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final param = enterpriseId != null ? ref.watch(manageEmployeesFilterOrgParamProvider(enterpriseId)) : null;
     final filters = ref.watch(manageEmployeesFiltersProvider);
 
-    if (enterpriseId != null && !_orgLoadTriggered) {
-      _orgLoadTriggered = true;
+    if (enterpriseId != null && _lastEnterpriseIdForOrgLoad != enterpriseId) {
+      _lastEnterpriseIdForOrgLoad = enterpriseId;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onEnsureOrgStructureLoaded(enterpriseId);
       });

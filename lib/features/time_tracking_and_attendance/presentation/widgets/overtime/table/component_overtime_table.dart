@@ -25,8 +25,7 @@ class OvertimeTable extends ConsumerWidget {
   final int totalItems;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
-  final Function(OvertimeRecord) onEdit;
-  final Function(OvertimeRecord) onDelete;
+  final Function(OvertimeRecord)? onEdit;
   final bool? paginationIsLoading;
 
   const OvertimeTable({
@@ -40,8 +39,7 @@ class OvertimeTable extends ConsumerWidget {
     required this.totalItems,
     this.onPrevious,
     this.onNext,
-    required this.onEdit,
-    required this.onDelete,
+    this.onEdit,
     this.paginationIsLoading,
   });
 
@@ -67,7 +65,7 @@ class OvertimeTable extends ConsumerWidget {
                 children: [
                   OvertimeTableHeader(isDark: isDark, localizations: localizations),
 
-                  if (isLoading && records.isEmpty)
+                  if (isLoading)
                     OvertimeTableSkeleton(localizations: localizations, isDark: isDark)
                   else if (records.isEmpty && !isLoading)
                     SizedBox(
@@ -104,7 +102,6 @@ class OvertimeTable extends ConsumerWidget {
                               }
                             },
                             onEdit: onEdit,
-                            onDelete: onDelete,
                           ),
                           AnimatedSize(
                             duration: const Duration(milliseconds: 350),

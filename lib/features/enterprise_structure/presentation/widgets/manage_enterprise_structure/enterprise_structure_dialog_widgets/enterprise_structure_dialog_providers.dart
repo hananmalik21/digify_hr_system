@@ -2,7 +2,8 @@ import 'package:digify_hr_system/features/enterprise_structure/data/models/edit_
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/edit_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart'
+    show getStructureLevelsUseCaseProvider, saveEnterpriseStructureUseCaseProvider;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final structureLevelsForCreateProvider = FutureProvider.autoDispose<List<HierarchyLevel>>((ref) async {
@@ -37,10 +38,7 @@ final createEnterpriseStructureProvider =
 final saveEnterpriseStructureDialogProvider =
     StateNotifierProvider.autoDispose<SaveEnterpriseStructureNotifier, SaveEnterpriseStructureState>((ref) {
       final saveUseCase = ref.watch(saveEnterpriseStructureUseCaseProvider);
-      return SaveEnterpriseStructureNotifier(
-        saveUseCase: saveUseCase,
-        onSuccess: () => ref.read(structureListProvider.notifier).refresh(),
-      );
+      return SaveEnterpriseStructureNotifier(saveUseCase: saveUseCase);
     });
 
 final editEnterpriseStructureDialogProvider = StateNotifierProvider.autoDispose

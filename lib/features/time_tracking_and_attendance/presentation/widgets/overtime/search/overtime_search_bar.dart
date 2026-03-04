@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../../core/widgets/forms/digify_text_field.dart';
+import '../../../providers/overtime/overtime_provider.dart';
 
 class OvertimeSearchBar extends ConsumerStatefulWidget {
   final String hintText;
@@ -30,17 +31,11 @@ class _OvertimeSearchBarState extends ConsumerState<OvertimeSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final searchQuery = "";
-
-    if (_controller.text.isEmpty) {
-      _controller.text = searchQuery;
-    }
-
     return DigifyTextField.search(
       controller: _controller,
       hintText: widget.hintText,
-      onSubmitted: (value) {
-        value.trim();
+      onChanged: (value) {
+        ref.read(overtimeManagementProvider.notifier).setSearchQuery(value);
       },
     );
   }

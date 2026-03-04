@@ -114,7 +114,6 @@ class ActionButtonsWidget extends ConsumerWidget {
             structureName: title,
             description: description,
             initialLevels: _viewLevels,
-            enterpriseId: enterpriseId,
             structureId: structureId,
             isActive: structureIsActive,
             provider: structureListProvider,

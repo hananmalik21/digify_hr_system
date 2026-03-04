@@ -1,7 +1,11 @@
+import 'package:digify_hr_system/core/enums/overtime_status.dart';
+import 'package:intl/intl.dart';
+
 class OvertimeRecord {
   static const String _placeholder = '--';
 
   final int? otRequestId;
+  final String? otRequestGuid;
   final String employeeId;
   final DateTime date;
   final DateTime requestedDate;
@@ -16,6 +20,7 @@ class OvertimeRecord {
 
   OvertimeRecord({
     this.otRequestId,
+    this.otRequestGuid,
     required this.employeeId,
     required this.date,
     required this.requestedDate,
@@ -89,8 +94,52 @@ class OvertimeRecord {
     );
   }
 
+  static OvertimeRecord updatedFromActionResponse(OvertimeRecord current, Map<String, dynamic> data) {
+    final statusRaw = data['status'] as String? ?? '';
+    final statusLabel = OvertimeStatus.fromString(statusRaw).label;
+    final byUser = data['manager_approved_by'] as String? ?? '';
+    final dateStr = data['manager_approved_date'] as String? ?? data['hr_validated_date'] as String?;
+    DateTime? approvedDt;
+    if (dateStr != null && dateStr.toString().isNotEmpty) {
+      try {
+        approvedDt = DateTime.parse(dateStr.toString());
+      } catch (_) {}
+    }
+    final reason = data['reason'] as String? ?? current.approvalInformation?.reason ?? '';
+    final approvedDateDisplay = approvedDt != null ? DateFormat('MMM d, yyyy').format(approvedDt) : '--';
+
+    final newApproval = ApprovalInformation(
+      status: statusLabel,
+      byUser: byUser,
+      date: approvedDt ?? current.approvalInformation?.date,
+      reason: reason,
+    );
+
+    return current.copyWith(approvalInformation: newApproval, approvedDateDisplay: approvedDateDisplay);
+  }
+
+  /// Merges draft update (PATCH) response into the current record.
+  static OvertimeRecord updatedFromDraftUpdate(OvertimeRecord current, Map<String, dynamic> data) {
+    final requestedHours = (data['requested_hours'] as num?)?.toDouble() ?? 0;
+    final reason = data['reason'] as String? ?? current.approvalInformation?.reason ?? '';
+    final hoursStr = requestedHours > 0
+        ? requestedHours.toStringAsFixed(1)
+        : current.overtimeDetail?.overtimeHours ?? '';
+    final amountStr = requestedHours > 0 ? requestedHours.toStringAsFixed(2) : current.amount;
+    final newOvertime = current.overtimeDetail?.copyWith(overtimeHours: hoursStr, amount: amountStr);
+    final newApproval =
+        current.approvalInformation?.copyWith(reason: reason) ??
+        ApprovalInformation(status: 'Draft', byUser: '', date: null, reason: reason);
+    return current.copyWith(
+      amount: amountStr,
+      overtimeDetail: newOvertime ?? current.overtimeDetail,
+      approvalInformation: newApproval,
+    );
+  }
+
   OvertimeRecord copyWith({
     int? otRequestId,
+    String? otRequestGuid,
     String? employeeId,
     DateTime? date,
     DateTime? requestedDate,
@@ -104,6 +153,7 @@ class OvertimeRecord {
   }) {
     return OvertimeRecord(
       otRequestId: otRequestId ?? this.otRequestId,
+      otRequestGuid: otRequestGuid ?? this.otRequestGuid,
       employeeId: employeeId ?? this.employeeId,
       date: date ?? this.date,
       requestedDate: requestedDate ?? this.requestedDate,
