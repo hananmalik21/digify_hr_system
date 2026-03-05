@@ -37,7 +37,7 @@ class ShiftsContentWidget extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, ShiftState shiftsState, ShiftsNotifier notifier) {
-    if (shiftsState.isLoading && shiftsState.items.isEmpty) {
+    if (shiftsState.isLoading) {
       return const ShiftsGridSkeleton();
     }
 

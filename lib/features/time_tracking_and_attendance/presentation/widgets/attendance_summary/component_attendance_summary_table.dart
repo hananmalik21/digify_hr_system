@@ -398,6 +398,14 @@ class _ComponentAttendanceSummaryTableState
     );
   }
 
+  Widget _buildCell(BuildContext context, Widget child, double width) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      width: width,
+      child: child,
+    );
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'present':
@@ -435,13 +443,5 @@ class _ComponentAttendanceSummaryTableState
     } catch (_) {
       return isoString;
     }
-  }
-
-  Widget _buildCell(BuildContext context, Widget child, double width) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      width: width,
-      child: child,
-    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_configuration.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/eligibility_subsection_header.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -25,7 +25,7 @@ class EmployeeCategorySubsection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final values = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.empCategory));
+    final values = ref.watch(policyConfigurationTabLookupValuesForCodeProvider(AbsLookupCode.empCategory));
     final selectedCode = eligibility.employeeCategoryCode;
     final draftNotifier = ref.read(policyDraftProvider.notifier);
 

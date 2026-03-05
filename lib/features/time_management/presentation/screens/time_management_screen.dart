@@ -2,11 +2,10 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_header_actions.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_config.dart';
-import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_tab_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_tab_with_enterprise_selector.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_stats_cards.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/shifts_tab.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/work_patterns_tab.dart';
@@ -40,7 +39,6 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final currentTabIndex = ref.watch(timeManagementTabStateProvider.select((s) => s.currentTabIndex));
-    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
     final tabs = TimeManagementTab.values;
     final currentTab = (currentTabIndex >= 0 && currentTabIndex < tabs.length)
         ? tabs[currentTabIndex]
@@ -62,16 +60,6 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
             Gap(24.h),
             TimeManagementStatsCards(localizations: localizations, isDark: isDark),
             Gap(24.h),
-            EnterpriseSelectorWidget(
-              selectedEnterpriseId: effectiveEnterpriseId,
-              onEnterpriseChanged: (enterpriseId) {
-                ref.read(timeManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
-              },
-              subtitle: effectiveEnterpriseId != null
-                  ? 'Viewing data for selected enterprise'
-                  : 'Select an enterprise to view data',
-            ),
-            Gap(24.h),
             _buildTabContent(currentTabIndex),
           ],
         ),
@@ -82,19 +70,34 @@ class _TimeManagementScreenState extends ConsumerState<TimeManagementScreen> {
   Widget _buildTabContent(int tabIndex) {
     switch (tabIndex) {
       case 0:
-        return const ShiftsTab();
+        return TimeManagementTabWithEnterpriseSelector(tab: TimeManagementTab.shifts, child: const ShiftsTab());
       case 1:
-        return const WorkPatternsTab();
+        return TimeManagementTabWithEnterpriseSelector(
+          tab: TimeManagementTab.workPatterns,
+          child: const WorkPatternsTab(),
+        );
       case 2:
-        return const WorkSchedulesTab();
+        return TimeManagementTabWithEnterpriseSelector(
+          tab: TimeManagementTab.workSchedules,
+          child: const WorkSchedulesTab(),
+        );
       case 3:
-        return const ScheduleAssignmentsTab();
+        return TimeManagementTabWithEnterpriseSelector(
+          tab: TimeManagementTab.scheduleAssignments,
+          child: const ScheduleAssignmentsTab(),
+        );
       case 4:
-        return const ViewCalendarTab();
+        return TimeManagementTabWithEnterpriseSelector(
+          tab: TimeManagementTab.viewCalendar,
+          child: const ViewCalendarTab(),
+        );
       case 5:
-        return const PublicHolidaysTab();
+        return TimeManagementTabWithEnterpriseSelector(
+          tab: TimeManagementTab.publicHolidays,
+          child: const PublicHolidaysTab(),
+        );
       default:
-        return const ShiftsTab();
+        return TimeManagementTabWithEnterpriseSelector(tab: TimeManagementTab.shifts, child: const ShiftsTab());
     }
   }
 }

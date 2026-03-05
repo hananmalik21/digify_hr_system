@@ -41,29 +41,18 @@ class LeaveManagementScreen extends ConsumerWidget {
   }
 
   Widget _buildTabContent(int tabIndex) {
-    switch (tabIndex) {
-      case _LeaveManagementTabIndex.leaveRequests:
-        return const LeaveRequestTab();
-      case _LeaveManagementTabIndex.leaveBalance:
-        return const AllLeaveBalancesTab();
-      case _LeaveManagementTabIndex.myLeaveBalance:
-        return const LeaveBalanceTab();
-      case _LeaveManagementTabIndex.teamLeaveRisk:
-        return const TeamLeaveRiskTab();
-      case _LeaveManagementTabIndex.leavePolicies:
-        return const LeavePoliciesTab();
-      case _LeaveManagementTabIndex.policyConfiguration:
-        return const PolicyConfigurationTab();
-      case _LeaveManagementTabIndex.forfeitPolicy:
-        return const ForfeitPolicyTab();
-      case _LeaveManagementTabIndex.forfeitProcessing:
-        return const ForfeitProcessingTab();
-      case _LeaveManagementTabIndex.forfeitReports:
-        return const ForfeitReportsTab();
-      case _LeaveManagementTabIndex.leaveCalendar:
-        return const LeaveCalendarTab();
-      default:
-        return const LeaveRequestTab();
-    }
+    return switch (tabIndex) {
+      _LeaveManagementTabIndex.leaveRequests => const LeaveRequestTab(),
+      _LeaveManagementTabIndex.leaveBalance => const AllLeaveBalancesTab(),
+      _LeaveManagementTabIndex.myLeaveBalance => const LeaveBalanceTab(),
+      _LeaveManagementTabIndex.teamLeaveRisk => const TeamLeaveRiskTab(),
+      _LeaveManagementTabIndex.leavePolicies => const LeavePoliciesTab(),
+      _LeaveManagementTabIndex.policyConfiguration => const PolicyConfigurationTab(),
+      _LeaveManagementTabIndex.forfeitPolicy => const ForfeitPolicyTab(),
+      _LeaveManagementTabIndex.forfeitProcessing => const ForfeitProcessingTab(),
+      _LeaveManagementTabIndex.forfeitReports => const ForfeitReportsTab(),
+      _LeaveManagementTabIndex.leaveCalendar => const LeaveCalendarTab(),
+      _ => const LeaveRequestTab(),
+    };
   }
 }

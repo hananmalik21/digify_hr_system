@@ -1,10 +1,10 @@
-import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 enum AssignmentType { department, employee }
 
@@ -57,19 +57,11 @@ class AssignmentTypeBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: _getBackgroundColor(isDark),
-        borderRadius: BorderRadius.circular(4.r),
-      ),
+      decoration: BoxDecoration(color: _getBackgroundColor(isDark), borderRadius: BorderRadius.circular(4.r)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          DigifyAsset(
-            assetPath: _getIconPath(),
-            width: 16,
-            height: 16,
-            color: _getTextColor(isDark),
-          ),
+          DigifyAsset(assetPath: _getIconPath(), width: 16, height: 16, color: _getTextColor(isDark)),
           Gap(8.w),
           Text(
             _getLabel(),

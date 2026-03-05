@@ -9,7 +9,7 @@ import 'package:digify_hr_system/features/leave_management/domain/models/forfeit
 import 'package:digify_hr_system/features/leave_management/domain/models/forfeit_processing_summary.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/forfeit_schedule_entry.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_schedule_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_processing_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/confirm_run_content.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/forfeit_processing_stepper.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_processing/preview_review_content.dart';
@@ -44,7 +44,7 @@ class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(forfeitProcessingTabEnterpriseIdProvider);
     final scheduleEntriesAsync = ref.watch(forfeitScheduleEntriesProvider);
     final selectedEntry = ref.watch(forfeitScheduleNotifierProvider).selectedEntry;
     final currentStep = ref.watch(forfeitProcessingStepProvider);
@@ -67,7 +67,7 @@ class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
               EnterpriseSelectorWidget(
                 selectedEnterpriseId: effectiveEnterpriseId,
                 onEnterpriseChanged: (enterpriseId) {
-                  ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+                  ref.read(forfeitProcessingTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
                 },
                 subtitle: effectiveEnterpriseId != null
                     ? 'Viewing data for selected enterprise'

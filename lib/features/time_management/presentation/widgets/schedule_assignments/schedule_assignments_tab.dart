@@ -3,12 +3,10 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
-
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
-
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/edit_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/view_schedule_assignment_dialog.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/mappers/schedule_assignment_mapper.dart';
@@ -29,7 +27,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
     ScheduleAssignmentTableRowData item,
     ScheduleAssignmentState state,
   ) async {
-    final enterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    final enterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
     if (enterpriseId == null) return;
 
     final assignment = state.items.firstWhere((a) => a.scheduleAssignmentId == item.scheduleAssignmentId);
@@ -53,7 +51,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
 
   @override
   Widget build(BuildContext context) {
-    final effectiveEnterpriseId = ref.watch(timeManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(scheduleAssignmentsTabEnterpriseIdProvider);
     final scheduleAssignmentsState = effectiveEnterpriseId != null
         ? ref.watch(scheduleAssignmentsNotifierProvider(effectiveEnterpriseId))
         : const ScheduleAssignmentState();
@@ -93,7 +91,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
   }
 
   Widget _buildContent(ScheduleAssignmentState scheduleAssignmentsState) {
-    final effectiveEnterpriseId = ref.read(timeManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
     if (effectiveEnterpriseId == null) return const SizedBox.shrink();
 
     return ScheduleAssignmentsTable(

@@ -6,6 +6,7 @@ import 'package:digify_hr_system/features/time_management/data/models/public_hol
 /// Remote data source for public holiday operations
 abstract class PublicHolidayRemoteDataSource {
   Future<PaginatedHolidaysModel> getHolidays({
+    required int tenantId,
     int page = 1,
     int pageSize = 10,
     String? search,
@@ -17,7 +18,7 @@ abstract class PublicHolidayRemoteDataSource {
 
   Future<Map<String, dynamic>> updateHoliday(int holidayId, Map<String, dynamic> requestBody);
 
-  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {bool hard = true});
+  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {required int tenantId, bool hard = true});
 }
 
 class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource {
@@ -27,6 +28,7 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
 
   @override
   Future<PaginatedHolidaysModel> getHolidays({
+    required int tenantId,
     int page = 1,
     int pageSize = 10,
     String? search,
@@ -34,6 +36,10 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
     String? type,
   }) async {
     try {
+      if (tenantId <= 0) {
+        throw ValidationException('tenant_id must be greater than 0');
+      }
+
       if (page < 1) {
         throw ValidationException('page must be greater than or equal to 1');
       }
@@ -42,7 +48,11 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
         throw ValidationException('page_size must be between 1 and 100');
       }
 
-      final queryParameters = <String, String>{'page': page.toString(), 'limit': pageSize.toString()};
+      final queryParameters = <String, String>{
+        'tenant_id': tenantId.toString(),
+        'page': page.toString(),
+        'limit': pageSize.toString(),
+      };
 
       if (search != null && search.trim().isNotEmpty) {
         queryParameters['search'] = search.trim();
@@ -108,9 +118,9 @@ class PublicHolidayRemoteDataSourceImpl implements PublicHolidayRemoteDataSource
   }
 
   @override
-  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {bool hard = true}) async {
+  Future<Map<String, dynamic>> deleteHoliday(int holidayId, {required int tenantId, bool hard = true}) async {
     try {
-      final queryParameters = <String, String>{'hard': hard.toString()};
+      final queryParameters = <String, String>{'tenant_id': tenantId.toString(), 'hard': hard.toString()};
       final endpoint = ApiEndpoints.tmPublicHolidayById(holidayId);
       final response = await apiClient.delete(endpoint, queryParameters: queryParameters);
 

@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/timesheet/timesheet_screen_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/org_structure_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/org_structure_repository_impl.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
@@ -52,6 +53,7 @@ class TimesheetOrgStructureNotifier extends StateNotifier<TimesheetOrgStructureS
     : super(const TimesheetOrgStructureState());
 
   Future<void> fetchOrgStructureLevels() async {
+    if (tenantId == null) return;
     state = state.copyWith(isLoading: true, error: null);
 
     try {
@@ -84,6 +86,13 @@ class TimesheetOrgStructureNotifier extends StateNotifier<TimesheetOrgStructureS
 final timesheetOrgStructureNotifierProvider =
     StateNotifierProvider<TimesheetOrgStructureNotifier, TimesheetOrgStructureState>((ref) {
       final useCase = ref.read(timesheetGetActiveOrgStructureLevelsUseCaseProvider);
-
-      return TimesheetOrgStructureNotifier(getActiveOrgStructureLevelsUseCase: useCase);
+      final enterpriseId = ref.watch(timesheetScreenEnterpriseIdProvider);
+      final notifier = TimesheetOrgStructureNotifier(
+        getActiveOrgStructureLevelsUseCase: useCase,
+        tenantId: enterpriseId,
+      );
+      if (enterpriseId != null) {
+        Future.microtask(() => notifier.fetchOrgStructureLevels());
+      }
+      return notifier;
     });

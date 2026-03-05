@@ -1,4 +1,3 @@
-import 'package:gap/gap.dart';
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
@@ -7,18 +6,14 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 class DepartmentField extends StatelessWidget {
   final TextEditingController controller;
   final AssignmentLevel? selectedLevel;
   final String? Function(String?)? validator;
 
-  const DepartmentField({
-    super.key,
-    required this.controller,
-    this.selectedLevel,
-    this.validator,
-  });
+  const DepartmentField({super.key, required this.controller, this.selectedLevel, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +28,13 @@ class DepartmentField extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.8.sp,
                 fontWeight: FontWeight.w500,
-                color: context.isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.inputLabel,
+                color: context.isDark ? AppColors.textPrimaryDark : AppColors.inputLabel,
               ),
             ),
             Gap(4.w),
             Text(
               '*',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.deleteIconRed,
-              ),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.deleteIconRed),
             ),
           ],
         ),
@@ -53,11 +42,7 @@ class DepartmentField extends StatelessWidget {
         DigifyTextField(
           controller: controller,
           hintText: 'Type to search departments...',
-          suffixIcon: DigifyAsset(
-            assetPath: Assets.icons.arrowIcon.path,
-            width: 18,
-            height: 18,
-          ),
+          suffixIcon: DigifyAsset(assetPath: Assets.icons.arrowIcon.path, width: 18, height: 18),
           validator: validator,
         ),
         Gap(8.h),
@@ -66,9 +51,7 @@ class DepartmentField extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w400,
-            color: context.isDark
-                ? AppColors.textMutedDark
-                : AppColors.textMuted,
+            color: context.isDark ? AppColors.textMutedDark : AppColors.textMuted,
           ),
         ),
       ],

@@ -48,6 +48,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
+    ref.watch(timesheetEnterpriseSyncProvider);
     final effectiveEnterpriseId = ref.watch(timesheetEnterpriseIdProvider);
     final state = ref.watch(timesheetNotifierProvider);
     final notifier = ref.read(timesheetNotifierProvider.notifier);

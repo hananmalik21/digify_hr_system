@@ -142,7 +142,7 @@ class LeaveRequestsActions {
     } catch (e) {
       notifier.setLoadingDraft(false);
       if (context.mounted) {
-        Navigator.of(context).pop();
+        Navigator.of(context).maybePop();
         ToastService.error(context, e.toString().replaceFirst('Exception: ', ''));
       }
     }

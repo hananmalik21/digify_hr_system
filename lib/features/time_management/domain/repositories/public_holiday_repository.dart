@@ -3,7 +3,14 @@ import 'package:digify_hr_system/features/time_management/domain/models/public_h
 
 /// Repository interface for public holiday operations
 abstract class PublicHolidayRepository {
-  Future<PaginatedHolidays> getHolidays({int page = 1, int pageSize = 10, String? search, String? year, String? type});
+  Future<PaginatedHolidays> getHolidays({
+    required int tenantId,
+    int page = 1,
+    int pageSize = 10,
+    String? search,
+    String? year,
+    String? type,
+  });
 
   Future<PublicHoliday> createHoliday({
     required int tenantId,
@@ -32,5 +39,5 @@ abstract class PublicHolidayRepository {
     required bool isPaid,
   });
 
-  Future<void> deleteHoliday(int holidayId, {bool hard = true});
+  Future<void> deleteHoliday(int holidayId, {required int tenantId, bool hard = true});
 }

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_tab_enterprise_provider.dart';
 import 'holiday_card.dart';
 
 class MonthlyHolidayGroupData {
@@ -31,8 +32,11 @@ class MonthlyHolidayGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final enterpriseId = ref.watch(publicHolidaysTabEnterpriseIdProvider);
+    if (enterpriseId == null) return const SizedBox.shrink();
+
     final isDark = context.isDark;
-    final state = ref.watch(publicHolidaysNotifierProvider);
+    final state = ref.watch(publicHolidaysNotifierProvider(enterpriseId));
     final deletingHolidayId = state.deletingHolidayId;
 
     return Container(

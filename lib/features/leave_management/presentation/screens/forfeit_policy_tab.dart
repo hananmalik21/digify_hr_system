@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/forfeit_policy.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_policy_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/forfeit_policy_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_policy/forfeit_policies_list.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_policy/forfeit_policy_details_content.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/forfeit_policy/forfeit_policy_stat_cards.dart';
@@ -28,7 +28,7 @@ class _ForfeitPolicyTabState extends ConsumerState<ForfeitPolicyTab> {
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final isMobile = context.isMobile;
-    final effectiveEnterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+    final effectiveEnterpriseId = ref.watch(forfeitPolicyTabEnterpriseIdProvider);
     final forfeitPoliciesAsync = ref.watch(forfeitPoliciesProvider);
 
     return SingleChildScrollView(
@@ -45,7 +45,7 @@ class _ForfeitPolicyTabState extends ConsumerState<ForfeitPolicyTab> {
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
-              ref.read(leaveManagementSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              ref.read(forfeitPolicyTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

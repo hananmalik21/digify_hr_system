@@ -8,8 +8,8 @@ import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_lab
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_request_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -27,7 +27,7 @@ class LeaveDetailsStep extends ConsumerWidget {
     final isDark = context.isDark;
     final state = ref.watch(newLeaveRequestProvider);
     final notifier = ref.read(newLeaveRequestProvider.notifier);
-    final enterpriseId = ref.watch(leaveManagementEnterpriseIdProvider) ?? 0;
+    final enterpriseId = ref.watch(leaveRequestTabEnterpriseIdProvider) ?? 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +248,7 @@ class LeaveDetailsStep extends ConsumerWidget {
               Builder(
                 builder: (context) {
                   final List<AbsLookupValue> shiftOptions = ref.watch(
-                    absLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
+                    leaveRequestTabLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
                   );
 
                   AbsLookupValue? selectedStart;
@@ -300,7 +300,7 @@ class LeaveDetailsStep extends ConsumerWidget {
               Builder(
                 builder: (context) {
                   final List<AbsLookupValue> shiftOptions = ref.watch(
-                    absLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
+                    leaveRequestTabLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
                   );
 
                   AbsLookupValue? selectedEnd;

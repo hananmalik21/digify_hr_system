@@ -47,16 +47,6 @@ class AttendanceSearchAndFilter extends ConsumerStatefulWidget {
 class _AttendanceSearchAndFilterState extends ConsumerState<AttendanceSearchAndFilter> {
   bool _showFilters = false;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orgState = ref.read(attendanceOrgStructureNotifierProvider);
-      if (!orgState.isLoading && orgState.orgStructure == null) {
-        ref.read(attendanceOrgStructureNotifierProvider.notifier).fetchOrgStructureLevels();
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

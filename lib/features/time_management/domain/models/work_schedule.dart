@@ -133,10 +133,13 @@ class WorkSchedule {
   final String scheduleNameEn;
   final String scheduleNameAr;
   final int workPatternId;
+  final String? patternNameEn;
+  final String? patternNameAr;
   final DateTime effectiveStartDate;
   final DateTime? effectiveEndDate;
   final String assignmentMode;
   final PositionStatus status;
+  final String timeZone;
   final DateTime creationDate;
   final String createdBy;
   final DateTime lastUpdateDate;
@@ -150,10 +153,13 @@ class WorkSchedule {
     required this.scheduleNameEn,
     required this.scheduleNameAr,
     required this.workPatternId,
+    this.patternNameEn,
+    this.patternNameAr,
     required this.effectiveStartDate,
     this.effectiveEndDate,
     required this.assignmentMode,
     required this.status,
+    this.timeZone = 'UTC',
     required this.creationDate,
     required this.createdBy,
     required this.lastUpdateDate,
@@ -212,10 +218,13 @@ class WorkSchedule {
       scheduleNameEn: parseString(json['schedule_name_en']),
       scheduleNameAr: parseString(json['schedule_name_ar']),
       workPatternId: parseInt(json['work_pattern_id'], defaultValue: 0),
+      patternNameEn: json['pattern_name_en'] != null ? parseString(json['pattern_name_en']) : null,
+      patternNameAr: json['pattern_name_ar'] != null ? parseString(json['pattern_name_ar']) : null,
       effectiveStartDate: effectiveStartDate,
       effectiveEndDate: parseDateTime(json['effective_end_date']),
       assignmentMode: parseString(json['assignment_mode']),
       status: status,
+      timeZone: parseString(json['time_zone'], defaultValue: 'UTC'),
       creationDate: parseDateTime(json['creation_date']) ?? DateTime.now(),
       createdBy: parseString(json['created_by']),
       lastUpdateDate: parseDateTime(json['last_update_date']) ?? DateTime.now(),

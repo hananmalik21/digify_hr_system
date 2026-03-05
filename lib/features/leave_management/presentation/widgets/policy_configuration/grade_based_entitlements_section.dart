@@ -11,7 +11,7 @@ import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/policy_detail.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/abs_lookups_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/policy_draft_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/policy_configuration/expandable_config_section.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -42,7 +42,7 @@ class GradeBasedEntitlementsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accrualOptions = ref.watch(absLookupValuesForCodeProvider(AbsLookupCode.accrualMethod));
+    final accrualOptions = ref.watch(policyConfigurationTabLookupValuesForCodeProvider(AbsLookupCode.accrualMethod));
     final draftNotifier = ref.read(policyDraftProvider.notifier);
 
     return ExpandableConfigSection(

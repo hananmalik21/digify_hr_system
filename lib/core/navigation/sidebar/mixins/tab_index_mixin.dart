@@ -120,4 +120,13 @@ mixin TabIndexMixin {
         return null;
     }
   }
+
+  int? getCompensationTabIndex(String itemId) {
+    switch (itemId) {
+      case 'gradeStructureManagement':
+        return 0;
+      default:
+        return null;
+    }
+  }
 }

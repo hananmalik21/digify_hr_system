@@ -1,44 +1,9 @@
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'overtime_provider.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/overtime/overtime_screen_enterprise_provider.dart'
+    as screen;
 
-final overtimeSelectedEnterpriseProvider = StateNotifierProvider<OvertimeEnterpriseNotifier, int?>((ref) {
-  final notifier = OvertimeEnterpriseNotifier(ref);
-  final initialActive = ref.read(activeEnterpriseIdProvider);
+export 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/providers/overtime/overtime_screen_enterprise_provider.dart'
+    show overtimeScreenSelectedEnterpriseProvider, overtimeScreenEnterpriseIdProvider, overtimeEnterpriseSyncProvider;
 
-  if (initialActive != null) {
-    notifier.setEnterpriseId(initialActive);
-  }
+final overtimeSelectedEnterpriseProvider = screen.overtimeScreenSelectedEnterpriseProvider;
 
-  ref.listen<int?>(activeEnterpriseIdProvider, (previous, next) {
-    if (next != null && !notifier.hasSelection) {
-      notifier.setEnterpriseId(next);
-    }
-  });
-
-  return notifier;
-});
-
-class OvertimeEnterpriseNotifier extends StateNotifier<int?> {
-  final Ref ref;
-
-  OvertimeEnterpriseNotifier(this.ref) : super(null);
-
-  bool get hasSelection => state != null;
-
-  void setEnterpriseId(int? enterpriseId) {
-    state = enterpriseId;
-    if (enterpriseId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(overtimeManagementProvider.notifier).setCompanyId(enterpriseId.toString());
-      });
-    }
-  }
-}
-
-final overtimeEnterpriseIdProvider = Provider<int?>((ref) {
-  final selected = ref.watch(overtimeSelectedEnterpriseProvider);
-  final active = ref.watch(activeEnterpriseIdProvider);
-  return selected ?? active;
-});
+final overtimeEnterpriseIdProvider = screen.overtimeScreenEnterpriseIdProvider;
