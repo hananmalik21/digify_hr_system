@@ -3,7 +3,9 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/create_employee_basic_info_request.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_basic_info_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
@@ -199,6 +201,27 @@ class AddEmployeeBasicInfoForm extends ConsumerWidget {
         firstDate: DateTime(1900),
         initialDate: form.dateOfBirth,
         onDateSelected: notifier.setDateOfBirth,
+      ),
+      Gap(16.h),
+      DigifySelectFieldWithLabel<String>(
+        label: l10n.employeeStatus,
+        hint: l10n.selectEmployeeStatus,
+        value: form.employeeStatus,
+        items: [AssignmentStatus.active.raw, AssignmentStatus.inactive.raw, AssignmentStatus.probation.raw],
+        itemLabelBuilder: (raw) {
+          switch (AssignmentStatus.fromRaw(raw)) {
+            case AssignmentStatus.active:
+              return l10n.active;
+            case AssignmentStatus.inactive:
+              return l10n.inactive;
+            case AssignmentStatus.probation:
+              return l10n.reviewProbation;
+            default:
+              return raw;
+          }
+        },
+        isRequired: true,
+        onChanged: (v) => notifier.setEmployeeStatus(v),
       ),
     ];
   }

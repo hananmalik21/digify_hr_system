@@ -59,6 +59,7 @@ class ApiEndpoints {
   static const String tmScheduleAssignments = '$api/tm/schedule-assignments';
   static String tmScheduleAssignmentById(int scheduleAssignmentId) => '$tmScheduleAssignments/$scheduleAssignmentId';
   static const String tmTimesheets = '$api/tm/timesheets';
+  static const String tmTimesheetsStats = '$tmTimesheets/stats';
   static String tmTimesheetByGuid(String guid) => '$tmTimesheets/$guid';
   static String tmTimesheetApprove(String guid) => '$tmTimesheets/$guid/approve';
   static String tmTimesheetReject(String guid) => '$tmTimesheets/$guid/reject';

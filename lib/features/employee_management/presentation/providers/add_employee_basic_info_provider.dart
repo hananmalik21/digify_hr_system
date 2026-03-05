@@ -99,6 +99,12 @@ class AddEmployeeBasicInfoNotifier extends StateNotifier<AddEmployeeBasicInfoSta
     );
   }
 
+  void setEmployeeStatus(String? value) {
+    state = state.copyWith(
+      form: state.form.copyWith(employeeStatus: value, clearEmployeeStatus: value == null),
+    );
+  }
+
   void clearSubmitError() {
     state = state.copyWith(clearSubmitError: true);
   }

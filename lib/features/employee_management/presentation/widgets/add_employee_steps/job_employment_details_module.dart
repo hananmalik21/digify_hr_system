@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_job_employment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
@@ -122,8 +123,19 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   label: localizations.employmentStatus,
                   isRequired: true,
                   hint: localizations.hintEmploymentStatus,
-                  items: const ['ACTIVE', 'INACTIVE'],
-                  itemLabelBuilder: (code) => code == 'ACTIVE' ? 'Active' : 'Inactive',
+                  items: [AssignmentStatus.active.raw, AssignmentStatus.inactive.raw, AssignmentStatus.probation.raw],
+                  itemLabelBuilder: (code) {
+                    switch (AssignmentStatus.fromRaw(code)) {
+                      case AssignmentStatus.active:
+                        return localizations.active;
+                      case AssignmentStatus.inactive:
+                        return localizations.inactive;
+                      case AssignmentStatus.probation:
+                        return localizations.reviewProbation;
+                      default:
+                        return code;
+                    }
+                  },
                   value: jobState.employmentStatusCode,
                   onChanged: (v) => jobNotifier.setEmploymentStatusCode(v),
                 ),

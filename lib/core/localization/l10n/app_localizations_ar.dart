@@ -1900,6 +1900,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allStatuses => 'جميع الحالات';
 
   @override
+  String get employeeStatus => 'حالة الموظف';
+
+  @override
+  String get selectEmployeeStatus => 'اختر حالة الموظف';
+
+  @override
   String get allPositions => 'جميع المناصب';
 
   @override

@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_stats.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
 
 class GetTimesheetStatisticsUseCase {
@@ -6,7 +7,7 @@ class GetTimesheetStatisticsUseCase {
 
   const GetTimesheetStatisticsUseCase({required this.repository});
 
-  Future<Map<String, dynamic>> call({
+  Future<TimesheetStats> call({
     DateTime? weekStartDate,
     DateTime? weekEndDate,
     String? employeeNumber,
@@ -28,10 +29,7 @@ class GetTimesheetStatisticsUseCase {
     } on AppException {
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        'Failed to get timesheet statistics: ${e.toString()}',
-        originalError: e,
-      );
+      throw UnknownException('Failed to get timesheet statistics: ${e.toString()}', originalError: e);
     }
   }
 }

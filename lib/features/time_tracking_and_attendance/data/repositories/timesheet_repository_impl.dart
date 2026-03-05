@@ -4,8 +4,10 @@ import 'package:digify_hr_system/core/network/api_endpoints.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/utils/date_time_utils.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/timesheet_dto.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/data/dto/timesheet_stats_dto.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_page.dart';
+import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_stats.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/models/timesheet/timesheet_status.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/domain/repositories/timesheet_repository.dart';
 
@@ -82,7 +84,7 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> getTimesheetStatistics({
+  Future<TimesheetStats> getTimesheetStatistics({
     DateTime? weekStartDate,
     DateTime? weekEndDate,
     String? employeeNumber,
@@ -91,15 +93,18 @@ class TimesheetRepositoryImpl implements TimesheetRepository {
     String? departmentId,
     String? sectionId,
   }) async {
-    return {
-      'total': 0,
-      'draft': 0,
-      'submitted': 0,
-      'approved': 0,
-      'rejected': 0,
-      'regularHours': 0.0,
-      'overtimeHours': 0.0,
-    };
+    try {
+      final enterpriseId = companyId?.trim().isNotEmpty == true ? companyId! : '1';
+      final query = <String, String>{'enterprise_id': enterpriseId};
+      final response = await _apiClient.get(ApiEndpoints.tmTimesheetsStats, queryParameters: query);
+      final data = response['data'] as Map<String, dynamic>? ?? {};
+      final dto = TimesheetStatsDto.fromJson(data);
+      return dto.toDomain();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to fetch timesheet stats: ${e.toString()}', originalError: e);
+    }
   }
 
   @override
