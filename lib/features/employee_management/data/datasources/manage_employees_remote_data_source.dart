@@ -139,10 +139,10 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
-        'employee_status': request.employmentStatusCode!.trim(),
-      },
+      if (request.employeeStatus != null && request.employeeStatus!.trim().isNotEmpty)
+        'employee_status': request.employeeStatus!.trim(),
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
       'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)
@@ -250,10 +250,10 @@ class ManageEmployeesRemoteDataSourceImpl implements ManageEmployeesRemoteDataSo
       if (request.probationDays != null) 'probation_days': request.probationDays!,
       if (request.contractTypeCode != null && request.contractTypeCode!.isNotEmpty)
         'contract_type_code': request.contractTypeCode!.trim(),
-      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty) ...{
+      if (request.employmentStatusCode != null && request.employmentStatusCode!.isNotEmpty)
         'employment_status': request.employmentStatusCode!.trim(),
-        'employee_status': request.employmentStatusCode!.trim(),
-      },
+      if (request.employeeStatus != null && request.employeeStatus!.trim().isNotEmpty)
+        'employee_status': request.employeeStatus!.trim(),
       if (request.reportingToEmpId != null) 'reporting_to_emp_id': request.reportingToEmpId!,
       'work_location_id': request.workLocationId?.toString() ?? request.workLocation?.trim() ?? '',
       if (request.basicSalaryKwd != null && request.basicSalaryKwd!.trim().isNotEmpty)

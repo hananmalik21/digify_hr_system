@@ -4,40 +4,51 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
+import 'package:digify_hr_system/features/enterprise_structure/domain/models/enterprise_stats.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_stats_providers.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class StatsCardsWidget extends ConsumerWidget {
   final AppLocalizations localizations;
   final bool isDark;
-  final AutoDisposeStateNotifierProvider<StructureListNotifier, StructureListState> structureListProvider;
 
-  const StatsCardsWidget({
-    super.key,
-    required this.localizations,
-    required this.isDark,
-    required this.structureListProvider,
-  });
+  const StatsCardsWidget({super.key, required this.localizations, required this.isDark});
 
   static const Color _iconBackgroundLight = AppColors.infoBg;
   static const Color _iconColor = AppColors.statIconBlue;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final isTablet = ResponsiveHelper.isTablet(context);
-    final listState = ref.watch(structureListProvider);
-    final totalStructures = listState.pagination?.total ?? listState.total;
-    final activeCount = listState.structures.where((s) => s.isActive).length;
+    final statsAsync = ref.watch(enterpriseStatsNotifierProvider);
 
+    if (statsAsync.isLoading) {
+      return _buildLayout(context, isSkeleton: true);
+    }
+
+    if (statsAsync.hasError) {
+      return DigifyErrorState(
+        message: localizations.somethingWentWrong,
+        retryLabel: localizations.retry,
+        onRetry: () => ref.read(enterpriseStatsNotifierProvider.notifier).refresh(),
+      );
+    }
+
+    final stats = statsAsync.valueOrNull;
+    return _buildLayout(context, stats: stats);
+  }
+
+  Widget _buildLayout(BuildContext context, {EnterpriseStats? stats, bool isSkeleton = false}) {
+    final displayStats = stats ?? EnterpriseStats.empty;
     final cards = [
       _EnterpriseStatCard(
         label: localizations.totalStructures,
-        value: totalStructures.toString(),
+        value: displayStats.formattedTotalStructures,
         iconPath: Assets.icons.totalStructuresIcon.path,
         isDark: isDark,
         iconColor: _iconColor,
@@ -45,7 +56,7 @@ class StatsCardsWidget extends ConsumerWidget {
       ),
       _EnterpriseStatCard(
         label: localizations.activeStructure,
-        value: activeCount.toString(),
+        value: displayStats.formattedActiveStructures,
         iconPath: Assets.icons.activeStructureIcon.path,
         isDark: isDark,
         iconColor: _iconColor,
@@ -53,7 +64,7 @@ class StatsCardsWidget extends ConsumerWidget {
       ),
       _EnterpriseStatCard(
         label: localizations.componentsInUse,
-        value: '58',
+        value: displayStats.formattedComponentsInUse,
         iconPath: Assets.icons.componentsIcon.path,
         isDark: isDark,
         iconColor: _iconColor,
@@ -61,13 +72,21 @@ class StatsCardsWidget extends ConsumerWidget {
       ),
       _EnterpriseStatCard(
         label: localizations.employeesAssigned,
-        value: '450',
+        value: displayStats.formattedEmployeesAssigned,
         iconPath: Assets.icons.employeesAssignedIcon.path,
         isDark: isDark,
         iconColor: _iconColor,
         iconBgLight: _iconBackgroundLight,
       ),
     ];
+
+    final content = _buildResponsiveLayout(context, cards);
+    return isSkeleton ? Skeletonizer(enabled: true, child: content) : content;
+  }
+
+  Widget _buildResponsiveLayout(BuildContext context, List<Widget> cards) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final isTablet = ResponsiveHelper.isTablet(context);
 
     if (isMobile) {
       return Column(

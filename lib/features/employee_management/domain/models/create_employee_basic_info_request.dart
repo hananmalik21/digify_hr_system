@@ -35,6 +35,7 @@ class CreateEmployeeBasicInfoRequest {
   final int? probationDays;
   final String? contractTypeCode;
   final String? employmentStatusCode;
+  final String? employeeStatus;
   final int? reportingToEmpId;
   final int? enterpriseId;
   final String? basicSalaryKwd;
@@ -93,6 +94,7 @@ class CreateEmployeeBasicInfoRequest {
     this.probationDays,
     this.contractTypeCode,
     this.employmentStatusCode,
+    this.employeeStatus,
     this.reportingToEmpId,
     this.enterpriseId,
     this.basicSalaryKwd,
@@ -178,6 +180,7 @@ class CreateEmployeeBasicInfoRequest {
     int? probationDays,
     String? contractTypeCode,
     String? employmentStatusCode,
+    String? employeeStatus,
     bool clearPositionIdHex = false,
     bool clearEnterpriseHireDate = false,
     bool clearJobFamilyId = false,
@@ -186,6 +189,7 @@ class CreateEmployeeBasicInfoRequest {
     bool clearProbationDays = false,
     bool clearContractTypeCode = false,
     bool clearEmploymentStatusCode = false,
+    bool clearEmployeeStatus = false,
     int? reportingToEmpId,
     bool clearReportingToEmpId = false,
     int? enterpriseId,
@@ -266,6 +270,7 @@ class CreateEmployeeBasicInfoRequest {
       probationDays: clearProbationDays ? null : (probationDays ?? this.probationDays),
       contractTypeCode: clearContractTypeCode ? null : (contractTypeCode ?? this.contractTypeCode),
       employmentStatusCode: clearEmploymentStatusCode ? null : (employmentStatusCode ?? this.employmentStatusCode),
+      employeeStatus: clearEmployeeStatus ? null : (employeeStatus ?? this.employeeStatus),
       reportingToEmpId: clearReportingToEmpId ? null : (reportingToEmpId ?? this.reportingToEmpId),
       enterpriseId: clearEnterpriseId ? null : (enterpriseId ?? this.enterpriseId),
       basicSalaryKwd: clearBasicSalaryKwd ? null : (basicSalaryKwd ?? this.basicSalaryKwd),
@@ -323,5 +328,6 @@ class CreateEmployeeBasicInfoRequest {
       isEmailValid &&
       isPhoneValid &&
       isMobileValid &&
-      dateOfBirth != null;
+      dateOfBirth != null &&
+      (employeeStatus?.trim().isNotEmpty ?? false);
 }

@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/features/time_tracking_and_attendance/presentation/widgets/attendance/component_attendance_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:digify_hr_system/gen/assets.gen.dart';
 
@@ -15,6 +16,7 @@ class TimesheetStatsGrid extends StatelessWidget {
   final double regularHours;
   final double overtimeHours;
   final bool isDark;
+  final bool isLoading;
 
   const TimesheetStatsGrid({
     super.key,
@@ -26,6 +28,7 @@ class TimesheetStatsGrid extends StatelessWidget {
     required this.regularHours,
     required this.overtimeHours,
     required this.isDark,
+    this.isLoading = false,
   });
 
   @override
@@ -93,31 +96,33 @@ class TimesheetStatsGrid extends StatelessWidget {
       ),
     ];
 
-    if (isMobile) {
-      return Column(
-        children: [
-          for (var i = 0; i < cards.length; i++)
-            Padding(
-              padding: EdgeInsetsDirectional.only(bottom: i < cards.length - 1 ? runSpacing : 0),
-              child: cards[i],
-            ),
-        ],
-      );
-    }
+    final content = isMobile
+        ? Column(
+            children: [
+              for (var i = 0; i < cards.length; i++)
+                Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: i < cards.length - 1 ? runSpacing : 0),
+                  child: cards[i],
+                ),
+            ],
+          )
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              final availableWidth = constraints.maxWidth;
+              final minCardWidth = 140.w;
+              final countPerRow = ((availableWidth + spacing) / (minCardWidth + spacing)).floor().clamp(
+                1,
+                cards.length,
+              );
+              final cardWidth = (availableWidth - (countPerRow - 1) * spacing) / countPerRow;
+              return Wrap(
+                spacing: spacing,
+                runSpacing: runSpacing,
+                children: cards.map((card) => SizedBox(width: cardWidth, child: card)).toList(),
+              );
+            },
+          );
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        final minCardWidth = 140.w;
-        final countPerRow = ((availableWidth + spacing) / (minCardWidth + spacing)).floor().clamp(1, cards.length);
-        final cardWidth = (availableWidth - (countPerRow - 1) * spacing) / countPerRow;
-
-        return Wrap(
-          spacing: spacing,
-          runSpacing: runSpacing,
-          children: cards.map((card) => SizedBox(width: cardWidth, child: card)).toList(),
-        );
-      },
-    );
+    return isLoading ? Skeletonizer(enabled: true, child: content) : content;
   }
 }

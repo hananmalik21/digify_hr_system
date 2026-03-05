@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ Future<void> handleStructureActivate(
   final id = structureId;
   final saveNotifier = ref.read(saveEnterpriseStructureProvider.notifier);
   final listNotifier = ref.read(structureListProvider.notifier);
+  final statsNotifier = ref.read(enterpriseStatsNotifierProvider.notifier);
 
   await showDialog<void>(
     context: context,
@@ -46,6 +48,7 @@ Future<void> handleStructureActivate(
           context: context,
           saveNotifier: saveNotifier,
           listNotifier: listNotifier,
+          statsNotifier: statsNotifier,
           title: title,
           description: description,
           structureId: id,
@@ -61,6 +64,7 @@ Future<void> _runActivate({
   required BuildContext context,
   required SaveEnterpriseStructureNotifier saveNotifier,
   required StructureListNotifier listNotifier,
+  required EnterpriseStatsNotifier statsNotifier,
   required String title,
   required String description,
   required String structureId,
@@ -78,6 +82,7 @@ Future<void> _runActivate({
     if (!context.mounted) return;
     ToastService.success(context, 'Structure activated successfully');
     listNotifier.setStructureActive(structureId, true);
+    statsNotifier.refresh();
   } on AppException catch (e) {
     if (!context.mounted) return;
     ToastService.error(context, e.message);

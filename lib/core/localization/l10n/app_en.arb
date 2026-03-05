@@ -728,6 +728,8 @@
   "advancedFilters": "Advanced Filters",
   "clearAll": "Clear All",
   "allStatuses": "All Statuses",
+  "employeeStatus": "Employee Status",
+  "selectEmployeeStatus": "Select employee status",
   "allPositions": "All Positions",
   "allWorkforceStructures": "All Workforce Structures",
   "allJobFamilies": "All Job Families",

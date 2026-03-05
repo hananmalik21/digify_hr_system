@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/usecases/delete_structure_usecase.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_list_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/cascade_delete_confirmation_dialog.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +113,7 @@ class DeleteStructureNotifier extends StateNotifier<DeleteStructureState> {
         context.pop(true);
         ToastService.success(context, localizations.structureDeletedSuccess);
         ref.read(structureListProvider.notifier).refresh();
+        ref.read(enterpriseStatsNotifierProvider.notifier).refresh();
       }
     } on ConflictException catch (e) {
       state = state.copyWith(isDeleting: false);
@@ -202,6 +204,7 @@ class DeleteStructureNotifier extends StateNotifier<DeleteStructureState> {
         context.pop(true);
         ToastService.success(context, localizations.structureDeletedSuccess);
         ref.read(structureListProvider.notifier).refresh();
+        ref.read(enterpriseStatsNotifierProvider.notifier).refresh();
       }
     } on AppException catch (e) {
       state = state.copyWith(isCascadeDeleting: false);
