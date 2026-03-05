@@ -12,6 +12,7 @@ class StructureListItem {
   final DateTime? lastUpdatedDate;
   final List<StructureLevelItem> levels;
   final int orgUnitCount;
+  final int employeeCount;
 
   const StructureListItem({
     required this.structureId,
@@ -26,6 +27,7 @@ class StructureListItem {
     this.lastUpdatedDate,
     required this.levels,
     this.orgUnitCount = 0,
+    this.employeeCount = 0,
   });
 
   StructureListItem copyWith({
@@ -41,6 +43,7 @@ class StructureListItem {
     DateTime? lastUpdatedDate,
     List<StructureLevelItem>? levels,
     int? orgUnitCount,
+    int? employeeCount,
   }) {
     return StructureListItem(
       structureId: structureId ?? this.structureId,
@@ -55,6 +58,7 @@ class StructureListItem {
       lastUpdatedDate: lastUpdatedDate ?? this.lastUpdatedDate,
       levels: levels ?? this.levels,
       orgUnitCount: orgUnitCount ?? this.orgUnitCount,
+      employeeCount: employeeCount ?? this.employeeCount,
     );
   }
 }

@@ -101,7 +101,7 @@ class StructuresListWidget extends ConsumerWidget {
             levels: levelNames,
             levelCount: activeLevels.length,
             components: structure.orgUnitCount,
-            employees: 0,
+            employees: structure.employeeCount,
             created: createdDate,
             modified: modifiedDate,
             showInfoMessage: structure.isActive,
