@@ -1903,6 +1903,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allStatuses => 'All Statuses';
 
   @override
+  String get employeeStatus => 'Employee Status';
+
+  @override
+  String get selectEmployeeStatus => 'Select employee status';
+
+  @override
   String get allPositions => 'All Positions';
 
   @override

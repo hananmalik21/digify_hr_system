@@ -634,6 +634,8 @@
   "advancedFilters": "مرشحات متقدمة",
   "clearAll": "مسح الكل",
   "allStatuses": "جميع الحالات",
+  "employeeStatus": "حالة الموظف",
+  "selectEmployeeStatus": "اختر حالة الموظف",
   "allPositions": "جميع المناصب",
   "allWorkforceStructures": "جميع هياكل القوى العاملة",
   "allJobFamilies": "جميع عائلات الوظائف",

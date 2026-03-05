@@ -104,6 +104,7 @@ class _TimesheetScreenState extends ConsumerState<TimesheetScreen> {
               regularHours: state.regularHours,
               overtimeHours: state.overtimeHours,
               isDark: isDark,
+              isLoading: state.isLoading,
             ),
             TimesheetSearchAndFilter(
               searchController: _searchController,

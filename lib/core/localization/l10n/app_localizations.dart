@@ -3812,6 +3812,18 @@ abstract class AppLocalizations {
   /// **'All Statuses'**
   String get allStatuses;
 
+  /// No description provided for @employeeStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Status'**
+  String get employeeStatus;
+
+  /// No description provided for @selectEmployeeStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Select employee status'**
+  String get selectEmployeeStatus;
+
   /// No description provided for @allPositions.
   ///
   /// In en, this message translates to:
