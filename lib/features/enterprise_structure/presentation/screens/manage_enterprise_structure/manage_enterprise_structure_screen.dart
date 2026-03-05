@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_tab_header.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/enterprise_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_enterprise_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/save_enterprise_structure_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
@@ -51,6 +52,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   );
                   if (result == true) {
                     ref.read(manageEnterpriseStructureStructureListProvider.notifier).refresh();
+                    ref.read(enterpriseStatsNotifierProvider.notifier).refresh();
                   }
                 },
               ),
@@ -65,11 +67,7 @@ class ManageEnterpriseStructureScreen extends ConsumerWidget {
                   : 'Select an enterprise to view data',
             ),
             Gap(24.h),
-            StatsCardsWidget(
-              localizations: localizations,
-              isDark: isDark,
-              structureListProvider: manageEnterpriseStructureStructureListProvider,
-            ),
+            StatsCardsWidget(localizations: localizations, isDark: isDark),
             Gap(16.h),
             StructuresListWidget(
               localizations: localizations,
