@@ -10,6 +10,7 @@ import '../../../../core/widgets/buttons/app_button.dart';
 import '../../../../core/widgets/common/digify_tab_header.dart';
 import '../../../../core/widgets/common/enterprise_selector_widget.dart';
 import '../../../../gen/assets.gen.dart';
+import '../dialogs/grade_structure_management/grade_level_dialog.dart';
 import '../providers/grade_structure_management/grade_structure_management_enterprise_provider.dart';
 import '../widgets/grade_structure_management/component_states.dart';
 import '../widgets/grade_structure_management/component_table.dart';
@@ -44,7 +45,7 @@ class GradeStructureManagementScreen extends ConsumerWidget {
                   AppButton.primary(
                     label: localizations.addGrade,
                     svgPath: Assets.icons.addNewIconFigma.path,
-                    onPressed: () {},
+                    onPressed: () => GradeLevelDialog.show(context),
                   ),
                 ],
               ),
