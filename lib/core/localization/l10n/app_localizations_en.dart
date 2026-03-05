@@ -63,8 +63,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeBack => 'Welcome Back';
 
   @override
-  String get enterCredentialsToAccess =>
-      'Enter your credentials to access your account.';
+  String get enterCredentialsToAccess => 'Enter your credentials to access your account.';
 
   @override
   String get orSignInWith => 'OR SIGN IN WITH';
@@ -76,8 +75,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPasswordTitle => 'FORGOT PASSWORD?';
 
   @override
-  String get forgotPasswordDialogMessage =>
-      'To reset your password, please contact your system administrator.';
+  String get forgotPasswordDialogMessage => 'To reset your password, please contact your system administrator.';
 
   @override
   String get signInBtn => 'SIGN IN';
@@ -86,8 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get endToEndEncrypted => 'END-TO-END ENCRYPTED';
 
   @override
-  String get copyrightInfo =>
-      '2026 DIGIFY INTELLIGENCE SYSTEMS.\nCORE: KUWAIT.';
+  String get copyrightInfo => '2026 DIGIFY INTELLIGENCE SYSTEMS.\nCORE: KUWAIT.';
 
   @override
   String get signInToAccessDashboard => 'Sign in to access your HR dashboard';
@@ -115,33 +112,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completeHrSuite => 'Complete HR Suite';
 
   @override
-  String get completeHrSuiteDescription =>
-      '19 integrated modules managing all aspects of human resources';
+  String get completeHrSuiteDescription => '19 integrated modules managing all aspects of human resources';
 
   @override
   String get advancedSecurity => 'Advanced Security';
 
   @override
-  String get advancedSecurityDescription =>
-      'Role-based access control with 60+ security functions';
+  String get advancedSecurityDescription => 'Role-based access control with 60+ security functions';
 
   @override
   String get kuwaitCompliance => 'Kuwait Compliance';
 
   @override
-  String get kuwaitComplianceDescription =>
-      'Fully compliant with Kuwait Labor Law No. 6/2010';
+  String get kuwaitComplianceDescription => 'Fully compliant with Kuwait Labor Law No. 6/2010';
 
   @override
   String get realTimeAnalytics => 'Real-time Analytics';
 
   @override
-  String get realTimeAnalyticsDescription =>
-      'Comprehensive reporting and analytics dashboard';
+  String get realTimeAnalyticsDescription => 'Comprehensive reporting and analytics dashboard';
 
   @override
-  String get invalidCredentials =>
-      'Invalid email or password. Please try again.';
+  String get invalidCredentials => 'Invalid email or password. Please try again.';
 
   @override
   String get connectionError => 'Connection error. Please try again.';
@@ -664,8 +656,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRecentActivity => 'No recent activity';
 
   @override
-  String get userRoleAssignmentSubtitle =>
-      'Assign and manage security roles for users';
+  String get userRoleAssignmentSubtitle => 'Assign and manage security roles for users';
 
   @override
   String get usersWithRoles => 'Users with Roles';
@@ -698,8 +689,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actions => 'Actions';
 
   @override
-  String get roleManagementSubtitle =>
-      'Manage roles, permissions, and access levels';
+  String get roleManagementSubtitle => 'Manage roles, permissions, and access levels';
 
   @override
   String get dutyRolesOnly => 'Duty Roles';
@@ -824,8 +814,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update => 'Update';
 
   @override
-  String get roleHierarchySubtitle =>
-      'View and manage role hierarchy structure';
+  String get roleHierarchySubtitle => 'View and manage role hierarchy structure';
 
   @override
   String get totalNodes => 'Total Nodes';
@@ -897,8 +886,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addRole => 'Add Role';
 
   @override
-  String get roleTemplatesSubtitle =>
-      'Pre-configured role templates for quick setup';
+  String get roleTemplatesSubtitle => 'Pre-configured role templates for quick setup';
 
   @override
   String get totalTemplates => 'Total Templates';
@@ -1012,8 +1000,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createTemplateButton => 'Create Template';
 
   @override
-  String get securityPoliciesSubtitle =>
-      'Configure and manage security policies';
+  String get securityPoliciesSubtitle => 'Configure and manage security policies';
 
   @override
   String get activePolicies => 'Active Policies';
@@ -1052,8 +1039,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get creatingPolicy => 'Creating Policy';
 
   @override
-  String get policyInstructions =>
-      'Define security policies to enforce access control and compliance';
+  String get policyInstructions => 'Define security policies to enforce access control and compliance';
 
   @override
   String get policyName => 'Policy Name';
@@ -1110,8 +1096,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createPolicyButton => 'Create Policy';
 
   @override
-  String get dataAccessSetsSubtitle =>
-      'Manage data access sets and permissions';
+  String get dataAccessSetsSubtitle => 'Manage data access sets and permissions';
 
   @override
   String get totalDataAccessSets => 'Total Data Access Sets';
@@ -1197,8 +1182,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDataAccessSetsFound => 'No data access sets found';
 
   @override
-  String get tryAdjustingFilters =>
-      'Try adjusting your filters or search criteria';
+  String get tryAdjustingFilters => 'Try adjusting your filters or search criteria';
 
   @override
   String get noPoliciesFound => 'No policies found';
@@ -1216,8 +1200,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noPrivilegesFound => 'No privileges found';
 
   @override
-  String get functionPrivilegesSubtitle =>
-      'Manage function-level security privileges';
+  String get functionPrivilegesSubtitle => 'Manage function-level security privileges';
 
   @override
   String get createPrivilege => 'Create Privilege';
@@ -1573,8 +1556,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get demographicsAndIdentity => 'Demographics & Identity';
 
   @override
-  String get demographicsAndIdentitySubtitle =>
-      'Personal demographics and identification documents.';
+  String get demographicsAndIdentitySubtitle => 'Personal demographics and identification documents.';
 
   @override
   String get demographics => 'Demographics';
@@ -1622,8 +1604,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addressAndEmergencyContact => 'Address & Emergency Contact';
 
   @override
-  String get addressAndEmergencyContactSubtitle =>
-      'Residential address and emergency contact information';
+  String get addressAndEmergencyContactSubtitle => 'Residential address and emergency contact information';
 
   @override
   String get residentialAddress => 'Residential Address';
@@ -1647,8 +1628,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get assignmentInformation => 'Assignment Information';
 
   @override
-  String get assignmentInformationSubtitle =>
-      'Organizational structure and job details.';
+  String get assignmentInformationSubtitle => 'Organizational structure and job details.';
 
   @override
   String get assignmentStartDate => 'Assignment Start Date';
@@ -1717,8 +1697,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeManagementWorkSchedule => 'Time Management - Work Schedule';
 
   @override
-  String get timeManagementWorkScheduleSubtitle =>
-      'Assign work schedule for attendance tracking';
+  String get timeManagementWorkScheduleSubtitle => 'Assign work schedule for attendance tracking';
 
   @override
   String get workScheduleAssignment => 'Work Schedule Assignment';
@@ -1742,8 +1721,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get compensationAndBenefits => 'Compensation & Benefits';
 
   @override
-  String get compensationAndBenefitsSubtitle =>
-      'Salary structure and allowances';
+  String get compensationAndBenefitsSubtitle => 'Salary structure and allowances';
 
   @override
   String get basicSalaryKwd => 'Basic Salary (KWD)';
@@ -1790,8 +1768,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bankingInformation => 'Banking Information';
 
   @override
-  String get bankingInformationSubtitle =>
-      'Bank account details for salary transfer';
+  String get bankingInformationSubtitle => 'Bank account details for salary transfer';
 
   @override
   String get bankName => 'Bank Name';
@@ -1821,8 +1798,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentsAndCompliance => 'Documents & Compliance';
 
   @override
-  String get documentsAndComplianceSubtitle =>
-      'Document expiry dates and compliance tracking';
+  String get documentsAndComplianceSubtitle => 'Document expiry dates and compliance tracking';
 
   @override
   String get documentExpiryDates => 'Document Expiry Dates';
@@ -1861,8 +1837,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewAndConfirm => 'Review & Confirm';
 
   @override
-  String get reviewAndConfirmSubtitle =>
-      'Review all information before creating the employee record';
+  String get reviewAndConfirmSubtitle => 'Review all information before creating the employee record';
 
   @override
   String get personalInformation => 'Personal Information';
@@ -1892,12 +1867,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewPermanent => 'Permanent';
 
   @override
-  String get addEmployeeStepContentPlaceholder =>
-      'Content for this step coming soon.';
+  String get addEmployeeStepContentPlaceholder => 'Content for this step coming soon.';
 
   @override
-  String get addEmployeeFillRequiredFields =>
-      'Please fill all required fields.';
+  String get addEmployeeFillRequiredFields => 'Please fill all required fields.';
 
   @override
   String get addEmployeeCreatedSuccess => 'Employee created successfully.';
@@ -1966,19 +1939,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageEnterpriseStructure => 'Manage Enterprise Structure';
 
   @override
-  String get configureManageHierarchy =>
-      'Configure and manage your organizational hierarchy structures';
+  String get configureManageHierarchy => 'Configure and manage your organizational hierarchy structures';
 
   @override
-  String get configureManageHierarchyAr =>
-      'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
+  String get configureManageHierarchyAr => 'إدارة وتكوين هياكل التسلسل الإداري للمؤسسة';
 
   @override
   String get currentlyActiveStructure => 'Currently Active Structure';
 
   @override
-  String get standardKuwaitCorporateStructure =>
-      'Standard Kuwait Corporate Structure';
+  String get standardKuwaitCorporateStructure => 'Standard Kuwait Corporate Structure';
 
   @override
   String get traditionalHierarchicalStructure =>
@@ -2053,8 +2023,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get flatOrganizationStructure => 'Flat Organization Structure';
 
   @override
-  String get minimalHierarchy =>
-      'Minimal hierarchy for startups and agile teams - Company and Department only';
+  String get minimalHierarchy => 'Minimal hierarchy for startups and agile teams - Company and Department only';
 
   @override
   String get currentlyActiveStructureMessage =>
@@ -2133,12 +2102,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phone => 'Phone';
 
   @override
-  String get viewEnterpriseStructureConfiguration =>
-      'View Enterprise Structure Configuration';
+  String get viewEnterpriseStructureConfiguration => 'View Enterprise Structure Configuration';
 
   @override
-  String get reviewOrganizationalHierarchy =>
-      'Review organizational hierarchy levels and sequence';
+  String get reviewOrganizationalHierarchy => 'Review organizational hierarchy levels and sequence';
 
   @override
   String get structureConfigurationActive => 'Structure Configuration Active';
@@ -2155,12 +2122,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Company is mandatory and must be the top level - it cannot be disabled or reordered';
 
   @override
-  String get enableDisableLevelsInstruction =>
-      'Enable or disable levels based on your organizational needs';
+  String get enableDisableLevelsInstruction => 'Enable or disable levels based on your organizational needs';
 
   @override
-  String get useArrowsInstruction =>
-      'Use the up/down arrows to change the hierarchy sequence';
+  String get useArrowsInstruction => 'Use the up/down arrows to change the hierarchy sequence';
 
   @override
   String get orderDeterminesRelationshipsInstruction =>
@@ -2208,16 +2173,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get topLevel => 'Top Level';
 
   @override
-  String get editEnterpriseStructureConfiguration =>
-      'Edit Enterprise Structure Configuration';
+  String get editEnterpriseStructureConfiguration => 'Edit Enterprise Structure Configuration';
 
   @override
-  String get defineOrganizationalHierarchy =>
-      'Define your organizational hierarchy levels and sequence';
+  String get defineOrganizationalHierarchy => 'Define your organizational hierarchy levels and sequence';
 
   @override
-  String get createEnterpriseStructureConfiguration =>
-      'Create Enterprise Structure Configuration';
+  String get createEnterpriseStructureConfiguration => 'Create Enterprise Structure Configuration';
 
   @override
   String get noConfigurationFound => 'No Configuration Found';
@@ -2230,12 +2192,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get structureName => 'Structure Name';
 
   @override
-  String get structureNamePlaceholder =>
-      'e.g., Standard Corporate Structure, Simplified Structure';
+  String get structureNamePlaceholder => 'e.g., Standard Corporate Structure, Simplified Structure';
 
   @override
-  String get descriptionPlaceholder =>
-      'Describe this structure configuration and when it should be used...';
+  String get descriptionPlaceholder => 'Describe this structure configuration and when it should be used...';
 
   @override
   String get manageComponentValues => 'Manage Component Values';
@@ -2245,12 +2205,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Create and manage organizational components (Company, Division, Business Unit, Department, Section)';
 
   @override
-  String get manageOrganizationalHierarchy =>
-      'Manage organizational hierarchy and structure';
+  String get manageOrganizationalHierarchy => 'Manage organizational hierarchy and structure';
 
   @override
-  String get manageOrganizationalHierarchyAr =>
-      'إدارة الهيكل التنظيمي والتسلسل الإداري';
+  String get manageOrganizationalHierarchyAr => 'إدارة الهيكل التنظيمي والتسلسل الإداري';
 
   @override
   String get structureConfiguration => 'Structure Configuration';
@@ -2271,24 +2229,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkUploadInstructionsTitle => 'Upload Instructions';
 
   @override
-  String get bulkUploadInstructionDownloadTemplate =>
-      'Download the template file to see the required format';
+  String get bulkUploadInstructionDownloadTemplate => 'Download the template file to see the required format';
 
   @override
   String get bulkUploadInstructionRequiredFields =>
       'Fill in all required fields: Type, Code, Name, Name Arabic, Parent Code (if applicable)';
 
   @override
-  String get bulkUploadInstructionOptionalFields =>
-      'Optional fields: Manager ID, Cost Center, Location, Description';
+  String get bulkUploadInstructionOptionalFields => 'Optional fields: Manager ID, Cost Center, Location, Description';
 
   @override
-  String get bulkUploadInstructionParentCode =>
-      'Parent Code must match an existing component code';
+  String get bulkUploadInstructionParentCode => 'Parent Code must match an existing component code';
 
   @override
-  String get bulkUploadInstructionFileFormat =>
-      'File format: Excel (.xlsx) or CSV (.csv)';
+  String get bulkUploadInstructionFileFormat => 'File format: Excel (.xlsx) or CSV (.csv)';
 
   @override
   String get bulkUploadInstructionRowLimit => 'Maximum 1000 rows per upload';
@@ -2303,12 +2257,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkUploadStepUploadLabel => 'Step 2: Upload Filled Template';
 
   @override
-  String get bulkUploadDropHint =>
-      'Drag and drop your file here, or click to browse';
+  String get bulkUploadDropHint => 'Drag and drop your file here, or click to browse';
 
   @override
-  String get bulkUploadSupportedFormats =>
-      'Supports: .xlsx, .csv (Max size: 10MB)';
+  String get bulkUploadSupportedFormats => 'Supports: .xlsx, .csv (Max size: 10MB)';
 
   @override
   String get bulkUploadTemplatePreview => 'Template Format Preview';
@@ -2425,8 +2377,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noComponentsFound => 'No components found';
 
   @override
-  String get confirmDeleteComponent =>
-      'Are you sure you want to delete this component?';
+  String get confirmDeleteComponent => 'Are you sure you want to delete this component?';
 
   @override
   String get componentTypeRequired => 'Component type is required';
@@ -2559,8 +2510,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get companyManagement => 'Company Management';
 
   @override
-  String get manageCompanyInformation =>
-      'Manage company information and organizational entities';
+  String get manageCompanyInformation => 'Manage company information and organizational entities';
 
   @override
   String get addCompany => 'Add Company';
@@ -2578,8 +2528,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get compliant => 'Compliant';
 
   @override
-  String get searchCompaniesPlaceholder =>
-      'Search by company name, code, or registration number...';
+  String get searchCompaniesPlaceholder => 'Search by company name, code, or registration number...';
 
   @override
   String get editCompany => 'Edit Company';
@@ -2660,8 +2609,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get divisionManagement => 'Division Management';
 
   @override
-  String get manageDivisionsSubtitle =>
-      'Manage organizational divisions across companies';
+  String get manageDivisionsSubtitle => 'Manage organizational divisions across companies';
 
   @override
   String get addDivision => 'Add Division';
@@ -2676,8 +2624,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalBudget => 'Total Budget';
 
   @override
-  String get searchDivisionsPlaceholder =>
-      'Search by division name, code, or head of division...';
+  String get searchDivisionsPlaceholder => 'Search by division name, code, or head of division...';
 
   @override
   String get allCompanies => 'All Companies';
@@ -2767,8 +2714,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintAnnualBudgetKwd => '0';
 
   @override
-  String get hintDivisionDescription =>
-      'Brief description of the division\'s role and responsibilities';
+  String get hintDivisionDescription => 'Brief description of the division\'s role and responsibilities';
 
   @override
   String get divisionDetails => 'Division Details';
@@ -2786,8 +2732,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get businessUnitManagement => 'Business Unit Management';
 
   @override
-  String get manageBusinessUnitsSubtitle =>
-      'Manage business units within divisions';
+  String get manageBusinessUnitsSubtitle => 'Manage business units within divisions';
 
   @override
   String get addBusinessUnit => 'Add Business Unit';
@@ -2799,8 +2744,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activeUnits => 'Active Units';
 
   @override
-  String get searchBusinessUnitsPlaceholder =>
-      'Search by business unit name, code, or head...';
+  String get searchBusinessUnitsPlaceholder => 'Search by business unit name, code, or head...';
 
   @override
   String get allDivisions => 'All Divisions';
@@ -2854,8 +2798,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintBusinessUnitFocus => 'e.g., Treasury & Investments';
 
   @override
-  String get hintBusinessUnitDescription =>
-      'Brief description of the business unit';
+  String get hintBusinessUnitDescription => 'Brief description of the business unit';
 
   @override
   String get businessUnitDetails => 'Business Unit Details';
@@ -2864,8 +2807,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get departmentManagement => 'Department Management';
 
   @override
-  String get manageDepartmentsSubtitle =>
-      'Manage departments within business units';
+  String get manageDepartmentsSubtitle => 'Manage departments within business units';
 
   @override
   String get addDepartment => 'Add Department';
@@ -2880,8 +2822,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalBudgetDept => 'Total Budget';
 
   @override
-  String get searchDepartmentsPlaceholder =>
-      'Search by department name, code, or head...';
+  String get searchDepartmentsPlaceholder => 'Search by department name, code, or head...';
 
   @override
   String get allBusinessUnits => 'All Business Units';
@@ -2944,8 +2885,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionManagement => 'Section Management';
 
   @override
-  String get manageSectionsSubtitle =>
-      'Organize and manage organizational sections';
+  String get manageSectionsSubtitle => 'Organize and manage organizational sections';
 
   @override
   String get addSection => 'Add Section';
@@ -2978,12 +2918,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get managePositions => 'Manage Positions';
 
   @override
-  String get managePositionsJobFamilies =>
-      'Manage positions, job families, levels, and organizational structure';
+  String get managePositionsJobFamilies => 'Manage positions, job families, levels, and organizational structure';
 
   @override
-  String get managePositionsJobFamiliesAr =>
-      'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
+  String get managePositionsJobFamiliesAr => 'إدارة الوظائف والعائلات الوظيفية والمستويات والهيكل التنظيمي';
 
   @override
   String get totalPositions => 'Total Positions';
@@ -3220,8 +3158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amount => 'Amount';
 
   @override
-  String get searchPositionsPlaceholder =>
-      'Search positions by title, code, or Arabic name...';
+  String get searchPositionsPlaceholder => 'Search positions by title, code, or Arabic name...';
 
   @override
   String get allDepartments => 'All Departments';
@@ -3263,12 +3200,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get titleArabic => 'Title (Arabic)';
 
   @override
-  String get reportingStructureDescription =>
-      'Tabular view of position reporting relationships and hierarchy';
+  String get reportingStructureDescription => 'Tabular view of position reporting relationships and hierarchy';
 
   @override
-  String get reportingStructureDescriptionAr =>
-      'عرض جدولي لهيكل التقارير والتسلسل الوظيفي';
+  String get reportingStructureDescriptionAr => 'عرض جدولي لهيكل التقارير والتسلسل الوظيفي';
 
   @override
   String get exportTable => 'Export Table';
@@ -3359,12 +3294,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobLevelDeletedSuccessfully => 'Job level deleted successfully';
 
   @override
-  String get errorCreatingJobLevel =>
-      'An error occurred while creating the job level';
+  String get errorCreatingJobLevel => 'An error occurred while creating the job level';
 
   @override
-  String get errorDeletingJobLevel =>
-      'An error occurred while deleting the job level';
+  String get errorDeletingJobLevel => 'An error occurred while deleting the job level';
 
   @override
   String get timeManagementTitle => 'Time Management';
@@ -3442,12 +3375,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tmFilterRejected => 'Rejected';
 
   @override
-  String get manageShiftsWorkPatterns =>
-      'Manage shifts, work patterns, schedules, and assignments';
+  String get manageShiftsWorkPatterns => 'Manage shifts, work patterns, schedules, and assignments';
 
   @override
-  String get manageShiftsWorkPatternsAr =>
-      'إدارة الورديات وأنماط العمل والجداول والتعيينات';
+  String get manageShiftsWorkPatternsAr => 'إدارة الورديات وأنماط العمل والجداول والتعيينات';
 
   @override
   String get shifts => 'Shifts';
@@ -3499,19 +3430,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'Cannot delete organization structure: This structure is referenced by other records in the database.';
 
   @override
-  String get structureDeletedSuccess =>
-      'Organization structure deleted successfully.';
+  String get structureDeletedSuccess => 'Organization structure deleted successfully.';
 
   @override
-  String get confirmDeleteStructure =>
-      'Are you sure you want to delete this structure?';
+  String get confirmDeleteStructure => 'Are you sure you want to delete this structure?';
 
   @override
   String get activateStructureTitle => 'Activate structure';
 
   @override
-  String get confirmActivateStructure =>
-      'Do you want to set this structure as the active organization structure?';
+  String get confirmActivateStructure => 'Do you want to set this structure as the active organization structure?';
 
   @override
   String structureHasOrgUnits(int count) {
@@ -3534,15 +3462,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveBalance => 'Leave Balance';
 
   @override
-  String get leaveBalanceDescription =>
-      'View and manage employee leave balances and accruals';
+  String get leaveBalanceDescription => 'View and manage employee leave balances and accruals';
 
   @override
   String get myLeaveBalance => 'My Leave Balance';
 
   @override
-  String get myLeaveBalanceDescription =>
-      'View your leave balances, carry forward, and forfeit information';
+  String get myLeaveBalanceDescription => 'View your leave balances, carry forward, and forfeit information';
 
   @override
   String get applyLeave => 'Apply Leave';
@@ -3587,8 +3513,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestEncashmentButton => 'Request →';
 
   @override
-  String get encashmentDescription =>
-      'You can request to encash unused leave days for monetary compensation';
+  String get encashmentDescription => 'You can request to encash unused leave days for monetary compensation';
 
   @override
   String atRiskDescription(String date) {
@@ -3681,27 +3606,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveCalendarDescription => 'Team absence calendar';
 
   @override
-  String get manageEmployeeLeaveRequests =>
-      'Manage employee leave requests according to Kuwait Labor Law';
+  String get manageEmployeeLeaveRequests => 'Manage employee leave requests according to Kuwait Labor Law';
 
   @override
   String get newLeaveRequest => 'New Leave Request';
 
   @override
-  String get kuwaitLaborLawLeaveEntitlements =>
-      'Kuwait Labor Law Leave Entitlements';
+  String get kuwaitLaborLawLeaveEntitlements => 'Kuwait Labor Law Leave Entitlements';
 
   @override
-  String get annualLeaveEntitlement =>
-      '30 days per year after 1 year of service';
+  String get annualLeaveEntitlement => '30 days per year after 1 year of service';
 
   @override
-  String get sickLeaveEntitlement =>
-      '15 days full pay + 10 days half pay + 10 days unpaid';
+  String get sickLeaveEntitlement => '15 days full pay + 10 days half pay + 10 days unpaid';
 
   @override
-  String get maternityLeaveEntitlement =>
-      '70 days total (30 before, 40 after delivery)';
+  String get maternityLeaveEntitlement => '70 days total (30 before, 40 after delivery)';
 
   @override
   String get emergencyLeaveEntitlement => '5 days per year for emergencies';
@@ -3764,8 +3684,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get approveTimesheetConfirmTitle => 'Approve timesheet';
 
   @override
-  String get approveTimesheetConfirmMessage =>
-      'Are you sure you want to approve this timesheet?';
+  String get approveTimesheetConfirmMessage => 'Are you sure you want to approve this timesheet?';
 
   @override
   String get rejectTimesheetConfirmTitle => 'Reject timesheet';
@@ -3778,8 +3697,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get approveOvertimeConfirmTitle => 'Approve overtime request';
 
   @override
-  String get approveOvertimeConfirmMessage =>
-      'Are you sure you want to approve this overtime request?';
+  String get approveOvertimeConfirmMessage => 'Are you sure you want to approve this overtime request?';
 
   @override
   String get rejectOvertimeConfirmTitle => 'Reject overtime request';
@@ -3796,8 +3714,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to cancel this draft? This action cannot be undone.';
 
   @override
-  String get overtimeDraftCancelled =>
-      'Draft overtime request cancelled successfully';
+  String get overtimeDraftCancelled => 'Draft overtime request cancelled successfully';
 
   @override
   String get totalRequests => 'Total Requests';
@@ -3806,23 +3723,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leaveRequestGuidelines => 'Leave Request Guidelines';
 
   @override
-  String get submitRequests3DaysAdvance =>
-      '• Submit requests at least 3 days in advance for annual leave';
+  String get submitRequests3DaysAdvance => '• Submit requests at least 3 days in advance for annual leave';
 
   @override
-  String get sickLeaveRequiresCertificate =>
-      '• Sick leave requires medical certificate if more than 3 days';
+  String get sickLeaveRequiresCertificate => '• Sick leave requires medical certificate if more than 3 days';
 
   @override
-  String get ensureWorkHandover =>
-      '• Ensure work handover is completed before leave starts';
+  String get ensureWorkHandover => '• Ensure work handover is completed before leave starts';
 
   @override
   String get typeToSearchEmployees => 'Type to search employees...';
 
   @override
-  String get searchByNameOrEmployeeNumber =>
-      'Search by name or employee number';
+  String get searchByNameOrEmployeeNumber => 'Search by name or employee number';
 
   @override
   String get search => 'Search';
@@ -3866,8 +3779,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get next => 'Next';
 
   @override
-  String get completeAllStepsToSubmit =>
-      'Complete all steps to submit your leave application';
+  String get completeAllStepsToSubmit => 'Complete all steps to submit your leave application';
 
   @override
   String get leaveDetails => 'Leave Details';
@@ -3882,8 +3794,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reasonForLeave => 'Reason for Leave';
 
   @override
-  String get pleaseProvideDetailedReason =>
-      'Please provide a detailed reason for your leave request...';
+  String get pleaseProvideDetailedReason => 'Please provide a detailed reason for your leave request...';
 
   @override
   String charactersCount(int count) {
@@ -3894,23 +3805,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workDelegatedTo => 'Work Delegated To';
 
   @override
-  String get selectColleagueToHandleWork =>
-      'Select colleague to handle your work...';
+  String get selectColleagueToHandleWork => 'Select colleague to handle your work...';
 
   @override
   String get selectColleagueWhoWillHandle =>
       'Select a colleague who will handle your responsibilities during your absence';
 
   @override
-  String get contactInformationDuringLeave =>
-      'Contact Information During Leave';
+  String get contactInformationDuringLeave => 'Contact Information During Leave';
 
   @override
   String get addressDuringLeave => 'Address During Leave';
 
   @override
-  String get enterAddressOrLocation =>
-      'Enter your address or location during leave...';
+  String get enterAddressOrLocation => 'Enter your address or location during leave...';
 
   @override
   String get contactPhoneNumber => 'Contact Phone Number';
@@ -3928,8 +3836,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get additionalNotes => 'Additional Notes';
 
   @override
-  String get anyAdditionalInformation =>
-      'Any additional information or special considerations...';
+  String get anyAdditionalInformation => 'Any additional information or special considerations...';
 
   @override
   String get supportingDocuments => 'Supporting Documents';
@@ -3944,15 +3851,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clickToUploadOrDragDrop => 'Click to upload or drag and drop';
 
   @override
-  String get pdfDocDocxJpgPngUpTo10MB =>
-      'PDF, DOC, DOCX, JPG, PNG up to 10MB each';
+  String get pdfDocDocxJpgPngUpTo10MB => 'PDF, DOC, DOCX, JPG, PNG up to 10MB each';
 
   @override
   String get requiredDocuments => 'Required Documents:';
 
   @override
-  String get supportingDocumentsIfApplicable =>
-      '• Supporting documents (if applicable)';
+  String get supportingDocumentsIfApplicable => '• Supporting documents (if applicable)';
 
   @override
   String get requestSummary => 'Request Summary';
@@ -3991,8 +3896,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamLeaveRiskDashboard => 'Team Leave Risk Dashboard';
 
   @override
-  String get monitorAndManageTeamMembersAtRisk =>
-      'Monitor and manage team members at risk of leave forfeit';
+  String get monitorAndManageTeamMembersAtRisk => 'Monitor and manage team members at risk of leave forfeit';
 
   @override
   String get teamMembers => 'Team Members';
@@ -4075,8 +3979,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overtimeManagment => 'Overtime Management';
 
   @override
-  String get overtimeManagmentDescription =>
-      'Track and manage overtime hours and approvals';
+  String get overtimeManagmentDescription => 'Track and manage overtime hours and approvals';
 
   @override
   String get requestOvertime => 'Request Overtime';

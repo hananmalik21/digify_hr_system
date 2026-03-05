@@ -39,12 +39,10 @@ class GradeLevelFormState {
     return GradeLevelFormState(
       gradeIdentifier: gradeIdentifier ?? this.gradeIdentifier,
       progressionSteps: progressionSteps ?? this.progressionSteps,
-      institutionalDescription:
-          institutionalDescription ?? this.institutionalDescription,
+      institutionalDescription: institutionalDescription ?? this.institutionalDescription,
       minSalary: minSalary ?? this.minSalary,
       maxSalary: maxSalary ?? this.maxSalary,
-      stepIncrementalGovernance:
-          stepIncrementalGovernance ?? this.stepIncrementalGovernance,
+      stepIncrementalGovernance: stepIncrementalGovernance ?? this.stepIncrementalGovernance,
       isLoading: isLoading ?? this.isLoading,
       clearError: clearError ?? this.clearError,
       error: error ?? this.error,
@@ -96,21 +94,15 @@ class GradeLevelDialogNotifier extends StateNotifier<GradeLevelFormState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      // TODO: Implement API call
       await Future.delayed(const Duration(seconds: 2));
 
       state = state.copyWith(isLoading: false, clearError: true);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-        clearError: false,
-      );
+      state = state.copyWith(isLoading: false, error: e.toString(), clearError: false);
     }
   }
 }
 
-final gradeLevelDialogProvider =
-    StateNotifierProvider<GradeLevelDialogNotifier, GradeLevelFormState>(
-      (ref) => GradeLevelDialogNotifier(),
-    );
+final gradeLevelDialogProvider = StateNotifierProvider<GradeLevelDialogNotifier, GradeLevelFormState>(
+  (ref) => GradeLevelDialogNotifier(),
+);

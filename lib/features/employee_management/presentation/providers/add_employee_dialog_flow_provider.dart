@@ -580,8 +580,9 @@ class AddEmployeeDialogFlow {
       final item = dto.toDomain();
       final listNotifier = _ref.read(manageEmployeesListProvider.notifier);
       final listState = _ref.read(manageEmployeesListProvider);
-      if (listState.lastEnterpriseId == null ||
-          (data['enterprise_id'] as num?)?.toInt() == listState.lastEnterpriseId) {
+      final enterpriseMatches =
+          listState.lastEnterpriseId == null || (data['enterprise_id'] as num?)?.toInt() == listState.lastEnterpriseId;
+      if (enterpriseMatches && listState.hasExplicitSearch) {
         listNotifier.prependEmployee(item);
       }
     } catch (_) {}

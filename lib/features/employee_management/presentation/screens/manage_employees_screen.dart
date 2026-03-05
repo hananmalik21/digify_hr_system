@@ -78,10 +78,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 retryLabel: localizations.retry,
                 onRetry: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
               )
-            else if (effectiveEnterpriseId != null &&
-                listState.searchQuery == null &&
-                listState.items.isEmpty &&
-                !listState.isLoading)
+            else if (!listState.hasExplicitSearch)
               SizedBox(
                 height: 320.h,
                 child: EmptyStateWidget(icon: Icons.search_rounded, title: localizations.searchToFindEmployeesTitle),

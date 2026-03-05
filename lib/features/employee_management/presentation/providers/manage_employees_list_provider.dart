@@ -62,6 +62,10 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
 
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10, String? search}) async {
     final effectiveSearch = search ?? state.searchQuery;
+    if (effectiveSearch == null || effectiveSearch.trim().isEmpty) {
+      state = state.copyWith(items: [], pagination: null, searchQuery: null, isLoading: false);
+      return;
+    }
     state = state.copyWith(
       isLoading: true,
       error: null,
@@ -110,12 +114,14 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   Future<void> goToPage(int page, {int pageSize = 10}) async {
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
+    if (state.searchQuery == null || state.searchQuery!.trim().isEmpty) return;
     await loadPage(enterpriseId, page, pageSize: pageSize);
   }
 
   Future<void> refresh() async {
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
+    if (state.searchQuery == null || state.searchQuery!.trim().isEmpty) return;
     await loadPage(enterpriseId, state.currentPage);
   }
 
