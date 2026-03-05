@@ -1,7 +1,6 @@
 import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_levels_provider.dart'
     show manageComponentValuesActiveLevelsProvider;
-import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_structure_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_screen_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_tree_provider.dart';
@@ -36,7 +35,6 @@ class ManageComponentValuesEnterpriseNotifier extends StateNotifier<int?> {
     await Future.wait([
       _ref.read(manageComponentValuesActiveLevelsProvider.notifier).refresh(),
       _ref.read(orgUnitsTreeProvider.notifier).refresh(),
-      _ref.read(activeStructureStatsNotifierProvider.notifier).refresh(),
     ]);
     _ref.invalidate(orgUnitsProvider);
     final levelCode = _ref.read(manageComponentValuesScreenProvider).selectedLevelCode;
