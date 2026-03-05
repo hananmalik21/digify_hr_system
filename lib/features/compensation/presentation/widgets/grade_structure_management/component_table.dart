@@ -13,6 +13,7 @@ import '../../../../../core/widgets/common/digify_capsule.dart';
 import '../../../../../core/widgets/common/scrollable_wrapper.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../../../domain/models/grade_structure_management/grade_record.dart';
+import '../../dialogs/grade_structure_management/grade_level_dialog.dart';
 import '../../providers/grade_structure_management/grade_structure_managment_provider.dart';
 
 class ComponentGradeStructureTable extends ConsumerWidget {
@@ -115,7 +116,13 @@ class ComponentGradeStructureTable extends ConsumerWidget {
                               (record) => _buildTableDataRow(
                                 context,
                                 record: record,
-                                onEdit: () {},
+                                onEdit: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        GradeLevelDialog(gradeRecord: record),
+                                  );
+                                },
                               ),
                             )
                             .toList(),
