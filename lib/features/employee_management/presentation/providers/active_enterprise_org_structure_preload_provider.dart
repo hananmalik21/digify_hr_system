@@ -15,10 +15,10 @@ void _preloadOrgStructureForEnterprise(Ref ref, int enterpriseId) {
 final activeEnterpriseOrgStructurePreloadProvider = Provider<void>((ref) {
   final current = ref.read(activeEnterpriseIdProvider);
   if (current != null) {
-    _preloadOrgStructureForEnterprise(ref, current);
+    Future.microtask(() => _preloadOrgStructureForEnterprise(ref, current));
   }
   ref.listen<int?>(activeEnterpriseIdProvider, (previous, next) {
     if (next == null) return;
-    _preloadOrgStructureForEnterprise(ref, next);
+    Future.microtask(() => _preloadOrgStructureForEnterprise(ref, next));
   });
 });

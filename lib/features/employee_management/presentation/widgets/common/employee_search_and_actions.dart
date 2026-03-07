@@ -105,12 +105,6 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                   svgPath: Assets.icons.bulkUploadIconFigma.path,
                   backgroundColor: AppColors.shiftUploadButton,
                 ),
-                Gap(12.w),
-                AppButton(
-                  label: localizations.refresh,
-                  onPressed: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
-                  svgPath: Assets.icons.refreshGray.path,
-                ),
               ],
             ),
           ),

@@ -28,16 +28,13 @@ final activeStructureStatsNotifierProvider =
 class ActiveStructureStatsNotifier extends AutoDisposeAsyncNotifier<ActiveStructureStats?> {
   @override
   Future<ActiveStructureStats?> build() async {
-    return null;
+    final enterpriseId = ref.watch(manageComponentValuesEnterpriseIdProvider);
+    if (enterpriseId == null) return null;
+    final useCase = ref.read(getActiveStructureStatsUseCaseProvider);
+    return useCase(enterpriseId: enterpriseId);
   }
 
   Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard<ActiveStructureStats?>(() async {
-      final enterpriseId = ref.read(manageComponentValuesEnterpriseIdProvider);
-      if (enterpriseId == null) return null;
-      final useCase = ref.read(getActiveStructureStatsUseCaseProvider);
-      return useCase(enterpriseId: enterpriseId);
-    });
+    ref.invalidateSelf();
   }
 }

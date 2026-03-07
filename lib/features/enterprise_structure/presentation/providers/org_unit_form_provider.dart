@@ -1,6 +1,8 @@
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_form_data.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_structure_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_tree_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -157,6 +159,8 @@ class OrgUnitFormNotifier extends StateNotifier<OrgUnitFormState> {
       } else {
         ref.read(orgUnitsProvider(levelCode).notifier).refresh();
       }
+      ref.read(activeStructureStatsNotifierProvider.notifier).refresh();
+      ref.read(orgUnitsTreeProvider.notifier).refresh();
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

@@ -20,6 +20,8 @@ class ManageEmployeesListState {
     this.searchQuery,
   });
 
+  bool get hasExplicitSearch => searchQuery != null && searchQuery!.trim().isNotEmpty;
+
   ManageEmployeesListState copyWith({
     List<EmployeeListItem>? items,
     PaginationInfo? pagination,

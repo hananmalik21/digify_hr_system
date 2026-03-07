@@ -5,7 +5,9 @@ import 'package:digify_hr_system/features/enterprise_structure/domain/models/act
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_levels_provider.dart'
     show manageComponentValuesActiveLevelsProvider;
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_structure_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_tree_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/structure_level_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/add_org_unit_dialog.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +58,7 @@ class ManageComponentValuesScreenNotifier extends StateNotifier<ManageComponentV
 
   void selectTreeView() {
     state = state.copyWith(selectedLevel: () => null, selectedLevelCode: '', orgUnitsSearchQuery: '', isTreeView: true);
+    _ref.read(orgUnitsTreeProvider.notifier).refresh();
   }
 
   void selectLevel(ActiveStructureLevel level) {
@@ -104,6 +107,8 @@ class ManageComponentValuesScreenNotifier extends StateNotifier<ManageComponentV
       if (context.mounted) {
         ToastService.success(context, '${unit.orgUnitNameEn} deleted successfully');
         _ref.read(orgUnitsProvider(code).notifier).removeUnitLocal(unit.orgUnitId);
+        _ref.read(activeStructureStatsNotifierProvider.notifier).refresh();
+        _ref.read(orgUnitsTreeProvider.notifier).refresh();
       }
     } catch (e) {
       if (context.mounted) {
