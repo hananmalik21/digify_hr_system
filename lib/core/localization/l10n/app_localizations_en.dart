@@ -3053,10 +3053,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get levelName => 'Level Name';
 
   @override
+  String get levelNameRequired => 'Level name is required';
+
+  @override
   String get levelNameHint => 'e.g., Executive';
 
   @override
   String get jobLevelDescriptionHint => 'Describe the level';
+
+  @override
+  String get jobLevelDescriptionRequired => 'Description is required';
 
   @override
   String get gradeRange => 'Grade Range';
@@ -3075,6 +3081,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobLevelCodeHint => 'e.g., EXEC';
+
+  @override
+  String get jobLevelCodeRequired => 'Job level code is required';
 
   @override
   String get code => 'Code';
@@ -3138,6 +3147,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectGrade => 'Select Grade';
+
+  @override
+  String get pleaseSelectGrades => 'Please select both minimum and maximum grades';
+
+  @override
+  String get minGradeMustBeLessOrEqualMax => 'Minimum grade must be less than or equal to maximum grade';
 
   @override
   String get gradeCategory => 'Grade Category';

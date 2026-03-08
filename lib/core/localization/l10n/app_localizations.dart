@@ -6080,6 +6080,12 @@ abstract class AppLocalizations {
   /// **'Level Name'**
   String get levelName;
 
+  /// No description provided for @levelNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Level name is required'**
+  String get levelNameRequired;
+
   /// No description provided for @levelNameHint.
   ///
   /// In en, this message translates to:
@@ -6091,6 +6097,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Describe the level'**
   String get jobLevelDescriptionHint;
+
+  /// No description provided for @jobLevelDescriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get jobLevelDescriptionRequired;
 
   /// No description provided for @gradeRange.
   ///
@@ -6127,6 +6139,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g., EXEC'**
   String get jobLevelCodeHint;
+
+  /// No description provided for @jobLevelCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job level code is required'**
+  String get jobLevelCodeRequired;
 
   /// No description provided for @code.
   ///
@@ -6253,6 +6271,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Grade'**
   String get selectGrade;
+
+  /// No description provided for @pleaseSelectGrades.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both minimum and maximum grades'**
+  String get pleaseSelectGrades;
+
+  /// No description provided for @minGradeMustBeLessOrEqualMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum grade must be less than or equal to maximum grade'**
+  String get minGradeMustBeLessOrEqualMax;
 
   /// No description provided for @gradeCategory.
   ///
