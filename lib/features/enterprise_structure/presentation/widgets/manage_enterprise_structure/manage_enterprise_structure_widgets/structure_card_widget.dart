@@ -133,7 +133,7 @@ class StructureCardWidget extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.h,
+            spacing: 12.h,
             children: [
               _buildTitleAndBadge(context, isTablet),
               _buildDescription(context, isTablet),
@@ -154,6 +154,7 @@ class StructureCardWidget extends StatelessWidget {
             ],
           ),
         ),
+        Gap(4.w),
         ActionButtonsWidget(
           context: context,
           localizations: localizations,

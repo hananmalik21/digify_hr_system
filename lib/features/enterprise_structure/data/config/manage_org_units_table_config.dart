@@ -3,16 +3,16 @@ class ManageOrgUnitsTableConfig {
 
   static const bool showIndex = false;
   static const bool showOrgStructure = true;
-  static const bool showEnterpriseId = true;
-  static const bool showLevelCode = true;
+  static const bool showEnterpriseId = false;
+  static const bool showLevelCode = false;
   static const bool showOrgUnitCode = true;
   static const bool showNameEn = true;
   static const bool showNameAr = true;
   static const bool showParent = true;
   static const bool showManager = true;
-  static const bool showLocation = true;
+  static const bool showLocation = false;
   static const bool showActive = true;
-  static const bool showLastUpdated = true;
+  static const bool showLastUpdated = false;
   static const bool showActions = true;
 
   static const double indexWidth = 80;

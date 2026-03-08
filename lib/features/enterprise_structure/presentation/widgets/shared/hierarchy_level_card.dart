@@ -73,14 +73,12 @@ class HierarchyLevelCard extends StatelessWidget {
                     if (isMandatory)
                       DigifySquareCapsule(
                         label: localizations.mandatory,
-                        height: 20.h,
                         backgroundColor: isDark ? AppColors.errorBgDark : AppColors.errorBg,
                         textColor: isDark ? AppColors.errorTextDark : AppColors.errorText,
                         borderColor: isDark ? AppColors.errorBorderDark : AppColors.errorBorder,
                       ),
                     DigifySquareCapsule(
                       label: localizations.active,
-                      height: 20.h,
                       backgroundColor: isDark ? AppColors.successBgDark : AppColors.successBg,
                       textColor: isDark ? AppColors.successTextDark : AppColors.successText,
                       borderColor: isDark ? AppColors.successBorderDark : AppColors.successBorder,
