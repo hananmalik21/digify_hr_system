@@ -43,9 +43,13 @@ class ApiEndpoints {
   static const String createEmployee = '$api/create-employee';
   static String updateEmployee(String employeeGuid) => '$api/update-employee/$employeeGuid';
 
-  // Employee (empl) lookups
+  // Employee (empl) lookups - demographics, contract type, etc.
   static const String emplLookupTypes = '$api/empl/lookup-types';
   static const String emplLookupValues = '$api/empl/lookup-values';
+
+  // Enterprise (ent) lookups - grade structure, etc. (GRADE_CATEGORY, GRADE_NUMBER)
+  static const String entLookupTypes = '$api/ent/lookup-types';
+  static const String entLookupValues = '$api/ent/lookup-values';
 
   // Organization Structure Levels (alias for convenience)
   static const String orgStructureLevels = hrOrgStructuresActiveLevels;

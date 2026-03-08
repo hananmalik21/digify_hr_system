@@ -45,7 +45,6 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
   late final TextEditingController englishController;
   late final TextEditingController arabicController;
   late final TextEditingController descriptionController;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -67,36 +66,52 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
   }
 
   Future<void> _handleSubmit() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final l10n = AppLocalizations.of(context)!;
+    final code = codeController.text.trim();
+    final nameEnglish = englishController.text.trim();
+    final description = descriptionController.text.trim();
+
+    if (code.isEmpty) {
+      ToastService.error(context, l10n.jobFamilyCodeRequired);
+      return;
+    }
+    if (nameEnglish.isEmpty) {
+      ToastService.error(context, l10n.jobFamilyNameEnglishRequired);
+      return;
+    }
+    if (description.isEmpty) {
+      ToastService.error(context, l10n.jobFamilyDescriptionRequired);
+      return;
+    }
 
     try {
       if (widget.isEdit && widget.jobFamily != null) {
         await ref.updateJobFamily(
           id: widget.jobFamily!.id,
-          code: codeController.text.trim(),
-          nameEnglish: englishController.text.trim(),
+          code: code,
+          nameEnglish: nameEnglish,
           nameArabic: arabicController.text.trim(),
-          description: descriptionController.text.trim(),
+          description: description,
         );
         if (mounted) {
           context.pop();
-          ToastService.success(context, 'Job family updated successfully', title: 'Success');
+          ToastService.success(context, l10n.jobFamilyUpdatedSuccessfully);
         }
       } else {
         await ref.createJobFamily(
-          code: codeController.text.trim(),
-          nameEnglish: englishController.text.trim(),
+          code: code,
+          nameEnglish: nameEnglish,
           nameArabic: arabicController.text.trim(),
-          description: descriptionController.text.trim(),
+          description: description,
         );
         if (mounted) {
           context.pop();
-          ToastService.success(context, 'Job family created successfully', title: 'Success');
+          ToastService.success(context, l10n.jobFamilyCreatedSuccessfully);
         }
       }
     } catch (e) {
       if (mounted) {
-        ToastService.error(context, e.toString(), title: 'Error');
+        ToastService.error(context, e.toString());
       }
     }
   }
@@ -109,54 +124,45 @@ class _JobFamilyFormDialogState extends ConsumerState<JobFamilyFormDialog> {
     return AppDialog(
       title: isEdit ? localizations.editJobFamily : localizations.addNewJobFamily,
       width: 540.w,
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              localizations.basicInformation,
-              style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
-            ),
-            SizedBox(height: 22.h),
-            _buildField(
-              label: localizations.jobFamilyCode,
-              hint: localizations.jobFamilyCodeHint,
-              controller: codeController,
-              readOnly: isEdit,
-            ),
-            SizedBox(height: 12.h),
-            _buildField(
-              label: localizations.jobFamilyNameEnglish,
-              hint: localizations.jobFamilyNameEnglishHint,
-              controller: englishController,
-            ),
-            SizedBox(height: 12.h),
-            _buildField(
-              label: localizations.jobFamilyNameArabic,
-              hint: 'e.g. Finance Manager (Optional)',
-              controller: arabicController,
-              isRequired: false,
-              inputFormatters: [AppInputFormatters.nameAny],
-              validator: (value) => null,
-            ),
-            SizedBox(height: 12.h),
-            DigifyTextArea(
-              labelText: localizations.description,
-              hintText: localizations.positionFamilyDescription,
-              controller: descriptionController,
-              maxLines: 3,
-              isRequired: true,
-              validator: (value) {
-                if ((value ?? '').isEmpty) {
-                  return '';
-                }
-                return null;
-              },
-            ),
-          ],
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.basicInformation,
+            style: context.textTheme.headlineSmall?.copyWith(color: AppColors.textPrimary),
+          ),
+          Gap(22.h),
+          _buildField(
+            label: localizations.jobFamilyCode,
+            hint: localizations.jobFamilyCodeHint,
+            controller: codeController,
+            readOnly: isEdit,
+          ),
+          Gap(12.h),
+          _buildField(
+            label: localizations.jobFamilyNameEnglish,
+            hint: localizations.jobFamilyNameEnglishHint,
+            controller: englishController,
+          ),
+          Gap(12.h),
+          _buildField(
+            label: localizations.jobFamilyNameArabic,
+            hint: 'e.g. Finance Manager (Optional)',
+            controller: arabicController,
+            isRequired: false,
+            inputFormatters: [AppInputFormatters.nameAny],
+            validator: (_) => null,
+          ),
+          Gap(12.h),
+          DigifyTextArea(
+            labelText: localizations.description,
+            hintText: localizations.positionFamilyDescription,
+            controller: descriptionController,
+            maxLines: 3,
+            isRequired: true,
+          ),
+        ],
       ),
       actions: [
         AppButton.outline(label: localizations.cancel, onPressed: () => context.pop()),

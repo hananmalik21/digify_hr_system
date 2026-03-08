@@ -6008,6 +6008,12 @@ abstract class AppLocalizations {
   /// **'Job Family Code'**
   String get jobFamilyCode;
 
+  /// No description provided for @jobFamilyCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family code is required'**
+  String get jobFamilyCodeRequired;
+
   /// No description provided for @jobFamilyCodeHint.
   ///
   /// In en, this message translates to:
@@ -6031,6 +6037,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Job Family Name (English)'**
   String get jobFamilyNameEnglish;
+
+  /// No description provided for @jobFamilyNameEnglishRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family name (English) is required'**
+  String get jobFamilyNameEnglishRequired;
 
   /// No description provided for @jobFamilyNameEnglishHint.
   ///
@@ -6056,6 +6068,18 @@ abstract class AppLocalizations {
   /// **'Create Job Family'**
   String get createJobFamily;
 
+  /// No description provided for @jobFamilyCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family created successfully'**
+  String get jobFamilyCreatedSuccessfully;
+
+  /// No description provided for @jobFamilyUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family updated successfully'**
+  String get jobFamilyUpdatedSuccessfully;
+
   /// No description provided for @editJobFamily.
   ///
   /// In en, this message translates to:
@@ -6080,6 +6104,12 @@ abstract class AppLocalizations {
   /// **'Level Name'**
   String get levelName;
 
+  /// No description provided for @levelNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Level name is required'**
+  String get levelNameRequired;
+
   /// No description provided for @levelNameHint.
   ///
   /// In en, this message translates to:
@@ -6091,6 +6121,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Describe the level'**
   String get jobLevelDescriptionHint;
+
+  /// No description provided for @jobLevelDescriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get jobLevelDescriptionRequired;
+
+  /// No description provided for @jobFamilyDescriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family description is required'**
+  String get jobFamilyDescriptionRequired;
 
   /// No description provided for @gradeRange.
   ///
@@ -6127,6 +6169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g., EXEC'**
   String get jobLevelCodeHint;
+
+  /// No description provided for @jobLevelCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job level code is required'**
+  String get jobLevelCodeRequired;
 
   /// No description provided for @code.
   ///
@@ -6254,11 +6302,83 @@ abstract class AppLocalizations {
   /// **'Select Grade'**
   String get selectGrade;
 
+  /// No description provided for @selectMinimumGradeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select minimum grade first'**
+  String get selectMinimumGradeFirst;
+
+  /// No description provided for @noHigherGradesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No higher grades available for this level'**
+  String get noHigherGradesAvailable;
+
+  /// No description provided for @pleaseSelectGrades.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both minimum and maximum grades'**
+  String get pleaseSelectGrades;
+
+  /// No description provided for @minGradeMustBeLessOrEqualMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum grade must be less than or equal to maximum grade'**
+  String get minGradeMustBeLessOrEqualMax;
+
   /// No description provided for @gradeCategory.
   ///
   /// In en, this message translates to:
   /// **'Grade Category'**
   String get gradeCategory;
+
+  /// No description provided for @gradeNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a grade number'**
+  String get gradeNumberRequired;
+
+  /// No description provided for @gradeCategoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a grade category'**
+  String get gradeCategoryRequired;
+
+  /// No description provided for @stepSalaryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} salary is required'**
+  String stepSalaryRequired(int step);
+
+  /// No description provided for @stepSalaryInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} must be a valid number (0 or greater)'**
+  String stepSalaryInvalid(int step);
+
+  /// No description provided for @gradeCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade created successfully'**
+  String get gradeCreatedSuccessfully;
+
+  /// No description provided for @errorCreatingGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating grade'**
+  String get errorCreatingGrade;
+
+  /// No description provided for @gradeUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade updated successfully'**
+  String get gradeUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating grade'**
+  String get errorUpdatingGrade;
 
   /// No description provided for @entryLevel.
   ///

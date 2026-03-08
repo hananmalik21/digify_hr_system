@@ -3017,6 +3017,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobFamilyCode => 'Job Family Code';
 
   @override
+  String get jobFamilyCodeRequired => 'Job family code is required';
+
+  @override
   String get jobFamilyCodeHint => 'e.g., JF-001';
 
   @override
@@ -3027,6 +3030,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobFamilyNameEnglish => 'Job Family Name (English)';
+
+  @override
+  String get jobFamilyNameEnglishRequired => 'Job family name (English) is required';
 
   @override
   String get jobFamilyNameEnglishHint => 'e.g., Finance & Accounting';
@@ -3041,6 +3047,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createJobFamily => 'Create Job Family';
 
   @override
+  String get jobFamilyCreatedSuccessfully => 'Job family created successfully';
+
+  @override
+  String get jobFamilyUpdatedSuccessfully => 'Job family updated successfully';
+
+  @override
   String get editJobFamily => 'Edit Job Family';
 
   @override
@@ -3053,10 +3065,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get levelName => 'Level Name';
 
   @override
+  String get levelNameRequired => 'Level name is required';
+
+  @override
   String get levelNameHint => 'e.g., Executive';
 
   @override
   String get jobLevelDescriptionHint => 'Describe the level';
+
+  @override
+  String get jobLevelDescriptionRequired => 'Description is required';
+
+  @override
+  String get jobFamilyDescriptionRequired => 'Job family description is required';
 
   @override
   String get gradeRange => 'Grade Range';
@@ -3075,6 +3096,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobLevelCodeHint => 'e.g., EXEC';
+
+  @override
+  String get jobLevelCodeRequired => 'Job level code is required';
 
   @override
   String get code => 'Code';
@@ -3140,7 +3164,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectGrade => 'Select Grade';
 
   @override
+  String get selectMinimumGradeFirst => 'Select minimum grade first';
+
+  @override
+  String get noHigherGradesAvailable => 'No higher grades available for this level';
+
+  @override
+  String get pleaseSelectGrades => 'Please select both minimum and maximum grades';
+
+  @override
+  String get minGradeMustBeLessOrEqualMax => 'Minimum grade must be less than or equal to maximum grade';
+
+  @override
   String get gradeCategory => 'Grade Category';
+
+  @override
+  String get gradeNumberRequired => 'Please select a grade number';
+
+  @override
+  String get gradeCategoryRequired => 'Please select a grade category';
+
+  @override
+  String stepSalaryRequired(int step) {
+    return 'Step $step salary is required';
+  }
+
+  @override
+  String stepSalaryInvalid(int step) {
+    return 'Step $step must be a valid number (0 or greater)';
+  }
+
+  @override
+  String get gradeCreatedSuccessfully => 'Grade created successfully';
+
+  @override
+  String get errorCreatingGrade => 'Error creating grade';
+
+  @override
+  String get gradeUpdatedSuccessfully => 'Grade updated successfully';
+
+  @override
+  String get errorUpdatingGrade => 'Error updating grade';
 
   @override
   String get entryLevel => 'Entry Level';
