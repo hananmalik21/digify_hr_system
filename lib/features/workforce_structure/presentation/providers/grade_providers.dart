@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/de
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -326,4 +327,12 @@ final gradeErrorProvider = Provider<String?>((ref) {
 
 final gradeCreatingProvider = Provider<bool>((ref) {
   return ref.watch(gradeNotifierProvider).isCreating;
+});
+
+final gradesForJobLevelFormProvider = FutureProvider.autoDispose<List<Grade>>((ref) async {
+  final enterpriseId = ref.watch(jobLevelsEnterpriseIdProvider);
+  if (enterpriseId == null) return [];
+  final useCase = ref.read(getGradesUseCaseProvider);
+  final response = await useCase.execute(page: 1, pageSize: 100, tenantId: enterpriseId);
+  return response.data;
 });

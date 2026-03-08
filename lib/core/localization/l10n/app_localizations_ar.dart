@@ -3044,10 +3044,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get levelName => 'اسم المستوى';
 
   @override
+  String get levelNameRequired => 'اسم المستوى مطلوب';
+
+  @override
   String get levelNameHint => 'مثال: تنفيذي';
 
   @override
   String get jobLevelDescriptionHint => 'وصف المستوى';
+
+  @override
+  String get jobLevelDescriptionRequired => 'الوصف مطلوب';
 
   @override
   String get gradeRange => 'نطاق الدرجات';
@@ -3066,6 +3072,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get jobLevelCodeHint => 'مثال: EXEC';
+
+  @override
+  String get jobLevelCodeRequired => 'رمز المستوى الوظيفي مطلوب';
 
   @override
   String get code => 'الرمز';
@@ -3129,6 +3138,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectGrade => 'اختر الدرجة';
+
+  @override
+  String get pleaseSelectGrades => 'يرجى اختيار الحد الأدنى والأعلى للدرجة';
+
+  @override
+  String get minGradeMustBeLessOrEqualMax => 'يجب أن تكون الدرجة الدنيا أقل من أو تساوي الدرجة العليا';
 
   @override
   String get gradeCategory => 'فئة الدرجة';
