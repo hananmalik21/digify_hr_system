@@ -4,6 +4,8 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/grad
 class GradeModel {
   final int gradeId;
   final String gradeNumber;
+  final String? gradeNumberMeaningEn;
+  final String? gradeNumberMeaningAr;
   final String gradeCategory;
   final String currencyCode;
   final double step1Salary;
@@ -22,6 +24,8 @@ class GradeModel {
   const GradeModel({
     required this.gradeId,
     required this.gradeNumber,
+    this.gradeNumberMeaningEn,
+    this.gradeNumberMeaningAr,
     required this.gradeCategory,
     required this.currencyCode,
     required this.step1Salary,
@@ -63,9 +67,12 @@ class GradeModel {
   }
 
   factory GradeModel.fromJson(Map<String, dynamic> json) {
+    final gradeNumberObj = json['grade_number_obj'] as Map<String, dynamic>?;
     return GradeModel(
       gradeId: _asInt(json['grade_id']),
       gradeNumber: _asString(json['grade_number']),
+      gradeNumberMeaningEn: gradeNumberObj?['meaning_en'] as String?,
+      gradeNumberMeaningAr: gradeNumberObj?['meaning_ar'] as String?,
       gradeCategory: _asString(json['grade_category']),
       currencyCode: _asString(json['currency_code']), // may be missing in your API
       step1Salary: _asDouble(json['step_1_salary']),
@@ -114,6 +121,8 @@ class GradeModel {
     return Grade(
       id: gradeId,
       gradeNumber: gradeNumber,
+      gradeNumberMeaningEn: gradeNumberMeaningEn,
+      gradeNumberMeaningAr: gradeNumberMeaningAr,
       gradeCategory: gradeCategory,
       currencyCode: currencyCode,
       step1Salary: step1Salary,
@@ -135,6 +144,8 @@ class GradeModel {
     return GradeModel(
       gradeId: entity.id,
       gradeNumber: entity.gradeNumber,
+      gradeNumberMeaningEn: entity.gradeNumberMeaningEn,
+      gradeNumberMeaningAr: entity.gradeNumberMeaningAr,
       gradeCategory: entity.gradeCategory,
       currencyCode: entity.currencyCode,
       step1Salary: entity.step1Salary,

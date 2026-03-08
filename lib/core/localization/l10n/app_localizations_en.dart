@@ -3017,6 +3017,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobFamilyCode => 'Job Family Code';
 
   @override
+  String get jobFamilyCodeRequired => 'Job family code is required';
+
+  @override
   String get jobFamilyCodeHint => 'e.g., JF-001';
 
   @override
@@ -3029,6 +3032,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobFamilyNameEnglish => 'Job Family Name (English)';
 
   @override
+  String get jobFamilyNameEnglishRequired => 'Job family name (English) is required';
+
+  @override
   String get jobFamilyNameEnglishHint => 'e.g., Finance & Accounting';
 
   @override
@@ -3039,6 +3045,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createJobFamily => 'Create Job Family';
+
+  @override
+  String get jobFamilyCreatedSuccessfully => 'Job family created successfully';
+
+  @override
+  String get jobFamilyUpdatedSuccessfully => 'Job family updated successfully';
 
   @override
   String get editJobFamily => 'Edit Job Family';
@@ -3063,6 +3075,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobLevelDescriptionRequired => 'Description is required';
+
+  @override
+  String get jobFamilyDescriptionRequired => 'Job family description is required';
 
   @override
   String get gradeRange => 'Grade Range';
@@ -3156,6 +3171,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gradeCategory => 'Grade Category';
+
+  @override
+  String get gradeNumberRequired => 'Please select a grade number';
+
+  @override
+  String get gradeCategoryRequired => 'Please select a grade category';
+
+  @override
+  String stepSalaryRequired(int step) {
+    return 'Step $step salary is required';
+  }
+
+  @override
+  String stepSalaryInvalid(int step) {
+    return 'Step $step must be a valid number (0 or greater)';
+  }
+
+  @override
+  String get gradeCreatedSuccessfully => 'Grade created successfully';
+
+  @override
+  String get errorCreatingGrade => 'Error creating grade';
+
+  @override
+  String get gradeUpdatedSuccessfully => 'Grade updated successfully';
+
+  @override
+  String get errorUpdatingGrade => 'Error updating grade';
 
   @override
   String get entryLevel => 'Entry Level';

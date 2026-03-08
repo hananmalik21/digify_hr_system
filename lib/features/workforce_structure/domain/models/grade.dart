@@ -2,6 +2,8 @@
 class Grade {
   final int id;
   final String gradeNumber;
+  final String? gradeNumberMeaningEn;
+  final String? gradeNumberMeaningAr;
   final String gradeCategory;
   final String currencyCode;
   final double step1Salary;
@@ -20,6 +22,8 @@ class Grade {
   const Grade({
     required this.id,
     required this.gradeNumber,
+    this.gradeNumberMeaningEn,
+    this.gradeNumberMeaningAr,
     required this.gradeCategory,
     required this.currencyCode,
     required this.step1Salary,
@@ -38,7 +42,8 @@ class Grade {
 
   bool get isActive => status == 'ACTIVE';
 
-  String get gradeLabel => 'Grade $gradeNumber';
+  String get gradeLabel =>
+      gradeNumberMeaningEn?.trim().isNotEmpty == true ? gradeNumberMeaningEn! : 'Grade $gradeNumber';
 
   List<GradeStep> get steps => [
     GradeStep(step: 1, salary: step1Salary),
@@ -51,6 +56,8 @@ class Grade {
   Grade copyWith({
     int? id,
     String? gradeNumber,
+    String? gradeNumberMeaningEn,
+    String? gradeNumberMeaningAr,
     String? gradeCategory,
     String? currencyCode,
     double? step1Salary,
@@ -69,6 +76,8 @@ class Grade {
     return Grade(
       id: id ?? this.id,
       gradeNumber: gradeNumber ?? this.gradeNumber,
+      gradeNumberMeaningEn: gradeNumberMeaningEn ?? this.gradeNumberMeaningEn,
+      gradeNumberMeaningAr: gradeNumberMeaningAr ?? this.gradeNumberMeaningAr,
       gradeCategory: gradeCategory ?? this.gradeCategory,
       currencyCode: currencyCode ?? this.currencyCode,
       step1Salary: step1Salary ?? this.step1Salary,
