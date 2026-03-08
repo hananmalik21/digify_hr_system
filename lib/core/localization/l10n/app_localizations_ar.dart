@@ -3149,6 +3149,34 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gradeCategory => 'فئة الدرجة';
 
   @override
+  String get gradeNumberRequired => 'يرجى اختيار رقم الدرجة';
+
+  @override
+  String get gradeCategoryRequired => 'يرجى اختيار فئة الدرجة';
+
+  @override
+  String stepSalaryRequired(int step) {
+    return 'الخطوة $step - الراتب مطلوب';
+  }
+
+  @override
+  String stepSalaryInvalid(int step) {
+    return 'الخطوة $step - يجب أن يكون رقماً صحيحاً (0 أو أكبر)';
+  }
+
+  @override
+  String get gradeCreatedSuccessfully => 'تم إنشاء الدرجة بنجاح';
+
+  @override
+  String get errorCreatingGrade => 'خطأ في إنشاء الدرجة';
+
+  @override
+  String get gradeUpdatedSuccessfully => 'تم تحديث الدرجة بنجاح';
+
+  @override
+  String get errorUpdatingGrade => 'خطأ في تحديث الدرجة';
+
+  @override
   String get entryLevel => 'مستوى المبتدئين';
 
   @override

@@ -1,15 +1,15 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
-import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
-import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/utils/form_validators.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/create_grade_form_state_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,17 +17,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../gen/assets.gen.dart';
-
-class GradeConfig {
-  static List<String> get gradeNumbers => List.generate(12, (index) => (index + 1).toString());
-
-  static Map<String, String> get gradeCategories => {
-    'ENTRY_LEVEL': 'Entry Level',
-    'PROFESSIONAL': 'Professional',
-    'EXECUTIVE': 'Executive',
-    'MANAGEMENT': 'Management',
-  };
-}
 
 class CreateGradeDialog extends ConsumerStatefulWidget {
   const CreateGradeDialog({super.key});
@@ -41,62 +30,39 @@ class CreateGradeDialog extends ConsumerStatefulWidget {
 }
 
 class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final descriptionController = TextEditingController();
-  final step1Controller = TextEditingController();
-  final step2Controller = TextEditingController();
-  final step3Controller = TextEditingController();
-  final step4Controller = TextEditingController();
-  final step5Controller = TextEditingController();
+  late final TextEditingController step1Controller;
+  late final TextEditingController step2Controller;
+  late final TextEditingController step3Controller;
+  late final TextEditingController step4Controller;
+  late final TextEditingController step5Controller;
+  late final TextEditingController descriptionController;
 
-  String? selectedGradeNumber;
-  String? selectedGradeCategory;
+  @override
+  void initState() {
+    super.initState();
+    final state = ref.read(createGradeFormStateProvider);
+    step1Controller = TextEditingController(text: state.step1Salary);
+    step2Controller = TextEditingController(text: state.step2Salary);
+    step3Controller = TextEditingController(text: state.step3Salary);
+    step4Controller = TextEditingController(text: state.step4Salary);
+    step5Controller = TextEditingController(text: state.step5Salary);
+    descriptionController = TextEditingController(text: state.description);
+  }
 
   @override
   void dispose() {
-    descriptionController.dispose();
     step1Controller.dispose();
     step2Controller.dispose();
     step3Controller.dispose();
     step4Controller.dispose();
     step5Controller.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
   Future<void> _handleSave() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-
-    try {
-      final grade = Grade(
-        id: 0, // Will be set by backend
-        gradeNumber: selectedGradeNumber!,
-        gradeCategory: selectedGradeCategory!,
-        currencyCode: 'KWD',
-        step1Salary: double.parse(step1Controller.text),
-        step2Salary: double.parse(step2Controller.text),
-        step3Salary: double.parse(step3Controller.text),
-        step4Salary: double.parse(step4Controller.text),
-        step5Salary: double.parse(step5Controller.text),
-        description: descriptionController.text,
-        status: 'ACTIVE',
-        createdBy: 'ADMIN',
-        createdDate: DateTime.now(),
-        lastUpdatedBy: 'ADMIN',
-        lastUpdatedDate: DateTime.now(),
-        lastUpdateLogin: 'ADMIN',
-      );
-
-      await ref.read(gradeNotifierProvider.notifier).createGrade(grade);
-
-      if (mounted) {
-        ToastService.success(context, 'Grade created successfully');
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ToastService.error(context, 'Error creating grade');
-      }
-    }
+    final success = await ref.read(createGradeFormStateProvider.notifier).submit(context, ref);
+    if (mounted && success) context.pop();
   }
 
   @override
@@ -107,19 +73,16 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     return AppDialog(
       title: localizations.addGrade,
       width: 896.w,
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildGradeFields(localizations),
-            Gap(24.h),
-            _buildStepSalaries(localizations),
-            Gap(24.h),
-            _buildDescription(localizations),
-          ],
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildGradeFields(localizations),
+          Gap(24.h),
+          _buildStepSalaries(localizations),
+          Gap(24.h),
+          _buildDescription(localizations),
+        ],
       ),
       actions: [
         AppButton.outline(label: localizations.cancel, onPressed: isCreating ? null : () => context.pop()),
@@ -145,101 +108,44 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
   }
 
   Widget _buildGradeNumberDropdown(AppLocalizations localizations) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(localizations.gradeNumber, style: context.textTheme.titleSmall),
-        Gap(4.h),
-        FormField<String>(
-          initialValue: selectedGradeNumber,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return localizations.fieldRequired;
-            }
-            return null;
-          },
-          builder: (field) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DigifySelectField<String>(
-                  hint: localizations.selectGrade,
-                  value: selectedGradeNumber,
-                  items: GradeConfig.gradeNumbers,
-                  itemLabelBuilder: (number) => 'Grade $number',
-                  isRequired: true,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedGradeNumber = value;
-                    });
-                    field.didChange(value);
-                  },
-                ),
-                if (field.hasError)
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.h),
-                    child: Text(
-                      field.errorText!,
-                      style: TextStyle(fontSize: 12.sp, color: AppColors.error),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-      ],
+    final gradeNumbersAsync = ref.watch(gradeNumberLookupValuesProvider);
+    final items = gradeNumbersAsync.valueOrNull ?? [];
+    final isLoading = gradeNumbersAsync.isLoading;
+    final formState = ref.watch(createGradeFormStateProvider);
+    final formNotifier = ref.read(createGradeFormStateProvider.notifier);
+
+    return DigifySelectFieldWithLabel<EmplLookupValue>(
+      label: localizations.gradeNumber,
+      hint: isLoading ? localizations.pleaseWait : localizations.selectGrade,
+      value: formState.selectedGradeNumber,
+      items: items,
+      itemLabelBuilder: (v) => v.meaningEn,
+      isRequired: true,
+      onChanged: isLoading ? null : (v) => formNotifier.setSelectedGradeNumber(v),
     );
   }
 
   Widget _buildGradeCategoryDropdown(AppLocalizations localizations) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(localizations.gradeCategory, style: context.textTheme.titleSmall),
-        Gap(4.h),
-        FormField<String>(
-          initialValue: selectedGradeCategory,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return localizations.fieldRequired;
-            }
-            return null;
-          },
-          builder: (field) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DigifySelectField<String>(
-                  hint: localizations.selectCategory,
-                  value: selectedGradeCategory,
-                  items: GradeConfig.gradeCategories.keys.toList(),
-                  itemLabelBuilder: (key) => GradeConfig.gradeCategories[key]!,
-                  isRequired: true,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedGradeCategory = value;
-                    });
-                    field.didChange(value);
-                  },
-                ),
-                if (field.hasError)
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.h),
-                    child: Text(
-                      field.errorText!,
-                      style: TextStyle(fontSize: 12.sp, color: AppColors.error),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-      ],
+    final gradeCategoriesAsync = ref.watch(gradeCategoryLookupValuesProvider);
+    final items = gradeCategoriesAsync.valueOrNull ?? [];
+    final isLoading = gradeCategoriesAsync.isLoading;
+    final formState = ref.watch(createGradeFormStateProvider);
+    final formNotifier = ref.read(createGradeFormStateProvider.notifier);
+
+    return DigifySelectFieldWithLabel<EmplLookupValue>(
+      label: localizations.gradeCategory,
+      hint: isLoading ? localizations.pleaseWait : localizations.selectCategory,
+      value: formState.selectedGradeCategory,
+      items: items,
+      itemLabelBuilder: (v) => v.meaningEn,
+      isRequired: true,
+      onChanged: isLoading ? null : (v) => formNotifier.setSelectedGradeCategory(v),
     );
   }
 
   Widget _buildStepSalaries(AppLocalizations localizations) {
     final controllers = [step1Controller, step2Controller, step3Controller, step4Controller, step5Controller];
+    final formNotifier = ref.read(createGradeFormStateProvider.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,7 +157,12 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: entry.key == 0 ? 0 : 12.w),
-                child: _buildStepInput(localizations, '${localizations.step} ${entry.key + 1}', entry.value),
+                child: _buildStepInput(
+                  localizations,
+                  '${localizations.step} ${entry.key + 1}',
+                  entry.value,
+                  (v) => formNotifier.setStepSalary(entry.key, v),
+                ),
               ),
             );
           }).toList(),
@@ -260,7 +171,12 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
     );
   }
 
-  Widget _buildStepInput(AppLocalizations localizations, String label, TextEditingController controller) {
+  Widget _buildStepInput(
+    AppLocalizations localizations,
+    String label,
+    TextEditingController controller,
+    ValueChanged<String> onChanged,
+  ) {
     return DigifyTextField(
       labelText: label,
       controller: controller,
@@ -268,6 +184,7 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
       isRequired: true,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [AppInputFormatters.decimalWithTwoPlaces()],
+      onChanged: onChanged,
       suffixIcon: Center(
         widthFactor: 1.0,
         child: Text(
@@ -275,29 +192,18 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
           style: context.textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
         ),
       ),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return '';
-        }
-        final numberError = FormValidators.number(value);
-        if (numberError != null) {
-          return '';
-        }
-        final numValue = num.parse(value);
-        if (numValue < 0) {
-          return '';
-        }
-        return null;
-      },
     );
   }
 
   Widget _buildDescription(AppLocalizations localizations) {
+    final formNotifier = ref.read(createGradeFormStateProvider.notifier);
+
     return DigifyTextArea(
       labelText: localizations.descriptionOptional,
       controller: descriptionController,
       hintText: localizations.gradeDescriptionHint,
       maxLines: 3,
+      onChanged: formNotifier.setDescription,
     );
   }
 }

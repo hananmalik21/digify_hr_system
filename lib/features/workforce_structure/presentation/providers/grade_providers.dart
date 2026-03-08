@@ -14,7 +14,6 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Dependency Injection Providers
 final gradeRemoteDataSourceProvider = Provider<GradeRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return GradeRemoteDataSourceImpl(apiClient: apiClient);
@@ -40,7 +39,6 @@ final updateGradeUseCaseProvider = Provider<UpdateGradeUseCase>((ref) {
   return UpdateGradeUseCase(ref.read(gradeRepositoryProvider));
 });
 
-// Grade State that extends PaginationState with creating status
 class GradeState extends PaginationState<Grade> {
   final bool isCreating;
   final int? deletingGradeId;
@@ -108,7 +106,6 @@ class GradeState extends PaginationState<Grade> {
   }
 }
 
-// Grade Notifier with pagination
 class GradeNotifier extends StateNotifier<GradeState>
     with PaginationMixin<Grade>
     implements PaginationController<Grade> {
@@ -215,7 +212,7 @@ class GradeNotifier extends StateNotifier<GradeState>
                 totalPages: response.meta.pagination.totalPages,
                 hasNextPage: response.meta.pagination.hasNext,
                 hasPreviousPage: response.meta.pagination.hasPrevious,
-                isFirstPage: true, // Replace entire list
+                isFirstPage: true,
               )
               as GradeState;
     } catch (e) {
@@ -237,13 +234,9 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> createGrade(Grade grade) async {
     state = state.copyWith(isCreating: true);
     try {
-      final createdGrade = await _createGradeUseCase.execute(grade, tenantId: tenantId);
-      // Add the new grade to the beginning of the list
-      state = state.copyWith(
-        items: [createdGrade, ...state.items],
-        totalItems: state.totalItems + 1,
-        isCreating: false,
-      );
+      await _createGradeUseCase.execute(grade, tenantId: tenantId);
+      state = state.copyWith(isCreating: false);
+      refresh();
     } catch (e) {
       state = state.copyWith(isCreating: false);
       rethrow;
@@ -254,7 +247,6 @@ class GradeNotifier extends StateNotifier<GradeState>
     state = state.copyWith(deletingGradeId: gradeId);
     try {
       await _deleteGradeUseCase.execute(gradeId, tenantId: tenantId);
-      // Remove the grade from the list optimistically
       state = state.copyWith(
         items: state.items.where((g) => g.id != gradeId).toList(),
         totalItems: state.totalItems - 1,
@@ -269,12 +261,9 @@ class GradeNotifier extends StateNotifier<GradeState>
   Future<void> updateGrade(int gradeId, Grade updatedGrade) async {
     state = state.copyWith(updatingGradeId: gradeId);
     try {
-      final grade = await _updateGradeUseCase.execute(gradeId, updatedGrade, tenantId: tenantId);
-      // Update the grade in the list optimistically
-      state = state.copyWith(
-        items: state.items.map((g) => g.id == gradeId ? grade : g).toList(),
-        clearUpdatingGradeId: true,
-      );
+      await _updateGradeUseCase.execute(gradeId, updatedGrade, tenantId: tenantId);
+      state = state.copyWith(clearUpdatingGradeId: true);
+      refresh();
     } catch (e) {
       state = state.copyWith(clearUpdatingGradeId: true);
       rethrow;
@@ -298,7 +287,6 @@ class GradeNotifier extends StateNotifier<GradeState>
   }
 }
 
-// Provider for the notifier
 final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((ref) {
   final tenantId = ref.watch(gradeStructureEnterpriseIdProvider);
   final notifier = GradeNotifier(
@@ -312,7 +300,6 @@ final gradeNotifierProvider = StateNotifierProvider<GradeNotifier, GradeState>((
   return notifier;
 });
 
-// Convenience providers
 final gradeListProvider = Provider<List<Grade>>((ref) {
   return ref.watch(gradeNotifierProvider).items;
 });

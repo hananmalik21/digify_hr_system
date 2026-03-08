@@ -6290,6 +6290,54 @@ abstract class AppLocalizations {
   /// **'Grade Category'**
   String get gradeCategory;
 
+  /// No description provided for @gradeNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a grade number'**
+  String get gradeNumberRequired;
+
+  /// No description provided for @gradeCategoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a grade category'**
+  String get gradeCategoryRequired;
+
+  /// No description provided for @stepSalaryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} salary is required'**
+  String stepSalaryRequired(int step);
+
+  /// No description provided for @stepSalaryInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} must be a valid number (0 or greater)'**
+  String stepSalaryInvalid(int step);
+
+  /// No description provided for @gradeCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade created successfully'**
+  String get gradeCreatedSuccessfully;
+
+  /// No description provided for @errorCreatingGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating grade'**
+  String get errorCreatingGrade;
+
+  /// No description provided for @gradeUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade updated successfully'**
+  String get gradeUpdatedSuccessfully;
+
+  /// No description provided for @errorUpdatingGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating grade'**
+  String get errorUpdatingGrade;
+
   /// No description provided for @entryLevel.
   ///
   /// In en, this message translates to:

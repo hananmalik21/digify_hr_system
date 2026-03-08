@@ -1155,6 +1155,28 @@
   "pleaseSelectGrades": "Please select both minimum and maximum grades",
   "minGradeMustBeLessOrEqualMax": "Minimum grade must be less than or equal to maximum grade",
   "gradeCategory": "Grade Category",
+  "gradeNumberRequired": "Please select a grade number",
+  "gradeCategoryRequired": "Please select a grade category",
+  "stepSalaryRequired": "Step {step} salary is required",
+  "@stepSalaryRequired": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "stepSalaryInvalid": "Step {step} must be a valid number (0 or greater)",
+  "@stepSalaryInvalid": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "gradeCreatedSuccessfully": "Grade created successfully",
+  "errorCreatingGrade": "Error creating grade",
+  "gradeUpdatedSuccessfully": "Grade updated successfully",
+  "errorUpdatingGrade": "Error updating grade",
   "entryLevel": "Entry Level",
   "stepSalaryStructureTitle": "Step Salary Structure",
   "descriptionOptional": "Description (Optional)",

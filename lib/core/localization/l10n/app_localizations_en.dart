@@ -3158,6 +3158,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gradeCategory => 'Grade Category';
 
   @override
+  String get gradeNumberRequired => 'Please select a grade number';
+
+  @override
+  String get gradeCategoryRequired => 'Please select a grade category';
+
+  @override
+  String stepSalaryRequired(int step) {
+    return 'Step $step salary is required';
+  }
+
+  @override
+  String stepSalaryInvalid(int step) {
+    return 'Step $step must be a valid number (0 or greater)';
+  }
+
+  @override
+  String get gradeCreatedSuccessfully => 'Grade created successfully';
+
+  @override
+  String get errorCreatingGrade => 'Error creating grade';
+
+  @override
+  String get gradeUpdatedSuccessfully => 'Grade updated successfully';
+
+  @override
+  String get errorUpdatingGrade => 'Error updating grade';
+
+  @override
   String get entryLevel => 'Entry Level';
 
   @override
