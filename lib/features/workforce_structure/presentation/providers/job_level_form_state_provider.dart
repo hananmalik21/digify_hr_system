@@ -39,7 +39,10 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
 
   static JobLevelFormState _initialState(JobLevel? jobLevel) {
     if (jobLevel == null) return const JobLevelFormState();
-    return JobLevelFormState(selectedMinGrade: jobLevel.minGrade, selectedMaxGrade: jobLevel.maxGrade);
+    final minG = jobLevel.minGrade;
+    final maxG = jobLevel.maxGrade;
+    final validMax = maxG != null && minG != null && maxG.id > minG.id ? maxG : null;
+    return JobLevelFormState(selectedMinGrade: minG, selectedMaxGrade: validMax);
   }
 
   static bool _checkNeedsResolve(JobLevel? jobLevel) {
@@ -50,7 +53,17 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
   }
 
   void setMinGrade(Grade? grade) {
-    state = state.copyWith(selectedMinGrade: grade, clearMinGrade: grade == null);
+    final currentMax = state.selectedMaxGrade;
+    final shouldClearMax =
+        grade != null &&
+        currentMax != null &&
+        (currentMax.gradeCategory != grade.gradeCategory || currentMax.id <= grade.id);
+
+    state = state.copyWith(
+      selectedMinGrade: grade,
+      clearMinGrade: grade == null,
+      clearMaxGrade: grade == null || shouldClearMax,
+    );
   }
 
   void setMaxGrade(Grade? grade) {
@@ -67,6 +80,7 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
       if (minG != null && maxG != null) break;
     }
     _needsResolve = false;
+    if (minG != null && maxG != null && maxG.id <= minG.id) maxG = null;
     if (minG != null || maxG != null) {
       state = state.copyWith(
         selectedMinGrade: minG ?? state.selectedMinGrade,
@@ -175,3 +189,17 @@ final jobLevelFormStateProvider = StateNotifierProvider.autoDispose
       });
       return notifier;
     });
+
+final maxGradeOptionsForJobLevelFormProvider = Provider.autoDispose.family<List<Grade>, JobLevel?>((ref, jobLevel) {
+  final grades = ref.watch(gradesForJobLevelFormProvider).valueOrNull ?? [];
+  final minGrade = ref.watch(jobLevelFormStateProvider(jobLevel)).selectedMinGrade;
+  if (minGrade == null) return [];
+  final minGradeId = minGrade.id;
+  final minGradeCategory = minGrade.gradeCategory;
+  return grades.where((g) {
+    if (g.id == minGradeId) return false;
+    if (g.gradeCategory != minGradeCategory) return false;
+    if (g.id <= minGradeId) return false;
+    return true;
+  }).toList();
+});

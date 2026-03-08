@@ -6302,6 +6302,18 @@ abstract class AppLocalizations {
   /// **'Select Grade'**
   String get selectGrade;
 
+  /// No description provided for @selectMinimumGradeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select minimum grade first'**
+  String get selectMinimumGradeFirst;
+
+  /// No description provided for @noHigherGradesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No higher grades available for this level'**
+  String get noHigherGradesAvailable;
+
   /// No description provided for @pleaseSelectGrades.
   ///
   /// In en, this message translates to:

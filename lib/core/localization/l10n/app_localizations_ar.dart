@@ -3155,6 +3155,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectGrade => 'اختر الدرجة';
 
   @override
+  String get selectMinimumGradeFirst => 'اختر الحد الأدنى للدرجة أولاً';
+
+  @override
+  String get noHigherGradesAvailable => 'لا توجد درجات أعلى متاحة لهذا المستوى';
+
+  @override
   String get pleaseSelectGrades => 'يرجى اختيار الحد الأدنى والأعلى للدرجة';
 
   @override

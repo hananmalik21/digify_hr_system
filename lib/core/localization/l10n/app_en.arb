@@ -1157,6 +1157,8 @@
   "addStep": "Add Step",
   "gradeNumber": "Grade Number",
   "selectGrade": "Select Grade",
+  "selectMinimumGradeFirst": "Select minimum grade first",
+  "noHigherGradesAvailable": "No higher grades available for this level",
   "pleaseSelectGrades": "Please select both minimum and maximum grades",
   "minGradeMustBeLessOrEqualMax": "Minimum grade must be less than or equal to maximum grade",
   "gradeCategory": "Grade Category",
