@@ -1063,6 +1063,8 @@
   "addStep": "إضافة خطوة",
   "gradeNumber": "رقم الدرجة",
   "selectGrade": "اختر الدرجة",
+  "selectMinimumGradeFirst": "اختر الحد الأدنى للدرجة أولاً",
+  "noHigherGradesAvailable": "لا توجد درجات أعلى متاحة لهذا المستوى",
   "pleaseSelectGrades": "يرجى اختيار الحد الأدنى والأعلى للدرجة",
   "minGradeMustBeLessOrEqualMax": "يجب أن تكون الدرجة الدنيا أقل من أو تساوي الدرجة العليا",
   "gradeCategory": "فئة الدرجة",

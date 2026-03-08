@@ -26,104 +26,132 @@ class JobLevelRow extends ConsumerWidget {
       jobLevelNotifierProvider.select((_) => ref.read(jobLevelNotifierProvider.notifier).deletingJobLevelId),
     );
     final isDeleting = deletingId == level.id;
+    final cells = <Widget>[];
+
+    if (JobLevelsTableConfig.showLevelName) {
+      cells.add(
+        _buildDataCell(
+          Text(
+            level.nameEn,
+            style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
+            overflow: TextOverflow.ellipsis,
+          ),
+          JobLevelsTableConfig.levelNameWidth.w,
+        ),
+      );
+    }
+    if (JobLevelsTableConfig.showCode) {
+      cells.add(_buildDataCell(CodeBadge(code: level.code.toUpperCase()), JobLevelsTableConfig.codeWidth.w));
+    }
+    if (JobLevelsTableConfig.showDescription) {
+      cells.add(
+        _buildDataCell(
+          Text(
+            level.description,
+            style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.tableHeaderText),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          JobLevelsTableConfig.descriptionWidth.w,
+        ),
+      );
+    }
+    if (JobLevelsTableConfig.showMinGrade) {
+      cells.add(
+        _buildDataCell(
+          Text(
+            level.minGrade?.gradeLabel ?? '-',
+            style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
+            overflow: TextOverflow.ellipsis,
+          ),
+          JobLevelsTableConfig.minGradeWidth.w,
+        ),
+      );
+    }
+    if (JobLevelsTableConfig.showMaxGrade) {
+      cells.add(
+        _buildDataCell(
+          Text(
+            level.maxGrade?.gradeLabel ?? '-',
+            style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
+            overflow: TextOverflow.ellipsis,
+          ),
+          JobLevelsTableConfig.maxGradeWidth.w,
+        ),
+      );
+    }
+    if (JobLevelsTableConfig.showTotalPositions) {
+      cells.add(
+        _buildDataCell(
+          Text(
+            '${level.totalPositions}',
+            style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
+            overflow: TextOverflow.ellipsis,
+          ),
+          JobLevelsTableConfig.totalPositionsWidth.w,
+        ),
+      );
+    }
+    if (JobLevelsTableConfig.showActions) {
+      cells.add(
+        _buildDataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8.w,
+            children: [
+              DigifyAssetButton(
+                assetPath: Assets.icons.blueEyeIcon.path,
+                onTap: () => JobLevelDetailDialog.show(context, level),
+              ),
+              DigifyAssetButton(
+                assetPath: Assets.icons.editIcon.path,
+                onTap: () {
+                  JobLevelFormDialog.show(context, jobLevel: level, isEdit: true, onSave: (updated) {});
+                },
+              ),
+              DigifyAssetButton(
+                assetPath: Assets.icons.redDeleteIcon.path,
+                isLoading: isDeleting,
+                onTap: isDeleting
+                    ? null
+                    : () async {
+                        final localizations = AppLocalizations.of(context)!;
+                        final confirmed = await DeleteConfirmationDialog.show(
+                          context,
+                          title: localizations.deleteJobLevel,
+                          message: localizations.deleteJobLevelConfirmationMessage,
+                          itemName: level.nameEn,
+                        );
+
+                        if (confirmed == true) {
+                          try {
+                            await ref.read(jobLevelNotifierProvider.notifier).deleteJobLevel(level.id);
+                            if (context.mounted) {
+                              ToastService.success(context, localizations.jobLevelDeletedSuccessfully);
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ToastService.error(context, localizations.errorDeletingJobLevel);
+                            }
+                          }
+                        }
+                      },
+              ),
+            ],
+          ),
+          JobLevelsTableConfig.actionsWidth.w,
+        ),
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: AppColors.cardBorder, width: 1.w),
         ),
       ),
-      child: Row(
-        children: [
-          if (JobLevelsTableConfig.showLevelName)
-            _buildDataCell(
-              Text(
-                level.nameEn,
-                style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
-                overflow: TextOverflow.ellipsis,
-              ),
-              JobLevelsTableConfig.levelNameWidth.w,
-            ),
-          if (JobLevelsTableConfig.showCode)
-            _buildDataCell(CodeBadge(code: level.code.toUpperCase()), JobLevelsTableConfig.codeWidth.w),
-          if (JobLevelsTableConfig.showDescription)
-            _buildDataCell(
-              Text(
-                level.description,
-                style: context.textTheme.bodySmall?.copyWith(fontSize: 14.sp, color: AppColors.tableHeaderText),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              JobLevelsTableConfig.descriptionWidth.w,
-            ),
-          if (JobLevelsTableConfig.showGradeRange)
-            _buildDataCell(
-              Text(
-                level.gradeRange,
-                style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
-                overflow: TextOverflow.ellipsis,
-              ),
-              JobLevelsTableConfig.gradeRangeWidth.w,
-            ),
-          if (JobLevelsTableConfig.showTotalPositions)
-            _buildDataCell(
-              Text(
-                '${level.totalPositions}',
-                style: context.textTheme.labelMedium?.copyWith(fontSize: 14.sp, color: AppColors.dialogTitle),
-                overflow: TextOverflow.ellipsis,
-              ),
-              JobLevelsTableConfig.totalPositionsWidth.w,
-            ),
-          if (JobLevelsTableConfig.showActions)
-            _buildDataCell(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8.w,
-                children: [
-                  DigifyAssetButton(
-                    assetPath: Assets.icons.blueEyeIcon.path,
-                    onTap: () => JobLevelDetailDialog.show(context, level),
-                  ),
-                  DigifyAssetButton(
-                    assetPath: Assets.icons.editIcon.path,
-                    onTap: () {
-                      JobLevelFormDialog.show(context, jobLevel: level, isEdit: true, onSave: (updated) {});
-                    },
-                  ),
-                  DigifyAssetButton(
-                    assetPath: Assets.icons.redDeleteIcon.path,
-                    isLoading: isDeleting,
-                    onTap: isDeleting
-                        ? null
-                        : () async {
-                            final localizations = AppLocalizations.of(context)!;
-                            final confirmed = await DeleteConfirmationDialog.show(
-                              context,
-                              title: localizations.deleteJobLevel,
-                              message: localizations.deleteJobLevelConfirmationMessage,
-                              itemName: level.nameEn,
-                            );
-
-                            if (confirmed == true) {
-                              try {
-                                await ref.read(jobLevelNotifierProvider.notifier).deleteJobLevel(level.id);
-                                if (context.mounted) {
-                                  ToastService.success(context, localizations.jobLevelDeletedSuccessfully);
-                                }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  ToastService.error(context, localizations.errorDeletingJobLevel);
-                                }
-                              }
-                            }
-                          },
-                  ),
-                ],
-              ),
-              JobLevelsTableConfig.actionsWidth.w,
-            ),
-        ],
-      ),
+      child: Row(children: cells),
     );
   }
 

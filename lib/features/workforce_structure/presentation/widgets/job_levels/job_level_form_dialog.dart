@@ -136,7 +136,7 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
               final gradesLoading = gradesAsync.isLoading;
               final formState = ref.watch(jobLevelFormStateProvider(widget.jobLevel));
               final formNotifier = ref.read(jobLevelFormStateProvider(widget.jobLevel).notifier);
-
+              final maxGradeOptions = ref.watch(maxGradeOptionsForJobLevelFormProvider(widget.jobLevel));
               return Row(
                 children: [
                   Expanded(
@@ -154,11 +154,24 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
                   Expanded(
                     child: DigifySelectFieldWithLabel<Grade>(
                       label: localizations.maximumGrade,
-                      hint: gradesLoading ? localizations.pleaseWait : localizations.selectGrade,
-                      items: grades,
+                      hint: gradesLoading
+                          ? localizations.pleaseWait
+                          : (formState.selectedMinGrade == null
+                                ? localizations.selectMinimumGradeFirst
+                                : maxGradeOptions.isEmpty
+                                ? localizations.noHigherGradesAvailable
+                                : localizations.selectGrade),
+                      items: maxGradeOptions,
                       itemLabelBuilder: (g) => g.gradeLabel,
-                      value: formState.selectedMaxGrade,
-                      onChanged: gradesLoading ? null : (v) => formNotifier.setMaxGrade(v),
+                      value:
+                          formState.selectedMinGrade != null &&
+                              formState.selectedMaxGrade != null &&
+                              formState.selectedMaxGrade!.id > formState.selectedMinGrade!.id
+                          ? formState.selectedMaxGrade
+                          : null,
+                      onChanged: (gradesLoading || formState.selectedMinGrade == null || maxGradeOptions.isEmpty)
+                          ? null
+                          : (v) => formNotifier.setMaxGrade(v),
                       isRequired: true,
                     ),
                   ),

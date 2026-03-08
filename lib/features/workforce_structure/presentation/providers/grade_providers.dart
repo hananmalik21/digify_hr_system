@@ -320,6 +320,12 @@ final gradesForJobLevelFormProvider = FutureProvider.autoDispose<List<Grade>>((r
   final enterpriseId = ref.watch(jobLevelsEnterpriseIdProvider);
   if (enterpriseId == null) return [];
   final useCase = ref.read(getGradesUseCaseProvider);
-  final response = await useCase.execute(page: 1, pageSize: 100, tenantId: enterpriseId);
-  return response.data;
+  const pageSize = 500;
+  final response = await useCase.execute(page: 1, pageSize: pageSize, tenantId: enterpriseId);
+  List<Grade> all = List.from(response.data);
+  for (int page = 2; page <= response.meta.pagination.totalPages; page++) {
+    final next = await useCase.execute(page: page, pageSize: pageSize, tenantId: enterpriseId);
+    all.addAll(next.data);
+  }
+  return all;
 });

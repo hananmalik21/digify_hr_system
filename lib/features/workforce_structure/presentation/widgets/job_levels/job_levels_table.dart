@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/common/scrollable_wrapper.dart';
@@ -79,7 +80,7 @@ class JobLevelsTable extends StatelessWidget {
 
   Widget _buildTableHeader(BuildContext context, bool isDark) {
     final headerColor = isDark ? AppColors.cardBackgroundDark : AppColors.tableHeaderBackground;
-
+    final l10n = AppLocalizations.of(context)!;
     final headerCells = <Widget>[];
 
     if (JobLevelsTableConfig.showLevelName) {
@@ -91,8 +92,11 @@ class JobLevelsTable extends StatelessWidget {
     if (JobLevelsTableConfig.showDescription) {
       headerCells.add(_buildHeaderCell(context, 'Description', JobLevelsTableConfig.descriptionWidth.w));
     }
-    if (JobLevelsTableConfig.showGradeRange) {
-      headerCells.add(_buildHeaderCell(context, 'Grade Range', JobLevelsTableConfig.gradeRangeWidth.w));
+    if (JobLevelsTableConfig.showMinGrade) {
+      headerCells.add(_buildHeaderCell(context, l10n.minimumGrade, JobLevelsTableConfig.minGradeWidth.w));
+    }
+    if (JobLevelsTableConfig.showMaxGrade) {
+      headerCells.add(_buildHeaderCell(context, l10n.maximumGrade, JobLevelsTableConfig.maxGradeWidth.w));
     }
     if (JobLevelsTableConfig.showTotalPositions) {
       headerCells.add(_buildHeaderCell(context, 'Total Positions', JobLevelsTableConfig.totalPositionsWidth.w));
