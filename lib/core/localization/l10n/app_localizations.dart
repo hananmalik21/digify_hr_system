@@ -6008,6 +6008,12 @@ abstract class AppLocalizations {
   /// **'Job Family Code'**
   String get jobFamilyCode;
 
+  /// No description provided for @jobFamilyCodeRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family code is required'**
+  String get jobFamilyCodeRequired;
+
   /// No description provided for @jobFamilyCodeHint.
   ///
   /// In en, this message translates to:
@@ -6032,6 +6038,12 @@ abstract class AppLocalizations {
   /// **'Job Family Name (English)'**
   String get jobFamilyNameEnglish;
 
+  /// No description provided for @jobFamilyNameEnglishRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family name (English) is required'**
+  String get jobFamilyNameEnglishRequired;
+
   /// No description provided for @jobFamilyNameEnglishHint.
   ///
   /// In en, this message translates to:
@@ -6055,6 +6067,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Job Family'**
   String get createJobFamily;
+
+  /// No description provided for @jobFamilyCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family created successfully'**
+  String get jobFamilyCreatedSuccessfully;
+
+  /// No description provided for @jobFamilyUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family updated successfully'**
+  String get jobFamilyUpdatedSuccessfully;
 
   /// No description provided for @editJobFamily.
   ///
@@ -6103,6 +6127,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description is required'**
   String get jobLevelDescriptionRequired;
+
+  /// No description provided for @jobFamilyDescriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Job family description is required'**
+  String get jobFamilyDescriptionRequired;
 
   /// No description provided for @gradeRange.
   ///

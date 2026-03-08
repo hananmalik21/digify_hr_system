@@ -3008,6 +3008,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get jobFamilyCode => 'رمز العائلة الوظيفية';
 
   @override
+  String get jobFamilyCodeRequired => 'رمز العائلة الوظيفية مطلوب';
+
+  @override
   String get jobFamilyCodeHint => 'مثال: JF-001';
 
   @override
@@ -3020,6 +3023,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get jobFamilyNameEnglish => 'اسم العائلة الوظيفية (إنجليزي)';
 
   @override
+  String get jobFamilyNameEnglishRequired => 'اسم العائلة الوظيفية (إنجليزي) مطلوب';
+
+  @override
   String get jobFamilyNameEnglishHint => 'مثال: المالية والمحاسبة';
 
   @override
@@ -3030,6 +3036,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get createJobFamily => 'إنشاء عائلة وظيفية';
+
+  @override
+  String get jobFamilyCreatedSuccessfully => 'تم إنشاء العائلة الوظيفية بنجاح';
+
+  @override
+  String get jobFamilyUpdatedSuccessfully => 'تم تحديث العائلة الوظيفية بنجاح';
 
   @override
   String get editJobFamily => 'تعديل العائلة الوظيفية';
@@ -3054,6 +3066,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get jobLevelDescriptionRequired => 'الوصف مطلوب';
+
+  @override
+  String get jobFamilyDescriptionRequired => 'وصف العائلة الوظيفية مطلوب';
 
   @override
   String get gradeRange => 'نطاق الدرجات';
