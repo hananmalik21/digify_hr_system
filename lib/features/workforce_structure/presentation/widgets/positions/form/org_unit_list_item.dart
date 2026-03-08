@@ -61,7 +61,7 @@ class OrgUnitListItem extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    unit.orgUnitCode,
+                    unit.levelCode,
                     style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                   ),
                 ],
