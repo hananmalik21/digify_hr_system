@@ -3155,6 +3155,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectGrade => 'اختر الدرجة';
 
   @override
+  String get selectGradeCategoryFirst => 'اختر فئة الدرجة أولاً';
+
+  @override
+  String get noGradeNumbersForCategory => 'لا توجد أرقام درجات متاحة لهذه الفئة';
+
+  @override
   String get selectMinimumGradeFirst => 'اختر الحد الأدنى للدرجة أولاً';
 
   @override

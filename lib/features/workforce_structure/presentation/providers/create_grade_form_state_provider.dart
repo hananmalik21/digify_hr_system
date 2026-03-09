@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +48,7 @@ class CreateGradeFormNotifier extends StateNotifier<CreateGradeFormState> {
 
   void setSelectedGradeCategory(EmplLookupValue? value) {
     state = CreateGradeFormState(
-      selectedGradeNumber: state.selectedGradeNumber,
+      selectedGradeNumber: null,
       selectedGradeCategory: value,
       step1Salary: state.step1Salary,
       step2Salary: state.step2Salary,
@@ -156,4 +157,13 @@ final createGradeFormStateProvider = StateNotifierProvider.autoDispose<CreateGra
   ref,
 ) {
   return CreateGradeFormNotifier();
+});
+
+final gradeNumbersForCreateGradeFormProvider = Provider.autoDispose<List<EmplLookupValue>>((ref) {
+  final all = ref.watch(gradeNumberLookupValuesProvider).valueOrNull ?? [];
+  final category = ref.watch(createGradeFormStateProvider).selectedGradeCategory;
+  if (category == null) return [];
+  final prefix = category.lookupCode.trim().toUpperCase();
+  if (prefix.isEmpty) return all;
+  return all.where((g) => g.lookupCode.trim().toUpperCase().startsWith(prefix)).toList();
 });

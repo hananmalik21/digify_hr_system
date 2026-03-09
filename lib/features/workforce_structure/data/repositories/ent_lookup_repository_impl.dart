@@ -8,7 +8,13 @@ class EntLookupRepositoryImpl implements EntLookupRepository {
 
   @override
   Future<List<EmplLookupValue>> getLookupValues(int enterpriseId, String lookupTypeCode) async {
-    final response = await remoteDataSource.getLookupValues(enterpriseId, lookupTypeCode);
-    return response.toDomain();
+    const pageSize = 100;
+    final response = await remoteDataSource.getLookupValues(enterpriseId, lookupTypeCode, page: 1, pageSize: pageSize);
+    List<EmplLookupValue> all = response.toDomain();
+    for (var page = 2; page <= response.meta.totalPages; page++) {
+      final next = await remoteDataSource.getLookupValues(enterpriseId, lookupTypeCode, page: page, pageSize: pageSize);
+      all = [...all, ...next.toDomain()];
+    }
+    return all;
   }
 }

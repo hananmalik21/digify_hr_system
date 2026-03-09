@@ -5,6 +5,8 @@ class Grade {
   final String? gradeNumberMeaningEn;
   final String? gradeNumberMeaningAr;
   final String gradeCategory;
+  final String? gradeCategoryMeaningEn;
+  final String? gradeCategoryMeaningAr;
   final String currencyCode;
   final double step1Salary;
   final double step2Salary;
@@ -25,6 +27,8 @@ class Grade {
     this.gradeNumberMeaningEn,
     this.gradeNumberMeaningAr,
     required this.gradeCategory,
+    this.gradeCategoryMeaningEn,
+    this.gradeCategoryMeaningAr,
     required this.currencyCode,
     required this.step1Salary,
     required this.step2Salary,
@@ -45,6 +49,9 @@ class Grade {
   String get gradeLabel =>
       gradeNumberMeaningEn?.trim().isNotEmpty == true ? gradeNumberMeaningEn! : 'Grade $gradeNumber';
 
+  String get gradeCategoryLabel =>
+      gradeCategoryMeaningEn?.trim().isNotEmpty == true ? gradeCategoryMeaningEn! : gradeCategory;
+
   List<GradeStep> get steps => [
     GradeStep(step: 1, salary: step1Salary),
     GradeStep(step: 2, salary: step2Salary),
@@ -59,6 +66,8 @@ class Grade {
     String? gradeNumberMeaningEn,
     String? gradeNumberMeaningAr,
     String? gradeCategory,
+    String? gradeCategoryMeaningEn,
+    String? gradeCategoryMeaningAr,
     String? currencyCode,
     double? step1Salary,
     double? step2Salary,
@@ -79,6 +88,8 @@ class Grade {
       gradeNumberMeaningEn: gradeNumberMeaningEn ?? this.gradeNumberMeaningEn,
       gradeNumberMeaningAr: gradeNumberMeaningAr ?? this.gradeNumberMeaningAr,
       gradeCategory: gradeCategory ?? this.gradeCategory,
+      gradeCategoryMeaningEn: gradeCategoryMeaningEn ?? this.gradeCategoryMeaningEn,
+      gradeCategoryMeaningAr: gradeCategoryMeaningAr ?? this.gradeCategoryMeaningAr,
       currencyCode: currencyCode ?? this.currencyCode,
       step1Salary: step1Salary ?? this.step1Salary,
       step2Salary: step2Salary ?? this.step2Salary,

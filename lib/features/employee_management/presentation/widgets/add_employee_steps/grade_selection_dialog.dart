@@ -108,7 +108,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
         final grade = items[index];
         return SelectionListItem(
           title: grade.gradeLabel,
-          subtitle: grade.gradeCategory,
+          subtitle: grade.gradeCategoryLabel,
           isSelected: false,
           onTap: () => context.pop(grade),
         );

@@ -41,7 +41,7 @@ class GradeStructureCard extends StatelessWidget {
                   Gap(12.w),
                   Text(grade.gradeLabel, style: context.textTheme.titleMedium),
                   Gap(12.w),
-                  Text('(${grade.gradeCategory})', style: context.textTheme.bodyMedium),
+                  Text('(${grade.gradeCategoryLabel})', style: context.textTheme.bodyMedium),
                 ],
               ),
               GradeActionButtons(grade: grade),
