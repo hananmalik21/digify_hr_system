@@ -7,6 +7,8 @@ class GradeModel {
   final String? gradeNumberMeaningEn;
   final String? gradeNumberMeaningAr;
   final String gradeCategory;
+  final String? gradeCategoryMeaningEn;
+  final String? gradeCategoryMeaningAr;
   final String currencyCode;
   final double step1Salary;
   final double step2Salary;
@@ -27,6 +29,8 @@ class GradeModel {
     this.gradeNumberMeaningEn,
     this.gradeNumberMeaningAr,
     required this.gradeCategory,
+    this.gradeCategoryMeaningEn,
+    this.gradeCategoryMeaningAr,
     required this.currencyCode,
     required this.step1Salary,
     required this.step2Salary,
@@ -66,24 +70,37 @@ class GradeModel {
     return fallback;
   }
 
+  static String? _optionalString(dynamic v) {
+    if (v == null) return null;
+    if (v is String) return v.trim().isEmpty ? null : v;
+    final s = v.toString().trim();
+    return s.isEmpty ? null : s;
+  }
+
   factory GradeModel.fromJson(Map<String, dynamic> json) {
-    final gradeNumberObj = json['grade_number_obj'] as Map<String, dynamic>?;
+    final gradeNumberObj = json['grade_number_obj'];
+    final gradeCategoryObj = json['grade_category_obj'];
+    final numberObj = gradeNumberObj is Map<String, dynamic> ? gradeNumberObj : null;
+    final categoryObj = gradeCategoryObj is Map<String, dynamic> ? gradeCategoryObj : null;
+
     return GradeModel(
       gradeId: _asInt(json['grade_id']),
       gradeNumber: _asString(json['grade_number']),
-      gradeNumberMeaningEn: gradeNumberObj?['meaning_en'] as String?,
-      gradeNumberMeaningAr: gradeNumberObj?['meaning_ar'] as String?,
+      gradeNumberMeaningEn: _optionalString(numberObj?['meaning_en']),
+      gradeNumberMeaningAr: _optionalString(numberObj?['meaning_ar']),
       gradeCategory: _asString(json['grade_category']),
-      currencyCode: _asString(json['currency_code']), // may be missing in your API
+      gradeCategoryMeaningEn: _optionalString(categoryObj?['meaning_en']),
+      gradeCategoryMeaningAr: _optionalString(categoryObj?['meaning_ar']),
+      currencyCode: _asString(json['currency_code']),
       step1Salary: _asDouble(json['step_1_salary']),
       step2Salary: _asDouble(json['step_2_salary']),
       step3Salary: _asDouble(json['step_3_salary']),
       step4Salary: _asDouble(json['step_4_salary']),
       step5Salary: _asDouble(json['step_5_salary']),
-      description: _asString(json['description']),
+      description: _optionalString(json['description']) ?? '',
       status: _asString(json['status'], fallback: 'ACTIVE'),
       createdBy: _asString(json['created_by'], fallback: 'SYSTEM'),
-      createdDate: _asString(json['created_date']), // keep as string in DTO
+      createdDate: _asString(json['created_date']),
       lastUpdatedBy: _asString(json['last_updated_by'], fallback: 'SYSTEM'),
       lastUpdatedDate: _asString(json['last_updated_date']),
       lastUpdateLogin: _asString(json['last_update_login'], fallback: 'SYSTEM'),
@@ -124,6 +141,8 @@ class GradeModel {
       gradeNumberMeaningEn: gradeNumberMeaningEn,
       gradeNumberMeaningAr: gradeNumberMeaningAr,
       gradeCategory: gradeCategory,
+      gradeCategoryMeaningEn: gradeCategoryMeaningEn,
+      gradeCategoryMeaningAr: gradeCategoryMeaningAr,
       currencyCode: currencyCode,
       step1Salary: step1Salary,
       step2Salary: step2Salary,
@@ -147,6 +166,8 @@ class GradeModel {
       gradeNumberMeaningEn: entity.gradeNumberMeaningEn,
       gradeNumberMeaningAr: entity.gradeNumberMeaningAr,
       gradeCategory: entity.gradeCategory,
+      gradeCategoryMeaningEn: entity.gradeCategoryMeaningEn,
+      gradeCategoryMeaningAr: entity.gradeCategoryMeaningAr,
       currencyCode: entity.currencyCode,
       step1Salary: entity.step1Salary,
       step2Salary: entity.step2Salary,

@@ -3164,6 +3164,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectGrade => 'Select Grade';
 
   @override
+  String get selectGradeCategoryFirst => 'Select grade category first';
+
+  @override
+  String get noGradeNumbersForCategory => 'No grade numbers available for this category';
+
+  @override
   String get selectMinimumGradeFirst => 'Select minimum grade first';
 
   @override

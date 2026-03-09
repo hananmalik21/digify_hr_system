@@ -5,11 +5,8 @@ import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/update_grade_form_state_provider.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +43,7 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
   @override
   void initState() {
     super.initState();
-    final state = ref.read(updateGradeFormStateProvider(widget.grade));
+    final state = UpdateGradeFormState.fromGrade(widget.grade);
     step1Controller = TextEditingController(text: state.step1Salary);
     step2Controller = TextEditingController(text: state.step2Salary);
     step3Controller = TextEditingController(text: state.step3Salary);
@@ -88,8 +85,6 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
         children: [
           _buildGradeInfo(localizations),
           Gap(16.h),
-          _buildGradeCategoryDropdown(localizations),
-          Gap(16.h),
           _buildStepSalaries(localizations),
           Gap(18.h),
           _buildDescription(localizations),
@@ -112,33 +107,49 @@ class _UpdateGradeDialogState extends ConsumerState<UpdateGradeDialog> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(color: AppColors.tableHeaderBackground, borderRadius: BorderRadius.circular(10.r)),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.info_outline, size: 20.sp, color: AppColors.textSecondary),
-          Gap(8.w),
-          Text('${localizations.gradeNumber}: ${widget.grade.gradeLabel}', style: context.textTheme.titleSmall),
-          Gap(8.w),
-          Text('(Cannot be changed)', style: context.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic)),
+          Row(
+            children: [
+              Icon(Icons.info_outline, size: 20.sp, color: AppColors.textSecondary),
+              Gap(8.w),
+              Text('(Cannot be changed)', style: context.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic)),
+            ],
+          ),
+          Gap(12.h),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.gradeNumber,
+                      style: context.textTheme.labelSmall?.copyWith(color: AppColors.textSecondary),
+                    ),
+                    Gap(4.h),
+                    Text(widget.grade.gradeLabel, style: context.textTheme.titleSmall),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.gradeCategory,
+                      style: context.textTheme.labelSmall?.copyWith(color: AppColors.textSecondary),
+                    ),
+                    Gap(4.h),
+                    Text(widget.grade.gradeCategoryLabel, style: context.textTheme.titleSmall),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildGradeCategoryDropdown(AppLocalizations localizations) {
-    final gradeCategoriesAsync = ref.watch(gradeCategoryLookupValuesProvider);
-    final items = gradeCategoriesAsync.valueOrNull ?? [];
-    final isLoading = gradeCategoriesAsync.isLoading;
-    final formState = ref.watch(updateGradeFormStateProvider(widget.grade));
-    final formNotifier = ref.read(updateGradeFormStateProvider(widget.grade).notifier);
-
-    return DigifySelectFieldWithLabel<EmplLookupValue>(
-      label: localizations.gradeCategory,
-      hint: isLoading ? localizations.pleaseWait : localizations.selectCategory,
-      value: formState.selectedGradeCategory,
-      items: items,
-      itemLabelBuilder: (v) => v.meaningEn,
-      isRequired: true,
-      onChanged: isLoading ? null : (v) => formNotifier.setSelectedGradeCategory(v),
     );
   }
 
