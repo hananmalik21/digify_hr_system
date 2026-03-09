@@ -244,6 +244,7 @@ class PositionModel {
       filled: filledPositions,
       vacant: vacant,
       isActive: status == 'ACTIVE',
+      status: status,
       createdAt: _parseDate(createdDate),
       updatedAt: _parseDate(lastUpdatedDate),
       jobFamilyRef: jobFamily?.toEntity(),

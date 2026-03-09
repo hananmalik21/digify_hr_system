@@ -30,6 +30,7 @@ class Position {
   final int filled;
   final int vacant;
   final bool isActive;
+  final String status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -66,6 +67,7 @@ class Position {
     required this.filled,
     required this.vacant,
     required this.isActive,
+    this.status = 'ACTIVE',
     this.createdAt,
     this.updatedAt,
     this.jobFamilyRef,
@@ -101,6 +103,7 @@ class Position {
     filled: 0,
     vacant: 0,
     isActive: true,
+    status: 'ACTIVE',
   );
 
   /// Calculate vacancy status
@@ -137,6 +140,7 @@ class Position {
     int? filled,
     int? vacant,
     bool? isActive,
+    String? status,
     DateTime? createdAt,
     DateTime? updatedAt,
     JobFamily? jobFamilyRef,
@@ -171,6 +175,7 @@ class Position {
       filled: filled ?? this.filled,
       vacant: vacant ?? this.vacant,
       isActive: isActive ?? this.isActive,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       jobFamilyRef: jobFamilyRef ?? this.jobFamilyRef,

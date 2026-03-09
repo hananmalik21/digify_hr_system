@@ -22,6 +22,6 @@ class WorkforcePositionsTableConfig {
   static const double reportsToWidth = 140.07;
   static const double headcountWidth = 125.12;
   static const double vacancyWidth = 140.0;
-  static const double statusWidth = 107.02;
+  static const double statusWidth = 130.02;
   static const double actionsWidth = 150.0;
 }

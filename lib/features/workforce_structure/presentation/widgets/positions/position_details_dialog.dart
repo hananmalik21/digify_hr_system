@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
@@ -33,8 +34,10 @@ class PositionDetailsDialog extends StatelessWidget {
                   PositionDetailCard(label: localizations.positionCode, value: position.code),
                   PositionDetailCard(
                     label: localizations.status,
-                    value: position.isActive ? localizations.active.toUpperCase() : localizations.active,
+                    value: position.status.isNotEmpty ? position.status.toUpperCase() : 'ACTIVE',
                     highlight: true,
+                    isActive: position.isActive,
+                    inactiveBackgroundColor: AppColors.cardBackground,
                   ),
                 ],
               ),

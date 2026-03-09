@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/utils/int_parse_utils.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/models/grade_model.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 
@@ -37,14 +38,11 @@ class JobLevelModel {
       minGradeId: json['min_grade_id'] as int? ?? 0,
       maxGradeId: json['max_grade_id'] as int? ?? 0,
       status: json['status'] as String? ?? 'ACTIVE',
-      minGrade: json['min_grade'] != null
-          ? GradeModel.fromJson(json['min_grade'] as Map<String, dynamic>)
-          : null,
-      maxGrade: json['max_grade'] != null
-          ? GradeModel.fromJson(json['max_grade'] as Map<String, dynamic>)
-          : null,
-      totalPositions: json['total_positions'] as int? ?? 0,
-      filledPositions: json['filled_positions'] as int? ?? 0,
+      minGrade: json['min_grade'] != null ? GradeModel.fromJson(json['min_grade'] as Map<String, dynamic>) : null,
+      maxGrade: json['max_grade'] != null ? GradeModel.fromJson(json['max_grade'] as Map<String, dynamic>) : null,
+      totalPositions:
+          IntParseUtils.tryParse(json['position_count']) ?? IntParseUtils.tryParse(json['total_positions']) ?? 0,
+      filledPositions: IntParseUtils.asInt(json['filled_positions']),
     );
   }
 
@@ -89,12 +87,8 @@ class JobLevelModel {
       minGradeId: entity.minGradeId,
       maxGradeId: entity.maxGradeId,
       status: entity.status,
-      minGrade: entity.minGrade != null
-          ? GradeModel.fromEntity(entity.minGrade!)
-          : null,
-      maxGrade: entity.maxGrade != null
-          ? GradeModel.fromEntity(entity.maxGrade!)
-          : null,
+      minGrade: entity.minGrade != null ? GradeModel.fromEntity(entity.minGrade!) : null,
+      maxGrade: entity.maxGrade != null ? GradeModel.fromEntity(entity.maxGrade!) : null,
       totalPositions: entity.totalPositions,
       filledPositions: entity.filledPositions,
     );
