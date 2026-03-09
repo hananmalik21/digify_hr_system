@@ -8,12 +8,7 @@ class GradeListItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const GradeListItem({
-    super.key,
-    required this.grade,
-    required this.isSelected,
-    required this.onTap,
-  });
+  const GradeListItem({super.key, required this.grade, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,24 +19,14 @@ class GradeListItem extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.05)
-              : Colors.white,
+          color: isSelected ? AppColors.primary.withValues(alpha: 0.05) : Colors.white,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected
-                ? AppColors.primary
-                : AppColors.borderGrey.withValues(alpha: 0.5),
+            color: isSelected ? AppColors.primary : AppColors.borderGrey.withValues(alpha: 0.5),
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
+              ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 4))]
               : null,
         ),
         child: Row(
@@ -68,27 +53,19 @@ class GradeListItem extends StatelessWidget {
                     grade.gradeLabel,
                     style: TextStyle(
                       fontSize: 14.sp,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w500,
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.textPrimary,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected ? AppColors.primary : AppColors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    grade.gradeCategory,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.textSecondary.withValues(alpha: 0.7),
-                    ),
+                    grade.gradeCategoryLabel,
+                    style: TextStyle(fontSize: 12.sp, color: AppColors.textSecondary.withValues(alpha: 0.7)),
                   ),
                 ],
               ),
             ),
-            if (isSelected)
-              Icon(Icons.check_circle, color: AppColors.primary, size: 20.sp),
+            if (isSelected) Icon(Icons.check_circle, color: AppColors.primary, size: 20.sp),
           ],
         ),
       ),

@@ -1,15 +1,12 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
-import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UpdateGradeFormState {
-  final EmplLookupValue? selectedGradeCategory;
   final String step1Salary;
   final String step2Salary;
   final String step3Salary;
@@ -18,7 +15,6 @@ class UpdateGradeFormState {
   final String description;
 
   const UpdateGradeFormState({
-    this.selectedGradeCategory,
     this.step1Salary = '',
     this.step2Salary = '',
     this.step3Salary = '',
@@ -40,45 +36,13 @@ class UpdateGradeFormState {
 }
 
 class UpdateGradeFormNotifier extends StateNotifier<UpdateGradeFormState> {
-  UpdateGradeFormNotifier(this._grade) : super(UpdateGradeFormState.fromGrade(_grade));
-
-  final Grade _grade;
-
-  void resolveInitialCategory(List<EmplLookupValue> values) {
-    if (state.selectedGradeCategory != null) return;
-    final matched = _findByLookupCode(_grade.gradeCategory, values);
-    if (matched != null) {
-      setSelectedGradeCategory(matched);
-    }
-  }
-
-  static EmplLookupValue? _findByLookupCode(String? code, List<EmplLookupValue> values) {
-    if (code == null || code.isEmpty) return null;
-    try {
-      return values.firstWhere((v) => v.lookupCode == code || v.lookupCode.toUpperCase() == code.toUpperCase());
-    } catch (_) {
-      return null;
-    }
-  }
-
-  void setSelectedGradeCategory(EmplLookupValue? value) {
-    state = UpdateGradeFormState(
-      selectedGradeCategory: value,
-      step1Salary: state.step1Salary,
-      step2Salary: state.step2Salary,
-      step3Salary: state.step3Salary,
-      step4Salary: state.step4Salary,
-      step5Salary: state.step5Salary,
-      description: state.description,
-    );
-  }
+  UpdateGradeFormNotifier(Grade grade) : super(UpdateGradeFormState.fromGrade(grade));
 
   void setStepSalary(int index, String value) {
     final steps = [state.step1Salary, state.step2Salary, state.step3Salary, state.step4Salary, state.step5Salary];
     if (index < 0 || index >= 5) return;
     steps[index] = value;
     state = UpdateGradeFormState(
-      selectedGradeCategory: state.selectedGradeCategory,
       step1Salary: steps[0],
       step2Salary: steps[1],
       step3Salary: steps[2],
@@ -90,7 +54,6 @@ class UpdateGradeFormNotifier extends StateNotifier<UpdateGradeFormState> {
 
   void setDescription(String value) {
     state = UpdateGradeFormState(
-      selectedGradeCategory: state.selectedGradeCategory,
       step1Salary: state.step1Salary,
       step2Salary: state.step2Salary,
       step3Salary: state.step3Salary,
@@ -113,11 +76,6 @@ class UpdateGradeFormNotifier extends StateNotifier<UpdateGradeFormState> {
     final l10n = AppLocalizations.of(context);
     if (l10n == null) return false;
 
-    if (state.selectedGradeCategory == null) {
-      ToastService.error(context, l10n.gradeCategoryRequired);
-      return false;
-    }
-
     final steps = [state.step1Salary, state.step2Salary, state.step3Salary, state.step4Salary, state.step5Salary];
     for (var i = 0; i < steps.length; i++) {
       final err = _validateStepSalary(steps[i], l10n, i);
@@ -129,7 +87,6 @@ class UpdateGradeFormNotifier extends StateNotifier<UpdateGradeFormState> {
 
     try {
       final updatedGrade = grade.copyWith(
-        gradeCategory: state.selectedGradeCategory!.lookupCode,
         step1Salary: double.parse(state.step1Salary),
         step2Salary: double.parse(state.step2Salary),
         step3Salary: double.parse(state.step3Salary),
@@ -151,11 +108,6 @@ class UpdateGradeFormNotifier extends StateNotifier<UpdateGradeFormState> {
   }
 }
 
-final updateGradeFormStateProvider = StateNotifierProvider.autoDispose
-    .family<UpdateGradeFormNotifier, UpdateGradeFormState, Grade>((ref, grade) {
-      final notifier = UpdateGradeFormNotifier(grade);
-      ref.listen(gradeCategoryLookupValuesProvider, (_, next) {
-        next.whenData((values) => notifier.resolveInitialCategory(values));
-      });
-      return notifier;
-    });
+final updateGradeFormStateProvider = StateNotifierProvider.family<UpdateGradeFormNotifier, UpdateGradeFormState, Grade>(
+  (ref, grade) => UpdateGradeFormNotifier(grade),
+);

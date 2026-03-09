@@ -100,28 +100,42 @@ class _CreateGradeDialogState extends ConsumerState<CreateGradeDialog> {
   Widget _buildGradeFields(AppLocalizations localizations) {
     return Row(
       children: [
-        Expanded(child: _buildGradeNumberDropdown(localizations)),
-        Gap(12.w),
         Expanded(child: _buildGradeCategoryDropdown(localizations)),
+        Gap(12.w),
+        Expanded(child: _buildGradeNumberDropdown(localizations)),
       ],
     );
   }
 
   Widget _buildGradeNumberDropdown(AppLocalizations localizations) {
     final gradeNumbersAsync = ref.watch(gradeNumberLookupValuesProvider);
-    final items = gradeNumbersAsync.valueOrNull ?? [];
     final isLoading = gradeNumbersAsync.isLoading;
+    final items = ref.watch(gradeNumbersForCreateGradeFormProvider);
     final formState = ref.watch(createGradeFormStateProvider);
     final formNotifier = ref.read(createGradeFormStateProvider.notifier);
+    final categorySelected = formState.selectedGradeCategory != null;
+
+    String hint;
+    if (isLoading) {
+      hint = localizations.pleaseWait;
+    } else if (!categorySelected) {
+      hint = localizations.selectGradeCategoryFirst;
+    } else if (items.isEmpty) {
+      hint = localizations.noGradeNumbersForCategory;
+    } else {
+      hint = localizations.selectGrade;
+    }
 
     return DigifySelectFieldWithLabel<EmplLookupValue>(
       label: localizations.gradeNumber,
-      hint: isLoading ? localizations.pleaseWait : localizations.selectGrade,
+      hint: hint,
       value: formState.selectedGradeNumber,
       items: items,
       itemLabelBuilder: (v) => v.meaningEn,
       isRequired: true,
-      onChanged: isLoading ? null : (v) => formNotifier.setSelectedGradeNumber(v),
+      onChanged: (isLoading || !categorySelected || items.isEmpty)
+          ? null
+          : (v) => formNotifier.setSelectedGradeNumber(v),
     );
   }
 

@@ -4,7 +4,12 @@ import 'package:digify_hr_system/features/employee_management/data/dto/empl_look
 
 abstract class EntLookupRemoteDataSource {
   Future<EmplLookupTypesResponseDto> getLookupTypes(int enterpriseId);
-  Future<EmplLookupValuesResponseDto> getLookupValues(int enterpriseId, String lookupTypeCode);
+  Future<EmplLookupValuesResponseDto> getLookupValues(
+    int enterpriseId,
+    String lookupTypeCode, {
+    int page = 1,
+    int pageSize = 100,
+  });
 }
 
 class EntLookupRemoteDataSourceImpl implements EntLookupRemoteDataSource {
@@ -21,10 +26,20 @@ class EntLookupRemoteDataSourceImpl implements EntLookupRemoteDataSource {
   }
 
   @override
-  Future<EmplLookupValuesResponseDto> getLookupValues(int enterpriseId, String lookupTypeCode) async {
+  Future<EmplLookupValuesResponseDto> getLookupValues(
+    int enterpriseId,
+    String lookupTypeCode, {
+    int page = 1,
+    int pageSize = 100,
+  }) async {
     final response = await apiClient.get(
       ApiEndpoints.entLookupValues,
-      queryParameters: {'enterprise_id': enterpriseId.toString(), 'lookup_type': lookupTypeCode},
+      queryParameters: {
+        'enterprise_id': enterpriseId.toString(),
+        'lookup_type': lookupTypeCode,
+        'page': page.toString(),
+        'page_size': pageSize.toString(),
+      },
     );
     return EmplLookupValuesResponseDto.fromJson(response);
   }
