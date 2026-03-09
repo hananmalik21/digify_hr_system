@@ -6,8 +6,10 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
+import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/manage_component_values_enterprise_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_unit_form_provider.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/widgets/dialogs/parent_org_unit_picker_dialog.dart';
@@ -208,22 +210,40 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
             ),
           ],
           Gap(24.h),
-          DigifyTextField(
-            controller: notifier.getController('managerName'),
-            labelText: localizations.manager,
-            hintText: 'Enter manager name',
-            enabled: !formState.isLoading,
+          Builder(
+            builder: (context) {
+              final enterpriseId = ref.watch(manageComponentValuesEnterpriseIdProvider);
+              if (enterpriseId != null) {
+                return EmployeeSearchField(
+                  label: localizations.manager,
+                  enterpriseId: enterpriseId,
+                  hintText: 'Type to search and select manager',
+                  selectedEmployee: formState.selectedManagerEmployee,
+                  onEmployeeSelected: (employee) => notifier.updateManagerFromEmployee(employee),
+                );
+              }
+              return DigifyTextField(
+                controller: notifier.getController('managerName'),
+                labelText: localizations.manager,
+                hintText: 'Select an enterprise first',
+                enabled: false,
+                readOnly: true,
+              );
+            },
           ),
-          Gap(24.h),
+          Gap(16.h),
           Row(
             children: [
               Expanded(
                 child: DigifyTextField(
                   controller: notifier.getController('managerEmail'),
                   labelText: 'Manager Email',
-                  hintText: 'Enter manager email',
+                  hintText: formState.selectedManagerEmployee != null
+                      ? 'Auto-filled from selected manager'
+                      : 'Enter manager email',
                   keyboardType: TextInputType.emailAddress,
                   enabled: !formState.isLoading,
+                  readOnly: formState.selectedManagerEmployee != null,
                   inputFormatters: [AppInputFormatters.email, AppInputFormatters.maxLen(150)],
                 ),
               ),
@@ -232,9 +252,12 @@ class _AddOrgUnitDialogState extends ConsumerState<AddOrgUnitDialog> {
                 child: DigifyTextField(
                   controller: notifier.getController('managerPhone'),
                   labelText: 'Manager Phone',
-                  hintText: 'Enter manager phone',
+                  hintText: formState.selectedManagerEmployee != null
+                      ? 'Auto-filled from selected manager'
+                      : 'Enter manager phone',
                   keyboardType: TextInputType.phone,
                   enabled: !formState.isLoading,
+                  readOnly: formState.selectedManagerEmployee != null,
                   inputFormatters: [AppInputFormatters.phone, AppInputFormatters.maxLen(20)],
                 ),
               ),
