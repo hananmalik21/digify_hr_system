@@ -99,7 +99,7 @@ class JobLevelsTable extends StatelessWidget {
       headerCells.add(_buildHeaderCell(context, l10n.maximumGrade, JobLevelsTableConfig.maxGradeWidth.w));
     }
     if (JobLevelsTableConfig.showTotalPositions) {
-      headerCells.add(_buildHeaderCell(context, 'Total Positions', JobLevelsTableConfig.totalPositionsWidth.w));
+      headerCells.add(_buildHeaderCell(context, 'Position Count', JobLevelsTableConfig.totalPositionsWidth.w));
     }
     if (JobLevelsTableConfig.showActions) {
       headerCells.add(_buildHeaderCell(context, 'Actions', JobLevelsTableConfig.actionsWidth.w));

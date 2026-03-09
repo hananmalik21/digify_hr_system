@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/common/position_badges.dart';
+import 'package:digify_hr_system/core/widgets/common/digify_capsule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -9,6 +9,8 @@ class PositionDetailCard extends StatelessWidget {
   final String label;
   final String value;
   final bool highlight;
+  final bool? isActive;
+  final Color? inactiveBackgroundColor;
   final bool isRtl;
   final double? width;
 
@@ -17,6 +19,8 @@ class PositionDetailCard extends StatelessWidget {
     required this.label,
     required this.value,
     this.highlight = false,
+    this.isActive,
+    this.inactiveBackgroundColor,
     this.isRtl = false,
     this.width,
   });
@@ -38,7 +42,16 @@ class PositionDetailCard extends StatelessWidget {
             Text(label, style: context.textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary)),
             Gap(6.h),
             highlight
-                ? PositionStatusBadge(label: value)
+                ? SizedBox(
+                    height: 20.h,
+                    child: DigifyCapsule(
+                      label: value,
+                      backgroundColor: isActive == true
+                          ? AppColors.shiftActiveStatusBg
+                          : (inactiveBackgroundColor ?? AppColors.inactiveStatusBg),
+                      textColor: isActive == true ? AppColors.shiftActiveStatusText : AppColors.inactiveStatusText,
+                    ),
+                  )
                 : Text(
                     value,
                     textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
