@@ -6458,6 +6458,12 @@ abstract class AppLocalizations {
   /// **'Level'**
   String get jobLevel;
 
+  /// No description provided for @grade.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade'**
+  String get grade;
+
   /// No description provided for @gradeStep.
   ///
   /// In en, this message translates to:

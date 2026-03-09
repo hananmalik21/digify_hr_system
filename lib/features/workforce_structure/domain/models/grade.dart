@@ -60,6 +60,14 @@ class Grade {
     GradeStep(step: 5, salary: step5Salary),
   ];
 
+  double get minSalary =>
+      [step1Salary, step2Salary, step3Salary, step4Salary, step5Salary].reduce((a, b) => a < b ? a : b);
+
+  double get maxSalary =>
+      [step1Salary, step2Salary, step3Salary, step4Salary, step5Salary].reduce((a, b) => a > b ? a : b);
+
+  double get averageSalary => (step1Salary + step2Salary + step3Salary + step4Salary + step5Salary) / 5;
+
   Grade copyWith({
     int? id,
     String? gradeNumber,

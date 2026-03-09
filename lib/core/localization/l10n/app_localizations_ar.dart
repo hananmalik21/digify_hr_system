@@ -3237,6 +3237,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get jobLevel => 'المستوى';
 
   @override
+  String get grade => 'الدرجة';
+
+  @override
   String get gradeStep => 'الدرجة/الخطوة';
 
   @override

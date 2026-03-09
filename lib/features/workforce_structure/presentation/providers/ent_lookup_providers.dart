@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/ent_lookup_remote_data_source.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/ent_lookup_repository_impl.dart';
@@ -38,4 +39,11 @@ final gradeNumberLookupValuesProvider = FutureProvider.autoDispose<List<EmplLook
   if (enterpriseId == null) return [];
   final repo = ref.watch(entLookupRepositoryProvider);
   return repo.getLookupValues(enterpriseId, 'GRADE_NUMBER');
+});
+
+final employmentTypeLookupValuesProvider = FutureProvider.autoDispose<List<EmplLookupValue>>((ref) async {
+  final enterpriseId = ref.watch(activeEnterpriseIdProvider);
+  if (enterpriseId == null) return [];
+  final repo = ref.watch(entLookupRepositoryProvider);
+  return repo.getLookupValues(enterpriseId, 'EMPLOYEMENT_TYPE');
 });

@@ -1197,6 +1197,7 @@
   "title": "Title",
   "jobFamily": "Job Family",
   "jobLevel": "Level",
+  "grade": "Grade",
   "gradeStep": "Grade/Step",
   "reportsTo": "Reports To",
   "headcount": "Headcount",

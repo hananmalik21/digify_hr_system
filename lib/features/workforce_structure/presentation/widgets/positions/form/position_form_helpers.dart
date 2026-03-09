@@ -10,14 +10,15 @@ class PositionFormHelpers {
   static Widget buildDropdownField<T>({
     required T? value,
     required List<T> items,
-    required ValueChanged<T?> onChanged,
+    ValueChanged<T?>? onChanged,
     String Function(T)? itemLabelProvider,
     String? hint,
+    bool readOnly = false,
   }) {
     return DigifySelectField<T>(
       value: value,
       items: items,
-      onChanged: onChanged,
+      onChanged: readOnly ? null : onChanged,
       itemLabelBuilder: (item) => itemLabelProvider?.call(item) ?? item.toString(),
       hint: hint,
     );
@@ -42,6 +43,26 @@ class PositionFormHelpers {
     );
   }
 
+  static Widget buildFormFieldFromValue({
+    required String value,
+    required ValueChanged<String> onChanged,
+    String? hint,
+    TextDirection? textDirection,
+    List<TextInputFormatter>? inputFormatters,
+    bool readOnly = false,
+    bool enabled = true,
+  }) {
+    return _ControlledFormField(
+      value: value,
+      onChanged: onChanged,
+      hint: hint,
+      textDirection: textDirection,
+      inputFormatters: inputFormatters,
+      readOnly: readOnly,
+      enabled: enabled,
+    );
+  }
+
   static Widget buildStatusSwitch({
     required String label,
     required bool value,
@@ -61,6 +82,69 @@ class PositionFormHelpers {
           activeTrackColor: AppColors.success,
         ),
       ),
+    );
+  }
+}
+
+class _ControlledFormField extends StatefulWidget {
+  final String value;
+  final ValueChanged<String> onChanged;
+  final String? hint;
+  final TextDirection? textDirection;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly;
+  final bool enabled;
+
+  const _ControlledFormField({
+    required this.value,
+    required this.onChanged,
+    this.hint,
+    this.textDirection,
+    this.inputFormatters,
+    this.readOnly = false,
+    this.enabled = true,
+  });
+
+  @override
+  State<_ControlledFormField> createState() => _ControlledFormFieldState();
+}
+
+class _ControlledFormFieldState extends State<_ControlledFormField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(_ControlledFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != _controller.text) {
+      _controller
+        ..text = widget.value
+        ..selection = TextSelection.collapsed(offset: widget.value.length);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DigifyTextField.normal(
+      controller: _controller,
+      hintText: widget.hint,
+      textDirection: widget.textDirection,
+      inputFormatters: widget.inputFormatters,
+      readOnly: widget.readOnly,
+      enabled: widget.enabled,
+      textAlign: widget.textDirection == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+      onChanged: widget.onChanged,
     );
   }
 }

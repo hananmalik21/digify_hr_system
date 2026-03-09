@@ -101,6 +101,21 @@ class PositionModel {
     return fallback;
   }
 
+  static String? _optionalString(dynamic v) {
+    if (v == null) return null;
+    if (v is String) return v.isEmpty ? null : v;
+    final s = v.toString();
+    return s.isEmpty ? null : s;
+  }
+
+  static int? _optionalInt(dynamic v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) return int.tryParse(v);
+    return null;
+  }
+
   factory PositionModel.fromJson(Map<String, dynamic> json) {
     return PositionModel(
       positionId: _asString(json['position_id']),
@@ -109,20 +124,20 @@ class PositionModel {
       positionTitleEn: _asString(json['position_title_en']),
       positionTitleAr: _asString(json['position_title_ar']),
       orgStructureId: _asString(json['org_structure_id']),
-      orgUnitId: json['org_unit_id'] as String,
-      costCenter: json['cost_center'] as String?,
-      location: json['location'] as String?,
-      jobFamilyId: json['job_family_id'] as int?,
-      jobLevelId: json['job_level_id'] as int?,
-      gradeId: json['grade_id'] as int?,
-      stepNo: json['step_no'] as int?,
+      orgUnitId: _asString(json['org_unit_id']),
+      costCenter: _optionalString(json['cost_center']),
+      location: _optionalString(json['location']),
+      jobFamilyId: _optionalInt(json['job_family_id']),
+      jobLevelId: _optionalInt(json['job_level_id']),
+      gradeId: _optionalInt(json['grade_id']),
+      stepNo: _optionalInt(json['step_no']),
       numberOfPositions: _asInt(json['number_of_positions']),
       filledPositions: _asInt(json['filled_positions']),
-      employmentType: json['employment_type'] as String?,
+      employmentType: _optionalString(json['employment_type']),
       budgetedMinKd: json['budgeted_min_kd'] != null ? _asDouble(json['budgeted_min_kd']) : null,
       budgetedMaxKd: json['budgeted_max_kd'] != null ? _asDouble(json['budgeted_max_kd']) : null,
       actualAvgKd: json['actual_avg_kd'] != null ? _asDouble(json['actual_avg_kd']) : null,
-      reportsToPositionId: _asString(json['reports_to_position_id']),
+      reportsToPositionId: _optionalString(json['reports_to_position_id']),
       createdBy: _asString(json['created_by'], fallback: 'SYSTEM'),
       createdDate: _asString(json['created_date']),
       lastUpdatedBy: _asString(json['last_updated_by'], fallback: 'SYSTEM'),
@@ -219,6 +234,7 @@ class PositionModel {
       reportsToTitle: reportsTo?.positionTitleEn,
       reportsToCode: reportsTo?.positionCode,
       division: division,
+      employmentType: employmentType,
       costCenter: costCenter ?? '',
       location: location ?? '',
       budgetedMin: budgetedMinKd != null ? budgetedMinKd!.toStringAsFixed(0) : '',
