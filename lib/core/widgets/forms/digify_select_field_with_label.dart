@@ -45,9 +45,7 @@ class DigifySelectFieldWithLabel<T> extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  color: isDark
-                      ? context.themeTextPrimary
-                      : AppColors.inputLabel,
+                  color: isDark ? context.themeTextPrimary : AppColors.inputLabel,
                   fontFamily: 'Inter',
                 ),
               ),

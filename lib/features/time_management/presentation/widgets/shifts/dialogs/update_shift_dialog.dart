@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class UpdateShiftDialog extends ConsumerStatefulWidget {
   final ShiftOverview shift;
@@ -31,7 +32,6 @@ class UpdateShiftDialog extends ConsumerStatefulWidget {
 }
 
 class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
-  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _codeController;
   late final TextEditingController _nameEnController;
   late final TextEditingController _nameArController;
@@ -45,9 +45,16 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
     _nameEnController = TextEditingController(text: widget.shift.name);
     _nameArController = TextEditingController(text: widget.shift.nameAr);
     _durationController = TextEditingController(text: DurationFormatter.formatHours(widget.shift.totalHours));
-    _breakDurationController = TextEditingController(
-      text: DurationFormatter.formatHours(widget.shift.breakHours.toDouble()),
-    );
+    _breakDurationController = TextEditingController(text: '1');
+  }
+
+  void _onFormStateChanged(UpdateShiftFormState? prev, UpdateShiftFormState next) {
+    if (prev?.duration != next.duration && next.duration.isNotEmpty) {
+      _durationController.text = next.duration;
+    }
+    if (prev?.breakDuration != next.breakDuration) {
+      _breakDurationController.text = next.breakDuration;
+    }
   }
 
   @override
@@ -63,28 +70,19 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
   Future<void> _handleUpdate() async {
     final params = (shift: widget.shift, enterpriseId: widget.enterpriseId);
     final formNotifier = ref.read(updateShiftFormProvider(params).notifier);
-
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (!formNotifier.validate()) {
-      ToastService.error(context, 'Please fill in all required fields');
-      return;
-    }
-
-    // Update shift
     final updatedShift = await formNotifier.updateShift();
 
     if (!mounted) return;
 
     if (updatedShift != null) {
       ToastService.success(context, 'Shift updated successfully', title: 'Success');
-      Navigator.of(context).pop();
+      context.pop();
     } else {
-      final errorMessage = ref.read(updateShiftFormProvider(params)).errorMessage;
-      if (errorMessage != null) {
-        ToastService.error(context, errorMessage, title: 'Error');
+      final formState = ref.read(updateShiftFormProvider(params));
+      if (formState.errors.isNotEmpty) {
+        ToastService.error(context, formState.errors.values.first, title: 'Validation Error');
+      } else if (formState.errorMessage != null) {
+        ToastService.error(context, formState.errorMessage!, title: 'Error');
       }
     }
   }
@@ -93,12 +91,12 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
   Widget build(BuildContext context) {
     final params = (shift: widget.shift, enterpriseId: widget.enterpriseId);
     final formState = ref.watch(updateShiftFormProvider(params));
+    ref.listen(updateShiftFormProvider(params), _onFormStateChanged);
 
     return AppDialog(
       title: 'Update Shift',
       width: 800.w,
       content: UpdateShiftFormContent(
-        formKey: _formKey,
         shift: widget.shift,
         codeController: _codeController,
         nameEnController: _nameEnController,
@@ -112,7 +110,7 @@ class _UpdateShiftDialogState extends ConsumerState<UpdateShiftDialog> {
           label: 'Cancel',
           type: AppButtonType.outline,
           width: null,
-          onPressed: formState.isLoading ? null : () => Navigator.of(context).pop(),
+          onPressed: formState.isLoading ? null : () => context.pop(),
         ),
         Gap(12.w),
         AppButton(
