@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
+import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/grade_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/grade_repository_impl.dart';
@@ -11,6 +12,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/ge
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -328,4 +330,99 @@ final gradesForJobLevelFormProvider = FutureProvider.autoDispose<List<Grade>>((r
     all.addAll(next.data);
   }
   return all;
+});
+
+final allGradesForPositionFormProvider = FutureProvider.autoDispose<List<Grade>>((ref) async {
+  final enterpriseId = ref.watch(activeEnterpriseIdProvider) ?? ref.watch(jobLevelsEnterpriseIdProvider);
+  if (enterpriseId == null) return [];
+  final useCase = ref.read(getGradesUseCaseProvider);
+  const pageSize = 500;
+  final response = await useCase.execute(page: 1, pageSize: pageSize, tenantId: enterpriseId);
+  List<Grade> all = List.from(response.data);
+  for (int page = 2; page <= response.meta.pagination.totalPages; page++) {
+    final next = await useCase.execute(page: page, pageSize: pageSize, tenantId: enterpriseId);
+    all.addAll(next.data);
+  }
+  return all;
+});
+
+int? _gradeNumberFromGradeNumber(String gradeNumber) {
+  final match = RegExp(r'\d+$').firstMatch(gradeNumber);
+  if (match == null) return null;
+  return int.tryParse(match.group(0)!);
+}
+
+bool _isGradeInRange(Grade g, Grade minGrade, Grade maxGrade) {
+  if (g.gradeCategory != minGrade.gradeCategory) return false;
+  final gNum = _gradeNumberFromGradeNumber(g.gradeNumber);
+  final minNum = _gradeNumberFromGradeNumber(minGrade.gradeNumber);
+  final maxNum = _gradeNumberFromGradeNumber(maxGrade.gradeNumber);
+  if (gNum == null || minNum == null || maxNum == null) return false;
+  return gNum >= minNum && gNum <= maxNum;
+}
+
+List<Grade> _filterAndSortGradesInRange(List<Grade> all, Grade minGrade, Grade maxGrade) {
+  final filtered = all.where((g) => _isGradeInRange(g, minGrade, maxGrade)).toList();
+  filtered.sort((a, b) {
+    final aNum = _gradeNumberFromGradeNumber(a.gradeNumber) ?? 0;
+    final bNum = _gradeNumberFromGradeNumber(b.gradeNumber) ?? 0;
+    return aNum.compareTo(bNum);
+  });
+  return filtered;
+}
+
+final gradesInRangeForPositionFormProvider = FutureProvider.autoDispose<List<Grade>>((ref) async {
+  final all = await ref.watch(gradesForJobLevelFormProvider.future);
+
+  final jobLevel = ref.watch(positionFormNotifierProvider.select((state) => state.jobLevel));
+  if (jobLevel == null) return [];
+
+  Grade? minGrade = jobLevel.minGrade ?? all.where((g) => g.id == jobLevel.minGradeId).firstOrNull;
+  Grade? maxGrade = jobLevel.maxGrade ?? all.where((g) => g.id == jobLevel.maxGradeId).firstOrNull;
+
+  if (minGrade == null || maxGrade == null) return [];
+  return _filterAndSortGradesInRange(all, minGrade, maxGrade);
+});
+
+final resolvedGradeForPositionFormProvider = Provider.autoDispose<Grade?>((ref) {
+  final formGrade = ref.watch(positionFormNotifierProvider.select((s) => s.grade));
+  if (formGrade == null) return null;
+  final gradesInRangeAsync = ref.watch(gradesInRangeForPositionFormProvider);
+  final gradeFromRange = gradesInRangeAsync.whenOrNull(
+    data: (grades) => grades.where((g) => g.id == formGrade.id).firstOrNull,
+  );
+  if (gradeFromRange != null) return gradeFromRange;
+  final allGradesAsync = ref.watch(allGradesForPositionFormProvider);
+  return allGradesAsync.whenOrNull(data: (all) => all.where((g) => g.id == formGrade.id).firstOrNull) ?? formGrade;
+});
+
+String _formatBudgetValue(String value) {
+  if (value.trim().isEmpty) return value;
+  final parsed = double.tryParse(value.trim());
+  return parsed != null ? parsed.toStringAsFixed(2) : value;
+}
+
+final effectiveBudgetForPositionFormProvider =
+    Provider.autoDispose<({String budgetedMin, String budgetedMax, String actualAverage})>((ref) {
+      final formState = ref.watch(positionFormNotifierProvider);
+      return (
+        budgetedMin: _formatBudgetValue(formState.budgetedMin),
+        budgetedMax: _formatBudgetValue(formState.budgetedMax),
+        actualAverage: _formatBudgetValue(formState.actualAverage),
+      );
+    });
+
+bool _gradeHasStepSalaries(Grade g) => g.minSalary > 0;
+
+final selectedStepForPositionFormProvider = Provider.autoDispose<GradeStep?>((ref) {
+  final formState = ref.watch(positionFormNotifierProvider);
+  final resolvedGrade = ref.watch(resolvedGradeForPositionFormProvider);
+  final stepStr = formState.step;
+  if (stepStr == null || stepStr.isEmpty) return null;
+  final stepNo = int.tryParse(stepStr.replaceAll(RegExp(r'[^0-9]'), ''));
+  if (stepNo == null || stepNo < 1 || stepNo > 5) return null;
+  if (resolvedGrade != null && _gradeHasStepSalaries(resolvedGrade)) {
+    return resolvedGrade.steps.where((s) => s.step == stepNo).firstOrNull;
+  }
+  return null;
 });

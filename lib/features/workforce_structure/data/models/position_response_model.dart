@@ -8,30 +8,20 @@ class PositionResponseModel {
   final MetaModel meta;
   final List<PositionModel> data;
 
-  const PositionResponseModel({
-    required this.success,
-    required this.meta,
-    required this.data,
-  });
+  const PositionResponseModel({required this.success, required this.meta, required this.data});
 
   factory PositionResponseModel.fromJson(Map<String, dynamic> json) {
     return PositionResponseModel(
       success: json['success'] as bool? ?? false,
       meta: MetaModel.fromJson(json['meta'] as Map<String, dynamic>? ?? {}),
       data:
-          (json['data'] as List<dynamic>?)
-              ?.map((e) => PositionModel.fromJson(e as Map<String, dynamic>))
-              .toList() ??
+          (json['data'] as List<dynamic>?)?.map((e) => PositionModel.fromJson(e as Map<String, dynamic>)).toList() ??
           [],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'meta': meta.toJson(),
-      'data': data.map((e) => e.toJson()).toList(),
-    };
+    return {'success': success, 'meta': meta.toJson(), 'data': data.map((e) => e.toJson()).toList()};
   }
 
   /// Convert to domain entity
@@ -67,15 +57,21 @@ class MetaModel {
 
   factory MetaModel.fromJson(Map<String, dynamic> json) {
     return MetaModel(
-      version: json['version'] as String? ?? '1.0.0',
+      version: json['api_version'] as String? ?? json['version'] as String? ?? '1.0.0',
       timestamp: json['timestamp'] as String? ?? '',
       requestId: json['request_id'] as String? ?? '',
-      count: json['count'] as int? ?? 0,
-      total: json['total'] as int? ?? 0,
-      pagination: PaginationModel.fromJson(
-        json['pagination'] as Map<String, dynamic>? ?? {},
-      ),
+      count: _asInt(json['count']),
+      total: _asInt(json['total']),
+      pagination: PaginationModel.fromJson(json['pagination'] as Map<String, dynamic>? ?? {}),
     );
+  }
+
+  static int _asInt(dynamic v) {
+    if (v == null) return 0;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) return int.tryParse(v) ?? 0;
+    return 0;
   }
 
   Map<String, dynamic> toJson() {
