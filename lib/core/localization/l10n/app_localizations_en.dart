@@ -3246,6 +3246,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jobLevel => 'Level';
 
   @override
+  String get grade => 'Grade';
+
+  @override
   String get gradeStep => 'Grade/Step';
 
   @override

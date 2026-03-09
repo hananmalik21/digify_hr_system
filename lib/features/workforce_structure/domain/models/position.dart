@@ -20,6 +20,7 @@ class Position {
   final String? reportsToTitle;
   final String? reportsToCode;
   final String division;
+  final String? employmentType;
   final String costCenter;
   final String location;
   final String budgetedMin;
@@ -55,6 +56,7 @@ class Position {
     this.reportsToTitle,
     this.reportsToCode,
     required this.division,
+    this.employmentType,
     required this.costCenter,
     required this.location,
     required this.budgetedMin,
@@ -89,6 +91,7 @@ class Position {
     reportsToTitle: null,
     reportsToCode: null,
     division: '',
+    employmentType: null,
     costCenter: '',
     location: '',
     budgetedMin: '',
@@ -124,6 +127,7 @@ class Position {
     String? reportsToTitle,
     String? reportsToCode,
     String? division,
+    String? employmentType,
     String? costCenter,
     String? location,
     String? budgetedMin,
@@ -157,6 +161,7 @@ class Position {
       reportsToTitle: reportsToTitle ?? this.reportsToTitle,
       reportsToCode: reportsToCode ?? this.reportsToCode,
       division: division ?? this.division,
+      employmentType: employmentType ?? this.employmentType,
       costCenter: costCenter ?? this.costCenter,
       location: location ?? this.location,
       budgetedMin: budgetedMin ?? this.budgetedMin,

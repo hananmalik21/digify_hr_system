@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
 import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
@@ -33,140 +34,69 @@ class PositionFormDialog extends ConsumerStatefulWidget {
 }
 
 class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
-  final _formKey = GlobalKey<FormState>();
-
-  late final Map<String, TextEditingController> _formControllers;
-  late final Map<String, String?> _selectedUnitIds;
-  bool _isSaving = false;
-  Position? _selectedReportsToPosition;
-
   @override
   void initState() {
     super.initState();
-    final position = widget.initialPosition;
-
-    if (widget.isEdit && position.reportsToPositionId != null && position.reportsToPositionId!.isNotEmpty) {
-      _selectedReportsToPosition = Position.empty().copyWith(
-        id: position.reportsToPositionId,
-        titleEnglish: position.reportsToTitle ?? '',
-        code: position.reportsToCode ?? '',
-      );
-    }
-
-    _selectedUnitIds = Map<String, String?>.from(position.orgPathIds ?? {});
-    _formControllers = {
-      'code': TextEditingController(text: position.code),
-      'titleEnglish': TextEditingController(text: position.titleEnglish),
-      'titleArabic': TextEditingController(text: position.titleArabic),
-      'costCenter': TextEditingController(text: position.costCenter),
-      'location': TextEditingController(text: position.location),
-      'positions': TextEditingController(text: position.headcount.toString()),
-      'filled': TextEditingController(text: position.filled.toString()),
-      'budgetedMin': TextEditingController(text: position.budgetedMin),
-      'budgetedMax': TextEditingController(text: position.budgetedMax),
-      'actualAverage': TextEditingController(text: position.actualAverage),
-    };
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(positionFormNotifierProvider.notifier)
-          .initialize(
-            employmentType: 'FULL_TIME',
-            isActive: position.isActive,
-            step: position.step.isEmpty ? null : position.step,
-            jobFamily: position.jobFamilyRef,
-            jobLevel: position.jobLevelRef,
-            grade: position.gradeRef,
-          );
-    });
-  }
-
-  @override
-  void dispose() {
-    for (var controller in _formControllers.values) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  void _handleEnterpriseSelection(String levelCode, String? unitId) {
-    setState(() {
-      _selectedUnitIds[levelCode] = unitId;
+          .initialize(position: widget.initialPosition, isEdit: widget.isEdit);
     });
   }
 
   bool _hasOrgUnitSelected() {
     final orgStructureState = ref.read(orgStructureNotifierProvider);
+    final formState = ref.read(positionFormNotifierProvider);
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
     for (final level in levels) {
-      if (_selectedUnitIds[level.levelCode] != null) return true;
+      if (formState.selectedUnitIds[level.levelCode] != null) return true;
     }
     return false;
   }
 
   Future<void> _handleSave() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-
     final localizations = AppLocalizations.of(context)!;
-    final validationError = ref
-        .read(positionFormNotifierProvider.notifier)
-        .validateForm(
-          positionCode: _formControllers['code']!.text,
-          titleEnglish: _formControllers['titleEnglish']!.text,
-          titleArabic: _formControllers['titleArabic']!.text,
-          costCenter: _formControllers['costCenter']!.text,
-          location: _formControllers['location']!.text,
-          numberOfPositionsStr: _formControllers['positions']!.text,
-          filledPositionsStr: _formControllers['filled']!.text,
-          budgetedMinStr: _formControllers['budgetedMin']!.text,
-          budgetedMaxStr: _formControllers['budgetedMax']!.text,
-          actualAverageStr: _formControllers['actualAverage']!.text,
-          hasOrgUnitSelected: _hasOrgUnitSelected(),
-          hasReportsToEmployeeSelected: _selectedReportsToPosition != null,
-          isEdit: widget.isEdit,
-          l: localizations,
-        );
-    if (validationError != null) {
-      ToastService.error(context, validationError, title: localizations.fieldRequired);
-      return;
-    }
+    final notifier = ref.read(positionFormNotifierProvider.notifier);
+    final isValid = notifier.validateForm(context, hasOrgUnitSelected: _hasOrgUnitSelected(), l: localizations);
+    if (!isValid) return;
 
     final formState = ref.read(positionFormNotifierProvider);
+    final effectiveBudget = ref.read(effectiveBudgetForPositionFormProvider);
     final orgStructureState = ref.read(orgStructureNotifierProvider);
 
-    // Get the deepest selected org unit
     String? lastUnitId;
     final levels = orgStructureState.orgStructure?.activeLevels ?? [];
     for (final level in levels) {
-      final id = _selectedUnitIds[level.levelCode];
+      final id = formState.selectedUnitIds[level.levelCode];
       if (id != null) {
         lastUnitId = id;
       }
     }
 
     final payload = {
-      if (!widget.isEdit) "position_code": _formControllers['code']!.text,
-      "position_title_en": _formControllers['titleEnglish']!.text,
-      "position_title_ar": _formControllers['titleArabic']!.text,
+      if (!widget.isEdit) "position_code": formState.code,
+      "position_title_en": formState.titleEnglish,
+      "position_title_ar": formState.titleArabic,
       "status": formState.isActive ? "ACTIVE" : "INACTIVE",
       "org_structure_id": orgStructureState.orgStructure?.structureId,
       "org_unit_id": lastUnitId,
-      "cost_center": _formControllers['costCenter']!.text,
-      "location": _formControllers['location']!.text,
+      "cost_center": formState.costCenter,
+      "location": formState.location,
       "job_family_id": formState.jobFamily!.id,
       "job_level_id": formState.jobLevel!.id,
       "grade_id": formState.grade!.id,
-      "number_of_positions": int.tryParse(_formControllers['positions']!.text) ?? 0,
-      "filled_positions": int.tryParse(_formControllers['filled']!.text) ?? 0,
+      "step_no": formState.stepNoForPayload,
+      "number_of_positions": int.tryParse(formState.positions) ?? 0,
+      "filled_positions": int.tryParse(formState.filled) ?? 0,
       "employment_type": formState.employmentType,
-      "budgeted_min_kd": double.tryParse(_formControllers['budgetedMin']!.text) ?? 0.0,
-      "budgeted_max_kd": double.tryParse(_formControllers['budgetedMax']!.text) ?? 0.0,
-      "actual_avg_kd": double.tryParse(_formControllers['actualAverage']!.text) ?? 0.0,
+      "budgeted_min_kd": double.tryParse(effectiveBudget.budgetedMin) ?? 0.0,
+      "budgeted_max_kd": double.tryParse(effectiveBudget.budgetedMax) ?? 0.0,
+      "actual_avg_kd": double.tryParse(effectiveBudget.actualAverage) ?? 0.0,
       "last_update_login": "HR_ADMIN",
-      "reports_to_position_id": _selectedReportsToPosition?.id,
+      "reports_to_position_id": formState.selectedReportsToPosition?.id,
     };
 
-    setState(() => _isSaving = true);
+    notifier.setIsSaving(true);
 
     try {
       if (widget.isEdit) {
@@ -193,7 +123,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
       }
     } finally {
       if (mounted) {
-        setState(() => _isSaving = false);
+        ref.read(positionFormNotifierProvider.notifier).setIsSaving(false);
       }
     }
   }
@@ -202,71 +132,68 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final formState = ref.watch(positionFormNotifierProvider);
-
+    final notifier = ref.read(positionFormNotifierProvider.notifier);
     return AppDialog(
       title: widget.isEdit ? localizations.editPosition : 'Add New Position',
       width: 1050.w,
       onClose: () => context.pop(),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BasicInfoSection(
-              localizations: localizations,
-              codeController: _formControllers['code']!,
-              titleEnglishController: _formControllers['titleEnglish']!,
-              titleArabicController: _formControllers['titleArabic']!,
-              isEdit: widget.isEdit,
-              isActive: formState.isActive,
-              onStatusChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setIsActive(val ?? true),
-            ),
-            Gap(24.h),
-            OrganizationalSection(
-              localizations: localizations,
-              selectedUnitIds: _selectedUnitIds,
-              onEnterpriseSelectionChanged: _handleEnterpriseSelection,
-              costCenterController: _formControllers['costCenter']!,
-              locationController: _formControllers['location']!,
-              initialSelections: widget.initialPosition.orgPathRefs,
-            ),
-            Gap(24.h),
-            JobClassificationSection(localizations: localizations),
-            Gap(24.h),
-            HeadcountSection(
-              localizations: localizations,
-              positionsController: _formControllers['positions']!,
-              filledController: _formControllers['filled']!,
-              selectedEmploymentType: formState.employmentType,
-              onEmploymentTypeChanged: (val) => ref.read(positionFormNotifierProvider.notifier).setEmploymentType(val),
-            ),
-            Gap(24.h),
-            SalarySection(
-              localizations: localizations,
-              budgetedMinController: _formControllers['budgetedMin']!,
-              budgetedMaxController: _formControllers['budgetedMax']!,
-              actualAverageController: _formControllers['actualAverage']!,
-            ),
-            Gap(24.h),
-            ReportingSection(
-              localizations: localizations,
-              tenantId: ref.watch(activeEnterpriseIdProvider),
-              selectedReportsToPosition: _selectedReportsToPosition,
-              onReportsToPositionSelected: (position) {
-                setState(() => _selectedReportsToPosition = position);
-              },
-            ),
-          ],
-        ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BasicInfoSection(
+            localizations: localizations,
+            code: formState.code,
+            titleEnglish: formState.titleEnglish,
+            titleArabic: formState.titleArabic,
+            isEdit: formState.isEdit,
+            isActive: formState.isActive,
+            onCodeChanged: notifier.setCode,
+            onTitleEnglishChanged: notifier.setTitleEnglish,
+            onTitleArabicChanged: notifier.setTitleArabic,
+            onStatusChanged: (val) => notifier.setIsActive(val ?? true),
+          ),
+          Gap(24.h),
+          OrganizationalSection(
+            localizations: localizations,
+            selectedUnitIds: formState.selectedUnitIds,
+            onEnterpriseSelectionChanged: (levelCode, unitId) => notifier.setSelectedUnitId(levelCode, unitId),
+            costCenter: formState.costCenter,
+            location: formState.location,
+            onCostCenterChanged: notifier.setCostCenter,
+            onLocationChanged: notifier.setLocation,
+            initialSelections: widget.initialPosition.orgPathRefs,
+          ),
+          Gap(24.h),
+          JobClassificationSection(localizations: localizations),
+          Gap(24.h),
+          HeadcountSection(
+            localizations: localizations,
+            positions: formState.positions,
+            filled: formState.filled,
+            selectedEmploymentType: formState.employmentType,
+            onPositionsChanged: notifier.setPositions,
+            onFilledChanged: notifier.setFilled,
+            onEmploymentTypeChanged: notifier.setEmploymentType,
+          ),
+          Gap(24.h),
+          SalarySection(localizations: localizations),
+          Gap(24.h),
+          ReportingSection(
+            localizations: localizations,
+            tenantId: ref.watch(activeEnterpriseIdProvider),
+            selectedReportsToPosition: formState.selectedReportsToPosition,
+            onReportsToPositionSelected: notifier.setSelectedReportsToPosition,
+          ),
+        ],
       ),
       actions: [
-        AppButton.outline(label: localizations.cancel, onPressed: _isSaving ? null : () => context.pop()),
+        AppButton.outline(label: localizations.cancel, onPressed: formState.isSaving ? null : () => context.pop()),
         Gap(12.w),
         AppButton.primary(
           label: widget.isEdit ? localizations.saveUpdates : localizations.saveChanges,
-          svgPath: _isSaving ? null : Assets.icons.saveIcon.path,
-          isLoading: _isSaving,
-          onPressed: _isSaving ? null : _handleSave,
+          svgPath: formState.isSaving ? null : Assets.icons.saveIcon.path,
+          isLoading: formState.isSaving,
+          onPressed: formState.isSaving ? null : _handleSave,
         ),
       ],
     );
