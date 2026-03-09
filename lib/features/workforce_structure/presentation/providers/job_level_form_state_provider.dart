@@ -41,7 +41,7 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
     if (jobLevel == null) return const JobLevelFormState();
     final minG = jobLevel.minGrade;
     final maxG = jobLevel.maxGrade;
-    final validMax = maxG != null && minG != null && maxG.id > minG.id ? maxG : null;
+    final validMax = maxG != null && minG != null && _isGradeNumberHigherThan(maxG, minG) ? maxG : null;
     return JobLevelFormState(selectedMinGrade: minG, selectedMaxGrade: validMax);
   }
 
@@ -57,7 +57,7 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
     final shouldClearMax =
         grade != null &&
         currentMax != null &&
-        (currentMax.gradeCategory != grade.gradeCategory || currentMax.id <= grade.id);
+        (currentMax.gradeCategory != grade.gradeCategory || !_isGradeNumberHigherThan(currentMax, grade));
 
     state = state.copyWith(
       selectedMinGrade: grade,
@@ -80,7 +80,7 @@ class JobLevelFormNotifier extends StateNotifier<JobLevelFormState> {
       if (minG != null && maxG != null) break;
     }
     _needsResolve = false;
-    if (minG != null && maxG != null && maxG.id <= minG.id) maxG = null;
+    if (minG != null && maxG != null && !_isGradeNumberHigherThan(maxG, minG)) maxG = null;
     if (minG != null || maxG != null) {
       state = state.copyWith(
         selectedMinGrade: minG ?? state.selectedMinGrade,
@@ -190,16 +190,35 @@ final jobLevelFormStateProvider = StateNotifierProvider.autoDispose
       return notifier;
     });
 
+int? _gradeNumberFromGradeNumber(String gradeNumber) {
+  final match = RegExp(r'\d+$').firstMatch(gradeNumber);
+  if (match == null) return null;
+  return int.tryParse(match.group(0)!);
+}
+
+bool _isGradeNumberHigherThan(Grade higher, Grade lower) {
+  final higherNum = _gradeNumberFromGradeNumber(higher.gradeNumber);
+  final lowerNum = _gradeNumberFromGradeNumber(lower.gradeNumber);
+  if (higherNum == null || lowerNum == null) return false;
+  return higherNum > lowerNum;
+}
+
 final maxGradeOptionsForJobLevelFormProvider = Provider.autoDispose.family<List<Grade>, JobLevel?>((ref, jobLevel) {
   final grades = ref.watch(gradesForJobLevelFormProvider).valueOrNull ?? [];
   final minGrade = ref.watch(jobLevelFormStateProvider(jobLevel)).selectedMinGrade;
   if (minGrade == null) return [];
-  final minGradeId = minGrade.id;
   final minGradeCategory = minGrade.gradeCategory;
+  final minGradeNum = _gradeNumberFromGradeNumber(minGrade.gradeNumber);
+  if (minGradeNum == null) return [];
+
   return grades.where((g) {
-    if (g.id == minGradeId) return false;
     if (g.gradeCategory != minGradeCategory) return false;
-    if (g.id <= minGradeId) return false;
-    return true;
-  }).toList();
+    final gNum = _gradeNumberFromGradeNumber(g.gradeNumber);
+    if (gNum == null) return false;
+    return gNum > minGradeNum;
+  }).toList()..sort((a, b) {
+    final aNum = _gradeNumberFromGradeNumber(a.gradeNumber) ?? 0;
+    final bNum = _gradeNumberFromGradeNumber(b.gradeNumber) ?? 0;
+    return aNum.compareTo(bNum);
+  });
 });
