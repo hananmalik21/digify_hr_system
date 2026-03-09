@@ -7,7 +7,6 @@ import 'package:digify_hr_system/features/time_management/presentation/providers
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// State for update shift form
 class UpdateShiftFormState {
   final int shiftId;
   final String code;
@@ -93,7 +92,6 @@ class UpdateShiftFormState {
   }
 }
 
-/// StateNotifier for managing update shift form
 class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
   final int _enterpriseId;
   final ShiftsNotifier? _shiftsNotifier;
@@ -117,9 +115,7 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
             return TimeOfDay(hour: hour, minute: minute);
           }
         }
-      } catch (_) {
-        // Ignore parsing errors and return null
-      }
+      } catch (_) {}
       return null;
     }
 
@@ -129,9 +125,7 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
         if (hex.length == 6) {
           return Color(int.parse('FF$hex', radix: 16));
         }
-      } catch (_) {
-        // Ignore parsing errors and return default color
-      }
+      } catch (_) {}
       return ShiftFormConfig.defaultColor;
     }
 
@@ -152,108 +146,102 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
       startTime: parseTime(shift.startTime),
       endTime: parseTime(shift.endTime),
       duration: DurationFormatter.formatHours(shift.totalHours),
-      breakDuration: DurationFormatter.formatHours(shift.breakHours.toDouble()),
+      breakDuration: '1',
       selectedColor: parseColor(shift.colorHex),
       status: getStatusDisplayName(shift.status),
     );
   }
 
-  /// Update name (English) field
   void updateNameEn(String value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('nameEn');
     state = state.copyWith(nameEn: value, errors: errors);
   }
 
-  /// Update name (Arabic) field
   void updateNameAr(String value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('nameAr');
     state = state.copyWith(nameAr: value, errors: errors);
   }
 
-  /// Update shift type
   void updateShiftType(String? value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('shiftType');
     state = state.copyWith(shiftType: value, errors: errors);
   }
 
-  /// Update start time
   void updateStartTime(TimeOfDay? value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('startTime');
     state = state.copyWith(startTime: value, errors: errors);
+    _recomputeDurationAndBreak();
   }
 
-  /// Update end time
   void updateEndTime(TimeOfDay? value) {
     final errors = Map<String, String>.from(state.errors);
     errors.remove('endTime');
     state = state.copyWith(endTime: value, errors: errors);
+    _recomputeDurationAndBreak();
   }
 
-  /// Update duration
-  void updateDuration(String value) {
-    final errors = Map<String, String>.from(state.errors);
-    errors.remove('duration');
-    state = state.copyWith(duration: value, errors: errors);
+  void _recomputeDurationAndBreak() {
+    final start = state.startTime;
+    final end = state.endTime;
+    if (start == null || end == null) return;
+
+    final startMinutes = _timeOfDayToMinutes(start);
+    final endMinutes = _timeOfDayToMinutes(end);
+    if (endMinutes <= startMinutes) return;
+
+    final spanHours = (endMinutes - startMinutes) / 60.0;
+    const breakHours = 1.0;
+    final durationHours = (spanHours - breakHours).clamp(0.0, 24.0);
+    state = state.copyWith(duration: DurationFormatter.formatHours(durationHours), breakDuration: '1');
   }
 
-  /// Update break duration
-  void updateBreakDuration(String value) {
-    state = state.copyWith(breakDuration: value);
-  }
-
-  /// Update selected color
   void updateColor(Color value) {
     state = state.copyWith(selectedColor: value);
   }
 
-  /// Update status
   void updateStatus(String value) {
     state = state.copyWith(status: value);
   }
 
-  /// Validate form
   bool validate() {
     final errors = <String, String>{};
 
     if (state.nameEn.isEmpty) {
-      errors['nameEn'] = 'Required';
+      errors['nameEn'] = 'Shift Name (English) is required';
     }
 
     if (state.shiftType == null) {
-      errors['shiftType'] = 'Please select a shift type';
+      errors['shiftType'] = 'Shift Type is required';
     }
 
     if (state.startTime == null) {
-      errors['startTime'] = 'Please select start time';
+      errors['startTime'] = 'Start Time is required';
     }
 
     if (state.endTime == null) {
-      errors['endTime'] = 'Please select end time';
+      errors['endTime'] = 'End Time is required';
     }
 
     if (state.duration.isEmpty) {
-      errors['duration'] = 'Required';
+      errors['duration'] = 'Duration is required';
     }
 
     state = state.copyWith(errors: errors);
     return errors.isEmpty;
   }
 
-  /// Reset form
   void reset() {
     state = UpdateShiftFormState(shiftId: state.shiftId, code: state.code);
   }
 
-  /// Convert Flutter TimeOfDay to minutes since midnight
   int _timeOfDayToMinutes(TimeOfDay time) {
     return time.hour * 60 + time.minute;
   }
 
-  /// Convert Color to hex string
   String _colorToHex(Color color) {
     final r = ((color.r * 255.0).round() & 0xff).toRadixString(16).padLeft(2, '0');
     final g = ((color.g * 255.0).round() & 0xff).toRadixString(16).padLeft(2, '0');
@@ -261,7 +249,6 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
     return '#$r$g$b'.toUpperCase();
   }
 
-  /// Update shift
   Future<ShiftOverview?> updateShift() async {
     if (_shiftsNotifier == null) {
       state = state.copyWith(errorMessage: 'Shifts notifier not available', isLoading: false);
@@ -279,11 +266,13 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
       final durationValue = double.tryParse(state.duration) ?? 0.0;
       final breakDurationValue = state.breakDuration.isEmpty ? 0.0 : (double.tryParse(state.breakDuration) ?? 0.0);
 
+      final shiftTypeApiValue = state.shiftType != null ? ShiftType.fromDisplayName(state.shiftType!).apiValue : 'DAY';
+
       final shiftData = <String, dynamic>{
         'tenant_id': _enterpriseId,
         'shift_name_en': state.nameEn.trim(),
         'shift_name_ar': state.nameAr.trim(),
-        'shift_type': state.shiftType ?? 'REGULAR',
+        'shift_type': shiftTypeApiValue,
         'start_minutes': _timeOfDayToMinutes(state.startTime!),
         'end_minutes': _timeOfDayToMinutes(state.endTime!),
         'duration_hours': durationValue,
@@ -311,7 +300,6 @@ class UpdateShiftFormNotifier extends StateNotifier<UpdateShiftFormState> {
   }
 }
 
-/// Family provider for update shift form that accepts shift and enterprise ID
 final updateShiftFormProvider = StateNotifierProvider.autoDispose
     .family<UpdateShiftFormNotifier, UpdateShiftFormState, ({ShiftOverview shift, int enterpriseId})>((ref, params) {
       return UpdateShiftFormNotifier(
