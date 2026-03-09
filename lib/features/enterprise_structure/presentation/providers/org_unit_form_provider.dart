@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/enterprise_structure/domain/models/org_unit_form_data.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/active_structure_stats_providers.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_provider.dart';
 import 'package:digify_hr_system/features/enterprise_structure/presentation/providers/org_units_tree_provider.dart';
@@ -15,6 +16,7 @@ class OrgUnitFormState {
   final String selectedStatus;
   final String? parentId;
   final String? parentName;
+  final Employee? selectedManagerEmployee;
 
   const OrgUnitFormState({
     this.isLoading = false,
@@ -23,6 +25,7 @@ class OrgUnitFormState {
     this.selectedStatus = 'Active',
     this.parentId,
     this.parentName,
+    this.selectedManagerEmployee,
   });
 
   OrgUnitFormState copyWith({
@@ -32,7 +35,9 @@ class OrgUnitFormState {
     String? selectedStatus,
     String? parentId,
     String? parentName,
+    Employee? selectedManagerEmployee,
     bool clearParent = false,
+    bool clearManager = false,
   }) {
     return OrgUnitFormState(
       isLoading: isLoading ?? this.isLoading,
@@ -41,6 +46,7 @@ class OrgUnitFormState {
       selectedStatus: selectedStatus ?? this.selectedStatus,
       parentId: clearParent ? null : (parentId ?? this.parentId),
       parentName: clearParent ? null : (parentName ?? this.parentName),
+      selectedManagerEmployee: clearManager ? null : (selectedManagerEmployee ?? this.selectedManagerEmployee),
     );
   }
 }
@@ -89,6 +95,7 @@ class OrgUnitFormNotifier extends StateNotifier<OrgUnitFormState> {
         parentId: initialValue.parentOrgUnitId,
         parentName:
             initialValue.parentUnit?.name ?? (initialValue.parentName.isNotEmpty ? initialValue.parentName : null),
+        selectedManagerEmployee: null,
       );
     } else {
       for (final controller in _controllers.values) {
@@ -107,6 +114,20 @@ class OrgUnitFormNotifier extends StateNotifier<OrgUnitFormState> {
       state = state.copyWith(clearParent: true);
     } else {
       state = state.copyWith(parentId: parent.orgUnitId, parentName: parent.orgUnitNameEn);
+    }
+  }
+
+  void updateManagerFromEmployee(Employee? employee) {
+    if (employee == null) {
+      _controllers['managerName']!.clear();
+      _controllers['managerEmail']!.clear();
+      _controllers['managerPhone']!.clear();
+      state = state.copyWith(clearManager: true);
+    } else {
+      _controllers['managerName']!.text = employee.fullName;
+      _controllers['managerEmail']!.text = employee.email;
+      _controllers['managerPhone']!.text = employee.phoneNumber ?? employee.mobileNumber ?? '';
+      state = state.copyWith(selectedManagerEmployee: employee);
     }
   }
 

@@ -164,9 +164,8 @@ class _JobLevelFormDialogState extends ConsumerState<JobLevelFormDialog> {
                       items: maxGradeOptions,
                       itemLabelBuilder: (g) => g.gradeLabel,
                       value:
-                          formState.selectedMinGrade != null &&
-                              formState.selectedMaxGrade != null &&
-                              formState.selectedMaxGrade!.id > formState.selectedMinGrade!.id
+                          formState.selectedMaxGrade != null &&
+                              maxGradeOptions.any((g) => g.id == formState.selectedMaxGrade!.id)
                           ? formState.selectedMaxGrade
                           : null,
                       onChanged: (gradesLoading || formState.selectedMinGrade == null || maxGradeOptions.isEmpty)

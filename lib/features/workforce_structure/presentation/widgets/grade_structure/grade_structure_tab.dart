@@ -1,4 +1,4 @@
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
+import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/common/workforce_tab_config.dart';
@@ -32,15 +32,33 @@ class _GradeStructureTabState extends ConsumerState<GradeStructureTab> {
       children: [
         const WorkforceTabEnterpriseSelector(tab: WorkforceTab.gradeStructure),
         Gap(24.h),
-        if (isLoading && grades.isEmpty)
+        if (isLoading)
           const GradeStructureSkeleton()
         else if (errorMessage != null && grades.isEmpty)
           DigifyErrorState(message: errorMessage, onRetry: () => ref.read(gradeNotifierProvider.notifier).refresh())
         else if (grades.isEmpty)
-          Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 32.h),
-              child: Text('No grades found', style: context.textTheme.bodyMedium),
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 500.h),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 64.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.workspace_premium_outlined, size: 64.sp, color: AppColors.textSecondary),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'No grades found',
+                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      'Create your first grade to get started',
+                      style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
             ),
           )
         else
@@ -74,7 +92,6 @@ class _GradeStructureTabState extends ConsumerState<GradeStructureTab> {
             onNext: gradeState.hasNextPage
                 ? () => ref.read(gradeNotifierProvider.notifier).goToPage(gradeState.currentPage + 1)
                 : null,
-            isLoading: gradeState.isLoading,
             style: PaginationStyle.simple,
           ),
         ],
