@@ -243,10 +243,16 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
         }
       }
 
-      final requestData = {
+      final requestData = <String, dynamic>{
         'tenant_id': _enterpriseId,
         'schedule_name_en': state.scheduleNameEn.trim(),
         'schedule_name_ar': state.scheduleNameAr.trim(),
+        if (state.selectedTimeZone != null) 'time_zone': state.selectedTimeZone!.tzName,
+        if (state.selectedWorkPattern != null) 'work_pattern_id': state.selectedWorkPattern!.workPatternId,
+        if (state.effectiveStartDate.trim().isNotEmpty) 'effective_start_date': state.effectiveStartDate.trim(),
+        'effective_end_date': state.effectiveEndDate.trim().isEmpty ? null : state.effectiveEndDate.trim(),
+        'assignment_mode': state.assignmentMode.apiValue,
+        'status': state.selectedStatus == PositionStatus.active ? 'ACTIVE' : 'INACTIVE',
         'weekly_lines': weeklyLines,
       };
 

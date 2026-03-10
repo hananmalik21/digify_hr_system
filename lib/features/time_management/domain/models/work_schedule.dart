@@ -261,8 +261,12 @@ class WorkSchedule {
         final dayName = dayNames[line.dayOfWeek - 1];
         if (line.dayType == 'WORK' && line.shift != null) {
           schedule[dayName] = line.shift!.shiftNameEn;
+        } else if (line.dayType == 'OFF') {
+          schedule[dayName] = 'OFF';
+        } else if (line.dayType == 'REST') {
+          schedule[dayName] = 'REST';
         } else {
-          schedule[dayName] = 'Rest';
+          schedule[dayName] = line.dayType.isEmpty ? '--' : line.dayType;
         }
       }
     }
