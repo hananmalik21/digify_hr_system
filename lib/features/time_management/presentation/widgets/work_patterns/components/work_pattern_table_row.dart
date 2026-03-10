@@ -95,6 +95,16 @@ class WorkPatternTableRow extends StatelessWidget {
               ),
               WorkPatternsTableConfig.restDaysWidth.w,
             ),
+          if (WorkPatternsTableConfig.showOffDays)
+            _buildDataCell(
+              Text(
+                '${workPattern.offDays} ${workPattern.offDays == 1 ? 'day' : 'days'}',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                ),
+              ),
+              WorkPatternsTableConfig.offDaysWidth.w,
+            ),
           if (WorkPatternsTableConfig.showHoursPerWeek)
             _buildDataCell(
               Text(

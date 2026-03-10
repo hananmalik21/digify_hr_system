@@ -6,6 +6,7 @@ class WorkPatternsTableConfig {
   static const bool showType = true;
   static const bool showWorkingDays = true;
   static const bool showRestDays = true;
+  static const bool showOffDays = true;
   static const bool showHoursPerWeek = true;
   static const bool showStatus = true;
   static const bool showActions = true;
@@ -15,6 +16,7 @@ class WorkPatternsTableConfig {
   static const double typeWidth = 180.0;
   static const double workingDaysWidth = 180.0;
   static const double restDaysWidth = 180.0;
+  static const double offDaysWidth = 180.0;
   static const double hoursPerWeekWidth = 180.0;
   static const double statusWidth = 170.0;
   static const double actionsWidth = 180.0;

@@ -91,6 +91,7 @@ class WorkPattern {
 
   int get workingDays => days.where((day) => day.dayType == 'WORK').length;
   int get restDays => days.where((day) => day.dayType == 'REST').length;
+  int get offDays => days.where((day) => day.dayType == 'OFF').length;
 }
 
 class PaginatedWorkPatterns {
