@@ -13,6 +13,8 @@ import 'package:digify_hr_system/features/time_management/presentation/widgets/s
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/schedule_assignment_enterprise_structure_fields_edit.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
+import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
+import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/active_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class EditScheduleAssignmentDialog extends ConsumerStatefulWidget {
   final int enterpriseId;
@@ -41,7 +42,6 @@ class EditScheduleAssignmentDialog extends ConsumerStatefulWidget {
 }
 
 class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssignmentDialog> {
-  final _formKey = GlobalKey<FormState>();
   late AssignmentLevel _selectedLevel;
   WorkSchedule? _selectedWorkSchedule;
   late String _selectedStatus;
@@ -49,6 +49,7 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
   Map<String, OrgUnit>? _initialSelections;
   DateTime? _effectiveStartDate;
   DateTime? _effectiveEndDate;
+  Employee? _selectedEmployee;
   late final TextEditingController _notesController;
 
   @override
@@ -161,64 +162,32 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
   }
 
   Future<void> _handleUpdate() async {
-    if (!_formKey.currentState!.validate()) {
+    final orgUnitId = _selectedLevel == AssignmentLevel.department ? _getLastSelectedOrgUnitId() : null;
+    final employeeId = _selectedLevel == AssignmentLevel.employee ? _selectedEmployee?.id : null;
+
+    final notifier = ref.read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier);
+    final errorMessage = await notifier.submitUpdateAssignment(
+      scheduleAssignmentId: widget.assignment.scheduleAssignmentId,
+      assignmentLevel: _selectedLevel,
+      orgUnitId: orgUnitId,
+      employeeId: employeeId,
+      workSchedule: _selectedWorkSchedule,
+      startDate: _effectiveStartDate,
+      endDate: _effectiveEndDate,
+      status: _selectedStatus,
+      notes: _notesController.text,
+    );
+
+    if (!mounted) return;
+
+    if (errorMessage != null) {
+      ToastService.error(context, errorMessage, title: 'Error');
       return;
     }
 
-    final orgUnitId = _getLastSelectedOrgUnitId();
-    if (orgUnitId == null) {
-      ToastService.error(context, 'Please select an organizational unit', title: 'Selection Required');
-      return;
-    }
-
-    if (_effectiveStartDate == null) {
-      ToastService.error(context, 'Please select an effective start date', title: 'Selection Required');
-      return;
-    }
-
-    if (_effectiveEndDate == null) {
-      ToastService.error(context, 'Please select an effective end date', title: 'Selection Required');
-      return;
-    }
-
-    if (_selectedWorkSchedule == null) {
-      ToastService.error(context, 'Please select a work schedule', title: 'Selection Required');
-      return;
-    }
-
-    if (_selectedStatus.isEmpty) {
-      ToastService.error(context, 'Please select a status', title: 'Selection Required');
-      return;
-    }
-
-    final assignmentData = <String, dynamic>{
-      'tenant_id': widget.enterpriseId,
-      'assignment_level': _selectedLevel == AssignmentLevel.department ? 'DEPARTMENT' : 'EMPLOYEE',
-      'org_unit_id': orgUnitId,
-      'work_schedule_id': _selectedWorkSchedule!.workScheduleId,
-      'effective_start_date': DateFormat('yyyy-MM-dd').format(_effectiveStartDate!),
-      'effective_end_date': DateFormat('yyyy-MM-dd').format(_effectiveEndDate!),
-      'status': _selectedStatus.toUpperCase(),
-      if (_notesController.text.trim().isNotEmpty) 'notes': _notesController.text.trim(),
-    };
-
-    try {
-      await ref
-          .read(scheduleAssignmentsNotifierProvider(widget.enterpriseId).notifier)
-          .updateScheduleAssignment(widget.assignment.scheduleAssignmentId, assignmentData);
-
-      if (mounted) {
-        ToastService.success(context, 'Schedule assignment updated successfully', title: 'Success');
-        await Future.delayed(const Duration(milliseconds: 300));
-        if (mounted) {
-          context.pop();
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ToastService.error(context, 'Failed to update schedule assignment: ${e.toString()}', title: 'Error');
-      }
-    }
+    ToastService.success(context, 'Schedule assignment updated successfully', title: 'Success');
+    if (!mounted) return;
+    context.pop();
   }
 
   @override
@@ -230,21 +199,37 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
     return AppDialog(
       title: 'Edit Schedule Assignment',
       width: 768.w,
-      content: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AssignmentLevelSelector(
-              selectedLevel: _selectedLevel,
-              onLevelChanged: (level) {
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AssignmentLevelSelector(
+            selectedLevel: _selectedLevel,
+            onLevelChanged: (level) {
+              setState(() {
+                _selectedLevel = level;
+                if (level == AssignmentLevel.employee) {
+                  _selectedUnitIds.clear();
+                } else {
+                  _selectedEmployee = null;
+                }
+              });
+            },
+          ),
+          Gap(24.h),
+          if (_selectedLevel == AssignmentLevel.employee)
+            EmployeeSearchField(
+              label: 'Employee',
+              isRequired: true,
+              enterpriseId: widget.enterpriseId,
+              selectedEmployee: _selectedEmployee,
+              onEmployeeSelected: (employee) {
                 setState(() {
-                  _selectedLevel = level;
+                  _selectedEmployee = employee;
                 });
               },
-            ),
-            Gap(24.h),
+            )
+          else
             ScheduleAssignmentEnterpriseStructureFieldsEdit(
               localizations: localizations,
               enterpriseId: widget.enterpriseId,
@@ -252,28 +237,27 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
               initialSelections: _initialSelections,
               onSelectionChanged: _handleEnterpriseSelection,
             ),
-            Gap(24.h),
-            WorkScheduleSelectionField(
-              label: 'Work Schedule',
-              isRequired: true,
-              enterpriseId: widget.enterpriseId,
-              selectedWorkSchedule: _selectedWorkSchedule,
-              onChanged: (schedule) {
-                setState(() {
-                  _selectedWorkSchedule = schedule;
-                });
-              },
-            ),
-            Gap(24.h),
-            _buildDateFields(),
-            Gap(24.h),
-            _buildStatusField(),
-            Gap(24.h),
-            _buildNotesField(),
-            Gap(24.h),
-            const AssignmentInfoBox(),
-          ],
-        ),
+          Gap(24.h),
+          WorkScheduleSelectionField(
+            label: 'Work Schedule',
+            isRequired: true,
+            enterpriseId: widget.enterpriseId,
+            selectedWorkSchedule: _selectedWorkSchedule,
+            onChanged: (schedule) {
+              setState(() {
+                _selectedWorkSchedule = schedule;
+              });
+            },
+          ),
+          Gap(24.h),
+          _buildDateFields(),
+          Gap(24.h),
+          _buildStatusField(),
+          Gap(24.h),
+          _buildNotesField(),
+          Gap(24.h),
+          const AssignmentInfoBox(),
+        ],
       ),
       actions: [
         AppButton(label: 'Cancel', type: AppButtonType.outline, onPressed: isUpdating ? null : () => context.pop()),
@@ -301,6 +285,9 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
           onDateSelected: (date) {
             setState(() {
               _effectiveStartDate = date;
+              if (_effectiveEndDate != null && _effectiveEndDate!.isBefore(date)) {
+                _effectiveEndDate = null;
+              }
             });
           },
           firstDate: DateTime(2000),
@@ -316,8 +303,9 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
               _effectiveEndDate = date;
             });
           },
-          firstDate: DateTime(2000),
+          firstDate: _effectiveStartDate ?? DateTime(2000),
           lastDate: DateTime(2100),
+          readOnly: _effectiveStartDate == null,
         ),
       ],
     );

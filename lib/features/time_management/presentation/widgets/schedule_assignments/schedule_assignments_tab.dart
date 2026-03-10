@@ -59,6 +59,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       await ref
           .read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier)
           .deleteScheduleAssignment(assignment.scheduleAssignmentId, hard: true);
+      await ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
     }
   }
 
@@ -106,6 +107,16 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
   Widget _buildContent(ScheduleAssignmentState scheduleAssignmentsState) {
     final effectiveEnterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
     if (effectiveEnterpriseId == null) return const SizedBox.shrink();
+
+    if (!scheduleAssignmentsState.isLoading &&
+        !scheduleAssignmentsState.hasError &&
+        scheduleAssignmentsState.items.isEmpty) {
+      return const Center(
+        child: TimeManagementEmptyStateWidget(
+          message: 'No schedule assignments found. Create your first schedule assignment to get started.',
+        ),
+      );
+    }
 
     return ScheduleAssignmentsTable(
       assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),
