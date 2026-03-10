@@ -90,6 +90,13 @@ List<DashboardButton> getDashboardButtons(AppLocalizations loc) {
       route: '/compensation',
     ),
     DashboardButton(
+      id: 'securityManager',
+      icon: Assets.icons.securityIcon.path,
+      label: 'Security Manager',
+      color: AppColors.dashManagerSS,
+      route: '/security-console',
+    ),
+    DashboardButton(
       id: 'payroll',
       icon: Assets.icons.websiteIcon.path,
       label: loc.payroll,

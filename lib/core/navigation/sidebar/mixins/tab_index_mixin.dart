@@ -129,4 +129,13 @@ mixin TabIndexMixin {
         return null;
     }
   }
+
+  int? getSecurityManagerTabIndex(String itemId) {
+    switch (itemId) {
+      case 'securityOverview':
+        return 0;
+      default:
+        return null;
+    }
+  }
 }

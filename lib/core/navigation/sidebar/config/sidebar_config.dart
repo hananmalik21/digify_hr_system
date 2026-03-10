@@ -319,7 +319,6 @@ class SidebarConfig {
           ),
         ],
       ),
-
       SidebarItem(
         id: 'timeTrackingAttendance',
         svgPath: Assets.icons.timeManagementMainIcon.path,
@@ -369,7 +368,6 @@ class SidebarConfig {
           ),
         ],
       ),
-
       SidebarItem(
         id: 'compensation',
         svgPath: Assets.icons.timeManagementMainIcon.path,
@@ -380,6 +378,19 @@ class SidebarConfig {
             svgPath: Assets.icons.structureConfigurationIcon.path,
             labelKey: 'gradeStructureManagement',
             route: '/compensation',
+          ),
+        ],
+      ),
+      SidebarItem(
+        id: 'securityManager',
+        svgPath: Assets.icons.securityIcon.path,
+        labelKey: 'securityManager',
+        children: [
+          SidebarItem(
+            id: 'securityOverview',
+            svgPath: Assets.icons.securityIcon.path,
+            labelKey: 'securityOverview',
+            route: '/security-console',
           ),
         ],
       ),
@@ -588,6 +599,10 @@ class SidebarConfig {
         return 'Compensation';
       case 'gradeStructureManagement':
         return 'Grade Structure Management';
+      case 'securityManager':
+        return 'Security Manager';
+      case 'securityOverview':
+        return 'Security Overview';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':
