@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:gap/gap.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
@@ -29,6 +30,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
       final enterpriseId = ref.read(workSchedulesTabEnterpriseIdProvider);
       if (enterpriseId != null) {
         ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }
