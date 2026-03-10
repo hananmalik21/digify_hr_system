@@ -11,11 +11,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class WorkPatternsTab extends ConsumerWidget {
+class WorkPatternsTab extends ConsumerStatefulWidget {
   const WorkPatternsTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorkPatternsTab> createState() => _WorkPatternsTabState();
+}
+
+class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(workPatternsTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(workPatternsNotifierProvider(enterpriseId).notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final effectiveEnterpriseId = ref.watch(workPatternsTabEnterpriseIdProvider);
 
     if (effectiveEnterpriseId == null) {
@@ -39,7 +55,7 @@ class WorkPatternsTab extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, WorkPatternState state, WorkPatternsNotifier notifier, int enterpriseId) {
-    if (state.isLoading && state.items.isEmpty) {
+    if (state.isLoading) {
       return WorkPatternsTable(workPatterns: const [], isLoading: true, onRetry: () => notifier.refresh());
     }
 

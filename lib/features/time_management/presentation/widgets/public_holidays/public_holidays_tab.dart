@@ -36,6 +36,17 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(publicHolidaysTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(publicHolidaysNotifierProvider(enterpriseId).notifier).refresh();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();

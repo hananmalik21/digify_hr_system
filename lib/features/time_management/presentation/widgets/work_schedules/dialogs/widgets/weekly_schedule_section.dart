@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/core/widgets/forms/shift_selection_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -11,10 +12,10 @@ class WeeklyScheduleSection extends StatelessWidget {
   final int enterpriseId;
   final List<ShiftOverview> shifts;
   final WorkPattern? selectedWorkPattern;
-  final String assignmentMode;
+  final WorkScheduleAssignmentMode assignmentMode;
   final ShiftOverview? sameShiftForAllDays;
   final Map<int, ShiftOverview?> dayShifts;
-  final ValueChanged<String> onAssignmentModeChanged;
+  final ValueChanged<WorkScheduleAssignmentMode> onAssignmentModeChanged;
   final ValueChanged<ShiftOverview?> onSameShiftChanged;
   final void Function(int dayOfWeek, ShiftOverview? shift) onDayShiftChanged;
 
@@ -59,7 +60,7 @@ class WeeklyScheduleSection extends StatelessWidget {
         if (selectedWorkPattern != null)
           _AssignmentModeSelector(isDark: isDark, assignmentMode: assignmentMode, onChanged: onAssignmentModeChanged),
         if (selectedWorkPattern != null) Gap(16.h),
-        if (assignmentMode == 'SAME_SHIFT_ALL_DAYS' && selectedWorkPattern != null)
+        if (assignmentMode == WorkScheduleAssignmentMode.sameShiftAllDays && selectedWorkPattern != null)
           _SameShiftForAllDaysSelector(
             isDark: isDark,
             enterpriseId: enterpriseId,
@@ -81,8 +82,8 @@ class WeeklyScheduleSection extends StatelessWidget {
 
 class _AssignmentModeSelector extends StatelessWidget {
   final bool isDark;
-  final String assignmentMode;
-  final ValueChanged<String> onChanged;
+  final WorkScheduleAssignmentMode assignmentMode;
+  final ValueChanged<WorkScheduleAssignmentMode> onChanged;
 
   const _AssignmentModeSelector({required this.isDark, required this.assignmentMode, required this.onChanged});
 
@@ -113,7 +114,7 @@ class _AssignmentModeSelector extends StatelessWidget {
               _RadioOption(
                 isDark: isDark,
                 label: 'Same shift for all days',
-                value: 'SAME_SHIFT_ALL_DAYS',
+                value: WorkScheduleAssignmentMode.sameShiftAllDays,
                 groupValue: assignmentMode,
                 onChanged: onChanged,
               ),
@@ -121,7 +122,7 @@ class _AssignmentModeSelector extends StatelessWidget {
               _RadioOption(
                 isDark: isDark,
                 label: 'Individual shifts per day',
-                value: 'PER_DAY_SHIFT',
+                value: WorkScheduleAssignmentMode.perDayShift,
                 groupValue: assignmentMode,
                 onChanged: onChanged,
               ),
@@ -136,9 +137,9 @@ class _AssignmentModeSelector extends StatelessWidget {
 class _RadioOption extends StatelessWidget {
   final bool isDark;
   final String label;
-  final String value;
-  final String groupValue;
-  final ValueChanged<String> onChanged;
+  final WorkScheduleAssignmentMode value;
+  final WorkScheduleAssignmentMode groupValue;
+  final ValueChanged<WorkScheduleAssignmentMode> onChanged;
 
   const _RadioOption({
     required this.isDark,

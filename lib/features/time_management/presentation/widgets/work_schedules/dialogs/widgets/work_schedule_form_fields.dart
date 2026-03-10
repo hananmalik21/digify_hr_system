@@ -79,12 +79,6 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 readOnly: widget.isScheduleCodeDisabled,
                 enabled: !widget.isScheduleCodeDisabled,
                 onChanged: widget.onScheduleCodeChanged,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Schedule code is required';
-                  }
-                  return null;
-                },
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9\-_]'))],
               ),
             ),
@@ -96,12 +90,6 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 hintText: 'e.g., Admin Department Schedule 2024',
                 isRequired: true,
                 onChanged: widget.onScheduleNameEnChanged,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Schedule name (English) is required';
-                  }
-                  return null;
-                },
               ),
             ),
           ],
@@ -116,9 +104,6 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 hintText: 'Enter schedule name in Arabic (Optional)',
                 isRequired: false,
                 onChanged: widget.onScheduleNameArChanged,
-                validator: (value) {
-                  return null;
-                },
                 inputFormatters: [AppInputFormatters.nameAny],
               ),
             ),
@@ -126,7 +111,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
             Expanded(
               child: TimeZoneSearchField(
                 label: 'Time Zone',
-                isRequired: false,
+                isRequired: true,
                 selectedTimeZone: widget.selectedTimeZone,
                 onTimeZoneSelected: (tz) => widget.onTimeZoneChanged?.call(tz),
                 hintText: 'Search time zones (e.g. America, Europe)',
@@ -158,6 +143,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 hintText: 'YYYY-MM-DD',
                 isRequired: true,
                 initialDate: widget.initialStartDate,
+                lastDate: DateTime(2100),
                 onDateSelected: widget.onStartDateSelected,
                 fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
               ),
@@ -170,6 +156,7 @@ class _WorkScheduleFormFieldsState extends State<WorkScheduleFormFields> {
                 isRequired: false,
                 initialDate: widget.initialEndDate,
                 onDateSelected: widget.onEndDateSelected,
+                lastDate: DateTime(2100),
                 fillColor: isDark ? AppColors.inputBgDark : Colors.transparent,
               ),
             ),
