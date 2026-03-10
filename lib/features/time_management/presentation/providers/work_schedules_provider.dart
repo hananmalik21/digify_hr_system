@@ -10,6 +10,7 @@ import 'package:digify_hr_system/features/time_management/domain/usecases/create
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_work_schedule_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_work_schedules_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_work_schedule_usecase.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final workScheduleApiClientProvider = Provider<ApiClient>((ref) {
@@ -112,6 +113,7 @@ final workSchedulesNotifierProvider = StateNotifierProvider.family<WorkSchedules
     ref.read(getWorkSchedulesUseCaseProvider(enterpriseId)),
     ref.read(updateWorkScheduleUseCaseProvider(enterpriseId)),
     ref.read(deleteWorkScheduleUseCaseProvider(enterpriseId)),
+    ref,
   );
 });
 
@@ -121,10 +123,15 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
   final GetWorkSchedulesUseCase _getWorkSchedulesUseCase;
   final UpdateWorkScheduleUseCase _updateWorkScheduleUseCase;
   final DeleteWorkScheduleUseCase _deleteWorkScheduleUseCase;
+  final Ref _ref;
   int? _currentEnterpriseId;
 
-  WorkSchedulesNotifier(this._getWorkSchedulesUseCase, this._updateWorkScheduleUseCase, this._deleteWorkScheduleUseCase)
-    : super(const WorkScheduleState());
+  WorkSchedulesNotifier(
+    this._getWorkSchedulesUseCase,
+    this._updateWorkScheduleUseCase,
+    this._deleteWorkScheduleUseCase,
+    this._ref,
+  ) : super(const WorkScheduleState());
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
@@ -312,6 +319,8 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
         hasPreviousPage: state.hasPreviousPage,
       );
 
+      _ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
+
       return updatedSchedule;
     } catch (e) {
       throw Exception('Failed to update work schedule: ${e.toString()}');
@@ -333,6 +342,8 @@ class WorkSchedulesNotifier extends StateNotifier<WorkScheduleState>
         deletingScheduleIds: updatedDeletingIds,
         totalItems: state.totalItems > 0 ? state.totalItems - 1 : 0,
       );
+
+      _ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
     } catch (e) {
       final updatedDeletingIds = Set<int>.from(state.deletingScheduleIds)..remove(scheduleId);
       state = state.copyWith(

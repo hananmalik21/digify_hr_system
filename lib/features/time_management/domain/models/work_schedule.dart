@@ -235,23 +235,19 @@ class WorkSchedule {
 
   bool get isActive => status == PositionStatus.active;
 
-  /// Get formatted effective start date
   String get formattedStartDate {
     return '${effectiveStartDate.year}-${effectiveStartDate.month.toString().padLeft(2, '0')}-${effectiveStartDate.day.toString().padLeft(2, '0')}';
   }
 
-  /// Get formatted effective end date or empty string if null
   String get formattedEndDate {
     if (effectiveEndDate == null) return '';
     return '${effectiveEndDate!.year}-${effectiveEndDate!.month.toString().padLeft(2, '0')}-${effectiveEndDate!.day.toString().padLeft(2, '0')}';
   }
 
-  /// Extract year from effective start date
   String get year {
     return effectiveStartDate.year.toString();
   }
 
-  /// Get weekly schedule as a map of day names to shift names
   Map<String, String> get weeklySchedule {
     final dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     final schedule = <String, String>{};
@@ -261,8 +257,12 @@ class WorkSchedule {
         final dayName = dayNames[line.dayOfWeek - 1];
         if (line.dayType == 'WORK' && line.shift != null) {
           schedule[dayName] = line.shift!.shiftNameEn;
+        } else if (line.dayType == 'OFF') {
+          schedule[dayName] = 'OFF';
+        } else if (line.dayType == 'REST') {
+          schedule[dayName] = 'REST';
         } else {
-          schedule[dayName] = 'Rest';
+          schedule[dayName] = line.dayType.isEmpty ? '--' : line.dayType;
         }
       }
     }
@@ -271,7 +271,6 @@ class WorkSchedule {
   }
 }
 
-/// Paginated work schedules response
 class PaginatedWorkSchedules {
   final List<WorkSchedule> workSchedules;
   final PaginationInfo pagination;
