@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/time_management/domain/repositories/sh
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_shift_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_shifts_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_shift_usecase.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -125,7 +126,9 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
   final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
   int? _currentEnterpriseId;
 
-  ShiftsNotifier(this._getShiftsUseCase, this._updateShiftUseCase, this._deleteShiftUseCase)
+  final Ref _ref;
+
+  ShiftsNotifier(this._getShiftsUseCase, this._updateShiftUseCase, this._deleteShiftUseCase, this._ref)
     : super(const ShiftState());
 
   void setEnterpriseId(int enterpriseId) {
@@ -368,6 +371,8 @@ class ShiftsNotifier extends StateNotifier<ShiftState>
         clearDeletingShiftId: true,
       );
 
+      _ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
+
       return true;
     } on AppException {
       state = state.copyWith(isDeleting: false, clearDeletingShiftId: true);
@@ -385,5 +390,6 @@ final shiftsNotifierProvider = StateNotifierProvider.family<ShiftsNotifier, Shif
     ref.read(getShiftsUseCaseProvider(enterpriseId)),
     ref.read(updateShiftUseCaseProvider(enterpriseId)),
     ref.read(deleteShiftUseCaseProvider(enterpriseId)),
+    ref,
   );
 });
