@@ -1,9 +1,11 @@
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_time_picker_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shift_form_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/dialogs/widgets/shift_color_picker_field.dart';
@@ -34,10 +36,8 @@ class ShiftFormContent extends ConsumerWidget {
   });
 
   Future<void> _selectTime(BuildContext context, WidgetRef ref, bool isStartTime) async {
-    final formNotifier = ref.read(shiftFormProvider(enterpriseId).notifier);
-    final currentTime = isStartTime
-        ? ref.read(shiftFormProvider(enterpriseId)).startTime
-        : ref.read(shiftFormProvider(enterpriseId)).endTime;
+    final viewState = ref.read(shiftFormViewProvider(enterpriseId));
+    final currentTime = isStartTime ? viewState.formState.startTime : viewState.formState.endTime;
 
     final TimeOfDay? picked = await DigifyTimePickerDialog.show(
       context,
@@ -48,18 +48,20 @@ class ShiftFormContent extends ConsumerWidget {
 
     if (picked != null) {
       if (isStartTime) {
-        formNotifier.updateStartTime(picked);
+        viewState.formNotifier.updateStartTime(picked);
       } else {
-        formNotifier.updateEndTime(picked);
+        viewState.formNotifier.updateEndTime(picked);
       }
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(shiftFormProvider(enterpriseId));
-    final formNotifier = ref.read(shiftFormProvider(enterpriseId).notifier);
+    final viewState = ref.watch(shiftFormViewProvider(enterpriseId));
+    final formState = viewState.formState;
+    final formNotifier = viewState.formNotifier;
     final isDark = context.isDark;
+    final localizations = AppLocalizations.of(context)!;
 
     return Form(
       key: formKey,
@@ -110,12 +112,13 @@ class ShiftFormContent extends ConsumerWidget {
               ),
               Gap(16.w),
               Expanded(
-                child: DigifySelectFieldWithLabel<String>(
+                child: DigifySelectFieldWithLabel<EmplLookupValue>(
                   label: 'Shift Type',
-                  items: ShiftFormConfig.shiftTypeOptions,
-                  itemLabelBuilder: (e) => e,
-                  value: formState.shiftType,
-                  onChanged: (value) => formNotifier.updateShiftType(value),
+                  hint: viewState.isLoadingShiftTypes ? localizations.pleaseWait : localizations.selectType,
+                  items: viewState.shiftTypeValues,
+                  itemLabelBuilder: (v) => v.meaningEn,
+                  value: viewState.selectedShiftType,
+                  onChanged: viewState.isLoadingShiftTypes ? null : (v) => formNotifier.updateShiftType(v?.lookupCode),
                   isRequired: true,
                 ),
               ),
