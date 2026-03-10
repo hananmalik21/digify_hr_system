@@ -32,6 +32,9 @@ class WorkPatternTableHeader extends StatelessWidget {
     if (WorkPatternsTableConfig.showRestDays) {
       headerCells.add(_buildHeaderCell(context, 'REST DAYS', WorkPatternsTableConfig.restDaysWidth.w));
     }
+    if (WorkPatternsTableConfig.showOffDays) {
+      headerCells.add(_buildHeaderCell(context, 'OFF DAYS', WorkPatternsTableConfig.offDaysWidth.w));
+    }
     if (WorkPatternsTableConfig.showHoursPerWeek) {
       headerCells.add(_buildHeaderCell(context, 'HOURS/WEEK', WorkPatternsTableConfig.hoursPerWeekWidth.w));
     }

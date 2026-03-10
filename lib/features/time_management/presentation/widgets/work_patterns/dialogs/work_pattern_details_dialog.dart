@@ -10,6 +10,7 @@ import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shift_status_badge.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_pattern_days_section.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/dialogs/edit_work_pattern_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,11 @@ class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMix
           _buildHeader(context, isDark),
           DigifyDivider(margin: EdgeInsets.symmetric(vertical: 24.h)),
           _buildDetailsGrid(context),
-          _buildWorkingDaysSection(context, isDark),
+          WorkPatternDaysSection(label: 'Working Days', dayType: 'WORK', workPattern: workPattern),
           Gap(16.h),
-          _buildRestDaysSection(context, isDark),
+          WorkPatternDaysSection(label: 'Rest Days', dayType: 'REST', workPattern: workPattern),
+          Gap(16.h),
+          WorkPatternDaysSection(label: 'Off Days', dayType: 'OFF', workPattern: workPattern),
         ],
       ),
       actions: [
@@ -154,87 +157,6 @@ class WorkPatternDetailsDialog extends ConsumerWidget with DateTimeConversionMix
         Gap(4.h),
         widget ?? Text(value, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.dialogTitle)),
       ],
-    );
-  }
-
-  Widget _buildWorkingDaysSection(BuildContext context, bool isDark) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Working Days',
-          style: context.textTheme.titleSmall?.copyWith(
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-          ),
-        ),
-        Gap(12.h),
-        _buildDaysRow(context, isDark, isWorking: true),
-      ],
-    );
-  }
-
-  Widget _buildRestDaysSection(BuildContext context, bool isDark) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Rest Days',
-          style: context.textTheme.titleSmall?.copyWith(
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-          ),
-        ),
-        Gap(12.h),
-        _buildDaysRow(context, isDark, isWorking: false),
-      ],
-    );
-  }
-
-  Widget _buildDaysRow(BuildContext context, bool isDark, {required bool isWorking}) {
-    final dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    final workingDayNumbers = workPattern.days
-        .where((day) => day.dayType == 'WORK')
-        .map((day) => day.dayOfWeek)
-        .toSet();
-    final restDayNumbers = workPattern.days.where((day) => day.dayType == 'REST').map((day) => day.dayOfWeek).toSet();
-
-    return Row(
-      children: List.generate(7, (index) {
-        final dayNumber = index + 1;
-        final isSelected = isWorking ? workingDayNumbers.contains(dayNumber) : restDayNumbers.contains(dayNumber);
-
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(end: index < 6 ? 8.w : 0),
-            child: _buildDayButton(context, dayNames[index], isSelected, isDark, isWorking: isWorking),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _buildDayButton(
-    BuildContext context,
-    String dayName,
-    bool isSelected,
-    bool isDark, {
-    required bool isWorking,
-  }) {
-    final backgroundColor = isSelected
-        ? (isWorking ? AppColors.shiftActiveStatusBg : AppColors.workPatternRestDayBg)
-        : AppColors.workPatternDisabledDayBg;
-    final textColor = isSelected
-        ? (isWorking ? AppColors.shiftActiveStatusText : AppColors.workPatternRestDayText)
-        : AppColors.workPatternDisabledDayText;
-
-    return Container(
-      height: 44.h,
-      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(10.r)),
-      alignment: Alignment.center,
-      child: Text(
-        dayName,
-        textAlign: TextAlign.center,
-        style: context.textTheme.titleSmall?.copyWith(color: textColor),
-      ),
     );
   }
 }

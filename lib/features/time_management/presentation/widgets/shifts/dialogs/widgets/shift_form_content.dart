@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/utils/form_validators.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_time_picker_dialog.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class ShiftFormContent extends ConsumerWidget {
-  final GlobalKey<FormState> formKey;
   final TextEditingController codeController;
   final TextEditingController nameEnController;
   final TextEditingController nameArController;
@@ -26,7 +24,6 @@ class ShiftFormContent extends ConsumerWidget {
 
   const ShiftFormContent({
     super.key,
-    required this.formKey,
     required this.codeController,
     required this.nameEnController,
     required this.nameArController,
@@ -63,162 +60,153 @@ class ShiftFormContent extends ConsumerWidget {
     final isDark = context.isDark;
     final localizations = AppLocalizations.of(context)!;
 
-    return Form(
-      key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: DigifyTextField(
-                  labelText: 'Shift Code',
-                  hintText: 'e.g., DAY-SHIFT',
-                  controller: codeController,
-                  isRequired: true,
-                  validator: (value) => FormValidators.requiredWithStateError(value, formState.errors, 'code'),
-                  onChanged: (value) => formNotifier.updateCode(value),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DigifyTextField(
+                labelText: 'Shift Code',
+                hintText: 'e.g., DAY-SHIFT',
+                controller: codeController,
+                isRequired: true,
+                validator: null,
+                onChanged: (value) => formNotifier.updateCode(value),
               ),
-              Gap(16.w),
-              Expanded(
-                child: DigifyTextField(
-                  labelText: 'Shift Name (English)',
-                  hintText: 'e.g., Day Shift',
-                  controller: nameEnController,
-                  isRequired: true,
-                  validator: (value) => FormValidators.requiredWithStateError(value, formState.errors, 'nameEn'),
-                  onChanged: (value) => formNotifier.updateNameEn(value),
-                ),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: DigifyTextField(
+                labelText: 'Shift Name (English)',
+                hintText: 'e.g., Day Shift',
+                controller: nameEnController,
+                isRequired: true,
+                validator: null,
+                onChanged: (value) => formNotifier.updateNameEn(value),
               ),
-            ],
-          ),
-          Gap(16.h),
+            ),
+          ],
+        ),
+        Gap(16.h),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: DigifyTextField(
-                  labelText: 'Shift Name (Arabic)',
-                  hintText: 'Enter shift name in Arabic (Optional)',
-                  controller: nameArController,
-                  isRequired: false,
-                  inputFormatters: [AppInputFormatters.nameAny],
-                  validator: (value) => null,
-                  onChanged: (value) => formNotifier.updateNameAr(value),
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DigifyTextField(
+                labelText: 'Shift Name (Arabic)',
+                hintText: 'Enter shift name in Arabic (Optional)',
+                controller: nameArController,
+                isRequired: false,
+                inputFormatters: [AppInputFormatters.nameAny],
+                validator: null,
+                onChanged: (value) => formNotifier.updateNameAr(value),
               ),
-              Gap(16.w),
-              Expanded(
-                child: DigifySelectFieldWithLabel<EmplLookupValue>(
-                  label: 'Shift Type',
-                  hint: viewState.isLoadingShiftTypes ? localizations.pleaseWait : localizations.selectType,
-                  items: viewState.shiftTypeValues,
-                  itemLabelBuilder: (v) => v.meaningEn,
-                  value: viewState.selectedShiftType,
-                  onChanged: viewState.isLoadingShiftTypes ? null : (v) => formNotifier.updateShiftType(v?.lookupCode),
-                  isRequired: true,
-                ),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: DigifySelectFieldWithLabel<EmplLookupValue>(
+                label: 'Shift Type',
+                hint: viewState.isLoadingShiftTypes ? localizations.pleaseWait : localizations.selectType,
+                items: viewState.shiftTypeValues,
+                itemLabelBuilder: (v) => v.meaningEn,
+                value: viewState.selectedShiftType,
+                onChanged: viewState.isLoadingShiftTypes ? null : (v) => formNotifier.updateShiftType(v?.lookupCode),
+                isRequired: true,
               ),
-            ],
-          ),
-          Gap(16.h),
+            ),
+          ],
+        ),
+        Gap(16.h),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ShiftTimePickerField(
-                  label: 'Start Time',
-                  hintText: '09:00 AM',
-                  time: formState.startTime,
-                  onTap: () => _selectTime(context, ref, true),
-                  isDark: isDark,
-                  isRequired: true,
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ShiftTimePickerField(
+                label: 'Start Time',
+                hintText: '09:00 AM',
+                time: formState.startTime,
+                onTap: () => _selectTime(context, ref, true),
+                isDark: isDark,
+                isRequired: true,
               ),
-              Gap(16.w),
-              Expanded(
-                child: ShiftTimePickerField(
-                  label: 'End Time',
-                  hintText: '05:00 PM',
-                  time: formState.endTime,
-                  onTap: () => _selectTime(context, ref, false),
-                  isDark: isDark,
-                  isRequired: true,
-                ),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: ShiftTimePickerField(
+                label: 'End Time',
+                hintText: '05:00 PM',
+                time: formState.endTime,
+                onTap: () => _selectTime(context, ref, false),
+                isDark: isDark,
+                isRequired: true,
               ),
-            ],
-          ),
-          Gap(16.h),
+            ),
+          ],
+        ),
+        Gap(16.h),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: DigifyTextField(
-                  labelText: 'Duration (Hours)',
-                  hintText: '8',
-                  controller: durationController,
-                  isRequired: true,
-                  enabled: false,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
-                  validator: (value) {
-                    final requiredError = FormValidators.requiredWithStateError(value, formState.errors, 'duration');
-                    if (requiredError != null) {
-                      return requiredError;
-                    }
-                    return FormValidators.positiveNumber(value);
-                  },
-                  onChanged: (value) => formNotifier.updateDuration(value),
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DigifyTextField(
+                labelText: 'Duration (Hours)',
+                hintText: '8',
+                controller: durationController,
+                isRequired: true,
+                enabled: false,
+                keyboardType: TextInputType.number,
+                inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
+                validator: null,
+                onChanged: (value) => formNotifier.updateDuration(value),
               ),
-              Gap(16.w),
-              Expanded(
-                child: DigifyTextField(
-                  labelText: 'Break Duration (Hours)',
-                  hintText: '1',
-                  controller: breakDurationController,
-                  isRequired: true,
-                  enabled: false,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
-                  validator: (value) => FormValidators.requiredWithStateError(value, formState.errors, 'breakDuration'),
-                  onChanged: (value) => formNotifier.updateBreakDuration(value),
-                ),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: DigifyTextField(
+                labelText: 'Break Duration (Hours)',
+                hintText: '1',
+                controller: breakDurationController,
+                isRequired: true,
+                enabled: false,
+                keyboardType: TextInputType.number,
+                inputFormatters: [AppInputFormatters.decimalWithOnePlace()],
+                validator: null,
+                onChanged: (value) => formNotifier.updateBreakDuration(value),
               ),
-            ],
-          ),
-          Gap(16.h),
+            ),
+          ],
+        ),
+        Gap(16.h),
 
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: ShiftColorPickerField(
-                  selectedColor: formState.selectedColor,
-                  onColorChanged: (color) => formNotifier.updateColor(color),
-                  isDark: isDark,
-                ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+              child: ShiftColorPickerField(
+                selectedColor: formState.selectedColor,
+                onColorChanged: (color) => formNotifier.updateColor(color),
+                isDark: isDark,
               ),
-              Gap(16.w),
-              Expanded(
-                child: DigifySelectFieldWithLabel<String>(
-                  label: 'Status',
-                  items: ShiftFormConfig.statusOptions,
-                  itemLabelBuilder: (e) => e,
-                  value: formState.status,
-                  onChanged: (value) => formNotifier.updateStatus(value!),
-                  isRequired: true,
-                ),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: DigifySelectFieldWithLabel<String>(
+                label: 'Status',
+                items: ShiftFormConfig.statusOptions,
+                itemLabelBuilder: (e) => e,
+                value: formState.status,
+                onChanged: (value) => formNotifier.updateStatus(value!),
+                isRequired: true,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
