@@ -73,6 +73,9 @@ class AppRoutes {
   static const String compensationGradeStructureManagement =
       '$compensation/grade-structure-management';
 
+  // Security routes
+  static const String securityManager = '/security-console';
+
   // Other routes
   static const String leaveManagement = '/leave-management';
   static const String leaveManagementLeaveRequests =

@@ -15,6 +15,7 @@ import '../../features/time_management/presentation/screens/time_management_scre
 import '../../features/time_tracking_and_attendance/domain/models/timesheet/timesheet.dart';
 import '../../features/time_tracking_and_attendance/presentation/screens/time_tracking_and_attendance_screen.dart';
 import '../../features/time_tracking_and_attendance/presentation/screens/timesheet_detail_screen.dart';
+import '../../features/security_manager/presentation/screens/security_manager_screen.dart';
 import '../../features/workforce_structure/presentation/screens/workforce_structure_screen.dart';
 import '../navigation/app_layout.dart';
 import '../navigation/root_navigator_key.dart';
@@ -194,6 +195,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.compensation,
             name: 'compensation',
             builder: (context, state) => const CompensationScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.securityManager,
+            name: 'security-manager',
+            builder: (context, state) => const SecurityManagerScreen(),
           ),
           GoRoute(
             path: AppRoutes.payroll,

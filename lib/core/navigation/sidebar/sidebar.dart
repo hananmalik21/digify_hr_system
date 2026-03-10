@@ -22,6 +22,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/compensation/presentation/providers/compensation_tab_state_provider.dart';
+import '../../../features/security_manager/presentation/providers/security_manager_tab_state_provider.dart';
 import '../../../features/time_tracking_and_attendance/presentation/providers/time_tracking_and_attendance_tab_state_provider.dart';
 
 class Sidebar extends ConsumerStatefulWidget {
@@ -84,6 +85,13 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
               .read(timeTrackingAndAttendanceTabStateProvider.notifier)
               .setTabIndex(tabIndex);
         }
+      } else if (item.route == AppRoutes.securityManager) {
+        final tabIndex = getSecurityManagerTabIndex(item.id);
+        if (tabIndex != null) {
+          ref
+              .read(securityManagerTabStateProvider.notifier)
+              .setTabIndex(tabIndex);
+        }
       }
       context.go(item.route!);
       if (ResponsiveHelper.isMobile(context)) {
@@ -127,6 +135,11 @@ class _SidebarState extends ConsumerState<Sidebar> with TabIndexMixin {
     } else if (route == AppRoutes.compensation) {
       final state = ref.watch(compensationTabStateProvider);
       final itemTabIndex = getCompensationTabIndex(itemId);
+      if (itemTabIndex == null) return false;
+      return itemTabIndex == state.currentTabIndex;
+    } else if (route == AppRoutes.securityManager) {
+      final state = ref.watch(securityManagerTabStateProvider);
+      final itemTabIndex = getSecurityManagerTabIndex(itemId);
       if (itemTabIndex == null) return false;
       return itemTabIndex == state.currentTabIndex;
     }
