@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
+import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/public_holiday_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/public_holiday_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/public_holiday.dart';
@@ -156,7 +157,9 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
     required this.updateHolidayUseCase,
     required int enterpriseId,
   }) : _currentEnterpriseId = enterpriseId,
-       super(const PublicHolidaysState());
+       super(const PublicHolidaysState()) {
+    state = state.copyWith(selectedYear: PublicHolidaysConfig.defaultYear);
+  }
 
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId == enterpriseId) return;
@@ -174,6 +177,39 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
     await loadFirstPage();
   }
 
+  String? validateHolidayInputs({
+    required String nameEn,
+    required DateTime? date,
+    required HolidayType? type,
+    required String descriptionEn,
+    required String? appliesToLabel,
+    required String yearText,
+  }) {
+    if (nameEn.trim().isEmpty) {
+      return 'Holiday name in English is required';
+    }
+    if (date == null) {
+      return 'Please select a date';
+    }
+    if (type == null) {
+      return 'Please select a holiday type';
+    }
+    if (descriptionEn.trim().isEmpty) {
+      return 'Description in English is required';
+    }
+    if (appliesToLabel == null || appliesToLabel.trim().isEmpty) {
+      return 'Please select who this holiday applies to';
+    }
+    if (yearText.trim().isEmpty) {
+      return 'Year is required';
+    }
+    final year = int.tryParse(yearText.trim());
+    if (year == null || year < 1900 || year > 2100) {
+      return 'Please enter a valid year';
+    }
+    return null;
+  }
+
   @override
   Future<void> loadFirstPage() async {
     if (_currentEnterpriseId == null) return;
@@ -187,7 +223,7 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
         page: 1,
         pageSize: state.pageSize,
         search: state.searchQuery,
-        year: state.selectedYear,
+        year: state.selectedYear == PublicHolidaysConfig.defaultYear ? null : state.selectedYear,
         type: state.selectedType,
       );
 
@@ -224,7 +260,7 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
         page: nextPage,
         pageSize: state.pageSize,
         search: state.searchQuery,
-        year: state.selectedYear,
+        year: state.selectedYear == PublicHolidaysConfig.defaultYear ? null : state.selectedYear,
         type: state.selectedType,
       );
 
@@ -306,8 +342,9 @@ class PublicHolidaysNotifier extends StateNotifier<PublicHolidaysState>
   }
 
   void setSelectedYear(String? year) {
-    if (state.selectedYear == year) return;
-    state = state.copyWith(selectedYear: year, currentPage: 1);
+    final normalized = year ?? PublicHolidaysConfig.defaultYear;
+    if (state.selectedYear == normalized) return;
+    state = state.copyWith(selectedYear: normalized, currentPage: 1);
     loadHolidays(refresh: true);
   }
 

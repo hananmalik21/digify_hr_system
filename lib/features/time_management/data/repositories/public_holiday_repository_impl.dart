@@ -55,7 +55,7 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
       'HOLIDAY_TYPE': type.apiValue.toUpperCase(),
       'DESCRIPTION_EN': descriptionEn,
       'DESCRIPTION_AR': descriptionAr,
-      'APPLIES_TO': appliesTo.toUpperCase(),
+      'APPLIES_TO': appliesTo,
       'STATUS': 'ACTIVE',
     };
 
@@ -92,7 +92,7 @@ class PublicHolidayRepositoryImpl implements PublicHolidayRepository {
       'HOLIDAY_TYPE': type.apiValue.toUpperCase(),
       'DESCRIPTION_EN': descriptionEn,
       'DESCRIPTION_AR': descriptionAr,
-      'APPLIES_TO': appliesTo.toUpperCase(),
+      'APPLIES_TO': appliesTo,
       'STATUS': 'ACTIVE',
     };
 
