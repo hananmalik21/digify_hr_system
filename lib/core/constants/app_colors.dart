@@ -318,6 +318,8 @@ class AppColors {
   // Work Pattern Day Colors
   static const Color workPatternRestDayBg = Color(0xFFFFE2E2);
   static const Color workPatternRestDayText = Color(0xFF9F0712);
+  static const Color workPatternOffDayBg = Color(0xFFE0F2FE);
+  static const Color workPatternOffDayText = Color(0xFF075985);
   static const Color workPatternDisabledDayBg = Color(0xFFF3F4F6);
   static const Color workPatternDisabledDayText = Color(0xFF99A1AF);
 

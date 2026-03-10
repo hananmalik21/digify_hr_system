@@ -125,6 +125,53 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
     this._ref,
   ) : super(const WorkPatternState());
 
+  String? validateCreateInputs({
+    required String patternCode,
+    required String patternNameEn,
+    required String? patternNameAr,
+    required String? patternType,
+    required int totalHoursPerWeek,
+  }) {
+    if (patternCode.trim().isEmpty) {
+      return 'Pattern code is required';
+    }
+
+    if (patternNameEn.trim().isEmpty) {
+      return 'Pattern name (English) is required';
+    }
+
+    if (patternType == null || patternType.trim().isEmpty) {
+      return 'Pattern type is required';
+    }
+
+    if (totalHoursPerWeek <= 0) {
+      return 'Total hours per week must be greater than 0';
+    }
+
+    return null;
+  }
+
+  String? validateUpdateInputs({
+    required String patternNameEn,
+    required String? patternNameAr,
+    required String? patternType,
+    required int totalHoursPerWeek,
+  }) {
+    if (patternNameEn.trim().isEmpty) {
+      return 'Pattern name (English) is required';
+    }
+
+    if (patternType == null || patternType.trim().isEmpty) {
+      return 'Pattern type is required';
+    }
+
+    if (totalHoursPerWeek <= 0 || totalHoursPerWeek > 168) {
+      return 'Please enter a valid number of hours per week (1-168)';
+    }
+
+    return null;
+  }
+
   void setEnterpriseId(int enterpriseId) {
     if (_currentEnterpriseId != enterpriseId) {
       _currentEnterpriseId = enterpriseId;
@@ -422,6 +469,103 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
   }
 }
 
+class WorkPatternDaysState {
+  const WorkPatternDaysState({
+    this.workingDays = const <int>{},
+    this.restDays = const <int>{},
+    this.offDays = const <int>{},
+  });
+
+  final Set<int> workingDays;
+  final Set<int> restDays;
+  final Set<int> offDays;
+
+  WorkPatternDaysState copyWith({Set<int>? workingDays, Set<int>? restDays, Set<int>? offDays}) {
+    return WorkPatternDaysState(
+      workingDays: workingDays ?? this.workingDays,
+      restDays: restDays ?? this.restDays,
+      offDays: offDays ?? this.offDays,
+    );
+  }
+}
+
+class WorkPatternDaysNotifier extends StateNotifier<WorkPatternDaysState> {
+  WorkPatternDaysNotifier() : super(const WorkPatternDaysState());
+
+  void initializeFromDays(List<WorkPatternDay> days) {
+    final working = <int>{};
+    final rest = <int>{};
+    final off = <int>{};
+
+    for (final day in days) {
+      switch (day.dayType) {
+        case 'WORK':
+          working.add(day.dayOfWeek);
+          break;
+        case 'REST':
+          rest.add(day.dayOfWeek);
+          break;
+        case 'OFF':
+          off.add(day.dayOfWeek);
+          break;
+        default:
+          break;
+      }
+    }
+
+    state = WorkPatternDaysState(workingDays: working, restDays: rest, offDays: off);
+  }
+
+  void toggleWorkingDay(int dayNumber) {
+    final working = Set<int>.from(state.workingDays);
+    final rest = Set<int>.from(state.restDays);
+    final off = Set<int>.from(state.offDays);
+    if (working.contains(dayNumber)) {
+      working.remove(dayNumber);
+    } else {
+      working.add(dayNumber);
+      rest.remove(dayNumber);
+      off.remove(dayNumber);
+    }
+    state = WorkPatternDaysState(workingDays: working, restDays: rest, offDays: off);
+  }
+
+  void toggleRestDay(int dayNumber) {
+    final working = Set<int>.from(state.workingDays);
+    final rest = Set<int>.from(state.restDays);
+    final off = Set<int>.from(state.offDays);
+    if (rest.contains(dayNumber)) {
+      rest.remove(dayNumber);
+    } else {
+      rest.add(dayNumber);
+      working.remove(dayNumber);
+      off.remove(dayNumber);
+    }
+    state = WorkPatternDaysState(workingDays: working, restDays: rest, offDays: off);
+  }
+
+  void toggleOffDay(int dayNumber) {
+    final working = Set<int>.from(state.workingDays);
+    final rest = Set<int>.from(state.restDays);
+    final off = Set<int>.from(state.offDays);
+    if (off.contains(dayNumber)) {
+      off.remove(dayNumber);
+    } else {
+      off.add(dayNumber);
+      working.remove(dayNumber);
+      rest.remove(dayNumber);
+    }
+    state = WorkPatternDaysState(workingDays: working, restDays: rest, offDays: off);
+  }
+
+  void reset() {
+    state = const WorkPatternDaysState();
+  }
+}
+
+final workPatternDaysProvider = StateNotifierProvider.autoDispose
+    .family<WorkPatternDaysNotifier, WorkPatternDaysState, int>((ref, enterpriseId) => WorkPatternDaysNotifier());
+
 const String workPatternTypeLookupCode = 'PATTERN_TYPE';
 
 class WorkPatternTypeState {
@@ -455,11 +599,24 @@ EmplLookupValue? _workPatternTypeByCode(String? code, List<EmplLookupValue> valu
 }
 
 class WorkPatternTypeViewState {
-  const WorkPatternTypeViewState({required this.items, required this.isLoading, required this.selected});
+  const WorkPatternTypeViewState({
+    required this.items,
+    required this.isLoading,
+    required this.selected,
+    required this.requiredWorkingDays,
+  });
 
   final List<EmplLookupValue> items;
   final bool isLoading;
   final EmplLookupValue? selected;
+  final int? requiredWorkingDays;
+}
+
+int? _requiredWorkingDaysForPatternLabel(String? patternLabel) {
+  if (patternLabel == null || patternLabel.isEmpty) return null;
+  final match = RegExp(r'^(\d+)').firstMatch(patternLabel.trim());
+  if (match == null) return 0;
+  return int.tryParse(match.group(1) ?? '');
 }
 
 final workPatternTypeViewProvider = Provider.autoDispose.family<WorkPatternTypeViewState, int>((ref, enterpriseId) {
@@ -469,6 +626,12 @@ final workPatternTypeViewProvider = Provider.autoDispose.family<WorkPatternTypeV
   );
   final items = lookupAsync.valueOrNull ?? <EmplLookupValue>[];
   final selected = _workPatternTypeByCode(typeState.selectedCode, items);
+  final requiredWorkingDays = _requiredWorkingDaysForPatternLabel(selected?.meaningEn);
 
-  return WorkPatternTypeViewState(items: items, isLoading: lookupAsync.isLoading, selected: selected);
+  return WorkPatternTypeViewState(
+    items: items,
+    isLoading: lookupAsync.isLoading,
+    selected: selected,
+    requiredWorkingDays: requiredWorkingDays,
+  );
 });

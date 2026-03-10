@@ -198,11 +198,11 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
     final errors = <String, String>{};
 
     if (state.code.isEmpty) {
-      errors['code'] = 'Required';
+      errors['code'] = 'Shift Code is required';
     }
 
     if (state.nameEn.isEmpty) {
-      errors['nameEn'] = 'Required';
+      errors['nameEn'] = 'Shift Name (English) is required';
     }
 
     if (state.shiftType == null) {
@@ -210,19 +210,19 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
     }
 
     if (state.startTime == null) {
-      errors['startTime'] = 'Please select start time';
+      errors['startTime'] = 'Start Time is required';
     }
 
     if (state.endTime == null) {
-      errors['endTime'] = 'Please select end time';
+      errors['endTime'] = 'End Time is required';
     }
 
     if (state.duration.isEmpty) {
-      errors['duration'] = 'Required';
+      errors['duration'] = 'Duration is required';
     }
 
     if (state.breakDuration.isEmpty) {
-      errors['breakDuration'] = 'Required';
+      errors['breakDuration'] = 'Break Duration is required';
     }
 
     state = state.copyWith(errors: errors);

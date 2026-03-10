@@ -28,7 +28,6 @@ class CreateShiftDialog extends ConsumerStatefulWidget {
 }
 
 class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
-  final _formKey = GlobalKey<FormState>();
   final _codeController = TextEditingController();
   final _nameEnController = TextEditingController();
   final _nameArController = TextEditingController();
@@ -55,15 +54,6 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
     final formNotifier = ref.read(shiftFormProvider(widget.enterpriseId).notifier);
     final shiftsNotifier = ref.read(shiftsNotifierProvider(widget.enterpriseId).notifier);
 
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (!formNotifier.validate()) {
-      ToastService.error(context, 'Please fill in all required fields');
-      return;
-    }
-
     final createdShift = await formNotifier.createShift();
 
     if (!mounted) return;
@@ -73,9 +63,11 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
       ToastService.success(context, 'Shift created successfully', title: 'Success');
       Navigator.of(context).pop();
     } else {
-      final errorMessage = ref.read(shiftFormProvider(widget.enterpriseId)).errorMessage;
-      if (errorMessage != null) {
-        ToastService.error(context, errorMessage, title: 'Error');
+      final formState = ref.read(shiftFormProvider(widget.enterpriseId));
+      if (formState.errors.isNotEmpty) {
+        ToastService.error(context, formState.errors.values.first, title: 'Validation Error');
+      } else if (formState.errorMessage != null) {
+        ToastService.error(context, formState.errorMessage!, title: 'Error');
       }
     }
   }
@@ -104,7 +96,6 @@ class _CreateShiftDialogState extends ConsumerState<CreateShiftDialog> {
       title: 'Create New Shift',
       width: 800.w,
       content: ShiftFormContent(
-        formKey: _formKey,
         codeController: _codeController,
         nameEnController: _nameEnController,
         nameArController: _nameArController,
