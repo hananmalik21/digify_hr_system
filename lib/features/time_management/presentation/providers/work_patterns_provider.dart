@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/work_pattern_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/work_pattern_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -9,7 +10,9 @@ import 'package:digify_hr_system/features/time_management/domain/usecases/delete
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_work_patterns_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_work_pattern_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_pattern_create_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final workPatternRemoteDataSourceProvider = Provider<WorkPatternRemoteDataSource>((ref) {
@@ -100,6 +103,7 @@ final workPatternsNotifierProvider = StateNotifierProvider.family<WorkPatternsNo
     ref.read(createWorkPatternUseCaseProvider(enterpriseId)),
     ref.read(updateWorkPatternUseCaseProvider(enterpriseId)),
     ref.read(deleteWorkPatternUseCaseProvider(enterpriseId)),
+    ref,
   );
 });
 
@@ -111,12 +115,14 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
   final UpdateWorkPatternUseCase _updateWorkPatternUseCase;
   final DeleteWorkPatternUseCase _deleteWorkPatternUseCase;
   int? _currentEnterpriseId;
+  final Ref _ref;
 
   WorkPatternsNotifier(
     this._getWorkPatternsUseCase,
     this._createWorkPatternUseCase,
     this._updateWorkPatternUseCase,
     this._deleteWorkPatternUseCase,
+    this._ref,
   ) : super(const WorkPatternState());
 
   void setEnterpriseId(int enterpriseId) {
@@ -356,9 +362,8 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
       );
 
       ref.read(workPatternCreateStateProvider.notifier).state = const WorkPatternCreateState(isCreating: false);
-
-      // Optimistically update the list - add to the beginning
       state = state.copyWith(items: [createdPattern, ...state.items], totalItems: state.totalItems + 1);
+      ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
 
       return createdPattern;
     } catch (e) {
@@ -409,8 +414,61 @@ class WorkPatternsNotifier extends StateNotifier<WorkPatternState>
         items: state.items.where((p) => p.workPatternId != workPatternId).toList(),
         totalItems: state.totalItems - 1,
       );
+
+      _ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
     } catch (e) {
       rethrow;
     }
   }
 }
+
+const String workPatternTypeLookupCode = 'PATTERN_TYPE';
+
+class WorkPatternTypeState {
+  const WorkPatternTypeState({this.selectedCode});
+
+  final String? selectedCode;
+
+  WorkPatternTypeState copyWith({String? selectedCode}) {
+    return WorkPatternTypeState(selectedCode: selectedCode ?? this.selectedCode);
+  }
+}
+
+class WorkPatternTypeNotifier extends StateNotifier<WorkPatternTypeState> {
+  WorkPatternTypeNotifier() : super(const WorkPatternTypeState());
+
+  void setSelectedCode(String? code) {
+    state = state.copyWith(selectedCode: code);
+  }
+}
+
+final workPatternTypeProvider = StateNotifierProvider.autoDispose
+    .family<WorkPatternTypeNotifier, WorkPatternTypeState, int>((ref, enterpriseId) => WorkPatternTypeNotifier());
+
+EmplLookupValue? _workPatternTypeByCode(String? code, List<EmplLookupValue> values) {
+  if (code == null || code.isEmpty) return null;
+  try {
+    return values.firstWhere((v) => v.lookupCode == code);
+  } catch (_) {
+    return null;
+  }
+}
+
+class WorkPatternTypeViewState {
+  const WorkPatternTypeViewState({required this.items, required this.isLoading, required this.selected});
+
+  final List<EmplLookupValue> items;
+  final bool isLoading;
+  final EmplLookupValue? selected;
+}
+
+final workPatternTypeViewProvider = Provider.autoDispose.family<WorkPatternTypeViewState, int>((ref, enterpriseId) {
+  final typeState = ref.watch(workPatternTypeProvider(enterpriseId));
+  final lookupAsync = ref.watch(
+    entLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: workPatternTypeLookupCode)),
+  );
+  final items = lookupAsync.valueOrNull ?? <EmplLookupValue>[];
+  final selected = _workPatternTypeByCode(typeState.selectedCode, items);
+
+  return WorkPatternTypeViewState(items: items, isLoading: lookupAsync.isLoading, selected: selected);
+});

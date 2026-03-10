@@ -1,9 +1,12 @@
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/utils/duration_formatter.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/time_management/data/config/shift_form_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart' hide TimeOfDay;
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_shift_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/ent_lookup_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -92,11 +95,13 @@ class ShiftFormState {
 
 /// StateNotifier for managing shift form
 class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
+  final Ref _ref;
   final int _enterpriseId;
   final CreateShiftUseCase? _createShiftUseCase;
 
-  ShiftFormNotifier({required int enterpriseId, CreateShiftUseCase? createShiftUseCase})
-    : _enterpriseId = enterpriseId,
+  ShiftFormNotifier({required Ref ref, required int enterpriseId, CreateShiftUseCase? createShiftUseCase})
+    : _ref = ref,
+      _enterpriseId = enterpriseId,
       _createShiftUseCase = createShiftUseCase,
       super(ShiftFormState());
 
@@ -264,7 +269,7 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
         'shift_code': state.code.trim(),
         'shift_name_en': state.nameEn.trim(),
         'shift_name_ar': state.nameAr.trim(),
-        'shift_type': state.shiftType ?? 'REGULAR',
+        'shift_type': state.shiftType ?? 'DAY',
         'start_minutes': _timeOfDayToMinutes(state.startTime!),
         'end_minutes': _timeOfDayToMinutes(state.endTime!),
         'duration_hours': double.tryParse(state.duration) ?? 0.0,
@@ -276,6 +281,8 @@ class ShiftFormNotifier extends StateNotifier<ShiftFormState> {
       final createdShift = await useCase.call(shiftData: shiftData);
 
       state = state.copyWith(isLoading: false, createdShift: createdShift, errorMessage: null, clearErrorMessage: true);
+
+      _ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
 
       return createdShift;
     } on AppException catch (e) {
@@ -300,7 +307,50 @@ final createShiftUseCaseProvider = Provider.family<CreateShiftUseCase, int>((ref
 /// Family provider for shift form that accepts enterprise ID
 final shiftFormProvider = StateNotifierProvider.autoDispose.family<ShiftFormNotifier, ShiftFormState, int>(
   (ref, enterpriseId) => ShiftFormNotifier(
+    ref: ref,
     enterpriseId: enterpriseId,
     createShiftUseCase: ref.read(createShiftUseCaseProvider(enterpriseId)),
   ),
 );
+
+EmplLookupValue? _shiftTypeValueByCode(String? code, List<EmplLookupValue> values) {
+  if (code == null || code.isEmpty) return null;
+  try {
+    return values.firstWhere((v) => v.lookupCode == code);
+  } catch (_) {
+    return null;
+  }
+}
+
+class ShiftFormViewState {
+  const ShiftFormViewState({
+    required this.formState,
+    required this.formNotifier,
+    required this.shiftTypeValues,
+    required this.isLoadingShiftTypes,
+    required this.selectedShiftType,
+  });
+
+  final ShiftFormState formState;
+  final ShiftFormNotifier formNotifier;
+  final List<EmplLookupValue> shiftTypeValues;
+  final bool isLoadingShiftTypes;
+  final EmplLookupValue? selectedShiftType;
+}
+
+final shiftFormViewProvider = Provider.autoDispose.family<ShiftFormViewState, int>((ref, enterpriseId) {
+  final formState = ref.watch(shiftFormProvider(enterpriseId));
+  final formNotifier = ref.read(shiftFormProvider(enterpriseId).notifier);
+  final lookupAsync = ref.watch(
+    entLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: shiftTypeLookupCode)),
+  );
+  final shiftTypeValues = lookupAsync.valueOrNull ?? [];
+  final selectedShiftType = _shiftTypeValueByCode(formState.shiftType, shiftTypeValues);
+  return ShiftFormViewState(
+    formState: formState,
+    formNotifier: formNotifier,
+    shiftTypeValues: shiftTypeValues,
+    isLoadingShiftTypes: lookupAsync.isLoading,
+    selectedShiftType: selectedShiftType,
+  );
+});
