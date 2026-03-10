@@ -215,7 +215,7 @@ final maxGradeOptionsForJobLevelFormProvider = Provider.autoDispose.family<List<
     if (g.gradeCategory != minGradeCategory) return false;
     final gNum = _gradeNumberFromGradeNumber(g.gradeNumber);
     if (gNum == null) return false;
-    return gNum > minGradeNum;
+    return gNum >= minGradeNum;
   }).toList()..sort((a, b) {
     final aNum = _gradeNumberFromGradeNumber(a.gradeNumber) ?? 0;
     final bNum = _gradeNumberFromGradeNumber(b.gradeNumber) ?? 0;

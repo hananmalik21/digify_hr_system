@@ -83,7 +83,6 @@ class ShiftsContentWidget extends ConsumerWidget {
             pageSize: shiftsState.pageSize,
             onPrevious: shiftsState.hasPreviousPage ? () => notifier.goToPage(shiftsState.currentPage - 1) : null,
             onNext: shiftsState.hasNextPage ? () => notifier.goToPage(shiftsState.currentPage + 1) : null,
-            isLoading: shiftsState.isLoading || shiftsState.isLoadingMore,
             style: PaginationStyle.simple,
           ),
           Gap(24.h),

@@ -47,6 +47,13 @@ enum ShiftType {
         return 'ROTATING';
     }
   }
+
+  static ShiftType fromDisplayName(String displayName) {
+    for (final e in ShiftType.values) {
+      if (e.displayName == displayName) return e;
+    }
+    return ShiftType.day;
+  }
 }
 
 enum ShiftStatus {

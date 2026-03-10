@@ -105,7 +105,10 @@ class PositionTableRow extends ConsumerWidget {
             ),
           if (WorkforcePositionsTableConfig.showStatus)
             _buildDataCell(
-              PositionStatusBadge(label: localizations.active.toUpperCase(), isActive: position.isActive),
+              PositionStatusBadge(
+                label: position.status.isNotEmpty ? position.status.toUpperCase() : 'ACTIVE',
+                isActive: position.isActive,
+              ),
               WorkforcePositionsTableConfig.statusWidth.w,
             ),
           if (WorkforcePositionsTableConfig.showActions)

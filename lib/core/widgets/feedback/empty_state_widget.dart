@@ -74,22 +74,6 @@ class EmptyStateWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            if (actionLabel != null && onAction != null) ...[
-              SizedBox(height: 24.h),
-              ElevatedButton(
-                onPressed: onAction,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 24.w, vertical: 12.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-                ),
-                child: Text(
-                  actionLabel!,
-                  style: TextStyle(fontSize: 15.3.sp, fontWeight: FontWeight.w400, height: 24 / 15.3),
-                ),
-              ),
-            ],
           ],
         ),
       ),
