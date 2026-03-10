@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_zone.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -61,8 +62,10 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
     state = state.copyWith(selectedTimeZone: value, clearTimeZone: value == null);
   }
 
-  void setAssignmentMode(String value) {
-    if (value == 'SAME_SHIFT_ALL_DAYS') {
+  void setAssignmentMode(WorkScheduleAssignmentMode value) {
+    if (value == state.assignmentMode) return;
+
+    if (value == WorkScheduleAssignmentMode.sameShiftAllDays) {
       state = state.copyWith(assignmentMode: value, dayShifts: {});
     } else {
       state = state.copyWith(assignmentMode: value, clearSameShift: true);
@@ -99,12 +102,17 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
       return false;
     }
 
+    if (state.selectedTimeZone == null) {
+      state = state.copyWith(error: 'Time zone is required');
+      return false;
+    }
+
     if (state.effectiveStartDate.trim().isEmpty) {
       state = state.copyWith(error: 'Effective start date is required');
       return false;
     }
 
-    if (state.assignmentMode == 'SAME_SHIFT_ALL_DAYS') {
+    if (state.assignmentMode == WorkScheduleAssignmentMode.sameShiftAllDays) {
       if (state.sameShiftForAllDays == null) {
         state = state.copyWith(error: 'Please select a shift for all days');
         return false;
@@ -131,9 +139,19 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
     try {
       final weeklyLines = <Map<String, dynamic>>[];
 
-      if (state.assignmentMode == 'SAME_SHIFT_ALL_DAYS') {
+      if (state.assignmentMode == WorkScheduleAssignmentMode.sameShiftAllDays) {
+        final pattern = state.selectedWorkPattern!;
         for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-          weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'WORK', 'shift_id': state.sameShiftForAllDays!.id});
+          final patternDay = pattern.days.firstWhere(
+            (d) => d.dayOfWeek == dayOfWeek,
+            orElse: () => WorkPatternDay(dayOfWeek: dayOfWeek, dayType: 'REST'),
+          );
+
+          if (patternDay.dayType == 'WORK') {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'WORK', 'shift_id': state.sameShiftForAllDays!.id});
+          } else {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': patternDay.dayType});
+          }
         }
       } else {
         for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
@@ -155,7 +173,7 @@ class WorkScheduleCreateNotifier extends StateNotifier<WorkScheduleCreateState> 
         'work_pattern_id': state.selectedWorkPattern!.workPatternId,
         'effective_start_date': state.effectiveStartDate.trim(),
         'effective_end_date': state.effectiveEndDate.trim().isEmpty ? null : state.effectiveEndDate.trim(),
-        'assignment_mode': state.assignmentMode,
+        'assignment_mode': state.assignmentMode.apiValue,
         'status': state.selectedStatus == PositionStatus.active ? 'ACTIVE' : 'INACTIVE',
         'weekly_lines': weeklyLines,
       };

@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_zone.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
@@ -12,7 +13,7 @@ class WorkScheduleCreateState {
   final TimeZone? selectedTimeZone;
   final WorkPattern? selectedWorkPattern;
   final PositionStatus selectedStatus;
-  final String assignmentMode;
+  final WorkScheduleAssignmentMode assignmentMode;
   final Map<int, ShiftOverview?> dayShifts;
   final ShiftOverview? sameShiftForAllDays;
   final bool isCreating;
@@ -27,7 +28,7 @@ class WorkScheduleCreateState {
     this.selectedTimeZone,
     this.selectedWorkPattern,
     this.selectedStatus = PositionStatus.active,
-    this.assignmentMode = 'PER_DAY_SHIFT',
+    this.assignmentMode = WorkScheduleAssignmentMode.perDayShift,
     this.dayShifts = const {},
     this.sameShiftForAllDays,
     this.isCreating = false,
@@ -45,7 +46,7 @@ class WorkScheduleCreateState {
     WorkPattern? selectedWorkPattern,
     bool clearWorkPattern = false,
     PositionStatus? selectedStatus,
-    String? assignmentMode,
+    WorkScheduleAssignmentMode? assignmentMode,
     Map<int, ShiftOverview?>? dayShifts,
     ShiftOverview? sameShiftForAllDays,
     bool clearSameShift = false,

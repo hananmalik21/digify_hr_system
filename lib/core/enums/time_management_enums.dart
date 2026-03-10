@@ -162,3 +162,28 @@ enum HolidayPaymentStatus {
 
   bool get isPaid => this == HolidayPaymentStatus.paid;
 }
+
+enum WorkScheduleAssignmentMode {
+  sameShiftAllDays,
+  perDayShift;
+
+  String get apiValue {
+    switch (this) {
+      case WorkScheduleAssignmentMode.sameShiftAllDays:
+        return 'SAME_SHIFT_ALL_DAYS';
+      case WorkScheduleAssignmentMode.perDayShift:
+        return 'PER_DAY_SHIFT';
+    }
+  }
+
+  static WorkScheduleAssignmentMode fromApiValue(String value) {
+    final normalized = value.toUpperCase().trim();
+    switch (normalized) {
+      case 'SAME_SHIFT_ALL_DAYS':
+        return WorkScheduleAssignmentMode.sameShiftAllDays;
+      case 'PER_DAY_SHIFT':
+      default:
+        return WorkScheduleAssignmentMode.perDayShift;
+    }
+  }
+}

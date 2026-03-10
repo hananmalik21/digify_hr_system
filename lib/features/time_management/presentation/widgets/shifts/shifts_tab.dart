@@ -19,6 +19,17 @@ class ShiftsTab extends ConsumerStatefulWidget {
 }
 
 class _ShiftsTabState extends ConsumerState<ShiftsTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(shiftsTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(shiftsNotifierProvider(enterpriseId).notifier).refresh();
+      }
+    });
+  }
+
   Future<void> _handleDelete(BuildContext context, ShiftOverview shift) async {
     final enterpriseId = ref.read(shiftsTabEnterpriseIdProvider);
     if (enterpriseId == null) return;
