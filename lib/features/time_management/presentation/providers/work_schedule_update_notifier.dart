@@ -2,6 +2,7 @@ import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/enums/time_management_enums.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/time_zone.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_work_schedule_usecase.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedule_update_state.dart';
@@ -46,8 +47,42 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
     WorkPattern? workPattern;
     try {
       workPattern = availableWorkPatterns.firstWhere((p) => p.workPatternId == schedule.workPatternId);
-    } catch (e) {
-      workPattern = null;
+    } catch (_) {
+      final patternDays = schedule.weeklyLines
+          .map((line) => WorkPatternDay(dayOfWeek: line.dayOfWeek, dayType: line.dayType))
+          .toList();
+
+      workPattern = WorkPattern(
+        workPatternId: schedule.workPatternId,
+        tenantId: schedule.tenantId,
+        patternCode: '',
+        patternNameEn: schedule.patternNameEn ?? '',
+        patternNameAr: schedule.patternNameAr ?? '',
+        patternType: 'SCHEDULE_DERIVED',
+        totalHoursPerWeek: 0,
+        status: schedule.status,
+        creationDate: schedule.creationDate,
+        createdBy: schedule.createdBy,
+        lastUpdateDate: schedule.lastUpdateDate,
+        lastUpdatedBy: schedule.lastUpdatedBy,
+        days: patternDays,
+      );
+    }
+
+    ShiftOverview? sameShiftForAllDays;
+    if (schedule.assignmentMode == 'SAME_SHIFT_ALL_DAYS') {
+      final workLines = schedule.weeklyLines.where((l) => l.dayType == 'WORK' && l.shift != null).toList();
+      if (workLines.isNotEmpty) {
+        final firstShiftId = workLines.first.shift!.shiftId;
+        final allSameShift = workLines.every((l) => l.shift!.shiftId == firstShiftId);
+        if (allSameShift) {
+          final anyLineShift = workLines.first.shift!;
+          sameShiftForAllDays = availableShifts.firstWhere(
+            (s) => s.id == firstShiftId,
+            orElse: () => _createShiftOverviewFromWorkScheduleShift(anyLineShift),
+          );
+        }
+      }
     }
 
     state = state.copyWith(
@@ -56,10 +91,12 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
       scheduleNameAr: schedule.scheduleNameAr,
       effectiveStartDate: schedule.formattedStartDate,
       effectiveEndDate: schedule.formattedEndDate,
+      selectedTimeZone: TimeZone(tzName: schedule.timeZone),
       selectedWorkPattern: workPattern,
       selectedStatus: schedule.status,
-      assignmentMode: schedule.assignmentMode,
+      assignmentMode: WorkScheduleAssignmentMode.fromApiValue(schedule.assignmentMode),
       dayShifts: dayShifts,
+      sameShiftForAllDays: sameShiftForAllDays,
     );
   }
 
@@ -129,12 +166,25 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
     state = state.copyWith(selectedStatus: status);
   }
 
-  void setAssignmentMode(String mode) {
-    if (mode == 'SAME_SHIFT_ALL_DAYS') {
+  void setSelectedTimeZone(TimeZone? timeZone) {
+    state = state.copyWith(selectedTimeZone: timeZone, clearTimeZone: timeZone == null);
+  }
+
+  void setAssignmentMode(WorkScheduleAssignmentMode mode) {
+    if (mode == state.assignmentMode) return;
+
+    if (mode == WorkScheduleAssignmentMode.sameShiftAllDays) {
       state = state.copyWith(assignmentMode: mode, clearDayShifts: true);
-    } else {
-      state = state.copyWith(assignmentMode: mode, clearSameShift: true);
+      return;
     }
+
+    if (state.assignmentMode == WorkScheduleAssignmentMode.sameShiftAllDays &&
+        mode == WorkScheduleAssignmentMode.perDayShift) {
+      state = state.copyWith(assignmentMode: mode, clearSameShift: true, clearDayShifts: true);
+      return;
+    }
+
+    state = state.copyWith(assignmentMode: mode, clearSameShift: true);
   }
 
   void setSameShiftForAllDays(ShiftOverview? shift) {
@@ -160,12 +210,36 @@ class WorkScheduleUpdateNotifier extends StateNotifier<WorkScheduleUpdateState> 
 
     try {
       final weeklyLines = <Map<String, dynamic>>[];
-      for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-        final shift = state.dayShifts[dayOfWeek];
-        if (shift != null) {
-          weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'WORK', 'shift_id': shift.id});
-        } else {
-          weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'REST'});
+
+      if (state.assignmentMode == WorkScheduleAssignmentMode.sameShiftAllDays) {
+        if (state.selectedWorkPattern == null || state.sameShiftForAllDays == null) {
+          state = state.copyWith(isUpdating: false, error: 'Please select a work pattern and a shift for all days');
+          return false;
+        }
+
+        final pattern = state.selectedWorkPattern!;
+        final sameShift = state.sameShiftForAllDays!;
+
+        for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
+          final patternDay = pattern.days.firstWhere(
+            (d) => d.dayOfWeek == dayOfWeek,
+            orElse: () => WorkPatternDay(dayOfWeek: dayOfWeek, dayType: 'REST'),
+          );
+
+          if (patternDay.dayType == 'WORK') {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'WORK', 'shift_id': sameShift.id});
+          } else {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': patternDay.dayType});
+          }
+        }
+      } else {
+        for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
+          final shift = state.dayShifts[dayOfWeek];
+          if (shift != null) {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'WORK', 'shift_id': shift.id});
+          } else {
+            weeklyLines.add({'day_of_week': dayOfWeek, 'day_type': 'REST'});
+          }
         }
       }
 

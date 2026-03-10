@@ -22,6 +22,17 @@ class ScheduleAssignmentsTab extends ConsumerStatefulWidget {
 }
 
 class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).refresh();
+      }
+    });
+  }
+
   Future<void> _handleDelete(
     BuildContext context,
     ScheduleAssignmentTableRowData item,

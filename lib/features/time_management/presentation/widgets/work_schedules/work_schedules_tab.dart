@@ -22,6 +22,17 @@ class WorkSchedulesTab extends ConsumerStatefulWidget {
 }
 
 class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(workSchedulesTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(workSchedulesNotifierProvider(enterpriseId).notifier).refresh();
+      }
+    });
+  }
+
   void _handleViewDetails(WorkSchedule schedule) {
     ViewWorkScheduleDialog.show(context, schedule: schedule);
   }
@@ -99,7 +110,7 @@ class _WorkSchedulesTabState extends ConsumerState<WorkSchedulesTab> {
   }
 
   Widget _buildContent(WorkScheduleState workSchedulesState, int enterpriseId) {
-    if (workSchedulesState.isLoading && workSchedulesState.items.isEmpty) {
+    if (workSchedulesState.isLoading) {
       return const WorkSchedulesListSkeleton(itemCount: 3);
     }
 

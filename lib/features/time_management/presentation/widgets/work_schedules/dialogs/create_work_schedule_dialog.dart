@@ -31,7 +31,6 @@ class CreateWorkScheduleDialog extends ConsumerStatefulWidget {
 }
 
 class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDialog> {
-  final _formKey = GlobalKey<FormState>();
   final _scheduleCodeController = TextEditingController();
   final _scheduleNameEnController = TextEditingController();
   final _scheduleNameArController = TextEditingController();
@@ -55,10 +54,6 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
   }
 
   Future<void> _handleCreate() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
     final notifier = ref.read(workScheduleCreateNotifierProvider(widget.enterpriseId).notifier);
     notifier.setScheduleCode(_scheduleCodeController.text);
     notifier.setScheduleNameEn(_scheduleNameEnController.text);
@@ -89,69 +84,64 @@ class _CreateWorkScheduleDialogState extends ConsumerState<CreateWorkScheduleDia
     return AppDialog(
       title: 'Create Work Schedule',
       width: 1024.w,
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              WorkScheduleFormFields(
-                scheduleCodeController: _scheduleCodeController,
-                scheduleNameEnController: _scheduleNameEnController,
-                scheduleNameArController: _scheduleNameArController,
-                initialStartDate: null,
-                initialEndDate: null,
-                selectedWorkPattern: createState.selectedWorkPattern,
-                selectedTimeZone: createState.selectedTimeZone,
-                enterpriseId: widget.enterpriseId,
-                selectedStatus: createState.selectedStatus,
-                onScheduleCodeChanged: (value) {
-                  notifier.setScheduleCode(value);
-                },
-                onScheduleNameEnChanged: (value) {
-                  notifier.setScheduleNameEn(value);
-                },
-                onScheduleNameArChanged: (value) {
-                  notifier.setScheduleNameAr(value);
-                },
-                onWorkPatternChanged: (value) {
-                  notifier.setSelectedWorkPattern(value);
-                },
-                onStatusChanged: (value) {
-                  notifier.setSelectedStatus(value);
-                },
-                onTimeZoneChanged: (value) {
-                  notifier.setSelectedTimeZone(value);
-                },
-                onStartDateSelected: (date) {
-                  notifier.setEffectiveStartDate(DateFormat('yyyy-MM-dd').format(date));
-                },
-                onEndDateSelected: (date) {
-                  notifier.setEffectiveEndDate(DateFormat('yyyy-MM-dd').format(date));
-                },
-              ),
-              Gap(24.h),
-              WeeklyScheduleSection(
-                isDark: isDark,
-                enterpriseId: widget.enterpriseId,
-                shifts: const [],
-                selectedWorkPattern: createState.selectedWorkPattern,
-                assignmentMode: createState.assignmentMode,
-                sameShiftForAllDays: createState.sameShiftForAllDays,
-                dayShifts: createState.dayShifts,
-                onAssignmentModeChanged: (value) {
-                  notifier.setAssignmentMode(value);
-                },
-                onSameShiftChanged: (value) {
-                  notifier.setSameShiftForAllDays(value);
-                },
-                onDayShiftChanged: (dayOfWeek, shift) {
-                  notifier.setDayShift(dayOfWeek, shift);
-                },
-              ),
-            ],
-          ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            WorkScheduleFormFields(
+              scheduleCodeController: _scheduleCodeController,
+              scheduleNameEnController: _scheduleNameEnController,
+              scheduleNameArController: _scheduleNameArController,
+              initialStartDate: null,
+              initialEndDate: null,
+              selectedWorkPattern: createState.selectedWorkPattern,
+              selectedTimeZone: createState.selectedTimeZone,
+              enterpriseId: widget.enterpriseId,
+              selectedStatus: createState.selectedStatus,
+              onScheduleCodeChanged: (value) {
+                notifier.setScheduleCode(value);
+              },
+              onScheduleNameEnChanged: (value) {
+                notifier.setScheduleNameEn(value);
+              },
+              onScheduleNameArChanged: (value) {
+                notifier.setScheduleNameAr(value);
+              },
+              onWorkPatternChanged: (value) {
+                notifier.setSelectedWorkPattern(value);
+              },
+              onStatusChanged: (value) {
+                notifier.setSelectedStatus(value);
+              },
+              onTimeZoneChanged: (value) {
+                notifier.setSelectedTimeZone(value);
+              },
+              onStartDateSelected: (date) {
+                notifier.setEffectiveStartDate(DateFormat('yyyy-MM-dd').format(date));
+              },
+              onEndDateSelected: (date) {
+                notifier.setEffectiveEndDate(DateFormat('yyyy-MM-dd').format(date));
+              },
+            ),
+            Gap(24.h),
+            WeeklyScheduleSection(
+              isDark: isDark,
+              enterpriseId: widget.enterpriseId,
+              shifts: const [],
+              selectedWorkPattern: createState.selectedWorkPattern,
+              assignmentMode: createState.assignmentMode,
+              sameShiftForAllDays: createState.sameShiftForAllDays,
+              dayShifts: createState.dayShifts,
+              onAssignmentModeChanged: notifier.setAssignmentMode,
+              onSameShiftChanged: (value) {
+                notifier.setSameShiftForAllDays(value);
+              },
+              onDayShiftChanged: (dayOfWeek, shift) {
+                notifier.setDayShift(dayOfWeek, shift);
+              },
+            ),
+          ],
         ),
       ),
       actions: [
