@@ -541,11 +541,21 @@ class _DigifyDateFieldState extends State<DigifyDateField> {
   }
 
   Future<void> _openDatePicker() async {
+    final firstDate = widget.firstDate ?? DateTime(1900);
+    final lastDate = widget.lastDate ?? DateTime.now();
+    DateTime initialDate = _date ?? DateTime.now();
+
+    if (initialDate.isBefore(firstDate)) {
+      initialDate = firstDate;
+    } else if (initialDate.isAfter(lastDate)) {
+      initialDate = lastDate;
+    }
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: _date ?? DateTime.now(),
-      firstDate: widget.firstDate ?? DateTime(1900),
-      lastDate: widget.lastDate ?? DateTime.now(),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (picked != null && mounted) {
       setState(() {
