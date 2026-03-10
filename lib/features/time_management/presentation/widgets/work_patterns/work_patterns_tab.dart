@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_tab_enterprise_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/work_patterns/components/work_patterns_table.dart';
@@ -26,6 +27,7 @@ class _WorkPatternsTabState extends ConsumerState<WorkPatternsTab> {
       final enterpriseId = ref.read(workPatternsTabEnterpriseIdProvider);
       if (enterpriseId != null) {
         ref.read(workPatternsNotifierProvider(enterpriseId).notifier).refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }

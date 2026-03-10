@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/time_management/data/config/public_hol
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/monthly_holiday_group.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_action_bar.dart';
@@ -42,6 +43,7 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
       final enterpriseId = ref.read(publicHolidaysTabEnterpriseIdProvider);
       if (enterpriseId != null) {
         ref.read(publicHolidaysNotifierProvider(enterpriseId).notifier).refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }
