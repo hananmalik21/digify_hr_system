@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/input_formatters.dart';
@@ -7,6 +8,7 @@ import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/core/widgets/feedback/app_dialog.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/time_management/domain/config/work_pattern_config.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_pattern.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/work_patterns_provider.dart';
@@ -41,7 +43,6 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
   late final TextEditingController _patternNameArController;
   late final TextEditingController _totalHoursController;
 
-  late String? _selectedPatternType;
   late PositionStatus _selectedStatus;
   final Set<int> _workingDays = {};
   final Set<int> _restDays = {};
@@ -57,8 +58,12 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
     _patternNameArController = TextEditingController(text: pattern.patternNameAr);
     _totalHoursController = TextEditingController(text: pattern.totalHoursPerWeek.toString());
 
-    _selectedPatternType = WorkPatternConfig.patternTypes.contains(pattern.patternType) ? pattern.patternType : null;
     _selectedStatus = pattern.status;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(workPatternTypeProvider(widget.enterpriseId).notifier).setSelectedCode(pattern.patternType);
+      }
+    });
 
     // Initialize working and rest days from the pattern
     for (final day in pattern.days) {
@@ -84,7 +89,10 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
       return;
     }
 
-    if (_selectedPatternType == null) {
+    final patternTypeState = ref.read(workPatternTypeProvider(widget.enterpriseId));
+    final selectedPatternType = patternTypeState.selectedCode;
+
+    if (selectedPatternType == null || selectedPatternType.isEmpty) {
       ToastService.error(context, 'Please select a pattern type');
       return;
     }
@@ -114,7 +122,7 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
         workPatternId: widget.workPattern.workPatternId,
         patternNameEn: _patternNameEnController.text.trim(),
         patternNameAr: _patternNameArController.text.trim(),
-        patternType: _selectedPatternType!,
+        patternType: selectedPatternType,
         totalHoursPerWeek: int.tryParse(_totalHoursController.text) ?? 40,
         status: _selectedStatus,
         days: days,
@@ -162,6 +170,8 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
+    final localizations = AppLocalizations.of(context)!;
+    final patternTypeView = ref.watch(workPatternTypeViewProvider(widget.enterpriseId));
 
     return AppDialog(
       title: 'Edit Work Pattern',
@@ -220,16 +230,19 @@ class _EditWorkPatternDialogState extends ConsumerState<EditWorkPatternDialog> {
                 ),
                 Gap(24.w),
                 Expanded(
-                  child: DigifySelectFieldWithLabel<String>(
+                  child: DigifySelectFieldWithLabel<EmplLookupValue>(
                     label: 'Pattern Type',
-                    value: _selectedPatternType,
-                    items: WorkPatternConfig.patternTypes,
-                    itemLabelBuilder: (type) => WorkPatternConfig.getPatternTypeLabel(type),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedPatternType = value;
-                      });
-                    },
+                    hint: patternTypeView.isLoading ? localizations.pleaseWait : localizations.selectType,
+                    value: patternTypeView.selected,
+                    items: patternTypeView.items,
+                    itemLabelBuilder: (v) => v.meaningEn,
+                    onChanged: patternTypeView.isLoading
+                        ? null
+                        : (value) {
+                            ref
+                                .read(workPatternTypeProvider(widget.enterpriseId).notifier)
+                                .setSelectedCode(value?.lookupCode);
+                          },
                     isRequired: true,
                   ),
                 ),
