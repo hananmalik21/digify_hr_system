@@ -134,6 +134,8 @@ mixin TabIndexMixin {
     switch (itemId) {
       case 'securityOverview':
         return 0;
+      case 'userManagement':
+        return 1;
       default:
         return null;
     }
