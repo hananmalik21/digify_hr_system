@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
@@ -13,13 +15,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class JobFamilySelectionDialog extends ConsumerStatefulWidget {
-  const JobFamilySelectionDialog({super.key});
+  const JobFamilySelectionDialog({super.key, this.selectedJobFamily});
 
-  static Future<JobFamily?> show(BuildContext context) async {
+  final JobFamily? selectedJobFamily;
+
+  static Future<JobFamily?> show(BuildContext context, {JobFamily? selectedJobFamily}) async {
     return showDialog<JobFamily>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const JobFamilySelectionDialog(),
+      builder: (context) => JobFamilySelectionDialog(selectedJobFamily: selectedJobFamily),
     );
   }
 
@@ -27,7 +31,12 @@ class JobFamilySelectionDialog extends ConsumerStatefulWidget {
   ConsumerState<JobFamilySelectionDialog> createState() => _JobFamilySelectionDialogState();
 }
 
-class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDialog> {
+class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDialog>
+    with ScrollPaginationMixin<JobFamilySelectionDialog> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  ScrollController get scrollController => _scrollController;
   @override
   void initState() {
     super.initState();
@@ -55,7 +64,7 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
             children: [
               OrgUnitSelectionHeader(
                 levelName: 'Job Family',
-                onClose: () => context.pop(),
+                onClose: () => context.pop<JobFamily?>(widget.selectedJobFamily),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
                     ref.read(jobFamilyNotifierProvider.notifier).clearSearch();
@@ -65,12 +74,35 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
                 },
                 initialSearchQuery: state.searchQuery ?? '',
               ),
+              if (widget.selectedJobFamily != null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 24.w, top: 8.h, bottom: 4.h),
+                    child: AppButton.outline(
+                      label: 'Clear selection',
+                      height: 32,
+                      onPressed: () => context.pop<JobFamily?>(null),
+                    ),
+                  ),
+                ),
               Flexible(child: _buildContent(context, state)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void onLoadMore() {
+    ref.read(jobFamilyNotifierProvider.notifier).loadNextPage();
   }
 
   Widget _buildContent(BuildContext context, dynamic state) {
@@ -100,16 +132,21 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
         ),
       );
     }
+    final isLoadingMore = state.isLoadingMore == true;
     return ListView.separated(
+      controller: _scrollController,
       padding: EdgeInsets.all(16.w),
-      itemCount: items.length,
+      itemCount: items.length + (isLoadingMore ? 1 : 0),
       separatorBuilder: (_, __) => Gap(8.h),
       itemBuilder: (context, index) {
+        if (index >= items.length) {
+          return const OrgUnitSelectionSkeleton();
+        }
         final jobFamily = items[index];
         return SelectionListItem(
           title: jobFamily.nameEnglish,
           subtitle: jobFamily.code,
-          isSelected: false,
+          isSelected: widget.selectedJobFamily != null && widget.selectedJobFamily!.id == jobFamily.id,
           onTap: () => context.pop(jobFamily),
         );
       },

@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
+import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
@@ -13,13 +15,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class PositionSelectionDialog extends ConsumerStatefulWidget {
-  const PositionSelectionDialog({super.key});
+  const PositionSelectionDialog({super.key, this.selectedPosition});
 
-  static Future<Position?> show(BuildContext context) async {
+  final Position? selectedPosition;
+
+  static Future<Position?> show(BuildContext context, {Position? selectedPosition}) async {
     return showDialog<Position>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const PositionSelectionDialog(),
+      builder: (context) => PositionSelectionDialog(selectedPosition: selectedPosition),
     );
   }
 
@@ -27,7 +31,12 @@ class PositionSelectionDialog extends ConsumerStatefulWidget {
   ConsumerState<PositionSelectionDialog> createState() => _PositionSelectionDialogState();
 }
 
-class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialog> {
+class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialog>
+    with ScrollPaginationMixin<PositionSelectionDialog> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  ScrollController get scrollController => _scrollController;
   @override
   void initState() {
     super.initState();
@@ -55,7 +64,7 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
             children: [
               OrgUnitSelectionHeader(
                 levelName: 'Position',
-                onClose: () => context.pop(),
+                onClose: () => context.pop<Position?>(widget.selectedPosition),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
                     ref.read(positionNotifierProvider.notifier).clearSearch();
@@ -65,12 +74,36 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
                 },
                 initialSearchQuery: state.searchQuery ?? '',
               ),
+              if (widget.selectedPosition != null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 24.w, top: 8.h, bottom: 4.h),
+                    child: AppButton.outline(
+                      label: 'Clear selection',
+                      height: 32,
+                      onPressed: () => context.pop<Position?>(null),
+                    ),
+                  ),
+                ),
               Flexible(child: _buildContent(context, state)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void onLoadMore() {
+    final notifier = ref.read(positionNotifierProvider.notifier);
+    notifier.loadNextPage();
   }
 
   Widget _buildContent(BuildContext context, dynamic state) {
@@ -88,7 +121,7 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
         ),
       );
     }
-    final positions = state.items;
+    final positions = state.items as List<Position>;
     if (positions.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(24.w),
@@ -100,16 +133,21 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
         ),
       );
     }
+    final isLoadingMore = state.isLoadingMore == true;
     return ListView.separated(
+      controller: _scrollController,
       padding: EdgeInsets.all(16.w),
-      itemCount: positions.length,
+      itemCount: positions.length + (isLoadingMore ? 1 : 0),
       separatorBuilder: (_, __) => Gap(8.h),
       itemBuilder: (context, index) {
+        if (index >= positions.length) {
+          return const OrgUnitSelectionSkeleton();
+        }
         final position = positions[index];
         return SelectionListItem(
           title: position.titleEnglish,
           subtitle: position.code,
-          isSelected: false,
+          isSelected: widget.selectedPosition != null && widget.selectedPosition!.id == position.id,
           onTap: () => context.pop(position),
         );
       },

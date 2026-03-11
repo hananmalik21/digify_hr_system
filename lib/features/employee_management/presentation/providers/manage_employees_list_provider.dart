@@ -61,8 +61,10 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   }
 
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10, String? search}) async {
+    final filters = ref.read(manageEmployeesFiltersProvider);
+    final hasFilters = filters.hasAnyFilter;
     final effectiveSearch = search ?? state.searchQuery;
-    if (effectiveSearch == null || effectiveSearch.trim().isEmpty) {
+    if ((effectiveSearch == null || effectiveSearch.trim().isEmpty) && !hasFilters) {
       state = state.copyWith(items: [], pagination: null, searchQuery: null, isLoading: false);
       return;
     }
@@ -73,7 +75,7 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
       currentPage: page,
       searchQuery: effectiveSearch,
     );
-    final filters = ref.read(manageEmployeesFiltersProvider);
+    // filters already read above
     final repository = ref.read(manageEmployeesListRepositoryProvider);
     final result = await repository.getEmployees(
       enterpriseId: enterpriseId,
@@ -114,15 +116,20 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   Future<void> goToPage(int page, {int pageSize = 10}) async {
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
-    if (state.searchQuery == null || state.searchQuery!.trim().isEmpty) return;
+    final filters = ref.read(manageEmployeesFiltersProvider);
+    final hasFilters = filters.hasAnyFilter;
+    if ((state.searchQuery == null || state.searchQuery!.trim().isEmpty) && !hasFilters) return;
     await loadPage(enterpriseId, page, pageSize: pageSize);
   }
 
   Future<void> refresh() async {
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
-    if (state.searchQuery == null || state.searchQuery!.trim().isEmpty) return;
-    await loadPage(enterpriseId, state.currentPage);
+    final filters = ref.read(manageEmployeesFiltersProvider);
+    final hasFilters = filters.hasAnyFilter;
+    if ((state.searchQuery == null || state.searchQuery!.trim().isEmpty) && !hasFilters) return;
+    final page = (state.searchQuery == null || state.searchQuery!.trim().isEmpty) ? 1 : state.currentPage;
+    await loadPage(enterpriseId, page);
   }
 
   void prependEmployee(EmployeeListItem item) {

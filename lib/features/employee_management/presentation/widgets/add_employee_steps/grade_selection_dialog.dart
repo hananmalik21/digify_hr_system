@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/mixins/scroll_pagination_mixin.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
@@ -13,13 +15,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class GradeSelectionDialog extends ConsumerStatefulWidget {
-  const GradeSelectionDialog({super.key});
+  const GradeSelectionDialog({super.key, this.selectedGrade});
 
-  static Future<Grade?> show(BuildContext context) async {
+  final Grade? selectedGrade;
+
+  static Future<Grade?> show(BuildContext context, {Grade? selectedGrade}) async {
     return showDialog<Grade>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const GradeSelectionDialog(),
+      builder: (context) => GradeSelectionDialog(selectedGrade: selectedGrade),
     );
   }
 
@@ -27,7 +31,12 @@ class GradeSelectionDialog extends ConsumerStatefulWidget {
   ConsumerState<GradeSelectionDialog> createState() => _GradeSelectionDialogState();
 }
 
-class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
+class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog>
+    with ScrollPaginationMixin<GradeSelectionDialog> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  ScrollController get scrollController => _scrollController;
   @override
   void initState() {
     super.initState();
@@ -55,7 +64,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
             children: [
               OrgUnitSelectionHeader(
                 levelName: 'Grade',
-                onClose: () => context.pop(),
+                onClose: () => context.pop<Grade?>(widget.selectedGrade),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
                     ref.read(gradeNotifierProvider.notifier).clearSearch();
@@ -65,12 +74,35 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
                 },
                 initialSearchQuery: state.searchQuery ?? '',
               ),
+              if (widget.selectedGrade != null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 24.w, top: 8.h, bottom: 4.h),
+                    child: AppButton.outline(
+                      label: 'Clear selection',
+                      height: 32,
+                      onPressed: () => context.pop<Grade?>(null),
+                    ),
+                  ),
+                ),
               Flexible(child: _buildContent(context, state)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void onLoadMore() {
+    ref.read(gradeNotifierProvider.notifier).loadNextPage();
   }
 
   Widget _buildContent(BuildContext context, dynamic state) {
@@ -88,7 +120,7 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
         ),
       );
     }
-    final items = state.items;
+    final items = state.items as List<Grade>;
     if (items.isEmpty) {
       return Padding(
         padding: EdgeInsets.all(24.w),
@@ -100,16 +132,21 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
         ),
       );
     }
+    final isLoadingMore = state.isLoadingMore == true;
     return ListView.separated(
+      controller: _scrollController,
       padding: EdgeInsets.all(16.w),
-      itemCount: items.length,
+      itemCount: items.length + (isLoadingMore ? 1 : 0),
       separatorBuilder: (_, __) => Gap(8.h),
       itemBuilder: (context, index) {
+        if (index >= items.length) {
+          return const OrgUnitSelectionSkeleton();
+        }
         final grade = items[index];
         return SelectionListItem(
           title: grade.gradeLabel,
           subtitle: grade.gradeCategoryLabel,
-          isSelected: false,
+          isSelected: widget.selectedGrade != null && widget.selectedGrade!.id == grade.id,
           onTap: () => context.pop(grade),
         );
       },
