@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class OrgUnitLoadMoreSkeleton extends StatelessWidget {
@@ -22,12 +23,9 @@ class OrgUnitLoadMoreSkeleton extends StatelessWidget {
             Container(
               width: 40.w,
               height: 40.h,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10.r)),
             ),
-            SizedBox(width: 12.w),
+            Gap(12.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,19 +33,13 @@ class OrgUnitLoadMoreSkeleton extends StatelessWidget {
                   Container(
                     width: 200.w,
                     height: 16.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                   ),
-                  SizedBox(height: 8.h),
+                  Gap(4.h),
                   Container(
                     width: 120.w,
                     height: 12.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                   ),
                 ],
               ),

@@ -1,11 +1,14 @@
 import 'dart:ui';
 
 import 'package:digify_hr_system/core/constants/app_colors.dart';
+import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
+import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_load_more_skeleton.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/selection_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,13 +16,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class JobLevelSelectionDialog extends ConsumerStatefulWidget {
-  const JobLevelSelectionDialog({super.key});
+  const JobLevelSelectionDialog({super.key, this.selectedJobLevel});
 
-  static Future<JobLevel?> show(BuildContext context) async {
+  final JobLevel? selectedJobLevel;
+
+  static Future<JobLevel?> show(BuildContext context, {JobLevel? selectedJobLevel}) async {
     return showDialog<JobLevel>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const JobLevelSelectionDialog(),
+      builder: (context) => JobLevelSelectionDialog(selectedJobLevel: selectedJobLevel),
     );
   }
 
@@ -28,9 +33,19 @@ class JobLevelSelectionDialog extends ConsumerStatefulWidget {
 }
 
 class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialog> {
+  final ScrollController _scrollController = ScrollController();
+  PaginationScrollListener? _paginationListener;
+
   @override
   void initState() {
     super.initState();
+    _paginationListener = PaginationScrollListener(
+      scrollController: _scrollController,
+      threshold: 500.0,
+      onLoadMore: () {
+        ref.read(jobLevelNotifierProvider.notifier).loadNextPage();
+      },
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
     });
@@ -48,14 +63,14 @@ class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialo
         elevation: 8,
         child: Container(
           width: 550.w,
-          constraints: BoxConstraints(maxHeight: 650.h),
+          height: 650.h,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               OrgUnitSelectionHeader(
                 levelName: 'Job Level',
-                onClose: () => context.pop(),
+                onClose: () => context.pop<JobLevel?>(widget.selectedJobLevel),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
                     ref.read(jobLevelNotifierProvider.notifier).clearSearch();
@@ -65,12 +80,31 @@ class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialo
                 },
                 initialSearchQuery: state.searchQuery ?? '',
               ),
+              if (widget.selectedJobLevel != null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 24.w, top: 8.h, bottom: 4.h),
+                    child: AppButton.outline(
+                      label: 'Clear selection',
+                      height: 32,
+                      onPressed: () => context.pop<JobLevel?>(null),
+                    ),
+                  ),
+                ),
               Flexible(child: _buildContent(context, state)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _paginationListener?.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Widget _buildContent(BuildContext context, dynamic state) {
@@ -100,16 +134,21 @@ class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialo
         ),
       );
     }
+    final isLoadingMore = state.isLoadingMore == true;
     return ListView.separated(
+      controller: _scrollController,
       padding: EdgeInsets.all(16.w),
-      itemCount: items.length,
+      itemCount: items.length + (isLoadingMore ? 3 : 0),
       separatorBuilder: (_, __) => Gap(8.h),
       itemBuilder: (context, index) {
+        if (index >= items.length) {
+          return const OrgUnitLoadMoreSkeleton();
+        }
         final jobLevel = items[index];
         return SelectionListItem(
           title: jobLevel.nameEn,
           subtitle: jobLevel.code,
-          isSelected: false,
+          isSelected: widget.selectedJobLevel != null && widget.selectedJobLevel!.id == jobLevel.id,
           onTap: () => context.pop(jobLevel),
         );
       },

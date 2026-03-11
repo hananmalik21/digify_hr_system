@@ -7,6 +7,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/widge
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_load_more_skeleton.dart';
+import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,12 +54,19 @@ class OrgUnitSelectionDialog extends ConsumerStatefulWidget {
 
 class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog> {
   final ScrollController _scrollController = ScrollController();
+  PaginationScrollListener? _paginationListener;
   bool _didApplyPreselection = false;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    _paginationListener = PaginationScrollListener(
+      scrollController: _scrollController,
+      threshold: 500.0,
+      onLoadMore: () {
+        ref.read(widget.selectionProvider.notifier).loadMoreOptionsForLevel(widget.level.levelCode);
+      },
+    );
 
     final initialState = ref.read(widget.selectionProvider);
     final hasOptions = initialState.getOptions(widget.level.levelCode).isNotEmpty;
@@ -73,15 +81,9 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
+    _paginationListener?.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      ref.read(widget.selectionProvider.notifier).loadMoreOptionsForLevel(widget.level.levelCode);
-    }
   }
 
   void _applyPreselectionIfNeeded(WidgetRef ref, List<OrgUnit> options) {
@@ -122,7 +124,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
         elevation: 8,
         child: Container(
           width: 550.w,
-          constraints: BoxConstraints(maxHeight: 650.h),
+          height: 650.h,
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.r), color: Colors.white),
           child: Column(
             mainAxisSize: MainAxisSize.min,

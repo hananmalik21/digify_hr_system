@@ -9,6 +9,7 @@ import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.
 import 'package:digify_hr_system/features/employee_management/presentation/providers/active_enterprise_org_structure_preload_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_dialog_flow_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/common/employee_management_stats_cards.dart';
@@ -35,6 +36,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveEnterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final listState = ref.watch(manageEmployeesListProvider);
+    final filters = ref.watch(manageEmployeesFiltersProvider);
     final viewMode = ref.watch(manageEmployeesViewModeProvider);
 
     return Container(
@@ -78,7 +80,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
                 retryLabel: localizations.retry,
                 onRetry: () => ref.read(manageEmployeesListProvider.notifier).refresh(),
               )
-            else if (!listState.hasExplicitSearch)
+            else if (!listState.hasExplicitSearch && !filters.hasAnyFilter)
               SizedBox(
                 height: 320.h,
                 child: EmptyStateWidget(icon: Icons.search_rounded, title: localizations.searchToFindEmployeesTitle),
