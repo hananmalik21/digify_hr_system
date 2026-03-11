@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/features/time_management/domain/models/assignment_level.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
 /// Organization unit information for schedule assignment
@@ -163,6 +164,23 @@ class ScheduleAssignmentEnterprise {
   }
 }
 
+class ScheduleAssignmentEmployee {
+  final String name;
+  final String code;
+
+  const ScheduleAssignmentEmployee({required this.name, required this.code});
+
+  factory ScheduleAssignmentEmployee.fromJson(Map<String, dynamic> json) {
+    String parseString(dynamic value, {String defaultValue = ''}) {
+      if (value == null || value == 'null') return defaultValue;
+      if (value is String) return value.trim().isEmpty ? defaultValue : value.trim();
+      return value.toString().trim();
+    }
+
+    return ScheduleAssignmentEmployee(name: parseString(json['name']), code: parseString(json['code']));
+  }
+}
+
 /// Organization path item
 class ScheduleAssignmentOrgPathItem {
   final String levelCode;
@@ -240,7 +258,7 @@ class ScheduleAssignmentOrgStructure {
 class ScheduleAssignment {
   final int scheduleAssignmentId;
   final int tenantId;
-  final String assignmentLevel;
+  final AssignmentLevel assignmentLevel;
   final int? departmentId;
   final int? employeeId;
   final int workScheduleId;
@@ -258,6 +276,7 @@ class ScheduleAssignment {
   final List<ScheduleAssignmentOrgPathItem>? orgPath;
   final ScheduleAssignmentEnterprise? enterprise;
   final ScheduleAssignmentOrgStructure? orgStructure;
+  final ScheduleAssignmentEmployee? employee;
 
   const ScheduleAssignment({
     required this.scheduleAssignmentId,
@@ -280,6 +299,7 @@ class ScheduleAssignment {
     this.orgPath,
     this.enterprise,
     this.orgStructure,
+    this.employee,
   });
 
   factory ScheduleAssignment.fromJson(Map<String, dynamic> json) {
@@ -330,6 +350,9 @@ class ScheduleAssignment {
     final orgStructureJson = json['org_structure'] as Map<String, dynamic>?;
     final orgStructure = orgStructureJson != null ? ScheduleAssignmentOrgStructure.fromJson(orgStructureJson) : null;
 
+    final employeeJson = json['employee'] as Map<String, dynamic>?;
+    final employee = employeeJson != null ? ScheduleAssignmentEmployee.fromJson(employeeJson) : null;
+
     final effectiveStartDate = parseDateTime(json['effective_start_date']);
     if (effectiveStartDate == null) {
       throw FormatException('effective_start_date is required');
@@ -338,7 +361,7 @@ class ScheduleAssignment {
     return ScheduleAssignment(
       scheduleAssignmentId: parseInt(json['schedule_assignment_id'], defaultValue: 0),
       tenantId: parseInt(json['tenant_id'], defaultValue: 0),
-      assignmentLevel: parseString(json['assignment_level']),
+      assignmentLevel: AssignmentLevel.fromString(parseString(json['assignment_level'])),
       departmentId: json['department_id'] != null ? parseInt(json['department_id']) : null,
       employeeId: json['employee_id'] != null ? parseInt(json['employee_id']) : null,
       workScheduleId: parseInt(json['work_schedule_id'], defaultValue: 0),
@@ -356,6 +379,7 @@ class ScheduleAssignment {
       orgPath: orgPath,
       enterprise: enterprise,
       orgStructure: orgStructure,
+      employee: employee,
     );
   }
 
@@ -371,6 +395,9 @@ class ScheduleAssignment {
   }
 
   String get assignedToName {
+    if (employee != null) {
+      return employee!.name;
+    }
     if (orgUnit != null) {
       return orgUnit!.orgUnitNameEn;
     }
@@ -378,6 +405,9 @@ class ScheduleAssignment {
   }
 
   String get assignedToCode {
+    if (employee != null) {
+      return employee!.code;
+    }
     if (orgUnit != null) {
       return orgUnit!.orgUnitCode;
     }

@@ -1,4 +1,5 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/assignment_level.dart';
 import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
@@ -12,7 +13,6 @@ import 'package:digify_hr_system/features/time_management/domain/usecases/create
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_schedule_assignments_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_schedule_assignment_usecase.dart';
-import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -391,7 +391,7 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
 
   Future<ScheduleAssignment> createScheduleAssignmentFromForm({
     required AssignmentLevel assignmentLevel,
-    required String orgUnitId,
+    String? orgUnitId,
     int? employeeId,
     required WorkSchedule workSchedule,
     required DateTime startDate,
@@ -445,7 +445,7 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     try {
       await createScheduleAssignmentFromForm(
         assignmentLevel: assignmentLevel!,
-        orgUnitId: orgUnitId!,
+        orgUnitId: orgUnitId,
         employeeId: employeeId,
         workSchedule: workSchedule!,
         startDate: startDate!,
