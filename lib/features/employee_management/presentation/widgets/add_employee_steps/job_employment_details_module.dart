@@ -146,6 +146,8 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   isRequired: true,
                   hintText: localizations.hintEnterpriseHireDate,
                   initialDate: jobState.enterpriseHireDate,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2100, 12, 31),
                   onDateSelected: (d) => jobNotifier.setEnterpriseHireDate(d),
                 ),
                 DigifyTextField(

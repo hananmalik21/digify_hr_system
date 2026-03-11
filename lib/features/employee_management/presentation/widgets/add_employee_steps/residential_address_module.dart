@@ -17,6 +17,7 @@ class ResidentialAddressModule extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final addressState = ref.watch(addEmployeeAddressProvider);
+    final addressNotifier = ref.read(addEmployeeAddressProvider.notifier);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final addressIcon = Padding(
@@ -58,11 +59,43 @@ class ResidentialAddressModule extends ConsumerWidget {
             ],
           ),
           DigifyTextField(
-            labelText: localizations.address,
+            labelText: '${localizations.address} (Line 1)',
             prefixIcon: addressIcon,
-            hintText: localizations.hintAddress,
-            initialValue: addressState.emergAddress ?? '',
-            onChanged: (value) => ref.read(addEmployeeAddressProvider.notifier).setEmergAddress(value),
+            hintText: 'e.g. Block 1, St 2',
+            initialValue: addressState.addressLine1 ?? '',
+            onChanged: addressNotifier.setAddressLine1,
+            isRequired: true,
+          ),
+          DigifyTextField(
+            labelText: '${localizations.address} (Line 2)',
+            prefixIcon: addressIcon,
+            hintText: 'e.g. Building 5, Floor 3',
+            initialValue: addressState.addressLine2 ?? '',
+            onChanged: addressNotifier.setAddressLine2,
+            isRequired: true,
+          ),
+          DigifyTextField(
+            labelText: '${localizations.address} (City)',
+            prefixIcon: addressIcon,
+            hintText: 'e.g. Kuwait City',
+            initialValue: addressState.city ?? '',
+            onChanged: addressNotifier.setCity,
+            isRequired: true,
+          ),
+          DigifyTextField(
+            labelText: '${localizations.address} (Area)',
+            prefixIcon: addressIcon,
+            hintText: 'e.g. Hawally',
+            initialValue: addressState.area ?? '',
+            onChanged: addressNotifier.setArea,
+            isRequired: true,
+          ),
+          DigifyTextField(
+            labelText: '${localizations.address} (Country Code)',
+            prefixIcon: addressIcon,
+            hintText: 'e.g. KW',
+            initialValue: addressState.countryCode ?? '',
+            onChanged: addressNotifier.setCountryCode,
             isRequired: true,
           ),
         ],

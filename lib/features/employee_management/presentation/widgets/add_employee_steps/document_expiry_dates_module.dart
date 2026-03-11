@@ -35,6 +35,7 @@ class DocumentExpiryDatesModule extends ConsumerWidget {
     final calendarPath = Assets.icons.leaveManagementMainIcon.path;
     final state = ref.watch(addEmployeeDocumentsProvider);
     final notifier = ref.read(addEmployeeDocumentsProvider.notifier);
+    final firstExpiryDate = DateTime.now();
     final lastExpiryDate = DateTime(2100, 12, 31);
 
     final civilIdExpiry = DigifyDateField(
@@ -43,6 +44,7 @@ class DocumentExpiryDatesModule extends ConsumerWidget {
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
       initialDate: state.civilIdExpiry,
+      firstDate: firstExpiryDate,
       lastDate: lastExpiryDate,
       onDateSelected: notifier.setCivilIdExpiry,
     );
@@ -52,6 +54,7 @@ class DocumentExpiryDatesModule extends ConsumerWidget {
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
       initialDate: state.passportExpiry,
+      firstDate: firstExpiryDate,
       lastDate: lastExpiryDate,
       onDateSelected: notifier.setPassportExpiry,
     );
@@ -69,6 +72,7 @@ class DocumentExpiryDatesModule extends ConsumerWidget {
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
       initialDate: state.visaExpiry,
+      firstDate: firstExpiryDate,
       lastDate: lastExpiryDate,
       onDateSelected: notifier.setVisaExpiry,
     );
@@ -86,6 +90,7 @@ class DocumentExpiryDatesModule extends ConsumerWidget {
       hintText: localizations.hintSelectDate,
       calendarIconPath: calendarPath,
       initialDate: state.workPermitExpiry,
+      firstDate: firstExpiryDate,
       lastDate: lastExpiryDate,
       onDateSelected: notifier.setWorkPermitExpiry,
     );

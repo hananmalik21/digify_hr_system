@@ -11,6 +11,10 @@ class EmployeeFullDetails {
     this.emergencyContacts = const [],
     this.bankAccounts = const [],
     this.addresses = const [],
+    this.workSchedules = const [],
+    this.compensationHistory = const [],
+    this.allowancesHistory = const [],
+    this.documentComplianceHistory = const [],
   });
 
   final EmployeeDetailSection employee;
@@ -24,6 +28,10 @@ class EmployeeFullDetails {
   final List<EmergencyContactItem> emergencyContacts;
   final List<BankAccountItem> bankAccounts;
   final List<AddressItem> addresses;
+  final List<WorkScheduleHistoryItem> workSchedules;
+  final List<CompensationHistoryItem> compensationHistory;
+  final List<AllowancesHistoryItem> allowancesHistory;
+  final List<DocumentComplianceHistoryItem> documentComplianceHistory;
 }
 
 class EmployeeDetailSection {
@@ -51,6 +59,8 @@ class EmployeeDetailSection {
     this.gradeId,
     this.probationDays,
     this.reportingToEmpId,
+    this.creationDate,
+    this.lastUpdateDate,
   });
 
   final int enterpriseId;
@@ -76,6 +86,8 @@ class EmployeeDetailSection {
   final int? gradeId;
   final int? probationDays;
   final int? reportingToEmpId;
+  final String? creationDate;
+  final String? lastUpdateDate;
 
   String get fullNameEn =>
       [firstNameEn, middleNameEn, lastNameEn].whereType<String>().where((s) => s.trim().isNotEmpty).join(' ').trim();
@@ -497,6 +509,100 @@ class AddressItem {
   final String? area;
   final String? countryCode;
   final String? isPrimary;
+  final String? status;
+  final String? isActive;
+}
+
+class WorkScheduleHistoryItem {
+  const WorkScheduleHistoryItem({
+    required this.empSchId,
+    this.empSchGuid,
+    this.workScheduleId,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  final int empSchId;
+  final String? empSchGuid;
+  final int? workScheduleId;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+}
+
+class CompensationHistoryItem {
+  const CompensationHistoryItem({
+    required this.compId,
+    this.compGuid,
+    this.basicSalaryKwd,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  final int compId;
+  final String? compGuid;
+  final double? basicSalaryKwd;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+}
+
+class AllowancesHistoryItem {
+  const AllowancesHistoryItem({
+    required this.allowId,
+    this.allowGuid,
+    this.housingKwd,
+    this.transportKwd,
+    this.foodKwd,
+    this.mobileKwd,
+    this.otherKwd,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  final int allowId;
+  final String? allowGuid;
+  final double? housingKwd;
+  final double? transportKwd;
+  final double? foodKwd;
+  final double? mobileKwd;
+  final double? otherKwd;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+}
+
+class DocumentComplianceHistoryItem {
+  const DocumentComplianceHistoryItem({
+    required this.docCompId,
+    this.docCompGuid,
+    this.civilIdExpiry,
+    this.passportExpiry,
+    this.visaNumber,
+    this.visaExpiry,
+    this.workPermitNumber,
+    this.workPermitExpiry,
+    this.status,
+    this.isActive,
+  });
+
+  final int docCompId;
+  final String? docCompGuid;
+  final String? civilIdExpiry;
+  final String? passportExpiry;
+  final String? visaNumber;
+  final String? visaExpiry;
+  final String? workPermitNumber;
+  final String? workPermitExpiry;
   final String? status;
   final String? isActive;
 }
