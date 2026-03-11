@@ -11,6 +11,11 @@ class CreateEmployeeBasicInfoRequest {
   final String? phoneNumber;
   final String? mobileNumber;
   final DateTime? dateOfBirth;
+  final String? addressLine1;
+  final String? addressLine2;
+  final String? city;
+  final String? area;
+  final String? countryCode;
   final String? emergAddress;
   final String? emergPhone;
   final String? emergEmail;
@@ -70,6 +75,11 @@ class CreateEmployeeBasicInfoRequest {
     this.phoneNumber,
     this.mobileNumber,
     this.dateOfBirth,
+    this.addressLine1,
+    this.addressLine2,
+    this.city,
+    this.area,
+    this.countryCode,
     this.emergAddress,
     this.emergPhone,
     this.emergEmail,
@@ -130,6 +140,11 @@ class CreateEmployeeBasicInfoRequest {
     String? phoneNumber,
     String? mobileNumber,
     DateTime? dateOfBirth,
+    String? addressLine1,
+    String? addressLine2,
+    String? city,
+    String? area,
+    String? countryCode,
     String? emergAddress,
     String? emergPhone,
     String? emergEmail,
@@ -147,6 +162,11 @@ class CreateEmployeeBasicInfoRequest {
     bool clearPhoneNumber = false,
     bool clearMobileNumber = false,
     bool clearDateOfBirth = false,
+    bool clearAddressLine1 = false,
+    bool clearAddressLine2 = false,
+    bool clearCity = false,
+    bool clearArea = false,
+    bool clearCountryCode = false,
     bool clearEmergAddress = false,
     bool clearEmergPhone = false,
     bool clearEmergEmail = false,
@@ -246,6 +266,11 @@ class CreateEmployeeBasicInfoRequest {
       phoneNumber: clearPhoneNumber ? null : (phoneNumber ?? this.phoneNumber),
       mobileNumber: clearMobileNumber ? null : (mobileNumber ?? this.mobileNumber),
       dateOfBirth: clearDateOfBirth ? null : (dateOfBirth ?? this.dateOfBirth),
+      addressLine1: clearAddressLine1 ? null : (addressLine1 ?? this.addressLine1),
+      addressLine2: clearAddressLine2 ? null : (addressLine2 ?? this.addressLine2),
+      city: clearCity ? null : (city ?? this.city),
+      area: clearArea ? null : (area ?? this.area),
+      countryCode: clearCountryCode ? null : (countryCode ?? this.countryCode),
       emergAddress: clearEmergAddress ? null : (emergAddress ?? this.emergAddress),
       emergPhone: clearEmergPhone ? null : (emergPhone ?? this.emergPhone),
       emergEmail: clearEmergEmail ? null : (emergEmail ?? this.emergEmail),

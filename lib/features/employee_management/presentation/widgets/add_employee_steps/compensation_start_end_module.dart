@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class CompensationStartEndModule extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final state = ref.watch(addEmployeeCompensationProvider);
+    final assignmentState = ref.watch(addEmployeeAssignmentProvider);
     final notifier = ref.read(addEmployeeCompensationProvider.notifier);
     final calendarPath = Assets.icons.leaveManagementMainIcon.path;
     final em = Assets.icons.employeeManagement;
@@ -64,8 +66,9 @@ class CompensationStartEndModule extends ConsumerWidget {
                   hintText: localizations.hintSelectDate,
                   calendarIconPath: calendarPath,
                   initialDate: state.compStart,
-                  firstDate: _firstDate,
-                  lastDate: _lastDate,
+                  firstDate: assignmentState.asgStart ?? _firstDate,
+                  lastDate: assignmentState.asgEnd ?? _lastDate,
+                  readOnly: assignmentState.asgStart == null,
                   onDateSelected: (d) => notifier.setCompStart(d),
                 ),
               ),
@@ -77,8 +80,9 @@ class CompensationStartEndModule extends ConsumerWidget {
                   hintText: localizations.hintSelectDate,
                   calendarIconPath: calendarPath,
                   initialDate: state.compEnd,
-                  firstDate: _firstDate,
-                  lastDate: _lastDate,
+                  firstDate: state.compStart ?? assignmentState.asgStart ?? _firstDate,
+                  lastDate: assignmentState.asgEnd ?? _lastDate,
+                  readOnly: assignmentState.asgStart == null || state.compStart == null,
                   onDateSelected: (d) => notifier.setCompEnd(d),
                 ),
               ),

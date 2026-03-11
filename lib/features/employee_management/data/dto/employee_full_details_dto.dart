@@ -26,6 +26,10 @@ class EmployeeFullDetailsDataDto {
     this.emergencyContacts = const [],
     this.bankAccounts = const [],
     this.addresses = const [],
+    this.workSchedules = const [],
+    this.compensationHistory = const [],
+    this.allowancesHistory = const [],
+    this.documentComplianceHistory = const [],
   });
 
   factory EmployeeFullDetailsDataDto.fromJson(Map<String, dynamic> json) {
@@ -41,6 +45,13 @@ class EmployeeFullDetailsDataDto {
       emergencyContacts: _parseList(json['emergency_contacts'], EmergencyContactItemDto.fromJson),
       bankAccounts: _parseList(json['bank_accounts'], BankAccountItemDto.fromJson),
       addresses: _parseList(json['addresses'], AddressItemDto.fromJson),
+      workSchedules: _parseList(json['work_schedules'], WorkScheduleHistoryItemDto.fromJson),
+      compensationHistory: _parseList(json['compensation_history'], CompensationHistoryItemDto.fromJson),
+      allowancesHistory: _parseList(json['allowances_history'], AllowancesHistoryItemDto.fromJson),
+      documentComplianceHistory: _parseList(
+        json['document_compliance_history'],
+        DocumentComplianceHistoryItemDto.fromJson,
+      ),
     );
   }
 
@@ -79,6 +90,10 @@ class EmployeeFullDetailsDataDto {
   final List<EmergencyContactItemDto> emergencyContacts;
   final List<BankAccountItemDto> bankAccounts;
   final List<AddressItemDto> addresses;
+  final List<WorkScheduleHistoryItemDto> workSchedules;
+  final List<CompensationHistoryItemDto> compensationHistory;
+  final List<AllowancesHistoryItemDto> allowancesHistory;
+  final List<DocumentComplianceHistoryItemDto> documentComplianceHistory;
 
   EmployeeFullDetails? toDomain() {
     if (employee == null || assignment == null) return null;
@@ -94,6 +109,10 @@ class EmployeeFullDetailsDataDto {
       emergencyContacts: emergencyContacts.map((e) => e.toDomain()).toList(),
       bankAccounts: bankAccounts.map((e) => e.toDomain()).toList(),
       addresses: addresses.map((e) => e.toDomain()).toList(),
+      workSchedules: workSchedules.map((e) => e.toDomain()).toList(),
+      compensationHistory: compensationHistory.map((e) => e.toDomain()).toList(),
+      allowancesHistory: allowancesHistory.map((e) => e.toDomain()).toList(),
+      documentComplianceHistory: documentComplianceHistory.map((e) => e.toDomain()).toList(),
     );
   }
 }
@@ -123,6 +142,8 @@ class EmployeeDetailSectionDto {
     this.gradeId,
     this.probationDays,
     this.reportingToEmpId,
+    this.creationDate,
+    this.lastUpdateDate,
   });
 
   factory EmployeeDetailSectionDto.fromJson(Map<String, dynamic> json) {
@@ -150,6 +171,8 @@ class EmployeeDetailSectionDto {
       gradeId: EmployeeFullDetailsDataDto._optionalInt(json['grade_id']),
       probationDays: EmployeeFullDetailsDataDto._optionalInt(json['probation_days']),
       reportingToEmpId: EmployeeFullDetailsDataDto._optionalInt(json['reporting_to_emp_id']),
+      creationDate: EmployeeFullDetailsDataDto._optionalString(json['creation_date']),
+      lastUpdateDate: EmployeeFullDetailsDataDto._optionalString(json['last_update_date']),
     );
   }
 
@@ -176,6 +199,8 @@ class EmployeeDetailSectionDto {
   final int? gradeId;
   final int? probationDays;
   final int? reportingToEmpId;
+  final String? creationDate;
+  final String? lastUpdateDate;
 
   EmployeeDetailSection toDomain() => EmployeeDetailSection(
     enterpriseId: enterpriseId,
@@ -201,6 +226,8 @@ class EmployeeDetailSectionDto {
     gradeId: gradeId,
     probationDays: probationDays,
     reportingToEmpId: reportingToEmpId,
+    creationDate: creationDate,
+    lastUpdateDate: lastUpdateDate,
   );
 }
 
@@ -976,6 +1003,202 @@ class AddressItemDto {
     area: area,
     countryCode: countryCode,
     isPrimary: isPrimary,
+    status: status,
+    isActive: isActive,
+  );
+}
+
+class WorkScheduleHistoryItemDto {
+  WorkScheduleHistoryItemDto({
+    required this.empSchId,
+    this.empSchGuid,
+    this.workScheduleId,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  factory WorkScheduleHistoryItemDto.fromJson(Map<String, dynamic> json) {
+    return WorkScheduleHistoryItemDto(
+      empSchId: (json['emp_sch_id'] as num?)?.toInt() ?? 0,
+      empSchGuid: json['emp_sch_guid'] as String?,
+      workScheduleId: (json['work_schedule_id'] as num?)?.toInt(),
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
+      status: json['status'] as String?,
+      isActive: json['is_active'] as String?,
+    );
+  }
+
+  final int empSchId;
+  final String? empSchGuid;
+  final int? workScheduleId;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+
+  WorkScheduleHistoryItem toDomain() => WorkScheduleHistoryItem(
+    empSchId: empSchId,
+    empSchGuid: empSchGuid,
+    workScheduleId: workScheduleId,
+    effectiveStartDate: effectiveStartDate,
+    effectiveEndDate: effectiveEndDate,
+    status: status,
+    isActive: isActive,
+  );
+}
+
+class CompensationHistoryItemDto {
+  CompensationHistoryItemDto({
+    required this.compId,
+    this.compGuid,
+    this.basicSalaryKwd,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  factory CompensationHistoryItemDto.fromJson(Map<String, dynamic> json) {
+    return CompensationHistoryItemDto(
+      compId: (json['comp_id'] as num?)?.toInt() ?? 0,
+      compGuid: json['comp_guid'] as String?,
+      basicSalaryKwd: (json['basic_salary_kwd'] as num?)?.toDouble(),
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
+      status: json['status'] as String?,
+      isActive: json['is_active'] as String?,
+    );
+  }
+
+  final int compId;
+  final String? compGuid;
+  final double? basicSalaryKwd;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+
+  CompensationHistoryItem toDomain() => CompensationHistoryItem(
+    compId: compId,
+    compGuid: compGuid,
+    basicSalaryKwd: basicSalaryKwd,
+    effectiveStartDate: effectiveStartDate,
+    effectiveEndDate: effectiveEndDate,
+    status: status,
+    isActive: isActive,
+  );
+}
+
+class AllowancesHistoryItemDto {
+  AllowancesHistoryItemDto({
+    required this.allowId,
+    this.allowGuid,
+    this.housingKwd,
+    this.transportKwd,
+    this.foodKwd,
+    this.mobileKwd,
+    this.otherKwd,
+    this.effectiveStartDate,
+    this.effectiveEndDate,
+    this.status,
+    this.isActive,
+  });
+
+  factory AllowancesHistoryItemDto.fromJson(Map<String, dynamic> json) {
+    return AllowancesHistoryItemDto(
+      allowId: (json['allow_id'] as num?)?.toInt() ?? 0,
+      allowGuid: json['allow_guid'] as String?,
+      housingKwd: (json['housing_kwd'] as num?)?.toDouble(),
+      transportKwd: (json['transport_kwd'] as num?)?.toDouble(),
+      foodKwd: (json['food_kwd'] as num?)?.toDouble(),
+      mobileKwd: (json['mobile_kwd'] as num?)?.toDouble(),
+      otherKwd: (json['other_kwd'] as num?)?.toDouble(),
+      effectiveStartDate: json['effective_start_date'] as String?,
+      effectiveEndDate: json['effective_end_date'] as String?,
+      status: json['status'] as String?,
+      isActive: json['is_active'] as String?,
+    );
+  }
+
+  final int allowId;
+  final String? allowGuid;
+  final double? housingKwd;
+  final double? transportKwd;
+  final double? foodKwd;
+  final double? mobileKwd;
+  final double? otherKwd;
+  final String? effectiveStartDate;
+  final String? effectiveEndDate;
+  final String? status;
+  final String? isActive;
+
+  AllowancesHistoryItem toDomain() => AllowancesHistoryItem(
+    allowId: allowId,
+    allowGuid: allowGuid,
+    housingKwd: housingKwd,
+    transportKwd: transportKwd,
+    foodKwd: foodKwd,
+    mobileKwd: mobileKwd,
+    otherKwd: otherKwd,
+    effectiveStartDate: effectiveStartDate,
+    effectiveEndDate: effectiveEndDate,
+    status: status,
+    isActive: isActive,
+  );
+}
+
+class DocumentComplianceHistoryItemDto {
+  DocumentComplianceHistoryItemDto({
+    required this.docCompId,
+    this.docCompGuid,
+    this.civilIdExpiry,
+    this.passportExpiry,
+    this.visaNumber,
+    this.visaExpiry,
+    this.workPermitNumber,
+    this.workPermitExpiry,
+    this.status,
+    this.isActive,
+  });
+
+  factory DocumentComplianceHistoryItemDto.fromJson(Map<String, dynamic> json) {
+    return DocumentComplianceHistoryItemDto(
+      docCompId: (json['doc_comp_id'] as num?)?.toInt() ?? 0,
+      docCompGuid: json['doc_comp_guid'] as String?,
+      civilIdExpiry: json['civil_id_expiry'] as String?,
+      passportExpiry: json['passport_expiry'] as String?,
+      visaNumber: json['visa_number'] as String?,
+      visaExpiry: json['visa_expiry'] as String?,
+      workPermitNumber: json['work_permit_number'] as String?,
+      workPermitExpiry: json['work_permit_expiry'] as String?,
+      status: json['status'] as String?,
+      isActive: json['is_active'] as String?,
+    );
+  }
+
+  final int docCompId;
+  final String? docCompGuid;
+  final String? civilIdExpiry;
+  final String? passportExpiry;
+  final String? visaNumber;
+  final String? visaExpiry;
+  final String? workPermitNumber;
+  final String? workPermitExpiry;
+  final String? status;
+  final String? isActive;
+
+  DocumentComplianceHistoryItem toDomain() => DocumentComplianceHistoryItem(
+    docCompId: docCompId,
+    docCompGuid: docCompGuid,
+    civilIdExpiry: civilIdExpiry,
+    passportExpiry: passportExpiry,
+    visaNumber: visaNumber,
+    visaExpiry: visaExpiry,
+    workPermitNumber: workPermitNumber,
+    workPermitExpiry: workPermitExpiry,
     status: status,
     isActive: isActive,
   );

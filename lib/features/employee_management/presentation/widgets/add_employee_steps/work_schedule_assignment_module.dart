@@ -82,12 +82,16 @@ class WorkScheduleStartEndModule extends StatelessWidget {
     required this.wsEnd,
     required this.onWsStartChanged,
     required this.onWsEndChanged,
+    required this.assignmentStart,
+    required this.assignmentEnd,
   });
 
   final DateTime? wsStart;
   final DateTime? wsEnd;
   final ValueChanged<DateTime?> onWsStartChanged;
   final ValueChanged<DateTime?> onWsEndChanged;
+  final DateTime? assignmentStart;
+  final DateTime? assignmentEnd;
 
   static final DateTime _firstDate = DateTime(2000);
   static final DateTime _lastDate = DateTime(2100, 12, 31);
@@ -136,8 +140,9 @@ class WorkScheduleStartEndModule extends StatelessWidget {
                   hintText: localizations.hintSelectDate,
                   calendarIconPath: calendarPath,
                   initialDate: wsStart,
-                  firstDate: _firstDate,
-                  lastDate: _lastDate,
+                  firstDate: assignmentStart ?? _firstDate,
+                  lastDate: assignmentEnd ?? _lastDate,
+                  readOnly: assignmentStart == null,
                   onDateSelected: (d) => onWsStartChanged(d),
                 ),
               ),
@@ -149,8 +154,9 @@ class WorkScheduleStartEndModule extends StatelessWidget {
                   hintText: localizations.hintSelectDate,
                   calendarIconPath: calendarPath,
                   initialDate: wsEnd,
-                  firstDate: _firstDate,
-                  lastDate: _lastDate,
+                  firstDate: wsStart ?? assignmentStart ?? _firstDate,
+                  lastDate: assignmentEnd ?? _lastDate,
+                  readOnly: assignmentStart == null || wsStart == null,
                   onDateSelected: (d) => onWsEndChanged(d),
                 ),
               ),

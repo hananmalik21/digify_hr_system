@@ -1,5 +1,6 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/section_header_card.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_work_schedule_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/work_schedule_assignment_module.dart';
@@ -18,6 +19,7 @@ class AddEmployeeWorkScheduleStep extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final workScheduleState = ref.watch(addEmployeeWorkScheduleProvider);
+    final assignmentState = ref.watch(addEmployeeAssignmentProvider);
     final workScheduleNotifier = ref.read(addEmployeeWorkScheduleProvider.notifier);
     final schedulesState = enterpriseId != null ? ref.watch(workSchedulesNotifierProvider(enterpriseId)) : null;
 
@@ -53,6 +55,8 @@ class AddEmployeeWorkScheduleStep extends ConsumerWidget {
           wsEnd: workScheduleState.wsEnd,
           onWsStartChanged: workScheduleNotifier.setWsStart,
           onWsEndChanged: workScheduleNotifier.setWsEnd,
+          assignmentStart: assignmentState.asgStart,
+          assignmentEnd: assignmentState.asgEnd,
         ),
       ],
     );
