@@ -30,6 +30,7 @@ class ManageEmployeesListState {
     int? lastEnterpriseId,
     int? currentPage,
     String? searchQuery,
+    bool clearSearchQuery = false,
   }) {
     return ManageEmployeesListState(
       items: items ?? this.items,
@@ -38,7 +39,7 @@ class ManageEmployeesListState {
       error: error,
       lastEnterpriseId: lastEnterpriseId ?? this.lastEnterpriseId,
       currentPage: currentPage ?? this.currentPage,
-      searchQuery: searchQuery ?? this.searchQuery,
+      searchQuery: clearSearchQuery ? null : (searchQuery ?? this.searchQuery),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class OrgUnitSelectionSkeleton extends StatelessWidget {
@@ -8,13 +9,12 @@ class OrgUnitSelectionSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(
-      enabled: true,
+    return Skeletonizer.zone(
       child: ListView.separated(
         itemCount: 3,
         shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        separatorBuilder: (context, index) => SizedBox(height: 12.h),
+        padding: EdgeInsets.all(16.w),
+        separatorBuilder: (context, index) => Gap(8.h),
         itemBuilder: (context, index) {
           return Container(
             padding: EdgeInsets.all(16.w),
@@ -25,26 +25,32 @@ class OrgUnitSelectionSkeleton extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
-                  width: 40.w,
-                  height: 40.h,
-                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10.r)),
+                Skeleton.leaf(
+                  child: Container(
+                    width: 40.w,
+                    height: 40.h,
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10.r)),
+                  ),
                 ),
-                SizedBox(width: 12.w),
+                Gap(12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 200.w,
-                        height: 16.h,
-                        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      Skeleton.leaf(
+                        child: Container(
+                          width: 200.w,
+                          height: 16.h,
+                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                        ),
                       ),
-                      SizedBox(height: 8.h),
-                      Container(
-                        width: 120.w,
-                        height: 12.h,
-                        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                      Gap(4.h),
+                      Skeleton.leaf(
+                        child: Container(
+                          width: 120.w,
+                          height: 12.h,
+                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
+                        ),
                       ),
                     ],
                   ),

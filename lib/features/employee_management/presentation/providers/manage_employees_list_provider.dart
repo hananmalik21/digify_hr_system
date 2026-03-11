@@ -63,9 +63,11 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
   Future<void> loadPage(int enterpriseId, int page, {int pageSize = 10, String? search}) async {
     final filters = ref.read(manageEmployeesFiltersProvider);
     final hasFilters = filters.hasAnyFilter;
-    final effectiveSearch = search ?? state.searchQuery;
-    if ((effectiveSearch == null || effectiveSearch.trim().isEmpty) && !hasFilters) {
-      state = state.copyWith(items: [], pagination: null, searchQuery: null, isLoading: false);
+    final isClearingSearch = search != null && search.trim().isEmpty;
+    final effectiveSearch = isClearingSearch ? null : (search ?? state.searchQuery);
+
+    if (effectiveSearch == null && !hasFilters) {
+      state = state.copyWith(items: [], pagination: null, clearSearchQuery: true, isLoading: false);
       return;
     }
     state = state.copyWith(
@@ -74,6 +76,7 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
       lastEnterpriseId: enterpriseId,
       currentPage: page,
       searchQuery: effectiveSearch,
+      clearSearchQuery: effectiveSearch == null,
     );
     // filters already read above
     final repository = ref.read(manageEmployeesListRepositoryProvider);
@@ -106,8 +109,10 @@ class ManageEmployeesListNotifier extends Notifier<ManageEmployeesListState> {
     final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
     if (enterpriseId == null) return;
     final q = query.trim();
-    if (q.isEmpty) {
-      state = state.copyWith(items: [], pagination: null, searchQuery: null, isLoading: false, error: null);
+
+    final filters = ref.read(manageEmployeesFiltersProvider);
+    if (q.isEmpty && !filters.hasAnyFilter) {
+      state = state.copyWith(items: [], pagination: null, clearSearchQuery: true, isLoading: false, error: null);
       return;
     }
     loadPage(enterpriseId, 1, search: q);

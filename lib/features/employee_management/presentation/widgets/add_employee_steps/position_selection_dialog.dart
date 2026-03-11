@@ -109,7 +109,7 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
 
   Widget _buildContent(BuildContext context, dynamic state) {
     if (state.isLoading && state.items.isEmpty) {
-      return Padding(padding: EdgeInsets.all(16.w), child: const OrgUnitSelectionSkeleton());
+      return const OrgUnitSelectionSkeleton();
     }
     if (state.hasError && state.items.isEmpty) {
       return Padding(
