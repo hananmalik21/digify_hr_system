@@ -21,6 +21,13 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart'
+    as emp_job_family_dialog;
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_level_selection_dialog.dart'
+    as emp_job_level_dialog;
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/grade_selection_dialog.dart'
+    as emp_grade_dialog;
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -323,74 +330,101 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         if (param != null) ..._buildOrgCascade(param, filtersNotifier, applyFiltersAndRefresh),
         SizedBox(
           width: 180.w,
-          child: DigifySelectField<String?>(
-            hint: widget.localizations.allPositions,
-            value: filters.positionId,
-            items: [null, ...positionItems.map((p) => p.id)],
-            itemLabelBuilder: (id) {
-              if (id == null) return widget.localizations.allPositions;
-              final list = positionItems.where((p) => p.id == id);
-              return list.isEmpty ? id : list.first.titleEnglish;
-            },
-            onChanged: (id) {
-              filtersNotifier.setPositionId(id);
+          child: _FilterSelectionField(
+            label: filters.positionId == null
+                ? widget.localizations.allPositions
+                : (positionItems
+                      .firstWhere((p) => p.id == filters.positionId, orElse: () => positionItems.first)
+                      .titleEnglish),
+            isDark: widget.isDark,
+            onTap: () async {
+              final selectedInitial = filters.positionId == null
+                  ? null
+                  : positionItems.firstWhere((p) => p.id == filters.positionId, orElse: () => positionItems.first);
+              final selected = await PositionSelectionDialog.show(context, selectedPosition: selectedInitial);
+              final newId = selected?.id;
+              if (newId == filters.positionId) {
+                return;
+              }
+              filtersNotifier.setPositionId(newId);
               applyFiltersAndRefresh();
             },
-            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
           width: 180.w,
-          child: DigifySelectField<int?>(
-            hint: widget.localizations.allJobFamilies,
-            value: filters.jobFamilyId,
-            items: [null, ...jobFamilyItems.map((j) => j.id)],
-            itemLabelBuilder: (id) {
-              if (id == null) return widget.localizations.allJobFamilies;
-              final list = jobFamilyItems.where((j) => j.id == id);
-              return list.isEmpty ? '$id' : list.first.nameEnglish;
-            },
-            onChanged: (id) {
-              filtersNotifier.setJobFamilyId(id);
+          child: _FilterSelectionField(
+            label: filters.jobFamilyId == null
+                ? widget.localizations.allJobFamilies
+                : (jobFamilyItems
+                      .firstWhere((j) => j.id == filters.jobFamilyId, orElse: () => jobFamilyItems.first)
+                      .nameEnglish),
+            isDark: widget.isDark,
+            onTap: () async {
+              final selectedInitial = filters.jobFamilyId == null
+                  ? null
+                  : jobFamilyItems.firstWhere((j) => j.id == filters.jobFamilyId, orElse: () => jobFamilyItems.first);
+              final selected = await emp_job_family_dialog.JobFamilySelectionDialog.show(
+                context,
+                selectedJobFamily: selectedInitial,
+              );
+              final newId = selected?.id;
+              if (newId == filters.jobFamilyId) {
+                return;
+              }
+              filtersNotifier.setJobFamilyId(newId);
               applyFiltersAndRefresh();
             },
-            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
           width: 180.w,
-          child: DigifySelectField<int?>(
-            hint: widget.localizations.allJobLevels,
-            value: filters.jobLevelId,
-            items: [null, ...jobLevelItems.map((j) => j.id)],
-            itemLabelBuilder: (id) {
-              if (id == null) return widget.localizations.allJobLevels;
-              final list = jobLevelItems.where((j) => j.id == id);
-              return list.isEmpty ? '$id' : list.first.nameEn;
-            },
-            onChanged: (id) {
-              filtersNotifier.setJobLevelId(id);
+          child: _FilterSelectionField(
+            label: filters.jobLevelId == null
+                ? widget.localizations.allJobLevels
+                : (jobLevelItems
+                      .firstWhere((j) => j.id == filters.jobLevelId, orElse: () => jobLevelItems.first)
+                      .nameEn),
+            isDark: widget.isDark,
+            onTap: () async {
+              final selectedInitial = filters.jobLevelId == null
+                  ? null
+                  : jobLevelItems.firstWhere((j) => j.id == filters.jobLevelId, orElse: () => jobLevelItems.first);
+              final selected = await emp_job_level_dialog.JobLevelSelectionDialog.show(
+                context,
+                selectedJobLevel: selectedInitial,
+              );
+              final newId = selected?.id;
+              if (newId == filters.jobLevelId) {
+                return;
+              }
+              filtersNotifier.setJobLevelId(newId);
               applyFiltersAndRefresh();
             },
-            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
         SizedBox(
           width: 180.w,
-          child: DigifySelectField<int?>(
-            hint: widget.localizations.allGrades,
-            value: filters.gradeId,
-            items: [null, ...gradeItems.map((g) => g.id)],
-            itemLabelBuilder: (id) {
-              if (id == null) return widget.localizations.allGrades;
-              final list = gradeItems.where((g) => g.id == id);
-              return list.isEmpty ? '$id' : list.first.gradeLabel;
-            },
-            onChanged: (id) {
-              filtersNotifier.setGradeId(id);
+          child: _FilterSelectionField(
+            label: filters.gradeId == null
+                ? widget.localizations.allGrades
+                : (gradeItems.firstWhere((g) => g.id == filters.gradeId, orElse: () => gradeItems.first).gradeLabel),
+            isDark: widget.isDark,
+            onTap: () async {
+              final selectedInitial = filters.gradeId == null
+                  ? null
+                  : gradeItems.firstWhere((g) => g.id == filters.gradeId, orElse: () => gradeItems.first);
+              final selected = await emp_grade_dialog.GradeSelectionDialog.show(
+                context,
+                selectedGrade: selectedInitial,
+              );
+              final newId = selected?.id;
+              if (newId == filters.gradeId) {
+                return;
+              }
+              filtersNotifier.setGradeId(newId);
               applyFiltersAndRefresh();
             },
-            fillColor: widget.isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
           ),
         ),
       ],
@@ -399,36 +433,33 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
 
   List<Widget> _buildOrgFiltersLoadingPlaceholders() {
     return List.generate(4, (_) {
-      return Padding(
-        padding: EdgeInsets.only(right: 12.w),
-        child: SizedBox(
-          width: 180.w,
-          height: 48.h,
-          child: Skeletonizer(
-            enabled: true,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              decoration: BoxDecoration(
-                color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 14.h,
-                      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Container(
-                    width: 16.w,
-                    height: 16.h,
+      return SizedBox(
+        width: 180.w,
+        height: 48.h,
+        child: Skeletonizer(
+          enabled: true,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            decoration: BoxDecoration(
+              color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 14.h,
                     decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 8.w),
+                Container(
+                  width: 16.w,
+                  height: 16.h,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                ),
+              ],
             ),
           ),
         ),
@@ -465,5 +496,45 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
         ),
       );
     }).toList();
+  }
+}
+
+class _FilterSelectionField extends StatelessWidget {
+  const _FilterSelectionField({required this.label, required this.isDark, required this.onTap});
+
+  final String label;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 48.h,
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+          borderRadius: BorderRadius.circular(10.r),
+          border: Border.all(color: AppColors.borderGrey),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(fontSize: 14.sp, color: AppColors.textPrimary),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            DigifyAsset(
+              assetPath: Assets.icons.workforce.chevronRight.path,
+              color: AppColors.textSecondary,
+              height: 15,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

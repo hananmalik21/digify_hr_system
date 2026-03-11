@@ -244,9 +244,9 @@ class AssignmentPositionDto {
     return AssignmentPositionDto(
       positionId: json['position_id'] as String?,
       positionCode: json['position_code'] as String?,
-      positionNameEn: json['position_name_en'] as String?,
-      positionNameAr: json['position_name_ar'] as String?,
-      positionStatus: json['position_status'] as String?,
+      positionNameEn: (json['position_name_en'] ?? json['position_title_en']) as String?,
+      positionNameAr: (json['position_name_ar'] ?? json['position_title_ar']) as String?,
+      positionStatus: (json['position_status'] ?? json['status']) as String?,
     );
   }
 
