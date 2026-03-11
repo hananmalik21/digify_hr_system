@@ -154,7 +154,7 @@ class _OrgUnitSelectionDialogState extends ConsumerState<OrgUnitSelectionDialog>
     String? error,
   ) {
     if (isLoading) {
-      return Padding(padding: EdgeInsets.all(16.w), child: const OrgUnitSelectionSkeleton());
+      return const OrgUnitSelectionSkeleton();
     }
 
     if (error != null) {
