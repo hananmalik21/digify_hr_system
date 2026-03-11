@@ -13,6 +13,7 @@ class OrgUnitSelectionSkeleton extends StatelessWidget {
       child: ListView.separated(
         itemCount: 3,
         shrinkWrap: true,
+        padding: EdgeInsets.zero,
         separatorBuilder: (context, index) => SizedBox(height: 12.h),
         itemBuilder: (context, index) {
           return Container(

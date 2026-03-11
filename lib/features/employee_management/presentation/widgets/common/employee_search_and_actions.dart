@@ -433,36 +433,33 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
 
   List<Widget> _buildOrgFiltersLoadingPlaceholders() {
     return List.generate(4, (_) {
-      return Padding(
-        padding: EdgeInsets.only(right: 12.w),
-        child: SizedBox(
-          width: 180.w,
-          height: 48.h,
-          child: Skeletonizer(
-            enabled: true,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              decoration: BoxDecoration(
-                color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
-                borderRadius: BorderRadius.circular(10.r),
-                border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 14.h,
-                      decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Container(
-                    width: 16.w,
-                    height: 16.h,
+      return SizedBox(
+        width: 180.w,
+        height: 48.h,
+        child: Skeletonizer(
+          enabled: true,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            decoration: BoxDecoration(
+              color: widget.isDark ? AppColors.inputBgDark : AppColors.inputBg,
+              borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: widget.isDark ? AppColors.cardBorderDark : AppColors.borderGrey),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 14.h,
                     decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 8.w),
+                Container(
+                  width: 16.w,
+                  height: 16.h,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r)),
+                ),
+              ],
             ),
           ),
         ),

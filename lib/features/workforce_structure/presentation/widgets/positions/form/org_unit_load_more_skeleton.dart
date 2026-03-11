@@ -22,10 +22,7 @@ class OrgUnitLoadMoreSkeleton extends StatelessWidget {
             Container(
               width: 40.w,
               height: 40.h,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10.r)),
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -35,19 +32,13 @@ class OrgUnitLoadMoreSkeleton extends StatelessWidget {
                   Container(
                     width: 200.w,
                     height: 16.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                   ),
                   SizedBox(height: 8.h),
                   Container(
                     width: 120.w,
                     height: 12.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4.r)),
                   ),
                 ],
               ),
