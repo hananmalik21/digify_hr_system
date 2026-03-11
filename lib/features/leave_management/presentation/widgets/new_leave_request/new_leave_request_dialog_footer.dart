@@ -2,15 +2,18 @@ import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 List<Widget> buildNewLeaveRequestFooterLeftActions(
   BuildContext context,
+  WidgetRef ref,
   NewLeaveRequestState state,
   NewLeaveRequestNotifier notifier,
 ) {
@@ -32,6 +35,7 @@ List<Widget> buildNewLeaveRequestFooterLeftActions(
 
 List<Widget> buildNewLeaveRequestFooterRightActions(
   BuildContext context,
+  WidgetRef ref,
   NewLeaveRequestState state,
   NewLeaveRequestNotifier notifier,
 ) {
@@ -44,6 +48,7 @@ List<Widget> buildNewLeaveRequestFooterRightActions(
       ToastService.success(context, localizations.draftSaved);
       notifier.reset();
       context.pop();
+      ref.read(leaveRequestsNotifierProvider.notifier).refresh();
     } else {
       ToastService.error(context, result.errorMessage ?? '');
     }
@@ -56,6 +61,7 @@ List<Widget> buildNewLeaveRequestFooterRightActions(
       ToastService.success(context, localizations.submitRequest);
       notifier.reset();
       context.pop();
+      ref.read(leaveRequestsNotifierProvider.notifier).refresh();
     } else {
       ToastService.error(context, result.errorMessage ?? '');
     }
@@ -74,8 +80,9 @@ List<Widget> buildNewLeaveRequestFooterRightActions(
         onPressed: state.isSavingDraft
             ? null
             : () {
-                if (state.currentStep == LeaveRequestStep.contactNotes && !state.canProceedToNextStep()) {
-                  ToastService.error(context, localizations.addEmployeeFillRequiredFields);
+                final error = notifier.validateStep(state.currentStep);
+                if (error != null) {
+                  ToastService.error(context, error);
                   return;
                 }
                 notifier.nextStep();
@@ -86,7 +93,16 @@ List<Widget> buildNewLeaveRequestFooterRightActions(
       AppButton(
         label: localizations.submitRequest,
         isLoading: state.isSubmitting,
-        onPressed: (state.isSubmitting || state.isSavingDraft) ? null : onSubmit,
+        onPressed: (state.isSubmitting || state.isSavingDraft)
+            ? null
+            : () {
+                final error = notifier.validateStep(state.currentStep);
+                if (error != null) {
+                  ToastService.error(context, error);
+                  return;
+                }
+                onSubmit();
+              },
         type: AppButtonType.primary,
         backgroundColor: AppColors.greenButton,
         svgPath: Assets.icons.checkIconGreen.path,
