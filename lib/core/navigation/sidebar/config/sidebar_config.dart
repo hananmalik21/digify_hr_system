@@ -392,6 +392,12 @@ class SidebarConfig {
             labelKey: 'securityOverview',
             route: '/security-console',
           ),
+          SidebarItem(
+            id: 'userManagement',
+            svgPath: Assets.icons.usersIcon.path,
+            labelKey: 'userManagement',
+            route: '/security-console',
+          ),
         ],
       ),
 
@@ -603,6 +609,8 @@ class SidebarConfig {
         return 'Security Manager';
       case 'securityOverview':
         return 'Security Overview';
+      case 'userManagement':
+        return 'User Management';
       case 'payroll':
         return localizations.payroll;
       case 'compliance':

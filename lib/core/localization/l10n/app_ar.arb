@@ -108,6 +108,7 @@
   "totalUsers": "إجمالي المستخدمين",
   "activeUsers": "المستخدمون النشطون",
   "inactiveUsers": "المستخدمون غير النشطين",
+  "lockedUsers": "المستخدمون المقيدون",
   "pendingApprovals": "الموافقات المعلقة",
   "totalRoles": "إجمالي الأدوار",
   "activeRoles": "الأدوار النشطة",
@@ -1401,5 +1402,7 @@
   "encashmentOptionDescription": "النظر في الموافقة على طلبات التحصيل للموظفين الذين لا يمكنهم أخذ إجازة",
   "overtimeManagment": "إدارة الوقت الإضافي",
   "overtimeManagmentDescription": "تتبع وإدارة ساعات العمل الإضافي والموافقات",
-  "requestOvertime": "طلب وقت إضافي"
+  "requestOvertime": "طلب وقت إضافي",
+  "userManagement": "إدارة المستخدمين",
+  "userSummary": "ملخص المستخدمين"
 }
