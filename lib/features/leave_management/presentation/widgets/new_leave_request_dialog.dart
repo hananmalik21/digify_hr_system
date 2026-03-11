@@ -34,8 +34,8 @@ class NewLeaveRequestDialog extends ConsumerWidget {
         notifier.reset();
         context.pop();
       },
-      footerLeftActions: buildNewLeaveRequestFooterLeftActions(context, state, notifier),
-      footerActions: buildNewLeaveRequestFooterRightActions(context, state, notifier),
+      footerLeftActions: buildNewLeaveRequestFooterLeftActions(context, ref, state, notifier),
+      footerActions: buildNewLeaveRequestFooterRightActions(context, ref, state, notifier),
       isLoading: state.isLoadingDraft,
     );
   }
