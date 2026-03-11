@@ -92,6 +92,14 @@ class EmergencyContactModule extends ConsumerWidget {
                 onChanged: (value) => addressNotifier.setContactName(value),
                 isRequired: true,
               );
+              final emergencyAddress = DigifyTextField(
+                labelText: localizations.address,
+                prefixIcon: _prefixIcon(context, Assets.icons.locationPinIcon.path, isDark),
+                hintText: localizations.hintAddress,
+                initialValue: addressState.emergAddress ?? '',
+                onChanged: (value) => addressNotifier.setEmergAddress(value),
+                isRequired: true,
+              );
               final relationship = DigifySelectFieldWithLabel<EmplLookupValue>(
                 label: localizations.relationship,
                 hint: relationshipLoading ? localizations.pleaseWait : localizations.hintRelationship,
@@ -142,13 +150,14 @@ class EmergencyContactModule extends ConsumerWidget {
                         Expanded(child: emailAddress),
                       ],
                     ),
+                    emergencyAddress,
                   ],
                 );
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 16.h,
-                children: [contactName, relationship, phoneNumber, emailAddress],
+                children: [contactName, relationship, phoneNumber, emailAddress, emergencyAddress],
               );
             },
           ),

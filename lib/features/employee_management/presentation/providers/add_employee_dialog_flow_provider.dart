@@ -75,6 +75,11 @@ class AddEmployeeDialogFlow {
       phoneNumber: emp.phoneNumber,
       mobileNumber: emp.mobileNumber,
       dateOfBirth: _parseDate(emp.dateOfBirth),
+      addressLine1: addr?.addressLine1,
+      addressLine2: addr?.addressLine2,
+      city: addr?.city,
+      area: addr?.area,
+      countryCode: addr?.countryCode,
       enterpriseId: enterpriseId,
       emergAddress: emerg?.address ?? addr?.addressLine1,
       emergPhone: emerg?.phoneNumber,
@@ -107,6 +112,7 @@ class AddEmployeeDialogFlow {
       probationDays: asg.probationDays ?? emp.probationDays,
       contractTypeCode: asg.contractTypeCode,
       employmentStatusCode: asg.employmentStatus,
+      employeeStatus: emp.employeeStatus ?? asg.employmentStatus,
       reportingToEmpId: asg.reportingToEmpId ?? emp.reportingToEmpId,
       basicSalaryKwd: comp?.basicSalaryKwd?.toString(),
       housingKwd: allow?.housingKwd?.toString(),
@@ -141,6 +147,11 @@ class AddEmployeeDialogFlow {
     _ref
         .read(addEmployeeAddressProvider.notifier)
         .setFromFullDetails(
+          addressLine1: addr?.addressLine1,
+          addressLine2: addr?.addressLine2,
+          city: addr?.city,
+          area: addr?.area,
+          countryCode: addr?.countryCode,
           emergAddress: request.emergAddress,
           emergPhone: request.emergPhone,
           emergEmail: request.emergEmail,
@@ -462,6 +473,11 @@ class AddEmployeeDialogFlow {
       return;
     }
     final request = basicState.form.copyWith(
+      addressLine1: _emptyToNull(addressState.addressLine1),
+      addressLine2: _emptyToNull(addressState.addressLine2),
+      city: _emptyToNull(addressState.city),
+      area: _emptyToNull(addressState.area),
+      countryCode: _emptyToNull(addressState.countryCode),
       emergAddress: _emptyToNull(addressState.emergAddress),
       emergPhone: _emptyToNull(addressState.emergPhone),
       emergEmail: _emptyToNull(addressState.emergEmail),
@@ -619,7 +635,9 @@ void logAddEmployeeState(dynamic ref) {
     'civilIdNumber=${demographics.civilIdNumber}, passportNumber=${demographics.passportNumber}',
   );
   debugPrint(
-    'Address: emergAddress=${address.emergAddress}, emergPhone=${address.emergPhone}, '
+    'Address: line1=${address.addressLine1}, line2=${address.addressLine2}, '
+    'city=${address.city}, area=${address.area}, countryCode=${address.countryCode}, '
+    'emergAddress=${address.emergAddress}, emergPhone=${address.emergPhone}, '
     'emergEmail=${address.emergEmail}, emergRelationship=${address.emergRelationship}, '
     'contactName=${address.contactName}',
   );
