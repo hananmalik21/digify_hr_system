@@ -17,6 +17,7 @@ import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/active_org_structure_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/assignment_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,9 +67,7 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
   void _initializeFormFields() {
     final assignment = widget.assignment;
 
-    _selectedLevel = assignment.assignmentLevel.toUpperCase() == 'DEPARTMENT'
-        ? AssignmentLevel.department
-        : AssignmentLevel.employee;
+    _selectedLevel = assignment.assignmentLevel;
 
     _effectiveStartDate = assignment.effectiveStartDate;
     _effectiveEndDate = assignment.effectiveEndDate;
