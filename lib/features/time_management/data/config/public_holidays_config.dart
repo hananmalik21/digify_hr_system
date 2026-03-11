@@ -5,14 +5,14 @@ class PublicHolidaysConfig with PublicHolidayStaticValuesMixin {
   PublicHolidaysConfig._();
 
   /// Available years for filtering holidays
-  static List<String> get availableYears => ['2024', '2025', '2026', '2027'];
+  static List<String> get availableYears => ['All Years', '2024', '2025', '2026', '2027'];
 
   static List<String> get availableTypes => ['All Types', ...PublicHolidayStaticValuesMixin.holidayTypes];
 
   static List<String> get availableAppliesTo => PublicHolidayStaticValuesMixin.appliesToOptions;
 
   /// Default selected year
-  static String get defaultYear => '2025';
+  static String get defaultYear => 'All Years';
 
   /// Default selected type
   static String get defaultType => 'All Types';

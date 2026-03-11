@@ -267,10 +267,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get functionPrivileges => 'صلاحيات الوظائف';
 
   @override
-  String get dutyRoles => 'أدوار الواجبات';
+  String get dutyRoles => 'أدوار المهام';
 
   @override
-  String get jobRoles => 'أدوار الوظائف';
+  String get jobRoles => 'أدوار العمل';
 
   @override
   String get auditCompliance => 'التدقيق والامتثال';
@@ -321,7 +321,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get about => 'حول';
 
   @override
-  String get securityOverview => 'نظرة عامة على الأمان';
+  String get securityConsoleOverview => 'نظرة عامة على الأمان';
 
   @override
   String get totalUsers => 'إجمالي المستخدمين';
@@ -349,6 +349,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get totalPrivileges => 'إجمالي الصلاحيات';
+
+  @override
+  String get mfaProtected => 'محمي بالمصادقة الثنائية';
+
+  @override
+  String get userAccessStatus => 'حالة وصول المستخدم';
+
+  @override
+  String get withRoles => 'بأدوار';
+
+  @override
+  String get mfaEnabled => 'تم تفعيل MFA';
+
+  @override
+  String get userDistributionByDepartment => 'توزيع المستخدمين حسب الإدارة';
+
+  @override
+  String get roleTypeDistribution => 'توزيع أنواع الأدوار';
+
+  @override
+  String get applicationRoles => 'أدوار التطبيق';
+
+  @override
+  String get functionRoles => 'أدوار الوظائف';
+
+  @override
+  String get dataRoles => 'أدوار البيانات';
+
+  @override
+  String get applicationRolesDesc => 'صلاحيات المستوى الأعلى';
+
+  @override
+  String get functionRolesDesc => 'التحكم في الوصول للميزات';
+
+  @override
+  String get dataRolesDesc => 'التحكم في الوصول للبيانات';
+
+  @override
+  String get jobRolesDesc => 'الوصول القائم على المسمى الوظيفي';
+
+  @override
+  String get dutyRolesDesc => 'صلاحيات محددة للمهام';
+
+  @override
+  String get usersUnit => 'مستخدمين';
+
+  @override
+  String get rolesUnit => 'أدوار';
+
+  @override
+  String get executive => 'تنفيذي';
+
+  @override
+  String get finance => 'المالية';
+
+  @override
+  String get it => 'تكنولوجيا المعلومات';
+
+  @override
+  String get operations => 'العمليات';
 
   @override
   String get active => 'نشط';
@@ -379,6 +439,45 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get investigateAll => 'التحقيق في الكل';
+
+  @override
+  String get recentUserActivity => 'نشاط المستخدم الأخير';
+
+  @override
+  String get loggedIn => 'تم تسجيل الدخول';
+
+  @override
+  String get passwordChanged => 'تم تغيير كلمة المرور';
+
+  @override
+  String get mfaEnabledActivity => 'تم تفعيل MFA';
+
+  @override
+  String get accessGranted => 'تم منح الوصول';
+
+  @override
+  String get topAssignedRoles => 'الأدوار الأكثر تعييناً';
+
+  @override
+  String get employeeSelfService => 'الخدمة الذاتية للموظف';
+
+  @override
+  String get applicationRole => 'دور التطبيق';
+
+  @override
+  String get payrollProcessor => 'معالج الرواتب';
+
+  @override
+  String get departmentManager => 'مدير الإدارة';
+
+  @override
+  String get leaveManagement => 'إدارة الإجازات';
+
+  @override
+  String get configureAccess => 'تكوين الوصول';
+
+  @override
+  String get activeLogins => 'عمليات تسجيل الدخول النشطة';
 
   @override
   String minutesAgo(int count) {
@@ -903,16 +1002,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get category => 'الفئة';
 
   @override
-  String get finance => 'المالية';
-
-  @override
-  String get operations => 'العمليات';
-
-  @override
   String get hr => 'الموارد البشرية';
-
-  @override
-  String get it => 'تكنولوجيا المعلومات';
 
   @override
   String get import => 'استيراد';
@@ -1423,9 +1513,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get timeManagement => 'إدارة الوقت';
-
-  @override
-  String get leaveManagement => 'إدارة الإجازات';
 
   @override
   String get workforceStructure => 'هيكل القوى العاملة';

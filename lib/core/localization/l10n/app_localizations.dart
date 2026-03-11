@@ -716,11 +716,11 @@ abstract class AppLocalizations {
   /// **'About'**
   String get about;
 
-  /// No description provided for @securityOverview.
+  /// No description provided for @securityConsoleOverview.
   ///
   /// In en, this message translates to:
-  /// **'Security Overview'**
-  String get securityOverview;
+  /// **'Security Console Overview'**
+  String get securityConsoleOverview;
 
   /// No description provided for @totalUsers.
   ///
@@ -775,6 +775,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Privileges'**
   String get totalPrivileges;
+
+  /// No description provided for @mfaProtected.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA Protected'**
+  String get mfaProtected;
+
+  /// No description provided for @userAccessStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'User Access Status'**
+  String get userAccessStatus;
+
+  /// No description provided for @withRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'With Roles'**
+  String get withRoles;
+
+  /// No description provided for @mfaEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA Enabled'**
+  String get mfaEnabled;
+
+  /// No description provided for @userDistributionByDepartment.
+  ///
+  /// In en, this message translates to:
+  /// **'User Distribution by Department'**
+  String get userDistributionByDepartment;
+
+  /// No description provided for @roleTypeDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Role Type Distribution'**
+  String get roleTypeDistribution;
+
+  /// No description provided for @applicationRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Roles'**
+  String get applicationRoles;
+
+  /// No description provided for @functionRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Function Roles'**
+  String get functionRoles;
+
+  /// No description provided for @dataRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Roles'**
+  String get dataRoles;
+
+  /// No description provided for @applicationRolesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Top-level permissions'**
+  String get applicationRolesDesc;
+
+  /// No description provided for @functionRolesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature access control'**
+  String get functionRolesDesc;
+
+  /// No description provided for @dataRolesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Data access control'**
+  String get dataRolesDesc;
+
+  /// No description provided for @jobRolesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Position-based access'**
+  String get jobRolesDesc;
+
+  /// No description provided for @dutyRolesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Task-specific permissions'**
+  String get dutyRolesDesc;
+
+  /// No description provided for @usersUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'users'**
+  String get usersUnit;
+
+  /// No description provided for @rolesUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'roles'**
+  String get rolesUnit;
+
+  /// No description provided for @executive.
+  ///
+  /// In en, this message translates to:
+  /// **'Executive'**
+  String get executive;
+
+  /// No description provided for @finance.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance'**
+  String get finance;
+
+  /// No description provided for @it.
+  ///
+  /// In en, this message translates to:
+  /// **'IT'**
+  String get it;
+
+  /// No description provided for @operations.
+  ///
+  /// In en, this message translates to:
+  /// **'Operations'**
+  String get operations;
 
   /// No description provided for @active.
   ///
@@ -835,6 +955,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Investigate All'**
   String get investigateAll;
+
+  /// No description provided for @recentUserActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent User Activity'**
+  String get recentUserActivity;
+
+  /// No description provided for @loggedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged in'**
+  String get loggedIn;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password changed'**
+  String get passwordChanged;
+
+  /// No description provided for @mfaEnabledActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA enabled'**
+  String get mfaEnabledActivity;
+
+  /// No description provided for @accessGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Access granted'**
+  String get accessGranted;
+
+  /// No description provided for @topAssignedRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Assigned Roles'**
+  String get topAssignedRoles;
+
+  /// No description provided for @employeeSelfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Self Service'**
+  String get employeeSelfService;
+
+  /// No description provided for @applicationRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Application Role'**
+  String get applicationRole;
+
+  /// No description provided for @payrollProcessor.
+  ///
+  /// In en, this message translates to:
+  /// **'Payroll Processor'**
+  String get payrollProcessor;
+
+  /// No description provided for @departmentManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Department Manager'**
+  String get departmentManager;
+
+  /// No description provided for @leaveManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Management'**
+  String get leaveManagement;
+
+  /// No description provided for @configureAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure access'**
+  String get configureAccess;
+
+  /// No description provided for @activeLogins.
+  ///
+  /// In en, this message translates to:
+  /// **'Active logins'**
+  String get activeLogins;
 
   /// No description provided for @minutesAgo.
   ///
@@ -1856,29 +2054,11 @@ abstract class AppLocalizations {
   /// **'Category'**
   String get category;
 
-  /// No description provided for @finance.
-  ///
-  /// In en, this message translates to:
-  /// **'Finance'**
-  String get finance;
-
-  /// No description provided for @operations.
-  ///
-  /// In en, this message translates to:
-  /// **'Operations'**
-  String get operations;
-
   /// No description provided for @hr.
   ///
   /// In en, this message translates to:
   /// **'HR'**
   String get hr;
-
-  /// No description provided for @it.
-  ///
-  /// In en, this message translates to:
-  /// **'IT'**
-  String get it;
 
   /// No description provided for @import.
   ///
@@ -2869,12 +3049,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time Management'**
   String get timeManagement;
-
-  /// No description provided for @leaveManagement.
-  ///
-  /// In en, this message translates to:
-  /// **'Leave Management'**
-  String get leaveManagement;
 
   /// No description provided for @workforceStructure.
   ///

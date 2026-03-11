@@ -1,6 +1,4 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/utils/responsive_helper.dart';
 import 'package:digify_hr_system/core/widgets/common/digify_error_state.dart';
 import 'package:digify_hr_system/core/widgets/common/pagination_controls.dart';
@@ -8,9 +6,9 @@ import 'package:digify_hr_system/features/time_management/domain/models/paginati
 import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:digify_hr_system/features/time_management/data/config/public_holidays_config.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/public_holidays_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/monthly_holiday_group.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/public_holidays/components/public_holidays_action_bar.dart';
@@ -31,7 +29,6 @@ class PublicHolidaysTab extends ConsumerStatefulWidget {
 
 class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedYear = PublicHolidaysConfig.defaultYear;
   String _selectedType = PublicHolidaysConfig.defaultType;
   final ScrollController _scrollController = ScrollController();
 
@@ -41,7 +38,9 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final enterpriseId = ref.read(publicHolidaysTabEnterpriseIdProvider);
       if (enterpriseId != null) {
-        ref.read(publicHolidaysNotifierProvider(enterpriseId).notifier).refresh();
+        final notifier = ref.read(publicHolidaysNotifierProvider(enterpriseId).notifier);
+        notifier.refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }
@@ -84,7 +83,6 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
   @override
   Widget build(BuildContext context) {
     final effectiveEnterpriseId = ref.watch(publicHolidaysTabEnterpriseIdProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final state = effectiveEnterpriseId != null
         ? ref.watch(publicHolidaysNotifierProvider(effectiveEnterpriseId))
         : const PublicHolidaysState();
@@ -125,6 +123,8 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
       }
     });
 
+    final selectedYear = state.selectedYear ?? PublicHolidaysConfig.defaultYear;
+
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
@@ -132,15 +132,14 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
         children: [
           PublicHolidaysActionBar(
             searchController: _searchController,
-            selectedYear: _selectedYear,
+            selectedYear: selectedYear,
             selectedType: _selectedType,
             availableYears: PublicHolidaysConfig.availableYears,
             availableTypes: PublicHolidaysConfig.availableTypes,
             onYearChanged: (year) {
               setState(() {
-                _selectedYear = year ?? PublicHolidaysConfig.defaultYear;
+                notifierRef.setSelectedYear(year);
               });
-              notifierRef.setSelectedYear(_selectedYear == PublicHolidaysConfig.defaultYear ? null : _selectedYear);
             },
             onTypeChanged: (type) {
               setState(() {
@@ -156,15 +155,9 @@ class _PublicHolidaysTabState extends ConsumerState<PublicHolidaysTab> {
           else if (state.hasError)
             DigifyErrorState(message: state.errorMessage ?? 'An error occurred', onRetry: () => notifierRef.refresh())
           else if (holidayGroups.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.w),
-                child: Text(
-                  'No holidays found',
-                  style: context.textTheme.titleMedium?.copyWith(
-                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                  ),
-                ),
+            const Center(
+              child: TimeManagementEmptyStateWidget(
+                message: 'No public holidays found. Create your first holiday to get started.',
               ),
             )
           else

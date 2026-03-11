@@ -322,7 +322,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'About';
 
   @override
-  String get securityOverview => 'Security Overview';
+  String get securityConsoleOverview => 'Security Console Overview';
 
   @override
   String get totalUsers => 'Total Users';
@@ -350,6 +350,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalPrivileges => 'Total Privileges';
+
+  @override
+  String get mfaProtected => 'MFA Protected';
+
+  @override
+  String get userAccessStatus => 'User Access Status';
+
+  @override
+  String get withRoles => 'With Roles';
+
+  @override
+  String get mfaEnabled => 'MFA Enabled';
+
+  @override
+  String get userDistributionByDepartment => 'User Distribution by Department';
+
+  @override
+  String get roleTypeDistribution => 'Role Type Distribution';
+
+  @override
+  String get applicationRoles => 'Application Roles';
+
+  @override
+  String get functionRoles => 'Function Roles';
+
+  @override
+  String get dataRoles => 'Data Roles';
+
+  @override
+  String get applicationRolesDesc => 'Top-level permissions';
+
+  @override
+  String get functionRolesDesc => 'Feature access control';
+
+  @override
+  String get dataRolesDesc => 'Data access control';
+
+  @override
+  String get jobRolesDesc => 'Position-based access';
+
+  @override
+  String get dutyRolesDesc => 'Task-specific permissions';
+
+  @override
+  String get usersUnit => 'users';
+
+  @override
+  String get rolesUnit => 'roles';
+
+  @override
+  String get executive => 'Executive';
+
+  @override
+  String get finance => 'Finance';
+
+  @override
+  String get it => 'IT';
+
+  @override
+  String get operations => 'Operations';
 
   @override
   String get active => 'Active';
@@ -380,6 +440,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get investigateAll => 'Investigate All';
+
+  @override
+  String get recentUserActivity => 'Recent User Activity';
+
+  @override
+  String get loggedIn => 'Logged in';
+
+  @override
+  String get passwordChanged => 'Password changed';
+
+  @override
+  String get mfaEnabledActivity => 'MFA enabled';
+
+  @override
+  String get accessGranted => 'Access granted';
+
+  @override
+  String get topAssignedRoles => 'Top Assigned Roles';
+
+  @override
+  String get employeeSelfService => 'Employee Self Service';
+
+  @override
+  String get applicationRole => 'Application Role';
+
+  @override
+  String get payrollProcessor => 'Payroll Processor';
+
+  @override
+  String get departmentManager => 'Department Manager';
+
+  @override
+  String get leaveManagement => 'Leave Management';
+
+  @override
+  String get configureAccess => 'Configure access';
+
+  @override
+  String get activeLogins => 'Active logins';
 
   @override
   String minutesAgo(int count) {
@@ -904,16 +1003,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category => 'Category';
 
   @override
-  String get finance => 'Finance';
-
-  @override
-  String get operations => 'Operations';
-
-  @override
   String get hr => 'HR';
-
-  @override
-  String get it => 'IT';
 
   @override
   String get import => 'Import';
@@ -1425,9 +1515,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timeManagement => 'Time Management';
-
-  @override
-  String get leaveManagement => 'Leave Management';
 
   @override
   String get workforceStructure => 'Workforce Structure';

@@ -1,15 +1,19 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
+import 'package:digify_hr_system/core/network/exceptions.dart';
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/time_management/data/datasources/schedule_assignment_remote_datasource.dart';
 import 'package:digify_hr_system/features/time_management/data/repositories/schedule_assignment_repository_impl.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/schedule_assignment.dart';
+import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/features/time_management/domain/repositories/schedule_assignment_repository.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/create_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/delete_schedule_assignment_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/get_schedule_assignments_usecase.dart';
 import 'package:digify_hr_system/features/time_management/domain/usecases/update_schedule_assignment_usecase.dart';
+import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/dialogs/widgets/assignment_level_selector.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final scheduleAssignmentApiClientProvider = Provider<ApiClient>((ref) {
@@ -349,6 +353,115 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     }
   }
 
+  String? validateCreateInputs({
+    required AssignmentLevel? assignmentLevel,
+    required String? orgUnitId,
+    required int? employeeId,
+    required WorkSchedule? workSchedule,
+    required DateTime? startDate,
+    required DateTime? endDate,
+    required String? status,
+  }) {
+    if (assignmentLevel == null) {
+      return 'Please select an assignment level';
+    }
+    if (assignmentLevel == AssignmentLevel.department && orgUnitId == null) {
+      return 'Please select an organizational unit';
+    }
+    if (assignmentLevel == AssignmentLevel.employee && employeeId == null) {
+      return 'Please select an employee';
+    }
+    if (workSchedule == null) {
+      return 'Please select a work schedule';
+    }
+    if (startDate == null) {
+      return 'Please select an effective start date';
+    }
+    if (endDate == null) {
+      return 'Please select an effective end date';
+    }
+    if (status == null || status.isEmpty) {
+      return 'Please select a status';
+    }
+    if (endDate.isBefore(startDate)) {
+      return 'Effective end date cannot be before start date';
+    }
+    return null;
+  }
+
+  Future<ScheduleAssignment> createScheduleAssignmentFromForm({
+    required AssignmentLevel assignmentLevel,
+    required String orgUnitId,
+    int? employeeId,
+    required WorkSchedule workSchedule,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String status,
+    String? notes,
+  }) {
+    if (_currentEnterpriseId == null) {
+      throw Exception('Enterprise ID is not set. Please ensure the provider is initialized.');
+    }
+
+    final assignmentData = <String, dynamic>{
+      'tenant_id': _currentEnterpriseId!,
+      'assignment_level': assignmentLevel == AssignmentLevel.department ? 'DEPARTMENT' : 'EMPLOYEE',
+      if (assignmentLevel == AssignmentLevel.department) 'org_unit_id': orgUnitId,
+      if (assignmentLevel == AssignmentLevel.employee && employeeId != null) 'employee_id': employeeId,
+      'work_schedule_id': workSchedule.workScheduleId,
+      'effective_start_date': DateFormat('yyyy-MM-dd').format(startDate),
+      'effective_end_date': DateFormat('yyyy-MM-dd').format(endDate),
+      'status': status.toUpperCase(),
+      if (notes != null && notes.trim().isNotEmpty) 'notes': notes.trim(),
+    };
+
+    return createScheduleAssignment(assignmentData);
+  }
+
+  Future<String?> submitCreateAssignment({
+    required AssignmentLevel? assignmentLevel,
+    required String? orgUnitId,
+    required int? employeeId,
+    required WorkSchedule? workSchedule,
+    required DateTime? startDate,
+    required DateTime? endDate,
+    required String? status,
+    String? notes,
+  }) async {
+    final validationError = validateCreateInputs(
+      assignmentLevel: assignmentLevel,
+      orgUnitId: orgUnitId,
+      employeeId: employeeId,
+      workSchedule: workSchedule,
+      startDate: startDate,
+      endDate: endDate,
+      status: status,
+    );
+
+    if (validationError != null) {
+      return validationError;
+    }
+
+    try {
+      await createScheduleAssignmentFromForm(
+        assignmentLevel: assignmentLevel!,
+        orgUnitId: orgUnitId!,
+        employeeId: employeeId,
+        workSchedule: workSchedule!,
+        startDate: startDate!,
+        endDate: endDate!,
+        status: status!,
+        notes: notes,
+      );
+
+      return null;
+    } on AppException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Failed to create schedule assignment: $e';
+    }
+  }
+
   Future<ScheduleAssignment> updateScheduleAssignment(
     int scheduleAssignmentId,
     Map<String, dynamic> assignmentData,
@@ -373,6 +486,63 @@ class ScheduleAssignmentsNotifier extends StateNotifier<ScheduleAssignmentState>
     } catch (e) {
       state = state.copyWith(isCreating: false, hasError: true, errorMessage: e.toString());
       rethrow;
+    }
+  }
+
+  Future<String?> submitUpdateAssignment({
+    required int scheduleAssignmentId,
+    required AssignmentLevel? assignmentLevel,
+    required String? orgUnitId,
+    required int? employeeId,
+    required WorkSchedule? workSchedule,
+    required DateTime? startDate,
+    required DateTime? endDate,
+    required String? status,
+    String? notes,
+  }) async {
+    final validationError = validateCreateInputs(
+      assignmentLevel: assignmentLevel,
+      orgUnitId: orgUnitId,
+      employeeId: employeeId,
+      workSchedule: workSchedule,
+      startDate: startDate,
+      endDate: endDate,
+      status: status,
+    );
+
+    if (validationError != null) {
+      return validationError;
+    }
+
+    try {
+      final level = assignmentLevel!;
+      final schedule = workSchedule!;
+      final start = startDate!;
+      final end = endDate!;
+      final statusValue = status!;
+
+      if (_currentEnterpriseId == null) {
+        return 'Enterprise ID is not set. Please try again.';
+      }
+
+      final data = <String, dynamic>{
+        'tenant_id': _currentEnterpriseId!,
+        'assignment_level': level == AssignmentLevel.department ? 'DEPARTMENT' : 'EMPLOYEE',
+        if (level == AssignmentLevel.department) 'org_unit_id': orgUnitId,
+        if (level == AssignmentLevel.employee && employeeId != null) 'employee_id': employeeId,
+        'work_schedule_id': schedule.workScheduleId,
+        'effective_start_date': DateFormat('yyyy-MM-dd').format(start),
+        'effective_end_date': DateFormat('yyyy-MM-dd').format(end),
+        'status': statusValue.toUpperCase(),
+        if (notes != null && notes.trim().isNotEmpty) 'notes': notes.trim(),
+      };
+
+      await updateScheduleAssignment(scheduleAssignmentId, data);
+      return null;
+    } on AppException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Failed to update schedule assignment: $e';
     }
   }
 

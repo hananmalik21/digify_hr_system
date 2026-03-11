@@ -4,6 +4,7 @@ import 'package:digify_hr_system/core/widgets/feedback/app_confirmation_dialog.d
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/schedule_assignments_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/common/time_management_empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignment_table_row.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/schedule_assignments/components/schedule_assignments_table.dart';
@@ -29,6 +30,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       final enterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
       if (enterpriseId != null) {
         ref.read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier).refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }
@@ -57,6 +59,7 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
       await ref
           .read(scheduleAssignmentsNotifierProvider(enterpriseId).notifier)
           .deleteScheduleAssignment(assignment.scheduleAssignmentId, hard: true);
+      await ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
     }
   }
 
@@ -104,6 +107,16 @@ class _ScheduleAssignmentsTabState extends ConsumerState<ScheduleAssignmentsTab>
   Widget _buildContent(ScheduleAssignmentState scheduleAssignmentsState) {
     final effectiveEnterpriseId = ref.read(scheduleAssignmentsTabEnterpriseIdProvider);
     if (effectiveEnterpriseId == null) return const SizedBox.shrink();
+
+    if (!scheduleAssignmentsState.isLoading &&
+        !scheduleAssignmentsState.hasError &&
+        scheduleAssignmentsState.items.isEmpty) {
+      return const Center(
+        child: TimeManagementEmptyStateWidget(
+          message: 'No schedule assignments found. Create your first schedule assignment to get started.',
+        ),
+      );
+    }
 
     return ScheduleAssignmentsTable(
       assignments: ScheduleAssignmentMapper.toTableRowDataList(scheduleAssignmentsState.items),

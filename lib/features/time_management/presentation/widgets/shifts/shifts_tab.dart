@@ -5,6 +5,7 @@ import 'package:digify_hr_system/core/widgets/feedback/empty_state_widget.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/shift.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_provider.dart';
 import 'package:digify_hr_system/features/time_management/presentation/providers/shifts_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/time_management/presentation/providers/time_management_stats_providers.dart';
 import 'package:digify_hr_system/features/time_management/presentation/widgets/shifts/components/shifts_content_widget.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _ShiftsTabState extends ConsumerState<ShiftsTab> {
       final enterpriseId = ref.read(shiftsTabEnterpriseIdProvider);
       if (enterpriseId != null) {
         ref.read(shiftsNotifierProvider(enterpriseId).notifier).refresh();
+        ref.read(timeManagementStatsNotifierProvider.notifier).refresh();
       }
     });
   }
