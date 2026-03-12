@@ -23,18 +23,12 @@ class UserManagementTableRow extends StatelessWidget {
       fontSize: 14.sp,
       color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
     );
-    final secondaryStyle = context.textTheme.bodySmall?.copyWith(
-      fontSize: 12.sp,
-      color: AppColors.tableHeaderText,
-    );
+    final secondaryStyle = context.textTheme.bodySmall?.copyWith(fontSize: 12.sp, color: AppColors.tableHeaderText);
 
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder,
-            width: 1.w,
-          ),
+          bottom: BorderSide(color: isDark ? AppColors.cardBorderDark : AppColors.cardBorder, width: 1.w),
         ),
       ),
       child: Row(
@@ -47,7 +41,7 @@ class UserManagementTableRow extends StatelessWidget {
                     image: null,
                     fallbackInitial: user.initials,
                     size: 44.w,
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                     textColor: AppColors.primary,
                   ),
                   Gap(12.w),
@@ -79,10 +73,7 @@ class UserManagementTableRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    user.department,
-                    style: textStyle?.copyWith(fontWeight: FontWeight.w700),
-                  ),
+                  Text(user.department, style: textStyle?.copyWith(fontWeight: FontWeight.w700)),
                   Gap(2.h),
                   Text(user.designation, style: secondaryStyle),
                 ],
@@ -95,41 +86,37 @@ class UserManagementTableRow extends StatelessWidget {
                 spacing: 8.w,
                 runSpacing: 4.h,
                 children: user.roles
-                    .map((role) => Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.roleBadgeBg,
-                            borderRadius: BorderRadius.circular(20.r),
-                            border: Border.all(color: AppColors.roleBadgeBorder, width: 1),
+                    .map(
+                      (role) => Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: AppColors.roleBadgeBg,
+                          borderRadius: BorderRadius.circular(20.r),
+                          border: Border.all(color: AppColors.roleBadgeBorder, width: 1),
+                        ),
+                        child: Text(
+                          role,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: AppColors.roleBadgeText,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: Text(
-                            role,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: AppColors.roleBadgeText,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ))
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
               UserManagementTableConfig.rolesWidth.w,
             ),
           if (UserManagementTableConfig.showStatus)
-            _buildDataCell(
-              UserStatusChip(status: user.status),
-              UserManagementTableConfig.statusWidth.w,
-            ),
+            _buildDataCell(UserStatusChip(status: user.status), UserManagementTableConfig.statusWidth.w),
           if (UserManagementTableConfig.showSecurity)
             _buildDataCell(
               UserSecurityStatus(is2FAEnabled: user.is2FAEnabled),
               UserManagementTableConfig.securityWidth.w,
             ),
           if (UserManagementTableConfig.showActions)
-            _buildDataCell(
-              _buildActionsCell(),
-              UserManagementTableConfig.actionsWidth.w,
-            ),
+            _buildDataCell(_buildActionsCell(), UserManagementTableConfig.actionsWidth.w),
         ],
       ),
     );
