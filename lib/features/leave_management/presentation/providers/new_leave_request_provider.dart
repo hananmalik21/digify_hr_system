@@ -5,6 +5,7 @@ import 'package:digify_hr_system/features/leave_management/presentation/provider
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/employee.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeaveRequestActionResult {
@@ -114,26 +115,6 @@ class NewLeaveRequestState {
     );
   }
 
-  bool canProceedToNextStep() {
-    switch (currentStep) {
-      case LeaveRequestStep.leaveDetails:
-        return selectedEmployee != null && leaveType != null && startDate != null && endDate != null;
-      case LeaveRequestStep.contactNotes:
-        return reason != null &&
-            reason!.trim().isNotEmpty &&
-            addressDuringLeave != null &&
-            addressDuringLeave!.trim().isNotEmpty &&
-            contactPhoneNumber != null &&
-            contactPhoneNumber!.trim().isNotEmpty &&
-            emergencyContactName != null &&
-            emergencyContactName!.trim().isNotEmpty &&
-            emergencyContactPhone != null &&
-            emergencyContactPhone!.trim().isNotEmpty;
-      case LeaveRequestStep.documentsReview:
-        return true; // Documents are optional
-    }
-  }
-
   int get totalDays {
     if (startDate == null || endDate == null) return 0;
     return endDate!.difference(startDate!).inDays + 1;
@@ -153,8 +134,70 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     state = state.copyWith(currentStep: step);
   }
 
+  String? validateStep(LeaveRequestStep step) {
+    switch (step) {
+      case LeaveRequestStep.leaveDetails:
+        if (state.selectedEmployee == null) return 'Please select an employee';
+        if (state.leaveType == null) return 'Please select a leave type';
+        if (state.startDate == null) return 'Please select a start date';
+        if (state.startTime == null) return 'Please select a start time';
+        if (state.endDate == null) return 'Please select an end date';
+        if (state.endTime == null) return 'Please select an end time';
+        if (state.endDate!.isBefore(state.startDate!)) return 'End date cannot be before start date';
+        return null;
+      case LeaveRequestStep.contactNotes:
+        if (state.reason == null || state.reason!.trim().isEmpty) return 'Please provide a reason for leave';
+        if (state.addressDuringLeave == null || state.addressDuringLeave!.trim().isEmpty) {
+          return 'Please provide an address during leave';
+        }
+        if (state.contactPhoneNumber == null || state.contactPhoneNumber!.trim().isEmpty) {
+          return 'Please provide a contact phone number';
+        }
+        if (state.emergencyContactName == null || state.emergencyContactName!.trim().isEmpty) {
+          return 'Please provide an emergency contact name';
+        }
+        if (state.emergencyContactPhone == null || state.emergencyContactPhone!.trim().isEmpty) {
+          return 'Please provide an emergency contact phone number';
+        }
+        return null;
+      case LeaveRequestStep.documentsReview:
+        return null;
+    }
+  }
+
+  void _printStepData(LeaveRequestStep step) {
+    debugPrint('--- Leave Request Step Data: ${step.name} ---');
+    switch (step) {
+      case LeaveRequestStep.leaveDetails:
+        debugPrint('Employee: ${state.selectedEmployee?.fullName}');
+        debugPrint('Leave Type: ${state.leaveType?.name}');
+        debugPrint('Start Date: ${state.startDate}');
+        debugPrint('End Date: ${state.endDate}');
+        debugPrint('Start Time: ${state.startTime}');
+        debugPrint('End Time: ${state.endTime}');
+        break;
+      case LeaveRequestStep.contactNotes:
+        debugPrint('Reason: ${state.reason}');
+        debugPrint('Delegated To: ${state.delegatedToEmployeeName}');
+        debugPrint('Address: ${state.addressDuringLeave}');
+        debugPrint('Phone: ${state.contactPhoneNumber}');
+        debugPrint('Emergency Contact: ${state.emergencyContactName} (${state.emergencyContactPhone})');
+        debugPrint('Additional Notes: ${state.additionalNotes}');
+        break;
+      case LeaveRequestStep.documentsReview:
+        debugPrint('Documents Count: ${state.documents.length}');
+        break;
+    }
+    debugPrint('----------------------------------------------');
+  }
+
+  bool canProceedToNextStep() {
+    return validateStep(state.currentStep) == null;
+  }
+
   void nextStep() {
-    if (!state.canProceedToNextStep()) return;
+    _printStepData(state.currentStep);
+    if (!canProceedToNextStep()) return;
 
     final steps = LeaveRequestStep.values;
     final currentIndex = steps.indexOf(state.currentStep);
@@ -185,7 +228,11 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
   }
 
   void setStartDate(DateTime date) {
-    state = state.copyWith(startDate: date);
+    if (state.endDate != null && state.endDate!.isBefore(date)) {
+      state = state.copyWith(startDate: date, endDate: null);
+    } else {
+      state = state.copyWith(startDate: date);
+    }
   }
 
   void setEndDate(DateTime date) {
@@ -348,18 +395,14 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     state = state.copyWith(isSubmitting: true);
     try {
-      final response = state.editingRequestGuid != null
-          ? await _repository.updateLeaveRequest(state.editingRequestGuid!, state, true, tenantId: tenantId)
-          : await _repository.createLeaveRequest(state, true, tenantId: tenantId);
+      if (state.editingRequestGuid != null) {
+        await _repository.updateLeaveRequest(state.editingRequestGuid!, state, true, tenantId: tenantId);
+      } else {
+        await _repository.createLeaveRequest(state, true, tenantId: tenantId);
+      }
       state = state.copyWith(isSubmitting: false);
       final leaveRequestsNotifier = _ref.read(leaveRequestsNotifierProvider.notifier);
-      if (state.editingRequestGuid != null) {
-        await leaveRequestsNotifier.updateLeaveRequest(state.editingRequestGuid!, state, true, response);
-      } else {
-        final employeeName = state.selectedEmployee?.fullName ?? '';
-        final leaveType = state.leaveType!;
-        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-      }
+      leaveRequestsNotifier.refresh();
       return LeaveRequestActionResult.success();
     } catch (e) {
       state = state.copyWith(isSubmitting: false);
@@ -374,18 +417,14 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
     state = state.copyWith(isSavingDraft: true);
     try {
-      final response = state.editingRequestGuid != null
-          ? await _repository.updateLeaveRequest(state.editingRequestGuid!, state, false, tenantId: tenantId)
-          : await _repository.createLeaveRequest(state, false, tenantId: tenantId);
+      if (state.editingRequestGuid != null) {
+        await _repository.updateLeaveRequest(state.editingRequestGuid!, state, false, tenantId: tenantId);
+      } else {
+        await _repository.createLeaveRequest(state, false, tenantId: tenantId);
+      }
       state = state.copyWith(isSavingDraft: false);
       final leaveRequestsNotifier = _ref.read(leaveRequestsNotifierProvider.notifier);
-      if (state.editingRequestGuid != null) {
-        await leaveRequestsNotifier.updateLeaveRequest(state.editingRequestGuid!, state, false, response);
-      } else {
-        final employeeName = state.selectedEmployee?.fullName ?? '';
-        final leaveType = state.leaveType!;
-        leaveRequestsNotifier.addLeaveRequestOptimistically(response, employeeName, leaveType);
-      }
+      leaveRequestsNotifier.refresh();
       return LeaveRequestActionResult.success();
     } catch (e) {
       state = state.copyWith(isSavingDraft: false);

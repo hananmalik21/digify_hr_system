@@ -1,3 +1,4 @@
+import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
@@ -75,6 +76,41 @@ class _EditScheduleAssignmentDialogState extends ConsumerState<EditScheduleAssig
     _selectedStatus = _convertStatusToDropdownFormat(assignment.status);
 
     _notesController = TextEditingController(text: assignment.notes ?? '');
+
+    if (_selectedLevel == AssignmentLevel.employee && assignment.employee != null) {
+      final emp = assignment.employee!;
+      _selectedEmployee = Employee(
+        id: assignment.employeeId ?? 0,
+        guid: '',
+        enterpriseId: widget.enterpriseId,
+        firstName: emp.name.split(' ').first,
+        lastName: emp.name.split(' ').length > 1 ? emp.name.split(' ').sublist(1).join(' ') : '',
+        email: '',
+        status: 'ACTIVE',
+        isActive: true,
+        createdAt: DateTime.now(),
+      );
+    }
+
+    if (assignment.workSchedule != null) {
+      final ws = assignment.workSchedule!;
+      _selectedWorkSchedule = WorkSchedule(
+        workScheduleId: ws.workScheduleId,
+        tenantId: widget.enterpriseId,
+        scheduleCode: ws.scheduleCode,
+        scheduleNameEn: ws.scheduleNameEn,
+        scheduleNameAr: ws.scheduleNameAr,
+        workPatternId: 0,
+        effectiveStartDate: assignment.effectiveStartDate,
+        assignmentMode: 'FIXED',
+        status: PositionStatus.active,
+        creationDate: DateTime.now(),
+        createdBy: 'SYSTEM',
+        lastUpdateDate: DateTime.now(),
+        lastUpdatedBy: 'ADMIN',
+        weeklyLines: const [],
+      );
+    }
   }
 
   void _initializeWorkSchedule() {

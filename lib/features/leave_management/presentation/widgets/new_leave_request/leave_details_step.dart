@@ -291,10 +291,11 @@ class LeaveDetailsStep extends ConsumerWidget {
                 hintText: localizations.hintSelectDate,
                 isRequired: true,
                 initialDate: state.endDate,
-                firstDate: today,
+                firstDate: state.startDate ?? today,
                 lastDate: lastSelectable,
                 onDateSelected: notifier.setEndDate,
                 fillColor: AppColors.cardBackground,
+                readOnly: state.startDate == null,
               ),
               Gap(24.h),
               Builder(

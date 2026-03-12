@@ -68,8 +68,6 @@ class WorkScheduleSelectionField extends StatelessWidget {
 
             if (selected != null) {
               onChanged(selected);
-            } else {
-              onChanged(null);
             }
           },
           child: Container(

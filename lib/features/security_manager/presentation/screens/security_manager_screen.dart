@@ -1,11 +1,14 @@
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/features/security_manager/presentation/providers/security_manager_tab_state_provider.dart';
-import 'package:digify_hr_system/features/security_manager/presentation/screens/security_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_colors.dart';
+import '../providers/security_manager_tab_state_provider.dart';
+import 'security_overview_screen.dart';
+import 'user_management_screen.dart';
+
 class _SecurityManagerTabIndex {
   static const int securityOverview = 0;
+  static const int userManagement = 1;
 }
 
 class SecurityManagerScreen extends ConsumerWidget {
@@ -30,6 +33,8 @@ class SecurityManagerScreen extends ConsumerWidget {
     switch (tabIndex) {
       case _SecurityManagerTabIndex.securityOverview:
         return const SecurityOverviewScreen();
+      case _SecurityManagerTabIndex.userManagement:
+        return const UserManagementScreen();
       default:
         return const SecurityOverviewScreen();
     }

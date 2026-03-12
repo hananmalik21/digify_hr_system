@@ -108,6 +108,7 @@
   "totalUsers": "Total Users",
   "activeUsers": "Active Users",
   "inactiveUsers": "Inactive Users",
+  "lockedUsers": "Locked Users",
   "pendingApprovals": "Pending Approvals",
   "totalRoles": "Total Roles",
   "activeRoles": "Active Roles",
@@ -1537,5 +1538,7 @@
   "encashmentOptionDescription": "Consider approving encashment requests for employees who cannot take leave",
   "overtimeManagment": "Overtime Management",
   "overtimeManagmentDescription": "Track and manage overtime hours and approvals",
-  "requestOvertime": "Request Overtime"
+  "requestOvertime": "Request Overtime",
+  "userManagement": "User Management",
+  "userSummary": "User Summary"
 }
