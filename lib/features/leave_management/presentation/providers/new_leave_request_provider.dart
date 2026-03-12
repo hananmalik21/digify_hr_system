@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/features/leave_management/data/mappers/leave_type_mapper.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/document.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_requests_repository.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/config/leave_request_config.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -25,8 +26,8 @@ class NewLeaveRequestState {
   final int? leaveTypeId;
   final DateTime? startDate;
   final DateTime? endDate;
-  final String? startTime; // "Full Day" or specific time
-  final String? endTime; // "Full Day" or specific time
+  final String? startTime;
+  final String? endTime;
   final String? reason;
   final int? delegatedToEmployeeId;
   final String? delegatedToEmployeeName;
@@ -118,6 +119,30 @@ class NewLeaveRequestState {
   int get totalDays {
     if (startDate == null || endDate == null) return 0;
     return endDate!.difference(startDate!).inDays + 1;
+  }
+
+  bool get isSameDay {
+    if (startDate == null || endDate == null) return true;
+    return startDate!.year == endDate!.year && startDate!.month == endDate!.month && startDate!.day == endDate!.day;
+  }
+
+  List<Map<String, String>> get availableStartTimeOptions {
+    final allOptions = LeaveRequestConfig.leaveTimeOptions;
+    if (isSameDay) return allOptions;
+    return allOptions.where((opt) => opt['code'] == 'FULL').toList();
+  }
+
+  List<Map<String, String>> get availableEndTimeOptions {
+    final allOptions = LeaveRequestConfig.leaveTimeOptions;
+    if (!isSameDay) return allOptions.where((opt) => opt['code'] == 'FULL').toList();
+
+    if (startTime == 'HALF_PM') {
+      return allOptions.where((opt) => opt['code'] != 'HALF_AM').toList();
+    }
+    if (startTime == 'FULL') {
+      return allOptions.where((opt) => opt['code'] == 'FULL').toList();
+    }
+    return allOptions;
   }
 }
 
@@ -227,20 +252,43 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     state = state.copyWith(leaveType: timeOffType, leaveTypeId: leaveTypeId);
   }
 
+  bool _isSameDay(DateTime? d1, DateTime? d2) {
+    if (d1 == null || d2 == null) return true;
+    return d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
+  }
+
   void setStartDate(DateTime date) {
+    final bool isMultiDay = !_isSameDay(date, state.endDate);
+
     if (state.endDate != null && state.endDate!.isBefore(date)) {
-      state = state.copyWith(startDate: date, endDate: null);
+      state = state.copyWith(startDate: date, endDate: null, startTime: null, endTime: null);
+    } else if (isMultiDay && state.endDate != null) {
+      state = state.copyWith(startDate: date, startTime: 'FULL', endTime: 'FULL');
     } else {
       state = state.copyWith(startDate: date);
     }
   }
 
   void setEndDate(DateTime date) {
-    state = state.copyWith(endDate: date);
+    final bool isMultiDay = !_isSameDay(state.startDate, date);
+
+    if (isMultiDay && state.startDate != null) {
+      state = state.copyWith(endDate: date, startTime: 'FULL', endTime: 'FULL');
+    } else {
+      state = state.copyWith(endDate: date);
+    }
   }
 
   void setStartTime(String time) {
-    state = state.copyWith(startTime: time);
+    String? newEndTime = state.endTime;
+    if (state.isSameDay) {
+      if (time == 'HALF_PM' && state.endTime == 'HALF_AM') {
+        newEndTime = 'HALF_PM';
+      } else if (time == 'FULL') {
+        newEndTime = 'FULL';
+      }
+    }
+    state = state.copyWith(startTime: time, endTime: newEndTime);
   }
 
   void setEndTime(String time) {
@@ -302,7 +350,7 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     state = const NewLeaveRequestState();
   }
 
-  Future<void> loadDraftData(Map<String, dynamic> responseData) async {
+  Future<void> loadDraftData(Map<String, dynamic> responseData, {TimeOffRequest? originalRequest}) async {
     final data = responseData['data'] as List<dynamic>?;
     if (data == null || data.isEmpty) {
       throw Exception('Invalid response data');
@@ -320,24 +368,41 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     final employeeInfo = leaveDetails['employee_info'] as Map<String, dynamic>?;
     final leaveTypeInfo = leaveDetails['leave_type_info'] as Map<String, dynamic>?;
 
-    if (employeeInfo == null) {
-      throw Exception('Employee info not found');
+    Employee? employee;
+    if (employeeInfo != null) {
+      employee = Employee(
+        id: (employeeInfo['employee_id'] as num?)?.toInt() ?? 0,
+        guid: employeeInfo['employee_guid'] as String? ?? '',
+        enterpriseId: (leaveDetails['tenant_id'] as num?)?.toInt() ?? 0,
+        firstName: employeeInfo['first_name'] as String? ?? '',
+        lastName: employeeInfo['last_name'] as String? ?? '',
+        email: employeeInfo['email'] as String? ?? '',
+        status: '',
+        isActive: true,
+        createdAt: DateTime.now(),
+      );
+    } else if (originalRequest != null) {
+      final names = originalRequest.employeeName.split(' ');
+      employee = Employee(
+        id: originalRequest.employeeId,
+        guid: originalRequest.employeeGuid ?? '',
+        enterpriseId: (leaveDetails['tenant_id'] as num?)?.toInt() ?? 0,
+        firstName: names.isNotEmpty ? names.first : '',
+        lastName: names.length > 1 ? names.last : '',
+        email: '',
+        status: '',
+        isActive: true,
+        createdAt: DateTime.now(),
+      );
     }
 
-    final employee = Employee(
-      id: (employeeInfo['employee_id'] as num?)?.toInt() ?? 0,
-      guid: employeeInfo['employee_guid'] as String? ?? '',
-      enterpriseId: (leaveDetails['tenant_id'] as num?)?.toInt() ?? 0,
-      firstName: employeeInfo['first_name'] as String? ?? '',
-      lastName: employeeInfo['last_name'] as String? ?? '',
-      email: employeeInfo['email'] as String? ?? '',
-      status: '',
-      isActive: true,
-      createdAt: DateTime.now(),
-    );
-
-    final leaveCode = leaveTypeInfo?['leave_code'] as String?;
-    final leaveType = LeaveTypeMapper.getLeaveTypeFromCode(leaveCode);
+    TimeOffType? leaveType;
+    if (leaveTypeInfo != null) {
+      final leaveCode = leaveTypeInfo['leave_code'] as String?;
+      leaveType = LeaveTypeMapper.getLeaveTypeFromCode(leaveCode);
+    } else if (originalRequest != null && originalRequest.leaveTypeInfo != null) {
+      leaveType = LeaveTypeMapper.getLeaveTypeFromCode(originalRequest.leaveTypeInfo!.leaveCode);
+    }
 
     DateTime parseDateTime(dynamic value) {
       if (value == null) return DateTime.now();
@@ -346,15 +411,17 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
     }
 
     String mapPortionToTime(String? portion) {
-      if (portion == null) return 'Full Time';
+      if (portion == null) return 'FULL';
       switch (portion.toUpperCase()) {
         case 'FULL_DAY':
-          return 'Full Time';
+        case 'FULL':
+          return 'FULL';
         case 'HALF_AM':
+          return 'HALF_AM';
         case 'HALF_PM':
-          return 'Half Time';
+          return 'HALF_PM';
         default:
-          return 'Full Time';
+          return 'FULL';
       }
     }
 
@@ -378,7 +445,7 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
           ? [
               Document(
                 id: leaveDocumentInfo['document_guid'] as String? ?? '',
-                name: leaveDocumentInfo['file_name'] as String? ?? '',
+                name: leaveDocumentInfo['file_name'] as String? ?? 'Attachment',
                 path: '',
                 size: 0,
                 uploadedAt: parseDateTime(leaveDocumentInfo['creation_date']),

@@ -5,11 +5,8 @@ import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/employee_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/leave_type_search_field.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_code.dart';
-import 'package:digify_hr_system/features/leave_management/domain/models/abs_lookup_value.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_request_tab_enterprise_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/new_leave_request_provider.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/time_off_request.dart';
@@ -227,6 +224,10 @@ class LeaveDetailsStep extends ConsumerWidget {
     final today = DateTime(now.year, now.month, now.day);
     final lastSelectable = today.add(const Duration(days: 365));
 
+    final startOptions = state.availableStartTimeOptions;
+    final endOptions = state.availableEndTimeOptions;
+    final isSameDay = state.isSameDay;
+
     return Row(
       children: [
         Expanded(
@@ -245,37 +246,23 @@ class LeaveDetailsStep extends ConsumerWidget {
                 fillColor: AppColors.cardBackground,
               ),
               Gap(24.h),
-              Builder(
-                builder: (context) {
-                  final List<AbsLookupValue> shiftOptions = ref.watch(
-                    leaveRequestTabLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
-                  );
-
-                  AbsLookupValue? selectedStart;
-                  if (state.startTime != null) {
-                    for (final v in shiftOptions) {
-                      if (v.lookupValueCode == state.startTime) {
-                        selectedStart = v;
-                        break;
-                      }
-                    }
-                  }
-
-                  return DigifySelectFieldWithLabel<AbsLookupValue>(
-                    label: localizations.startTime,
-                    hint: 'Select Time',
-                    value: selectedStart,
-                    items: shiftOptions,
-                    itemLabelBuilder: (v) => v.lookupValueName,
-                    onChanged: (v) {
-                      if (v != null) {
-                        notifier.setStartTime(v.lookupValueCode);
-                      }
-                    },
-                    isRequired: true,
-                    fillColor: AppColors.cardBackground,
-                  );
-                },
+              DigifySelectFieldWithLabel<Map<String, String>>(
+                label: localizations.startTime,
+                hint: 'Select Time',
+                value: state.startTime != null && startOptions.any((opt) => opt['code'] == state.startTime)
+                    ? startOptions.firstWhere((opt) => opt['code'] == state.startTime)
+                    : (state.startDate != null && !isSameDay ? startOptions.last : null),
+                items: startOptions,
+                itemLabelBuilder: (opt) => opt['name']!,
+                onChanged: state.startDate == null || state.endDate == null
+                    ? null
+                    : (opt) {
+                        if (opt != null) {
+                          notifier.setStartTime(opt['code']!);
+                        }
+                      },
+                isRequired: true,
+                fillColor: AppColors.cardBackground,
               ),
             ],
           ),
@@ -298,37 +285,23 @@ class LeaveDetailsStep extends ConsumerWidget {
                 readOnly: state.startDate == null,
               ),
               Gap(24.h),
-              Builder(
-                builder: (context) {
-                  final List<AbsLookupValue> shiftOptions = ref.watch(
-                    leaveRequestTabLookupValuesForCodeProvider(AbsLookupCode.shiftTime),
-                  );
-
-                  AbsLookupValue? selectedEnd;
-                  if (state.endTime != null) {
-                    for (final v in shiftOptions) {
-                      if (v.lookupValueCode == state.endTime) {
-                        selectedEnd = v;
-                        break;
-                      }
-                    }
-                  }
-
-                  return DigifySelectFieldWithLabel<AbsLookupValue>(
-                    label: localizations.endTime,
-                    hint: 'Select Time',
-                    value: selectedEnd,
-                    items: shiftOptions,
-                    itemLabelBuilder: (v) => v.lookupValueName,
-                    onChanged: (v) {
-                      if (v != null) {
-                        notifier.setEndTime(v.lookupValueCode);
-                      }
-                    },
-                    isRequired: true,
-                    fillColor: AppColors.cardBackground,
-                  );
-                },
+              DigifySelectFieldWithLabel<Map<String, String>>(
+                label: localizations.endTime,
+                hint: 'Select Time',
+                value: state.endTime != null && endOptions.any((opt) => opt['code'] == state.endTime)
+                    ? endOptions.firstWhere((opt) => opt['code'] == state.endTime)
+                    : (state.endDate != null && !isSameDay ? endOptions.last : null),
+                items: endOptions,
+                itemLabelBuilder: (opt) => opt['name']!,
+                onChanged: state.startDate == null || state.endDate == null
+                    ? null
+                    : (opt) {
+                        if (opt != null) {
+                          notifier.setEndTime(opt['code']!);
+                        }
+                      },
+                isRequired: true,
+                fillColor: AppColors.cardBackground,
               ),
             ],
           ),
