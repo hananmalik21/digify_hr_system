@@ -75,6 +75,7 @@ class AppRoutes {
 
   // Security routes
   static const String securityManager = '/security-console';
+  static const String securityManagerUserAdd = '$securityManager/user/add';
 
   // Other routes
   static const String leaveManagement = '/leave-management';
