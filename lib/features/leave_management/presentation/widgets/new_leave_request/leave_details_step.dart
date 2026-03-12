@@ -228,13 +228,12 @@ class LeaveDetailsStep extends ConsumerWidget {
     final endOptions = state.availableEndTimeOptions;
     final isSameDay = state.isSameDay;
 
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DigifyDateField(
+        Row(
+          children: [
+            Expanded(
+              child: DigifyDateField(
                 key: ValueKey<String>(state.startDate?.toIso8601String() ?? 'start'),
                 label: localizations.startDate,
                 hintText: localizations.hintSelectDate,
@@ -245,34 +244,10 @@ class LeaveDetailsStep extends ConsumerWidget {
                 onDateSelected: notifier.setStartDate,
                 fillColor: AppColors.cardBackground,
               ),
-              Gap(24.h),
-              DigifySelectFieldWithLabel<Map<String, String>>(
-                label: localizations.startTime,
-                hint: 'Select Time',
-                value: state.startTime != null && startOptions.any((opt) => opt['code'] == state.startTime)
-                    ? startOptions.firstWhere((opt) => opt['code'] == state.startTime)
-                    : (state.startDate != null && !isSameDay ? startOptions.last : null),
-                items: startOptions,
-                itemLabelBuilder: (opt) => opt['name']!,
-                onChanged: state.startDate == null || state.endDate == null
-                    ? null
-                    : (opt) {
-                        if (opt != null) {
-                          notifier.setStartTime(opt['code']!);
-                        }
-                      },
-                isRequired: true,
-                fillColor: AppColors.cardBackground,
-              ),
-            ],
-          ),
-        ),
-        Gap(16.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DigifyDateField(
+            ),
+            Gap(16.w),
+            Expanded(
+              child: DigifyDateField(
                 key: ValueKey<String>(state.endDate?.toIso8601String() ?? 'end'),
                 label: localizations.endDate,
                 hintText: localizations.hintSelectDate,
@@ -284,28 +259,57 @@ class LeaveDetailsStep extends ConsumerWidget {
                 fillColor: AppColors.cardBackground,
                 readOnly: state.startDate == null,
               ),
-              Gap(24.h),
-              DigifySelectFieldWithLabel<Map<String, String>>(
-                label: localizations.endTime,
-                hint: 'Select Time',
-                value: state.endTime != null && endOptions.any((opt) => opt['code'] == state.endTime)
-                    ? endOptions.firstWhere((opt) => opt['code'] == state.endTime)
-                    : (state.endDate != null && !isSameDay ? endOptions.last : null),
-                items: endOptions,
-                itemLabelBuilder: (opt) => opt['name']!,
-                onChanged: state.startDate == null || state.endDate == null
-                    ? null
-                    : (opt) {
-                        if (opt != null) {
-                          notifier.setEndTime(opt['code']!);
-                        }
-                      },
-                isRequired: true,
-                fillColor: AppColors.cardBackground,
+            ),
+          ],
+        ),
+        if (state.shouldShowTimeFields) ...[
+          Gap(24.h),
+          Row(
+            children: [
+              Expanded(
+                child: DigifySelectFieldWithLabel<Map<String, String>>(
+                  label: localizations.startTime,
+                  hint: 'Select Time',
+                  value: state.startTime != null && startOptions.any((opt) => opt['code'] == state.startTime)
+                      ? startOptions.firstWhere((opt) => opt['code'] == state.startTime)
+                      : (state.startDate != null && !isSameDay ? startOptions.last : null),
+                  items: startOptions,
+                  itemLabelBuilder: (opt) => opt['name']!,
+                  onChanged: state.startDate == null || state.endDate == null
+                      ? null
+                      : (opt) {
+                          if (opt != null) {
+                            notifier.setStartTime(opt['code']!);
+                          }
+                        },
+                  isRequired: true,
+                  fillColor: AppColors.cardBackground,
+                ),
+              ),
+              Gap(16.w),
+              Expanded(
+                child: DigifySelectFieldWithLabel<Map<String, String>>(
+                  label: localizations.endTime,
+                  hint: 'Select Time',
+                  value: state.endTime != null && endOptions.any((opt) => opt['code'] == state.endTime)
+                      ? endOptions.firstWhere((opt) => opt['code'] == state.endTime)
+                      : (state.endDate != null && !isSameDay ? endOptions.last : null),
+                  items: endOptions,
+                  itemLabelBuilder: (opt) => opt['name']!,
+                  onChanged: state.startDate == null || state.endDate == null
+                      ? null
+                      : (opt) {
+                          if (opt != null) {
+                            notifier.setEndTime(opt['code']!);
+                          }
+                        },
+                  isRequired: true,
+                  fillColor: AppColors.cardBackground,
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ],
     );
   }

@@ -41,6 +41,8 @@ class NewLeaveRequestState {
   final bool isSavingDraft;
   final bool isLoadingDraft;
   final String? editingRequestGuid;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
 
   const NewLeaveRequestState({
     this.currentStep = LeaveRequestStep.leaveDetails,
@@ -64,6 +66,8 @@ class NewLeaveRequestState {
     this.isSavingDraft = false,
     this.isLoadingDraft = false,
     this.editingRequestGuid,
+    this.initialStartDate,
+    this.initialEndDate,
   });
 
   NewLeaveRequestState copyWith({
@@ -88,6 +92,8 @@ class NewLeaveRequestState {
     bool? isSavingDraft,
     bool? isLoadingDraft,
     String? editingRequestGuid,
+    DateTime? initialStartDate,
+    DateTime? initialEndDate,
     bool clearEmployee = false,
     bool clearDelegatedTo = false,
   }) {
@@ -113,6 +119,8 @@ class NewLeaveRequestState {
       isSavingDraft: isSavingDraft ?? this.isSavingDraft,
       isLoadingDraft: isLoadingDraft ?? this.isLoadingDraft,
       editingRequestGuid: editingRequestGuid ?? this.editingRequestGuid,
+      initialStartDate: initialStartDate ?? this.initialStartDate,
+      initialEndDate: initialEndDate ?? this.initialEndDate,
     );
   }
 
@@ -143,6 +151,12 @@ class NewLeaveRequestState {
       return allOptions.where((opt) => opt['code'] == 'FULL').toList();
     }
     return allOptions;
+  }
+
+  bool get shouldShowTimeFields {
+    if (editingRequestGuid == null) return true;
+    if (startDate == null || endDate == null) return false;
+    return startDate != initialStartDate || endDate != initialEndDate;
   }
 }
 
@@ -425,13 +439,18 @@ class NewLeaveRequestNotifier extends StateNotifier<NewLeaveRequestState> {
       }
     }
 
+    final start = parseDateTime(leaveDetails['start_date']);
+    final end = parseDateTime(leaveDetails['end_date']);
+
     state = state.copyWith(
       editingRequestGuid: leaveDetails['leave_request_guid'] as String?,
+      initialStartDate: start,
+      initialEndDate: end,
       selectedEmployee: employee,
       leaveType: leaveType,
       leaveTypeId: (leaveDetails['leave_type_id'] as num?)?.toInt(),
-      startDate: parseDateTime(leaveDetails['start_date']),
-      endDate: parseDateTime(leaveDetails['end_date']),
+      startDate: start,
+      endDate: end,
       startTime: mapPortionToTime(leaveDetails['start_portion'] as String?),
       endTime: mapPortionToTime(leaveDetails['end_portion'] as String?),
       reason: leaveContactInfo?['reason_for_leave'] as String?,
