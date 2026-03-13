@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/localization/l10n/app_localizations.dart';
-import '../../../../core/widgets/buttons/app_button.dart';
-import '../../../../core/widgets/common/digify_tab_header.dart';
-import '../../../../core/widgets/common/enterprise_selector_widget.dart';
-import '../../../../gen/assets.gen.dart';
-import '../providers/user_management/user_management_enterprise_provider.dart';
-import '../providers/user_management/user_management_provider.dart';
-import '../widgets/user_management/search_and_filter.dart';
-import '../widgets/user_management/user_summary_stats.dart';
-import '../widgets/user_management/user_management_table.dart';
+import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/localization/l10n/app_localizations.dart';
+import '../../../../../core/widgets/buttons/app_button.dart';
+import '../../../../../core/widgets/common/digify_tab_header.dart';
+import '../../../../../core/widgets/common/enterprise_selector_widget.dart';
+import '../../../../../gen/assets.gen.dart';
+import '../../providers/user_management/user_management_enterprise_provider.dart';
+import '../../providers/user_management/user_management_provider.dart';
+import '../../widgets/user_management/search_and_filter.dart';
+import '../../widgets/user_management/user_summary_stats.dart';
+import '../../widgets/user_management/user_management_table.dart';
 
 class UserManagementScreen extends ConsumerStatefulWidget {
   const UserManagementScreen({super.key});
@@ -52,7 +53,9 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               trailing: AppButton.primary(
                 label: "Create New User",
                 svgPath: Assets.icons.addNewIconFigma.path,
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed('security-manager-user-add');
+                },
               ),
             ),
             Gap(24.h),

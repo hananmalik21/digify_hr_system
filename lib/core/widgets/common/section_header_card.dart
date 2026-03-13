@@ -10,6 +10,7 @@ class SectionHeaderCard extends StatelessWidget {
   final Widget? icon;
   final String title;
   final String? subtitle;
+  final Widget? trailing;
   final double? borderRadius;
   final EdgeInsetsGeometry? padding;
 
@@ -19,6 +20,7 @@ class SectionHeaderCard extends StatelessWidget {
     this.icon,
     required this.title,
     this.subtitle,
+    this.trailing,
     this.borderRadius,
     this.padding,
   });
@@ -36,8 +38,10 @@ class SectionHeaderCard extends StatelessWidget {
     return Container(
       padding: effectivePadding,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
-        border: Border.all(color: isDark ? AppColors.cardBorderDark : AppColors.dashboardCardBorder),
+        color: isDark
+            ? AppColors.cardBackgroundDark
+            : AppColors.tableHeaderBackground,
+
         borderRadius: BorderRadius.circular(effectiveRadius),
       ),
       child: Row(
@@ -51,7 +55,14 @@ class SectionHeaderCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(effectiveRadius),
             ),
             alignment: Alignment.center,
-            child: icon ?? DigifyAsset(assetPath: iconAssetPath!, width: 17, height: 17, color: AppColors.primary),
+            child:
+                icon ??
+                DigifyAsset(
+                  assetPath: iconAssetPath!,
+                  width: 17,
+                  height: 17,
+                  color: AppColors.primary,
+                ),
           ),
           Gap(11.w),
           Expanded(
@@ -62,7 +73,9 @@ class SectionHeaderCard extends StatelessWidget {
                 Text(
                   title,
                   style: context.textTheme.titleMedium?.copyWith(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.dialogTitle,
                   ),
                 ),
                 if (subtitle != null && subtitle!.isNotEmpty) ...[
@@ -71,13 +84,16 @@ class SectionHeaderCard extends StatelessWidget {
                     subtitle!,
                     style: context.textTheme.labelSmall?.copyWith(
                       fontSize: 12.sp,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.shiftExportButton,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.shiftExportButton,
                     ),
                   ),
                 ],
               ],
             ),
           ),
+          if (trailing != null) ...[Gap(16.w), trailing!],
         ],
       ),
     );

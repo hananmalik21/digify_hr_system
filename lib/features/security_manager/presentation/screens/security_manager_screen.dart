@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../providers/security_manager_tab_state_provider.dart';
 import 'security_overview_screen.dart';
-import 'user_management_screen.dart';
+import 'user_management/user_management_screen.dart';
 
 class _SecurityManagerTabIndex {
   static const int securityOverview = 0;
