@@ -7,7 +7,6 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../../core/widgets/assets/digify_asset.dart';
 
 class JobLevelSelectionField extends ConsumerWidget {
@@ -18,10 +17,8 @@ class JobLevelSelectionField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(positionFormNotifierProvider);
-    final selectedJobLevel = formState.jobLevel;
-    final jobLevelsState = ref.watch(jobLevelNotifierProvider);
-    final isLoading = jobLevelsState.isLoading;
+    final selectedJobLevel = ref.watch(positionFormNotifierProvider.select((state) => state.jobLevel));
+    final jobLevelsState = ref.watch(jobLevelNotifierForPositionProvider);
     final error = jobLevelsState.errorMessage;
 
     return PositionLabeledField(
@@ -29,9 +26,8 @@ class JobLevelSelectionField extends ConsumerWidget {
       isRequired: isRequired,
       child: InkWell(
         onTap: () async {
-          // Trigger initial loading if needed
-          if (jobLevelsState.items.isEmpty && !isLoading && error == null) {
-            ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
+          if (ref.read(jobLevelNotifierForPositionProvider).isEmpty) {
+            ref.read(jobLevelNotifierForPositionProvider.notifier).loadFirstPage();
           }
 
           final selected = await JobLevelSelectionDialog.show(context: context, selectedJobLevel: selectedJobLevel);

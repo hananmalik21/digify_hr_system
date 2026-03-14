@@ -15,6 +15,7 @@ import 'package:digify_hr_system/features/workforce_structure/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_create_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_delete_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_update_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
 
 // Providers for dependency injection
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -296,6 +297,19 @@ class JobFamilyNotifier extends StateNotifier<PaginationState<JobFamily>>
 // Provider for the notifier
 final jobFamilyNotifierProvider = StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((ref) {
   final tenantId = ref.watch(jobFamiliesEnterpriseIdProvider);
+  final notifier = JobFamilyNotifier(
+    ref.watch(getJobFamiliesUseCaseProvider),
+    ref.watch(createJobFamilyUseCaseProvider),
+    tenantId,
+  );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
+});
+
+final jobFamilyNotifierForPositionProvider = StateNotifierProvider<JobFamilyNotifier, PaginationState<JobFamily>>((
+  ref,
+) {
+  final tenantId = ref.watch(positionsEnterpriseIdProvider);
   final notifier = JobFamilyNotifier(
     ref.watch(getJobFamiliesUseCaseProvider),
     ref.watch(createJobFamilyUseCaseProvider),
