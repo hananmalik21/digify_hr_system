@@ -1,11 +1,11 @@
 import 'package:digify_hr_system/core/network/api_client.dart';
 import 'package:digify_hr_system/core/network/api_config.dart';
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/empl_lookup_value.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/ent_lookup_remote_data_source.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/ent_lookup_repository_impl.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/repositories/ent_lookup_repository.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _entLookupApiClientProvider = Provider<ApiClient>((ref) {
@@ -42,7 +42,7 @@ final gradeNumberLookupValuesProvider = FutureProvider.autoDispose<List<EmplLook
 });
 
 final employmentTypeLookupValuesProvider = FutureProvider.autoDispose<List<EmplLookupValue>>((ref) async {
-  final enterpriseId = ref.watch(activeEnterpriseIdProvider);
+  final enterpriseId = ref.watch(positionsEnterpriseIdProvider);
   if (enterpriseId == null) return [];
   final repo = ref.watch(entLookupRepositoryProvider);
   return repo.getLookupValues(enterpriseId, 'EMPLOYEMENT_TYPE');

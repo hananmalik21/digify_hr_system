@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/up
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_create_state.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Dependency Injection Providers
@@ -251,6 +252,19 @@ class JobLevelNotifier extends StateNotifier<PaginationState<JobLevel>>
 // Provider for the notifier
 final jobLevelNotifierProvider = StateNotifierProvider<JobLevelNotifier, PaginationState<JobLevel>>((ref) {
   final tenantId = ref.watch(jobLevelsEnterpriseIdProvider);
+  final notifier = JobLevelNotifier(
+    ref.read(getJobLevelsUseCaseProvider),
+    ref.read(createJobLevelUseCaseProvider),
+    ref.read(updateJobLevelUseCaseProvider),
+    ref.read(deleteJobLevelUseCaseProvider),
+    tenantId,
+  );
+  Future.microtask(() => notifier.loadFirstPage());
+  return notifier;
+});
+
+final jobLevelNotifierForPositionProvider = StateNotifierProvider<JobLevelNotifier, PaginationState<JobLevel>>((ref) {
+  final tenantId = ref.watch(positionsEnterpriseIdProvider);
   final notifier = JobLevelNotifier(
     ref.read(getJobLevelsUseCaseProvider),
     ref.read(createJobLevelUseCaseProvider),

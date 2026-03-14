@@ -1,7 +1,5 @@
 import 'package:digify_hr_system/core/enums/position_status.dart';
 import 'package:digify_hr_system/core/services/debouncer.dart';
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
-import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/datasources/grade_remote_datasource.dart';
 import 'package:digify_hr_system/features/workforce_structure/data/repositories/grade_repository_impl.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
@@ -10,10 +8,11 @@ import 'package:digify_hr_system/features/workforce_structure/domain/usecases/cr
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/delete_grade_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_grades_usecase.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/update_grade_usecase.dart';
+import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_structure_enterprise_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_levels_enterprise_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final gradeRemoteDataSourceProvider = Provider<GradeRemoteDataSource>((ref) {
@@ -319,7 +318,7 @@ final gradeCreatingProvider = Provider<bool>((ref) {
 });
 
 final gradesForJobLevelFormProvider = FutureProvider.autoDispose<List<Grade>>((ref) async {
-  final enterpriseId = ref.watch(jobLevelsEnterpriseIdProvider);
+  final enterpriseId = ref.watch(positionsEnterpriseIdProvider);
   if (enterpriseId == null) return [];
   final useCase = ref.read(getGradesUseCaseProvider);
   const pageSize = 500;
@@ -333,7 +332,7 @@ final gradesForJobLevelFormProvider = FutureProvider.autoDispose<List<Grade>>((r
 });
 
 final allGradesForPositionFormProvider = FutureProvider.autoDispose<List<Grade>>((ref) async {
-  final enterpriseId = ref.watch(activeEnterpriseIdProvider) ?? ref.watch(jobLevelsEnterpriseIdProvider);
+  final enterpriseId = ref.watch(positionsEnterpriseIdProvider);
   if (enterpriseId == null) return [];
   final useCase = ref.read(getGradesUseCaseProvider);
   const pageSize = 500;

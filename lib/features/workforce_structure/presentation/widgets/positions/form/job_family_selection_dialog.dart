@@ -48,13 +48,13 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
 
   void _scrollListener() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
-      ref.read(jobFamilyNotifierProvider.notifier).loadNextPage();
+      ref.read(jobFamilyNotifierForPositionProvider.notifier).loadNextPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final jobFamiliesState = ref.watch(jobFamilyNotifierProvider);
+    final jobFamiliesState = ref.watch(jobFamilyNotifierForPositionProvider);
     final items = jobFamiliesState.items;
     final isLoading = jobFamiliesState.isLoading;
     final errorMessage = jobFamiliesState.errorMessage;
@@ -141,12 +141,12 @@ class _JobFamilySelectionDialogState extends ConsumerState<JobFamilySelectionDia
           SearchField(
             hintText: 'Search job families...',
             onChanged: (value) {
-              ref.read(jobFamilyNotifierProvider.notifier).search(value);
+              ref.read(jobFamilyNotifierForPositionProvider.notifier).search(value);
             },
             onClear: () {
-              ref.read(jobFamilyNotifierProvider.notifier).clearSearch();
+              ref.read(jobFamilyNotifierForPositionProvider.notifier).clearSearch();
             },
-            initialValue: ref.read(jobFamilyNotifierProvider).searchQuery ?? '',
+            initialValue: ref.read(jobFamilyNotifierForPositionProvider).searchQuery ?? '',
           ),
         ],
       ),
