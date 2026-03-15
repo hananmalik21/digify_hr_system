@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 
-import 'package:digify_hr_system/core/constants/app_colors.dart';
-import 'package:digify_hr_system/core/widgets/common/section_header_card.dart';
-import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
-import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/core/widgets/common/digify_checkbox.dart';
-import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
-import 'package:digify_hr_system/gen/assets.gen.dart';
-import 'package:digify_hr_system/features/security_manager/presentation/widgets/user_management/user_form_section.dart';
-import 'package:digify_hr_system/features/security_manager/presentation/widgets/user_management/user_form_table_header_text.dart';
+import '../../../../../../core/constants/app_colors.dart';
+import '../../../../../../core/theme/theme_extensions.dart';
+import '../../../../../../core/widgets/assets/digify_asset.dart';
+import '../../../../../../core/widgets/buttons/app_button.dart';
+import '../../../../../../core/widgets/common/digify_checkbox.dart';
+import '../../../../../../core/widgets/common/section_header_card.dart';
+import '../../../../../../core/widgets/forms/digify_text_field.dart';
+import '../../../../../../gen/assets.gen.dart';
+import '../../../providers/user_management/user_form_provider.dart';
+import '../../../widgets/user_management/user_form_section.dart';
+import '../../../widgets/user_management/user_form_table_header_text.dart';
 
-class AccessAndPermissionsTab extends StatelessWidget {
-  final bool isDark;
-
-  const AccessAndPermissionsTab({
-    super.key,
-    required this.isDark,
-  });
+class AccessAndPermissionsTab extends ConsumerStatefulWidget {
+  const AccessAndPermissionsTab({super.key});
 
   @override
+  ConsumerState<AccessAndPermissionsTab> createState() =>
+      _AccessAndPermissionsTabState();
+}
+
+class _AccessAndPermissionsTabState
+    extends ConsumerState<AccessAndPermissionsTab> {
+  @override
   Widget build(BuildContext context) {
+    final state = ref.watch(userFormProvider);
+    final notifier = ref.read(userFormProvider.notifier);
     return SingleChildScrollView(
       padding: EdgeInsets.all(24.w),
       child: Column(
@@ -30,7 +36,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
         children: [
           _buildDataAccessPoliciesSection(),
           Gap(24.h),
-          _buildFunctionalPrivilegesSection(context),
+          _buildFunctionalPrivilegesSection(context, state, notifier),
         ],
       ),
     );
@@ -38,7 +44,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
 
   Widget _buildDataAccessPoliciesSection() {
     return UserFormSection(
-      isDark: isDark,
+      isDark: context.isDark,
       header: SectionHeaderCard(
         title: 'Data Access Policies',
         subtitle: 'Define what data the user can access',
@@ -55,7 +61,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
               border: Border.all(
-                color: isDark
+                color: context.isDark
                     ? AppColors.cardBorderDark
                     : AppColors.dashboardCardBorder,
               ),
@@ -78,7 +84,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: isDark
+        color: context.isDark
             ? AppColors.cardBackgroundGreyDark
             : AppColors.tableHeaderBackground,
         borderRadius: BorderRadius.only(
@@ -88,11 +94,31 @@ class AccessAndPermissionsTab extends StatelessWidget {
       ),
       child: Row(
         children: [
-          UserFormTableHeaderText(text: 'POLICY NAME', flex: 2, isDark: isDark),
-          UserFormTableHeaderText(text: 'TYPE', flex: 1, isDark: isDark),
-          UserFormTableHeaderText(text: 'SCOPE', flex: 1, isDark: isDark),
-          UserFormTableHeaderText(text: 'EFFECTIVE DATE', flex: 1, isDark: isDark),
-          UserFormTableHeaderText(text: 'ACTIONS', flex: 1, isDark: isDark),
+          UserFormTableHeaderText(
+            text: 'POLICY NAME',
+            flex: 2,
+            isDark: context.isDark,
+          ),
+          UserFormTableHeaderText(
+            text: 'TYPE',
+            flex: 1,
+            isDark: context.isDark,
+          ),
+          UserFormTableHeaderText(
+            text: 'SCOPE',
+            flex: 1,
+            isDark: context.isDark,
+          ),
+          UserFormTableHeaderText(
+            text: 'EFFECTIVE DATE',
+            flex: 1,
+            isDark: context.isDark,
+          ),
+          UserFormTableHeaderText(
+            text: 'ACTIONS',
+            flex: 1,
+            isDark: context.isDark,
+          ),
         ],
       ),
     );
@@ -106,7 +132,9 @@ class AccessAndPermissionsTab extends StatelessWidget {
         'No data access policies assigned. Click "Add Policy" to grant data access.',
         style: TextStyle(
           fontSize: 14.sp,
-          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          color: context.isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondary,
         ),
       ),
     );
@@ -121,7 +149,9 @@ class AccessAndPermissionsTab extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+            color: context.isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimary,
           ),
         ),
         Gap(16.h),
@@ -152,18 +182,14 @@ class AccessAndPermissionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildPolicyRow(
-    String title,
-    String subtitle,
-    String tag,
-  ) {
+  Widget _buildPolicyRow(String title, String subtitle, String tag) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
+        color: context.isDark ? AppColors.cardBackgroundDark : Colors.white,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: isDark
+          color: context.isDark
               ? AppColors.cardBorderDark
               : AppColors.dashboardCardBorder,
         ),
@@ -179,7 +205,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
-                    color: isDark
+                    color: context.isDark
                         ? AppColors.textPrimaryDark
                         : AppColors.textPrimary,
                   ),
@@ -188,7 +214,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: isDark
+                    color: context.isDark
                         ? AppColors.textSecondaryDark
                         : AppColors.textSecondary,
                   ),
@@ -199,7 +225,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: isDark
+              color: context.isDark
                   ? AppColors.cardBackgroundGreyDark
                   : AppColors.tableHeaderBackground,
               borderRadius: BorderRadius.circular(4.r),
@@ -209,7 +235,7 @@ class AccessAndPermissionsTab extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w600,
-                color: isDark
+                color: context.isDark
                     ? AppColors.textSecondaryDark
                     : AppColors.textSecondary,
               ),
@@ -220,9 +246,13 @@ class AccessAndPermissionsTab extends StatelessWidget {
     );
   }
 
-  Widget _buildFunctionalPrivilegesSection(BuildContext context) {
+  Widget _buildFunctionalPrivilegesSection(
+    BuildContext context,
+    UserFormState state,
+    UserFormProvider notifier,
+  ) {
     return UserFormSection(
-      isDark: isDark,
+      isDark: context.isDark,
       header: SectionHeaderCard(
         title: 'Functional Privileges',
         subtitle: 'Additional privileges and permissions',
@@ -246,33 +276,20 @@ class AccessAndPermissionsTab extends StatelessWidget {
                 color: AppColors.textPlaceholder,
               ),
             ),
+            onChanged: (value) => notifier.searchFunctionalPrivileges(value),
           ),
           Gap(16.h),
-          _buildPrivilegesGrid(context),
+          _buildPrivilegesGrid(context, state, notifier),
         ],
       ),
     );
   }
 
-  Widget _buildPrivilegesGrid(BuildContext context) {
-    final privileges = [
-      {'title': 'View All Employees', 'category': 'Employee Management'},
-      {'title': 'Manage Payroll', 'category': 'Payroll'},
-      {'title': 'Approve Leave Requests', 'category': 'Leave Management'},
-      {'title': 'Access Reports', 'category': 'Reporting'},
-      {'title': 'Manage Recruitment', 'category': 'Recruitment'},
-      {'title': 'System Administration', 'category': 'Administration'},
-      {'title': 'Edit Employee Records', 'category': 'Employee Management'},
-      {'title': 'View Salary Information', 'category': 'Payroll'},
-      {'title': 'Manage Performance Reviews', 'category': 'Performance'},
-      {'title': 'Approve Expense Claims', 'category': 'Finance'},
-      {
-        'title': 'Manage Training Programs',
-        'category': 'Learning & Development',
-      },
-      {'title': 'Access Audit Logs', 'category': 'Security'},
-    ];
-
+  Widget _buildPrivilegesGrid(
+    BuildContext context,
+    UserFormState state,
+    UserFormProvider notifier,
+  ) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -280,14 +297,18 @@ class AccessAndPermissionsTab extends StatelessWidget {
         crossAxisCount: context.isMobile ? 1 : 2,
         crossAxisSpacing: 16.w,
         mainAxisSpacing: 12.h,
-        mainAxisExtent: 80.h,
+        mainAxisExtent: 100.h,
       ),
-      itemCount: privileges.length,
+      itemCount: state.filteredFunctionalPrivileges.length,
       itemBuilder: (context, index) {
-        final privilege = privileges[index];
+        final privilege = state.filteredFunctionalPrivileges[index];
+
         return _buildPrivilegeCard(
-          title: privilege['title']!,
-          category: privilege['category']!,
+          title: privilege.name,
+          description: privilege.description,
+          category: privilege.type,
+          isActive: state.selectedFunctionalPrivileges.contains(privilege.id),
+          onTap: () => notifier.setFunctionalPrivilege(privilege.id),
         );
       },
     );
@@ -295,61 +316,78 @@ class AccessAndPermissionsTab extends StatelessWidget {
 
   Widget _buildPrivilegeCard({
     required String title,
+    required String description,
     required String category,
+    VoidCallback? onTap,
+    bool isActive = false,
   }) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.cardBackgroundDark : Colors.white,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(
-          color: isDark
-              ? AppColors.cardBorderDark
-              : AppColors.dashboardCardBorder,
-        ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 24.w,
-            child: DigifyCheckbox(value: false, onChanged: (v) {}),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: context.isDark ? AppColors.cardBackgroundDark : Colors.white,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color: context.isDark
+                ? AppColors.cardBorderDark
+                : AppColors.dashboardCardBorder,
           ),
-          Gap(12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : AppColors.textPrimary,
-                  ),
-                ),
-                Gap(4.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4.r),
-                  ),
-                  child: Text(
-                    category,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DigifyCheckbox(value: isActive, onChanged: (v) {}),
+            Gap(12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
                     style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: context.isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary,
                     ),
                   ),
-                ),
-              ],
+                  Gap(4.h),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: context.isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
+                    ),
+                  ),
+                  Spacer(),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      category,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

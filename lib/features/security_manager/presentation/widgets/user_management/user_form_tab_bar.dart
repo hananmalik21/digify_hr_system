@@ -20,8 +20,9 @@ class UserFormTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final unselectedColor =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final unselectedColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -68,15 +69,19 @@ class UserFormTabBar extends StatelessWidget implements PreferredSizeWidget {
             unselectedColor: unselectedColor,
           ),
         ],
-        indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(width: 2.w, color: AppColors.primary),
+        indicator: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 2.w, color: AppColors.primary),
+          ),
+          color: AppColors.primary.withValues(alpha: .05),
         ),
         dividerColor: Colors.transparent,
         indicatorSize: TabBarIndicatorSize.tab,
         labelColor: AppColors.primary,
         unselectedLabelColor: unselectedColor,
-        labelStyle:
-            context.textTheme.titleSmall?.copyWith(color: AppColors.primary),
+        labelStyle: context.textTheme.titleSmall?.copyWith(
+          color: AppColors.primary,
+        ),
         unselectedLabelStyle: context.textTheme.bodyMedium?.copyWith(
           color: unselectedColor,
         ),
