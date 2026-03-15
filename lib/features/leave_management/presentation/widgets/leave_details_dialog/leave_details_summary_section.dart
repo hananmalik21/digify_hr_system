@@ -3,6 +3,7 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:digify_hr_system/core/utils/number_format_utils.dart';
 
 class LeaveDetailsSummarySection extends StatelessWidget {
   const LeaveDetailsSummarySection({super.key, required this.summary, required this.isDark});
@@ -17,7 +18,8 @@ class LeaveDetailsSummarySection extends StatelessWidget {
         Expanded(
           child: LeaveDetailsStatsCard(
             label: 'Total Accrued',
-            value: '${summary['totalAccrued']} days',
+            value: '${NumberFormatUtils.formatDays(summary['totalAccrued'] as num? ?? 0)} days',
+
             iconPath: Assets.icons.addBusinessUnitIcon.path,
             isDark: isDark,
           ),
@@ -26,7 +28,8 @@ class LeaveDetailsSummarySection extends StatelessWidget {
         Expanded(
           child: LeaveDetailsStatsCard(
             label: 'Total Consumed',
-            value: '${summary['totalConsumed']} days',
+            value: '${NumberFormatUtils.formatDays(summary['totalConsumed'] as num? ?? 0)} days',
+
             iconPath: Assets.icons.leaveManagement.minus.path,
             isDark: isDark,
           ),
@@ -35,7 +38,8 @@ class LeaveDetailsSummarySection extends StatelessWidget {
         Expanded(
           child: LeaveDetailsStatsCard(
             label: 'Current Balance',
-            value: '${summary['currentBalance']} days',
+            value: '${NumberFormatUtils.formatDays(summary['currentBalance'] as num? ?? 0)} days',
+
             iconPath: Assets.icons.leaveManagementMainIcon.path,
             isDark: isDark,
           ),
@@ -44,7 +48,7 @@ class LeaveDetailsSummarySection extends StatelessWidget {
         Expanded(
           child: LeaveDetailsStatsCard(
             label: 'Entitlement',
-            value: summary['entitlement'] as String,
+            value: (summary['entitlement'] as String?) ?? '0 days',
             iconPath: Assets.icons.workforce.fillRate.path,
             isDark: isDark,
           ),

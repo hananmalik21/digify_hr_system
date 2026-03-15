@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
-import 'package:digify_hr_system/core/widgets/common/app_loading_indicator.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/api_leave_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +35,17 @@ class LeaveDetailsLeaveTypeSelector extends StatelessWidget {
         ),
         Gap(8.h),
         if (isLoading)
-          SizedBox(
-            height: 42.h,
-            child: const Center(child: AppLoadingIndicator(type: LoadingType.circle, size: 24)),
+          Skeletonizer(
+            enabled: true,
+            child: Row(
+              spacing: 7.w,
+              children: List.generate(
+                3,
+                (index) => const Expanded(
+                  child: _LeaveTypeButton(label: 'Loading...', isSelected: false, isDark: false, onTap: null),
+                ),
+              ),
+            ),
           )
         else if (leaveTypes.isEmpty)
           Padding(
@@ -75,7 +83,7 @@ class _LeaveTypeButton extends StatelessWidget {
   final String label;
   final bool isSelected;
   final bool isDark;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final leaveBalanceTabSelectedEnterpriseProvider = StateNotifierProvider<LeaveBalanceTabEnterpriseNotifier, int?>((ref) {
   final notifier = LeaveBalanceTabEnterpriseNotifier();
@@ -22,7 +22,5 @@ class LeaveBalanceTabEnterpriseNotifier extends StateNotifier<int?> {
 }
 
 final leaveBalanceTabEnterpriseIdProvider = Provider<int?>((ref) {
-  final selected = ref.watch(leaveBalanceTabSelectedEnterpriseProvider);
-  final active = ref.watch(activeEnterpriseIdProvider);
-  return selected ?? active;
+  return ref.watch(leaveBalanceTabSelectedEnterpriseProvider);
 });

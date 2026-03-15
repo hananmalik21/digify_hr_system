@@ -56,7 +56,7 @@ class LeaveBalancesTableSection extends StatelessWidget {
 
   Widget _buildMessageState(double fontSize, String text, Color color) {
     return SizedBox(
-      width: 1200.w,
+      width: 1800.w,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 48.h),
         child: Center(

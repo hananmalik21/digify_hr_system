@@ -53,6 +53,9 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {
               ref.read(allLeaveBalancesTabSelectedEnterpriseProvider.notifier).setEnterpriseId(enterpriseId);
+              if (enterpriseId != null) {
+                ref.read(leaveBalanceSummaryListProvider.notifier).resetAndLoad(enterpriseId);
+              }
             },
             subtitle: effectiveEnterpriseId != null
                 ? 'Viewing data for selected enterprise'

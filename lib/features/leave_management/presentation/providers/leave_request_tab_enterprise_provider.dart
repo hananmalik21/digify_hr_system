@@ -22,7 +22,5 @@ class LeaveRequestTabEnterpriseNotifier extends StateNotifier<int?> {
 }
 
 final leaveRequestTabEnterpriseIdProvider = Provider<int?>((ref) {
-  final selected = ref.watch(leaveRequestTabSelectedEnterpriseProvider);
-  final active = ref.watch(activeEnterpriseIdProvider);
-  return selected ?? active;
+  return ref.watch(leaveRequestTabSelectedEnterpriseProvider);
 });

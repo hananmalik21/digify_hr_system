@@ -5,8 +5,10 @@ import 'package:digify_hr_system/features/leave_management/data/datasources/leav
 import 'package:digify_hr_system/features/leave_management/data/repositories/leave_balances_repository_impl.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance.dart';
 import 'package:digify_hr_system/features/leave_management/domain/repositories/leave_balances_repository.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/adjust_leave_balance_validation_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_types_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeaveBalancesState {
@@ -148,6 +150,34 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
     }
   }
 
+  Future<String?> validateAndSubmit({
+    required int employeeId,
+    required String reason,
+    required Map<int, String> controllerValues,
+  }) async {
+    final leaveTypes = _ref.read(leaveTypesNotifierProvider).leaveTypes;
+    final validation = _ref.read(adjustLeaveBalanceValidationProvider);
+
+    final Map<String, String> leavesForValidation = {};
+    final List<LeaveAdjustmentItem> items = [];
+
+    for (final type in leaveTypes) {
+      final value = controllerValues[type.id] ?? '';
+      leavesForValidation[type.nameEn] = value;
+
+      final parsedVal = double.tryParse(value) ?? 0.0;
+      items.add(LeaveAdjustmentItem(leaveCode: type.code, newDays: parsedVal));
+    }
+
+    final error = validation.validate(leaves: leavesForValidation, reason: reason);
+    if (error != null) return error;
+
+    final payload = AdjustLeaveBalancePayload(employeeId: employeeId, reason: reason.trim(), items: items);
+
+    await submitAdjustment(payload);
+    return null;
+  }
+
   Future<void> submitAdjustment(AdjustLeaveBalancePayload payload) async {
     state = state.copyWith(isUpdating: true, updateError: null);
     final tenantId = _ref.read(leaveManagementEnterpriseIdProvider);
@@ -160,13 +190,29 @@ class LeaveBalancesNotifier extends StateNotifier<LeaveBalancesState> {
         tenantId: tenantId,
         employeeId: payload.employeeId,
         reason: payload.reason,
-        annualDays: payload.annualDays,
-        sickDays: payload.sickDays,
+        items: payload.items,
       );
       state = state.copyWith(isUpdating: false);
-      _ref
-          .read(leaveBalanceSummaryListProvider.notifier)
-          .updateItemBalances(payload.employeeId, annualLeave: payload.annualDays, sickLeave: payload.sickDays);
+
+      final annualItem = payload.items.where((e) => e.leaveCode == 'ANNUAL_LEAVE').firstOrNull;
+      final sickItem = payload.items.where((e) => e.leaveCode == 'SICK_LEAVE').firstOrNull;
+
+      if (annualItem != null || sickItem != null) {
+        final currentSummary = _ref
+            .read(leaveBalanceSummaryListProvider)
+            .items
+            .where((e) => e.employeeId == payload.employeeId)
+            .firstOrNull;
+        if (currentSummary != null) {
+          _ref
+              .read(leaveBalanceSummaryListProvider.notifier)
+              .updateItemBalances(
+                payload.employeeId,
+                annualLeave: annualItem?.newDays ?? currentSummary.annualLeave,
+                sickLeave: sickItem?.newDays ?? currentSummary.sickLeave,
+              );
+        }
+      }
     } on AppException catch (e) {
       state = state.copyWith(isUpdating: false, updateError: e.message);
     } catch (e) {
@@ -202,4 +248,12 @@ final leaveBalancesRefreshProvider = Provider<void Function()>((ref) {
   return () {
     ref.read(leaveBalancesNotifierProvider.notifier).refresh();
   };
+});
+final employeeLeaveBalancesProvider = FutureProvider.autoDispose.family<List<LeaveBalance>, String>((
+  ref,
+  employeeGuid,
+) async {
+  final repository = ref.watch(leaveBalancesRepositoryProvider);
+  final tenantId = ref.watch(leaveManagementEnterpriseIdProvider);
+  return repository.getLeaveBalancesForEmployee(employeeGuid, tenantId: tenantId);
 });

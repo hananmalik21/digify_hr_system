@@ -10,6 +10,7 @@ import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:digify_hr_system/core/utils/number_format_utils.dart';
 
 typedef OnAdjustRequested = void Function(BuildContext context, LeaveBalanceSummaryItem item);
 
@@ -27,11 +28,11 @@ class LeaveBalancesTableRow extends StatelessWidget {
 
     final rowCells = <Widget>[];
 
-    if (LeaveBalancesTableConfig.showEmployee) {
-      rowCells.add(_buildEmployeeNameCell(context, textStyle));
-    }
     if (LeaveBalancesTableConfig.showEmployeeNumber) {
       rowCells.add(_buildEmployeeNumberCell(context, textStyle));
+    }
+    if (LeaveBalancesTableConfig.showEmployee) {
+      rowCells.add(_buildEmployeeNameCell(context, textStyle));
     }
     if (LeaveBalancesTableConfig.showDepartment) {
       rowCells.add(_buildDepartmentCell(context, textStyle));
@@ -138,7 +139,7 @@ class LeaveBalancesTableRow extends StatelessWidget {
   }) {
     final localizations = AppLocalizations.of(context)!;
     return _buildDataCell(
-      LeaveBalanceBadge(text: '$value ${localizations.days.toLowerCase()}', type: type),
+      LeaveBalanceBadge(text: '${NumberFormatUtils.formatDays(value)} ${localizations.days.toLowerCase()}', type: type),
       width,
       center: center,
     );
@@ -170,6 +171,6 @@ class LeaveBalancesTableRow extends StatelessWidget {
   }
 
   void _handleDetails(BuildContext context) {
-    LeaveDetailsDialog.show(context, employeeName: item.employeeName, employeeId: item.employeeGuid);
+    LeaveDetailsDialog.show(context, item: item);
   }
 }
