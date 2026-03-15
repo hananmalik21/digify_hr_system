@@ -17,10 +17,8 @@ class JobFamilySelectionField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(positionFormNotifierProvider);
-    final selectedJobFamily = formState.jobFamily;
-    final jobFamiliesState = ref.watch(jobFamilyNotifierProvider);
-    final isLoading = jobFamiliesState.isLoading;
+    final selectedJobFamily = ref.watch(positionFormNotifierProvider.select((state) => state.jobFamily));
+    final jobFamiliesState = ref.watch(jobFamilyNotifierForPositionProvider);
     final error = jobFamiliesState.errorMessage;
 
     return PositionLabeledField(
@@ -28,8 +26,8 @@ class JobFamilySelectionField extends ConsumerWidget {
       isRequired: isRequired,
       child: InkWell(
         onTap: () async {
-          if (jobFamiliesState.items.isEmpty && !isLoading && error == null) {
-            ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
+          if (ref.read(jobFamilyNotifierForPositionProvider).isEmpty) {
+            ref.read(jobFamilyNotifierForPositionProvider.notifier).loadFirstPage();
           }
 
           final selected = await JobFamilySelectionDialog.show(context: context, selectedJobFamily: selectedJobFamily);

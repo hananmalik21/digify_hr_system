@@ -7,9 +7,9 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/posi
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_form_state.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/position_form_sections.dart';
-import 'package:digify_hr_system/core/services/initialization/providers/initialization_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
+import 'package:digify_hr_system/features/workforce_structure/presentation/providers/positions_enterprise_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -180,7 +180,7 @@ class _PositionFormDialogState extends ConsumerState<PositionFormDialog> {
           Gap(24.h),
           ReportingSection(
             localizations: localizations,
-            tenantId: ref.watch(activeEnterpriseIdProvider),
+            tenantId: ref.watch(positionsEnterpriseIdProvider),
             selectedReportsToPosition: formState.selectedReportsToPosition,
             onReportsToPositionSelected: notifier.setSelectedReportsToPosition,
           ),

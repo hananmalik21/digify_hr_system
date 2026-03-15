@@ -48,13 +48,13 @@ class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialo
 
   void _scrollListener() {
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
-      ref.read(jobLevelNotifierProvider.notifier).loadNextPage();
+      ref.read(jobLevelNotifierForPositionProvider.notifier).loadNextPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final jobLevelsState = ref.watch(jobLevelNotifierProvider);
+    final jobLevelsState = ref.watch(jobLevelNotifierForPositionProvider);
     final items = jobLevelsState.items;
     final isLoading = jobLevelsState.isLoading;
     final errorMessage = jobLevelsState.errorMessage;
@@ -141,12 +141,12 @@ class _JobLevelSelectionDialogState extends ConsumerState<JobLevelSelectionDialo
           SearchField(
             hintText: 'Search job levels...',
             onChanged: (value) {
-              ref.read(jobLevelNotifierProvider.notifier).search(value);
+              ref.read(jobLevelNotifierForPositionProvider.notifier).search(value);
             },
             onClear: () {
-              ref.read(jobLevelNotifierProvider.notifier).clearSearch();
+              ref.read(jobLevelNotifierForPositionProvider.notifier).clearSearch();
             },
-            initialValue: ref.read(jobLevelNotifierProvider).searchQuery ?? '',
+            initialValue: ref.read(jobLevelNotifierForPositionProvider).searchQuery ?? '',
           ),
         ],
       ),
