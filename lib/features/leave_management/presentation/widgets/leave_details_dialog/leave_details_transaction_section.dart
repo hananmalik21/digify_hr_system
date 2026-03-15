@@ -49,7 +49,7 @@ class LeaveDetailsTransactionSection extends StatelessWidget {
         children: [
           LeaveDetailsTransactionTableHeader(isDark: isDark),
           ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 360.h),
+            constraints: BoxConstraints(minHeight: 250.h, maxHeight: 400.h),
             child: ScrollableSingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: LeaveDetailsTransactionTableBody(

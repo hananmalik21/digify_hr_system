@@ -2,7 +2,6 @@ import 'package:digify_hr_system/core/services/debouncer.dart';
 import 'package:digify_hr_system/features/leave_management/domain/models/leave_balance_summary.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balance_summary_list_state.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_balances_provider.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LeaveBalanceSummaryListNotifier extends Notifier<LeaveBalanceSummaryListState> {
@@ -16,16 +15,8 @@ class LeaveBalanceSummaryListNotifier extends Notifier<LeaveBalanceSummaryListSt
       _searchDebouncer?.dispose();
       _searchDebouncer = null;
     });
-    ref.listen<int?>(leaveManagementEnterpriseIdProvider, (previous, next) {
-      if (next != null && previous != next) {
-        state = state.copyWith(items: [], pagination: null, clearSearchQuery: true, lastEnterpriseId: next);
-        loadPage(next, 1);
-      } else if (next != null) {
-        state = state.copyWith(lastEnterpriseId: next);
-      }
-    });
-    final enterpriseId = ref.read(leaveManagementEnterpriseIdProvider);
-    return LeaveBalanceSummaryListState(lastEnterpriseId: enterpriseId);
+
+    return const LeaveBalanceSummaryListState();
   }
 
   void setSearchQueryInput(String value) {
@@ -37,7 +28,7 @@ class LeaveBalanceSummaryListNotifier extends Notifier<LeaveBalanceSummaryListSt
   void search(String query) {
     _searchDebouncer?.dispose();
     _searchDebouncer = null;
-    final enterpriseId = ref.read(leaveManagementEnterpriseIdProvider);
+    final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
     final q = query.trim();
     if (q.isEmpty) {
@@ -87,6 +78,11 @@ class LeaveBalanceSummaryListNotifier extends Notifier<LeaveBalanceSummaryListSt
     final enterpriseId = state.lastEnterpriseId;
     if (enterpriseId == null) return;
     await loadPage(enterpriseId, state.currentPage);
+  }
+
+  Future<void> resetAndLoad(int enterpriseId) async {
+    state = LeaveBalanceSummaryListState(lastEnterpriseId: enterpriseId, isLoading: true);
+    await loadPage(enterpriseId, 1);
   }
 
   void updateItemBalances(int employeeId, {required double annualLeave, required double sickLeave}) {

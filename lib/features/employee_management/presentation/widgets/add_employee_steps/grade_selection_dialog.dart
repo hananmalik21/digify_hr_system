@@ -5,7 +5,7 @@ import 'package:digify_hr_system/core/services/pagination_service.dart';
 import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/grade.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_load_more_skeleton.dart';
@@ -16,15 +16,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class GradeSelectionDialog extends ConsumerStatefulWidget {
-  const GradeSelectionDialog({super.key, this.selectedGrade});
+  const GradeSelectionDialog({super.key, required this.enterpriseId, this.selectedGrade});
 
+  final int enterpriseId;
   final Grade? selectedGrade;
 
-  static Future<Grade?> show(BuildContext context, {Grade? selectedGrade}) async {
+  static Future<Grade?> show(BuildContext context, {required int enterpriseId, Grade? selectedGrade}) async {
     return showDialog<Grade>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => GradeSelectionDialog(selectedGrade: selectedGrade),
+      builder: (context) => GradeSelectionDialog(enterpriseId: enterpriseId, selectedGrade: selectedGrade),
     );
   }
 
@@ -43,17 +44,17 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
       scrollController: _scrollController,
       threshold: 500.0,
       onLoadMore: () {
-        ref.read(gradeNotifierProvider.notifier).loadNextPage();
+        ref.read(employeeGradeNotifierProvider(widget.enterpriseId).notifier).loadNextPage();
       },
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(gradeNotifierProvider.notifier).loadFirstPage();
+      ref.read(employeeGradeNotifierProvider(widget.enterpriseId).notifier).loadFirstPage();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(gradeNotifierProvider);
+    final state = ref.watch(employeeGradeNotifierProvider(widget.enterpriseId));
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -73,9 +74,9 @@ class _GradeSelectionDialogState extends ConsumerState<GradeSelectionDialog> {
                 onClose: () => context.pop<Grade?>(widget.selectedGrade),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
-                    ref.read(gradeNotifierProvider.notifier).clearSearch();
+                    ref.read(employeeGradeNotifierProvider(widget.enterpriseId).notifier).clearSearch();
                   } else {
-                    ref.read(gradeNotifierProvider.notifier).search(value);
+                    ref.read(employeeGradeNotifierProvider(widget.enterpriseId).notifier).search(value);
                   }
                 },
                 initialSearchQuery: state.searchQuery ?? '',

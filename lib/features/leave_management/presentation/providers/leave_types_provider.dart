@@ -43,7 +43,14 @@ class LeaveTypesNotifier extends StateNotifier<LeaveTypesState> {
   final LeaveTypesRepository _repository;
   final Ref _ref;
 
-  LeaveTypesNotifier(this._repository, this._ref) : super(const LeaveTypesState());
+  LeaveTypesNotifier(this._repository, this._ref) : super(const LeaveTypesState()) {
+    _ref.listen(leaveManagementEnterpriseIdProvider, (previous, next) {
+      if (previous != next) {
+        loadLeaveTypes();
+      }
+    });
+    loadLeaveTypes();
+  }
 
   Future<void> loadLeaveTypes({String? search}) async {
     state = state.copyWith(isLoading: true, error: null, searchQuery: search);

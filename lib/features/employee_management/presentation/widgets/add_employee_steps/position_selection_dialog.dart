@@ -5,26 +5,27 @@ import 'package:digify_hr_system/core/extensions/context_extensions.dart';
 import 'package:digify_hr_system/core/widgets/buttons/app_button.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
 import 'package:digify_hr_system/core/services/pagination_service.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_header.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_selection_skeleton.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/org_unit_load_more_skeleton.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/widgets/positions/form/selection_list_item.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class PositionSelectionDialog extends ConsumerStatefulWidget {
-  const PositionSelectionDialog({super.key, this.selectedPosition});
+  const PositionSelectionDialog({super.key, required this.enterpriseId, this.selectedPosition});
 
+  final int enterpriseId;
   final Position? selectedPosition;
 
-  static Future<Position?> show(BuildContext context, {Position? selectedPosition}) async {
+  static Future<Position?> show(BuildContext context, {required int enterpriseId, Position? selectedPosition}) async {
     return showDialog<Position>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => PositionSelectionDialog(selectedPosition: selectedPosition),
+      builder: (context) => PositionSelectionDialog(enterpriseId: enterpriseId, selectedPosition: selectedPosition),
     );
   }
 
@@ -43,17 +44,17 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
       scrollController: _scrollController,
       threshold: 500.0,
       onLoadMore: () {
-        ref.read(positionNotifierProvider.notifier).loadNextPage();
+        ref.read(employeePositionNotifierProvider(widget.enterpriseId).notifier).loadNextPage();
       },
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(positionNotifierProvider.notifier).loadFirstPage();
+      ref.read(employeePositionNotifierProvider(widget.enterpriseId).notifier).loadFirstPage();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(positionNotifierProvider);
+    final state = ref.watch(employeePositionNotifierProvider(widget.enterpriseId));
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -73,9 +74,9 @@ class _PositionSelectionDialogState extends ConsumerState<PositionSelectionDialo
                 onClose: () => context.pop<Position?>(widget.selectedPosition),
                 onSearchChanged: (value) {
                   if (value.isEmpty) {
-                    ref.read(positionNotifierProvider.notifier).clearSearch();
+                    ref.read(employeePositionNotifierProvider(widget.enterpriseId).notifier).clearSearch();
                   } else {
-                    ref.read(positionNotifierProvider.notifier).search(value);
+                    ref.read(employeePositionNotifierProvider(widget.enterpriseId).notifier).search(value);
                   }
                 },
                 initialSearchQuery: state.searchQuery ?? '',

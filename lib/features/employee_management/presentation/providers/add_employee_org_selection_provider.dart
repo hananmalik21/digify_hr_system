@@ -5,7 +5,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_unit.dart';
 import 'package:digify_hr_system/features/workforce_structure/presentation/providers/enterprise_selection_provider.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Map<String, OrgUnit> _selectionsFromAssignment(
@@ -53,7 +53,7 @@ final addEmployeeOrgSelectionProvider = StateNotifierProvider.autoDispose
     >((ref, param) {
       final enterpriseId = ref.read(manageEmployeesEnterpriseIdProvider);
       final notifier = EnterpriseSelectionNotifier(
-        getOrgUnitsByLevelUseCase: ref.read(getOrgUnitsByLevelUseCaseProvider),
+        getOrgUnitsByLevelUseCase: ref.read(employeeGetOrgUnitsByLevelUseCaseProvider),
         levels: param.levels,
         structureId: param.structureId,
         tenantId: enterpriseId,

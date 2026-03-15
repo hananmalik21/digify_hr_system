@@ -31,7 +31,7 @@ class ManageEmployeesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(activeEnterpriseOrgStructurePreloadProvider);
+    ref.watch(activeEnterpriseOrgStructurePreloadProvider);
     final localizations = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveEnterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);

@@ -17,13 +17,13 @@ class LeaveBalancesTableHeader extends StatelessWidget {
 
     final headerCells = <Widget>[];
 
-    if (LeaveBalancesTableConfig.showEmployee) {
-      headerCells.add(_buildHeaderCell(context, localizations.employeeName, LeaveBalancesTableConfig.employeeWidth.w));
-    }
     if (LeaveBalancesTableConfig.showEmployeeNumber) {
       headerCells.add(
         _buildHeaderCell(context, localizations.employeeNumber, LeaveBalancesTableConfig.employeeNumberWidth.w),
       );
+    }
+    if (LeaveBalancesTableConfig.showEmployee) {
+      headerCells.add(_buildHeaderCell(context, localizations.employeeName, LeaveBalancesTableConfig.employeeWidth.w));
     }
     if (LeaveBalancesTableConfig.showDepartment) {
       headerCells.add(_buildHeaderCell(context, localizations.department, LeaveBalancesTableConfig.departmentWidth.w));

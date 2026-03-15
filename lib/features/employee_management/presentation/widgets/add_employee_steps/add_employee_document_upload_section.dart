@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/constants/app_colors.dart';
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/services/toast_service.dart';
+import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_select_field_with_label.dart';
@@ -97,7 +98,23 @@ class _AddEmployeeDocumentUploadSectionState extends ConsumerState<AddEmployeeDo
     final state = ref.watch(addEmployeeDocumentsProvider);
     final notifier = ref.read(addEmployeeDocumentsProvider.notifier);
     final isEditing = ref.watch(addEmployeeEditingEmployeeIdProvider) != null;
-    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) {
+      return Container(
+        padding: EdgeInsets.all(18.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: Text(
+          localizations.supportingDocuments,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+          ),
+        ),
+      );
+    }
     final documentTypeLookup = ref.watch(
       emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'DOCUMENT_TYPE')),
     );

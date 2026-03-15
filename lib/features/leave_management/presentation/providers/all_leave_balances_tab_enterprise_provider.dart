@@ -23,7 +23,5 @@ class AllLeaveBalancesTabEnterpriseNotifier extends StateNotifier<int?> {
 }
 
 final allLeaveBalancesTabEnterpriseIdProvider = Provider<int?>((ref) {
-  final selected = ref.watch(allLeaveBalancesTabSelectedEnterpriseProvider);
-  final active = ref.watch(activeEnterpriseIdProvider);
-  return selected ?? active;
+  return ref.watch(allLeaveBalancesTabSelectedEnterpriseProvider);
 });

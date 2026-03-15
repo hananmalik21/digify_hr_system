@@ -1,6 +1,6 @@
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/usecases/get_active_org_structure_levels_usecase.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_structure_providers.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ManageEmployeesOrgStructureState {
@@ -63,6 +63,6 @@ final manageEmployeesOrgStructureNotifierProvider =
       enterpriseId,
     ) {
       return ManageEmployeesOrgStructureNotifier(
-        getActiveOrgStructureLevelsUseCase: ref.read(getActiveOrgStructureLevelsUseCaseProvider),
+        getActiveOrgStructureLevelsUseCase: ref.read(employeeGetActiveOrgStructureLevelsUseCaseProvider),
       );
     });

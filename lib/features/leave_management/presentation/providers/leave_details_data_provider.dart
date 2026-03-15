@@ -23,20 +23,22 @@ final leaveBalanceTransactionsDataSourceProvider = Provider<LeaveBalanceTransact
   return LeaveBalanceTransactionsRemoteDataSourceImpl(apiClient: apiClient);
 });
 
-final leaveDetailsDataProvider = FutureProvider.family<LeaveDetailsData, String>((ref, employeeId) {
+final leaveDetailsDataProvider = FutureProvider.autoDispose.family<LeaveDetailsData, String>((ref, employeeId) {
   return ref.read(leaveDetailsDataSourceProvider).getLeaveDetails(employeeId);
 });
 
-final leaveDetailsTransactionsPaginationProvider = StateProvider.family<(int page, int pageSize), String>((
+final leaveDetailsTransactionsPaginationProvider = StateProvider.autoDispose.family<(int page, int pageSize), String>((
   ref,
   employeeId,
 ) {
   return (1, LeaveDetailsTransactionTableConfig.defaultPageSize);
 });
 
-final leaveDetailsSelectedLeaveTypeIdProvider = StateProvider.family<int?, String>((ref, employeeId) => null);
+final leaveDetailsSelectedLeaveTypeIdProvider = StateProvider.autoDispose.family<int?, String>(
+  (ref, employeeId) => null,
+);
 
-final leaveDetailsEffectiveLeaveTypeIdProvider = Provider.family<int?, String>((ref, employeeGuid) {
+final leaveDetailsEffectiveLeaveTypeIdProvider = Provider.autoDispose.family<int?, String>((ref, employeeGuid) {
   final selectedId = ref.watch(leaveDetailsSelectedLeaveTypeIdProvider(employeeGuid));
   final leaveTypesState = ref.watch(leaveTypesNotifierProvider);
   final leaveTypes = leaveTypesState.leaveTypes;
@@ -73,43 +75,41 @@ class LeaveDetailsTransactionPageState {
   }
 }
 
-final leaveDetailsTransactionsResultProvider = FutureProvider.family<LeaveBalanceTransactionsResult, String>((
-  ref,
-  employeeGuid,
-) async {
-  final leaveTypeId = ref.watch(leaveDetailsEffectiveLeaveTypeIdProvider(employeeGuid));
-  final enterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
-  final pagination = ref.watch(leaveDetailsTransactionsPaginationProvider(employeeGuid));
-  final page = pagination.$1;
-  final pageSize = pagination.$2;
+final leaveDetailsTransactionsResultProvider = FutureProvider.autoDispose
+    .family<LeaveBalanceTransactionsResult, String>((ref, employeeGuid) async {
+      final leaveTypeId = ref.watch(leaveDetailsEffectiveLeaveTypeIdProvider(employeeGuid));
+      final enterpriseId = ref.watch(leaveManagementEnterpriseIdProvider);
+      final pagination = ref.watch(leaveDetailsTransactionsPaginationProvider(employeeGuid));
+      final page = pagination.$1;
+      final pageSize = pagination.$2;
 
-  if (leaveTypeId == null || enterpriseId == null) {
-    return LeaveBalanceTransactionsResult(
-      transactions: const [],
-      pagination: PaginationInfo(
-        currentPage: page,
-        totalPages: 1,
-        totalItems: 0,
+      if (leaveTypeId == null || enterpriseId == null) {
+        return LeaveBalanceTransactionsResult(
+          transactions: const [],
+          pagination: PaginationInfo(
+            currentPage: page,
+            totalPages: 1,
+            totalItems: 0,
+            pageSize: pageSize,
+            hasNext: false,
+            hasPrevious: false,
+          ),
+        );
+      }
+
+      final dataSource = ref.read(leaveBalanceTransactionsDataSourceProvider);
+      final dto = await dataSource.getTransactions(
+        employeeGuid: employeeGuid,
+        leaveTypeId: leaveTypeId,
+        enterpriseId: enterpriseId,
+        page: page,
         pageSize: pageSize,
-        hasNext: false,
-        hasPrevious: false,
-      ),
-    );
-  }
+        tenantId: enterpriseId,
+      );
+      return dto.toDomain();
+    });
 
-  final dataSource = ref.read(leaveBalanceTransactionsDataSourceProvider);
-  final dto = await dataSource.getTransactions(
-    employeeGuid: employeeGuid,
-    leaveTypeId: leaveTypeId,
-    enterpriseId: enterpriseId,
-    page: page,
-    pageSize: pageSize,
-    tenantId: enterpriseId,
-  );
-  return dto.toDomain();
-});
-
-final leaveDetailsTransactionPageProvider = Provider.family<LeaveDetailsTransactionPageState, String>((
+final leaveDetailsTransactionPageProvider = Provider.autoDispose.family<LeaveDetailsTransactionPageState, String>((
   ref,
   employeeGuid,
 ) {

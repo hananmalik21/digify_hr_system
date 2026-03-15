@@ -34,14 +34,8 @@ class LeaveBalancesRepositoryImpl implements LeaveBalancesRepository {
   @override
   Future<List<LeaveBalance>> getLeaveBalancesForEmployee(String employeeGuid, {int? tenantId}) async {
     try {
-      final paginated = await remoteDataSource.getLeaveBalances(
-        page: 1,
-        pageSize: 50,
-        tenantId: tenantId,
-        employeeGuid: employeeGuid,
-      );
-      final list = paginated.toDomain().balances;
-      return list.where((b) => b.employeeGuid == employeeGuid).toList();
+      final list = await remoteDataSource.getEmployeeLeaveBalances(tenantId: tenantId, employeeGuid: employeeGuid);
+      return list.map((e) => e.toDomain()).toList();
     } on AppException {
       rethrow;
     } catch (e) {
@@ -106,8 +100,7 @@ class LeaveBalancesRepositoryImpl implements LeaveBalancesRepository {
     required int tenantId,
     required int employeeId,
     required String reason,
-    required double annualDays,
-    required double sickDays,
+    required List<LeaveAdjustmentItem> items,
   }) async {
     try {
       final body = <String, dynamic>{
@@ -115,10 +108,7 @@ class LeaveBalancesRepositoryImpl implements LeaveBalancesRepository {
         'employee_id': employeeId,
         'reason': reason,
         'source': 'MANUAL',
-        'leave_items': <Map<String, dynamic>>[
-          {'leave_code': 'ANNUAL_LEAVE', 'new_days': annualDays},
-          {'leave_code': 'SICK_LEAVE', 'new_days': sickDays},
-        ],
+        'leave_items': items.map((item) => {'leave_code': item.leaveCode, 'new_days': item.newDays}).toList(),
       };
       await remoteDataSource.adjustLeaveBalances(body, tenantId: tenantId);
     } on AppException {

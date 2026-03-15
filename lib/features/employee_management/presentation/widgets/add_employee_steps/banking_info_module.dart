@@ -48,7 +48,23 @@ class BankingInfoModule extends ConsumerWidget {
     final notifier = ref.read(addEmployeeBankingProvider.notifier);
     final em = Assets.icons.employeeManagement;
     final cardIcon = _prefixIcon(context, em.card.path, isDark);
-    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) {
+      return Container(
+        padding: EdgeInsets.all(18.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: Text(
+          localizations.bankingInformation,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+          ),
+        ),
+      );
+    }
     final bankValuesAsync = ref.watch(
       emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'BANK_NAME')),
     );

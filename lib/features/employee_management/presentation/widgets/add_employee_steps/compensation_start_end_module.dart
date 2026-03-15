@@ -6,6 +6,7 @@ import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_assignment_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,23 @@ class CompensationStartEndModule extends ConsumerWidget {
     final state = ref.watch(addEmployeeCompensationProvider);
     final assignmentState = ref.watch(addEmployeeAssignmentProvider);
     final notifier = ref.read(addEmployeeCompensationProvider.notifier);
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) {
+      return Container(
+        padding: EdgeInsets.all(18.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: Text(
+          localizations.compensationPeriod,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+          ),
+        ),
+      );
+    }
     final calendarPath = Assets.icons.leaveManagementMainIcon.path;
     final em = Assets.icons.employeeManagement;
 
