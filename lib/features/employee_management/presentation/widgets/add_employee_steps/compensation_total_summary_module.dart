@@ -3,6 +3,7 @@ import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_compensation_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,10 +15,12 @@ class CompensationTotalSummaryModule extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(addEmployeeCompensationProvider);
-    final monthlyTotal = state.monthlyTotalFormatted;
-    final annualTotal = state.annualTotalFormatted;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
+    if (enterpriseId == null) return const SizedBox.shrink();
+    final monthlyTotal = state.monthlyTotalFormatted;
+    final annualTotal = state.annualTotalFormatted;
     final summaryBg = isDark ? AppColors.primary.withValues(alpha: 0.2) : AppColors.infoBg;
     final labelColor = isDark ? AppColors.primaryLight : AppColors.primary;
     final valueColor = isDark ? AppColors.textPrimaryDark : AppColors.infoTextSecondary;
