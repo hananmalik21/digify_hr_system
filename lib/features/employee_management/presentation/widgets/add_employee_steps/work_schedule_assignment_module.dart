@@ -4,7 +4,7 @@ import 'package:digify_hr_system/core/theme/app_shadows.dart';
 import 'package:digify_hr_system/core/theme/theme_extensions.dart';
 import 'package:digify_hr_system/core/widgets/assets/digify_asset.dart';
 import 'package:digify_hr_system/core/widgets/forms/digify_text_field.dart';
-import 'package:digify_hr_system/core/widgets/forms/work_schedule_selection_field.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/work_schedule_selection_field.dart';
 import 'package:digify_hr_system/features/time_management/domain/models/work_schedule.dart';
 import 'package:digify_hr_system/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +57,7 @@ class WorkScheduleAssignmentModule extends StatelessWidget {
             ],
           ),
           if (enterpriseId != null)
-            WorkScheduleSelectionField(
+            EmployeeWorkScheduleSelectionField(
               label: localizations.workSchedule,
               isRequired: true,
               enterpriseId: enterpriseId!,

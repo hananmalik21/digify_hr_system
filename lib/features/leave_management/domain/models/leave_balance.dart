@@ -1,6 +1,5 @@
 import 'package:digify_hr_system/features/time_management/domain/models/pagination_info.dart';
 
-/// Domain model for a single leave balance record from the API.
 class LeaveBalance {
   final String employeeLeaveBalanceGuid;
   final int tenantId;
@@ -121,21 +120,21 @@ class AdjustLeaveBalanceResult {
   );
 }
 
+class LeaveAdjustmentItem {
+  final String leaveCode;
+  final double newDays;
+
+  const LeaveAdjustmentItem({required this.leaveCode, required this.newDays});
+}
+
 class AdjustLeaveBalancePayload {
   final int employeeId;
   final String reason;
-  final double annualDays;
-  final double sickDays;
+  final List<LeaveAdjustmentItem> items;
 
-  const AdjustLeaveBalancePayload({
-    required this.employeeId,
-    required this.reason,
-    required this.annualDays,
-    required this.sickDays,
-  });
+  const AdjustLeaveBalancePayload({required this.employeeId, required this.reason, required this.items});
 }
 
-/// Params for updating a leave balance via PUT.
 class UpdateLeaveBalanceParams {
   final double openingBalanceDays;
   final double accruedDays;
@@ -156,7 +155,6 @@ class UpdateLeaveBalanceParams {
   });
 }
 
-/// Paginated leave balances result.
 class PaginatedLeaveBalances {
   final List<LeaveBalance> balances;
   final PaginationInfo pagination;

@@ -11,16 +11,12 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filter_org_param_provider.dart';
 import 'package:digify_hr_system/features/employee_management/domain/models/assignment_status_enum.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_filters_state.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_org_structure_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/digify_style_org_level_field.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/org_structure_level.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/org_unit_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_family_selection_dialog.dart'
     as emp_job_family_dialog;
@@ -158,7 +154,7 @@ class _EmployeeSearchAndActionsState extends ConsumerState<EmployeeSearchAndActi
                             if (param != null) {
                               ref
                                   .read(
-                                    enterpriseSelectionNotifierProvider((
+                                    employeeEnterpriseSelectionNotifierProvider((
                                       levels: param.levels,
                                       structureId: param.structureId,
                                     )).notifier,
@@ -256,29 +252,29 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
       });
     }
 
-    final jobFamilyState = ref.watch(jobFamilyNotifierProvider);
-    final jobLevelState = ref.watch(jobLevelNotifierProvider);
-    final gradeState = ref.watch(gradeNotifierProvider);
-    final positionState = ref.watch(positionNotifierProvider);
+    final jobFamilyState = ref.watch(employeeJobFamilyNotifierProvider(enterpriseId));
+    final jobLevelState = ref.watch(employeeJobLevelNotifierProvider(enterpriseId));
+    final gradeState = ref.watch(employeeGradeNotifierProvider(enterpriseId));
+    final positionState = ref.watch(employeePositionNotifierProvider(enterpriseId));
 
     if (jobFamilyState.items.isEmpty && !jobFamilyState.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeJobFamilyNotifierProvider(enterpriseId).notifier).loadFirstPage();
       });
     }
     if (jobLevelState.items.isEmpty && !jobLevelState.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeJobLevelNotifierProvider(enterpriseId).notifier).loadFirstPage();
       });
     }
     if (gradeState.items.isEmpty && !gradeState.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(gradeNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeGradeNotifierProvider(enterpriseId).notifier).loadFirstPage();
       });
     }
     if (positionState.items.isEmpty && !positionState.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(positionNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeePositionNotifierProvider(enterpriseId).notifier).loadFirstPage();
       });
     }
 
@@ -341,7 +337,11 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
               final selectedInitial = filters.positionId == null
                   ? null
                   : positionItems.firstWhere((p) => p.id == filters.positionId, orElse: () => positionItems.first);
-              final selected = await PositionSelectionDialog.show(context, selectedPosition: selectedInitial);
+              final selected = await PositionSelectionDialog.show(
+                context,
+                enterpriseId: enterpriseId ?? 0,
+                selectedPosition: selectedInitial,
+              );
               final newId = selected?.id;
               if (newId == filters.positionId) {
                 return;
@@ -366,6 +366,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
                   : jobFamilyItems.firstWhere((j) => j.id == filters.jobFamilyId, orElse: () => jobFamilyItems.first);
               final selected = await emp_job_family_dialog.JobFamilySelectionDialog.show(
                 context,
+                enterpriseId: enterpriseId ?? 0,
                 selectedJobFamily: selectedInitial,
               );
               final newId = selected?.id;
@@ -392,6 +393,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
                   : jobLevelItems.firstWhere((j) => j.id == filters.jobLevelId, orElse: () => jobLevelItems.first);
               final selected = await emp_job_level_dialog.JobLevelSelectionDialog.show(
                 context,
+                enterpriseId: enterpriseId ?? 0,
                 selectedJobLevel: selectedInitial,
               );
               final newId = selected?.id;
@@ -416,6 +418,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
                   : gradeItems.firstWhere((g) => g.id == filters.gradeId, orElse: () => gradeItems.first);
               final selected = await emp_grade_dialog.GradeSelectionDialog.show(
                 context,
+                enterpriseId: enterpriseId ?? 0,
                 selectedGrade: selectedInitial,
               );
               final newId = selected?.id;
@@ -472,7 +475,7 @@ class _FilterDropdownsSectionState extends ConsumerState<_FilterDropdownsSection
     ManageEmployeesFiltersNotifier filtersNotifier,
     VoidCallback applyFiltersAndRefresh,
   ) {
-    final selectionProvider = enterpriseSelectionNotifierProvider(param);
+    final selectionProvider = employeeEnterpriseSelectionNotifierProvider(param);
     final selectionState = ref.watch(selectionProvider);
     final levels = param.levels;
 

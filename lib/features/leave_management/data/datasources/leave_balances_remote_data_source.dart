@@ -25,6 +25,8 @@ abstract class LeaveBalancesRemoteDataSource {
     int? tenantId,
   });
 
+  Future<List<LeaveBalanceDto>> getEmployeeLeaveBalances({required String employeeGuid, int? tenantId});
+
   Future<Map<String, dynamic>> adjustLeaveBalances(Map<String, dynamic> body, {int? tenantId});
 }
 
@@ -98,6 +100,25 @@ class LeaveBalancesRemoteDataSourceImpl implements LeaveBalancesRemoteDataSource
       rethrow;
     } catch (e) {
       throw UnknownException('Failed to update leave balance: ${e.toString()}', originalError: e);
+    }
+  }
+
+  @override
+  Future<List<LeaveBalanceDto>> getEmployeeLeaveBalances({required String employeeGuid, int? tenantId}) async {
+    try {
+      final queryParameters = <String, String>{
+        'employee_guid': employeeGuid,
+        if (tenantId != null) 'tenant_id': tenantId.toString(),
+      };
+
+      final response = await apiClient.get(ApiEndpoints.absEmployeeLeaveBalances, queryParameters: queryParameters);
+
+      final data = response['data'] as List<dynamic>? ?? [];
+      return data.map((e) => LeaveBalanceDto.fromJson(e as Map<String, dynamic>)).toList();
+    } on AppException {
+      rethrow;
+    } catch (e) {
+      throw UnknownException('Failed to fetch employee leave balances: ${e.toString()}', originalError: e);
     }
   }
 

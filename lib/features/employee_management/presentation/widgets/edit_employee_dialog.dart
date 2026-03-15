@@ -9,7 +9,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_org_selection_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/add_employee_stepper_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
-import 'package:digify_hr_system/features/time_management/presentation/providers/work_schedules_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/address_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/assignment_step.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/basic_info_step.dart';
@@ -33,7 +33,7 @@ class EditEmployeeDialog extends ConsumerWidget {
     container.read(addEmployeeEditingEmployeeIdProvider.notifier).state = employeeGuid;
     final enterpriseId = container.read(manageEmployeesEnterpriseIdProvider);
     if (enterpriseId != null) {
-      container.read(workSchedulesNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
+      container.read(employeeWorkSchedulesNotifierProvider(enterpriseId).notifier).setEnterpriseId(enterpriseId);
     }
     return showDialog<void>(
       context: context,

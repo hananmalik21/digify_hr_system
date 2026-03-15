@@ -11,6 +11,7 @@ import 'package:digify_hr_system/features/employee_management/presentation/provi
 import 'package:digify_hr_system/features/employee_management/presentation/providers/empl_lookups_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_enterprise_provider.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/providers/manage_employees_list_provider.dart';
+import 'package:digify_hr_system/features/employee_management/presentation/providers/employee_structure_providers.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/job_employment_picker_field.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/position_selection_dialog.dart';
 import 'package:digify_hr_system/features/employee_management/presentation/widgets/add_employee_steps/reporting_to_employee_search_field.dart';
@@ -19,10 +20,6 @@ import 'package:digify_hr_system/features/workforce_structure/domain/models/grad
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_family.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/job_level.dart';
 import 'package:digify_hr_system/features/workforce_structure/domain/models/position.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/grade_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_family_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/job_level_providers.dart';
-import 'package:digify_hr_system/features/workforce_structure/presentation/providers/position_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,13 +42,29 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
     final em = Assets.icons.employeeManagement;
     final jobState = ref.watch(addEmployeeJobEmploymentProvider);
     final jobNotifier = ref.read(addEmployeeJobEmploymentProvider.notifier);
-    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) {
+      return Container(
+        padding: EdgeInsets.all(18.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: Text(
+          localizations.jobAndEmploymentDetails,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+          ),
+        ),
+      );
+    }
 
     _resolvePrefillIds(ref, jobState, jobNotifier, enterpriseId);
-    ref.listen(positionNotifierProvider, (prev, next) => _tryResolvePosition(ref, next));
-    ref.listen(jobFamilyNotifierProvider, (prev, next) => _tryResolveJobFamily(ref, next));
-    ref.listen(jobLevelNotifierProvider, (prev, next) => _tryResolveJobLevel(ref, next));
-    ref.listen(gradeNotifierProvider, (prev, next) => _tryResolveGrade(ref, next));
+    ref.listen(employeePositionNotifierProvider(enterpriseId), (prev, next) => _tryResolvePosition(ref, next));
+    ref.listen(employeeJobFamilyNotifierProvider(enterpriseId), (prev, next) => _tryResolveJobFamily(ref, next));
+    ref.listen(employeeJobLevelNotifierProvider(enterpriseId), (prev, next) => _tryResolveJobLevel(ref, next));
+    ref.listen(employeeGradeNotifierProvider(enterpriseId), (prev, next) => _tryResolveGrade(ref, next));
     final contractTypeValuesAsync = ref.watch(
       emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'CONTRACT_TYPE')),
     );
@@ -98,7 +111,7 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   value: jobState.selectedPosition?.titleEnglish,
                   hint: localizations.hintSelectDivision,
                   onTap: () async {
-                    final selected = await PositionSelectionDialog.show(context);
+                    final selected = await PositionSelectionDialog.show(context, enterpriseId: enterpriseId);
                     if (selected != null && context.mounted) {
                       jobNotifier.setPosition(selected);
                     }
@@ -118,26 +131,6 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                   hintText: localizations.hintReportingTo,
                   selectedEmployee: jobState.selectedReportingTo,
                   onEmployeeSelected: jobNotifier.setReportingTo,
-                ),
-                DigifySelectFieldWithLabel<String>(
-                  label: localizations.employmentStatus,
-                  isRequired: true,
-                  hint: localizations.hintEmploymentStatus,
-                  items: [AssignmentStatus.active.raw, AssignmentStatus.inactive.raw, AssignmentStatus.probation.raw],
-                  itemLabelBuilder: (code) {
-                    switch (AssignmentStatus.fromRaw(code)) {
-                      case AssignmentStatus.active:
-                        return localizations.active;
-                      case AssignmentStatus.inactive:
-                        return localizations.inactive;
-                      case AssignmentStatus.probation:
-                        return localizations.reviewProbation;
-                      default:
-                        return code;
-                    }
-                  },
-                  value: jobState.employmentStatusCode,
-                  onChanged: (v) => jobNotifier.setEmploymentStatusCode(v),
                 ),
               ];
               final rightColumn = [
@@ -161,6 +154,26 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
                     final n = int.tryParse(v);
                     jobNotifier.setProbationDays(n);
                   },
+                ),
+                DigifySelectFieldWithLabel<String>(
+                  label: localizations.employmentStatus,
+                  isRequired: true,
+                  hint: localizations.hintEmploymentStatus,
+                  items: [AssignmentStatus.active.raw, AssignmentStatus.inactive.raw, AssignmentStatus.probation.raw],
+                  itemLabelBuilder: (code) {
+                    switch (AssignmentStatus.fromRaw(code)) {
+                      case AssignmentStatus.active:
+                        return localizations.active;
+                      case AssignmentStatus.inactive:
+                        return localizations.inactive;
+                      case AssignmentStatus.probation:
+                        return localizations.reviewProbation;
+                      default:
+                        return code;
+                    }
+                  },
+                  value: jobState.employmentStatusCode,
+                  onChanged: (v) => jobNotifier.setEmploymentStatusCode(v),
                 ),
               ];
               if (useTwoColumns) {
@@ -209,18 +222,18 @@ class _JobEmploymentDetailsModuleState extends ConsumerState<JobEmploymentDetail
       setState(() => _prefillLoadsTriggered = true);
 
       if (jobState.prefillJobFamilyId != null && jobState.selectedJobFamily == null) {
-        ref.read(jobFamilyNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeJobFamilyNotifierProvider(enterpriseId).notifier).loadFirstPage();
       }
       if (jobState.prefillPositionId != null &&
           jobState.prefillPositionId!.isNotEmpty &&
           jobState.selectedPosition == null) {
-        ref.read(positionNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeePositionNotifierProvider(enterpriseId).notifier).loadFirstPage();
       }
       if (jobState.prefillJobLevelId != null && jobState.selectedJobLevel == null) {
-        ref.read(jobLevelNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeJobLevelNotifierProvider(enterpriseId).notifier).loadFirstPage();
       }
       if (jobState.prefillGradeId != null && jobState.selectedGrade == null) {
-        ref.read(gradeNotifierProvider.notifier).loadFirstPage();
+        ref.read(employeeGradeNotifierProvider(enterpriseId).notifier).loadFirstPage();
       }
       if (jobState.prefillReportingToEmpId != null && jobState.selectedReportingTo == null) {
         _resolveReportingTo(ref, enterpriseId, jobState.prefillReportingToEmpId!);

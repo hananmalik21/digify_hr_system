@@ -19,7 +19,6 @@ abstract class LeaveBalancesRepository {
     required int tenantId,
     required int employeeId,
     required String reason,
-    required double annualDays,
-    required double sickDays,
+    required List<LeaveAdjustmentItem> items,
   });
 }

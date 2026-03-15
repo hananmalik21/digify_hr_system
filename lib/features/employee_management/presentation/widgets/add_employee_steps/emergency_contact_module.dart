@@ -26,7 +26,23 @@ class EmergencyContactModule extends ConsumerWidget {
     final addressNotifier = ref.read(addEmployeeAddressProvider.notifier);
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
-    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider) ?? 0;
+    final enterpriseId = ref.watch(manageEmployeesEnterpriseIdProvider);
+    if (enterpriseId == null) {
+      return Container(
+        padding: EdgeInsets.all(18.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardBackgroundDark : AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(10.r),
+          boxShadow: AppShadows.primaryShadow,
+        ),
+        child: Text(
+          localizations.emergencyContact,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: isDark ? AppColors.textPrimaryDark : AppColors.dialogTitle,
+          ),
+        ),
+      );
+    }
     final relationshipValuesAsync = ref.watch(
       emplLookupValuesForTypeProvider((enterpriseId: enterpriseId, typeCode: 'CONTACT_RELATIONSHIP')),
     );
