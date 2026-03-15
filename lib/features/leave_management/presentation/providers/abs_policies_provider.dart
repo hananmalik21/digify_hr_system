@@ -48,7 +48,7 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
   final AbsPoliciesRepository _repository;
   final Ref _ref;
 
-  AbsPoliciesNotifier(this._repository, this._ref) : super(const AbsPoliciesState(isLoading: true)) {
+  AbsPoliciesNotifier(this._repository, this._ref) : super(const AbsPoliciesState(isLoading: false)) {
     _ref.listen(absPoliciesPaginationProvider, (previous, next) {
       if (previous != next) _load();
     });
@@ -62,7 +62,6 @@ class AbsPoliciesNotifier extends StateNotifier<AbsPoliciesState> {
         _load();
       }
     });
-    _load();
   }
 
   Future<void> _load() async {

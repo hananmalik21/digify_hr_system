@@ -11,11 +11,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TeamLeaveRiskTab extends ConsumerWidget {
+class TeamLeaveRiskTab extends ConsumerStatefulWidget {
   const TeamLeaveRiskTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TeamLeaveRiskTab> createState() => _TeamLeaveRiskTabState();
+}
+
+class _TeamLeaveRiskTabState extends ConsumerState<TeamLeaveRiskTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(teamLeaveRiskTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(teamLeaveRiskProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final state = ref.watch(teamLeaveRiskProvider);
@@ -41,7 +57,6 @@ class TeamLeaveRiskTab extends ConsumerWidget {
                 ? 'Viewing data for selected enterprise'
                 : 'Select an enterprise to view data',
           ),
-
           TeamLeaveRiskStatCards(stats: state.stats, isDark: isDark),
           TeamLeaveRiskFiltersSection(localizations: localizations, isDark: isDark),
           TeamLeaveRiskTable(

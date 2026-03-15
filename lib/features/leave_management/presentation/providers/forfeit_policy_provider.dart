@@ -31,9 +31,7 @@ final forfeitPolicyRepositoryProvider = Provider<ForfeitPolicyRepository>((ref) 
 class ForfeitPolicyNotifier extends StateNotifier<ForfeitPolicyState> {
   final ForfeitPolicyRepository _repository;
 
-  ForfeitPolicyNotifier(this._repository) : super(const ForfeitPolicyState(isLoading: true)) {
-    _load();
-  }
+  ForfeitPolicyNotifier(this._repository) : super(const ForfeitPolicyState(isLoading: false));
 
   Future<void> _load() async {
     state = state.copyWith(isLoading: true, error: null);

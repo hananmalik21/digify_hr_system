@@ -21,7 +21,11 @@ class LeavePolicyCardsGridSkeleton extends StatelessWidget {
     isPaid: true,
     carryoverDays: 30,
     requiresAttachment: false,
-    genderRestriction: null,
+    probationAllowed: true,
+    allowEncashment: true,
+    autoForfeit: false,
+    countWeekendsAsLeave: false,
+    countPublicHolidaysAsLeave: false,
   );
 
   @override

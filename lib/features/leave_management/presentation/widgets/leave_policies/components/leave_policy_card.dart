@@ -18,9 +18,9 @@ class LeavePolicyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = context.isMobile;
-    final padding = isMobile ? 16.w : 20.w;
-    final gapSmall = isMobile ? 8.h : 12.h;
-    final gapMedium = isMobile ? 10.h : 14.h;
+    final padding = isMobile ? 12.w : 16.w;
+    final gapSmall = isMobile ? 4.h : 6.h;
+    final gapMedium = isMobile ? 6.h : 8.h;
 
     return Container(
       padding: EdgeInsets.all(padding),
@@ -48,15 +48,16 @@ class LeavePolicyCard extends StatelessWidget {
                           child: Text(
                             policy.nameEn,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: isMobile ? 14.sp : 16.sp,
+                              fontSize: isMobile ? 13.sp : 15.sp,
+                              fontWeight: FontWeight.w600,
                               color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
                             ),
-                            maxLines: 2,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (policy.isKuwaitLaw) ...[
-                          Gap(isMobile ? 8.w : 11.w),
+                          Gap(isMobile ? 6.w : 8.w),
                           DigifyCapsule(
                             label: 'Kuwait Law',
                             backgroundColor: AppColors.successBg,
@@ -65,12 +66,12 @@ class LeavePolicyCard extends StatelessWidget {
                         ],
                       ],
                     ),
-                    Gap(4.h),
+                    Gap(2.h),
                     Text(
                       policy.nameAr,
                       textDirection: ui.TextDirection.rtl,
                       style: context.textTheme.bodyMedium?.copyWith(
-                        fontSize: isMobile ? 13.sp : 15.sp,
+                        fontSize: isMobile ? 11.sp : 13.sp,
                         color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                       ),
                       maxLines: 1,
@@ -79,34 +80,50 @@ class LeavePolicyCard extends StatelessWidget {
                   ],
                 ),
               ),
+              Gap(4.w),
+              _buildStatusBadge(policy.status),
             ],
           ),
           Gap(gapMedium),
           Flexible(
             child: Text(
-              policy.description,
+              policy.description.isEmpty ? 'No description provided' : policy.description,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontSize: isMobile ? 11.sp : 12.sp,
+                fontSize: isMobile ? 10.sp : 11.sp,
                 color: isDark ? AppColors.textTertiaryDark : AppColors.textTertiary,
               ),
-              maxLines: isMobile ? 2 : 3,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Gap(gapMedium),
           Row(
             children: [
-              Expanded(child: _buildDetailItem(context, 'Entitlement', policy.entitlement)),
-              Gap(isMobile ? 8.w : 12.w),
+              Expanded(child: _buildDetailItem(context, 'Entitlement', '${policy.entitlement} Days')),
+              Gap(isMobile ? 6.w : 8.w),
               Expanded(child: _buildDetailItem(context, 'Accrual Type', policy.accrualType)),
             ],
           ),
           Gap(gapSmall),
           Row(
             children: [
-              Expanded(child: _buildDetailItem(context, 'Min Service', policy.minService)),
-              Gap(isMobile ? 8.w : 12.w),
-              Expanded(child: _buildDetailItem(context, 'Advance Notice', policy.advanceNotice)),
+              Expanded(child: _buildDetailItem(context, 'Min Service', '${policy.minService} Year(s)')),
+              Gap(isMobile ? 6.w : 8.w),
+              Expanded(child: _buildDetailItem(context, 'Advance Notice', '${policy.advanceNotice} Day(s)')),
+            ],
+          ),
+          Gap(gapSmall),
+          Row(
+            children: [
+              Expanded(
+                child: _buildDetailItem(
+                  context,
+                  'Max Consecutive',
+                  policy.maxConsecutiveDays != null ? '${policy.maxConsecutiveDays} Days' : '-',
+                ),
+              ),
+              Gap(isMobile ? 6.w : 8.w),
+              Expanded(child: _buildDetailItem(context, 'Gender', policy.genderRestriction ?? 'All')),
             ],
           ),
           Gap(gapMedium),
@@ -120,7 +137,7 @@ class LeavePolicyCard extends StatelessWidget {
                   backgroundColor: policy.isPaid ? AppColors.successBg : AppColors.orangeBg,
                   textColor: policy.isPaid ? AppColors.successText : AppColors.orangeText,
                 ),
-                if (policy.carryoverDays != null)
+                if (policy.carryoverDays != null && policy.carryoverDays! > 0)
                   DigifyCapsule(
                     label: 'Carryover: ${policy.carryoverDays} days',
                     backgroundColor: AppColors.jobRoleBg,
@@ -132,16 +149,53 @@ class LeavePolicyCard extends StatelessWidget {
                     backgroundColor: AppColors.orangeBg,
                     textColor: AppColors.orangeText,
                   ),
-                if (policy.genderRestriction != null)
+                if (policy.allowEncashment)
                   DigifyCapsule(
-                    label: '${policy.genderRestriction} Only',
+                    label: 'Encashment Allowed',
                     backgroundColor: AppColors.purpleBg,
                     textColor: AppColors.statIconPurple,
+                  ),
+                if (policy.probationAllowed)
+                  DigifyCapsule(
+                    label: 'Available in Probation',
+                    backgroundColor: AppColors.successBg,
+                    textColor: AppColors.successText,
+                  ),
+                if (policy.countWeekendsAsLeave)
+                  DigifyCapsule(
+                    label: 'Incl. Weekends',
+                    backgroundColor: AppColors.orangeBg,
+                    textColor: AppColors.orangeText,
+                  ),
+                if (policy.countPublicHolidaysAsLeave)
+                  DigifyCapsule(
+                    label: 'Incl. Holidays',
+                    backgroundColor: AppColors.orangeBg,
+                    textColor: AppColors.orangeText,
                   ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String? status) {
+    final isActive = status?.toUpperCase() == 'ACTIVE' || status?.toUpperCase() == 'A';
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: isActive ? AppColors.successBg : AppColors.errorBg,
+        borderRadius: BorderRadius.circular(4.r),
+      ),
+      child: Text(
+        isActive ? 'Active' : 'Draft',
+        style: TextStyle(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w600,
+          color: isActive ? AppColors.successText : AppColors.errorText,
+        ),
       ),
     );
   }

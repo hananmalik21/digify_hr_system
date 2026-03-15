@@ -26,14 +26,13 @@ class _LeaveBalanceTabState extends ConsumerState<LeaveBalanceTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeLoadPage());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _refreshData());
   }
 
-  void _maybeLoadPage() {
+  void _refreshData() {
     final enterpriseId = ref.read(leaveBalanceTabEnterpriseIdProvider);
-    final state = ref.read(leaveBalanceSummaryListProvider);
-    if (enterpriseId != null && state.items.isEmpty && !state.isLoading && state.error == null) {
-      ref.read(leaveBalanceSummaryListProvider.notifier).loadPage(enterpriseId, 1);
+    if (enterpriseId != null) {
+      ref.read(leaveBalanceSummaryListProvider.notifier).resetAndLoad(enterpriseId);
     }
   }
 
