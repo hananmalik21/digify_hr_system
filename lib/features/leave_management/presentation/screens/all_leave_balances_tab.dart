@@ -26,6 +26,10 @@ class _AllLeaveBalancesTabState extends ConsumerState<AllLeaveBalancesTab> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(leaveTypesNotifierProvider.notifier).loadLeaveTypes();
+      final enterpriseId = ref.read(allLeaveBalancesTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(leaveBalanceSummaryListProvider.notifier).resetAndLoad(enterpriseId);
+      }
     });
   }
 

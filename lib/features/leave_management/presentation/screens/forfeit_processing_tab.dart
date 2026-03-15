@@ -27,6 +27,20 @@ class ForfeitProcessingTab extends ConsumerStatefulWidget {
 }
 
 class _ForfeitProcessingTabState extends ConsumerState<ForfeitProcessingTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(forfeitProcessingTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.invalidate(forfeitScheduleEntriesProvider);
+        ref.invalidate(forfeitPreviewEmployeesProvider);
+        ref.invalidate(forfeitProcessingSummaryProvider);
+        ref.read(forfeitProcessingStepProvider.notifier).setStep(ForfeitProcessingStep.upcomingForfeits);
+      }
+    });
+  }
+
   String _getButtonLabel(ForfeitProcessingStep step) {
     switch (step) {
       case ForfeitProcessingStep.upcomingForfeits:

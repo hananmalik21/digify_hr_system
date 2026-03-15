@@ -1,6 +1,7 @@
 import 'package:digify_hr_system/core/localization/l10n/app_localizations.dart';
 import 'package:digify_hr_system/core/widgets/common/enterprise_selector_widget.dart';
-import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_request_tab_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_management_enterprise_provider.dart';
+import 'package:digify_hr_system/features/leave_management/presentation/providers/leave_requests_provider.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/providers/tab_lookups_providers.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_entitlements_section.dart';
 import 'package:digify_hr_system/features/leave_management/presentation/widgets/leave_filter_tabs.dart';
@@ -10,11 +11,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class LeaveRequestTab extends ConsumerWidget {
+class LeaveRequestTab extends ConsumerStatefulWidget {
   const LeaveRequestTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LeaveRequestTab> createState() => _LeaveRequestTabState();
+}
+
+class _LeaveRequestTabState extends ConsumerState<LeaveRequestTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(leaveRequestTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(leaveRequestsNotifierProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final effectiveEnterpriseId = ref.watch(leaveRequestTabEnterpriseIdProvider);
     ref.watch(leaveRequestTabLookupsPreloadProvider);
@@ -27,8 +44,6 @@ class LeaveRequestTab extends ConsumerWidget {
         children: [
           LeaveEntitlementsSection(localizations: localizations),
           Gap(24.h),
-          // KuwaitLawEntitlementsSection(localizations: localizations),
-          // Gap(24.h),
           EnterpriseSelectorWidget(
             selectedEnterpriseId: effectiveEnterpriseId,
             onEnterpriseChanged: (enterpriseId) {

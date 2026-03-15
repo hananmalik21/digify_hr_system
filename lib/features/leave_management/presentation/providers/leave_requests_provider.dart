@@ -46,7 +46,7 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
   final LeaveRequestsRepository _repository;
   final Ref _ref;
 
-  LeaveRequestsNotifier(this._repository, this._ref) : super(const LeaveRequestsState(isLoading: true)) {
+  LeaveRequestsNotifier(this._repository, this._ref) : super(const LeaveRequestsState(isLoading: false)) {
     _ref.listen(leaveRequestsPaginationProvider, (previous, next) {
       if (previous != next) {
         _loadRequests();
@@ -62,7 +62,6 @@ class LeaveRequestsNotifier extends StateNotifier<LeaveRequestsState> {
         _loadRequests();
       }
     });
-    _loadRequests();
   }
 
   String? _mapFilterToStatus(LeaveFilter filter) {

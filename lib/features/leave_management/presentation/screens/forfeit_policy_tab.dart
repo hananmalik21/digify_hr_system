@@ -25,6 +25,17 @@ class _ForfeitPolicyTabState extends ConsumerState<ForfeitPolicyTab> {
   ForfeitPolicy? _selectedForfeitPolicy;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(forfeitPolicyTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(forfeitPolicyNotifierProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
     final isMobile = context.isMobile;

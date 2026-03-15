@@ -18,6 +18,12 @@ class LeavePolicy {
   final String? accrualMethodCode;
   final String? status;
   final String? kuwaitLaborCompliant;
+  final bool allowEncashment;
+  final bool autoForfeit;
+  final bool probationAllowed;
+  final bool countWeekendsAsLeave;
+  final bool countPublicHolidaysAsLeave;
+  final int? maxConsecutiveDays;
 
   /// Maps from ABS policy list item for display in Leave Policies tab (same card design).
   factory LeavePolicy.fromPolicyListItem(PolicyListItem item) {
@@ -40,6 +46,12 @@ class LeavePolicy {
       accrualMethodCode: item.accrualMethod.code,
       status: item.status.code,
       kuwaitLaborCompliant: detail?.kuwaitLaborCompliant == true ? 'Y' : 'N',
+      allowEncashment: detail?.allowEncashment ?? false,
+      autoForfeit: detail?.autoForfeit ?? false,
+      probationAllowed: detail?.probationAllowed ?? false,
+      countWeekendsAsLeave: detail?.countWeekendsAsLeave ?? false,
+      countPublicHolidaysAsLeave: detail?.countPublicHolidaysAsLeave ?? false,
+      maxConsecutiveDays: detail?.maxConsecutiveDays,
     );
   }
 
@@ -61,6 +73,12 @@ class LeavePolicy {
     this.accrualMethodCode,
     this.status,
     this.kuwaitLaborCompliant,
+    this.allowEncashment = false,
+    this.autoForfeit = false,
+    this.probationAllowed = false,
+    this.countWeekendsAsLeave = false,
+    this.countPublicHolidaysAsLeave = false,
+    this.maxConsecutiveDays,
   });
 
   LeavePolicy copyWith({
@@ -81,6 +99,12 @@ class LeavePolicy {
     String? accrualMethodCode,
     String? status,
     String? kuwaitLaborCompliant,
+    bool? allowEncashment,
+    bool? autoForfeit,
+    bool? probationAllowed,
+    bool? countWeekendsAsLeave,
+    bool? countPublicHolidaysAsLeave,
+    int? maxConsecutiveDays,
   }) {
     return LeavePolicy(
       policyGuid: policyGuid ?? this.policyGuid,
@@ -100,6 +124,12 @@ class LeavePolicy {
       accrualMethodCode: accrualMethodCode ?? this.accrualMethodCode,
       status: status ?? this.status,
       kuwaitLaborCompliant: kuwaitLaborCompliant ?? this.kuwaitLaborCompliant,
+      allowEncashment: allowEncashment ?? this.allowEncashment,
+      autoForfeit: autoForfeit ?? this.autoForfeit,
+      probationAllowed: probationAllowed ?? this.probationAllowed,
+      countWeekendsAsLeave: countWeekendsAsLeave ?? this.countWeekendsAsLeave,
+      countPublicHolidaysAsLeave: countPublicHolidaysAsLeave ?? this.countPublicHolidaysAsLeave,
+      maxConsecutiveDays: maxConsecutiveDays ?? this.maxConsecutiveDays,
     );
   }
 }

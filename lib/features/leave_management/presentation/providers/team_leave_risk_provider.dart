@@ -25,13 +25,12 @@ class TeamLeaveRiskState {
 }
 
 class TeamLeaveRiskNotifier extends StateNotifier<TeamLeaveRiskState> {
-  TeamLeaveRiskNotifier() : super(_initialState) {
-    _loadData();
-  }
+  TeamLeaveRiskNotifier() : super(_initialState);
 
   static const _initialState = TeamLeaveRiskState(
     employees: [],
     stats: TeamLeaveRiskStats(teamMembers: 0, employeesAtRisk: 0, totalAtRiskDays: 0, avgAtRiskPerEmployee: 0),
+    isLoading: false,
   );
 
   void _loadData() {

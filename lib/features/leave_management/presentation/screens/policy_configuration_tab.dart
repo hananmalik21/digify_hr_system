@@ -21,11 +21,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-class PolicyConfigurationTab extends ConsumerWidget {
+class PolicyConfigurationTab extends ConsumerStatefulWidget {
   const PolicyConfigurationTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PolicyConfigurationTab> createState() => _PolicyConfigurationTabState();
+}
+
+class _PolicyConfigurationTabState extends ConsumerState<PolicyConfigurationTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(policyConfigurationTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(absPoliciesNotifierProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final isMobile = context.isMobile;

@@ -12,11 +12,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LeavePoliciesTab extends ConsumerWidget {
+class LeavePoliciesTab extends ConsumerStatefulWidget {
   const LeavePoliciesTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LeavePoliciesTab> createState() => _LeavePoliciesTabState();
+}
+
+class _LeavePoliciesTabState extends ConsumerState<LeavePoliciesTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final enterpriseId = ref.read(leavePoliciesTabEnterpriseIdProvider);
+      if (enterpriseId != null) {
+        ref.read(absPoliciesNotifierProvider.notifier).refresh();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final isDark = context.isDark;
     final effectiveEnterpriseId = ref.watch(leavePoliciesTabEnterpriseIdProvider);
@@ -61,7 +77,6 @@ class LeavePoliciesTab extends ConsumerWidget {
               onNext: paginationInfo.hasNext && !notifierState.isLoading
                   ? () => _goToPage(ref, paginationState.page + 1, paginationState.pageSize)
                   : null,
-              isLoading: false,
               style: PaginationStyle.simple,
             ),
         ],
